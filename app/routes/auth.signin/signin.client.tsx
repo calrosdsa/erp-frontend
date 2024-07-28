@@ -1,4 +1,3 @@
-import { MetaFunction } from "@remix-run/react";
 import React, { Suspense } from "react";
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -20,27 +19,14 @@ import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import { IndexHtmlTransform } from "vite";
 import ColorSchemeToggle from "~/components/shared/button/ColorSchemeToggle";
 import GoogleIcon from "~/components/shared/icon/GoogleIcon";
+import { useFetcher } from "@remix-run/react";
+import { action } from "./route";
+const SignInClient = ({}:{
+}) =>{
+  const fetcher = useFetcher<typeof action>()
 
-export const meta: MetaFunction = () => {
-    return [
-      { title: "Erp SignIn" },
-      { name: "description", content: "Welcome to erp" },
-    ];
-  };
-
-let isHydrating = true;
-export default function SignIn(){
-  const [isHydrated, setIsHydrated] = React.useState(
-    !isHydrating
-  );
-
-  React.useEffect(() => {
-    isHydrating = false;
-    setIsHydrated(true);
-  }, []);
-  if(isHydrated){
-  return (
-      <CssVarsProvider defaultMode="dark" disableTransitionOnChange >
+    return (
+        <CssVarsProvider defaultMode="dark" disableTransitionOnChange >
       <CssBaseline />
       <GlobalStyles
         styles={{
@@ -145,22 +131,17 @@ export default function SignIn(){
               or
             </Divider>
             <Stack gap={4} sx={{ mt: 2 }}>
-              <form
-                onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-                    event.preventDefault();
-                    const formData = new FormData(event.currentTarget);
-                    const data = Object.fromEntries<any>(
-                      formData.entries(),
-                    );
-                    console.log(data)
-                  // const formElements = event.currentTarget.elements;
-                  // const data = {
-                  //     email: formElements.email.value,
-                  //     password: formElements.password.value,
-                  //     persistent: formElements.persistent.checked,
-                  //   };
-                  // alert(JSON.stringify(data, null, 2));
-                }}
+              <fetcher.Form
+              method="post"
+                // onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+                //     event.preventDefault();
+                //     const formData = new FormData(event.currentTarget);
+                //     const data = Object.fromEntries<any>(
+                //       formData.entries(),
+                //     );
+                //     console.log(data)
+                
+                // }}
                 >
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
@@ -183,11 +164,11 @@ export default function SignIn(){
                       Forgot your password?
                     </Link>
                   </Box>
-                  <Button type="submit" fullWidth>
-                    Sign in
+                  <Button type="submit" fullWidth loading={fetcher.state == "submitting"}>
+                    Sign in 
                   </Button>
                 </Stack>
-              </form>
+              </fetcher.Form>
             </Stack>
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
@@ -199,27 +180,7 @@ export default function SignIn(){
       </Box>
     
     </CssVarsProvider>
-  )
-}else{
-  return(
-    <div>
-      asdmkasmd
-    </div>
-  )
+    )
 }
 
-  // if (isHydrated) {
-  //   return(
-  //     <div>
-  //         <SignInSide/>
-  //     </div>
-  // )
-  // }else{
-  //   return(
-  //       <div>
-  //         dasdaskl
-  //       </div>
-  //   )
-
-  // }
-}
+export default SignInClient;
