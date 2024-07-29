@@ -1,29 +1,8 @@
-import { json, MetaFunction, redirect, useActionData, useFetcher, useLoaderData } from "@remix-run/react";
-import React, { Suspense } from "react";
-import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
-import GlobalStyles from '@mui/joy/GlobalStyles';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Checkbox from '@mui/joy/Checkbox';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
-import Link from '@mui/joy/Link';
-import Input from '@mui/joy/Input';
-import Typography from '@mui/joy/Typography';
-import Stack from '@mui/joy/Stack';
-import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import { IndexHtmlTransform } from "vite";
-import ColorSchemeToggle from "~/components/shared/button/ColorSchemeToggle";
-import GoogleIcon from "~/components/shared/icon/GoogleIcon";
+import { json, MetaFunction, redirect, useActionData } from "@remix-run/react";
 import SignInClient from "./signin.client";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import createClient from "openapi-fetch";
-import { paths } from "~/sdk/account";
+import { paths } from "~/sdk";
 import { commitSession, getSession } from "~/sessions";
 
 
@@ -43,7 +22,7 @@ export const meta: MetaFunction = () => {
       form.entries(),
     );
     const apiClient = createClient<paths>({baseUrl:process.env.API_URL});
-    const res = await apiClient.POST("/account/signin",{
+    const res = await apiClient.POST("/account/sign-in",{
       body:{
         email:data.email,
         password:data.password
@@ -51,25 +30,29 @@ export const meta: MetaFunction = () => {
     })
     if(res.response.ok && res.data != undefined){
       session.set("access_token",res.data.access_token)
-      console.log(data,res)      
-      return redirect("/auth", {
+      return redirect("/", {
         headers: {
           "Set-Cookie": await commitSession(session),
         },
       });
     }else{
-      return json({message:"dsad"})
+      console.log("ERROR",res.error)      
+      return json({
+        message:"dsad",
+        error:res.error
+      })
     }
     
   }
 
   export const loader =async({request}:LoaderFunctionArgs)=> {
+    // console.log("",request.headers)
     const session = await getSession(
       request.headers.get("Cookie")
     );
     if (session.has("access_token")) {
       // Redirect to the home page if they are already signed in.
-      return redirect("/auth");
+      return redirect("/");
     }
     return json({ok:true})
   }
@@ -77,7 +60,6 @@ export const meta: MetaFunction = () => {
 // let isHydrating = true;
 export default function SignIn(){
   // const data = useLoaderData<typeof loader>()
-  const data = useActionData<typeof action>();
 
 
   return (

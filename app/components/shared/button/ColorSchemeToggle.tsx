@@ -1,31 +1,58 @@
-import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
+import * as React from 'react';
 import { useColorScheme } from '@mui/joy/styles';
+import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
 
-import React from "react";
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-function ColorSchemeToggle(props: IconButtonProps) {
-    const { onClick, ...other } = props;
-    const { mode, setMode } = useColorScheme();
-    const [mounted, setMounted] = React.useState(false);
-  
-    React.useEffect(() => setMounted(true), []);
-  
+import LightModeIcon from '@mui/icons-material/LightMode';
+
+export default function ColorSchemeToggle(props: IconButtonProps) {
+  const { onClick, sx, ...other } = props;
+  const { mode, setMode } = useColorScheme();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) {
     return (
       <IconButton
-        aria-label="toggle light/dark mode"
         size="sm"
         variant="outlined"
-        disabled={!mounted}
-        onClick={(event) => {
-          setMode(mode === 'light' ? 'dark' : 'light');
-          onClick?.(event);
-        }}
+        color="neutral"
         {...other}
-      >
-        {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
-      </IconButton>
+        sx={sx}
+        disabled
+      />
     );
   }
-
-  export default ColorSchemeToggle;
+  return (
+    <IconButton
+      id="toggle-mode"
+      size="sm"
+      variant="outlined"
+      color="neutral"
+      {...other}
+      onClick={(event) => {
+        if (mode === 'light') {
+          setMode('dark');
+        } else {
+          setMode('light');
+        }
+        onClick?.(event);
+      }}
+      sx={[
+        {
+          '& > *:first-child': {
+            display: mode === 'dark' ? 'none' : 'initial',
+          },
+          '& > *:last-child': {
+            display: mode === 'light' ? 'none' : 'initial',
+          },
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+    >
+      <DarkModeRoundedIcon />
+      <LightModeIcon />
+    </IconButton>
+  );
+}
