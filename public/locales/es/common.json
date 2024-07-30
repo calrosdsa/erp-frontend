@@ -2,5 +2,14 @@
 	"greeting": "Hola",
     "company": {
         "companies":"Companias"
+    },
+    "form":{
+        "familyName":"Apellido",
+        "givenName":"Nombre",
+        "phoneNumber":"Numero de Telefono",
+        "email":"Correo Electronico",
+        "companyName":"Nombre de Empresa",
+        "clientDetails":"Complete su Información Personal",
+        "Pais":"Pais"
     }
 }

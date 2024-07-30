@@ -321,7 +321,7 @@ export default function OrderTable({body,headerValues}:CustomTableProps) {
         }}
       >
         <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Search for order</FormLabel>
+          <FormLabel>Search for</FormLabel>
           <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
         </FormControl>
         {renderFilters()}

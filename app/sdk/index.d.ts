@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get user account */
+        get: operations["get-account"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/account/sign-in": {
         parameters: {
             query?: never;
@@ -15,6 +32,23 @@ export interface paths {
         put?: never;
         /** Sign in a user */
         post: operations["sign-in"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/company": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get User companies */
+        get: operations["companies"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -42,7 +76,44 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        ErrorDetail: {  
+        AccountResponseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            user: components["schemas"]["User"];
+        };
+        CompaniesResponsePaginationResultListCompanyBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListCompany"];
+        };
+        Company: {
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            IsParent: boolean;
+            Name: string;
+            Parent: components["schemas"]["Company"];
+            /** Format: int64 */
+            ParentID: number | null;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Users: components["schemas"]["User"][];
+            Uuid: string;
+        };
+        DeletedAt: {
+            /** Format: date-time */
+            Time: string;
+            Valid: boolean;
+        };
+        ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
             location?: string;
             /** @description Error message text */
@@ -88,6 +159,16 @@ export interface components {
             /** @description Greeting message */
             message: string;
         };
+        NullTime: {
+            /** Format: date-time */
+            Time: string;
+            Valid: boolean;
+        };
+        PaginationResultListCompany: {
+            results: components["schemas"]["Company"][];
+            /** Format: int64 */
+            total: number;
+        };
         SignInRequestBody: {
             /**
              * Format: uri
@@ -108,6 +189,20 @@ export interface components {
             /** @description Access token of the user */
             access_token: string;
         };
+        User: {
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            Identifier: string;
+            LastLogin: components["schemas"]["NullTime"];
+            /** Format: int64 */
+            RoleID: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Uuid: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -117,6 +212,37 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    "get-account": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "sign-in": {
         parameters: {
             query?: never;
@@ -137,6 +263,40 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SignInResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    companies: {
+        parameters: {
+            query?: {
+                page?: string;
+                size?: string;
+            };
+            header?: {
+                Authorization?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompaniesResponsePaginationResultListCompanyBody"];
                 };
             };
             /** @description Error */

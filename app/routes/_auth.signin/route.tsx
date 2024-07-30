@@ -1,9 +1,8 @@
 import { json, MetaFunction, redirect, useActionData } from "@remix-run/react";
 import SignInClient from "./signin.client";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import createClient from "openapi-fetch";
-import { paths } from "~/sdk";
 import { commitSession, getSession } from "~/sessions";
+import apiClient from "~/apiclient";
 
 
 export const meta: MetaFunction = () => {
@@ -21,8 +20,7 @@ export const meta: MetaFunction = () => {
     const data = Object.fromEntries<any>(
       form.entries(),
     );
-    const apiClient = createClient<paths>({baseUrl:process.env.API_URL});
-    const res = await apiClient.POST("/account/sign-in",{
+    const res = await apiClient({request}).POST("/account/sign-in",{
       body:{
         email:data.email,
         password:data.password
@@ -30,7 +28,7 @@ export const meta: MetaFunction = () => {
     })
     if(res.response.ok && res.data != undefined){
       session.set("access_token",res.data.access_token)
-      return redirect("/", {
+      return redirect("/home/companies", {
         headers: {
           "Set-Cookie": await commitSession(session),
         },

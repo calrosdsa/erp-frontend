@@ -32,6 +32,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import ColorSchemeToggle from '../button/ColorSchemeToggle';
 import { closeSidebar } from '../../util';
+import { Form, Link, useLocation } from '@remix-run/react';
+import { useSSR, useTranslation } from 'react-i18next';
 
 function Toggler({
   defaultExpanded = false,
@@ -66,6 +68,8 @@ function Toggler({
 }
 
 export default function Sidebar() {
+  const { t } = useTranslation()
+  const location = useLocation()
   return (
     <Sheet
       className="Sidebar"
@@ -164,22 +168,26 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
 
+          <Link to={"/home/companies"}>
           <ListItem>
-            <ListItemButton selected>
+            <ListItemButton selected={location.pathname == "/home/companies"}>
               <ShoppingCartRoundedIcon />
               <ListItemContent>
-                <Typography level="title-sm">Orders</Typography>
+                <Typography level="title-sm">Companias</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
+          </Link>
+
 
           <ListItem nested>
-            <Toggler
+            <Toggler 
+            defaultExpanded={location.pathname.includes("stock")}
               renderToggle={({ open, setOpen }) => (
                 <ListItemButton onClick={() => setOpen(!open)}>
                   <AssignmentRoundedIcon />
                   <ListItemContent>
-                    <Typography level="title-sm">Tasks</Typography>
+                    <Typography level="title-sm">{t("stock")}</Typography>
                   </ListItemContent>
                   <KeyboardArrowDownIcon
                     sx={{ transform: open ? 'rotate(180deg)' : 'none' }}
@@ -188,18 +196,21 @@ export default function Sidebar() {
               )}
             >
               <List sx={{ gap: 0.5 }}>
+                <Link to={"/home/stock/items"}>
                 <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All tasks</ListItemButton>
+                  <ListItemButton selected={location.pathname == "/home/stock/items"}>
+                  {t("items")}
+                  </ListItemButton>
+                </ListItem>
+                </Link>
+
+                <ListItem>
+                  <ListItemButton>{t("itemGroups")}</ListItemButton>
                 </ListItem>
                 <ListItem>
-                  <ListItemButton>Backlog</ListItemButton>
+                  <ListItemButton>{t("warehouse")}</ListItemButton>
                 </ListItem>
-                <ListItem>
-                  <ListItemButton>In progress</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Done</ListItemButton>
-                </ListItem>
+                
               </List>
             </Toggler>
           </ListItem>
@@ -311,9 +322,12 @@ export default function Sidebar() {
           <Typography level="title-sm">Siriwat K.</Typography>
           <Typography level="body-xs">siriwatk@test.com</Typography>
         </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
+        <Form action="/home" method='post'>
+        <input type="hidden" value="signout" name="action"/>
+        <IconButton size="sm" variant="plain" color="neutral" type="submit">
           <LogoutRoundedIcon />
         </IconButton>
+          </Form>
       </Box>
     </Sheet>
   );

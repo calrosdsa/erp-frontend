@@ -3,19 +3,36 @@ import { createCookieSessionStorage, redirect } from "@remix-run/node"; // or cl
 
 type SessionData = {
   access_token: string;
+  locale:string
 };
 
 type SessionFlashData = {
   error: string;
 };
 
+const validateSessionAndGetToken = async(request:Request) =>{
+  const session = await getSession(
+    request.headers.get("Cookie")
+  );
+  if (!session.has("access_token")) {
+    // Redirect to the home page if they are already signed in.
+    console.log("REDIRECT")
+    return redirect("/signin"); 
+  }
+  const token = session.get("access_token")
+  if(token == undefined){
+    return redirect("/signin")
+  }
+  const bearerToken = `Bearer ${token}`
+  return bearerToken
+}
 const validateSession = async(request:Request) =>{
   const session = await getSession(
     request.headers.get("Cookie")
   );
   if (!session.has("access_token")) {
     // Redirect to the home page if they are already signed in.
-    return redirect("/auth/login");
+    return redirect("/signin"); 
   }
 }
 
@@ -41,4 +58,4 @@ const { getSession, commitSession, destroySession } =
     }
   );
 
-export { getSession, commitSession, destroySession };
+export { getSession, commitSession, destroySession,validateSession,validateSessionAndGetToken };

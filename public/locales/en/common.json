@@ -1,3 +1,22 @@
 {
-	"greeting": "Hello"
+  "greeting": "Hello",
+  "company": {
+    "companies": "Companies"
+  },
+  "form": {
+    "familyName": "Family Name",
+    "givenName": "Given Name",
+    "phoneNumber": "Phone Number",
+    "email": "Email",
+    "companyName": "Company Name",
+    "clientDetails": "Complete Your Personal Information",
+    "Pais": "Country"
+  },
+  
+  "stock": "Stock",
+  "items": "Items",
+  "itemGroups": "Item Groups",
+  "warehouse": "Warehouse",
+  "home": "H1ome",
+  "companies": "Companies"
 }

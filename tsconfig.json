@@ -19,6 +19,7 @@
     "target": "ES2022",
     "strict": true,
     "allowJs": true,
+    "typeRoots": ["./app/index.d.ts"],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
