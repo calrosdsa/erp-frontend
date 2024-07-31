@@ -75,7 +75,7 @@ const SignInClient = ({}: {}) => {
               <IconButton variant="soft" color="primary" size="sm">
                 <BadgeRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">Company logo {t("greeting")}</Typography>
+              <Typography level="title-lg">Teclu</Typography>
             </Box>
             <ColorSchemeToggle />
           </Box>
@@ -114,16 +114,16 @@ const SignInClient = ({}: {}) => {
                   </Link>
                 </Typography>
               </Stack>
-              <Button
+              {/* <Button
                 variant="soft"
                 color="neutral"
                 fullWidth
                 startDecorator={<GoogleIcon />}
               >
                 Continue with Google
-              </Button>
+              </Button> */}
             </Stack>
-            <Divider
+            {/* <Divider
               sx={(theme) => ({
                 [theme.getColorSchemeSelector("light")]: {
                   color: { xs: "#FFF", md: "text.tertiary" },
@@ -131,7 +131,7 @@ const SignInClient = ({}: {}) => {
               })}
             >
               or
-            </Divider>
+            </Divider> */}
             <Stack gap={4} sx={{ mt: 2 }}>
               <fetcher.Form
                 method="post"

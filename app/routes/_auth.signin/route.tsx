@@ -28,7 +28,7 @@ export const meta: MetaFunction = () => {
     })
     if(res.response.ok && res.data != undefined){
       session.set("access_token",res.data.access_token)
-      return redirect("/home/companies", {
+      return redirect("/home", {
         headers: {
           "Set-Cookie": await commitSession(session),
         },

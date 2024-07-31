@@ -3,53 +3,63 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import FallBack from "~/components/layout/Fallback";
 import HomeLayout from "./homeLayout";
-import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
-import { destroySession, getSession } from "~/sessions";
+import {
+  ActionFunctionArgs,
+  json,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
+import { destroySession, getSession, SessionData } from "~/sessions";
 import apiClient from "~/apiclient";
 import { GlobalState } from "~/types/app";
 
 let isHydrating = true;
 
 type HomeActions = {
-  action:string
-}
+  action: string;
+};
 
-export const action = async({request}:ActionFunctionArgs) =>{
-  const data = await request.formData()
-  switch(data.get("action")){
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const data = await request.formData();
+  switch (data.get("action")) {
     case "signout":
-      const session = await getSession(
-        request.headers.get("Cookie")
-      );
-      return redirect("/signin",{
+      const session = await getSession(request.headers.get("Cookie"));
+      return redirect("/signin", {
         headers: {
           "Set-Cookie": await destroySession(session),
         },
-      })
+      });
     default:
-      return redirect("/signin")
+      return redirect("/signin");
   }
-}
+};
 
-export const loader = async({request}:LoaderFunctionArgs) =>{
-  const session = await getSession(
-    request.headers.get("Cookie")
-  );
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const session = await getSession(request.headers.get("Cookie"));
   if (!session.has("access_token")) {
     // Redirect to the home page if they are already signed in.
-    return redirect("/signin"); 
+    return redirect("/signin");
   }
 
-  const res = await apiClient({request}).GET("/account")
-  console.log("ACCOUNT DATA",res.data)
+  // if (!session.has("companyID")) {
+  //   console.log(request.url);
+  //   if (!request.url.includes("settings")) {
+  //     return redirect("/home/settings?action=session");
+  //   }
+  // }
+
+  const res = await apiClient({ request }).GET("/account");
+  const sessionData = session.data as SessionData
+  console.log("SESSIOIN",session.data );
   return json({
-    account:res.data
-  })
-}
+    data: res.data,
+    session:sessionData
+  });
+};
 
 export default function Home() {
   const [isHydrated, setIsHydrated] = useState(!isHydrating);
-  const {account} = useLoaderData<typeof loader>()
+  const { data,session } = useLoaderData<typeof loader>();
 
   useEffect(() => {
     isHydrating = false;
@@ -59,12 +69,22 @@ export default function Home() {
   if (isHydrated) {
     return (
       <div>
-        <HomeLayout>
-        <Outlet 
-        context={{
-          account:account
-        } as GlobalState }
-        />
+        <HomeLayout
+          globalState={{
+            user: data?.user,
+            appConfig: data?.appConfig,
+            session:session
+          }}
+        >
+          <Outlet
+            context={
+              {
+                user: data?.user,
+                appConfig: data?.appConfig,
+                session:session
+              } as GlobalState
+            }
+          />
         </HomeLayout>
       </div>
     );

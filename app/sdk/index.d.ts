@@ -72,6 +72,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/plugin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get available plugins */
+        get: operations["plugins"];
+        put?: never;
+        /** Add plugin */
+        post: operations["add-plugin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plugin/{plugin}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get plugin from company */
+        get: operations["get-plugin"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -82,7 +117,27 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            appConfig: components["schemas"]["AppConfigStruct"];
             user: components["schemas"]["User"];
+        };
+        AddPluginRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            plugin: string;
+        };
+        AddPluginResponseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            company_plugin: components["schemas"]["CompanyPlugins"];
+        };
+        AppConfigStruct: {
+            plugins: components["schemas"]["PluginApp"][];
         };
         CompaniesResponsePaginationResultListCompanyBody: {
             /**
@@ -107,6 +162,12 @@ export interface components {
             UpdatedAt: string;
             Users: components["schemas"]["User"][];
             Uuid: string;
+        };
+        CompanyPlugins: {
+            /** Format: int64 */
+            CompanyID: number;
+            Credentials: string;
+            Plugin: string;
         };
         DeletedAt: {
             /** Format: date-time */
@@ -169,6 +230,25 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PluginApp: {
+            Name: string;
+        };
+        PluginDetailResponseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            company_plugin: components["schemas"]["CompanyPlugins"];
+        };
+        PluginsResponseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            plugins: components["schemas"]["PluginApp"][];
+        };
         SignInRequestBody: {
             /**
              * Format: uri
@@ -190,6 +270,7 @@ export interface components {
             access_token: string;
         };
         User: {
+            Companies: components["schemas"]["Company"][];
             /** Format: date-time */
             CreatedAt: string;
             DeletedAt: components["schemas"]["DeletedAt"];
@@ -217,6 +298,7 @@ export interface operations {
             query?: never;
             header?: {
                 Authorization?: string;
+                "Active-Company"?: string;
             };
             path?: never;
             cookie?: never;
@@ -284,6 +366,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
+                "Active-Company"?: string;
             };
             path?: never;
             cookie?: never;
@@ -332,6 +415,105 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GreetingOutputBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    plugins: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PluginsResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "add-plugin": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddPluginRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AddPluginResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-plugin": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path: {
+                plugin: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PluginDetailResponseBody"];
                 };
             };
             /** @description Error */

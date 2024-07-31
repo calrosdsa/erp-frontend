@@ -10,13 +10,30 @@
     "email": "Email",
     "companyName": "Company Name",
     "clientDetails": "Complete Your Personal Information",
-    "Pais": "Country"
+    "Pais": "Country",
+    "submit":"Submit"
   },
+
+  "sidebar":{
+    "sessionDefaults":"Session Defaults"
+  },
+  "language":"Language",
+
+  "addSquare":"Add Square Plugin",
+  "applicationId":"Application ID",
+  "accessToken":"Access Token",
+  "locationId":"Location ID",
+
   
   "stock": "Stock",
   "items": "Items",
-  "itemGroups": "Item Groups",
+  "item-groups": "Item Groups",
   "warehouse": "Warehouse",
   "home": "H1ome",
-  "companies": "Companies"
+  "companies": "Companies",
+
+  "square":"Square",
+
+  "settings":"Settings"
+
 }

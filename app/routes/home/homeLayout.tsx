@@ -14,6 +14,8 @@ import Sidebar from "~/components/shared/sidebar/sidebar";
 import OrderTable from "~/components/shared/table/CustomTable";
 import { Link, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
+import { GlobalState } from "~/types/app";
+import { SessionDefaultDrawer } from "./components/SessionDefaults";
 
 type RouteItem = {
   name: string;
@@ -21,12 +23,16 @@ type RouteItem = {
 };
 
 export default function HomeLayout({
-  children,
+  children,globalState
 }: {
   children: React.ReactNode;
+  globalState:GlobalState
 }) {
   const location = useLocation();
   const { t } = useTranslation();
+  const [openSessionDefaults,setOpenSessionDefaults] = React.useState(false)
+
+
 
   const [routesName, setRoutesName] = React.useState<string[]>([]);
 
@@ -57,9 +63,21 @@ export default function HomeLayout({
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
+      {openSessionDefaults &&
+      <SessionDefaultDrawer
+      open={openSessionDefaults}
+      close={()=>setOpenSessionDefaults(false)}
+      session={globalState.session}
+      companies={globalState.user?.Companies || []}
+      />
+    }
+
       <Box sx={{ display: "flex", minHeight: "100dvh" }}>
         <Header />
-        <Sidebar />
+        <Sidebar 
+        globalState={globalState}
+        openSessionDefaults={()=>setOpenSessionDefaults(true)}
+        />
         <Box
           component="main"
           className="MainContent"
@@ -131,13 +149,13 @@ export default function HomeLayout({
               {getRouteName()}
               {/* {t("company.companies")} */}
             </Typography>
-            <Button
+            {/* <Button
               color="primary"
               startDecorator={<DownloadRoundedIcon />}
               size="sm"
             >
               Download PDF
-            </Button>
+            </Button> */}
           </Box>
 
           {children}

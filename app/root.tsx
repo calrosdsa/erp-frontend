@@ -1,10 +1,13 @@
 import {
+  isRouteErrorResponse,
+  Link,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRouteError,
 } from "@remix-run/react";
 import "./tailwind.css";
 import '@fontsource/inter';
@@ -14,8 +17,6 @@ import { useChangeLanguage } from "remix-i18next/react";
 import { useTranslation } from "react-i18next";
 import i18next from "~/i18next.server";
 import { ExternalScripts } from "remix-utils/external-scripts";
-import { useEffect } from "react";
-
 
 export async function action({request}:ActionFunctionArgs) { 
   const body = await request.json()
@@ -54,15 +55,15 @@ export let handle = {
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  let { locale } = useLoaderData<typeof loader>();
-
+  let data = useLoaderData<typeof loader>();
 	let { i18n } = useTranslation();
-
 	// This hook will change the i18n instance language to the current locale
 	// detected by the loader, this way, when we do something to change the
 	// language, this locale will change and i18next will load the correct
 	// translation files
-  useChangeLanguage(locale)
+  if(data != undefined){
+    useChangeLanguage(data.locale)
+  }
   
   return (
     <html lang={i18n.resolvedLanguage} dir={i18n.dir()}>
@@ -78,8 +79,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-   
+
         {children}
+
         <ScrollRestoration />
         <Scripts />
         <ExternalScripts/>
@@ -91,4 +93,86 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return <Outlet />;
+}
+
+
+type DefaultSparseErrorPageProps = {
+  tagline: string;
+  headline: string;
+  description: string;
+};
+
+function DefaultSparseErrorPage({
+  tagline,
+  headline,
+  description,
+}: DefaultSparseErrorPageProps) {
+  return (
+    <html lang="es" id="app">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" type="image/png"></link>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <main className="flex flex-col items-center px-4 py-16 sm:py-32 text-center">
+          <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            {tagline}
+          </span>
+          <h1 className="mt-2 font-bold text-gray-900 tracking-tight text-4xl sm:text-5xl">
+            {headline}
+          </h1>
+          <p className="mt-4 text-base text-gray-500 max-w-full break-words">
+            {description}
+          </p>
+          <div className="mt-6">
+            <Link
+              to="/home"
+              className="text-base font-medium text-primary-600 hover:text-primary-500 inline-flex gap-2
+              hover:underline"
+            >
+              Volve al Inicio
+            </Link>
+          </div>
+        </main>
+        <ScrollRestoration />
+        <Scripts />
+        {/* {devMode && <LiveReload />} */}
+      </body>
+    </html>
+  );
+}
+
+
+export function ErrorBoundary() {
+  let tagline = '¡UPS!';
+  let headline = 'Error inesperado';
+  let description = "No pudimos procesar tu solicitud. Por favor, inténtalo de nuevo más tarde.";
+
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    tagline = `${error.status} error`;
+    headline = error.statusText;
+    description = error.data;
+  }
+
+  return (
+    <DefaultSparseErrorPage
+      tagline={tagline}
+      headline={headline}
+      description={description}
+    />
+  );
+}
+
+/**
+ * In Remix v2 there will only be a `ErrorBoundary`
+ * As mentioned in the jsdoc for `DefaultSparseErrorPage` you should replace this to suit your needs.
+ * Relevant for the future: https://remix.run/docs/en/main/route/error-boundary-v2
+ */
+export function CatchBoundary() {
+  return ErrorBoundary();
 }

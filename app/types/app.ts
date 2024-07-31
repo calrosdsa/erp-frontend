@@ -1,4 +1,5 @@
 import { components } from "~/sdk";
+import { SessionData } from "~/sessions";
 
 export type CountrySelectItem = {
     code: string;
@@ -8,7 +9,7 @@ export type CountrySelectItem = {
 }
 
 export type GlobalState = {
-    account: {
-        user: components["schemas"]["User"];
-    } | undefined;
+    appConfig?: components["schemas"]["AppConfigStruct"];
+    user?: components["schemas"]["User"];
+    session:SessionData;
 }
