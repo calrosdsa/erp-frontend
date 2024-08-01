@@ -27,8 +27,8 @@ export default function PluginClient() {
           companies={state.user?.Companies || []}
           session={state.session}
           plugin={params.plugin}
-        />
-      )}
+          />
+        )}
       <div>
         {plugin == undefined && (
           <Button onClick={() => setOpenAddPlugin(true)}>
@@ -37,7 +37,9 @@ export default function PluginClient() {
         )}
 
         {plugin.company_plugin.Plugin == "square" &&
-        <SquarePlugin/>
+        <SquarePlugin
+        companyPlugin={plugin.company_plugin}
+        />
         }
 
       </div>

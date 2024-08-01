@@ -5,6 +5,9 @@ import DrawerLayout from "~/components/shared/drawer/Drawer";
 import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
 
+
+
+
 export const AddPlugin = ({
   plugin,
   session,
@@ -15,6 +18,7 @@ export const AddPlugin = ({
   companies: components["schemas"]["Company"][];
 }) => {
     const { t } = useTranslation()
+
   return (
     <Form method="post" className=" grid gap-y-3">
       <input type="hidden" value={plugin} />
@@ -40,13 +44,14 @@ export const AddPluginDrawer = ({
   close,
   plugin,
   session,
-  companies
+  companies,
 }: {
   open: boolean;
   close: () => void;
   plugin: string;
   session: SessionData;
   companies: components["schemas"]["Company"][];
+
 }) => {
   const { t } = useTranslation();
   return (

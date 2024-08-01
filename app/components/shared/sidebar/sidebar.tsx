@@ -242,7 +242,7 @@ export default function Sidebar({
                 <Link to={"/home/stock/items"}>
                   <ListItem sx={{ mt: 0.5 }}>
                     <ListItemButton
-                      selected={location.pathname == "/home/stock/items"}
+                      selected={location.pathname.includes("/home/stock/items")}
                     >
                       {t("items")}
                     </ListItemButton>
@@ -322,7 +322,7 @@ export default function Sidebar({
                 <ListItemButton onClick={() => setOpen(!open)}>
                   <GroupRoundedIcon />
                   <ListItemContent>
-                    <Typography level="title-sm">Plugins</Typography>
+                    <Typography level="title-sm">{t("plugins")}</Typography>
                   </ListItemContent>
                   <KeyboardArrowDownIcon
                     sx={{ transform: open ? "rotate(180deg)" : "none" }}

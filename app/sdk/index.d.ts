@@ -99,6 +99,24 @@ export interface paths {
         };
         /** Get plugin from company */
         get: operations["get-plugin"];
+        /** Update plugin credentials */
+        put: operations["update-plugin-credentials"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Item groups */
+        get: operations["item-group"];
         put?: never;
         post?: never;
         delete?: never;
@@ -139,21 +157,23 @@ export interface components {
         AppConfigStruct: {
             plugins: components["schemas"]["PluginApp"][];
         };
-        CompaniesResponsePaginationResultListCompanyBody: {
+        CompaniesResponsePaginationResultListItemGroupBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            pagination_result: components["schemas"]["PaginationResultListCompany"];
+            pagination_result: components["schemas"]["PaginationResultListItemGroup"];
         };
         Company: {
+            CompanyPlugins: components["schemas"]["CompanyPlugins"][];
             /** Format: date-time */
             CreatedAt: string;
             DeletedAt: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
             IsParent: boolean;
+            ItemGroups: components["schemas"]["ItemGroup"][];
             Name: string;
             Parent: components["schemas"]["Company"];
             /** Format: int64 */
@@ -220,13 +240,41 @@ export interface components {
             /** @description Greeting message */
             message: string;
         };
+        ItemGroup: {
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            IsParent: boolean;
+            Name: string;
+            Parent: components["schemas"]["ItemGroup"];
+            /** Format: int64 */
+            ParentID: number | null;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Uuid: string;
+        };
         NullTime: {
             /** Format: date-time */
             Time: string;
             Valid: boolean;
         };
+        PaginationResponsePaginationResultListCompanyBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListCompany"];
+        };
         PaginationResultListCompany: {
             results: components["schemas"]["Company"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListItemGroup: {
+            results: components["schemas"]["ItemGroup"][];
             /** Format: int64 */
             total: number;
         };
@@ -249,6 +297,17 @@ export interface components {
             readonly $schema?: string;
             plugins: components["schemas"]["PluginApp"][];
         };
+        ResponseMessageBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            errors: {
+                [key: string]: string | undefined;
+            };
+            message: string;
+        };
         SignInRequestBody: {
             /**
              * Format: uri
@@ -268,6 +327,14 @@ export interface components {
             readonly $schema?: string;
             /** @description Access token of the user */
             access_token: string;
+        };
+        UpdateCredentialsPluginRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            credentials: string;
         };
         User: {
             Companies: components["schemas"]["Company"][];
@@ -360,9 +427,10 @@ export interface operations {
     };
     companies: {
         parameters: {
-            query?: {
-                page?: string;
-                size?: string;
+            query: {
+                page: string;
+                size: string;
+                query?: string;
             };
             header?: {
                 Authorization?: string;
@@ -379,7 +447,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CompaniesResponsePaginationResultListCompanyBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyBody"];
                 };
             };
             /** @description Error */
@@ -514,6 +582,80 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PluginDetailResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-plugin-credentials": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path: {
+                plugin: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCredentialsPluginRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "item-group": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompaniesResponsePaginationResultListItemGroupBody"];
                 };
             };
             /** @description Error */

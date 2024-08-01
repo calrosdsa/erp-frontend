@@ -1,9 +1,16 @@
 {
   "greeting": "Hello",
+  "integrations":"Integrations",
+
+  "show":"Show",
+  "hide":"Hide",
+
   "company": {
     "companies": "Companies"
   },
   "form": {
+    "name":"Name",
+    "code":"Code",
     "familyName": "Family Name",
     "givenName": "Given Name",
     "phoneNumber": "Phone Number",
@@ -11,7 +18,9 @@
     "companyName": "Company Name",
     "clientDetails": "Complete Your Personal Information",
     "Pais": "Country",
-    "submit":"Submit"
+    "item-group": "Item Group",    
+    "submit":"Submit",
+    "save":"Save"
   },
 
   "sidebar":{
@@ -23,6 +32,7 @@
   "applicationId":"Application ID",
   "accessToken":"Access Token",
   "locationId":"Location ID",
+  "apiVersion":"Api Version",
 
   
   "stock": "Stock",
@@ -31,6 +41,11 @@
   "warehouse": "Warehouse",
   "home": "H1ome",
   "companies": "Companies",
+  "plugins":"Plugins",
+
+  "create_item":"Add Item",
+  "itemInfo":"Item Information",
+
 
   "square":"Square",
 

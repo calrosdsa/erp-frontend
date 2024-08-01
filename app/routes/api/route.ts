@@ -2,7 +2,6 @@ import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { commitSession, getSession } from "~/sessions";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  console.log("ACTIONS");
   const formData = await request.formData();
   const action = formData.get("action");
   switch (action) {

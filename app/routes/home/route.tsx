@@ -50,7 +50,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const res = await apiClient({ request }).GET("/account");
   const sessionData = session.data as SessionData
-  console.log("SESSIOIN",session.data );
   return json({
     data: res.data,
     session:sessionData
