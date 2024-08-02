@@ -3,13 +3,14 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AddPluginDrawer } from "./components/AddPlugin";
 import {
+  useFetcher,
   useLoaderData,
   useOutletContext,
   useParams,
   useRouteError,
 } from "@remix-run/react";
 import { GlobalState } from "~/types/app";
-import { loader } from "./route";
+import { action, loader } from "./route";
 import SquarePlugin from "./plugins/square";
 
 export default function PluginClient() {
@@ -18,9 +19,12 @@ export default function PluginClient() {
   const [openAddPlugin, setOpenAddPlugin] = useState(false);
   const state = useOutletContext<GlobalState>();
   const params = useParams();
+  const addPluginfetcher = useFetcher<typeof action>({key:"add-plugin"})
+  
+
   return (
     <>
-      {openAddPlugin && params.plugin != undefined && (
+      {(!addPluginfetcher.data?.success && openAddPlugin && params.plugin != undefined) && (
         <AddPluginDrawer
           open={openAddPlugin}
           close={() => setOpenAddPlugin(false)}
@@ -30,7 +34,7 @@ export default function PluginClient() {
           />
         )}
       <div>
-        {plugin == undefined && (
+        {(plugin == undefined || plugin.company_plugin.Plugin == "")&& (
           <Button onClick={() => setOpenAddPlugin(true)}>
             {t("addSquare")}
           </Button>

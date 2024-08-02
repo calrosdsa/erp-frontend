@@ -108,7 +108,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stock": {
+    "/stock/item-group": {
         parameters: {
             query?: never;
             header?: never;
@@ -117,6 +117,60 @@ export interface paths {
         };
         /** Get Item groups */
         get: operations["item-group"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item/item-price": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update item price */
+        put: operations["update-item-price"];
+        /** Create item price */
+        post: operations["create-item-price"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item/price-list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve Price List items */
+        get: operations["get-price-lists"];
+        /** Update item price list */
+        put: operations["update-item-price-list"];
+        /** Create item price list */
+        post: operations["create-item-price-list"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/uom": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve UOMs (Units of Measure) */
+        get: operations["uom"];
         put?: never;
         post?: never;
         delete?: never;
@@ -157,14 +211,6 @@ export interface components {
         AppConfigStruct: {
             plugins: components["schemas"]["PluginApp"][];
         };
-        CompaniesResponsePaginationResultListItemGroupBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            pagination_result: components["schemas"]["PaginationResultListItemGroup"];
-        };
         Company: {
             CompanyPlugins: components["schemas"]["CompanyPlugins"][];
             /** Format: date-time */
@@ -173,7 +219,6 @@ export interface components {
             /** Format: int64 */
             ID: number;
             IsParent: boolean;
-            ItemGroups: components["schemas"]["ItemGroup"][];
             Name: string;
             Parent: components["schemas"]["Company"];
             /** Format: int64 */
@@ -241,6 +286,9 @@ export interface components {
             message: string;
         };
         ItemGroup: {
+            Company: components["schemas"]["Company"];
+            /** Format: int64 */
+            CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
             DeletedAt: components["schemas"]["DeletedAt"];
@@ -251,6 +299,43 @@ export interface components {
             Parent: components["schemas"]["ItemGroup"];
             /** Format: int64 */
             ParentID: number | null;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Uuid: string;
+        };
+        ItemPrice: {
+            Company: components["schemas"]["Company"];
+            /** Format: int64 */
+            CompanyID: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            /** Format: int64 */
+            ItemID: number;
+            /** Format: int64 */
+            ItemPriceListID: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Uuid: string;
+            /** Format: date-time */
+            ValidFrom: string;
+            /** Format: date-time */
+            ValidUpTo: string | null;
+        };
+        ItemPriceList: {
+            /** Format: int64 */
+            CompanyID: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            Currency: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            IsBuying: boolean;
+            IsSelling: boolean;
+            Name: string;
             /** Format: date-time */
             UpdatedAt: string;
             Uuid: string;
@@ -268,6 +353,22 @@ export interface components {
             readonly $schema?: string;
             pagination_result: components["schemas"]["PaginationResultListCompany"];
         };
+        PaginationResponsePaginationResultListItemGroupBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListItemGroup"];
+        };
+        PaginationResponsePaginationResultListItemPriceListBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListItemPriceList"];
+        };
         PaginationResultListCompany: {
             results: components["schemas"]["Company"][];
             /** Format: int64 */
@@ -275,6 +376,11 @@ export interface components {
         };
         PaginationResultListItemGroup: {
             results: components["schemas"]["ItemGroup"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListItemPriceList: {
+            results: components["schemas"]["ItemPriceList"][];
             /** Format: int64 */
             total: number;
         };
@@ -328,6 +434,41 @@ export interface components {
             /** @description Access token of the user */
             access_token: string;
         };
+        UOMsResponseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            results: components["schemas"]["UnitOfMeasureTranslation"][];
+        };
+        UnitOfMeasure: {
+            Code: string;
+            /** Format: int64 */
+            CompanyID: number | null;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            Enabled: boolean;
+            /** Format: int64 */
+            ID: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+        };
+        UnitOfMeasureTranslation: {
+            /** Format: int64 */
+            BaseId: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            LanguageCode: string;
+            Name: string;
+            UnitOfMeasure: components["schemas"]["UnitOfMeasure"];
+            /** Format: date-time */
+            UpdatedAt: string;
+        };
         UpdateCredentialsPluginRequestBody: {
             /**
              * Format: uri
@@ -335,6 +476,22 @@ export interface components {
              */
             readonly $schema?: string;
             credentials: string;
+        };
+        UpsertItemPriceRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            itemPrice: components["schemas"]["ItemPrice"];
+        };
+        UpsertPriceListRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            itemPriceList: components["schemas"]["ItemPriceList"];
         };
         User: {
             Companies: components["schemas"]["Company"][];
@@ -655,7 +812,221 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CompaniesResponsePaginationResultListItemGroupBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemGroupBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-item-price": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpsertItemPriceRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-item-price": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpsertItemPriceRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-price-lists": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceListBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-item-price-list": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpsertPriceListRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-item-price-list": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpsertPriceListRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    uom: {
+        parameters: {
+            query?: {
+                query?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UOMsResponseBody"];
                 };
             };
             /** @description Error */

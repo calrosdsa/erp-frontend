@@ -1,5 +1,5 @@
 import { Button, FormControl, FormLabel, Option, Select } from "@mui/joy";
-import { Form } from "@remix-run/react";
+import { Form, useFetcher } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import DrawerLayout from "~/components/shared/drawer/Drawer";
 import { components } from "~/sdk";
@@ -18,10 +18,12 @@ export const AddPlugin = ({
   companies: components["schemas"]["Company"][];
 }) => {
     const { t } = useTranslation()
+    const fetcher = useFetcher({key:"add-plugin"})
 
   return (
-    <Form method="post" className=" grid gap-y-3">
-      <input type="hidden" value={plugin} />
+    <fetcher.Form method="post" action={`/home/plugins/${plugin}`} className=" grid gap-y-3">
+      <input type="hidden" value="add-plugin" name="action" />  
+      <input type="hidden" value={plugin} name="plugin"/>
       <FormControl>
         <FormLabel>{t("form.companyName")}</FormLabel>
         <Select defaultValue={session.companyUuid} name="companyUuid">
@@ -34,8 +36,9 @@ export const AddPlugin = ({
           })}
         </Select>
       </FormControl>
-      <Button type="submit">{t("form.submit")}</Button>
-    </Form>
+      <Button loading={fetcher.state =="submitting"}
+       type="submit">{t("form.submit")}</Button>
+    </fetcher.Form>
   );
 };
 

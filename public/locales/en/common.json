@@ -20,7 +20,14 @@
     "Pais": "Country",
     "item-group": "Item Group",    
     "submit":"Submit",
-    "save":"Save"
+    "save":"Save",
+    "uom":"UOM",
+    "optional":"Optional",
+    "price-list":"Price List",
+    "currency":"Currency",
+    "buying":"Buying",
+    "selling":"Selling",
+    "rate":"Rate"
   },
 
   "sidebar":{
@@ -45,6 +52,7 @@
 
   "create_item":"Add Item",
   "itemInfo":"Item Information",
+  "itemPrice":"Item Price",
 
 
   "square":"Square",

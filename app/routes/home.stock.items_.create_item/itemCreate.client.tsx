@@ -1,4 +1,12 @@
-import { Button, FormControl, FormLabel, Grid, Input, Typography } from "@mui/joy";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Grid,
+  Input,
+  Stack,
+  Typography,
+} from "@mui/joy";
 import { Form, useFetcher, useOutletContext } from "@remix-run/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,11 +18,14 @@ import { loader } from "../home.stock.item-groups/route";
 import { GlobalState } from "~/types/app";
 import CustomMultipleSelect from "~/components/shared/select/CustomMultipleSelect";
 import CustomSelect from "~/components/shared/select/CustomSelect";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CustomFormInput from "~/components/shared/input/CustomFormInput";
 
 export default function CreateItemClient() {
   const fetcher = useFetcher();
   const { t } = useTranslation();
-  const state = useOutletContext<GlobalState>()
+  const state = useOutletContext<GlobalState>();
   const fetcherDebounce = useDebounceFetcher<
     | {
         paginationResult: {
@@ -25,40 +36,64 @@ export default function CreateItemClient() {
     | undefined
   >();
 
-  const [selectedItemGroup, setSelectedItemGroup] = useState<components["schemas"]["ItemGroup"] | null>(null);
-  const [selectedCompany, setSelectedCompany] = useState<components["schemas"]["Company"] | null>(null);
-  const [selectedPlugins, setSelectedPlugins] = useState<components["schemas"]["CompanyPlugins"][]>([]);
+  const fetcherDebounceUoms = useDebounceFetcher<
+    | {
+        uoms: components["schemas"]["UnitOfMeasureTranslation"][];
+      }
+    | undefined
+  >();
 
+  const fetcherDebouncePriceList = useDebounceFetcher<
+    | {
+        pagination_result: {
+          results: components["schemas"]["ItemPriceList"][];
+          total: number;
+        };
+      }
+    | undefined
+  >();
 
-  const [formData,setFormData] = useState({
-    name:"",
-    code:"",
-    itemGroup:selectedItemGroup,
-    company:selectedCompany,
-    plugins:selectedPlugins
-  })
+  const [selectedItemGroup, setSelectedItemGroup] = useState<
+    components["schemas"]["ItemGroup"] | null
+  >(null);
+  const [selectedPriceList, setSelectedPriceList] = useState<
+    components["schemas"]["ItemPriceList"] | null
+  >(null);
+  const [selectedUom, setSelectedUom] = useState<
+    components["schemas"]["UnitOfMeasureTranslation"] | null
+  >(null);
+  const [selectedCompany, setSelectedCompany] = useState<
+    components["schemas"]["Company"] | null
+  >(null);
+  const [selectedPlugins, setSelectedPlugins] = useState<
+    components["schemas"]["CompanyPlugins"][]
+  >([]);
 
+  const [formData, setFormData] = useState({
+    name: "",
+    code: "",
+    rate: "",
+    itemGroup: selectedItemGroup,
+    company: selectedCompany,
+    plugins: selectedPlugins,
+  });
 
-  const onSubmit = (e:FormEvent<HTMLFormElement>) => {
-    try{
-      
-    }catch(err){
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    try {
+    } catch (err) {}
+  };
 
-    }
-  }
-
-  function slugify(string:string) {
+  function slugify(string: string) {
     return string
-      .toString()                             // Convert to string
-      .normalize('NFD')                       // Normalize the string to decompose combined characters
-      .replace(/[\u0300-\u036f]/g, '')        // Remove diacritics
-      .toLowerCase()                          // Convert to lowercase
-      .trim()                                 // Remove leading and trailing whitespace
-      .replace(/[^a-z0-9 -]/g, '')            // Remove invalid characters
-      .replace(/\s+/g, '-')                   // Replace spaces with hyphens
-      .replace(/-+/g, '-');                   // Replace multiple hyphens with a single hyphen
+      .toString() // Convert to string
+      .normalize("NFD") // Normalize the string to decompose combined characters
+      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+      .toLowerCase() // Convert to lowercase
+      .trim() // Remove leading and trailing whitespace
+      .replace(/[^a-z0-9 -]/g, "") // Remove invalid characters
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .replace(/-+/g, "-"); // Replace multiple hyphens with a single hyphen
   }
-  
 
   const data = [
     { Name: "Alice", id: 30 },
@@ -66,76 +101,140 @@ export default function CreateItemClient() {
   ];
   return (
     <div>
-      <fetcher.Form  method="post" action="/home/stock/items/create_item">
+      <fetcher.Form method="post" action="/home/stock/items/create_item">
         <Grid container spacing={2} columns={6} sx={{ flexGrow: 1 }}>
-        <Grid xs={6}>
-          <Typography level="title-lg">{t("itemInfo")}</Typography>
-        </Grid>
+          <Grid xs={6}>
+            <Typography level="title-lg">{t("itemInfo")}</Typography>
+          </Grid>
 
           <Grid xs={6} sm={3} lg={2}>
             <FormControl required>
               <FormLabel>{t("form.name")}</FormLabel>
-              <Input type="text" name="name" value={formData.name} onChange={(e)=>{
-                setFormData({
-                  ...formData,
-                  name:e.target.value,
-                  code:slugify(e.target.value)
-                })
-              }}/>
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    name: e.target.value,
+                  });
+                }}
+              />
             </FormControl>
           </Grid>
 
           <Grid xs={6} sm={3} lg={2}>
             <FormControl required>
               <FormLabel>{t("form.code")}</FormLabel>
-              <Input type="text" name="code" value={formData.code} onChange={(e)=>{
-                setFormData({
-                  ...formData,
-                  code:slugify(e.target.value)
-                })
-              }}/>
+              <Input
+                type="text"
+                name="code"
+                value={formData.code}
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    code: e.target.value,
+                  });
+                }}
+              />
+            </FormControl>
+          </Grid>
+          <Grid xs={6} sm={3} lg={2}>
+            <FormControl required>
+              <FormLabel>{t("form.uom")}</FormLabel>
+              <CustomAutoComplete
+                selected={selectedUom}
+                setSelected={(e) => {
+                  setSelectedUom(e);
+                }}
+                onChangeInputValue={(e) => {
+                  fetcherDebounceUoms.submit(
+                    { query: e, action: "get" },
+                    {
+                      debounceTimeout: 600,
+                      method: "POST",
+                      action: `/home/settings/uom`,
+                      encType: "application/json",
+                    }
+                  );
+                }}
+                onFocus={() => {
+                  fetcherDebounceUoms.submit(
+                    { query: "", action: "get" },
+                    {
+                      method: "POST",
+                      action: `/home/settings/uom`,
+                      encType: "application/json",
+                    }
+                  );
+                }}
+                data={
+                  fetcherDebounceUoms.data != undefined
+                    ? fetcherDebounceUoms.data.uoms
+                    : []
+                }
+                name="Name"
+              />
             </FormControl>
           </Grid>
 
           <Grid xs={6} sm={3} lg={2}>
-
             <FormControl required>
               <FormLabel>{t("form.item-group")}</FormLabel>
               <CustomAutoComplete
                 selected={selectedItemGroup}
                 setSelected={(e) => {
-                  setSelectedItemGroup(e)
+                  setSelectedItemGroup(e);
                 }}
                 onChangeInputValue={(e) => {
-                  fetcherDebounce.submit({query:e},{
-                    debounceTimeout:600,
-                    method:"POST",
-                    action:`/home/stock/item-groups`,
-                    encType: "application/json",
-                  });
+                  fetcherDebounce.submit(
+                    { query: e },
+                    {
+                      debounceTimeout: 600,
+                      method: "POST",
+                      action: `/home/stock/item-groups`,
+                      encType: "application/json",
+                    }
+                  );
                 }}
-                onFocus={()=>{
-                  fetcherDebounce.submit({query:""},{
-                    method:"POST",
-                    action:`/home/stock/item-groups`,
-                    encType: "application/json",
-                  });
+                onFocus={() => {
+                  fetcherDebounce.submit(
+                    { query: "" },
+                    {
+                      method: "POST",
+                      action: `/home/stock/item-groups`,
+                      encType: "application/json",
+                    }
+                  );
                 }}
-                data={fetcherDebounce.data != undefined ?fetcherDebounce.data.paginationResult.pagination_result.results:[] }
+                data={
+                  fetcherDebounce.data != undefined
+                    ? fetcherDebounce.data.paginationResult.pagination_result
+                        .results
+                    : []
+                }
                 name="Name"
               />
             </FormControl>
-
           </Grid>
 
           <Grid xs={6} sm={3} lg={2}>
             <FormControl required>
               <FormLabel>{t("form.companyName")}</FormLabel>
               <CustomSelect
-              data={state.user?.Companies || []}
-              name={"Name"}
-              selected={selectedCompany}
-              setSelected={(e)=>setSelectedCompany(e)}
+                data={state.user?.Companies || []}
+                name={"Name"}
+                selected={formData.company}
+                setSelected={(e) => {
+                  if(e == null){
+                    return
+                  }
+                  setFormData({
+                    ...formData,
+                    company:e
+                  })
+                }}
               />
               {/* <CustomMultipleSelect
               defaultValue={[]}
@@ -144,30 +243,124 @@ export default function CreateItemClient() {
             </FormControl>
           </Grid>
 
-
           <Grid xs={6}>
-          <Typography level="title-lg">{t("integrations")}</Typography>
-        </Grid>
+            <Typography level="title-lg">
+              {t("itemPrice")} ({t("form.optional")})
+            </Typography>
+          </Grid>
 
-        <Grid xs={6} sm={3} lg={2}>
-            <FormControl>
-              <FormLabel>{t("plugins")}</FormLabel>
-              <CustomMultipleSelect
-              name={"Plugin"}
-              selected={selectedPlugins}
-              setSelected={(e)=>{setSelectedPlugins(e)}}
-              data={selectedCompany?.CompanyPlugins || []}
+          {selectedPriceList != undefined && (
+            <Grid xs={6}>
+              <Stack direction={"row"} spacing={3} flexWrap="wrap" useFlexGap>
+                <Typography level="title-md" fontWeight={600}>
+                  {t("form.currency")}: {selectedPriceList.Currency}
+                </Typography>
+                <div className="flex space-x-1">
+                  {selectedPriceList.IsBuying ? (
+                    <CheckBoxIcon />
+                  ) : (
+                    <CheckBoxOutlineBlankIcon />
+                  )}
+                  <Typography level="title-md" fontWeight={500}>
+                    {t("form.buying")}
+                  </Typography>
+                </div>
+                <div className="flex space-x-1">
+                  {selectedPriceList.IsSelling ? (
+                    <CheckBoxIcon />
+                  ) : (
+                    <CheckBoxOutlineBlankIcon />
+                  )}
+                  <Typography level="title-md" fontWeight={500}>
+                    {t("form.selling")}
+                  </Typography>
+                </div>
+              </Stack>
+            </Grid>
+          )}
+
+          <Grid xs={6} sm={3} lg={2}>
+            <FormControl required>
+              <FormLabel>{t("form.price-list")}</FormLabel>
+              <CustomAutoComplete
+                selected={selectedPriceList}
+                setSelected={(e) => {
+                  setSelectedPriceList(e);
+                }}
+                onChangeInputValue={(e) => {
+                  fetcherDebouncePriceList.submit(
+                    { query: e, action: "get" },
+                    {
+                      debounceTimeout: 600,
+                      method: "POST",
+                      action: `/home/stock/price-list`,
+                      encType: "application/json",
+                    }
+                  );
+                }}
+                onFocus={() => {
+                  fetcherDebouncePriceList.submit(
+                    { query: "", action: "get" },
+                    {
+                      method: "POST",
+                      action: `/home/stock/price-list`,
+                      encType: "application/json",
+                    }
+                  );
+                }}
+                data={
+                  fetcherDebouncePriceList.data != undefined
+                    ? fetcherDebouncePriceList.data.pagination_result.results
+                    : []
+                }
+                name="Name"
               />
             </FormControl>
           </Grid>
 
-          <Grid xs={6} sx={{marginTop:2}}>
-          {/* <Typography level="title-lg">{t("integrations")}</Typography> */}
-          <Button  type="submit">{t("form.submit")}</Button>
-        </Grid>
+          <Grid xs={6} sm={3} lg={2}>
+            <CustomFormInput
+            formControlProps={{
+              required:true
+            }}
+            inputProps={{
+              type:"text",
+              name:"priceList",
+              value:formData.rate,
+              onChange:(e) => {
+                setFormData({
+                  ...formData,
+                  rate: e.target.value,
+                });
+              }
+            }}
+            label={t("form.rate")}
+            />
+          </Grid>
 
+          <Grid xs={6}>
+            <Typography level="title-lg">{t("integrations")}</Typography>
+          </Grid>
+
+          <Grid xs={6} sm={3} lg={2}>
+            <FormControl>
+              <FormLabel>{t("plugins")}</FormLabel>
+              <CustomMultipleSelect
+                name={"Plugin"}
+                selected={selectedPlugins}
+                setSelected={(e) => {
+                  setSelectedPlugins(e);
+                }}
+                data={selectedCompany?.CompanyPlugins || []}
+              />
+            </FormControl>
+          </Grid>
+
+          <Grid xs={6} sx={{ marginTop: 2 }}>
+            {/* <Typography level="title-lg">{t("integrations")}</Typography> */}
+            <Button type="submit">{t("form.submit")}</Button>
+          </Grid>
         </Grid>
-        
       </fetcher.Form>
     </div>
   );

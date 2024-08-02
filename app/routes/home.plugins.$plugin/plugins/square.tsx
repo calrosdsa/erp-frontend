@@ -44,6 +44,7 @@ export default function SquarePlugin({companyPlugin}:{
     <div>
       {credentials != null &&
       <fetcher.Form method="post" action="/home/plugins/square" className="grid gap-y-3 max-w-sm">
+      <input type="hidden" value="update-credentials" name="action" />
         <FormControl required>
           <FormLabel>{t("applicationId")}</FormLabel>
           <Input type="text" name="applicationId" defaultValue={credentials?.applicationId} />
