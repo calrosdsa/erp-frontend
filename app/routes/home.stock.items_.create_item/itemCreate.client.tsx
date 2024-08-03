@@ -7,14 +7,19 @@ import {
   Stack,
   Typography,
 } from "@mui/joy";
-import { Form, useFetcher, useOutletContext } from "@remix-run/react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import {
+  Form,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+  useRouteLoaderData,
+} from "@remix-run/react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { useDebounceSubmit } from "remix-utils/use-debounce-submit";
 import CustomAutoComplete from "~/components/shared/input/CustomAutoComplete";
 import { components } from "~/sdk";
-import { loader } from "../home.stock.item-groups/route";
 import { GlobalState } from "~/types/app";
 import CustomMultipleSelect from "~/components/shared/select/CustomMultipleSelect";
 import CustomSelect from "~/components/shared/select/CustomSelect";
@@ -25,7 +30,17 @@ import CustomFormInput from "~/components/shared/input/CustomFormInput";
 export default function CreateItemClient() {
   const fetcher = useFetcher();
   const { t } = useTranslation();
-  const state = useOutletContext<GlobalState>();
+  // const state = useOutletContext<GlobalState>();
+  const companyfetcherDebounce = useDebounceFetcher<
+    | {
+        pagination_result: {
+          results: components["schemas"]["Company"][];
+          total: number;
+        };
+      }
+    | undefined
+  >();
+
   const fetcherDebounce = useDebounceFetcher<
     | {
         paginationResult: {
@@ -95,10 +110,6 @@ export default function CreateItemClient() {
       .replace(/-+/g, "-"); // Replace multiple hyphens with a single hyphen
   }
 
-  const data = [
-    { Name: "Alice", id: 30 },
-    { Name: "Bob", id: 25 },
-  ];
   return (
     <div>
       <fetcher.Form method="post" action="/home/stock/items/create_item">
@@ -222,24 +233,40 @@ export default function CreateItemClient() {
           <Grid xs={6} sm={3} lg={2}>
             <FormControl required>
               <FormLabel>{t("form.companyName")}</FormLabel>
-              <CustomSelect
-                data={state.user?.Companies || []}
-                name={"Name"}
-                selected={formData.company}
+
+              <CustomAutoComplete
+                selected={selectedCompany}
                 setSelected={(e) => {
-                  if(e == null){
-                    return
-                  }
-                  setFormData({
-                    ...formData,
-                    company:e
-                  })
+                  setSelectedCompany(e);
                 }}
+                onChangeInputValue={(e) => {
+                  companyfetcherDebounce.submit(
+                    { query: e, action: "get" },
+                    {
+                      debounceTimeout: 600,
+                      method: "POST",
+                      action: `/home/companies`,
+                      encType: "application/json",
+                    }
+                  );
+                }}
+                onFocus={() => {
+                  companyfetcherDebounce.submit(
+                    { query: "", action: "get" },
+                    {
+                      method: "POST",
+                      action: `/home/companies`,
+                      encType: "application/json",
+                    }
+                  );
+                }}
+                data={
+                  companyfetcherDebounce.data != undefined
+                    ? companyfetcherDebounce.data.pagination_result.results
+                    : []
+                }
+                name="Name"
               />
-              {/* <CustomMultipleSelect
-              defaultValue={[]}
-              // data={}
-              /> */}
             </FormControl>
           </Grid>
 
@@ -320,21 +347,21 @@ export default function CreateItemClient() {
 
           <Grid xs={6} sm={3} lg={2}>
             <CustomFormInput
-            formControlProps={{
-              required:true
-            }}
-            inputProps={{
-              type:"text",
-              name:"priceList",
-              value:formData.rate,
-              onChange:(e) => {
-                setFormData({
-                  ...formData,
-                  rate: e.target.value,
-                });
-              }
-            }}
-            label={t("form.rate")}
+              formControlProps={{
+                required: true,
+              }}
+              inputProps={{
+                type: "text",
+                name: "priceList",
+                value: formData.rate,
+                onChange: (e) => {
+                  setFormData({
+                    ...formData,
+                    rate: e.target.value,
+                  });
+                },
+              }}
+              label={t("form.rate")}
             />
           </Grid>
 

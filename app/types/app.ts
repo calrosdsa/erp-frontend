@@ -13,3 +13,13 @@ export type GlobalState = {
     user?: components["schemas"]["User"];
     session:SessionData;
 }
+
+// export type GlobalState = {
+//     // appConfig?: components["schemas"]["AppConfigStruct"];
+//     data:{
+//         readonly $schema?: string;
+//         appConfig: components["schemas"]["AppConfigStruct"];
+//         user: components["schemas"]["User"];
+//     } | undefined;
+//     session:SessionData;
+// }

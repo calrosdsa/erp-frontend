@@ -48,6 +48,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   //   }
   // }
 
+  console.log("LOADER ACCOUNT")
   const res = await apiClient({ request }).GET("/account");
   const sessionData = session.data as SessionData
   return json({

@@ -28,6 +28,7 @@ interface Props<T extends object, K extends keyof T> {
           onChange={(event, newValue) => {
             setSelected(newValue);
           }}
+          
           getOptionLabel={option => option[name] as string}
           inputValue={inputValue}
           onFocus={onFocus}
