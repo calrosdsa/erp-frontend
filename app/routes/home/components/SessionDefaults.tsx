@@ -16,7 +16,7 @@ export const SessionDefault = ({
   close: () => void;
 }) => {
   const { t } = useTranslation();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher(); 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget)
     // console.log(e.currentTarget)

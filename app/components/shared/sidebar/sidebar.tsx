@@ -11,7 +11,7 @@ import Input from "@mui/joy/Input";
 import LinearProgress from "@mui/joy/LinearProgress";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
-import ListItemButton, { listItemButtonClasses } from "@mui/joy/ListItemButton";
+import ListItemButton from "@mui/joy/ListItemButton";
 import ListItemContent from "@mui/joy/ListItemContent";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
@@ -35,6 +35,7 @@ import { closeSidebar } from "../../util";
 import { Form, Link, useLocation } from "@remix-run/react";
 import { useSSR, useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
+import listItemButtonClasses from "@mui/material/ListItemButton/listItemButtonClasses";
 
 function Toggler({
   defaultExpanded = false,

@@ -12,6 +12,8 @@ import {
 import { destroySession, getSession, SessionData } from "~/sessions";
 import apiClient from "~/apiclient";
 import { GlobalState } from "~/types/app";
+import { components } from "~/sdk";
+import { ClientOnly } from "remix-utils/client-only";
 
 let isHydrating = true;
 
@@ -41,6 +43,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return redirect("/signin");
   }
 
+  const companyUuid = session.get("companyUuid")
+
   // if (!session.has("companyID")) {
   //   console.log(request.url);
   //   if (!request.url.includes("settings")) {
@@ -49,46 +53,58 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // }
 
   console.log("LOADER ACCOUNT")
+  let activeCompany:components["schemas"]["Company"] | undefined = undefined;
   const res = await apiClient({ request }).GET("/account");
   const sessionData = session.data as SessionData
+  if(companyUuid != undefined && res.data != undefined){
+    activeCompany = res.data.user.Companies.find(item=>item.Uuid == companyUuid)
+  }
   return json({
     data: res.data,
-    session:sessionData
+    session:sessionData,
+    activeCompany:activeCompany
   });
 };
 
 export default function Home() {
   const [isHydrated, setIsHydrated] = useState(!isHydrating);
-  const { data,session } = useLoaderData<typeof loader>();
+  const { data,session,activeCompany } = useLoaderData<typeof loader>();
 
   useEffect(() => {
     isHydrating = false;
     setIsHydrated(true);
   }, []);
 
-  if (isHydrated) {
-    return (
-      <div>
+  return (
+    <ClientOnly fallback={<FallBack />}>
+      {()=>{
+        return (
+
+          <div>
         <HomeLayout
           globalState={{
             user: data?.user,
             appConfig: data?.appConfig,
-            session:session
+            session:session,
+            activeCompany:activeCompany
           }}
-        >
+          >
           <Outlet
             context={
               {
                 user: data?.user,
                 appConfig: data?.appConfig,
-                session:session
+                session:session,
+                activeCompany:activeCompany
               } as GlobalState
             }
-          />
+            />
         </HomeLayout>
       </div>
-    );
-  } else {
-    return <FallBack />;
-  }
+          )
+          }}
+    </ClientOnly>
+  )
+
+
 }

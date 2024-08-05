@@ -108,6 +108,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create item */
+        post: operations["create-item"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item-group": {
         parameters: {
             query?: never;
@@ -234,6 +251,16 @@ export interface components {
             Credentials: string;
             Plugin: string;
         };
+        CreateItemRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            item: components["schemas"]["ItemDto"];
+            itemPrice?: components["schemas"]["ItemPriceDto"];
+            plugins?: components["schemas"]["CompanyPlugins"][];
+        };
         DeletedAt: {
             /** Format: date-time */
             Time: string;
@@ -285,6 +312,13 @@ export interface components {
             /** @description Greeting message */
             message: string;
         };
+        ItemDto: {
+            code: string;
+            /** Format: int64 */
+            itemGroupId: number;
+            name: string;
+            uom: components["schemas"]["UnitOfMeasureTranslation"];
+        };
         ItemGroup: {
             Company: components["schemas"]["Company"];
             /** Format: int64 */
@@ -316,6 +350,10 @@ export interface components {
             ItemID: number;
             /** Format: int64 */
             ItemPriceListID: number;
+            /** Format: int64 */
+            ItemQuantity: number;
+            /** Format: int64 */
+            Rate: number;
             /** Format: date-time */
             UpdatedAt: string;
             Uuid: string;
@@ -323,6 +361,20 @@ export interface components {
             ValidFrom: string;
             /** Format: date-time */
             ValidUpTo: string | null;
+        };
+        ItemPriceDto: {
+            /** Format: int64 */
+            itemId?: number;
+            /** Format: int64 */
+            itemQuantity: number;
+            /** Format: int64 */
+            priceListId: number;
+            /** Format: int64 */
+            rate: number;
+            /** Format: date-time */
+            validFrom?: string;
+            /** Format: date-time */
+            validUpTo?: string | null;
         };
         ItemPriceList: {
             /** Format: int64 */
@@ -772,6 +824,42 @@ export interface operations {
         responses: {
             /** @description OK */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-item": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateItemRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };

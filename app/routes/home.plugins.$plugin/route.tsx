@@ -64,9 +64,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           locationId,
           apiVersion,
         });
+        
         const res = await apiClient({ request }).PUT("/plugin/{plugin}", {
           body: {
-            credentials: JSON.stringify(credentials),
+            credentials: credentials,
           },
           params: {
             path: {

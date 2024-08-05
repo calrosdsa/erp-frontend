@@ -1,7 +1,5 @@
 import React, { Suspense } from "react";
-import { CssVarsProvider, useColorScheme } from "@mui/joy/styles";
 import GlobalStyles from "@mui/joy/GlobalStyles";
-import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Checkbox from "@mui/joy/Checkbox";
@@ -28,8 +26,7 @@ const SignInClient = ({}: {}) => {
   let { t } = useTranslation();
 
   return (
-    <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
-      <CssBaseline />
+    <>
       <GlobalStyles
         styles={{
           ":root": {
@@ -194,7 +191,7 @@ const SignInClient = ({}: {}) => {
           </Box>
         </Box>
       </Box>
-    </CssVarsProvider>
+    </>
   );
 };
 

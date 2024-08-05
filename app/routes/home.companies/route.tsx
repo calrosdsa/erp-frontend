@@ -32,7 +32,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       if (res.data != undefined) {
         pagination_result = res.data.pagination_result;
       }
-      console.log(res.data)
       break;
     }
   }

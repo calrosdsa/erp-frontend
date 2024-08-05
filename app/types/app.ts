@@ -11,6 +11,7 @@ export type CountrySelectItem = {
 export type GlobalState = {
     appConfig?: components["schemas"]["AppConfigStruct"];
     user?: components["schemas"]["User"];
+    activeCompany?: components["schemas"]["Company"];
     session:SessionData;
 }
 

@@ -27,7 +27,8 @@
     "currency":"Currency",
     "buying":"Buying",
     "selling":"Selling",
-    "rate":"Rate"
+    "rate":"Rate",
+    "itemQuantity":"Item Quantity"
   },
 
   "sidebar":{

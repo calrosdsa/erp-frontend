@@ -4,6 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { Outlet } from "@remix-run/react";
 import { useEffect, useState } from "react";
+import { ClientOnly } from "remix-utils/client-only";
 import FallBack from "~/components/layout/Fallback";
 
 
@@ -20,14 +21,17 @@ export default function AuthLayout(){
     setIsHydrated(true);
   }, []);
 
-  if(isHydrated){
+  return (
+    <ClientOnly fallback={<FallBack/>}>
+      {()=>{
+        return (
+          <div>
+          <h1>HELLO</h1>
+           </div>
+        )
+      }}
 
-    return (
-      <div>
-       <h1>HELLO</h1>
-        </div>
-    )
-  }else{
-    return <FallBack/>
-  }
+    </ClientOnly>
+  )
+
 }

@@ -23,7 +23,7 @@ export default function SquarePlugin({companyPlugin}:{
     try{
       console.log(c)
       // const cleanedString = c.slice(1, -1);
-      const parse = JSON.parse(JSON.parse(c)) as SquareCredentials
+      const parse = JSON.parse(c) as SquareCredentials
       console.log(parse)
       setCredentias(parse)
     }catch(err){

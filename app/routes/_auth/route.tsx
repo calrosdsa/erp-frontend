@@ -1,7 +1,4 @@
-import { Box } from "@mui/joy";
-import { CssVarsProvider } from "@mui/joy/styles/CssVarsProvider";
-import CssBaseline from "@mui/material/CssBaseline";
-import GlobalStyles from "@mui/material/GlobalStyles";
+
 import { Outlet } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import FallBack from "~/components/layout/Fallback";

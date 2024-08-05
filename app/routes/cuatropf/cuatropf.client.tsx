@@ -1,5 +1,5 @@
 import React, { FormEvent, Suspense, useEffect, useRef, useState } from "react";
-import { CssVarsProvider, useColorScheme } from "@mui/joy/styles";
+import { useColorScheme } from "@mui/joy/styles";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
@@ -27,6 +27,7 @@ import { Grid } from "@mui/joy";
 import CountrySelect from "~/components/shared/select/CountrySelect";
 import LanguageSelect from "~/components/shared/select/LanguageSelect";
 import { CountrySelectItem } from "~/types/app";
+
 const CuatropfClient = ({}: {}) => {
   let scriptLoaded = false
   const fetcher = useFetcher<typeof action>();
@@ -220,7 +221,6 @@ const CuatropfClient = ({}: {}) => {
           // document.addEventListener("DOMContentLoaded", eventCardListener);
         }}
       ></script>
-      <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
         <CssBaseline />
         <GlobalStyles
           styles={{
@@ -418,7 +418,7 @@ const CuatropfClient = ({}: {}) => {
             },
           })}
         />
-      </CssVarsProvider>
+     
     </>
   );
 };

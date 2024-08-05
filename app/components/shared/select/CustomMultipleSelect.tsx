@@ -30,8 +30,8 @@ export default function CustomMultipleSelect<T extends object,K extends keyof T>
     
       renderValue={(selected) => (
         <Box sx={{ display: 'flex', gap: '0.25rem' }}>
-          {selected.map((selectedOption) => (
-            <Chip variant="soft" color="primary">
+          {selected.map((selectedOption,idx) => (
+            <Chip variant="soft" color="primary" key={idx}>
               {selectedOption.label}
             </Chip>
           ))}

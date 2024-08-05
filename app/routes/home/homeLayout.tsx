@@ -61,7 +61,7 @@ export default function HomeLayout({
     getRoutes();
   }, [location.pathname]);
   return (
-    <CssVarsProvider disableTransitionOnChange>
+    <>
       <CssBaseline />
       {openSessionDefaults &&
       <SessionDefaultDrawer
@@ -165,6 +165,6 @@ export default function HomeLayout({
             <OrderList /> */}
         </Box>
       </Box>
-    </CssVarsProvider>
+    </>
   );
 }

@@ -30,17 +30,7 @@ import CustomFormInput from "~/components/shared/input/CustomFormInput";
 export default function CreateItemClient() {
   const fetcher = useFetcher();
   const { t } = useTranslation();
-  // const state = useOutletContext<GlobalState>();
-  const companyfetcherDebounce = useDebounceFetcher<
-    | {
-        pagination_result: {
-          results: components["schemas"]["Company"][];
-          total: number;
-        };
-      }
-    | undefined
-  >();
-
+  const state = useOutletContext<GlobalState>();
   const fetcherDebounce = useDebounceFetcher<
     | {
         paginationResult: {
@@ -77,23 +67,52 @@ export default function CreateItemClient() {
   const [selectedUom, setSelectedUom] = useState<
     components["schemas"]["UnitOfMeasureTranslation"] | null
   >(null);
-  const [selectedCompany, setSelectedCompany] = useState<
-    components["schemas"]["Company"] | null
-  >(null);
+ 
   const [selectedPlugins, setSelectedPlugins] = useState<
     components["schemas"]["CompanyPlugins"][]
   >([]);
 
   const [formData, setFormData] = useState({
-    name: "",
-    code: "",
-    rate: "",
+    name: "Item",
+    code: "item",
+    rate: "11.50",
+    itemQuantity:"1",
     itemGroup: selectedItemGroup,
-    company: selectedCompany,
     plugins: selectedPlugins,
   });
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async(e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if(selectedUom == null) {
+      return
+    }
+    if(selectedItemGroup == null){
+      return 
+    }
+   
+    if(selectedPriceList == null){
+      return
+    }
+    const body:components["schemas"]["CreateItemRequestBody"] ={
+      item:{
+        code:formData.code,
+        name:formData.name,
+        itemGroupId:selectedItemGroup.ID,
+        uom:selectedUom
+      },
+      plugins:selectedPlugins,
+      itemPrice:{
+        priceListId:selectedPriceList.ID,
+        rate:Number(formData.rate),
+        itemQuantity:Number(formData.itemQuantity),
+      },
+    }
+    fetcher.submit(body,{
+      action:"/home/stock/items/create_item",
+      method:"POST",
+      encType:"application/json"
+    }
+    )
     try {
     } catch (err) {}
   };
@@ -112,7 +131,8 @@ export default function CreateItemClient() {
 
   return (
     <div>
-      <fetcher.Form method="post" action="/home/stock/items/create_item">
+      {/* <fetcher.Form method="post" action="/home/stock/items/create_item" onSubmit={onSubmit}> */}
+      <fetcher.Form onSubmit={onSubmit}>
         <Grid container spacing={2} columns={6} sx={{ flexGrow: 1 }}>
           <Grid xs={6}>
             <Typography level="title-lg">{t("itemInfo")}</Typography>
@@ -230,46 +250,6 @@ export default function CreateItemClient() {
             </FormControl>
           </Grid>
 
-          <Grid xs={6} sm={3} lg={2}>
-            <FormControl required>
-              <FormLabel>{t("form.companyName")}</FormLabel>
-
-              <CustomAutoComplete
-                selected={selectedCompany}
-                setSelected={(e) => {
-                  setSelectedCompany(e);
-                }}
-                onChangeInputValue={(e) => {
-                  companyfetcherDebounce.submit(
-                    { query: e, action: "get" },
-                    {
-                      debounceTimeout: 600,
-                      method: "POST",
-                      action: `/home/companies`,
-                      encType: "application/json",
-                    }
-                  );
-                }}
-                onFocus={() => {
-                  companyfetcherDebounce.submit(
-                    { query: "", action: "get" },
-                    {
-                      method: "POST",
-                      action: `/home/companies`,
-                      encType: "application/json",
-                    }
-                  );
-                }}
-                data={
-                  companyfetcherDebounce.data != undefined
-                    ? companyfetcherDebounce.data.pagination_result.results
-                    : []
-                }
-                name="Name"
-              />
-            </FormControl>
-          </Grid>
-
           <Grid xs={6}>
             <Typography level="title-lg">
               {t("itemPrice")} ({t("form.optional")})
@@ -351,17 +331,37 @@ export default function CreateItemClient() {
                 required: true,
               }}
               inputProps={{
-                type: "text",
+                type: "number",
                 name: "priceList",
                 value: formData.rate,
                 onChange: (e) => {
                   setFormData({
                     ...formData,
-                    rate: e.target.value,
+                    rate:e.target.value,
                   });
                 },
               }}
               label={t("form.rate")}
+            />
+          </Grid>
+
+          <Grid xs={6} sm={3} lg={2}>
+            <CustomFormInput
+              formControlProps={{
+                required: true,
+              }}
+              inputProps={{
+                type: "number",
+                name: "priceList",
+                value: formData.itemQuantity,
+                onChange: (e) => {
+                  setFormData({
+                    ...formData,
+                    itemQuantity: e.target.value,
+                  });
+                },
+              }}
+              label={t("form.itemQuantity")}
             />
           </Grid>
 
@@ -378,14 +378,14 @@ export default function CreateItemClient() {
                 setSelected={(e) => {
                   setSelectedPlugins(e);
                 }}
-                data={selectedCompany?.CompanyPlugins || []}
+                data={state?.activeCompany?.CompanyPlugins || []}
               />
             </FormControl>
           </Grid>
 
           <Grid xs={6} sx={{ marginTop: 2 }}>
             {/* <Typography level="title-lg">{t("integrations")}</Typography> */}
-            <Button type="submit">{t("form.submit")}</Button>
+            <Button loading={fetcher.state == "loading"} type="submit">{t("form.submit")}</Button>
           </Grid>
         </Grid>
       </fetcher.Form>
