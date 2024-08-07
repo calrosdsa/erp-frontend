@@ -1,0 +1,119 @@
+ <ChakraProvider theme={theme}>
+      <Flex
+        width={{ base: "100%", md: "50vw" }}
+        transition="width var(--Transition-duration)"
+        transitionDelay="calc(var(--Transition-duration) + 0.1s)"
+        position="relative"
+        zIndex={1}
+        justifyContent="flex-end"
+        backdropFilter="blur(12px)"
+        bg="rgba(255, 255, 255, 0.2)"
+        _dark={{ bg: "rgba(19, 19, 24, 0.4)" }}
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          minHeight="100vh"
+          width="100%"
+          px={2}
+        >
+          <Flex
+            as="header"
+            py={3}
+            justifyContent="space-between"
+          >
+            <Flex gap={2} alignItems="center">
+              <IconButton aria-label="badge" icon={<BadgeRoundedIcon />} />
+              <Heading size="lg">Cuatropf</Heading>
+            </Flex>
+            <Flex gap={2} alignItems="center">
+              <Select defaultValue={i18n.language}>
+                {/* Language Options */}
+              </Select>
+              {/* Add ColorSchemeToggle component here */}
+            </Flex>
+          </Flex>
+          <Box
+            as="main"
+            my="auto"
+            py={2}
+            pb={5}
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            maxWidth="550px"
+            mx="auto"
+            borderRadius="sm"
+          >
+            <Stack gap={4} mt={2}>
+              <Flex gap={2} alignItems="center">
+                <Heading size="lg">{t("form.clientDetails")}</Heading>
+              </Flex>
+              <form id="submit-form" method="post">
+                <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+                  <FormControl isRequired>
+                    <FormLabel>{t("form.givenName")}</FormLabel>
+                    <Input type="text" name="givenName" />
+                  </FormControl>
+                  <FormControl isRequired>
+                    <FormLabel>{t("form.familyName")}</FormLabel>
+                    <Input type="text" name="familyName" />
+                  </FormControl>
+                  <FormControl isRequired>
+                    <FormLabel>{t("form.companyName")}</FormLabel>
+                    <Input type="text" name="companyName" />
+                  </FormControl>
+                  <FormControl isRequired>
+                    <FormLabel>{t("form.email")}</FormLabel>
+                    <Input type="email" name="email" />
+                  </FormControl>
+                  <FormControl isRequired>
+                    <FormLabel>{t("form.country")}</FormLabel>
+                    <CountrySelect setCountry={setCountry} />
+                  </FormControl>
+                  <FormControl isRequired>
+                    <FormLabel>{t("form.phoneNumber")}</FormLabel>
+                    <Input
+                      type="text"
+                      name="phoneNumber"
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      value={
+                        country ? `+${country.phone} ${phoneNumber}` : phoneNumber
+                      }
+                    />
+                  </FormControl>
+                </Grid>
+                {/* Display errors if any */}
+                <Stack gap={4} mt={2}>
+                  <div id="card-container" className="h-14"></div>
+                  <Button id="card-button" type="submit">
+                    Pay $1.00
+                  </Button>
+                  <div id="payment-status-container"></div>
+                </Stack>
+              </form>
+            </Stack>
+          </Box>
+          <Box as="footer" py={3}>
+            <Text textAlign="center">© Cuatropf {new Date().getFullYear()}</Text>
+          </Box>
+        </Box>
+      </Flex>
+      <Box
+        height="100%"
+        position="fixed"
+        right={0}
+        top={0}
+        bottom={0}
+        left={{ base: 0, md: "50vw" }}
+        transition="background-image var(--Transition-duration), left var(--Transition-duration) !important"
+        transitionDelay="calc(var(--Transition-duration) + 0.1s)"
+        bg="url(https://images.unsplash.com/photo-1527181152855-fc03fc7949c8?auto=format&w=1000&dpr=2)"
+        bgSize="cover"
+        bgPosition="center"
+        bgRepeat="no-repeat"
+        _dark={{
+          bg: "url(https://images.unsplash.com/photo-1572072393749-3ca9c8ea0831?auto=format&w=1000&dpr=2)",
+        }}
+      />
+    </ChakraProvider>
