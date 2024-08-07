@@ -55,6 +55,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cuatropf/subscription/{companyUuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cuatropf Subscription */
+        post: operations["cuatropf-subscription"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/greeting/{name}": {
         parameters: {
             query?: never;
@@ -101,6 +118,40 @@ export interface paths {
         get: operations["get-plugin"];
         /** Update plugin credentials */
         put: operations["update-plugin-credentials"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/square/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get square catalog */
+        get: operations["get-catalog-square"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/square/{uuid}/{object_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get square object */
+        get: operations["get-object-square"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -225,6 +276,11 @@ export interface components {
             readonly $schema?: string;
             company_plugin: components["schemas"]["CompanyPlugins"];
         };
+        Amount: {
+            /** Format: int64 */
+            amount: number;
+            currency: string;
+        };
         AppConfigStruct: {
             plugins: components["schemas"]["PluginApp"][];
         };
@@ -247,9 +303,14 @@ export interface components {
         };
         CompanyPlugins: {
             /** Format: int64 */
-            CompanyID: number;
-            Credentials: string;
+            CompanyID?: number;
+            Credentials?: string;
             Plugin: string;
+        };
+        Country: {
+            code: string;
+            label: string;
+            phone: string;
         };
         CreateItemRequestBody: {
             /**
@@ -259,6 +320,21 @@ export interface components {
             readonly $schema?: string;
             item: components["schemas"]["ItemDto"];
             itemPrice?: components["schemas"]["ItemPriceDto"];
+            plugins?: components["schemas"]["CompanyPlugins"][];
+        };
+        CuatropfSubscriptionRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            companyName: string;
+            country: components["schemas"]["Country"];
+            email: string;
+            familyName: string;
+            givenName: string;
+            metadata: string;
+            phoneNumber: string;
             plugins?: components["schemas"]["CompanyPlugins"][];
         };
         DeletedAt: {
@@ -312,6 +388,19 @@ export interface components {
             /** @description Greeting message */
             message: string;
         };
+        Item: {
+            /** Format: date-time */
+            created_at: string;
+            id: string;
+            is_deleted: boolean;
+            present_at_all_locations: boolean;
+            subscription_plan_variation_data: components["schemas"]["SubscriptionPlanVariationDataStruct"];
+            type: string;
+            /** Format: date-time */
+            updated_at: string;
+            /** Format: int64 */
+            version: number;
+        };
         ItemDto: {
             code: string;
             /** Format: int64 */
@@ -348,6 +437,7 @@ export interface components {
             ID: number;
             /** Format: int64 */
             ItemID: number;
+            ItemPriceList: components["schemas"]["ItemPriceList"];
             /** Format: int64 */
             ItemPriceListID: number;
             /** Format: int64 */
@@ -369,7 +459,7 @@ export interface components {
             itemQuantity: number;
             /** Format: int64 */
             priceListId: number;
-            /** Format: int64 */
+            /** Format: double */
             rate: number;
             /** Format: date-time */
             validFrom?: string;
@@ -436,6 +526,20 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        Phase: {
+            cadence: string;
+            /** Format: int64 */
+            ordinal: number;
+            /** Format: int64 */
+            periods: number;
+            pricing: components["schemas"]["PhasePricingStruct"];
+            uid: string;
+        };
+        PhasePricingStruct: {
+            price: components["schemas"]["Amount"];
+            price_money: components["schemas"]["Amount"];
+            type: string;
+        };
         PluginApp: {
             Name: string;
         };
@@ -466,6 +570,38 @@ export interface components {
             };
             message: string;
         };
+        RetrieveCatalogRequest: {
+            object: components["schemas"]["RetrieveCatalogRequestObjectStruct"];
+        };
+        RetrieveCatalogRequestObjectStruct: {
+            /** Format: date-time */
+            created_at: string;
+            id: string;
+            is_deleted: boolean;
+            present_at_all_locations: boolean;
+            subscription_plan_data: components["schemas"]["SubscriptionPlanDataStruct"];
+            type: string;
+            /** Format: date-time */
+            updated_at: string;
+            /** Format: int64 */
+            version: number;
+        };
+        RetrieveObjectRequest: {
+            object: components["schemas"]["RetrieveObjectRequestObjectStruct"];
+        };
+        RetrieveObjectRequestObjectStruct: {
+            /** Format: date-time */
+            created_at: string;
+            id: string;
+            is_deleted: boolean;
+            present_at_all_locations: boolean;
+            subscription_plan_variation_data: components["schemas"]["SubscriptionPlanVariationDataStruct"];
+            type: string;
+            /** Format: date-time */
+            updated_at: string;
+            /** Format: int64 */
+            version: number;
+        };
         SignInRequestBody: {
             /**
              * Format: uri
@@ -486,6 +622,32 @@ export interface components {
             /** @description Access token of the user */
             access_token: string;
         };
+        SquareCatalogResponseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            catalog: components["schemas"]["RetrieveCatalogRequest"];
+        };
+        SquareObjectResponseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            plan_variation: components["schemas"]["RetrieveObjectRequest"];
+        };
+        SubscriptionPlanDataStruct: {
+            all_items: boolean;
+            name: string;
+            subscription_plan_variations: components["schemas"]["Item"][];
+        };
+        SubscriptionPlanVariationDataStruct: {
+            name: string;
+            phases: components["schemas"]["Phase"][];
+            subscription_plan_id: string;
+        };
         UOMsResponseBody: {
             /**
              * Format: uri
@@ -500,7 +662,7 @@ export interface components {
             CompanyID: number | null;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             Enabled: boolean;
             /** Format: int64 */
             ID: number;
@@ -512,7 +674,7 @@ export interface components {
             BaseId: number;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
             LanguageCode: string;
@@ -657,6 +819,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "cuatropf-subscription": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                companyUuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CuatropfSubscriptionRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -829,6 +1026,69 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-catalog-square": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                uuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SquareCatalogResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-object-square": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                object_id: string;
+                uuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SquareObjectResponseBody"];
                 };
             };
             /** @description Error */

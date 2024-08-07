@@ -19,8 +19,11 @@ export default function SquarePlugin({companyPlugin}:{
   const fetcher = useFetcher()
   const [credentials,setCredentias] = useState<SquareCredentials | null>(null)
 
-  const parseCredentials = (c:string) =>{
+  const parseCredentials = (c:string | undefined) =>{
     try{
+      if(c == undefined) {
+        return 
+      }
       console.log(c)
       // const cleanedString = c.slice(1, -1);
       const parse = JSON.parse(c) as SquareCredentials

@@ -11,13 +11,13 @@
   "form": {
     "name":"Name",
     "code":"Code",
-    "familyName": "Family Name",
-    "givenName": "Given Name",
+    "familyName": "Last Name",
+    "givenName": "First Name",
     "phoneNumber": "Phone Number",
     "email": "Email",
     "companyName": "Company Name",
     "clientDetails": "Complete Your Personal Information",
-    "Pais": "Country",
+    "country": "Country",
     "item-group": "Item Group",    
     "submit":"Submit",
     "save":"Save",
@@ -28,7 +28,13 @@
     "buying":"Buying",
     "selling":"Selling",
     "rate":"Rate",
-    "itemQuantity":"Item Quantity"
+    "itemQuantity":"Item Quantity",
+    "pay":"Pay",
+    "orderTotal":"Order Total",
+    "total":"Total",
+    "totalTax":"Total Taxes",
+
+    "orderConfirmation":"Order Confirmation"
   },
 
   "sidebar":{

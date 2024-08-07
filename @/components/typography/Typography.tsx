@@ -1,15 +1,17 @@
+import { cn } from "@/lib/utils";
 import { ReactNode } from "react"
 
 export default function Typography({
-    children,fontSize,textAlign,textColor
+    children,fontSize,textAlign,textColor,className
 }:{
     children:ReactNode
     fontSize:number
     textAlign?:"center" | "end" | "justify" | "left" | "match-parent" | "right" | "start";
     textColor?:string
+    className?:string
 }){
     return (
-        <div className="font-semibold"
+        <div className={cn("font-semibold",className)}
         style={{
             fontSize:fontSize,
             textAlign:textAlign,

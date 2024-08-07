@@ -9,7 +9,7 @@ import {
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
-import "./tailwind.css";
+import "./global.css";
 import '@fontsource/inter';
 import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { commitSession, getSession } from "./sessions";
