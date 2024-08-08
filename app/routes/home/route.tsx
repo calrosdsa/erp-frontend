@@ -9,11 +9,13 @@ import {
   LoaderFunctionArgs,
   redirect,
 } from "@remix-run/node";
-import { destroySession, getSession, SessionData } from "~/sessions";
+import { commitSession, destroySession, getSession, SessionData } from "~/sessions";
 import apiClient from "~/apiclient";
-import { GlobalState } from "~/types/app";
+import { GlobalState, UserData } from "~/types/app";
 import { components } from "~/sdk";
 import { ClientOnly } from "remix-utils/client-only";
+import { Role } from "~/types/enums";
+import { administratorToUserData, clientToUserData } from "~/util/convertor/entityToUserData";
 
 let isHydrating = true;
 
@@ -43,7 +45,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return redirect("/signin");
   }
 
-  const companyUuid = session.get("companyUuid")
+  const companyUuid = session.get("companyUuid");
+  const role = session.get("role");
 
   // if (!session.has("companyID")) {
   //   console.log(request.url);
@@ -52,59 +55,86 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   //   }
   // }
 
-  console.log("LOADER ACCOUNT")
-  let activeCompany:components["schemas"]["Company"] | undefined = undefined;
+  console.log("LOADER ACCOUNT");
+  console.log("SESSION ROLE", role);
+  let activeCompany: components["schemas"]["Company"] | undefined = undefined;
+  let userData: UserData | undefined = undefined;
   const res = await apiClient({ request }).GET("/account");
-  const sessionData = session.data as SessionData
-  if(companyUuid != undefined && res.data != undefined){
-    activeCompany = res.data.user.Companies.find(item=>item.Uuid == companyUuid)
+  const sessionData = session.data as SessionData;
+  if (companyUuid != undefined && res.data != undefined) {
+    activeCompany = res.data.user.Companies.find(
+      (item) => item.Uuid == companyUuid
+    );
+  }
+
+  if (res.data != undefined) {
+    if (role != undefined) {
+      switch (role) {
+        case Role.ROLE_CLIENT:{
+          if (res.data?.user.Clients.length > 0) {
+            userData = clientToUserData(res.data?.user.Clients[0]);
+            const currenCompany= res.data.user.Companies.find(item =>item.ID == userData?.CompanyID)
+            if(currenCompany != undefined){
+              activeCompany = currenCompany
+              session.set("companyUuid",activeCompany.Uuid)
+              
+              console.log("CURRENCT COMPANY",activeCompany)
+            }
+          }
+          // session.set("companyUuid",)
+          break
+        }
+        case Role.ROLE_ADMIN:{
+          userData = administratorToUserData(res.data.user.Administrator)
+          break 
+        }
+      }
+    }
   }
   return json({
     data: res.data,
-    session:sessionData,
-    activeCompany:activeCompany
+    session: sessionData,
+    activeCompany: activeCompany,
+    userData:userData
+  },{
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
   });
 };
 
 export default function Home() {
-  const [isHydrated, setIsHydrated] = useState(!isHydrating);
-  const { data,session,activeCompany } = useLoaderData<typeof loader>();
-
-  useEffect(() => {
-    isHydrating = false;
-    setIsHydrated(true);
-  }, []);
+  const { data, session, activeCompany,userData } = useLoaderData<typeof loader>();
 
   return (
     <ClientOnly fallback={<FallBack />}>
-      {()=>{
+      {() => {
         return (
-
           <div>
-        <HomeLayout
-          globalState={{
-            user: data?.user,
-            appConfig: data?.appConfig,
-            session:session,
-            activeCompany:activeCompany
-          }}
-          >
-          <Outlet
-            context={
-              {
+            <HomeLayout
+              globalState={{
                 user: data?.user,
                 appConfig: data?.appConfig,
-                session:session,
-                activeCompany:activeCompany
-              } as GlobalState
-            }
-            />
-        </HomeLayout>
-      </div>
-          )
-          }}
+                session: session,
+                activeCompany: activeCompany,
+                userData:userData
+              }}
+            >
+              <Outlet
+                context={
+                  {
+                    user: data?.user,
+                    appConfig: data?.appConfig,
+                    session: session,
+                    activeCompany: activeCompany,
+                    userData:userData
+                  } as GlobalState
+                }
+              />
+            </HomeLayout>
+          </div>
+        );
+      }}
     </ClientOnly>
-  )
-
-
+  );
 }

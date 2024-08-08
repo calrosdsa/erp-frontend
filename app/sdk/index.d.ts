@@ -276,6 +276,21 @@ export interface components {
             readonly $schema?: string;
             company_plugin: components["schemas"]["CompanyPlugins"];
         };
+        Administrator: {
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            EmailAddress: string;
+            FirstName: string;
+            /** Format: int64 */
+            ID: number;
+            LastName: string;
+            /** Format: date-time */
+            UpdatedAt: string;
+            /** Format: int64 */
+            UserID: number;
+            Uuid: string;
+        };
         Amount: {
             /** Format: int64 */
             amount: number;
@@ -283,6 +298,27 @@ export interface components {
         };
         AppConfigStruct: {
             plugins: components["schemas"]["PluginApp"][];
+        };
+        Client: {
+            Company: components["schemas"]["Company"];
+            /** Format: int64 */
+            CompanyID: number;
+            CountryCode: string;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            EmailAddress: string;
+            FamilyName: string;
+            GivenName: string;
+            /** Format: int64 */
+            ID: number;
+            OrganizationName: string;
+            PhoneNumber: string;
+            /** Format: date-time */
+            UpdatedAt: string;
+            /** Format: int64 */
+            UserID: number;
+            Uuid: string;
         };
         Company: {
             CompanyPlugins: components["schemas"]["CompanyPlugins"][];
@@ -602,6 +638,19 @@ export interface components {
             /** Format: int64 */
             version: number;
         };
+        Role: {
+            Code: string;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            Description: string;
+            /** Format: int64 */
+            ID: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Users: components["schemas"]["User"][];
+            Uuid: string;
+        };
         SignInRequestBody: {
             /**
              * Format: uri
@@ -621,6 +670,7 @@ export interface components {
             readonly $schema?: string;
             /** @description Access token of the user */
             access_token: string;
+            user: components["schemas"]["User"];
         };
         SquareCatalogResponseBody: {
             /**
@@ -708,6 +758,8 @@ export interface components {
             itemPriceList: components["schemas"]["ItemPriceList"];
         };
         User: {
+            Administrator: components["schemas"]["Administrator"];
+            Clients: components["schemas"]["Client"][];
             Companies: components["schemas"]["Company"][];
             /** Format: date-time */
             CreatedAt: string;
@@ -716,8 +768,7 @@ export interface components {
             ID: number;
             Identifier: string;
             LastLogin: components["schemas"]["NullTime"];
-            /** Format: int64 */
-            RoleID: number;
+            Roles: components["schemas"]["Role"][];
             /** Format: date-time */
             UpdatedAt: string;
             Uuid: string;

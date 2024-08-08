@@ -255,36 +255,36 @@ export default function FormCuatropf() {
             className="space-y-8"
           >
             <div className="grid sm:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="givenName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.givenName")}</FormLabel>
-                    <FormControl>
-                      <Input {...field} name="givenName" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="givenName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("form.givenName")}</FormLabel>
+                      <FormControl>
+                        <Input {...field} name="givenName" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="familyName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.familyName")}</FormLabel>
-                    <FormControl>
-                      <Input {...field} name="familyName" />
-                    </FormControl>
-                    {/* <FormDescription>
-                      This is your public display name.
-                    </FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="familyName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("form.familyName")}</FormLabel>
+                      <FormControl>
+                        <Input {...field} name="familyName" />
+                      </FormControl>
+                      {/* <FormDescription>
+                        This is your public display name.
+                      </FormDescription> */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
 
               <FormField

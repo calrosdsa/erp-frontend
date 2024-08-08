@@ -7,6 +7,7 @@ import Typography, {
 import { useTranslation } from "react-i18next";
 import Divider from "@/components/custom/Divider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 
     
@@ -74,7 +75,7 @@ export default function FormCuatropfDetail() {
             </CardContent>
           </Card>
         )}
-        <Divider />
+       <Separator/>
 
         {planVariation.phases.length > 0 && (
           <div className="flex space-x-2 justify-between">

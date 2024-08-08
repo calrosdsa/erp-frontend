@@ -31,7 +31,7 @@ export const SessionDefault = ({
       method={"post"}
       action={"/api"}
       className="grid gap-y-3"
-      onSubmit={onSubmit}
+      // onSubmit={onSubmit}
     >
       <input type="hidden" name="action" value={"update-session-defaults"} />
       <FormControl>

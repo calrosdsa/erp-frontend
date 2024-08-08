@@ -5,6 +5,7 @@ export type SessionData = {
   access_token: string;
   locale:string
   companyUuid:string
+  role:string
 };
 
 type SessionFlashData = {

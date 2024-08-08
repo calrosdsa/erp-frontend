@@ -35,6 +35,7 @@ import { closeSidebar } from "../../util";
 import { Form, Link, useLocation } from "@remix-run/react";
 import { useSSR, useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
+import { fullName } from "~/util/convertor/convertor";
   
 function Toggler({
   defaultExpanded = false,
@@ -424,10 +425,13 @@ export default function Sidebar({
           size="sm"
           src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
         />
+
+        {globalState.userData != undefined &&
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
+          <Typography level="title-sm">{fullName(globalState.userData.FirstName,globalState.userData.LastName)}</Typography>
+          <Typography level="body-xs">{globalState.userData.Email}</Typography>
         </Box>
+        }
         <Form action="/home" method="post">
           <input type="hidden" value="signout" name="action" />
           <IconButton size="sm" variant="plain" color="neutral" type="submit">

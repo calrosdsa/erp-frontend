@@ -13,6 +13,17 @@ export type GlobalState = {
     user?: components["schemas"]["User"];
     activeCompany?: components["schemas"]["Company"];
     session:SessionData;
+    userData?:UserData  
+}
+
+export type UserData = {
+    FirstName:string
+    LastName:string
+    Email:string
+    ID:number
+    Uuid:string
+    Image?:string
+    CompanyID?:number
 }
 
 // export type GlobalState = {

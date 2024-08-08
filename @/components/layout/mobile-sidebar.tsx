@@ -1,0 +1,34 @@
+import { useState, useEffect } from "react";
+import { MenuIcon } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { SideNav } from "@/components/layout/side-nav";
+import { NavItems } from "../constant/side-nav";
+import { GlobalState } from "~/types/app";
+
+export const MobileSidebar = ({data}:{
+    data:GlobalState    
+}) => {
+    const [open, setOpen] = useState(false);
+
+    
+
+    return (
+        <>
+            <Sheet open={open} onOpenChange={setOpen}>
+                <SheetTrigger asChild>
+                    <div className="flex items-center justify-center gap-2">
+                        <MenuIcon />
+                        <h1 className="text-lg font-semibold">T3 app template</h1>
+                    </div>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-72">
+                    <div className="px-1 py-6 pt-16">
+                        <SideNav items={NavItems({
+                            session:data.session
+                        })} setOpen={setOpen} />
+                    </div>
+                </SheetContent>
+            </Sheet>
+        </>
+    );
+};

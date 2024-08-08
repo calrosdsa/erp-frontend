@@ -28,6 +28,9 @@ export const meta: MetaFunction = () => {
     })
     if(res.response.ok && res.data != undefined){
       session.set("access_token",res.data.access_token)
+      if(res.data.user.Roles.length == 1){
+        session.set("role",res.data.user.Roles[0]?.Code as string)
+      }
       return redirect("/home", {
         headers: {
           "Set-Cookie": await commitSession(session),

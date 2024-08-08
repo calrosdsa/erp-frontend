@@ -7,6 +7,7 @@ import FallBack from "~/components/layout/Fallback";
 import { useEffect, useState } from "react";
 import { ExternalScriptsFunction } from "remix-utils/external-scripts";
 import { components } from "~/sdk";
+import { ClientOnly } from "remix-utils/client-only";
 
 let scripts: ExternalScriptsFunction = () => {
   return [{ src: "https://sandbox.web.squarecdn.com/v1/square.js" }];
@@ -73,24 +74,32 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 };
 
-let isHydrating = true;
+// ?companyUuid=94442fed-cf6f-4255-bc22-e4dffcbdec4e&uuid=7f5f07c6-6a23-476c-a9b7-da761f04626a&objectId=ZKJPOIRI3MXSLRNPTP7GFEKK
+
+// let isHydrating = true;
 export default function Cuatropf() {
-  const [isHydrated, setIsHydrated] = useState(!isHydrating);
+  // const [isHydrated, setIsHydrated] = useState(!isHydrating);
 
-  useEffect(() => {
-    isHydrating = false;
-    setIsHydrated(true);
-  }, []);
+  // useEffect(() => {
+  //   isHydrating = false;
+  //   setIsHydrated(true);
+  // }, []);
 
-  if (isHydrated) {
+  // if (isHydrated) {
     return (
       <>
-        <CuatropfClient />
+      <ClientOnly fallback={<FallBack/>}>
+      {()=>{
+        return (
+          <CuatropfClient />
+        )
+      }}
+      </ClientOnly>
       </>
-    );
-  } else {
-    return <FallBack />;
-  }
+     );
+  // } else {
+  //   return <FallBack />;
+  // }
 
   // }else{
   //   return(

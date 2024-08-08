@@ -27,14 +27,6 @@ const SignInClient = ({}: {}) => {
 
   return (
     <>
-      <GlobalStyles
-        styles={{
-          ":root": {
-            "--Form-maxWidth": "800px",
-            "--Transition-duration": "0.4s", // set to `none` to disable transition
-          },
-        }}
-      />
       <Box
         sx={(theme) => ({
           width: { xs: "100%", md: "50vw" },
@@ -111,37 +103,10 @@ const SignInClient = ({}: {}) => {
                   </Link>
                 </Typography>
               </Stack>
-              {/* <Button
-                variant="soft"
-                color="neutral"
-                fullWidth
-                startDecorator={<GoogleIcon />}
-              >
-                Continue with Google
-              </Button> */}
             </Stack>
-            {/* <Divider
-              sx={(theme) => ({
-                [theme.getColorSchemeSelector("light")]: {
-                  color: { xs: "#FFF", md: "text.tertiary" },
-                },
-              })}
-            >
-              or
-            </Divider> */}
-            <Stack gap={4} sx={{ mt: 2 }}>
-              <fetcher.Form
-                method="post"
-                // onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-                //     event.preventDefault();
-                //     const formData = new FormData(event.currentTarget);
-                //     const data = Object.fromEntries<any>(
-                //       formData.entries(),
-                //     );
-                //     console.log(data)
 
-                // }}
-              >
+            <Stack gap={4} sx={{ mt: 2 }}>
+              <fetcher.Form method="post">
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
                   <Input type="email" name="email" />
@@ -150,15 +115,16 @@ const SignInClient = ({}: {}) => {
                   <FormLabel>Password</FormLabel>
                   <Input type="password" name="password" />
                 </FormControl>
-                {(fetcher.data != undefined && fetcher.data.error != undefined) && (
-                  <Typography
-                    level="body-xs"
-                    textAlign="start"
-                    textColor={"danger.400"}
-                  >
-                    {fetcher.data.error.detail}
-                  </Typography>
-                )}
+                {fetcher.data != undefined &&
+                  fetcher.data.error != undefined && (
+                    <Typography
+                      level="body-xs"
+                      textAlign="start"
+                      textColor={"danger.400"}
+                    >
+                      {fetcher.data.error.detail}
+                    </Typography>
+                  )}
 
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Box
