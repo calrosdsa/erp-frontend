@@ -8,9 +8,7 @@ import { useTranslation } from "react-i18next";
 import Divider from "@/components/custom/Divider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-
-
-    
+import { formatNumber, getTax } from "~/util/convertor/money";
 
 export default function FormCuatropfDetail() {
   const { data } = useLoaderData<typeof loader>();
@@ -18,16 +16,10 @@ export default function FormCuatropfDetail() {
   const planVariation =
     data.plan_variation.object.subscription_plan_variation_data;
 
-  function formatNumber(input: number | undefined): string {
-    if (input == undefined) {
-      return "";
-    }
-    // Convert the input string to a number and divide by 100
-    const number = input / 100;
+  const squareObject =
+    data.square_object;
 
-    // Format the number to 2 decimal places
-    return number.toFixed(2);
-  }
+  
   return (
     <div className="h-full">
       <div className="space-y-8 max-w-xl mx-auto pt-20 px-4">
@@ -55,7 +47,7 @@ export default function FormCuatropfDetail() {
                 </Typography>
                 <Typography fontSize={subtitle}>
                   {planVariation.phases[0]?.pricing.price.currency}{" "}
-                  {formatNumber(planVariation.phases[0]?.pricing.price.amount)}
+                  {formatNumber(squareObject.ItemPrice.Rate)}
                 </Typography>
               </div>
 
@@ -67,15 +59,13 @@ export default function FormCuatropfDetail() {
                   {t("form.totalTax")}
                 </Typography>
                 <Typography fontSize={subtitle}>
-                  {planVariation.phases[0]?.pricing.price.currency}{" "}
-                 12.50
+                  {planVariation.phases[0]?.pricing.price.currency} {getTax(squareObject.ItemPrice.Tax.Value,squareObject.ItemPrice.Rate)}
                 </Typography>
               </div>
-
             </CardContent>
           </Card>
         )}
-       <Separator/>
+        <Separator />
 
         {planVariation.phases.length > 0 && (
           <div className="flex space-x-2 justify-between">

@@ -480,6 +480,9 @@ export interface components {
             ItemQuantity: number;
             /** Format: int64 */
             Rate: number;
+            Tax: components["schemas"]["Tax"];
+            /** Format: int64 */
+            TaxID: number;
             /** Format: date-time */
             UpdatedAt: string;
             Uuid: string;
@@ -497,6 +500,8 @@ export interface components {
             priceListId: number;
             /** Format: double */
             rate: number;
+            /** Format: int64 */
+            taxId: number;
             /** Format: date-time */
             validFrom?: string;
             /** Format: date-time */
@@ -679,6 +684,21 @@ export interface components {
              */
             readonly $schema?: string;
             catalog: components["schemas"]["RetrieveCatalogRequest"];
+            objects: components["schemas"]["SquareObject"][];
+        };
+        SquareObject: {
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ItemGroupId: number;
+            ItemPrice: components["schemas"]["ItemPrice"];
+            /** Format: int64 */
+            ItemPriceID: number;
+            ObjectId: string;
+            ObjectVariationId: string;
+            /** Format: date-time */
+            UpdatedAt: string;
         };
         SquareObjectResponseBody: {
             /**
@@ -687,6 +707,7 @@ export interface components {
              */
             readonly $schema?: string;
             plan_variation: components["schemas"]["RetrieveObjectRequest"];
+            square_object: components["schemas"]["SquareObject"];
         };
         SubscriptionPlanDataStruct: {
             all_items: boolean;
@@ -697,6 +718,22 @@ export interface components {
             name: string;
             phases: components["schemas"]["Phase"][];
             subscription_plan_id: string;
+        };
+        Tax: {
+            /** Format: int64 */
+            CompanyID: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            Enabled: boolean;
+            /** Format: int64 */
+            ID: number;
+            Name: string;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Uuid: string;
+            /** Format: double */
+            Value: number;
         };
         UOMsResponseBody: {
             /**

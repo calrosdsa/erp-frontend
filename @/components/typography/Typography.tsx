@@ -25,5 +25,5 @@ export const xs = 12
 export const sm = 14
 export const label = 16
 export const subtitle = 18
-export const title = 20
-export const headline = 22
+export const title = 24
+export const headline = 28

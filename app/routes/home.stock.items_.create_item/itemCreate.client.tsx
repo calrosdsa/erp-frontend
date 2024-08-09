@@ -105,6 +105,7 @@ export default function CreateItemClient() {
         priceListId:selectedPriceList.ID,
         rate:Number(formData.rate),
         itemQuantity:Number(formData.itemQuantity),
+        taxId:1,
       },
     }
     fetcher.submit(body,{

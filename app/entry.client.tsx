@@ -35,9 +35,7 @@ async function hydrate() {
       document,
       <I18nextProvider i18n={i18next}>
         <StrictMode>
-          <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
             <RemixBrowser />
-          </CssVarsProvider>
         </StrictMode>
       </I18nextProvider>
     );

@@ -18,7 +18,7 @@ export const MobileSidebar = ({data}:{
                 <SheetTrigger asChild>
                     <div className="flex items-center justify-center gap-2">
                         <MenuIcon />
-                        <h1 className="text-lg font-semibold">T3 app template</h1>
+                        <h1 className="text-lg font-semibold">ERP</h1>
                     </div>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-72">

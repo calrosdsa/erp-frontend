@@ -39,7 +39,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request.headers.get("Cookie"));  
   if (!session.has("access_token")) {
     // Redirect to the home page if they are already signed in.
     return redirect("/signin");
@@ -55,8 +55,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   //   }
   // }
 
-  console.log("LOADER ACCOUNT");
-  console.log("SESSION ROLE", role);
   let activeCompany: components["schemas"]["Company"] | undefined = undefined;
   let userData: UserData | undefined = undefined;
   const res = await apiClient({ request }).GET("/account");
@@ -77,6 +75,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
             if(currenCompany != undefined){
               activeCompany = currenCompany
               session.set("companyUuid",activeCompany.Uuid)
+              if(userData != undefined){
+                session.set("clientID",userData.ID)
+              }
+
               
               console.log("CURRENCT COMPANY",activeCompany)
             }

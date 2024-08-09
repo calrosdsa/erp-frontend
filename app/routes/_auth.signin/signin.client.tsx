@@ -21,13 +21,19 @@ import { useActionData, useFetcher } from "@remix-run/react";
 import { action } from "./route";
 import { components } from "~/sdk";
 import { useTranslation } from "react-i18next";
+import { UserAuthForm } from "./components/user-signin-form";
 const SignInClient = ({}: {}) => {
-  const fetcher = useFetcher<typeof action>();
   let { t } = useTranslation();
 
   return (
     <>
-      <Box
+      <UserAuthForm/> 
+    </>
+  );
+};
+
+export default SignInClient;
+{/* <Box
         sx={(theme) => ({
           width: { xs: "100%", md: "50vw" },
           transition: "width var(--Transition-duration)",
@@ -105,50 +111,49 @@ const SignInClient = ({}: {}) => {
               </Stack>
             </Stack>
 
-            <Stack gap={4} sx={{ mt: 2 }}>
-              <fetcher.Form method="post">
-                <FormControl required>
-                  <FormLabel>Email</FormLabel>
-                  <Input type="email" name="email" />
-                </FormControl>
-                <FormControl required>
-                  <FormLabel>Password</FormLabel>
-                  <Input type="password" name="password" />
-                </FormControl>
-                {fetcher.data != undefined &&
-                  fetcher.data.error != undefined && (
-                    <Typography
-                      level="body-xs"
-                      textAlign="start"
-                      textColor={"danger.400"}
-                    >
-                      {fetcher.data.error.detail}
-                    </Typography>
-                  )}
+            <fetcher.Form method="post">
+              <FormControl required>
+                <FormLabel>Email</FormLabel>
+                <Input type="email" name="email" />
+              </FormControl>
+              <FormControl required>
+                <FormLabel>Password</FormLabel>
+                <Input type="password" name="password" />
+              </FormControl>
+              {fetcher.data != undefined && fetcher.data.error != undefined && (
+                <Typography
+                  level="body-xs"
+                  textAlign="start"
+                  textColor={"danger.400"}
+                >
+                  {fetcher.data.error.detail}
+                </Typography>
+              )}
 
-                <Stack gap={4} sx={{ mt: 2 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Checkbox size="sm" label="Remember me" name="persistent" />
-                    <Link level="title-sm" href="#replace-with-a-link">
-                      Forgot your password?
-                    </Link>
-                  </Box>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    loading={fetcher.state == "submitting"}
-                  >
-                    Sign in
-                  </Button>
-                </Stack>
-              </fetcher.Form>
-            </Stack>
+              <Stack gap={4} sx={{ mt: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Checkbox size="sm" label="Remember me" name="persistent" />
+                  <Link level="title-sm" href="#replace-with-a-link">
+                    Forgot your password?
+                  </Link>
+                </Box>
+                <Button
+                  type="submit"
+                  fullWidth
+                  loading={fetcher.state == "submitting"}
+                >
+                  Sign in
+                </Button>
+              </Stack>
+            </fetcher.Form>
+
+            <UserAuthForm />
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
             <Typography level="body-xs" textAlign="center">
@@ -156,9 +161,4 @@ const SignInClient = ({}: {}) => {
             </Typography>
           </Box>
         </Box>
-      </Box>
-    </>
-  );
-};
-
-export default SignInClient;
+      </Box> */}

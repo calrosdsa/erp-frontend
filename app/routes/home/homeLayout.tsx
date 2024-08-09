@@ -1,12 +1,4 @@
 import * as React from "react";
-import { CssVarsProvider } from "@mui/joy/styles";
-import CssBaseline from "@mui/joy/CssBaseline";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Typography from "@mui/joy/Typography";
-
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { Link, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
@@ -19,6 +11,13 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Typography, {
+  label,
+  sm,
+  title,
+  xs,
+} from "@/components/typography/Typography";
+import { HomeIcon } from "lucide-react";
 
 type RouteItem = {
   name: string;
@@ -41,7 +40,7 @@ export default function HomeLayout({
   const getRoutes = () => {
     const routesName = location.pathname
       .split("/")
-      .map((word) => t(word).charAt(0).toUpperCase() + word.slice(1));
+      .map((word) => t(word));
     setRoutesName(routesName.slice(2));
   };
 
@@ -62,10 +61,9 @@ export default function HomeLayout({
   React.useEffect(() => {
     getRoutes();
   }, [location.pathname]);
-  React.useEffect(()=>{
-    
-    setOpenSessionDefaults(false)
-  },[location])
+  React.useEffect(() => {
+    setOpenSessionDefaults(false);
+  }, [location]);
   return (
     <>
       {/* <CssBaseline /> */}
@@ -78,13 +76,12 @@ export default function HomeLayout({
         />
       )}
 
-      <Header data={globalState} 
-      openSessionDefaults={()=>setOpenSessionDefaults(true)}
+      <Header
+        data={globalState}
+        openSessionDefaults={() => setOpenSessionDefaults(true)}
       />
       <div className="flex h-screen border-collapse overflow-hidden">
-        <Sidebar 
-        data={globalState}
-        />
+        <Sidebar data={globalState} />
         <main className="flex-1 overflow-y-auto overflow-x-hidden pt-16 bg-secondary/10 pb-1">
           <div
             className="
@@ -111,7 +108,7 @@ export default function HomeLayout({
                       className="hover:underline"
                       aria-label="Home"
                     >
-                      <HomeRoundedIcon />
+                      <HomeIcon size={15}/>
                     </Link>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
@@ -128,9 +125,7 @@ export default function HomeLayout({
                               aria-label={item}
                               className="hover:underline"
                             >
-                              <Typography fontWeight={500} fontSize={12}>
-                                {item}
-                              </Typography>
+                              <Typography fontSize={xs}>{item}</Typography>
                             </Link>
                           </BreadcrumbItem>
                           <BreadcrumbSeparator />
@@ -138,28 +133,16 @@ export default function HomeLayout({
                       );
                     })}
 
-                  <Typography color="primary" fontWeight={500} fontSize={12}>
+                  <Typography fontSize={xs}>
                     {routesName[routesName.length - 1]}
                   </Typography>
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
 
-            <Box
-              sx={{
-                display: "flex",
-                mb: 1,
-                gap: 1,
-                flexDirection: { xs: "column", sm: "row" },
-                alignItems: { xs: "start", sm: "center" },
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography level="h2" component="h1">
-                {getRouteName()}
-              </Typography>
-            </Box>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
+              <Typography fontSize={title}>{getRouteName()}</Typography>
+            </div>
             {children}
           </div>
         </main>

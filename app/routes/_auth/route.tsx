@@ -1,4 +1,3 @@
-
 import { Outlet } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import FallBack from "~/components/layout/Fallback";
@@ -28,8 +27,9 @@ export default function AuthLayout() {
   if (isHydrated) {
     return (
       <div>
-        <Outlet />
-        <AuthClient />
+        <AuthClient>
+          <Outlet />
+        </AuthClient>
       </div>
     );
   } else {

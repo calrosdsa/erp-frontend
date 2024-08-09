@@ -42,6 +42,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   })
   console.log(res.data,res.error)
+  if(res.response.ok){
+    return redirect("/cuatropf/success")
+  }
     return json({
       data:res.data,
       err:res.error

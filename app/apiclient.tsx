@@ -18,10 +18,12 @@ const authMiddl = (appRequest: Request) => {
       const activeCompany = session.get("companyUuid") as string;
       const locale = session.get("locale") as string;
 
+
       // console.log("token" bearerToken)
       request.headers.set("Authorization", `Bearer ${bearerToken}`);
       request.headers.set("Active-Company", activeCompany);
       request.headers.set("Accept-Language", locale);
+      request.headers.set("Session", appRequest.headers.get("Cookie") || "");
 
       return request;
     },
