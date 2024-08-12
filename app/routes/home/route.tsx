@@ -1,7 +1,6 @@
 import { Box } from "@mui/joy";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import FallBack from "~/components/layout/Fallback";
 import HomeLayout from "./homeLayout";
 import {
   ActionFunctionArgs,
@@ -16,6 +15,7 @@ import { components } from "~/sdk";
 import { ClientOnly } from "remix-utils/client-only";
 import { Role } from "~/types/enums";
 import { administratorToUserData, clientToUserData } from "~/util/convertor/entityToUserData";
+import FallBack from "@/components/layout/Fallback";
 
 let isHydrating = true;
 

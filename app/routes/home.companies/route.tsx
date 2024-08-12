@@ -47,11 +47,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     params: {
       query: {
         page: "1",
-        size: "1",
+        size: DEFAULT_SIZE,
       },
     },
   });
-  console.log("data", res.error, res.data?.pagination_result);
+  // console.log("data", res.error, res.data?.pagination_result);
   return json({
     paginationResult: res.data,
   });

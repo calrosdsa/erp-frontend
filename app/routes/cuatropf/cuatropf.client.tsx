@@ -1,26 +1,8 @@
 import React, { FormEvent, Suspense, useEffect, useRef, useState } from "react";
-import { useColorScheme } from "@mui/joy/styles";
-import GlobalStyles from "@mui/joy/GlobalStyles";
-import CssBaseline from "@mui/joy/CssBaseline";
-import Box from "@mui/joy/Box";
-import IconButton, { IconButtonProps } from "@mui/joy/IconButton";
-import Typography from "@mui/joy/Typography";
-import Stack from "@mui/joy/Stack";
-import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
-import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
-import { IndexHtmlTransform } from "vite";
-import ColorSchemeToggle from "~/components/shared/button/ColorSchemeToggle";
-import GoogleIcon from "~/components/shared/icon/GoogleIcon";
-import { useActionData, useFetcher } from "@remix-run/react";
-import { action, handle } from "./route";
-import { components } from "~/sdk";
 import { useTranslation } from "react-i18next";
-import { Grid } from "@mui/joy";
-import CountrySelect from "~/components/shared/select/CountrySelect";
 import LanguageSelect from "~/components/shared/select/LanguageSelect";
 import { CountrySelectItem } from "~/types/app";
-import { Button } from "@/components/ui/button";
 import FormCuatropf from "./components/FormCuatropf";
 import FormCuatropfDetail from "./components/FormDetail";
 

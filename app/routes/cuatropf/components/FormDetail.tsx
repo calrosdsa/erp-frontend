@@ -5,7 +5,6 @@ import Typography, {
   title,
 } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
-import Divider from "@/components/custom/Divider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatNumber, getTax } from "~/util/convertor/money";

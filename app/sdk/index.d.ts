@@ -442,7 +442,7 @@ export interface components {
             /** Format: int64 */
             itemGroupId: number;
             name: string;
-            uom: components["schemas"]["UnitOfMeasureTranslation"];
+            uom: components["schemas"]["UnitOfMeasureTranslation"] | null;
         };
         ItemGroup: {
             Company: components["schemas"]["Company"];

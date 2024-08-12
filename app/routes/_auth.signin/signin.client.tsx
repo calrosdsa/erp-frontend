@@ -1,27 +1,6 @@
-import React, { Suspense } from "react";
-import GlobalStyles from "@mui/joy/GlobalStyles";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Checkbox from "@mui/joy/Checkbox";
-import Divider from "@mui/joy/Divider";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import IconButton, { IconButtonProps } from "@mui/joy/IconButton";
-import Link from "@mui/joy/Link";
-import Input from "@mui/joy/Input";
-import Typography from "@mui/joy/Typography";
-import Stack from "@mui/joy/Stack";
-import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
-import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
-import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
-import { IndexHtmlTransform } from "vite";
-import ColorSchemeToggle from "~/components/shared/button/ColorSchemeToggle";
-import GoogleIcon from "~/components/shared/icon/GoogleIcon";
-import { useActionData, useFetcher } from "@remix-run/react";
-import { action } from "./route";
-import { components } from "~/sdk";
 import { useTranslation } from "react-i18next";
 import { UserAuthForm } from "./components/user-signin-form";
+
 const SignInClient = ({}: {}) => {
   let { t } = useTranslation();
 

@@ -1,7 +1,7 @@
+import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import { Button, FormControl, FormLabel, Option, Select } from "@mui/joy";
 import { Form, useFetcher } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import DrawerLayout from "~/components/shared/drawer/Drawer";
 import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
 

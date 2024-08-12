@@ -3,11 +3,11 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { commitSession, getSession } from "~/sessions";
 import apiClient from "~/apiclient";
 import CuatropfClient from "./cuatropf.client";
-import FallBack from "~/components/layout/Fallback";
 import { useEffect, useState } from "react";
 import { ExternalScriptsFunction } from "remix-utils/external-scripts";
 import { components } from "~/sdk";
 import { ClientOnly } from "remix-utils/client-only";
+import FallBack from "@/components/layout/Fallback";
 
 let scripts: ExternalScriptsFunction = () => {
   return [{ src: "https://sandbox.web.squarecdn.com/v1/square.js" }];

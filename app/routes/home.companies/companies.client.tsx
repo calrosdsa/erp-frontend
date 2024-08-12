@@ -8,18 +8,19 @@ import {
   Link,
   Typography,
 } from "@mui/joy";
-import OrderList from "~/components/shared/table/CustomList";
-import OrderTable, { rows } from "~/components/shared/table/CustomTable";
+import OrderList from "@/components/custom/table/CustomList";
 import React, { useContext } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import BlockIcon from "@mui/icons-material/Block";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
-import { RowMenu } from "~/components/shared/table/RowMenu";
+import { RowMenu } from "@/components/custom/table/RowMenu";
 import { useTranslation } from "react-i18next";
 import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { loader } from "./route";
 import { GlobalState } from "~/types/app";
+import { DataTable } from "@/components/custom/table/CustomTable";
+import { columns } from "./components/table/columns";
 
 export default function CompaniesClient() {
   const { t } = useTranslation();
@@ -28,8 +29,9 @@ export default function CompaniesClient() {
 
   return (
     <>
+    <DataTable columns={columns} data={paginationResult?.pagination_result.results || []} />
      
-      <OrderTable
+      {/* <OrderTable
         headerValues={[
           { name: "", style: { width: 60, padding: "12px 6px" } },
           { name: "Name"},
@@ -53,12 +55,9 @@ export default function CompaniesClient() {
                     </td>
 
                     <td>
-                      <Box
-                        sx={{ display: "flex", gap: 2, alignItems: "end",justifyContent:"end"}}
-                        >
-                        
+                      <div  className="flex gap-2 justify-end items-end">                        
                         <RowMenu onEdit={() => {}} />
-                      </Box>
+                          </div>
                     </td>
                   </tr>
                 ))}
@@ -67,7 +66,7 @@ export default function CompaniesClient() {
             </>
           );
         }}
-      />
+      /> */}
       {/* <OrderList />  */}
     </>
   );

@@ -1,9 +1,9 @@
 import { Outlet } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import FallBack from "~/components/layout/Fallback";
 import AuthClient from "./auth.client";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { getSession } from "~/sessions";
+import FallBack from "@/components/layout/Fallback";
 
 let isHydrating = true;
 // export const loader =async({request}:LoaderFunctionArgs)=> {

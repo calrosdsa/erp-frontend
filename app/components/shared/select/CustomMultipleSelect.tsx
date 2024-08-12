@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
-import { Box, Chip } from '@mui/joy';
+import { Chip } from '@mui/joy';
 
 
 interface Props<T extends object, K extends keyof T> {
@@ -29,13 +29,13 @@ export default function CustomMultipleSelect<T extends object,K extends keyof T>
       value={selected}
     
       renderValue={(selected) => (
-        <Box sx={{ display: 'flex', gap: '0.25rem' }}>
+        <div className='flex space-x-3' >
           {selected.map((selectedOption,idx) => (
             <Chip variant="soft" color="primary" key={idx}>
               {selectedOption.label}
             </Chip>
           ))}
-        </Box>
+        </div>
       )}
       sx={{
         minWidth: '15rem',

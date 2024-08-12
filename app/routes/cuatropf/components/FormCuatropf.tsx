@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import CountrySelect from "~/components/shared/select/CountrySelect";
 import { useEffect } from "react";
 import { components } from "~/sdk";
+import CountrySelect from "@/components/custom/select/CountrySelect";
 
 
 type SquareMetadata = {

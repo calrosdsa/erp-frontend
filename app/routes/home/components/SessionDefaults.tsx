@@ -1,8 +1,23 @@
-import { FormControl, FormLabel, Select, Option, Button } from "@mui/joy";
-import { Form, useFetcher, useRevalidator } from "@remix-run/react";
-import { FormEvent } from "react";
+import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
+import { Button } from "@/components/ui/button";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  Form,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useFetcher, useRevalidator } from "@remix-run/react";
+import { FormEvent, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import DrawerLayout from "~/components/shared/drawer/Drawer";
 import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
 
@@ -16,16 +31,18 @@ export const SessionDefault = ({
   close: () => void;
 }) => {
   const { t } = useTranslation();
-  const fetcher = useFetcher(); 
+  const fetcher = useFetcher();
+  const form = useForm();
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(e.currentTarget);
     // console.log(e.currentTarget)
-    fetcher.submit(formData,{
-      method:"post",
-      action:"/api"
+    fetcher.submit(formData, {
+      method: "post",
+      action: "/api",
     });
-    window.location.reload()
+    window.location.reload();
   };
+
   return (
     <fetcher.Form
       method={"post"}
@@ -34,28 +51,76 @@ export const SessionDefault = ({
       // onSubmit={onSubmit}
     >
       <input type="hidden" name="action" value={"update-session-defaults"} />
-      <FormControl>
+      <Form {...form}>
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("form.companyName")}</FormLabel>
+              <FormControl>
+                <Select {...field} defaultValue={session.companyUuid} name="companyUuid">
+                  <SelectTrigger >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="w-full">
+                    {companies.map((item, idx) => {
+                      return (
+                        <SelectItem value={item.Uuid} key={idx}>
+                          {item.Name}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("form.companyName")}</FormLabel>
+              <FormControl>
+                <Select {...field} defaultValue={session.locale} name="locale">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="es">Español</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        {/* <FormControl>
         <FormLabel>{t("form.companyName")}</FormLabel>
         <Select defaultValue={session.companyUuid} name="companyUuid">
-          {companies.map((item, idx) => {
-            return (
-              <Option key={idx} value={item.Uuid}>
-                {item.Name}
+        {companies.map((item, idx) => {
+          return (
+            <Option key={idx} value={item.Uuid}>
+            {item.Name}
               </Option>
-            );
-          })}
-        </Select>
-      </FormControl>
+              );
+              })}
+              </Select>
+              </FormControl> */}
 
-      <FormControl>
+        {/* <FormControl>
         <FormLabel>{t("language")}</FormLabel>
         <Select defaultValue={session.locale} name="locale">
-          <Option value="en">English</Option>
-          <Option value="es">Español</Option>
+        <Option value="en">English</Option>
+        <Option value="es">Español</Option>
         </Select>
-      </FormControl>
+        </FormControl> */}
 
-      <Button type="submit">{t("form.submit")}</Button>
+        <Button type="submit">{t("form.submit")}</Button>
+      </Form>
     </fetcher.Form>
   );
 };
