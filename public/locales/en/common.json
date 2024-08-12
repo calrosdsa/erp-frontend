@@ -30,9 +30,11 @@
     "selling":"Selling",
     "rate":"Rate",
     "itemQuantity":"Item Quantity",
+    "totalQuantity":"Total Quantity",
     "pay":"Pay",
     "orderTotal":"Order Total",
     "total":"Total",
+    "tax":"Tax",
     "totalTax":"Total Taxes",
 
     "orderConfirmation":"Order Confirmation"
@@ -65,6 +67,20 @@
 
   "square":"Square",
 
-  "settings":"Settings"
+  "settings":"Settings",
+
+  "purchases":"Purchases",
+
+  "orders":"Orders",
+  "orderInfo":"Order Info",
+
+  "table":{
+    "createdAt":"Creation Date",
+    "deliverdDate":"Deliverd Date",
+    "type":"Type",
+    "ID":"ID",
+    "code":"CODE"
+  }
+
 
 }

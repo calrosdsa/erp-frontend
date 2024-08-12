@@ -6,7 +6,7 @@ export type SessionData = {
   locale:string
   companyUuid:string
   role:string
-  clientID:number
+  userSessionUuid:string
 };
 
 type SessionFlashData = {

@@ -76,7 +76,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
               activeCompany = currenCompany
               session.set("companyUuid",activeCompany.Uuid)
               if(userData != undefined){
-                session.set("clientID",userData.ID)
+                session.set("userSessionUuid",userData.Uuid)
               }
 
               

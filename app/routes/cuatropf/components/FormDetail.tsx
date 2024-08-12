@@ -7,11 +7,11 @@ import Typography, {
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { formatNumber, getTax } from "~/util/convertor/money";
+import { formatCurrency, formatTax } from "~/util/format/formatCurrency";
 
 export default function FormCuatropfDetail() {
   const { data } = useLoaderData<typeof loader>();
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   const planVariation =
     data.plan_variation.object.subscription_plan_variation_data;
 
@@ -46,7 +46,7 @@ export default function FormCuatropfDetail() {
                 </Typography>
                 <Typography fontSize={subtitle}>
                   {planVariation.phases[0]?.pricing.price.currency}{" "}
-                  {formatNumber(squareObject.ItemPrice.Rate)}
+                  {formatCurrency(squareObject.ItemPrice.Rate,squareObject.ItemPrice.ItemPriceList.Currency,i18n.language)}
                 </Typography>
               </div>
 
@@ -58,7 +58,7 @@ export default function FormCuatropfDetail() {
                   {t("form.totalTax")}
                 </Typography>
                 <Typography fontSize={subtitle}>
-                  {planVariation.phases[0]?.pricing.price.currency} {getTax(squareObject.ItemPrice.Tax.Value,squareObject.ItemPrice.Rate)}
+                  {planVariation.phases[0]?.pricing.price.currency} {formatTax(squareObject.ItemPrice.Tax,squareObject.ItemPrice.Rate,squareObject.ItemPrice.ItemPriceList.Currency,i18n.language)}
                 </Typography>
               </div>
             </CardContent>
@@ -77,7 +77,8 @@ export default function FormCuatropfDetail() {
             <div>
               <Typography fontSize={subtitle}>
                 {planVariation.phases[0]?.pricing.price.currency}{" "}
-                {formatNumber(planVariation.phases[0]?.pricing.price.amount)}
+                {formatCurrency(planVariation.phases[0]?.pricing.price.amount,
+                  planVariation.phases[0]?.pricing.price.currency || squareObject.ItemPrice.ItemPriceList.Currency,i18n.language)}
               </Typography>
             </div>
           </div>

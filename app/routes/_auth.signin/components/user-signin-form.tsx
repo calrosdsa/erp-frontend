@@ -78,7 +78,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               <FormItem>
                 <FormLabel>{t("form.password")}</FormLabel>
                 <FormControl>
-                  <Input {...field} name="password" />
+                  <Input {...field} name="password" type="password"/>
                 </FormControl>
                 {/* <FormDescription>
                       This is your public display name.

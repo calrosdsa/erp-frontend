@@ -16,23 +16,19 @@ interface Props<T extends object, K extends keyof T,V extends keyof T> {
     label:string
     description?:string
     onValueChange:(e:string)=>void
+    onSelect:(v:T)=>void
   }
   
 
 export default function FormAutocomplete<T extends object,K extends keyof T,V extends keyof T>({
-    data,nameK,value,form,label,onOpen,description,name,onValueChange
+    data,nameK,value,form,label,onOpen,description,name,onValueChange,onSelect
 }:Props<T,K,V>){
-  const [state,setState] = useState(data)
-  useEffect(()=>{
-    console.log("data",data)  
-      setState(data)
-  },[data])
     return (
         <FormField
         control={form.control}
         name={name}
         render={({ field }) => (
-          <FormItem className="flex flex-col">
+          <FormItem className="flex flex-col ">
           <FormLabel>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
@@ -42,7 +38,7 @@ export default function FormAutocomplete<T extends object,K extends keyof T,V ex
                   role="combobox"
                   onClick={()=>onOpen()}
                   className={cn(
-                    "justify-between",
+                    "justify-between h-[37px]",
                     !field.value && "text-muted-foreground"
                   )}
                 >
@@ -51,7 +47,7 @@ export default function FormAutocomplete<T extends object,K extends keyof T,V ex
                         (item) => item[value] === field.value
                       )?.[nameK]?.toString()
                     : "Select item"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
                 </Button>
               </FormControl>
             </PopoverTrigger>
@@ -61,15 +57,15 @@ export default function FormAutocomplete<T extends object,K extends keyof T,V ex
                   onValueChange(e)
                 }}/>
                 <CommandList>
-                  {/* {JSON.stringify(data)} */}
                   <CommandEmpty>No results found.</CommandEmpty>
                   <CommandGroup>
-                    {state.map((item,idx) => (
+                    {data.map((item,idx) => (
                       <CommandItem
-                        value={item[value]?.toString()}
+                        value={item[value] as string || ""}
                         key={idx}
                         onSelect={() => {
-                          form.setValue("uomID", item[value])
+                          form.setValue(name, item[value])
+                          onSelect(item)
                         }}
                       >
                         <Check

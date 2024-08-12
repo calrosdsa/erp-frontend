@@ -1,4 +1,4 @@
-import { Button } from "@mui/joy";
+import { Button } from "@/components/ui/button";
 import { Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 

@@ -89,6 +89,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/payment/webhook": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Payment square wenhook */
+        post: operations["payment-webhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/plugin": {
         parameters: {
             query?: never;
@@ -118,6 +135,40 @@ export interface paths {
         get: operations["get-plugin"];
         /** Update plugin credentials */
         put: operations["update-plugin-credentials"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/selling/salesorder/client": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get client sales orders */
+        get: operations["client-sales-orders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/selling/salesorder/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get sales order detail */
+        get: operations["sale-order-detail"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -296,8 +347,49 @@ export interface components {
             amount: number;
             currency: string;
         };
+        AmountMoneyStruct: {
+            /** Format: int64 */
+            amount: number;
+            currency: string;
+        };
         AppConfigStruct: {
             plugins: components["schemas"]["PluginApp"][];
+        };
+        ApplicationDetailsStruct: {
+            application_id: string;
+            square_product: string;
+        };
+        ApprovedMoneyStruct: {
+            /** Format: int64 */
+            amount: number;
+            currency: string;
+        };
+        CardDetailsStruct: {
+            avs_status: string;
+            card: components["schemas"]["CardStruct"];
+            card_payment_timeline: components["schemas"]["CardPaymentTimelineStruct"];
+            cvv_status: string;
+            entry_method: string;
+            statement_description: string;
+            status: string;
+        };
+        CardPaymentTimelineStruct: {
+            /** Format: date-time */
+            authorized_at: string;
+            /** Format: date-time */
+            captured_at: string;
+        };
+        CardStruct: {
+            bin: string;
+            card_brand: string;
+            card_type: string;
+            /** Format: int64 */
+            exp_month: number;
+            /** Format: int64 */
+            exp_year: number;
+            fingerprint: string;
+            last_4: string;
+            prepaid_type: string;
         };
         Client: {
             Company: components["schemas"]["Company"];
@@ -347,6 +439,7 @@ export interface components {
             code: string;
             label: string;
             phone: string;
+            suggested: boolean;
         };
         CreateItemRequestBody: {
             /**
@@ -373,10 +466,23 @@ export interface components {
             phoneNumber: string;
             plugins?: components["schemas"]["CompanyPlugins"][];
         };
+        DataStruct: {
+            id: string;
+            object: components["schemas"]["ObjectStruct"];
+            type: string;
+        };
         DeletedAt: {
             /** Format: date-time */
             Time: string;
             Valid: boolean;
+        };
+        EntityResponseRequestSalesOrderDetailBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["RequestSalesOrderDetail"];
         };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
@@ -425,24 +531,32 @@ export interface components {
             message: string;
         };
         Item: {
-            /** Format: date-time */
-            created_at: string;
-            id: string;
-            is_deleted: boolean;
-            present_at_all_locations: boolean;
-            subscription_plan_variation_data: components["schemas"]["SubscriptionPlanVariationDataStruct"];
-            type: string;
-            /** Format: date-time */
-            updated_at: string;
+            Code: string;
+            Company: components["schemas"]["Company"];
             /** Format: int64 */
-            version: number;
+            CompanyID: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            ItemGroup: components["schemas"]["ItemGroup"];
+            /** Format: int64 */
+            ItemGroupID: number;
+            Name: string;
+            UnitOfMeasure: components["schemas"]["UnitOfMeasure"];
+            /** Format: int64 */
+            UnitOfMeasureID: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Uuid: string;
         };
         ItemDto: {
             code: string;
             /** Format: int64 */
             itemGroupId: number;
             name: string;
-            uom: components["schemas"]["UnitOfMeasureTranslation"] | null;
+            uom: components["schemas"]["UnitOfMeasureTranslation"];
         };
         ItemGroup: {
             Company: components["schemas"]["Company"];
@@ -471,6 +585,7 @@ export interface components {
             DeletedAt: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
+            Item: components["schemas"]["Item"];
             /** Format: int64 */
             ItemID: number;
             ItemPriceList: components["schemas"]["ItemPriceList"];
@@ -528,6 +643,9 @@ export interface components {
             Time: string;
             Valid: boolean;
         };
+        ObjectStruct: {
+            payment: components["schemas"]["PaymentStruct"];
+        };
         PaginationResponsePaginationResultListCompanyBody: {
             /**
              * Format: uri
@@ -552,6 +670,14 @@ export interface components {
             readonly $schema?: string;
             pagination_result: components["schemas"]["PaginationResultListItemPriceList"];
         };
+        PaginationResponsePaginationResultListSalesOrderBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListSalesOrder"];
+        };
         PaginationResultListCompany: {
             results: components["schemas"]["Company"][];
             /** Format: int64 */
@@ -566,6 +692,51 @@ export interface components {
             results: components["schemas"]["ItemPriceList"][];
             /** Format: int64 */
             total: number;
+        };
+        PaginationResultListSalesOrder: {
+            results: components["schemas"]["SalesOrder"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaymentStruct: {
+            amount_money: components["schemas"]["AmountMoneyStruct"];
+            application_details: components["schemas"]["ApplicationDetailsStruct"];
+            approved_money: components["schemas"]["ApprovedMoneyStruct"];
+            buyer_email_address: string;
+            card_details: components["schemas"]["CardDetailsStruct"];
+            /** Format: date-time */
+            created_at: string;
+            customer_id: string;
+            delay_action: string;
+            delay_duration: string;
+            /** Format: date-time */
+            delayed_until: string;
+            id: string;
+            location_id: string;
+            order_id: string;
+            processing_fee: components["schemas"]["ProcessFee"][];
+            receipt_number: string;
+            receipt_url: string;
+            source_type: string;
+            status: string;
+            total_money: components["schemas"]["TotalMoneyStruct"];
+            /** Format: date-time */
+            updated_at: string;
+            /** Format: int64 */
+            version: number;
+        };
+        PaymentWeebhookRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            created_at: string;
+            data: components["schemas"]["DataStruct"];
+            event_id: string;
+            merchant_id: string;
+            type: string;
         };
         Phase: {
             cadence: string;
@@ -599,6 +770,24 @@ export interface components {
              */
             readonly $schema?: string;
             plugins: components["schemas"]["PluginApp"][];
+        };
+        ProcessFee: {
+            amount_money: components["schemas"]["ProcessFeeAmountMoneyStruct"];
+            /** Format: date-time */
+            effective_at: string;
+            type: string;
+        };
+        ProcessFeeAmountMoneyStruct: {
+            /** Format: int64 */
+            amount: number;
+            currency: string;
+        };
+        RequestSalesOrderDetail: {
+            Body: components["schemas"]["RequestSalesOrderDetailBodyStruct"];
+        };
+        RequestSalesOrderDetailBodyStruct: {
+            lines: components["schemas"]["SalesItemLine"][];
+            order: components["schemas"]["SalesOrder"];
         };
         ResponseMessageBody: {
             /**
@@ -654,6 +843,45 @@ export interface components {
             /** Format: date-time */
             UpdatedAt: string;
             Users: components["schemas"]["User"][];
+            Uuid: string;
+        };
+        SalesItemLine: {
+            /** Format: date-time */
+            CreatedAt: string;
+            Currency: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            ItemPrice: components["schemas"]["ItemPrice"];
+            /** Format: int64 */
+            ItemPriceID: number;
+            /** Format: int64 */
+            ItemQuantity: number;
+            /** Format: int64 */
+            Rate: number;
+            /** Format: int64 */
+            SalesOrderID: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+        };
+        SalesOrder: {
+            Client: components["schemas"]["Client"];
+            /** Format: int64 */
+            ClientID: number;
+            Code: string;
+            Company: components["schemas"]["Company"];
+            /** Format: int64 */
+            CompanyID: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: date-time */
+            DeliveryDate: string;
+            /** Format: int64 */
+            ID: number;
+            OrderType: string;
+            /** Format: date-time */
+            UpdatedAt: string;
             Uuid: string;
         };
         SignInRequestBody: {
@@ -712,9 +940,27 @@ export interface components {
         SubscriptionPlanDataStruct: {
             all_items: boolean;
             name: string;
-            subscription_plan_variations: components["schemas"]["Item"][];
+            subscription_plan_variations: components["schemas"]["SubscriptionPlanVariation"][];
+        };
+        SubscriptionPlanVariation: {
+            /** Format: date-time */
+            created_at: string;
+            id: string;
+            is_deleted: boolean;
+            present_at_all_locations: boolean;
+            subscription_plan_variation_data: components["schemas"]["SubscriptionPlanVariationSubscriptionPlanVariationDataStruct"];
+            type: string;
+            /** Format: date-time */
+            updated_at: string;
+            /** Format: int64 */
+            version: number;
         };
         SubscriptionPlanVariationDataStruct: {
+            name: string;
+            phases: components["schemas"]["Phase"][];
+            subscription_plan_id: string;
+        };
+        SubscriptionPlanVariationSubscriptionPlanVariationDataStruct: {
             name: string;
             phases: components["schemas"]["Phase"][];
             subscription_plan_id: string;
@@ -734,6 +980,11 @@ export interface components {
             Uuid: string;
             /** Format: double */
             Value: number;
+        };
+        TotalMoneyStruct: {
+            /** Format: int64 */
+            amount: number;
+            currency: string;
         };
         UOMsResponseBody: {
             /**
@@ -825,6 +1076,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -894,6 +1147,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -990,6 +1245,39 @@ export interface operations {
             };
         };
     };
+    "payment-webhook": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentWeebhookRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     plugins: {
         parameters: {
             query?: never;
@@ -1025,6 +1313,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -1061,6 +1351,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path: {
                 plugin: string;
@@ -1095,6 +1387,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path: {
                 plugin: string;
@@ -1114,6 +1408,80 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "client-sales-orders": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListSalesOrderBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "sale-order-detail": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseRequestSalesOrderDetailBody"];
                 };
             };
             /** @description Error */
@@ -1196,6 +1564,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -1236,6 +1606,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -1268,6 +1640,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -1304,6 +1678,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -1344,6 +1720,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -1376,6 +1754,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -1412,6 +1792,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -1450,6 +1832,8 @@ export interface operations {
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
             };
             path?: never;
             cookie?: never;

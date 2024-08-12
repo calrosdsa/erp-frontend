@@ -62,9 +62,9 @@ export const NavItems = ({ session }: { session: SessionData }): NavItem[] => {
     children: [] as NavItem[]
   }
 
-  const subscriptions = {
-    title: t("subscriptions"),
-    href:"/home/subscriptions",
+  const orders = {
+    title: t("orders"),
+    href:"/home/purchases/orders",
   }
 
   switch(session.role){
@@ -75,7 +75,7 @@ export const NavItems = ({ session }: { session: SessionData }): NavItem[] => {
         break;
     }
     case Role.ROLE_CLIENT:{
-        purchases.children.push(subscriptions)
+        purchases.children.push(orders)
         navItems.push(purchases)
         break;
     }

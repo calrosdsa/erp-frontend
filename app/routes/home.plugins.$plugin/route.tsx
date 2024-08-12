@@ -1,4 +1,3 @@
-import DrawerAnchor from "~/components/shared/drawer/Drawer";
 import PluginClient from "./plugin.client";
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";

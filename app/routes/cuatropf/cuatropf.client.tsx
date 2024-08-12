@@ -1,7 +1,6 @@
 import React, { FormEvent, Suspense, useEffect, useRef, useState } from "react";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import { useTranslation } from "react-i18next";
-import LanguageSelect from "~/components/shared/select/LanguageSelect";
 import { CountrySelectItem } from "~/types/app";
 import FormCuatropf from "./components/FormCuatropf";
 import FormCuatropfDetail from "./components/FormDetail";
@@ -33,10 +32,9 @@ const CuatropfClient = ({}: {}) => {
               <h1 className="text-lg font-bold">Cuatropf</h1>
             </div>
 
-            <div className="flex gap-2 items-center">
+            {/* <div className="flex gap-2 items-center">
               <LanguageSelect defaultLanguage={i18n.language} />
-              {/* <ColorSchemeToggle /> */}
-            </div>
+            </div> */}
           </header>
 
       <div

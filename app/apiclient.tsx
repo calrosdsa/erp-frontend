@@ -1,6 +1,7 @@
 import createClient, { Middleware } from "openapi-fetch";
 import { paths } from "./sdk";
 import { getSession } from "./sessions";
+import { Role } from "./types/enums";
 
 const UNPROTECTED_ROUTES = ["/auth/signin"];
 
@@ -17,12 +18,23 @@ const authMiddl = (appRequest: Request) => {
       const bearerToken = session.get("access_token") as string;
       const activeCompany = session.get("companyUuid") as string;
       const locale = session.get("locale") as string;
+      const userSessionUuid = session.get("userSessionUuid") as string;
+      const role = session.get("role");
+      if (role != undefined) {
+        request.headers.set("Role", role);
+      }
+      if(role == Role.ROLE_CLIENT) {
+        if(userSessionUuid != undefined){
+          request.headers.set("User-Session-Uuid", userSessionUuid);
+        }
+      }
 
 
       // console.log("token" bearerToken)
       request.headers.set("Authorization", `Bearer ${bearerToken}`);
       request.headers.set("Active-Company", activeCompany);
       request.headers.set("Accept-Language", locale);
+      
       request.headers.set("Session", appRequest.headers.get("Cookie") || "");
 
       return request;
