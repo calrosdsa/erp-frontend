@@ -1,4 +1,6 @@
-import { Button, FormControl, FormLabel, IconButton, Input, Typography } from "@mui/joy";
+import { Button } from "@/components/ui/button";
+import { FormControl, FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Form, useFetcher } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -48,30 +50,24 @@ export default function SquarePlugin({companyPlugin}:{
       {credentials != null &&
       <fetcher.Form method="post" action="/home/plugins/square" className="grid gap-y-3 max-w-sm">
       <input type="hidden" value="update-credentials" name="action" />
-        <FormControl required>
+        <FormControl>
           <FormLabel>{t("applicationId")}</FormLabel>
           <Input type="text" name="applicationId" defaultValue={credentials?.applicationId} />
         </FormControl>
 
-        <FormControl required>
+        <FormControl>
           <FormLabel>{t("accessToken")}</FormLabel>
-          <Input type={showAccessToken ? "password":"text"} name="accessToken" 
+          <Input type={showAccessToken ? "password":"text"} required name="accessToken" 
           defaultValue={credentials?.accessToken} 
-          endDecorator={
-            <IconButton onClick={()=>setShowAccessToken(!showAccessToken)}>
-          <Typography color="primary">
-            {showAccessToken ? t("show"):t("hide")}
-          </Typography>
-          </IconButton>}
           />
         </FormControl>
 
-        <FormControl required>
+        <FormControl>
           <FormLabel>{t("locationId")}</FormLabel>
           <Input type="text" name="locationId" defaultValue={credentials?.locationId}  />
         </FormControl>
 
-        <FormControl required>
+        <FormControl>
           <FormLabel>{t("apiVersion")}</FormLabel>
           <Input type="text" name="apiVersion" defaultValue={credentials?.apiVersion}  />
         </FormControl>

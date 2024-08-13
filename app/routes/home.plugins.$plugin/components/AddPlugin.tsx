@@ -1,5 +1,7 @@
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
-import { Button, FormControl, FormLabel, Option, Select } from "@mui/joy";
+import { Button } from "@/components/ui/button";
+import { FormControl, FormLabel } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem } from "@/components/ui/select";
 import { Form, useFetcher } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
@@ -27,13 +29,16 @@ export const AddPlugin = ({
       <FormControl>
         <FormLabel>{t("form.companyName")}</FormLabel>
         <Select defaultValue={session.companyUuid} name="companyUuid">
+        <SelectContent>
+
           {companies.map((item, idx) => {
             return (
-              <Option key={idx} value={item.Uuid}>
+              <SelectItem key={idx} value={item.Uuid}>
                 {item.Name}
-              </Option>
+              </SelectItem>
             );
           })}
+          </SelectContent>
         </Select>
       </FormControl>
       <Button loading={fetcher.state =="submitting"}

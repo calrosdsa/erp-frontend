@@ -1,4 +1,3 @@
-import { Button } from "@mui/joy";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AddPluginDrawer } from "./components/AddPlugin";
@@ -12,6 +11,7 @@ import {
 import { GlobalState } from "~/types/app";
 import { action, loader } from "./route";
 import SquarePlugin from "./plugins/square";
+import { Button } from "@/components/ui/button";
 
 export default function PluginClient() {
   const { t } = useTranslation();

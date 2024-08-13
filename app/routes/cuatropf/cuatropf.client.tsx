@@ -1,5 +1,4 @@
 import React, { FormEvent, Suspense, useEffect, useRef, useState } from "react";
-import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import { useTranslation } from "react-i18next";
 import { CountrySelectItem } from "~/types/app";
 import FormCuatropf from "./components/FormCuatropf";
@@ -27,7 +26,6 @@ const CuatropfClient = ({}: {}) => {
           <header className="py-3 flex justify-between px-2">
             <div className="flex gap-2 items-center">
               <button className="bg-primary p-2 rounded-full">
-                <BadgeRoundedIcon />
               </button>
               <h1 className="text-lg font-bold">Cuatropf</h1>
             </div>

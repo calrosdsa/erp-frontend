@@ -1,4 +1,3 @@
-import { Box } from "@mui/joy";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import HomeLayout from "./homeLayout";
@@ -23,7 +22,7 @@ type HomeActions = {
   action: string;
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request,context }: ActionFunctionArgs) => {
   const data = await request.formData();
   switch (data.get("action")) {
     case "signout":
@@ -38,7 +37,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request,context }: LoaderFunctionArgs) => {
+        console.log("API URL CONTEXT",context)
   const session = await getSession(request.headers.get("Cookie"));  
   if (!session.has("access_token")) {
     // Redirect to the home page if they are already signed in.

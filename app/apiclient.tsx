@@ -2,6 +2,7 @@ import createClient, { Middleware } from "openapi-fetch";
 import { paths } from "./sdk";
 import { getSession } from "./sessions";
 import { Role } from "./types/enums";
+import { API_URL } from "./constant";
 
 const UNPROTECTED_ROUTES = ["/auth/signin"];
 
@@ -44,7 +45,8 @@ const authMiddl = (appRequest: Request) => {
 };
 
 export default function apiClient({ request }: { request: Request }) {
-  const client = createClient<paths>({ baseUrl: process.env.API_URL });
+  console.log("BASE URL",API_URL,process.env.API_URL)
+  const client = createClient<paths>({ baseUrl: API_URL });
   client.use(authMiddl(request));
   return client;
 }
