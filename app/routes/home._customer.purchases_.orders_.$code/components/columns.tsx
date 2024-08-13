@@ -4,12 +4,27 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
+import { SubscriptionAction } from "~/types/plugin/square";
 import {
   formatCurrency,
   formatTax,
   getTaxPorcent,
 } from "~/util/format/formatCurrency";
 import { formatLongDate } from "~/util/format/formatDate";
+
+export const subscriptionActionsColumns = ():ColumnDef<SubscriptionAction>[] =>{
+  const {t ,i18n} = useTranslation()
+  return [
+    {
+      accessorKey: "type",
+      header: t("table.type"),
+    },
+    {
+      accessorKey: "effective_date",
+      header: t("table.effectiveDate"),
+    },
+  ]
+}
 
 export const itemLineColumns = (): ColumnDef<
   components["schemas"]["SalesItemLine"]

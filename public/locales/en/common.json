@@ -36,6 +36,8 @@
     "total":"Total",
     "tax":"Tax",
     "totalTax":"Total Taxes",
+    "status":"Status",
+    "startDate":"Start Date",
 
     "orderConfirmation":"Order Confirmation"
   },
@@ -71,6 +73,13 @@
 
   "purchases":"Purchases",
 
+
+  "subscription":{
+    "base":"Subscription",
+    "actions":"Subscription Actions",
+    "cancel":"Cancel Subscription"
+  },
+
   "orders":"Orders",
   "orderInfo":"Order Info",
 
@@ -79,8 +88,15 @@
     "deliverdDate":"Deliverd Date",
     "type":"Type",
     "ID":"ID",
-    "code":"CODE"
-  }
+    "code":"CODE",
+    "effectiveDate":"Effective Date"
+  },
+  "dialog":{
+    "title":"Are you sure you want to proceed with this action?",
+    "description":"Please confirm if you wish to proceed with this action. This step cannot be undone."
+  },
+  "continue":"Continue",
+  "cancel":"Cancel"
 
 
 }

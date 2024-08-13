@@ -64,20 +64,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       }
     }
   })
+  console.log(res.data)
   if(res.error != undefined){
     throw new Response(res.error.detail,{
       status:res.response.status,
       statusText:res.error.title
     })
   }
-  console.log(res.error)
 
   return json({
     data:res.data
   });
 };
 
-// ?companyUuid=94442fed-cf6f-4255-bc22-e4dffcbdec4e&uuid=7f5f07c6-6a23-476c-a9b7-da761f04626a&objectId=ZKJPOIRI3MXSLRNPTP7GFEKK
+// ?companyUuid=94442fed-cf6f-4255-bc22-e4dffcbdec4e&uuid=7f5f07c6-6a23-476c-a9b7-da761f04626a&objectId=3XCEIJ7DAWG66EEIZQKH2H47
 
 // let isHydrating = true;
 export default function Cuatropf() {

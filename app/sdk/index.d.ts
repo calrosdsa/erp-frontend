@@ -176,6 +176,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/square/subscription/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel square subscription */
+        post: operations["cancel-square-subscription"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/square/{uuid}": {
         parameters: {
             query?: never;
@@ -439,7 +456,6 @@ export interface components {
             code: string;
             label: string;
             phone: string;
-            suggested: boolean;
         };
         CreateItemRequestBody: {
             /**
@@ -476,13 +492,13 @@ export interface components {
             Time: string;
             Valid: boolean;
         };
-        EntityResponseRequestSalesOrderDetailBody: {
+        EntityResponseResponseSalesOrderDetailBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            result: components["schemas"]["RequestSalesOrderDetail"];
+            result: components["schemas"]["ResponseSalesOrderDetail"];
         };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
@@ -782,12 +798,13 @@ export interface components {
             amount: number;
             currency: string;
         };
-        RequestSalesOrderDetail: {
-            Body: components["schemas"]["RequestSalesOrderDetailBodyStruct"];
-        };
-        RequestSalesOrderDetailBodyStruct: {
-            lines: components["schemas"]["SalesItemLine"][];
-            order: components["schemas"]["SalesOrder"];
+        RequestSubscriptionCancelBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            subscriptionId: string;
         };
         ResponseMessageBody: {
             /**
@@ -799,6 +816,13 @@ export interface components {
                 [key: string]: string | undefined;
             };
             message: string;
+        };
+        ResponseSalesOrderDetail: {
+            Body: components["schemas"]["ResponseSalesOrderDetailBodyStruct"];
+        };
+        ResponseSalesOrderDetailBodyStruct: {
+            lines: components["schemas"]["SalesItemLine"][];
+            order: components["schemas"]["SalesOrder"];
         };
         RetrieveCatalogRequest: {
             object: components["schemas"]["RetrieveCatalogRequestObjectStruct"];
@@ -880,9 +904,16 @@ export interface components {
             /** Format: int64 */
             ID: number;
             OrderType: string;
+            SalesOrderPlugin: components["schemas"]["SalesOrderPlugin"][];
             /** Format: date-time */
             UpdatedAt: string;
             Uuid: string;
+        };
+        SalesOrderPlugin: {
+            Data: string;
+            Plugin: string;
+            /** Format: int64 */
+            SalesOrderID: number;
         };
         SignInRequestBody: {
             /**
@@ -1481,7 +1512,45 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseRequestSalesOrderDetailBody"];
+                    "application/json": components["schemas"]["EntityResponseResponseSalesOrderDetailBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "cancel-square-subscription": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestSubscriptionCancelBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

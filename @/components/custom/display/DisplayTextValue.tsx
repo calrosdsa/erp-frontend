@@ -8,9 +8,11 @@ export default function DisplayTextValue({
   value: string;
 }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <Typography fontSize={labelF}>{title}</Typography>
-      <Typography fontWeight={400} fontSize={sm}>{value}</Typography>
+      <Typography fontWeight={400} fontSize={sm}
+      className="bg-accent rounded-lg p-1 shadow-sm"
+      >{value}</Typography>
     </div>
   );
 }

@@ -17,6 +17,7 @@ import { useChangeLanguage } from "remix-i18next/react";
 import { useTranslation } from "react-i18next";
 import i18next from "~/i18next.server";
 import { ExternalScripts } from "remix-utils/external-scripts";
+import { Toaster } from "@/components/ui/toaster";
 
 export async function action({request}:ActionFunctionArgs) { 
   const body = await request.json()
@@ -85,7 +86,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ScrollRestoration />
         <Scripts />
         <ExternalScripts/>
-        
+        <Toaster/>
       </body>
     </html>
   );

@@ -5,7 +5,13 @@ import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
 import { itemLineColumns } from "./columns";
-import { formatCurrency, formatTax, formatTotalTax } from "~/util/format/formatCurrency";
+import {
+  formatCurrency,
+  formatTax,
+  formatTotalTax,
+} from "~/util/format/formatCurrency";
+import SquareOrder from "./plugin/SquareOrder";
+import { PluginApp } from "~/types/enums";
 
 export default function DetailOrder({
   order,
@@ -23,9 +29,7 @@ export default function DetailOrder({
   };
   const getTotalTax = () => {
     return lines
-      .map((item) =>
-        formatTotalTax(item.ItemPrice.Tax,item.Rate)
-      )
+      .map((item) => formatTotalTax(item.ItemPrice.Tax, item.Rate))
       .reduce((prev, curr) => prev + curr, 0);
   };
 
@@ -86,6 +90,18 @@ export default function DetailOrder({
             )}
           />
         )}
+      </div>
+
+      <div className="mt-5">
+        {order.SalesOrderPlugin.map((item, idx) => {
+          return (
+            <div key={idx}>
+              {item.Plugin == PluginApp.SQUARE && (
+                <SquareOrder data={item.Data} order={order} />
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

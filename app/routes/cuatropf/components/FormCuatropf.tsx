@@ -44,7 +44,6 @@ export default function FormCuatropf() {
       code: z.string(),
       label: z.string(),
       phone: z.string(),
-      suggested: z.boolean(),
     }),
     phoneNumber: z.string(),
   });
