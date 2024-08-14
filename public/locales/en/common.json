@@ -79,6 +79,11 @@
     "actions":"Subscription Actions",
     "cancel":"Cancel Subscription"
   },
+  "item":{
+    "info":"Item Info",
+    "code":"Item Code",
+    "prices":"Item Prices"
+  },
 
   "orders":"Orders",
   "orderInfo":"Order Info",

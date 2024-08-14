@@ -11,12 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Typography, {
-  label,
-  sm,
-  title,
-  xs,
-} from "@/components/typography/Typography";
+import Typography, { sm, title, xs } from "@/components/typography/Typography";
 import { HomeIcon } from "lucide-react";
 
 type RouteItem = {
@@ -38,9 +33,7 @@ export default function HomeLayout({
   const [routesName, setRoutesName] = React.useState<string[]>([]);
 
   const getRoutes = () => {
-    const routesName = location.pathname
-      .split("/")
-      .map((word) => t(word));
+    const routesName = location.pathname.split("/").map((word) => t(word));
     setRoutesName(routesName.slice(2));
   };
 
@@ -55,7 +48,9 @@ export default function HomeLayout({
 
   const getRouteName = () => {
     const path = location.pathname.split("/");
-    return t(path.slice(-1));
+    const route = path.slice(-1)
+    console.log(route)
+    return t(route);
   };
 
   React.useEffect(() => {
@@ -108,7 +103,7 @@ export default function HomeLayout({
                       className="hover:underline"
                       aria-label="Home"
                     >
-                      <HomeIcon size={15}/>
+                      <HomeIcon size={15} />
                     </Link>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />

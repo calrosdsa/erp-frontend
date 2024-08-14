@@ -279,6 +279,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/item-price/{itemCode}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Item Prices
+         * @description Retrieve Item Prices by Item Code
+         */
+        get: operations["get-item-prices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/price-list": {
         parameters: {
             query?: never;
@@ -292,6 +312,23 @@ export interface paths {
         put: operations["update-item-price-list"];
         /** Create item price list */
         post: operations["create-item-price-list"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve item detail base on code */
+        get: operations["get-item-detail"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -500,6 +537,14 @@ export interface components {
             readonly $schema?: string;
             result: components["schemas"]["ResponseSalesOrderDetail"];
         };
+        EntityResponseResultEntityItemBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["ResultEntityItem"];
+        };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
             location?: string;
@@ -593,6 +638,7 @@ export interface components {
             Uuid: string;
         };
         ItemPrice: {
+            Code: string;
             Company: components["schemas"]["Company"];
             /** Format: int64 */
             CompanyID: number;
@@ -678,6 +724,14 @@ export interface components {
             readonly $schema?: string;
             pagination_result: components["schemas"]["PaginationResultListItemGroup"];
         };
+        PaginationResponsePaginationResultListItemPriceBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListItemPrice"];
+        };
         PaginationResponsePaginationResultListItemPriceListBody: {
             /**
              * Format: uri
@@ -701,6 +755,11 @@ export interface components {
         };
         PaginationResultListItemGroup: {
             results: components["schemas"]["ItemGroup"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListItemPrice: {
+            results: components["schemas"]["ItemPrice"][];
             /** Format: int64 */
             total: number;
         };
@@ -823,6 +882,9 @@ export interface components {
         ResponseSalesOrderDetailBodyStruct: {
             lines: components["schemas"]["SalesItemLine"][];
             order: components["schemas"]["SalesOrder"];
+        };
+        ResultEntityItem: {
+            entity: components["schemas"]["Item"];
         };
         RetrieveCatalogRequest: {
             object: components["schemas"]["RetrieveCatalogRequestObjectStruct"];
@@ -1035,6 +1097,7 @@ export interface components {
             Enabled: boolean;
             /** Format: int64 */
             ID: number;
+            UnitOfMeasureTranslation: components["schemas"]["UnitOfMeasureTranslation"];
             /** Format: date-time */
             UpdatedAt: string;
         };
@@ -1779,6 +1842,46 @@ export interface operations {
             };
         };
     };
+    "get-item-prices": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                itemCode: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-price-lists": {
         parameters: {
             query: {
@@ -1880,6 +1983,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-item-detail": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityItemBody"];
                 };
             };
             /** @description Error */

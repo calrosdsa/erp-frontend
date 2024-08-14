@@ -19,20 +19,19 @@ import { useState } from "react"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  hiddenColumns?:VisibilityState
 }
  
 export function DataTable<TData, TValue>({
   columns,
   data,
+  hiddenColumns
 }: DataTableProps<TData, TValue>) {
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    'Uuid': false,
-    'Currency':false  
-})
+  // const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(hiddenColumns|| {})
   const table = useReactTable({
     data,
     state:{
-      columnVisibility: columnVisibility
+      columnVisibility: hiddenColumns,
     },
     columns,
     getCoreRowModel: getCoreRowModel(),
