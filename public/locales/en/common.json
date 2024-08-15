@@ -64,10 +64,15 @@
 
   "create_item":"Add Item",
   "itemInfo":"Item Information",
-  "itemPrice":"Item Price",
-
 
   "square":"Square",
+  "_object":{
+    "objectId":"Object ID",
+    "objectType":"Object Type",
+    "presentAtAllLocations":"Present At All Locations",
+    "subscriptionPlanVariation":"Subscription Plan Variation Id",
+    "phases":"Phases"
+  },
 
   "settings":"Settings",
 
@@ -85,16 +90,30 @@
     "prices":"Item Prices"
   },
 
+  "item-prices":"Item Prices",
+  "itemPrice":{
+    "s`":"Item Price",
+    "p":"Item Prices",
+    "info":"Item Price Info"
+  },
+  "priceList":{
+    "info":"Price list info"
+  },
+
   "orders":"Orders",
   "orderInfo":"Order Info",
 
   "table":{
     "createdAt":"Creation Date",
+    "updatedAt":"Last Modified",
     "deliverdDate":"Deliverd Date",
     "type":"Type",
     "ID":"ID",
     "code":"CODE",
-    "effectiveDate":"Effective Date"
+    "effectiveDate":"Effective Date",
+    "ordinal":"Ordinal",
+    "cadence":"Cadence",
+    "periods":"Periods"
   },
   "dialog":{
     "title":"Are you sure you want to proceed with this action?",

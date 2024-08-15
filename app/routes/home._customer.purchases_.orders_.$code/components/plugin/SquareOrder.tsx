@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { SalesOrderType } from "~/types/enums";
-import { SquareSalesOrderResponse, SquareSubscriptionStatus } from "~/types/plugin/square";
+import { SquareSalesOrderResponse, SquareSubscriptionStatus } from "~/types/plugin/square/subscription";
 import { subscriptionActionsColumns } from "../columns";
 import { Button } from "@/components/ui/button";
 import CustomAlertDialog from "@/components/custom/dialog/CustomAlertDialog";

@@ -32,6 +32,10 @@ export const NavItems = ({ session }: { session: SessionData }): NavItem[] => {
         href: "/home/stock/items",
       },
       {
+        title: t("itemPrice.p"),
+        href: "/home/stock/item-prices",
+      },
+      {
         title: t("item-groups"),
         href: "/home/stock/item-groups",
       },

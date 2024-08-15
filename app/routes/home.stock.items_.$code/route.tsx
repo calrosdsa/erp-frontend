@@ -1,7 +1,7 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import ItemDetailClient from "./itemDetail.client";
 import apiClient from "~/apiclient";
-import { DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 
 
 export const loader = async({request,params}:LoaderFunctionArgs) =>{
@@ -19,7 +19,7 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
         params:{
             query:{
                 size:DEFAULT_SIZE,
-                page:"1"
+                page:DEFAULT_PAGE,
             },
             path:{
                 itemCode:code || ""

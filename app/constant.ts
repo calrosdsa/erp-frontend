@@ -1,4 +1,5 @@
-export const DEFAULT_SIZE = "15"
+export const DEFAULT_SIZE = "5"
+export const DEFAULT_PAGE = "0"
 
 
 export let API_URL = 

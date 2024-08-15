@@ -234,7 +234,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Get Items
+         * @description Retrieve Items
+         */
+        get: operations["get-items"];
         put?: never;
         /** Create item */
         post: operations["create-item"];
@@ -268,11 +272,35 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Get Item Prices
+         * @description Retrieve Item Prices
+         */
+        get: operations["get-item-prices"];
         /** Update item price */
         put: operations["update-item-price"];
         /** Create item price */
         post: operations["create-item-price"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item/item-price/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Item Price
+         * @description Retrieve Item Price Datail
+         */
+        get: operations["get-item-price-detail"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -287,10 +315,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Item Prices
+         * Get List by item
          * @description Retrieve Item Prices by Item Code
          */
-        get: operations["get-item-prices"];
+        get: operations["get-list-by-item"];
         put?: never;
         post?: never;
         delete?: never;
@@ -545,6 +573,14 @@ export interface components {
             readonly $schema?: string;
             result: components["schemas"]["ResultEntityItem"];
         };
+        EntityResponseResultEntityItemPriceBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["ResultEntityItemPrice"];
+        };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
             location?: string;
@@ -653,6 +689,7 @@ export interface components {
             ItemPriceList: components["schemas"]["ItemPriceList"];
             /** Format: int64 */
             ItemPriceListID: number;
+            ItemPricePlugin: components["schemas"]["ItemPricePlugin"][];
             /** Format: int64 */
             ItemQuantity: number;
             /** Format: int64 */
@@ -700,6 +737,12 @@ export interface components {
             UpdatedAt: string;
             Uuid: string;
         };
+        ItemPricePlugin: {
+            /** Format: int64 */
+            BaseID: number;
+            Data: string;
+            Plugin: string;
+        };
         NullTime: {
             /** Format: date-time */
             Time: string;
@@ -715,6 +758,14 @@ export interface components {
              */
             readonly $schema?: string;
             pagination_result: components["schemas"]["PaginationResultListCompany"];
+        };
+        PaginationResponsePaginationResultListItemBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListItem"];
         };
         PaginationResponsePaginationResultListItemGroupBody: {
             /**
@@ -750,6 +801,11 @@ export interface components {
         };
         PaginationResultListCompany: {
             results: components["schemas"]["Company"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListItem: {
+            results: components["schemas"]["Item"][];
             /** Format: int64 */
             total: number;
         };
@@ -885,6 +941,9 @@ export interface components {
         };
         ResultEntityItem: {
             entity: components["schemas"]["Item"];
+        };
+        ResultEntityItemPrice: {
+            entity: components["schemas"]["ItemPrice"];
         };
         RetrieveCatalogRequest: {
             object: components["schemas"]["RetrieveCatalogRequestObjectStruct"];
@@ -1690,6 +1749,44 @@ export interface operations {
             };
         };
     };
+    "get-items": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-item": {
         parameters: {
             query?: never;
@@ -1753,6 +1850,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListItemGroupBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-item-prices": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceBody"];
                 };
             };
             /** @description Error */
@@ -1842,7 +1977,43 @@ export interface operations {
             };
         };
     };
-    "get-item-prices": {
+    "get-item-price-detail": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityItemPriceBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-list-by-item": {
         parameters: {
             query: {
                 page: string;
@@ -1862,8 +2033,8 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Created */
-            201: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

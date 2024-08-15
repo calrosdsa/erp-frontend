@@ -2,10 +2,14 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
+  OnChangeFn,
+  PaginationState,
+  TableOptions,
   useReactTable,
   VisibilityState,
-} from "@tanstack/react-table"
- 
+} from "@tanstack/react-table";
+
 import {
   Table,
   TableBody,
@@ -13,30 +17,65 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { useState } from "react"
- 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  hiddenColumns?:VisibilityState
+} from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { DataTablePagination } from "./DataTablePagination";
+import { DEFAULT_SIZE } from "~/constant";
+
+export interface OptionsTable {
+  onPaginationChange: (d: PaginationState) => void;
+  rowCount: number;
+  paginationState:PaginationState
 }
- 
+
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  hiddenColumns?: VisibilityState;
+  options?: OptionsTable;
+}
+
 export function DataTable<TData, TValue>({
   columns,
   data,
-  hiddenColumns
+  hiddenColumns,
+  options,
 }: DataTableProps<TData, TValue>) {
   // const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(hiddenColumns|| {})
+  // const [pagination, setPagination] = useState<PaginationState>({
+  //   pageIndex: 0,
+  //   pageSize: Number(DEFAULT_SIZE),
+  // });
+  const onPaginationChange: OnChangeFn<PaginationState> = (
+    updaterOrValue
+  ) => {
+    let newState: PaginationState | undefined = undefined;
+    if (options == undefined) return;
+    if (typeof updaterOrValue === "function") {
+      newState = updaterOrValue(options.paginationState);
+    } else {
+      newState = updaterOrValue;
+    }
+    if (newState != undefined) {
+      options.onPaginationChange(newState);
+    }
+  };
   const table = useReactTable({
     data,
-    state:{
+    state: {
       columnVisibility: hiddenColumns,
+      pagination:options?.paginationState,
     },
     columns,
     getCoreRowModel: getCoreRowModel(),
-    
-  })
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange:onPaginationChange,
+    rowCount:options?.rowCount,
+    autoResetPageIndex: false,
+    manualPagination:true,
+  });
+
  
   return (
     <div className="rounded-md border">
@@ -54,7 +93,7 @@ export function DataTable<TData, TValue>({
                           header.getContext()
                         )}
                   </TableHead>
-                )
+                );
               })}
             </TableRow>
           ))}
@@ -82,6 +121,28 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      {options != undefined &&
+        <DataTablePagination table={table} />
+      }
+
+      {/* <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div> */}
     </div>
-  )
+  );
 }

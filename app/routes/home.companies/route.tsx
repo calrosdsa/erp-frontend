@@ -2,7 +2,7 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import CompaniesClient from "./companies.client";
 import apiClient from "~/apiclient";
 import { components } from "~/sdk";
-import { DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 
 type CompaniesAction  = {
   action:string
@@ -24,7 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         params: {
           query: {
             query: data.query,
-            page: data.page || "1",
+            page: data.page || DEFAULT_PAGE,
             size: data.size || DEFAULT_SIZE,
           },
         },
@@ -46,7 +46,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const res = await apiClient({ request }).GET("/company", {
     params: {
       query: {
-        page: "1",
+        page: DEFAULT_PAGE,
         size: DEFAULT_SIZE,
       },
     },

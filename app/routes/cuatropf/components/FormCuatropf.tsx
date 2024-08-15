@@ -31,22 +31,22 @@ type SquareMetadata = {
   }
 }
 
+const formSchema = z.object({
+  givenName: z.string().min(5),
+  familyName: z.string().min(5),
+  companyName: z.string().min(5),
+  email: z.string().email(),
+  country: z.object({
+    code: z.string(),
+    label: z.string(),
+    phone: z.string(),
+  }),
+  phoneNumber: z.string(),
+});
 export default function FormCuatropf() {
   let scriptLoaded = false;
   const fetcher = useFetcher<typeof action>();
   let { t, i18n } = useTranslation();
-  const formSchema = z.object({
-    givenName: z.string().min(5),
-    familyName: z.string().min(5),
-    companyName: z.string().min(5),
-    email: z.string().email(),
-    country: z.object({
-      code: z.string(),
-      label: z.string(),
-      phone: z.string(),
-    }),
-    phoneNumber: z.string(),
-  });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

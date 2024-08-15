@@ -1,7 +1,7 @@
 import apiClient from "~/apiclient";
 import ItemsClient from "./items.client";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import { DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 
 
 
@@ -12,7 +12,7 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
     const res = await client.GET("/stock/item",{
         params:{
             query:{
-                page:params.get("page") || "1",
+                page:params.get("page") || DEFAULT_PAGE,
                 size:params.get("size") || DEFAULT_SIZE
             }
         }

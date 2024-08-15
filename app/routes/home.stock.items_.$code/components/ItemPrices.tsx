@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { loader } from "../route";
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { itemPriceColumns } from "@/components/custom/table/columns/itemPriceColumns";
+import { itemPriceColumns } from "@/components/custom/table/columns/stock/itemPriceColumns";
 
 
 
@@ -24,7 +24,7 @@ export default  function ItemPrices({
         <div className="mt-3">
             <DataTable
             data={itemPrices?.pagination_result.results || []}
-            columns={itemPriceColumns()}
+            columns={itemPriceColumns({})}
             hiddenColumns={{
                 'Currency':false,
             }}
