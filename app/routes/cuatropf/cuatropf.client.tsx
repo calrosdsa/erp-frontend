@@ -13,13 +13,7 @@ const CuatropfClient = ({}: {}) => {
 
   return (
     <>
-      <script
-        type="text/javascript"
-        onLoad={() => {
-          // document.addEventListener("DOMContentLoaded", eventCardListener);
-        }}
-      ></script>
-
+     
 
       <div className="min-h-screen">
 

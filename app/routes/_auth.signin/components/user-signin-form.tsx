@@ -21,13 +21,13 @@ import { Button } from "@/components/ui/button";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation();
-  const formSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
-  });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

@@ -22,7 +22,7 @@ export default function ItemPricesClient() {
       <DataTable
         data={data?.pagination_result.results || []}
         columns={itemPriceColumns({ includeItem: true })}
-        options={{
+        paginationOptions={{
           paginationState: paginationState,
           rowCount:data?.pagination_result.total || 0,
           onPaginationChange: (e) => {

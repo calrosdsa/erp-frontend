@@ -1,7 +1,9 @@
 import {
   ColumnDef,
+  ExpandedState,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getPaginationRowModel,
   OnChangeFn,
   PaginationState,
@@ -23,24 +25,30 @@ import { Button } from "@/components/ui/button";
 import { DataTablePagination } from "./DataTablePagination";
 import { DEFAULT_SIZE } from "~/constant";
 
-export interface OptionsTable {
+export interface PaginationOptions {
   onPaginationChange: (d: PaginationState) => void;
   rowCount: number;
   paginationState:PaginationState
+}
+
+export interface ExpandedRowOptions<T> {
+  getSubRows?:(t:T)=>T[]
 }
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   hiddenColumns?: VisibilityState;
-  options?: OptionsTable;
+  paginationOptions?: PaginationOptions;
+  expandedOptions?:ExpandedRowOptions<TData>
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   hiddenColumns,
-  options,
+  paginationOptions,
+  expandedOptions
 }: DataTableProps<TData, TValue>) {
   // const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(hiddenColumns|| {})
   // const [pagination, setPagination] = useState<PaginationState>({
@@ -51,27 +59,33 @@ export function DataTable<TData, TValue>({
     updaterOrValue
   ) => {
     let newState: PaginationState | undefined = undefined;
-    if (options == undefined) return;
+    if (paginationOptions == undefined) return;
     if (typeof updaterOrValue === "function") {
-      newState = updaterOrValue(options.paginationState);
+      newState = updaterOrValue(paginationOptions.paginationState);
     } else {
       newState = updaterOrValue;
     }
     if (newState != undefined) {
-      options.onPaginationChange(newState);
+      paginationOptions.onPaginationChange(newState);
     }
   };
+
+  const [expanded, setExpanded] = useState<ExpandedState>({})
   const table = useReactTable({
     data,
     state: {
       columnVisibility: hiddenColumns,
-      pagination:options?.paginationState,
+      pagination:paginationOptions?.paginationState,
+      expanded,
     },
     columns,
+    onPaginationChange:onPaginationChange,
+    onExpandedChange:setExpanded,
+    getExpandedRowModel: getExpandedRowModel(),
+    getSubRows: expandedOptions?.getSubRows,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange:onPaginationChange,
-    rowCount:options?.rowCount,
+    rowCount:paginationOptions?.rowCount,
     autoResetPageIndex: false,
     manualPagination:true,
   });
@@ -121,7 +135,7 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      {options != undefined &&
+      {paginationOptions != undefined &&
         <DataTablePagination table={table} />
       }
 

@@ -33,7 +33,7 @@ export default function CountrySelect({
           <Select onValueChange={(e)=>{
             const object = JSON.parse(e)
             field.onChange(object)
-          }} defaultValue={field.value}>
+          }} defaultValue={JSON.stringify(field.value)}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select a verified country to display" />

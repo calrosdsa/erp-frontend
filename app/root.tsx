@@ -59,7 +59,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     });
   }
 }
+
 export let handle = {
+  
   // In the handle export, we can add a i18n key with namespaces our route
   // will need to load. This key can be a single string or an array of strings.
   // TIP: In most cases, you should set this to your defaultNS from your i18n config

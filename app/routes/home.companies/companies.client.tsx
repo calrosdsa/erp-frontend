@@ -1,19 +1,6 @@
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-import {
-  Avatar,
-  Box,
-  Button,
-  Chip,
-  ColorPaletteProp,
-  Link,
-  Typography,
-} from "@mui/joy";
+
 import OrderList from "@/components/custom/table/CustomList";
 import React, { useContext } from "react";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import BlockIcon from "@mui/icons-material/Block";
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import { RowMenu } from "@/components/custom/table/RowMenu";
 import { useTranslation } from "react-i18next";
 import { useLoaderData, useOutletContext } from "@remix-run/react";
@@ -21,6 +8,7 @@ import { loader } from "./route";
 import { GlobalState } from "~/types/app";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { columns } from "./components/table/columns";
+import { components } from "~/sdk";
 
 export default function CompaniesClient() {
   const { t } = useTranslation();
@@ -29,7 +17,11 @@ export default function CompaniesClient() {
 
   return (
     <>
-    <DataTable columns={columns} data={paginationResult?.pagination_result.results || []} />
+    <DataTable columns={columns()} data={paginationResult?.pagination_result.results || []} 
+    expandedOptions={{
+      getSubRows:row=> row.CompanyDepartments
+    }}
+    />
      
       {/* <OrderTable
         headerValues={[

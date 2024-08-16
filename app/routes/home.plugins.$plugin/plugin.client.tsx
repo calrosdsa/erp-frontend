@@ -12,6 +12,7 @@ import { GlobalState } from "~/types/app";
 import { action, loader } from "./route";
 import SquarePlugin from "./plugins/square";
 import { Button } from "@/components/ui/button";
+import EmailPlugin from "./components/EmailPlugin";
 
 export default function PluginClient() {
   const { t } = useTranslation();
@@ -36,9 +37,13 @@ export default function PluginClient() {
       <div>
         {(plugin == undefined || plugin.company_plugin.Plugin == "")&& (
           <Button onClick={() => setOpenAddPlugin(true)}>
-            {t("addSquare")}
+            {t("addPlugin")}
           </Button>
         )}
+
+        {plugin.company_plugin.Plugin == "email" && 
+        <EmailPlugin/>
+        }
 
         {plugin.company_plugin.Plugin == "square" &&
         <SquarePlugin

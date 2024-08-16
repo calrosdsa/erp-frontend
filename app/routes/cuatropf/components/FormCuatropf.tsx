@@ -15,26 +15,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { components } from "~/sdk";
 import CountrySelect from "@/components/custom/select/CountrySelect";
 
-
 type SquareMetadata = {
-  objectId:string
-  itemGroupUuid:string
-  type: "SUBSCRIPTION"
-  cardRequest:{
-    locationId:string
-    sourceId:string
-    idempotencyKey:string
-  }
-}
+  objectId: string;
+  itemGroupUuid: string;
+  type: "SUBSCRIPTION";
+  cardRequest: {
+    locationId: string;
+    sourceId: string;
+    idempotencyKey: string;
+  };
+};
 
 const formSchema = z.object({
-  givenName: z.string().min(5),
-  familyName: z.string().min(5),
-  companyName: z.string().min(5),
+  givenName: z.string(),
+  familyName: z.string(),
+  companyName: z.string(),
   email: z.string().email(),
   country: z.object({
     code: z.string(),
@@ -47,19 +46,20 @@ export default function FormCuatropf() {
   let scriptLoaded = false;
   const fetcher = useFetcher<typeof action>();
   let { t, i18n } = useTranslation();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      givenName: "Jorge",
-      familyName: "Miranda",
-      companyName: "Teclu",
-      email: "jorgemiranda0180@gmail.com",
-      phoneNumber: "+1-212-555-4240",
-      country:{
-        phone:"",
-        code:"",
-        label:"",
-      }
+      givenName: "",
+      familyName: "",
+      companyName: "",
+      email: "",
+      phoneNumber: "",
+      country: {
+        code: "US",
+        label: "United States",
+        phone: "1",
+      },
     },
   });
 
@@ -76,55 +76,39 @@ export default function FormCuatropf() {
   async function initializeCard(payments: any) {
     const card = await payments.card();
     await card.attach("#card-container");
-
     return card;
   }
 
-  async function createPayment(token: any, verificationToken: any) {
-    console.log("CREATEPAYMENT")
-    const params = new URL(window.location.href)
-    const metadata:SquareMetadata = {
-      cardRequest:{
+  async function createPayment(token: any) {
+    const params = new URL(window.location.href);
+    const metadata: SquareMetadata = {
+      cardRequest: {
         locationId,
         sourceId: token,
         idempotencyKey: window.crypto.randomUUID(),
       },
-      objectId:params.searchParams.get("objectId") || "",
-      itemGroupUuid:params.searchParams.get("uuid") || "",
-      type:"SUBSCRIPTION"
+      objectId: params.searchParams.get("objectId") || "",
+      itemGroupUuid: params.searchParams.get("uuid") || "",
+      type: "SUBSCRIPTION",
     };
 
-    console.log(form.getValues(),metadata);
-
-    const body:components["schemas"]["CuatropfSubscriptionRequestBody"] = {
-      metadata:JSON.stringify(metadata),
+    const body: components["schemas"]["CuatropfSubscriptionRequestBody"] = {
+      metadata: JSON.stringify(metadata),
       ...form.getValues(),
-      plugins:[{
-        Plugin:"square"
-      }]
-    }
+      plugins: [
+        {
+          Plugin: "square",
+        },
+      ],
+    };
 
-
-    fetcher.submit(body,{
-      method:"POST",
-      action:`/cuatropf?companyUuid=${params.searchParams.get("companyUuid") || ""}`,
-      encType:"application/json"
-    })
-
-    // const paymentResponse = await fetch("/payment", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body,
-    // });
-
-    // if (paymentResponse.ok) {
-    //   return paymentResponse.json();
-    // }
-
-    // const errorBody = await paymentResponse.text();
-    // throw new Error(errorBody);
+    fetcher.submit(body, {
+      method: "POST",
+      action: `/cuatropf?companyUuid=${
+        params.searchParams.get("companyUuid") || ""
+      }`,
+      encType: "application/json",
+    });
   }
 
   async function tokenize(paymentMethod: any) {
@@ -141,31 +125,6 @@ export default function FormCuatropf() {
     }
   }
 
-  async function verifyBuyer(payments: any, token: any) {
-    const verificationDetails = {
-      amount: "1.00",
-      billingContact: {
-        givenName: "John",
-        familyName: "Doe",
-        email: "john.doe@square.example",
-        phone: "3214563987",
-        addressLines: ["123 Main Street", "Apartment 1"],
-        city: "London",
-        state: "LND",
-        countryCode: "GB",
-      },
-      currencyCode: "GBP",
-      intent: "CHARGE",
-    };
-
-    const verificationResults = await payments.verifyBuyer(
-      token,
-      verificationDetails
-    );
-    return verificationResults.token;
-  }
-
-  // status is either SUCCESS or FAILURE;
   function displayPaymentResults(status: any) {
     const statusContainer = document.getElementById(
       "payment-status-container"
@@ -182,7 +141,6 @@ export default function FormCuatropf() {
   }
 
   const eventCardListener = async () => {
-    console.log("load ------");
     if (!window.Square) {
       throw new Error("Square.js failed to load properly");
     }
@@ -217,32 +175,38 @@ export default function FormCuatropf() {
     ) {
       event.preventDefault();
       try {
-        // disable the submit button as we await tokenization and make a payment request.
+        setLoading(true);
         const token = await tokenize(card);
-        const verificationToken = await verifyBuyer(payments, token);
-        const paymentResults = await createPayment(token, verificationToken);
+        const paymentResults = await createPayment(token);
         displayPaymentResults("SUCCESS");
 
-        console.debug("Payment Success", paymentResults);
+        setLoading(false);
       } catch (e: any) {
+        setLoading(false);
         displayPaymentResults("FAILURE");
         console.error(e.message);
       }
     }
 
     submitForm.addEventListener("submit", async function (event) {
-      console.log("clicking");
       await handlePaymentMethodSubmission(event, card);
     });
   };
 
   useEffect(() => {
-    if (!scriptLoaded) {
-      console.log("sdaskdmskam");
+    if (!scriptLoaded && window.Square) {
       scriptLoaded = true;
       eventCardListener();
     }
-  }, []);
+  }, [window.Square]);
+
+  // useEffect(() => {
+  //   if (!scriptLoaded) {
+  //     console.log("sdaskdmskam");
+  //     scriptLoaded = true;
+  //     eventCardListener();
+  //   }
+  // }, []);
 
   return (
     <div className="h-full">
@@ -255,37 +219,36 @@ export default function FormCuatropf() {
             className="space-y-8"
           >
             <div className="grid sm:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="givenName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("form.givenName")}</FormLabel>
-                      <FormControl>
-                        <Input {...field} name="givenName" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="givenName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("form.givenName")}</FormLabel>
+                    <FormControl>
+                      <Input {...field} name="givenName" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="familyName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("form.familyName")}</FormLabel>
-                      <FormControl>
-                        <Input {...field} name="familyName" />
-                      </FormControl>
-                      {/* <FormDescription>
+              <FormField
+                control={form.control}
+                name="familyName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("form.familyName")}</FormLabel>
+                    <FormControl>
+                      <Input {...field} name="familyName" />
+                    </FormControl>
+                    {/* <FormDescription>
                         This is your public display name.
                       </FormDescription> */}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
@@ -324,14 +287,12 @@ export default function FormCuatropf() {
                   <FormItem>
                     <FormLabel>{t("form.phoneNumber")}</FormLabel>
                     <FormControl>
-                      <Input {...field}  name="phoneNumber" />
+                      <Input {...field} name="phoneNumber" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-           
             </div>
 
             {fetcher.data != undefined && fetcher.data != undefined && (
@@ -345,15 +306,13 @@ export default function FormCuatropf() {
             )}
 
             <div>
-           
               <div id="card-container" className="h-32"></div>
               <Button
                 id="card-button"
                 type="submit"
                 variant={"default"}
                 className="w-full"
-                loading={fetcher.state == "submitting"}
-                
+                loading={fetcher.state == "submitting" || loading}
               >
                 {t("form.pay")}
               </Button>

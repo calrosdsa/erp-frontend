@@ -37,7 +37,7 @@ const ItemsClient = () => {
         <DataTable
           data={data?.pagination_result.results || []}
           columns={itemColumns()}
-          options={{
+          paginationOptions={{
             rowCount:data?.pagination_result.total || 0,
             onPaginationChange:  (e) => {
               const fD = new FormData();

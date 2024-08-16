@@ -8,11 +8,19 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
 import { NavItem } from "~/types";
 import { Role } from "~/types/enums";
+import { title } from "../typography/Typography";
 
-export const NavItems = ({ session }: { session: SessionData }): NavItem[] => {
+export const NavItems = ({
+  session,
+  appConfig,
+}: {
+  session: SessionData;
+  appConfig: components["schemas"]["AppConfigStruct"] | undefined;
+}): NavItem[] => {
   const { t } = useTranslation();
   let navItems: NavItem[] = [];
   const companies = {
@@ -20,7 +28,7 @@ export const NavItems = ({ session }: { session: SessionData }): NavItem[] => {
     icon: Building2Icon,
     href: "/home/companies",
     // color: "text-sky-500",
-  }
+  };
   const stock = {
     title: t("stock"),
     icon: Layers3Icon,
@@ -44,44 +52,48 @@ export const NavItems = ({ session }: { session: SessionData }): NavItem[] => {
         href: "/home/stock/warehouse",
       },
     ],
-  }
-  const plugins =   {
+  };
+  const plugins:NavItem = {
     title: t("plugins"),
     icon: BlocksIcon,
     href: "/home/plugins",
     isChidren: true,
-    children: [
-      {
-        title: t("square"),
-        href: "/home/plugins/square",
-      },
-    ],
+    children: [],
+  };
+  if (appConfig != undefined) {
+    appConfig.plugins.map((item) => {
+      const navItem: NavItem = {
+        title: t(item.Name),
+        href: `/home/plugins/${item.Name}`,
+      };
+      plugins.children?.push(navItem);
+    });
   }
 
   const purchases = {
     title: t("purchases"),
-    href:"/home/purchases",
-    icon:CreditCardIcon,
+    href: "/home/purchases",
+    icon: CreditCardIcon,
     isChidren: true,
-    children: [] as NavItem[]
-  }
+    children: [] as NavItem[],
+  };
 
   const orders = {
     title: t("orders"),
-    href:"/home/purchases/orders",
-  }
+    href: "/home/purchases/orders",
+  };
 
-  switch(session.role){
-    case Role.ROLE_ADMIN:{
-        navItems.push(companies)
-        navItems.push(stock)
-        navItems.push(plugins)
-        break;
+  switch (session.role) {
+    case Role.ROLE_ADMIN: {
+      navItems.push(companies);
+      navItems.push(stock);
+      navItems.push(plugins);
+      break;
     }
-    case Role.ROLE_CLIENT:{
-        purchases.children.push(orders)
-        navItems.push(purchases)
-        break;
+    case Role.ROLE_CLIENT: {
+      purchases.children.push(orders);
+      navItems.push(purchases);
+      break;
     }
   }
 
@@ -97,7 +109,7 @@ export const NavItems = ({ session }: { session: SessionData }): NavItem[] => {
       icon: LayoutDashboard,
       href: "/",
       // color: "text-sky-500",
-    }, 
-    ...navItems
+    },
+    ...navItems,
   ];
 };

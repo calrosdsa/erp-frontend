@@ -193,6 +193,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/square/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Test Event */
+        get: operations["test-event"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/square/{uuid}": {
         parameters: {
             query?: never;
@@ -495,6 +512,7 @@ export interface components {
             Uuid: string;
         };
         Company: {
+            CompanyDepartments: components["schemas"]["Company"][];
             CompanyPlugins: components["schemas"]["CompanyPlugins"][];
             /** Format: date-time */
             CreatedAt: string;
@@ -503,6 +521,8 @@ export interface components {
             ID: number;
             IsParent: boolean;
             Name: string;
+            /** Format: int64 */
+            Ordinal: number;
             Parent: components["schemas"]["Company"];
             /** Format: int64 */
             ParentID: number | null;
@@ -1674,6 +1694,33 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
                 };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "test-event": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Error */
             default: {

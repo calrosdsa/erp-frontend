@@ -47,7 +47,7 @@
   },
   "language":"Language",
 
-  "addSquare":"Add Square Plugin",
+  "addPlugin":"Add Plugin",
   "applicationId":"Application ID",
   "accessToken":"Access Token",
   "locationId":"Location ID",
@@ -65,6 +65,7 @@
   "create_item":"Add Item",
   "itemInfo":"Item Information",
 
+  "email":"Email",
   "square":"Square",
   "_object":{
     "objectId":"Object ID",

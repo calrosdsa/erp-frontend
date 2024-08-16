@@ -24,7 +24,8 @@ export const MobileSidebar = ({data}:{
                 <SheetContent side="left" className="w-72">
                     <div className="px-1 py-6 pt-16">
                         <SideNav items={NavItems({
-                            session:data.session
+                            session:data.session,
+                            appConfig:data.appConfig,
                         })} setOpen={setOpen} />
                     </div>
                 </SheetContent>

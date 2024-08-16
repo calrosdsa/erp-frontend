@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import ItemGroupsClient from "./itemGroups.client";
-import { DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 
 
 export const action = async({request}:ActionFunctionArgs)=>{
@@ -10,7 +10,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
     const res = await apiClient({ request }).GET("/stock/item-group", {
       params: {
         query: {
-          page: "1",
+          page: DEFAULT_PAGE,
           size: DEFAULT_SIZE,
           query:query
         },

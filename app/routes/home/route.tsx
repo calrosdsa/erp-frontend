@@ -74,7 +74,7 @@ export const loader = async ({ request,context }: LoaderFunctionArgs) => {
             const currenCompany= res.data.user.Companies.find(item =>item.ID == userData?.CompanyID)
             if(currenCompany != undefined){
               activeCompany = currenCompany
-              console.log("setting company uuid")
+              console.log("setting company uuid",activeCompany.Uuid)
               session.set("companyUuid",activeCompany.Uuid)
               if(userData != undefined){
                 session.set("userSessionUuid",userData.Uuid)

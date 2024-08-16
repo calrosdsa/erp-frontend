@@ -51,7 +51,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       },
     },
   });
-  // console.log("data", res.error, res.data?.pagination_result);
+  console.log("data", res.error, res.data?.pagination_result.results.length);
   return json({
     paginationResult: res.data,
   });

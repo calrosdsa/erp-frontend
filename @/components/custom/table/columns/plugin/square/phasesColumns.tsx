@@ -44,14 +44,5 @@ columns.push({
       );
     },
   })
-
-//   columns.push({
-//     accessorKey: "ItemQuantity",
-//     header: t("form.itemQuantity"),
-//   })
-//   columns.push({
-//     accessorKey: "CreatedAt",
-//     header: t("table.createdAt"),
-//   })
   return columns
 };

@@ -3,7 +3,7 @@ import { ClientOnly } from "remix-utils/client-only";
 import CustomerOrders from "./customer-orders.client";
 import apiClient from "~/apiclient";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import { DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 
 
 export const loader = async({request}:LoaderFunctionArgs)=>{
@@ -11,7 +11,7 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
     const res = await client.GET("/selling/salesorder/client",{
         params:{
             query:{
-                page:"1",
+                page:DEFAULT_PAGE,
                 size:DEFAULT_SIZE,
             }
         }

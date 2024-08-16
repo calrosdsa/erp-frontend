@@ -29,26 +29,30 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({request})
   const url=new URL(request.url)
   const companyUuid = url.searchParams.get("companyUuid")
-  console.log(url,companyUuid,request.url)
+  console.log(url,companyUuid,request.url,"upload")
   if(companyUuid == null){
-    throw new Error("No company present in request")
+    return
   }
-  const res = await  client.POST("/cuatropf/subscription/{companyUuid}",{
-    body:data,
-    params:{
-      path:{
-        companyUuid:companyUuid,
-      }
-    }
-  })
-  console.log(res.data,res.error)
-  if(res.response.ok){
-    return redirect("/cuatropf/success")
-  }
-    return json({
-      data:res.data,
-      err:res.error
-    })
+  // throw new Error("No company present in request")
+  return json({err:  {
+    detail: "ERROR",
+}})
+  // const res = await  client.POST("/cuatropf/subscription/{companyUuid}",{
+  //   body:data,
+  //   params:{
+  //     path:{
+  //       companyUuid:companyUuid,
+  //     }
+  //   }
+  // })
+  // console.log(res.data,res.error)
+  // if(res.response.ok){
+  //   return redirect("/cuatropf/success")
+  // }
+  //   return json({
+  //     data:res.data,
+  //     err:res.error
+  //   })
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -64,7 +68,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       }
     }
   })
-  console.log(res.data)
+  // console.log(res.data)
   if(res.error != undefined){
     throw new Response(res.error.detail,{
       status:res.response.status,

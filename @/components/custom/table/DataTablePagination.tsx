@@ -14,7 +14,6 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
-import { OptionsTable } from "./CustomTable"
   
   interface DataTablePaginationProps<TData> {
     table: Table<TData>
