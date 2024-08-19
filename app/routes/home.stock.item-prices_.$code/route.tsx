@@ -1,7 +1,8 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
-import ItemPriceDetailClient from "./itemPrice.client"
+import ItemPriceDetailClient from "./item-price.client"
 import SquareItemPrice from "../home.stock.item-prices/components/plugin/SquareItemPrice"
+import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 
 
 export const loader = async({request,params}:LoaderFunctionArgs) =>{
@@ -26,8 +27,6 @@ export default function ItemPriceDetail(){
     return (
         <div>
             <ItemPriceDetailClient/>
-
-            
         </div>
     )
 }

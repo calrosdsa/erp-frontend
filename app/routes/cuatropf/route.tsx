@@ -34,25 +34,24 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return
   }
   // throw new Error("No company present in request")
-  return json({err:  {
-    detail: "ERROR",
-}})
-  // const res = await  client.POST("/cuatropf/subscription/{companyUuid}",{
-  //   body:data,
-  //   params:{
-  //     path:{
-  //       companyUuid:companyUuid,
-  //     }
-  //   }
-  // })
-  // console.log(res.data,res.error)
-  // if(res.response.ok){
-  //   return redirect("/cuatropf/success")
-  // }
-  //   return json({
-  //     data:res.data,
-  //     err:res.error
-  //   })
+  
+ 
+  const res = await  client.POST("/cuatropf/subscription/{companyUuid}",{
+    body:data,
+    params:{
+      path:{
+        companyUuid:companyUuid,
+      }
+    }
+  })
+  console.log(res.data,res.error)
+  if(res.response.ok){
+    return redirect("/cuatropf/success")
+  }
+    return json({
+      data:res.data,
+      err:res.error?.detail
+    })
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

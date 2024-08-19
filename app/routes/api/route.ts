@@ -1,26 +1,26 @@
 import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { commitSession, getSession } from "~/sessions";
+import { sessionDefaultsFormSchema } from "../home/components/SessionDefaults";
+import { z } from "zod";
 
+type ApiAction = {
+  action:string
+  pathName:string
+  sessionDefault:z.infer<typeof sessionDefaultsFormSchema>
+}
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const action = formData.get("action");
-  switch (action) {
+  const data:ApiAction = await request.json();
+  console.log(data)
+  switch (data.action) {
     case "update-session-defaults":
       const session = await getSession(request.headers.get("Cookie"));
       console.log(
         "UPDATE SESSION",
-        formData.get("companyUuid"),
-        formData.get("locale")
+        data.sessionDefault,
       );
-      const locale = formData.get("locale")?.toString();
-      const companyUuid = formData.get("companyUuid")?.toString();
-      if (locale != undefined) {
-        session.set("locale", locale);
-      }
-      if (companyUuid != undefined) {
-        session.set("companyUuid", companyUuid);
-      }
-      return redirect("/home", {
+      session.set("locale", data.sessionDefault.locale);
+        session.set("companyUuid", data.sessionDefault.companyUuid);
+      return redirect(data.pathName, {
         headers: {
           "Set-Cookie": await commitSession(session),
         },

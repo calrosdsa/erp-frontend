@@ -42,11 +42,12 @@ import {
             <FormLabel>{label}</FormLabel>
             <Select onValueChange={(e)=>{
             //   const object = JSON.parse(e)
-              field.onChange(name,e)
+            console.log(e)
+              field.onChange(e)
             }} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a verified country to display" />
+                  <SelectValue placeholder="Select a option" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
@@ -57,7 +58,7 @@ import {
                     </SelectItem>
                   );
                 })}
-                <SelectItem value="m@example.com"></SelectItem>
+                {/* <SelectItem value="m@example.com"></SelectItem> */}
                 {/* <SelectItem value="m@google.com">m@google.com</SelectItem> */}
                 {/* <SelectItem value="m@support.com">m@support.com</SelectItem> */}
               </SelectContent>

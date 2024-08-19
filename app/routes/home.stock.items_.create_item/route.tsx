@@ -13,10 +13,12 @@ export const action = async({request}:ActionFunctionArgs)=>{
     const res = await client.POST("/stock/item",{
         body:data
     })
+    let errorAction:string | undefined = undefined
     console.log("RESPONSE",res.data,res.error)
+    errorAction = res.error?.detail
     return json({
-      ok: true,
-      responseMessage:res.data
+      responseMessage:res.data,
+      errorAction:errorAction,
     });
 }
 

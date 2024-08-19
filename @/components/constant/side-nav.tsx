@@ -3,6 +3,7 @@ import {
   BookOpenCheck,
   Building2Icon,
   CreditCardIcon,
+  DollarSign,
   HomeIcon,
   Layers3Icon,
   LayoutDashboard,
@@ -29,6 +30,19 @@ export const NavItems = ({
     href: "/home/companies",
     // color: "text-sky-500",
   };
+  const selling: NavItem = {
+    title: t("selling"),
+    icon: DollarSign,
+    href: "/home/selling",
+    isChidren:true,
+    children: [
+      {
+        title: t("price-list"),
+        href: "/home/selling/stock/price-list",
+      },
+    ],
+  };
+
   const stock = {
     title: t("stock"),
     icon: Layers3Icon,
@@ -53,7 +67,7 @@ export const NavItems = ({
       },
     ],
   };
-  const plugins:NavItem = {
+  const plugins: NavItem = {
     title: t("plugins"),
     icon: BlocksIcon,
     href: "/home/plugins",
@@ -86,6 +100,7 @@ export const NavItems = ({
   switch (session.role) {
     case Role.ROLE_ADMIN: {
       navItems.push(companies);
+      navItems.push(selling);
       navItems.push(stock);
       navItems.push(plugins);
       break;

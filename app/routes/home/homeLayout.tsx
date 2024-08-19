@@ -42,14 +42,12 @@ export default function HomeLayout({
       .split("/")
       .slice(0, index + 3)
       .join("/");
-    console.log(route);
     return route;
   };
 
   const getRouteName = () => {
     const path = location.pathname.split("/");
     const route = path.slice(-1)
-    console.log(route)
     return t(route);
   };
 

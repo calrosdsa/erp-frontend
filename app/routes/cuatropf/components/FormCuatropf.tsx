@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { components } from "~/sdk";
 import CountrySelect from "@/components/custom/select/CountrySelect";
+import { toast, useToast } from "@/components/ui/use-toast";
 
 type SquareMetadata = {
   objectId: string;
@@ -47,6 +48,7 @@ export default function FormCuatropf() {
   const fetcher = useFetcher<typeof action>();
   let { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -193,20 +195,20 @@ export default function FormCuatropf() {
     });
   };
 
+  useEffect(()=>{
+    if(fetcher.data?.err != undefined ){
+      toast({
+        title:fetcher.data.err || "",
+      })
+    }
+  },[fetcher.data])
+
   useEffect(() => {
     if (!scriptLoaded && window.Square) {
       scriptLoaded = true;
       eventCardListener();
     }
   }, [window.Square]);
-
-  // useEffect(() => {
-  //   if (!scriptLoaded) {
-  //     console.log("sdaskdmskam");
-  //     scriptLoaded = true;
-  //     eventCardListener();
-  //   }
-  // }, []);
 
   return (
     <div className="h-full">
@@ -301,7 +303,7 @@ export default function FormCuatropf() {
                 textAlign="start"
                 textColor={"danger.400"}
               >
-                {fetcher.data.err?.detail}
+                {fetcher.data.err}
               </Typography>
             )}
 

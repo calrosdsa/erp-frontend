@@ -669,7 +669,6 @@ export interface components {
             Uuid: string;
         };
         ItemDto: {
-            code: string;
             /** Format: int64 */
             itemGroupId: number;
             name: string;
@@ -742,6 +741,7 @@ export interface components {
             validUpTo?: string | null;
         };
         ItemPriceList: {
+            Code: string;
             /** Format: int64 */
             CompanyID: number;
             /** Format: date-time */
@@ -1138,6 +1138,7 @@ export interface components {
             subscription_plan_id: string;
         };
         Tax: {
+            Code: string;
             /** Format: int64 */
             CompanyID: number;
             /** Format: date-time */

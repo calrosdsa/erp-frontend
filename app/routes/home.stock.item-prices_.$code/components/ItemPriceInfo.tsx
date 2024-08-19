@@ -5,12 +5,14 @@ import { useTranslation } from "react-i18next"
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue"
 import { formatCurrency } from "~/util/format/formatCurrency"
 import { formatQuantity } from "~/util/format/formatQuantiy"
+import Routes from "~/util/route"
 
 
 export default function ItemPriceInfo(){
     const {itemPriceData} = useLoaderData<typeof loader>()
     const {entity} = itemPriceData.result
     const {t,i18n} = useTranslation()
+    const routes = new Routes()
     return(
         <div>
       <div className="info-grid">
@@ -33,8 +35,16 @@ export default function ItemPriceInfo(){
         <DisplayTextValue
           title={t("form.price-list")}
           value={entity.ItemPriceList.Name}
-          to=""
+          to={routes.priceListDetail(entity.ItemPriceList.Code)}
         />
+
+        <DisplayTextValue
+          title={t("form.tax")}
+          value={entity.Tax.Name}
+          to={routes.taxDetailRoute(entity.Tax.Code)}
+        />
+
+        
 
         {/* <DisplayTextValue title={t("form.uom")} value={data.UnitOfMeasure.UnitOfMeasureTranslation.Name} /> */}
       </div>

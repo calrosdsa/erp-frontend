@@ -1,6 +1,7 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
+import PriceListsClient from "./price-list.client";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
-import { DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { components } from "~/sdk";
 
 type PriceListAction = {
@@ -22,7 +23,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         params: {
           query: {
             query: data.query,
-            page: data.page || "1",
+            page: data.page || DEFAULT_PAGE,
             size: data.size || DEFAULT_SIZE,
           },
         },
@@ -38,3 +39,28 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     pagination_result,
   });
 };
+
+
+
+export const loader = async({request}:LoaderFunctionArgs) =>{
+    const client = apiClient({request});
+    const url = new URL(request.url)
+    const searchParams = url.searchParams
+    const res = await client.GET("/stock/item/price-list",{
+        params:{
+            query:{
+                page:searchParams.get("page") || DEFAULT_PAGE,
+                size:searchParams.get("size") || DEFAULT_SIZE
+            }
+        }
+    })
+    return json({
+        data:res.data
+    })
+}
+
+export default function PriceLists(){
+    return(
+        <PriceListsClient/>
+    )
+}

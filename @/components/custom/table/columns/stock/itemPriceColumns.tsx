@@ -28,7 +28,7 @@
         const code = row.getValue("Code") as string;
         return (
           <Link
-            to={`./${encodeURIComponent(code)}`}
+            to={`/home/stock/item-prices/${encodeURIComponent(code)}`}
             className="underline font-semibold"
           >
             {code.toString()}

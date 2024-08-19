@@ -16,7 +16,7 @@ type SquareCredentials = {
   locationId: string;
   apiVersion: string;
 };
-const formSchema = z.object({
+export const squareCredentialsformSchema = z.object({
   accessToken: z.string().min(5),
   applicationId: z.string().min(5),
   apiVersion: z.string().min(5),
@@ -31,8 +31,8 @@ export default function SquarePlugin({
   const [showAccessToken, setShowAccessToken] = useState(true);
   const fetcher = useFetcher();
   const [credentials, setCredentias] = useState<SquareCredentials | null>(null);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof squareCredentialsformSchema>>({
+    resolver: zodResolver(squareCredentialsformSchema),
     defaultValues: {
       accessToken: credentials?.accessToken,
       applicationId: credentials?.applicationId,
@@ -54,6 +54,7 @@ export default function SquarePlugin({
       form.setValue("locationId",parse.locationId)
       form.setValue("apiVersion",parse.apiVersion)
       form.setValue("applicationId",parse.applicationId)
+      form.setValue("accessToken",parse.accessToken)
 
     } catch (err) {
       setCredentias({
@@ -65,17 +66,33 @@ export default function SquarePlugin({
       console.log(err);
     }
   };
+
+  function onSubmit(values: z.infer<typeof squareCredentialsformSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    // console.log(form.getValues());
+    fetcher.submit({
+      updatePluginSquare:values,
+      plugin:"square",
+      action:"update-credentials",
+    }, {
+      action: "/home/plugins/${plugin}",
+      method: "POST",
+      encType:"application/json"
+    });
+  }
+
   useEffect(() => {
     parseCredentials(companyPlugin.Credentials);
   }, [companyPlugin]);
 
   return (
     <div>
-  
       {credentials != null && (
         <Form {...form}>
           <fetcher.Form
             method="post"
+            onSubmit={form.handleSubmit(onSubmit)}
             action="/home/plugins/square"
             className="grid gap-y-3 max-w-sm"
           >
@@ -102,7 +119,7 @@ export default function SquarePlugin({
               label={t("accessToken")}
               children={(field) => {
                 return (
-                  <Input {...field} type="password" defaultValue={credentials?.accessToken} />
+                  <Input {...field}  defaultValue={credentials?.accessToken} />
                   // <Input {...field} name="name" />
                 );
               }}

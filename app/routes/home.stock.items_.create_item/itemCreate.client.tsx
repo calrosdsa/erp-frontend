@@ -19,9 +19,11 @@ import { MultiSelect } from "@/components/custom/select/MultiSelect";
 import { Icons } from "@/components/icons";
 import { Input } from "@/components/ui/input";
 import { SquareCheckIcon, SquareIcon } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { action } from "./route";
 
 export default function CreateItemClient() {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation();
   const state = useOutletContext<GlobalState>();
   const fetcherDebounce = useDebounceFetcher<
@@ -63,10 +65,11 @@ export default function CreateItemClient() {
 >();
   const [selectedPlugins,setSelectedPlugins] = useState<
   components["schemas"]["CompanyPlugins"][]>([])
+  const { toast } = useToast()
+
 
   const formSchema = z.object({
     name: z.string().min(2),
-    code: z.string().min(2),
     rate: z.number().min(0),
     itemQuantity: z.number().min(0),
     uomName:z.string(),
@@ -77,8 +80,7 @@ export default function CreateItemClient() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "Item",
-      code: "item",
+      name: "",
     },
   });
 
@@ -100,7 +102,6 @@ export default function CreateItemClient() {
 
     const body: components["schemas"]["CreateItemRequestBody"] = {
       item: {
-        code: values.code,
         name: values.name,
         itemGroupId: selectedItemGroup.ID,
         uom: selectedUom,
@@ -123,55 +124,22 @@ export default function CreateItemClient() {
     
   }
 
-  // const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-   
-  //   if (selectedItemGroup == null) {
-  //     return;
-  //   }
 
-  //   if (selectedPriceList == null) {
-  //     return;
-  //   }
-    // const body: components["schemas"]["CreateItemRequestBody"] = {
-    //   item: {
-    //     code: formData.code,
-    //     name: formData.name,
-    //     itemGroupId: selectedItemGroup.ID,
-    //     uom: null,
-    //   },
-    //   plugins: selectedPlugins,
-    //   itemPrice: {
-    //     priceListId: selectedPriceList.ID,
-    //     rate: Number(formData.rate),
-    //     itemQuantity: Number(formData.itemQuantity),
-    //     taxId: 1,
-    //   },
-    // };
-  //   fetcher.submit(body, {
-  //     action: "/home/stock/items/create_item",
-  //     method: "POST",
-  //     encType: "application/json",
-  //   });
-  //   try {
-  //   } catch (err) {}
-  // };
-
-  function slugify(string: string) {
-    return string
-      .toString() // Convert to string
-      .normalize("NFD") // Normalize the string to decompose combined characters
-      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
-      .toLowerCase() // Convert to lowercase
-      .trim() // Remove leading and trailing whitespace
-      .replace(/[^a-z0-9 -]/g, "") // Remove invalid characters
-      .replace(/\s+/g, "-") // Replace spaces with hyphens
-      .replace(/-+/g, "-"); // Replace multiple hyphens with a single hyphen
-  }
+  useEffect(()=>{
+    if(fetcher.data?.errorAction != undefined){
+      toast({
+        title: fetcher.data.errorAction || "",
+      })
+    }
+    if(fetcher.data?.responseMessage != undefined){
+      toast({
+        title: fetcher.data.responseMessage.message || "",
+      })
+    }
+  },[fetcher.data])
 
   return (
     <div>
-      {/* <fetcher.Form method="post" action="/home/stock/items/create_item" onSubmit={onSubmit}> */}
       <Form {...form}>
 
       <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -195,30 +163,6 @@ export default function CreateItemClient() {
          
           </div>
 
-          <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-            <CustomFormField
-            form={form}
-            name="code"
-            label={t("form.code")}
-            children={(field)=>{
-              return(
-                <Input {...field} name="code" />
-              )
-            }}
-            />
-          {/* <FormField
-                  control={form.control}
-                  name="code"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("form.code")}</FormLabel>
-                      <FormControl>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-          </div>
 
           <div className="col-span-6 sm:col-span-3 lg:col-span-2">
             <FormAutocomplete
@@ -297,7 +241,7 @@ export default function CreateItemClient() {
 
           <div className="col-span-6">
             <Typography fontSize={subtitle}>
-              {t("itemPrice")} ({t("form.optional")})
+              {t("itemPrice.s")} ({t("form.optional")})
             </Typography>
           </div>
 
@@ -343,7 +287,7 @@ export default function CreateItemClient() {
                 {
                   debounceTimeout: 600,
                     method: "POST",
-                    action: `/home/stock/price-list`,
+                    action: `/home/selling/stock/price-list`,
                     encType: "application/json",
                 }
               );
@@ -354,7 +298,7 @@ export default function CreateItemClient() {
                 { query: "",action: "get"  },
                 {
                   method: "POST",
-                  action: `/home/stock/price-list`,
+                  action: `/home/selling/stock/price-list`,
                   encType: "application/json",
                 }
               );
@@ -375,27 +319,10 @@ export default function CreateItemClient() {
             }}
             />
          
-            {/* <CustomFormInput
-              formControlProps={{
-                required: true,
-              }}
-              inputProps={{
-                type: "number",
-                name: "rate",
-                value: formData.rate,
-                onChange: (e) => {
-                  setFormData({
-                    ...formData,
-                    rate: e.target.value,
-                  });
-                },
-              }} label={t("form.rate")}            /> */}
           </div>
 
           <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-            {/* <label className="block font-medium" htmlFor="itemQuantity">
-              {t("form.itemQuantity")}
-            </label> */}
+            
             <CustomFormField
             form={form}
             name="itemQuantity"
@@ -411,20 +338,6 @@ export default function CreateItemClient() {
           <div className="col-span-6">
             <Typography fontSize={title}>{t("integrations")}</Typography>
           </div>
-
-          {/* <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-            <label className="block font-medium" htmlFor="plugins">
-              {t("plugins")}
-            </label>
-            <CustomMultipleSelect
-              name="Plugin"
-              selected={selectedPlugins}
-              setSelected={(e) => {
-                setSelectedPlugins(e);
-              }}
-              data={state?.activeCompany?.CompanyPlugins || []}
-            />
-          </div> */}
 
           <div className="col-span-6 sm:col-span-3 lg:col-span-2">
            <MultiSelect

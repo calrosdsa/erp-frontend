@@ -58,7 +58,7 @@ export const AddPlugin = ({
       <fetcher.Form
         method="post"
         onSubmit={form.handleSubmit(onSubmit)}        
-        className=" grid gap-y-3"
+        className="grid gap-y-3"
       >
         <SelectForm
           name="companyUuid"
