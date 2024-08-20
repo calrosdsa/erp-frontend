@@ -33,7 +33,7 @@ const ItemsClient = () => {
       <Link to={"./create_item"}>
         <Button>{t("create_item")}</Button>
       </Link>
-      <div className="py-2">
+      <div className="">
         <DataTable
           data={data?.pagination_result.results || []}
           columns={itemColumns()}

@@ -11,7 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Typography, { sm, title, xs } from "@/components/typography/Typography";
+import Typography, { headline, sm, title, xs } from "@/components/typography/Typography";
 import { HomeIcon } from "lucide-react";
 
 type RouteItem = {
@@ -134,9 +134,11 @@ export default function HomeLayout({
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
-              <Typography fontSize={title}>{getRouteName()}</Typography>
+              <Typography fontSize={22}>{getRouteName()}</Typography>
             </div>
+            <div className="h-full">
             {children}
+            </div>
           </div>
         </main>
       </div>

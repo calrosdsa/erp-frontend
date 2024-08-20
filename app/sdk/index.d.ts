@@ -282,6 +282,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/item-attribute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Item attributes */
+        get: operations["item-attributes"];
+        put?: never;
+        /** Create item attribute */
+        post: operations["create-item-attribute"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item/item-attribute/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Item attribute */
+        get: operations["item-attribute"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/item-price": {
         parameters: {
             query?: never;
@@ -542,6 +577,15 @@ export interface components {
             label: string;
             phone: string;
         };
+        CreateItemAttributeRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
+            values: components["schemas"]["ItemAttributeValueDto"][];
+        };
         CreateItemRequestBody: {
             /**
              * Format: uri
@@ -576,6 +620,14 @@ export interface components {
             /** Format: date-time */
             Time: string;
             Valid: boolean;
+        };
+        EntityResponseItemAttributeBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["ItemAttribute"];
         };
         EntityResponseResponseSalesOrderDetailBody: {
             /**
@@ -655,18 +707,59 @@ export interface components {
             /** Format: date-time */
             CreatedAt: string;
             DeletedAt: components["schemas"]["DeletedAt"];
+            HasVaraiants: boolean;
             /** Format: int64 */
             ID: number;
+            IsAVariant: boolean;
             ItemGroup: components["schemas"]["ItemGroup"];
             /** Format: int64 */
             ItemGroupID: number;
             Name: string;
+            /** Format: int64 */
+            ParentID: number | null;
             UnitOfMeasure: components["schemas"]["UnitOfMeasure"];
             /** Format: int64 */
             UnitOfMeasureID: number;
             /** Format: date-time */
             UpdatedAt: string;
             Uuid: string;
+        };
+        ItemAttribute: {
+            Company: components["schemas"]["Company"];
+            /** Format: int64 */
+            CompanyID: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            ItemAttributeValues: components["schemas"]["ItemAttributeValue"][];
+            Name: string;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Uuid: string;
+        };
+        ItemAttributeValue: {
+            Abbreviation: string;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            ItemAttribute: components["schemas"]["ItemAttribute"];
+            /** Format: int64 */
+            ItemAttributeID: number;
+            /** Format: int64 */
+            Ordinal: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Value: string;
+        };
+        ItemAttributeValueDto: {
+            abbreviation: string;
+            /** Format: int64 */
+            ordinal: number;
+            value: string;
         };
         ItemDto: {
             /** Format: int64 */
@@ -779,6 +872,14 @@ export interface components {
             readonly $schema?: string;
             pagination_result: components["schemas"]["PaginationResultListCompany"];
         };
+        PaginationResponsePaginationResultListItemAttributeBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListItemAttribute"];
+        };
         PaginationResponsePaginationResultListItemBody: {
             /**
              * Format: uri
@@ -829,6 +930,11 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListItemAttribute: {
+            results: components["schemas"]["ItemAttribute"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListItemGroup: {
             results: components["schemas"]["ItemGroup"][];
             /** Format: int64 */
@@ -865,7 +971,7 @@ export interface components {
             id: string;
             location_id: string;
             order_id: string;
-            processing_fee: components["schemas"]["ProcessFee"][];
+            processing_fee?: components["schemas"]["ProcessFee"][];
             receipt_number: string;
             receipt_url: string;
             source_type: string;
@@ -1177,7 +1283,7 @@ export interface components {
             Enabled: boolean;
             /** Format: int64 */
             ID: number;
-            UnitOfMeasureTranslation: components["schemas"]["UnitOfMeasureTranslation"];
+            UnitOfMeasureTranslation?: components["schemas"]["UnitOfMeasureTranslation"];
             /** Format: date-time */
             UpdatedAt: string;
         };
@@ -1898,6 +2004,118 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListItemGroupBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "item-attributes": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemAttributeBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-item-attribute": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateItemAttributeRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "item-attribute": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseItemAttributeBody"];
                 };
             };
             /** @description Error */

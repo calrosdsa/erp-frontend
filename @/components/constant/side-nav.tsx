@@ -62,6 +62,10 @@ export const NavItems = ({
         href: "/home/stock/item-groups",
       },
       {
+        title: t("item-atributes"),
+        href: "/home/stock/item-attributes",
+      },
+      {
         title: t("warehouse"),
         href: "/home/stock/warehouse",
       },

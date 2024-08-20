@@ -29,4 +29,4 @@ export const sm = 14
 export const labelF = 16
 export const subtitle = 18
 export const title = 20
-export const headline = 28
+export const headline = 24

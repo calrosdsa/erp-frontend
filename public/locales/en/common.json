@@ -8,8 +8,10 @@
   "company": {
     "companies": "Companies"
   },
+  "create":"Create",
   "form": {
     "name":"Name",
+    "abbreviation":"Abbreviation",
     "code":"Code",
     "familyName": "Last Name",
     "givenName": "First  Name",
@@ -55,8 +57,16 @@
 
   
   "stock": "Stock",
+  "_stock":{
+    "createItemAttribute":"Create Item Attribute",
+    "itemAttributeInfo":"Item Attribute Info",
+    "itemAttributeValues":"Item Attribute Values",
+    "itemAttributeValue":"Item Attribute Value",
+    "addItemAttributeValue":"Add Item Attribute Value"
+  },
   "items": "Items",
   "item-groups": "Item Groups",
+  "item-attributes":"Item Attributes",
   "warehouse": "Warehouse",
   "home": "H1ome",
   "companies": "Companies",
@@ -111,10 +121,14 @@
     "type":"Type",
     "ID":"ID",
     "code":"CODE",
+    "no":"No.",
+    "attributeValue":"Attribute Value",
     "effectiveDate":"Effective Date",
+    "abbreviation":"Abbreviation",
     "ordinal":"Ordinal",
     "cadence":"Cadence",
-    "periods":"Periods"
+    "periods":"Periods",
+    "addRow":"Add Row"
   },
   "dialog":{
     "title":"Are you sure you want to proceed with this action?",

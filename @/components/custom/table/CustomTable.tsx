@@ -1,12 +1,19 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
   ExpandedState,
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   OnChangeFn,
   PaginationState,
+  SortingState,
+  TableMeta,
   TableOptions,
   useReactTable,
   VisibilityState,
@@ -16,6 +23,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -24,15 +32,22 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DataTablePagination } from "./DataTablePagination";
 import { DEFAULT_SIZE } from "~/constant";
+import { DataTableToolbar } from "./data-table-toolbar";
+import { useTranslation } from "react-i18next";
+import DataTableEditFooter from "./data-table-edit-footer";
 
 export interface PaginationOptions {
   onPaginationChange: (d: PaginationState) => void;
   rowCount: number;
-  paginationState:PaginationState
+  paginationState: PaginationState;
 }
 
 export interface ExpandedRowOptions<T> {
-  getSubRows?:(t:T)=>T[]
+  getSubRows?: (t: T) => T[];
+}
+
+export interface TableMetaOptions<TData> {
+  meta: TableMeta<TData> | undefined;
 }
 
 interface DataTableProps<TData, TValue> {
@@ -40,24 +55,20 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   hiddenColumns?: VisibilityState;
   paginationOptions?: PaginationOptions;
-  expandedOptions?:ExpandedRowOptions<TData>
+  expandedOptions?: ExpandedRowOptions<TData>;
+  metaOptions?: TableMetaOptions<TData>;
 }
 
-export function DataTable<TData, TValue>({
+export function   DataTable<TData, TValue>({
   columns,
   data,
   hiddenColumns,
   paginationOptions,
-  expandedOptions
+  expandedOptions,
+  metaOptions,
 }: DataTableProps<TData, TValue>) {
-  // const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(hiddenColumns|| {})
-  // const [pagination, setPagination] = useState<PaginationState>({
-  //   pageIndex: 0,
-  //   pageSize: Number(DEFAULT_SIZE),
-  // });
-  const onPaginationChange: OnChangeFn<PaginationState> = (
-    updaterOrValue
-  ) => {
+  const { t } = useTranslation();
+  const onPaginationChange: OnChangeFn<PaginationState> = (updaterOrValue) => {
     let newState: PaginationState | undefined = undefined;
     if (paginationOptions == undefined) return;
     if (typeof updaterOrValue === "function") {
@@ -70,93 +81,134 @@ export function DataTable<TData, TValue>({
     }
   };
 
-  const [expanded, setExpanded] = useState<ExpandedState>({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    hiddenColumns || {}
+  );
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const [expanded, setExpanded] = useState<ExpandedState>({});
   const table = useReactTable({
     data,
-    state: {
-      columnVisibility: hiddenColumns,
-      pagination:paginationOptions?.paginationState,
-      expanded,
-    },
     columns,
-    onPaginationChange:onPaginationChange,
-    onExpandedChange:setExpanded,
+    state: {
+      pagination: paginationOptions?.paginationState,
+      columnVisibility,
+      expanded,
+      rowSelection,
+      columnFilters,
+      sorting,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: onPaginationChange,
+    onExpandedChange: setExpanded,
+    getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getSubRows: expandedOptions?.getSubRows,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    rowCount:paginationOptions?.rowCount,
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    rowCount: paginationOptions?.rowCount,
     autoResetPageIndex: false,
-    manualPagination:true,
+    manualPagination: true,
+    meta: {
+      ...metaOptions?.meta,
+    },
   });
 
- 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      {paginationOptions != undefined &&
-        <DataTablePagination table={table} />
-      }
+    <div className=" py-3 space-y-4">
+      {metaOptions == undefined && <DataTableToolbar table={table} />}
 
-      {/* <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="rounded-md border h-full relative">
+        <Table className="">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter className="w-full">
+            <TableRow >
+              <TableHead  colSpan={table.getCenterLeafColumns().length} align="right">
+              {metaOptions != undefined && (
+                <DataTableEditFooter table={table} />
+              )}
+              {paginationOptions != undefined && (
+                <DataTablePagination table={table} />
+              )}
+              </TableHead>
+            </TableRow>
+          </TableFooter>
+        </Table>
+
+
+        {/* <div className="flex items-center justify-end space-x-2 py-4">
         <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+        variant="outline"
+        size="sm"
+        onClick={() => table.previousPage()}
+        disabled={!table.getCanPreviousPage()}
         >
-          Previous
+        Previous
         </Button>
         <Button
-          variant="outline"
+        variant="outline"
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-        >
+          >
           Next
-        </Button>
-      </div> */}
+          </Button>
+          </div> */}
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { ControllerRenderProps, FieldValues } from "react-hook-form";
 
 interface Props {
     form:any
-    label:string
+    label?:string
     name:string
     description?:string
     children:(field: ControllerRenderProps<FieldValues, string>)=>ReactNode
@@ -17,7 +17,9 @@ export default function CustomFormField({form,label,description,name,children}:P
         name={name}
         render={({ field }) => (
           <FormItem>
+            {label != undefined &&
             <FormLabel>{label}</FormLabel>
+            }
             <FormControl>
               {children(field)}
             </FormControl>

@@ -26,7 +26,7 @@ export default function ItemInfo({
           to=""
         />
 
-        <DisplayTextValue title={t("form.uom")} value={data.UnitOfMeasure.UnitOfMeasureTranslation.Name} />
+        <DisplayTextValue title={t("form.uom")} value={data.UnitOfMeasure.UnitOfMeasureTranslation?.Name || ""} />
       </div>
     </div>
   );

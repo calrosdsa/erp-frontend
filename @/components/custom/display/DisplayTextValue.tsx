@@ -7,7 +7,7 @@ export default function DisplayTextValue({
   to,
 }: {
   title: string;
-  value: string;
+  value: string | undefined;
   to?: string;
 }) {
   return (
@@ -29,7 +29,7 @@ export default function DisplayTextValue({
           fontSize={sm}
           className="bg-accent rounded-md p-1 shadow-sm"
         >
-          {value}
+          {value || "-"}
         </Typography>
       )}
     </div>
