@@ -10,10 +10,9 @@
   }: {
     includeItem?: boolean;
   } ): ColumnDef<components["schemas"]["ItemPrice"]>[] => {
-    const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation("common");
     let columns: ColumnDef<components["schemas"]["ItemPrice"]>[] = [];
 
-    columns.push({ accessorKey: "ItemPriceList.Currency", id: "Currency" });
     columns.push({
       id: "index",
       cell: ({ row }) => {
@@ -49,6 +48,7 @@
         );
       },
     })
+    columns.push({ accessorKey: "ItemPriceList.Currency", id: "Currency",header:t("form.currency") });
     columns.push({
       accessorKey: "ItemQuantity",
       header: t("form.itemQuantity"),

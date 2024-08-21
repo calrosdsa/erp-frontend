@@ -256,7 +256,8 @@ export interface paths {
          * @description Retrieve Items
          */
         get: operations["get-items"];
-        put?: never;
+        /** Update item */
+        put: operations["update-item"];
         /** Create item */
         post: operations["create-item"];
         delete?: never;
@@ -294,6 +295,24 @@ export interface paths {
         put?: never;
         /** Create item attribute */
         post: operations["create-item-attribute"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item/item-attribute/item-attribute-value": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Item Attribute Value */
+        put: operations["update-item-attribute-value"];
+        /** Create Item Attribute Value */
+        post: operations["create-item-attribute-value"];
         delete?: never;
         options?: never;
         head?: never;
@@ -398,6 +417,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/variant": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get variant from items */
+        get: operations["get-variants-from-item"];
+        put?: never;
+        /** Create item variant */
+        post: operations["create-item-variant"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/{id}": {
         parameters: {
             query?: never;
@@ -464,7 +501,7 @@ export interface components {
         Administrator: {
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             EmailAddress: string;
             FirstName: string;
             /** Format: int64 */
@@ -532,7 +569,7 @@ export interface components {
             CountryCode: string;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             EmailAddress: string;
             FamilyName: string;
             GivenName: string;
@@ -551,7 +588,7 @@ export interface components {
             CompanyPlugins: components["schemas"]["CompanyPlugins"][];
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
             IsParent: boolean;
@@ -586,6 +623,15 @@ export interface components {
             name: string;
             values: components["schemas"]["ItemAttributeValueDto"][];
         };
+        CreateItemPriceRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            Plugins: components["schemas"]["CompanyPlugins"][];
+            itemPrice: components["schemas"]["ItemPriceDto"];
+        };
         CreateItemRequestBody: {
             /**
              * Format: uri
@@ -593,8 +639,14 @@ export interface components {
              */
             readonly $schema?: string;
             item: components["schemas"]["ItemDto"];
-            itemPrice?: components["schemas"]["ItemPriceDto"];
-            plugins?: components["schemas"]["CompanyPlugins"][];
+        };
+        CreateItemVariantRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            itemVariant: components["schemas"]["ItemVariantDto"];
         };
         CuatropfSubscriptionRequestBody: {
             /**
@@ -701,22 +753,19 @@ export interface components {
         };
         Item: {
             Code: string;
-            Company: components["schemas"]["Company"];
+            Company?: components["schemas"]["Company"];
             /** Format: int64 */
             CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
-            HasVaraiants: boolean;
+            DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
-            IsAVariant: boolean;
-            ItemGroup: components["schemas"]["ItemGroup"];
+            ItemGroup?: components["schemas"]["ItemGroup"];
             /** Format: int64 */
             ItemGroupID: number;
+            ItemType: string;
             Name: string;
-            /** Format: int64 */
-            ParentID: number | null;
             UnitOfMeasure: components["schemas"]["UnitOfMeasure"];
             /** Format: int64 */
             UnitOfMeasureID: number;
@@ -730,7 +779,7 @@ export interface components {
             CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
             ItemAttributeValues: components["schemas"]["ItemAttributeValue"][];
@@ -758,14 +807,22 @@ export interface components {
         ItemAttributeValueDto: {
             abbreviation: string;
             /** Format: int64 */
+            id?: number;
+            /** Format: int64 */
+            itemAttributeId?: number;
+            /** Format: int64 */
             ordinal: number;
             value: string;
         };
         ItemDto: {
             /** Format: int64 */
+            id?: number;
+            /** Format: int64 */
             itemGroupId: number;
+            itemType?: string;
             name: string;
-            uom: components["schemas"]["UnitOfMeasureTranslation"];
+            /** Format: int64 */
+            uomId?: number;
         };
         ItemGroup: {
             Company: components["schemas"]["Company"];
@@ -773,7 +830,7 @@ export interface components {
             CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
             IsParent: boolean;
@@ -792,7 +849,7 @@ export interface components {
             CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
             Item: components["schemas"]["Item"];
@@ -840,7 +897,7 @@ export interface components {
             /** Format: date-time */
             CreatedAt: string;
             Currency: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
             IsBuying: boolean;
@@ -855,6 +912,29 @@ export interface components {
             BaseID: number;
             Data: string;
             Plugin: string;
+        };
+        ItemVariant: {
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            Item: components["schemas"]["Item"];
+            ItemAttributeValue: components["schemas"]["ItemAttributeValue"];
+            /** Format: int64 */
+            ItemAttributeValueID: number;
+            /** Format: int64 */
+            ItemID: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+            Uuid: string;
+        };
+        ItemVariantDto: {
+            /** Format: int64 */
+            itemAttributeId: number;
+            /** Format: int64 */
+            itemId: number;
+            name: string;
         };
         NullTime: {
             /** Format: date-time */
@@ -912,6 +992,14 @@ export interface components {
             readonly $schema?: string;
             pagination_result: components["schemas"]["PaginationResultListItemPriceList"];
         };
+        PaginationResponsePaginationResultListItemVariantBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListItemVariant"];
+        };
         PaginationResponsePaginationResultListSalesOrderBody: {
             /**
              * Format: uri
@@ -947,6 +1035,11 @@ export interface components {
         };
         PaginationResultListItemPriceList: {
             results: components["schemas"]["ItemPriceList"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListItemVariant: {
+            results: components["schemas"]["ItemVariant"][];
             /** Format: int64 */
             total: number;
         };
@@ -1107,7 +1200,7 @@ export interface components {
             Code: string;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             Description: string;
             /** Format: int64 */
             ID: number;
@@ -1145,7 +1238,7 @@ export interface components {
             CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: date-time */
             DeliveryDate: string;
             /** Format: int64 */
@@ -1249,7 +1342,7 @@ export interface components {
             CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             Enabled: boolean;
             /** Format: int64 */
             ID: number;
@@ -1309,6 +1402,21 @@ export interface components {
             readonly $schema?: string;
             credentials: string;
         };
+        UpsertItemAttributeValueRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            abbreviation: string;
+            /** Format: int64 */
+            id?: number;
+            /** Format: int64 */
+            itemAttributeId?: number;
+            /** Format: int64 */
+            ordinal: number;
+            value: string;
+        };
         UpsertItemPriceRequestBody: {
             /**
              * Format: uri
@@ -1325,13 +1433,21 @@ export interface components {
             readonly $schema?: string;
             itemPriceList: components["schemas"]["ItemPriceList"];
         };
+        UpsertRequestEntityItemDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            entity: components["schemas"]["ItemDto"];
+        };
         User: {
             Administrator: components["schemas"]["Administrator"];
             Clients: components["schemas"]["Client"][];
             Companies: components["schemas"]["Company"][];
             /** Format: date-time */
             CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
+            DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             ID: number;
             Identifier: string;
@@ -1352,7 +1468,12 @@ export type $defs = Record<string, never>;
 export interface operations {
     "get-account": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -1423,6 +1544,9 @@ export interface operations {
                 page: string;
                 size: string;
                 query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
             };
             header?: {
                 Authorization?: string;
@@ -1589,7 +1713,12 @@ export interface operations {
     };
     "add-plugin": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -1627,7 +1756,12 @@ export interface operations {
     };
     "get-plugin": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -1663,7 +1797,12 @@ export interface operations {
     };
     "update-plugin-credentials": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -1707,6 +1846,9 @@ export interface operations {
                 page: string;
                 size: string;
                 query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
             };
             header?: {
                 Authorization?: string;
@@ -1741,7 +1883,12 @@ export interface operations {
     };
     "sale-order-detail": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -1777,7 +1924,12 @@ export interface operations {
     };
     "cancel-square-subscription": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -1909,6 +2061,9 @@ export interface operations {
                 page: string;
                 size: string;
                 query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
             };
             header?: {
                 Authorization?: string;
@@ -1941,9 +2096,57 @@ export interface operations {
             };
         };
     };
+    "update-item": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpsertRequestEntityItemDtoBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-item": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -1985,6 +2188,9 @@ export interface operations {
                 page: string;
                 size: string;
                 query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
             };
             header?: {
                 Authorization?: string;
@@ -2023,6 +2229,9 @@ export interface operations {
                 page: string;
                 size: string;
                 query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
             };
             header?: {
                 Authorization?: string;
@@ -2057,7 +2266,12 @@ export interface operations {
     };
     "create-item-attribute": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -2093,9 +2307,100 @@ export interface operations {
             };
         };
     };
+    "update-item-attribute-value": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpsertItemAttributeValueRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-item-attribute-value": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpsertItemAttributeValueRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "item-attribute": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -2135,6 +2440,9 @@ export interface operations {
                 page: string;
                 size: string;
                 query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
             };
             header?: {
                 Authorization?: string;
@@ -2169,7 +2477,12 @@ export interface operations {
     };
     "update-item-price": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -2207,7 +2520,12 @@ export interface operations {
     };
     "create-item-price": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -2219,7 +2537,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpsertItemPriceRequestBody"];
+                "application/json": components["schemas"]["CreateItemPriceRequestBody"];
             };
         };
         responses: {
@@ -2245,7 +2563,12 @@ export interface operations {
     };
     "get-item-price-detail": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -2285,6 +2608,9 @@ export interface operations {
                 page: string;
                 size: string;
                 query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
             };
             header?: {
                 Authorization?: string;
@@ -2325,6 +2651,9 @@ export interface operations {
                 page: string;
                 size: string;
                 query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
             };
             header?: {
                 Authorization?: string;
@@ -2359,7 +2688,12 @@ export interface operations {
     };
     "update-item-price-list": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -2397,7 +2731,12 @@ export interface operations {
     };
     "create-item-price-list": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -2433,9 +2772,98 @@ export interface operations {
             };
         };
     };
+    "get-variants-from-item": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemVariantBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-item-variant": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateItemVariantRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-item-detail": {
         parameters: {
-            query?: never;
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
             header?: {
                 Authorization?: string;
                 "Active-Company"?: string;
@@ -2473,6 +2901,9 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
             };
             header?: {
                 Authorization?: string;

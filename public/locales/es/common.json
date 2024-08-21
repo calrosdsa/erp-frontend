@@ -1,67 +1,139 @@
 {
-    "greeting": "Hola",
-    "integrations": "Integraciones",
+  "greeting": "Hola",
+  "integrations": "Integraciones",
+
+  "show": "Mostrar",
+  "hide": "Ocultar",
+
+  "company": {
+    "companies": "Empresas"
+  },
+  "create": "Crear",
+  "form": {
+    "name": "Nombre",
+    "abbreviation": "Abreviación",
+    "code": "Código",
+    "familyName": "Apellido",
+    "givenName": "Nombre",
+    "phoneNumber": "Número de Teléfono",
+    "password": "Contraseña",
+    "email": "Correo Electrónico",
+    "companyName": "Nombre de la Empresa",
+    "clientDetails": "Complete su Información Personal",
+    "country": "País",
+    "item-group": "Grupo de Artículos",    
+    "submit": "Enviar",
+    "save": "Guardar",
+    "uom": "UOM",
+    "optional": "Opcional",
+    "price-list": "Lista de Precios",
+    "currency": "Moneda",
+    "buying": "Compras",
+    "selling": "Ventas",
+    "rate": "Tasa",
+    "itemQuantity": "Cantidad de Artículo",
+    "totalQuantity": "Cantidad Total",
+    "pay": "Pagar",
+    "orderTotal": "Total del Pedido",
+    "total": "Total",
+    "tax": "Impuesto",
+    "totalTax": "Impuestos Totales",
+    "status": "Estado",
+    "startDate": "Fecha de Inicio",
+
+    "orderConfirmation": "Confirmación del Pedido"
+  },
+
+  "sidebar": {
+    "sessionDefaults": "Predeterminados de la Sesión"
+  },
+  "language": "Idioma",
+
+  "addPlugin": "Agregar Plugin",
+  "applicationId": "ID de la Aplicación",
+  "accessToken": "Token de Acceso",
+  "locationId": "ID de la Ubicación",
+  "apiVersion": "Versión de la API",
+
   
-    "show": "Mostrar",
-    "hide": "Ocultar",
-  
-    "company": {
-      "companies": "Empresas"
-    },
-    "form": {
-      "name": "Nombre",
-      "code": "Código",
-      "familyName": "Apellido",
-      "givenName": "Nombre",
-      "phoneNumber": "Número de Teléfono",
-      "email": "Correo Electrónico",
-      "companyName": "Nombre de la Empresa",
-      "clientDetails": "Completa Tu Información Personal",
-      "country": "País",
-      "item-group": "Grupo de Artículos",    
-      "submit": "Enviar",
-      "save": "Guardar",
-      "uom": "UOM",
-      "optional": "Opcional",
-      "price-list": "Lista de Precios",
-      "currency": "Moneda",
-      "buying": "Compra",
-      "selling": "Venta",
-      "rate": "Tasa",
-      "itemQuantity": "Cantidad de Artículos",
-      "pay": "Pagar",
-      "orderTotal": "Total del Pedido",
-      "total": "Total",
-      "totalTax": "Total de Impuestos",
-  
-      "orderConfirmation": "Confirmación de Pedido"
-    },
-  
-    "sidebar": {
-      "sessionDefaults": "Valores Predeterminados de Sesión"
-    },
-    "language": "Idioma",
-  
-    "addSquare": "Agregar Plugin de Square",
-    "applicationId": "ID de Aplicación",
-    "accessToken": "Token de Acceso",
-    "locationId": "ID de Ubicación",
-    "apiVersion": "Versión de API",
-  
-    "stock": "Inventario",
-    "items": "Artículos",
-    "item-groups": "Grupos de Artículos",
-    "warehouse": "Almacén",
-    "home": "Inicio",
-    "companies": "Empresas",
-    "plugins": "Plugins",
-  
-    "create_item": "Agregar Artículo",
-    "itemInfo": "Información del Artículo",
-    "itemPrice": "Precio del Artículo",
-  
-    "square": "Square",
-  
-    "settings": "Configuraciones"
-  }
-  
+  "stock": "Inventario",
+  "_stock": {
+    "createItemAttribute": "Crear Atributo de Artículo",
+    "itemAttributeInfo": "Información del Atributo de Artículo",
+    "itemAttributeValues": "Valores del Atributo de Artículo",
+    "itemAttributeValue": "Valor del Atributo de Artículo",
+    "addItemAttributeValue": "Agregar Valor del Atributo de Artículo"
+  },
+  "items": "Artículos",
+  "item-groups": "Grupos de Artículos",
+  "item-attributes": "Atributos de Artículos",
+  "warehouse": "Almacén",
+  "home": "Inicio",
+  "companies": "Empresas",
+  "plugins": "Plugins",
+
+  "create_item": "Agregar Artículo",
+  "itemInfo": "Información del Artículo",
+
+  "email": "Correo Electrónico",
+  "square": "Square",
+  "_object": {
+    "objectId": "ID del Objeto",
+    "objectType": "Tipo de Objeto",
+    "presentAtAllLocations": "Presente en Todas las Ubicaciones",
+    "subscriptionPlanVariation": "Variación del Plan de Suscripción",
+    "phases": "Fases"
+  },
+
+  "settings": "Configuración",
+
+  "purchases": "Compras",
+
+
+  "subscription": {
+    "base": "Suscripción",
+    "actions": "Acciones de Suscripción",
+    "cancel": "Cancelar Suscripción"
+  },
+  "item": {
+    "info": "Información del Artículo",
+    "code": "Código del Artículo",
+    "prices": "Precios del Artículo"
+  },
+
+  "item-prices": "Precios del Artículo",
+  "itemPrice": {
+    "s": "Precio del Artículo",
+    "p": "Precios del Artículo",
+    "info": "Información del Precio del Artículo"
+  },
+  "priceList": {
+    "info": "Información de la Lista de Precios"
+  },
+
+  "orders": "Pedidos",
+  "orderInfo": "Información del Pedido",
+
+  "table": {
+    "createdAt": "Fecha de Creación",
+    "updatedAt": "Última Modificación",
+    "deliverdDate": "Fecha de Entrega",
+    "type": "Tipo",
+    "ID": "ID",
+    "code": "CÓDIGO",
+    "no": "No.",
+    "attributeValue": "Valor del Atributo",
+    "effectiveDate": "Fecha Efectiva",
+    "abbreviation": "Abreviación",
+    "ordinal": "Ordinal",
+    "cadence": "Cadencia",
+    "periods": "Periodos",
+    "addRow": "Agregar Fila"
+  },
+  "dialog": {
+    "title": "¿Está seguro de que desea proceder con esta acción?",
+    "description": "Por favor, confirme si desea proceder con esta acción. Este paso no se puede deshacer."
+  },
+  "continue": "Continuar",
+  "cancel": "Cancelar"
+}

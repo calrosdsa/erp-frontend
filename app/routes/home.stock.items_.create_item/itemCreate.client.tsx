@@ -21,10 +21,11 @@ import { Input } from "@/components/ui/input";
 import { SquareCheckIcon, SquareIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { action } from "./route";
+import { itemFormSchema } from "~/util/data/schemas/stock/item-schemas";
 
 export default function CreateItemClient() {
   const fetcher = useFetcher<typeof action>();
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const state = useOutletContext<GlobalState>();
   const fetcherDebounce = useDebounceFetcher<
     | {
@@ -43,59 +44,47 @@ export default function CreateItemClient() {
     | undefined
   >();
 
-  const fetcherDebouncePriceList = useDebounceFetcher<
-    | {
-        pagination_result: {
-          results: components["schemas"]["ItemPriceList"][];
-          total: number;
-        };
-      }
-    | undefined
-  >();
+  // const fetcherDebouncePriceList = useDebounceFetcher<
+    // | {
+    //     pagination_result: {
+    //       results: components["schemas"]["ItemPriceList"][];
+    //       total: number;
+    //     };
+    //   }
+    // | undefined
+  // >();
 
   const [selectedItemGroup, setSelectedItemGroup] = useState<
     components["schemas"]["ItemGroup"] | null
   >(null);
-  const [selectedPriceList, setSelectedPriceList] = useState<
-    components["schemas"]["ItemPriceList"] | null
-  >(null);
+  // const [selectedPriceList, setSelectedPriceList] = useState<
+  //   components["schemas"]["ItemPriceList"] | null
+  // >(null);
 
   const [selectedUom, setSelectedUom] = useState<
   components["schemas"]["UnitOfMeasureTranslation"] | null
 >();
-  const [selectedPlugins,setSelectedPlugins] = useState<
-  components["schemas"]["CompanyPlugins"][]>([])
+  // const [selectedPlugins,setSelectedPlugins] = useState<
+  // components["schemas"]["CompanyPlugins"][]>([])
   const { toast } = useToast()
 
 
-  const formSchema = z.object({
-    name: z.string().min(2),
-    rate: z.number().min(0),
-    itemQuantity: z.number().min(0),
-    uomName:z.string(),
-    itemGroupName:z.string(),
-    priceListName:z.string(),
-    pluginList:z.array(z.string()),
-  });
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+ 
+  const form = useForm<z.infer<typeof itemFormSchema>>({
+    resolver: zodResolver(itemFormSchema),
     defaultValues: {
       name: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    console.log(form.getValues());
+  function onSubmit(values: z.infer<typeof itemFormSchema>) {
       if (selectedItemGroup == null) {
       return;
     }
 
-    if (selectedPriceList == null) {
-      return;
-    }
+    // if (selectedPriceList == null) {
+    //   return;
+    // }
     if (selectedUom == null) {
       return;
     }
@@ -104,16 +93,18 @@ export default function CreateItemClient() {
       item: {
         name: values.name,
         itemGroupId: selectedItemGroup.ID,
-        uom: selectedUom,
+        uomId: selectedUom.ID,
       },
-      plugins: selectedPlugins,
-      itemPrice: {
-        priceListId: selectedPriceList.ID,
-        rate: values.rate,
-        itemQuantity: values.itemQuantity,
-        taxId: 1,
-      },
+      // plugins: selectedPlugins
     };
+    // if(values.rate != undefined && values.itemQuantity != undefined && values.priceListName != undefined){
+    //   body.itemPrice = {
+    //     priceListId: selectedPriceList.ID,
+    //     rate: values.rate,
+    //     itemQuantity: values.itemQuantity,
+    //     taxId: 1,
+    //   }
+    // }
 
     console.log(body)
       fetcher.submit(body, {
@@ -239,13 +230,13 @@ export default function CreateItemClient() {
           
           </div>
 
-          <div className="col-span-6">
+          {/* <div className="col-span-6">
             <Typography fontSize={subtitle}>
               {t("itemPrice.s")} ({t("form.optional")})
             </Typography>
-          </div>
+          </div> */}
 
-          {selectedPriceList != undefined && (
+          {/* {selectedPriceList != undefined && (
             <div className="col-span-6">
               <div className="flex flex-wrap gap-3">
                 <h3 className="font-semibold">
@@ -269,9 +260,9 @@ export default function CreateItemClient() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
-          <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+          {/* <div className="col-span-6 sm:col-span-3 lg:col-span-2">
           <FormAutocomplete
             form={form}
             data={fetcherDebouncePriceList.data?.pagination_result.results || []}
@@ -305,9 +296,9 @@ export default function CreateItemClient() {
             }}
             />
           
-          </div>
+          </div> */}
 
-          <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+          {/* <div className="col-span-6 sm:col-span-3 lg:col-span-2">
           <CustomFormField
             form={form}
             name="rate"
@@ -348,7 +339,7 @@ export default function CreateItemClient() {
            name="pluginList"
            onSelect={(v)=>setSelectedPlugins(v)}
            />
-          </div>
+          </div> */}
 
           <div className="col-span-6 mt-2">
           <Button

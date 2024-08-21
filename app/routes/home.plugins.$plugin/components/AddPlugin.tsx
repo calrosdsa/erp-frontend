@@ -105,9 +105,9 @@ export const AddPluginDrawer = ({
   session: SessionData;
   companies: components["schemas"]["Company"][];
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   return (
-    <DrawerLayout open={open} close={close} title={t("addPlugin")}>
+    <DrawerLayout open={open} onOpenChange={()=>close()} title={t("addPlugin")}>
       <AddPlugin session={session} plugin={plugin} companies={companies} />
     </DrawerLayout>
   );

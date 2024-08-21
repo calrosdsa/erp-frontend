@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 
 const ItemsClient = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const { data } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
   const submit = useSubmit();

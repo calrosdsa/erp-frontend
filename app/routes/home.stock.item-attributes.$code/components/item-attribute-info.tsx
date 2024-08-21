@@ -8,51 +8,64 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemAttributeValuesColumns } from "@/components/custom/table/columns/stock/item-attribute-columns";
 import useActionTable from "~/util/hooks/useActionTable";
 import UpsertItemAttributeValue from "./upsert-item-attribute-value";
-
-
+import { useEffect, useState } from "react";
+import { components } from "~/sdk";
 
 export default function ItemAttributeInfo() {
   const { itemAttribute } = useLoaderData<typeof loader>();
-  const { t } = useTranslation();
-  const [meta,stateActions] = useActionTable({})
-  const {addRowDialog,setAddRowDialog} = stateActions
+  const { t } = useTranslation("common");
+  const [meta, stateActions] = useActionTable({
+    onEdit:indexRow=>{
+      if (indexRow != undefined) {
+        const item = itemAttribute?.ItemAttributeValues.find(
+          (t, index) => index == indexRow
+        );
+        console.log(item)
+        if (item) {
+          setSelectedItemAttributeValue(item)
+        }
+      }
+    }
+  });
+  const { openDialog, setOpenDialog } = stateActions;
+  const [selectedItemAttributeValue, setSelectedItemAttributeValue] = useState<
+    components["schemas"]["ItemAttributeValue"] | undefined
+  >(undefined);
+
   return (
     <>
-    {addRowDialog &&
-    <UpsertItemAttributeValue
-    open={addRowDialog}
-    close={()=> setAddRowDialog(false)}
-    title={t("_stock.addItemAttributeValue")}
-    />
-    }
-    <div className="info-grid">
-      <div className=" col-span-full">
-        <Typography fontSize={title}>
-          {t("_stock.itemAttributeInfo")}
-        </Typography>
-      </div>
-      <DisplayTextValue
-      title={t("form.name")}
-      value={itemAttribute?.Name}
-      />
-
-      <div className="col-span-full">
-        <Typography fontSize={title}>
-            {t("_stock.itemAttributeValues")}
-        </Typography>
-      </div>
-      <div className="col-span-full">
-        <DataTable
-        columns={itemAttributeValuesColumns()}
-        data={itemAttribute?.ItemAttributeValues || []}
-        metaOptions={{
-            meta:meta
-        }}
+      {openDialog && itemAttribute && (
+        <UpsertItemAttributeValue
+        itemAttributeValue={selectedItemAttributeValue}
+          open={openDialog}
+          itemAttribute={itemAttribute}
+          close={() => setOpenDialog(false)}
+          title={t("_stock.addItemAttributeValue")}
         />
+      )}
+      <div className="info-grid">
+        <div className=" col-span-full">
+          <Typography fontSize={title}>
+            {t("_stock.itemAttributeInfo")}
+          </Typography>
+        </div>
+        <DisplayTextValue title={t("form.name")} value={itemAttribute?.Name} />
+
+        <div className="col-span-full">
+          <Typography fontSize={title}>
+            {t("_stock.itemAttributeValues")}
+          </Typography>
+        </div>
+        <div className="col-span-full">
+          <DataTable
+            columns={itemAttributeValuesColumns()}
+            data={itemAttribute?.ItemAttributeValues || []}
+            metaOptions={{
+              meta: meta,
+            }}
+          />
+        </div>
       </div>
-
-
-    </div>
-        </>
+    </>
   );
 }

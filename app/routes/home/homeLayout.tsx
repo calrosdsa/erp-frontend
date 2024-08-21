@@ -27,7 +27,7 @@ export default function HomeLayout({
   globalState: GlobalState;
 }) {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const [openSessionDefaults, setOpenSessionDefaults] = React.useState(false);
 
   const [routesName, setRoutesName] = React.useState<string[]>([]);

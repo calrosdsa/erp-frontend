@@ -4,6 +4,7 @@ import ItemInfo from "./components/ItemInfo";
 import ItemPrices from "./components/ItemPrices";
 import { Separator } from "@/components/ui/separator";
 import { components } from "~/sdk";
+import ItemVariants from "./components/item-variants";
 
 export default function ItemDetailClient({
   data
@@ -17,8 +18,13 @@ export default function ItemDetailClient({
       {data?.result != undefined && <ItemInfo data={data.result.entity} />}
 
       <Separator/>
-
       <ItemPrices />
+      <Separator/>
+      
+      <ItemVariants
+      item={data.result.entity}
+      />
+
     </div>
   );
 }

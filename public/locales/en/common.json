@@ -62,6 +62,7 @@
     "itemAttributeInfo":"Item Attribute Info",
     "itemAttributeValues":"Item Attribute Values",
     "itemAttributeValue":"Item Attribute Value",
+    "itemAttribute":"Item Attribute",
     "addItemAttributeValue":"Add Item Attribute Value"
   },
   "items": "Items",
@@ -100,6 +101,11 @@
     "code":"Item Code",
     "prices":"Item Prices"
   },
+  "_item":{
+    "variants":"Item Variants",
+    "addVariant":"Add  item variant",
+    "enableForVariants":"Enable item for variants"
+  },
 
   "item-prices":"Item Prices",
   "itemPrice":{
@@ -132,10 +138,13 @@
   },
   "dialog":{
     "title":"Are you sure you want to proceed with this action?",
-    "description":"Please confirm if you wish to proceed with this action. This step cannot be undone."
+    "description":"Please confirm if you wish to proceed with this action."
   },
   "continue":"Continue",
-  "cancel":"Cancel"
+  "cancel":"Cancel",
 
+  "actions":{
+    "edit":"Edit"
+  }
 
 }

@@ -10,7 +10,7 @@ import { Link } from "@remix-run/react";
 import { routes } from "~/util/route";
 
 export const itemAttributeColumns = ():ColumnDef<components["schemas"]["ItemAttribute"]>[] =>{
-    const {t} = useTranslation()
+    const {t} = useTranslation("common")
     const r = routes
     return [
         {
@@ -53,7 +53,9 @@ export const itemAttributeValuesColumns = (): ColumnDef<
       id: "actions",
       cell: ({ row,table }) => {
         const tableMeta: any = table.options.meta;
-        return <DataTableRowActions row={row} onDelete={() =>tableMeta.removeRow(row.index)} />;
+        return <DataTableRowActions row={row} onDelete={() =>tableMeta.removeRow(row.index)}
+        onEdit={()=>tableMeta.onEdit(row.index)}
+         />;
       },
     },
   ];

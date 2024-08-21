@@ -12,7 +12,7 @@ export default  function ItemPrices({
 }:{
 
 }){
-    const {t} = useTranslation()
+    const {t} = useTranslation("common")
   const { itemPrices } = useLoaderData<typeof loader>();
 
     return (

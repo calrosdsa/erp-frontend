@@ -24,10 +24,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useMediaQuery } from 'usehooks-ts'
  
-export function DrawerLayout({open,close,children,title,description}:{
+export function DrawerLayout({open,onOpenChange,children,title,description}:{
   children:React.ReactNode
   open:boolean
-  close:()=>void
+  onOpenChange:(e:boolean)=>void
   title?:string
   description?:string
 }) {
@@ -35,7 +35,7 @@ export function DrawerLayout({open,close,children,title,description}:{
  
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={(e)=>close()} >
+      <Dialog open={open} onOpenChange={onOpenChange} >
         {/* <DialogTrigger asChild>
           <Button variant="outline">Edit Profile</Button>
         </DialogTrigger> */}
@@ -53,7 +53,7 @@ export function DrawerLayout({open,close,children,title,description}:{
   }
  
   return (
-    <Drawer open={open} onOpenChange={()=>close()}>
+    <Drawer open={open} onOpenChange={onOpenChange}>
       {/* <DrawerTrigger asChild>
         <Button variant="outline">Edit Profile</Button>
       </DrawerTrigger> */}

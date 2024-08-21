@@ -14,7 +14,7 @@ let i18next = new RemixI18Next({
 		...i18n,
 		backend: {
 			loadPath: resolve("./public/locales/{{lng}}/{{ns}}.json"),
-		},
+		},	
 	},
 	// The i18next plugins you want RemixI18next to use for `i18n.getFixedT` inside loaders and actions.
 	// E.g. The Backend plugin for loading translations from the file system

@@ -15,6 +15,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Pencil, TrashIcon } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 // import { labels } from "../data/data"
 // import { taskSchema } from "../data/schema"
@@ -22,11 +24,13 @@ import {
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
   onDelete?:()=>void
+  onEdit?:()=>void
 }
 
 export function DataTableRowActions<TData>({
-  row,onDelete,
+  row,onDelete,onEdit
 }: DataTableRowActionsProps<TData>) {
+  const {t} = useTranslation("common")
 //   const task = taskSchema.parse(row.original)
 
   return (
@@ -57,11 +61,22 @@ export function DataTableRowActions<TData>({
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
+        {onEdit != undefined &&
+        <DropdownMenuItem onClick={()=>onEdit()} >
+          {t("actions.edit")}
+          <DropdownMenuShortcut>
+          <Pencil size={12}/>
+          </DropdownMenuShortcut>
+          
+        </DropdownMenuItem>
+        }
         <DropdownMenuSeparator />
         {onDelete != undefined &&
         <DropdownMenuItem onClick={()=>onDelete()}>
           Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          <DropdownMenuShortcut>
+            <TrashIcon size={12}/>
+          </DropdownMenuShortcut>
         </DropdownMenuItem>
         }
       </DropdownMenuContent>

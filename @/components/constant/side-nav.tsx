@@ -22,7 +22,7 @@ export const NavItems = ({
   session: SessionData;
   appConfig: components["schemas"]["AppConfigStruct"] | undefined;
 }): NavItem[] => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   let navItems: NavItem[] = [];
   const companies = {
     title: t("company.companies"),

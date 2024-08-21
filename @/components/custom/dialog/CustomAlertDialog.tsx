@@ -24,7 +24,7 @@ interface Props {
 export default function CustomAlertDialog({
     open,onOpenChange,title,description,onContinue,loading
 }:Props) {
-    const { t }= useTranslation()
+    const { t }= useTranslation("common")
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>

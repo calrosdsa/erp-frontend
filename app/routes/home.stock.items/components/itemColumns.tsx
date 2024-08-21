@@ -7,7 +7,7 @@ import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
 
 export const itemColumns = (): ColumnDef<components["schemas"]["Item"]>[] => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
 
   return [
     {

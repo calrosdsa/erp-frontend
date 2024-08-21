@@ -9,7 +9,7 @@ interface DataTableEditProps<TData>{
 export default function DataTableEditFooter<TData>({
     table
 }:DataTableEditProps<TData>){
-    const {t} = useTranslation()
+    const {t} = useTranslation("common")
     const meta:any = table.options.meta
     return (
         <div className="py-2">

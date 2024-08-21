@@ -10,3 +10,8 @@ export enum PluginApp {
 export enum SalesOrderType {
     ORDER_TYPE_SERVICE = "SERVICE"
 }
+
+export enum Order {
+    DESC = "desc",
+    ASC = "asc",
+}

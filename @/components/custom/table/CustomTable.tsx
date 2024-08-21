@@ -67,7 +67,6 @@ export function   DataTable<TData, TValue>({
   expandedOptions,
   metaOptions,
 }: DataTableProps<TData, TValue>) {
-  const { t } = useTranslation();
   const onPaginationChange: OnChangeFn<PaginationState> = (updaterOrValue) => {
     let newState: PaginationState | undefined = undefined;
     if (paginationOptions == undefined) return;

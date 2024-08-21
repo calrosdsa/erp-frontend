@@ -2,58 +2,84 @@ import { Form } from "@/components/ui/form";
 import CustomFormField from "./CustomFormField";
 import { Input } from "@/components/ui/input";
 import { useFetcher } from "@remix-run/react";
-import { z } from "zod";
+import { z, ZodRawShape } from "zod";
 import { Button } from "@/components/ui/button";
 import { t } from "i18next";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { upsertItemAttributeValueSchema } from "~/routes/home.stock.item-attributes.$code/components/upsert-item-attribute-value";
+import { FormEvent, ReactNode } from "react";
+import { DefaultValues, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+import { makeZodI18nMap } from "zod-i18n-map";
 
-interface Props<T> {
-  form: any;
+interface Props<T extends ZodRawShape> {
+  schema: any;
   formItemsData: FormItemData[];
-  onSubmitt: (values:any) => void;
-  fetcherKey:string
-  className?:string
+  onSubmit: (e: any) => void;
+  fetcherKey: string;
+  className?: string;
+  defaultValues?: any;
+  renderCustomInputs?: (form: any) => ReactNode;
 }
-export default function CustomForm<T>({ form, formItemsData,
-    fetcherKey,onSubmitt,className
- }: Props<T>) {
-    const fetcher = useFetcher()
-    const onSubmit = (e:z.infer<typeof upsertItemAttributeValueSchema>) =>{
-        console.log(e)
-    }
+export default function CustomForm<T extends ZodRawShape>({
+  formItemsData,
+  fetcherKey,
+  schema,
+  onSubmit,
+  className,
+  defaultValues,
+  renderCustomInputs,
+}: Props<T>) {
+  const fetcher = useFetcher({ key: fetcherKey });
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: defaultValues,
+  });
+  const { t } = useTranslation("common");
+  z.setErrorMap(makeZodI18nMap({ t }));
+  // form.setValue("","")
   return (
-    <Form  {...form}>
-        <fetcher.Form 
+    <Form {...form}>
+      <fetcher.Form
         method="post"
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn(className,"grid gap-y-2 p-3")}
-        >
-      {formItemsData.map((item, idx) => {
+        className={cn(className, "grid gap-y-2 p-3")}
+      >
+        {formItemsData.map((item, idx) => {
           return (
-          <div key={idx}>
-            {item.typeForm == "input" && (
+            item.typeForm == "input" && (
               <CustomFormField
+                key={idx}
                 label={item.label}
                 name={item.name}
                 form={form}
                 children={(field) => {
-                    return <Input {...field} type={item.type} readOnly={item.readOnly} />;
+                  return (
+                    <Input
+                      {...field}
+                      type={item.type}
+                      onChange={(e) => {
+                        if (item.type == "number") {
+                          field.onChange(Number(e.target.value));
+                        }
+                        if (item.type == "string") {
+                          field.onChange(e.target.value);
+                        }
+                      }}
+                    />
+                  );
                 }}
-                />
-            )}
-          </div>
-        );
-    })}
-    <Button  type="submit">
-        {fetcher.state == "submitting" ?
-        <Icons.spinner/>
-        :
-        t("form.submit")
-    }
-    </Button>
-    </fetcher.Form>
+              />
+            )
+          );
+        })}
+        
+        {renderCustomInputs != undefined && renderCustomInputs(form)}
+        <Button type="submit">
+          {fetcher.state == "submitting" ? <Icons.spinner /> : t("form.submit")}
+        </Button>
+      </fetcher.Form>
     </Form>
   );
 }

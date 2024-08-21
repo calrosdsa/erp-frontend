@@ -11,7 +11,7 @@ import { routes } from "~/util/route"
 
 
 export default function ItemAttributesClient(){
-    const {t,i18n} = useTranslation()
+    const {t,i18n} = useTranslation("common")
     const {pagination_result} = useLoaderData<typeof loader>()
     const [searchParams,setSearchParams] = useSearchParams()
     const submit = useSubmit()

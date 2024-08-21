@@ -8,10 +8,10 @@ export default function ItemInfo({
 }: {
   data: components["schemas"]["Item"];
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   return (
     <div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+      <div className="info-grid">
         <div className=" col-span-full">
           <Typography fontSize={title}>{t("item.info")}</Typography>
         </div>
@@ -22,7 +22,7 @@ export default function ItemInfo({
 
         <DisplayTextValue
           title={t("form.item-group")}
-          value={data.ItemGroup.Name}
+          value={data.ItemGroup?.Name}
           to=""
         />
 

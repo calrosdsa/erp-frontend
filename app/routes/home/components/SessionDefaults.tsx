@@ -107,7 +107,7 @@ export const SessionDefaultDrawer = ({
   return (
     <DrawerLayout
       open={open}
-      close={close}
+      onOpenChange={(e)=>close()}
       title={t("sidebar.sessionDefaults")}
     >
       <SessionDefault session={session} companies={companies} close={close} />

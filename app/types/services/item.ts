@@ -1,0 +1,5 @@
+export enum ItemType {
+    ITEM_TYPE   = "ITEM",
+	ITEM_VARIANT_TYPE  = "ITEM_VARIANT",
+	ITEM_TEMPLATE_TYPE = "ITEM_TEMPLATE",
+}
