@@ -12,9 +12,10 @@ export const itemVariantColumns = (): ColumnDef<
   return [
     {
       header: t("form.code"),
-      accessorKey: "Item.Code",
+      accessorKey: "Variant.Code",
+      id:"variantCode",
       cell: ({ row }) => {
-        const code = row.getValue("Code") as string;
+        const code = row.getValue("variantCode") as string;
         return (
           <Link to={r.toItemDetail(code)} className="underline">
             {code}
@@ -24,7 +25,7 @@ export const itemVariantColumns = (): ColumnDef<
     },
     {
       header: t("form.name"),
-      accessorKey: "Item.Name",
+      accessorKey: "Variant.Name",
     },
   ];
 };

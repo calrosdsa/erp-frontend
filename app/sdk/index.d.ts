@@ -629,8 +629,8 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            Plugins: components["schemas"]["CompanyPlugins"][];
             itemPrice: components["schemas"]["ItemPriceDto"];
+            plugins: components["schemas"]["PluginDto"][];
         };
         CreateItemRequestBody: {
             /**
@@ -680,6 +680,14 @@ export interface components {
              */
             readonly $schema?: string;
             result: components["schemas"]["ItemAttribute"];
+        };
+        EntityResponseItemBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["Item"];
         };
         EntityResponseResponseSalesOrderDetailBody: {
             /**
@@ -914,24 +922,19 @@ export interface components {
             Plugin: string;
         };
         ItemVariant: {
-            /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            ID: number;
             Item: components["schemas"]["Item"];
             ItemAttributeValue: components["schemas"]["ItemAttributeValue"];
             /** Format: int64 */
             ItemAttributeValueID: number;
             /** Format: int64 */
             ItemID: number;
-            /** Format: date-time */
-            UpdatedAt: string;
-            Uuid: string;
+            Variant: components["schemas"]["Item"];
+            /** Format: int64 */
+            VariantID: number;
         };
         ItemVariantDto: {
             /** Format: int64 */
-            itemAttributeId: number;
+            itemAttributeValueId: number;
             /** Format: int64 */
             itemId: number;
             name: string;
@@ -1112,6 +1115,11 @@ export interface components {
              */
             readonly $schema?: string;
             company_plugin: components["schemas"]["CompanyPlugins"];
+        };
+        PluginDto: {
+            /** Format: int64 */
+            companyId?: number;
+            plugin: string;
         };
         PluginsResponseBody: {
             /**
@@ -2168,7 +2176,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
+                    "application/json": components["schemas"]["EntityResponseItemBody"];
                 };
             };
             /** @description Error */
@@ -2293,7 +2301,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
+                    "application/json": components["schemas"]["EntityResponseItemAttributeBody"];
                 };
             };
             /** @description Error */

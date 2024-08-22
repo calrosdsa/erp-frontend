@@ -47,8 +47,8 @@ export default function HomeLayout({
 
   const getRouteName = () => {
     const path = location.pathname.split("/");
-    const route = path.slice(-1)
-    return t(route);
+    const route = path.slice(-1)[0]
+    return t(decodeURIComponent(route||""));
   };
 
   React.useEffect(() => {
@@ -127,7 +127,7 @@ export default function HomeLayout({
                     })}
 
                   <Typography fontSize={xs}>
-                    {routesName[routesName.length - 1]}
+                    {decodeURIComponent(routesName[routesName.length - 1]||"")}
                   </Typography>
                 </BreadcrumbList>
               </Breadcrumb>

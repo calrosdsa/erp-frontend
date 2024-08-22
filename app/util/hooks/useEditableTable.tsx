@@ -45,8 +45,10 @@ export default function useEditableTable<T>({ form }: Props<T>) {
       updateUpperOrdinals(rowIndex);
     },
     updateData: (rowIndex: number, columnId: string, value: string) => {
-      const n = form.getValues().values.map((item: any) => {
-        item[columnId] = value;
+      const n = form.getValues().values.map((item: any,idx:number) => {
+        if(idx == rowIndex){
+          item[columnId] = value;
+        }
         //   switch (columnId) {
         //     case "value": {
         //       item.value = value;

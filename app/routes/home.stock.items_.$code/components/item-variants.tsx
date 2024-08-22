@@ -14,7 +14,7 @@ import FallBack from "@/components/layout/Fallback";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemVariantColumns } from "@/components/custom/table/columns/stock/item-variant-columns";
 import useActionTable from "~/util/hooks/useActionTable";
-import AddItemVariant from "./AddItemVariant";
+import AddItemVariant from "./dialog/AddItemVariant";
 
 
 
@@ -77,7 +77,9 @@ export default function ItemVariants({item}:{
         />
         }
             <div className=" col-span-full">
+         {item.ItemType != ItemType.ITEM_VARIANT_TYPE &&
           <Typography fontSize={title}>{t("_item.variants")}</Typography>
+         }
 
           {item.ItemType == ItemType.ITEM_TYPE &&
           <div className=" w-full py-20 flex  justify-center">
@@ -96,6 +98,7 @@ export default function ItemVariants({item}:{
               const vData =  itemVariants.data as components["schemas"]["PaginationResponsePaginationResultListItemVariantBody"]
               return (
                   <div>
+                    {/* {JSON.stringify(vData.pagination_result.results)} */}
                     <DataTable
                     columns={itemVariantColumns()}
                     data={vData.pagination_result.results || []}

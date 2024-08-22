@@ -1,7 +1,7 @@
 import { Form } from "@/components/ui/form";
 import CustomFormField from "./CustomFormField";
 import { Input } from "@/components/ui/input";
-import { useFetcher } from "@remix-run/react";
+import { FetcherWithComponents, useFetcher } from "@remix-run/react";
 import { z, ZodRawShape } from "zod";
 import { Button } from "@/components/ui/button";
 import { t } from "i18next";
@@ -17,21 +17,20 @@ interface Props<T extends ZodRawShape> {
   schema: any;
   formItemsData: FormItemData[];
   onSubmit: (e: any) => void;
-  fetcherKey: string;
   className?: string;
   defaultValues?: any;
   renderCustomInputs?: (form: any) => ReactNode;
+  fetcher: FetcherWithComponents<unknown>
 }
 export default function CustomForm<T extends ZodRawShape>({
   formItemsData,
-  fetcherKey,
   schema,
   onSubmit,
   className,
   defaultValues,
   renderCustomInputs,
+  fetcher,
 }: Props<T>) {
-  const fetcher = useFetcher({ key: fetcherKey });
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
@@ -44,8 +43,11 @@ export default function CustomForm<T extends ZodRawShape>({
       <fetcher.Form
         method="post"
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn(className, "grid gap-y-2 p-3")}
+        className={cn(className, "gap-y-2 p-3")}
       >
+        {/* <div className=" col-span-full">
+        {JSON.stringify(form.getValues())}
+        </div> */}
         {formItemsData.map((item, idx) => {
           return (
             item.typeForm == "input" && (
@@ -59,14 +61,14 @@ export default function CustomForm<T extends ZodRawShape>({
                     <Input
                       {...field}
                       type={item.type}
-                      onChange={(e) => {
-                        if (item.type == "number") {
-                          field.onChange(Number(e.target.value));
-                        }
-                        if (item.type == "string") {
-                          field.onChange(e.target.value);
-                        }
-                      }}
+                      // onChange={(e) => {
+                      //   if (item.type == "number") {
+                      //     field.onChange(Number(e.target.value));
+                      //   }
+                      //   if (item.type == "string") {
+                      //     field.onChange(e.target.value);
+                      //   }
+                      // }}
                     />
                   );
                 }}
@@ -74,9 +76,10 @@ export default function CustomForm<T extends ZodRawShape>({
             )
           );
         })}
-        
         {renderCustomInputs != undefined && renderCustomInputs(form)}
-        <Button type="submit">
+       <div className="col-span-full"></div>
+        
+        <Button type="submit" className=" col-span-full">
           {fetcher.state == "submitting" ? <Icons.spinner /> : t("form.submit")}
         </Button>
       </fetcher.Form>

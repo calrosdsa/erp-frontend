@@ -1,7 +1,7 @@
 import CustomForm from "@/components/custom/form/CustomForm";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import { useToast } from "@/components/ui/use-toast";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useRevalidator } from "@remix-run/react";
 import { useTranslation, withTranslation } from "react-i18next";
 import { z } from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
@@ -12,7 +12,7 @@ import { useEffect } from "react";
 export const upsertItemAttributeValueSchema = z.object({
   value: z.string(),
   abbreviation: z.string(),
-  ordinal: z.number().readonly(),
+  ordinal: z.string(),
   itemAttributeId: z.number().optional(),
   id:z.number().optional(),
 });
@@ -39,7 +39,7 @@ export default function UpsertItemAttributeValue({
       },
     })
   );
-  const fetcher = useFetcher<typeof action>({ key: "upsert-item-attribute" });
+  const fetcher = useFetcher<typeof action>();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -56,12 +56,14 @@ export default function UpsertItemAttributeValue({
     }
   }, [fetcher.data]);
   return (
-    <DrawerLayout open={open} onOpenChange={() => close()} title={title}>
+    <DrawerLayout open={open} onOpenChange={() => close()} title={title}
+    className="">
       <CustomForm
         schema={upsertItemAttributeValueSchema}
-        fetcherKey="upsert-item-attribute"
+        fetcher={fetcher}
+        className="grid grid-cols-1"
         defaultValues={{
-            ordinal:itemAttributeValue?.Ordinal,
+            ordinal:itemAttributeValue?.Ordinal.toString(),
             value:itemAttributeValue?.Value,
             abbreviation:itemAttributeValue?.Abbreviation,
             id:itemAttributeValue?.ID

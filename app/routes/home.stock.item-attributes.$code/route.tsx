@@ -26,7 +26,7 @@ export const action = async({request}:ActionFunctionArgs) =>{
             const res = await client.GET("/stock/item/item-attribute/{id}",{
                 params:{
                     path:{
-                        id:data.code || "",
+                        id:decodeURIComponent(data.code) || "",
                     },
                     query:{
                         order:Order.ASC,
@@ -41,8 +41,14 @@ export const action = async({request}:ActionFunctionArgs) =>{
             break;
         } 
         case "create-item-attribute-value":{
+            const itemAttributeV = data.itemAttributeData
             const res  = await client.POST("/stock/item/item-attribute/item-attribute-value",{
-                body:data.itemAttributeData,
+                body:{
+                    abbreviation: itemAttributeV.abbreviation,
+                    ordinal: Number(itemAttributeV.ordinal),
+                    value: itemAttributeV.value,
+                    itemAttributeId:itemAttributeV.itemAttributeId
+                }
             })
             if(res.error != undefined) {
                 error = res.error.detail
@@ -53,8 +59,14 @@ export const action = async({request}:ActionFunctionArgs) =>{
             break
         }
         case "update-item-attribute-value":{
+            const itemAttributeV = data.itemAttributeData
             const res  = await client.PUT("/stock/item/item-attribute/item-attribute-value",{
-                body:data.itemAttributeData
+                body:{
+                    abbreviation: itemAttributeV.abbreviation,
+                    ordinal: Number(itemAttributeV.ordinal),
+                    value: itemAttributeV.value,
+                    itemAttributeId:itemAttributeV.itemAttributeId
+                }
             })
             if(res.error != undefined) {
                 error = res.error.detail
@@ -74,10 +86,11 @@ export const action = async({request}:ActionFunctionArgs) =>{
 
 export const loader = async({request,params}:LoaderFunctionArgs) =>{
     const client = apiClient({request})
+    console.log("NAME",decodeURIComponent(params.code||""))
     const res = await client.GET("/stock/item/item-attribute/{id}",{
         params:{
             path:{
-                id:params.code || "",
+                id:decodeURIComponent(params.code || "") ,
             },
             query:{
                 order:Order.ASC,

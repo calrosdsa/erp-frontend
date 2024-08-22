@@ -7,6 +7,5 @@ interface FormItemData {
     name:string
     label?:string
     readOnly?:boolean
-    
     onValueChange?:(value:string)=>void
 }

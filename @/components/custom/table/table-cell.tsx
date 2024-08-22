@@ -91,5 +91,5 @@ export default function TableCell<TData>({ getValue, row, column, table }:TableC
     //   />
     // );
   }
-  return <span>{value} {row.index} {tableMeta.editedRows}</span>;
+  return <span>{value}</span>;
 };

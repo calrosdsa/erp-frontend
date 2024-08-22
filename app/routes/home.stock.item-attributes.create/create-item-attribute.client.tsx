@@ -27,7 +27,7 @@ export const createItemAttributeSchema = z.object({
   values: z.array(valuesSchema),
 });
 export default function CreateItemAttributeClient() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const form = useForm<z.infer<typeof createItemAttributeSchema>>({
     resolver: zodResolver(createItemAttributeSchema),
@@ -59,11 +59,11 @@ export default function CreateItemAttributeClient() {
         title: fetcher.data.errorAction,
       });
     }
-    if (fetcher.data?.successMessage != undefined) {
-      toast({
-        title: fetcher.data.successMessage,
-      });
-    }
+    // if (fetcher.data?.successMessage != undefined) {
+    //   toast({
+    //     title: fetcher.data.successMessage,
+    //   });
+    // }
   }, [fetcher.data]);
   return (
     <div>

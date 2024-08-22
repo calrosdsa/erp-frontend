@@ -11,7 +11,7 @@ import { SquareCatalogObject } from "~/types/plugin/square/catalog";
 import { formatLongDate } from "~/util/format/formatDate";
 
 export default function SquareItemPrice({ data }: { data: string }) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
   const [squareObject, setSquareObject] = useState<
     SquareCatalogObject | undefined
   >(undefined);

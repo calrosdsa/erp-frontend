@@ -93,7 +93,7 @@ export default function CreateItemClient() {
       item: {
         name: values.name,
         itemGroupId: selectedItemGroup.ID,
-        uomId: selectedUom.ID,
+        uomId: selectedUom.UnitOfMeasure.ID,
       },
       // plugins: selectedPlugins
     };
@@ -122,11 +122,11 @@ export default function CreateItemClient() {
         title: fetcher.data.errorAction || "",
       })
     }
-    if(fetcher.data?.responseMessage != undefined){
-      toast({
-        title: fetcher.data.responseMessage.message || "",
-      })
-    }
+    // if(fetcher.data?.responseMessage != undefined){
+    //   toast({
+    //     title: fetcher.data.responseMessage.message || "",
+    //   })
+    // }
   },[fetcher.data])
 
   return (

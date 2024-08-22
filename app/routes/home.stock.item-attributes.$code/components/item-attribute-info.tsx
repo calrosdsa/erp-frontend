@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useRevalidator } from "@remix-run/react";
 import { loader } from "../route";
 import Typography, { title } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,8 @@ export default function ItemAttributeInfo() {
     }
   });
   const { openDialog, setOpenDialog } = stateActions;
+  const revalidator = useRevalidator()
+
   const [selectedItemAttributeValue, setSelectedItemAttributeValue] = useState<
     components["schemas"]["ItemAttributeValue"] | undefined
   >(undefined);

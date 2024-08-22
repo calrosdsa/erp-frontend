@@ -63,7 +63,8 @@
     "itemAttributeValues":"Item Attribute Values",
     "itemAttributeValue":"Item Attribute Value",
     "itemAttribute":"Item Attribute",
-    "addItemAttributeValue":"Add Item Attribute Value"
+    "addItemAttributeValue":"Add Item Attribute Value",
+    "addItemPrice":"Add Item Price"
   },
   "items": "Items",
   "item-groups": "Item Groups",

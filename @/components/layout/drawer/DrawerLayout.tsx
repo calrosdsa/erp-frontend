@@ -24,12 +24,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useMediaQuery } from 'usehooks-ts'
  
-export function DrawerLayout({open,onOpenChange,children,title,description}:{
+export function DrawerLayout({open,onOpenChange,children,title,description,className}:{
   children:React.ReactNode
   open:boolean
   onOpenChange:(e:boolean)=>void
   title?:string
   description?:string
+  className?:string
 }) {
   const isDesktop = useMediaQuery("(min-width: 768px)")
  
@@ -39,7 +40,7 @@ export function DrawerLayout({open,onOpenChange,children,title,description}:{
         {/* <DialogTrigger asChild>
           <Button variant="outline">Edit Profile</Button>
         </DialogTrigger> */}
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className={cn("sm:max-w-[425px]",className)}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>

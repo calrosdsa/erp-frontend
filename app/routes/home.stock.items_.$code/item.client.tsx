@@ -1,7 +1,7 @@
 import { useLoaderData } from "@remix-run/react";
 import { loader } from "./route";
 import ItemInfo from "./components/ItemInfo";
-import ItemPrices from "./components/ItemPrices";
+import ItemPrices from "./components/Item-prices";
 import { Separator } from "@/components/ui/separator";
 import { components } from "~/sdk";
 import ItemVariants from "./components/item-variants";
@@ -18,7 +18,7 @@ export default function ItemDetailClient({
       {data?.result != undefined && <ItemInfo data={data.result.entity} />}
 
       <Separator/>
-      <ItemPrices />
+      <ItemPrices item={data.result.entity}/>
       <Separator/>
       
       <ItemVariants

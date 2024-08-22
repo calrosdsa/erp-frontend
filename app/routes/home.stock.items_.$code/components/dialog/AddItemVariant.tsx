@@ -10,6 +10,8 @@ import { z } from "zod";
 import { components } from "~/sdk";
 import { itemVariantFormSchema } from "~/util/data/schemas/stock/item-variant-schemas";
 import { routes } from "~/util/route";
+import { action } from "../../route";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function AddItemVariant({
   open,
@@ -35,8 +37,23 @@ export default function AddItemVariant({
     { itemAttribute:components["schemas"]["ItemAttribute"]} | undefined
   >()
   const revalidator = useRevalidator()
-  const fetcher = useFetcher({ key: "add-item-variant" });
+  const fetcher = useFetcher<typeof action>();
   const r = routes;
+  const {toast} = useToast()
+
+  useEffect(()=>{
+    if(fetcher.data?.error){
+      toast({
+        title:fetcher.data.error
+      })
+    }
+    if(fetcher.data?.message){
+      toast({
+        title:fetcher.data.message
+      })
+      onOpenChange(false)
+    }
+  },[fetcher.data])
   return (
     <DrawerLayout
       open={open}
@@ -46,8 +63,15 @@ export default function AddItemVariant({
         {/* {JSON.stringify(fetcherItemAttribute.data)} */}
       <CustomForm
         schema={itemVariantFormSchema}
-        fetcherKey="add-item-variant"
+        fetcher={fetcher}
         onSubmit={(e: z.infer<typeof itemVariantFormSchema>) => {
+          fetcher.submit({
+            action:"add-variant",
+            itemVariantFormSchema:e,
+          },{
+            method:"POST",
+            encType:"application/json"
+          })
             console.log("VALUES",e)
         }}
         defaultValues={{
@@ -63,7 +87,7 @@ export default function AddItemVariant({
         ]}
         renderCustomInputs={(form) => {
           return (
-            <div>
+            <div className="py-2">
               <FormAutocomplete
                 form={form}
                 data={fetcherDebounce.data?.pagination_result.results || []}

@@ -35,7 +35,7 @@ export const itemAttributeColumns = ():ColumnDef<components["schemas"]["ItemAttr
 export const itemAttributeValuesColumns = (): ColumnDef<
   components["schemas"]["ItemAttributeValue"]
 >[] => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   return [
     {
       header: t("table.no"),
@@ -65,7 +65,7 @@ export const itemAttributeValuesColumns = (): ColumnDef<
 export const itemAttributeValuesDtoColumns = (): ColumnDef<
   components["schemas"]["ItemAttributeValueDto"]
 >[] => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   return [
     {
       header: t("table.no"),

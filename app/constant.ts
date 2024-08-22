@@ -1,4 +1,4 @@
-export const DEFAULT_SIZE = "15"
+export const DEFAULT_SIZE = "20"
 export const DEFAULT_PAGE = "0"
 
 

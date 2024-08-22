@@ -7,7 +7,7 @@ import { formatLongDate } from "~/util/format/formatDate";
 
 
 export const phaseColumns = (): ColumnDef<Phase>[] => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
   let columns: ColumnDef<Phase>[] = [];
 
   
