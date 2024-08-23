@@ -13,7 +13,7 @@ import {
 import { formatLongDate } from "~/util/format/formatDate";
 
 export const subscriptionActionsColumns = ():ColumnDef<SubscriptionAction>[] =>{
-  const {t ,i18n} = useTranslation()
+  const {t ,i18n} = useTranslation("common")
   return [
     {
       accessorKey: "type",
@@ -29,7 +29,7 @@ export const subscriptionActionsColumns = ():ColumnDef<SubscriptionAction>[] =>{
 export const itemLineColumns = (): ColumnDef<
   components["schemas"]["SalesItemLine"]
 >[] => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
 
   return [
     // {

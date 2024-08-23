@@ -42,6 +42,8 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
             }
         }
     })
+    console.log("ORDER ERROR",res.error)
+    console.log("ORDER DATA",res.data)
     return json({
         data:res.data
     })

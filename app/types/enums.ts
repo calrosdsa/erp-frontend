@@ -8,7 +8,8 @@ export enum PluginApp {
 }
 
 export enum SalesOrderType {
-    ORDER_TYPE_SERVICE = "SERVICE"
+    ORDER_TYPE_SERVICE = "SERVICE", 
+    ORDER_TYPE_PURCHASE = "PURCHASE"
 }
 
 export enum Order {

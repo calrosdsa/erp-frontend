@@ -1,11 +1,17 @@
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { DataTable } from "@/components/custom/table/CustomTable";
-import Typography, { subtitle, title } from "@/components/typography/Typography";
+import Typography, {
+  subtitle,
+  title,
+} from "@/components/typography/Typography";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { SalesOrderType } from "~/types/enums";
-import { SquareSalesOrderResponse, SquareSubscriptionStatus } from "~/types/plugin/square/subscription";
+import {
+  SquareSalesOrderResponse,
+  SquareSubscriptionStatus,
+} from "~/types/plugin/square/subscription";
 import { subscriptionActionsColumns } from "../columns";
 import { Button } from "@/components/ui/button";
 import CustomAlertDialog from "@/components/custom/dialog/CustomAlertDialog";
@@ -20,93 +26,109 @@ export default function SquareOrder({
   data: string;
   order: components["schemas"]["SalesOrder"];
 }) {
-  const { t } = useTranslation();
-  const [confirmCancel,setConfirmCancel] = useState(false)
-  const fetcher = useFetcher<typeof action>()
-  const [squareOrder, setSquareOrder] = useState<
+  const { t } = useTranslation("common");
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const fetcher = useFetcher<typeof action>();
+  const [squareOrderSubscription, setSquareOrderSubscription] = useState<
     SquareSalesOrderResponse | undefined
   >(undefined);
-  const { toast } = useToast()
-
+  const { toast } = useToast();
 
   const parseData = () => {
-    const d = JSON.parse(data);
-    setSquareOrder(d);
+    try {
+      switch (order.OrderType) {
+        case SalesOrderType.ORDER_TYPE_SERVICE: {
+          const d = JSON.parse(data);
+          setSquareOrderSubscription(d);
+          break;
+        }
+      }
+    } catch (err) {}
   };
 
-  useEffect(()=>{
-    if(fetcher.data?.errorAction != undefined){
+  useEffect(() => {
+    if (fetcher.data?.errorAction != undefined) {
       toast({
         title: fetcher.data.errorAction,
-      })
+      });
     }
-  },[fetcher.data])
-
+  }, [fetcher.data]);
 
   useEffect(() => {
     parseData();
   }, [data]);
   return (
     <>
-    <CustomAlertDialog
-    open={confirmCancel}
-    loading={fetcher.state == "submitting"}
-    onOpenChange={(e)=>setConfirmCancel(e)}
-    onContinue={()=>{
-        if(squareOrder == undefined) return
-        const body:components["schemas"]["RequestSubscriptionCancelBody"] = {
-            subscriptionId:squareOrder.subscription.subscription.id
-        }
-        fetcher.submit({
-            action:"square-cancel-subscription",
-            data:JSON.stringify(body)
-        },{
-            method:"POST",
-            encType:"application/json"
-        })
-    }}
-    />
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-      <div className=" col-span-full">
-        {order.OrderType == SalesOrderType.ORDER_TYPE_SERVICE && (
-          <Typography fontSize={title}>{t("subscription.base")}</Typography>
+      <CustomAlertDialog
+        open={confirmCancel}
+        loading={fetcher.state == "submitting"}
+        onOpenChange={(e) => setConfirmCancel(e)}
+        onContinue={() => {
+          if (squareOrderSubscription == undefined) return;
+          const body: components["schemas"]["RequestSubscriptionCancelBody"] = {
+            subscriptionId:
+              squareOrderSubscription.subscription.subscription.id,
+          };
+          fetcher.submit(
+            {
+              action: "square-cancel-subscription",
+              data: JSON.stringify(body),
+            },
+            {
+              method: "POST",
+              encType: "application/json",
+            }
+          );
+        }}
+      />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {squareOrderSubscription != undefined && (
+          <>
+            <div className=" col-span-full">
+              {order.OrderType == SalesOrderType.ORDER_TYPE_SERVICE && (
+                <Typography fontSize={title}>
+                  {t("subscription.base")}
+                </Typography>
+              )}
+            </div>
+            <DisplayTextValue
+              title={t("form.startDate")}
+              value={
+                squareOrderSubscription.subscription.subscription.start_date
+              }
+            />
+            <DisplayTextValue
+              title={t("form.status")}
+              value={squareOrderSubscription.subscription.subscription.status}
+            />
+            <div className=" col-span-full gap-3">
+              <Typography fontSize={subtitle}>
+                {t("subscription.actions")}
+              </Typography>
+
+              <div className="py-3">
+                <DataTable
+                  data={
+                    squareOrderSubscription.subscription.subscription.actions ||
+                    []
+                  }
+                  columns={subscriptionActionsColumns()}
+                />
+              </div>
+              {/* {JSON.stringify(squareOrderSubscription.subscription.actions)} */}
+            </div>
+
+            <div className=" col-span-full flex space-x-4">
+              {squareOrderSubscription.subscription.subscription.status ==
+                SquareSubscriptionStatus.ACTIVE && (
+                <Button onClick={() => setConfirmCancel(true)}>
+                  {t("subscription.cancel")}
+                </Button>
+              )}
+            </div>
+          </>
         )}
       </div>
-      {squareOrder != undefined && (
-        <>
-          <DisplayTextValue
-            title={t("form.startDate")}
-            value={squareOrder.subscription.subscription.start_date}
-          />
-          <DisplayTextValue
-            title={t("form.status")}
-            value={squareOrder.subscription.subscription.status}
-          />
-
-        </>
-      )}
-        <div className=" col-span-full gap-3">
-          <Typography fontSize={subtitle}>{t("subscription.actions")}</Typography>
-
-          <div className="py-3">
-          <DataTable 
-          data={squareOrder?.subscription.subscription.actions || []}
-          columns={subscriptionActionsColumns()}
-          />
-          </div>
-          {/* {JSON.stringify(squareOrder.subscription.subscription.actions)} */}
-        </div>
-
-        <div className=" col-span-full flex space-x-4">
-        {squareOrder?.subscription.subscription.status == SquareSubscriptionStatus.ACTIVE && 
-            <Button
-            onClick={()=>setConfirmCancel(true)}
-            >{t("subscription.cancel")}</Button>
-        }
-            
-        </div>
-
-    </div>
-        </>
+    </>
   );
 }

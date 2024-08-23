@@ -8,7 +8,13 @@
   .info-grid {
     @apply grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4
   }
+  .info-grid-sidebar {
+    @apply grid sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4
+  }
   .create-grid {
+    @apply grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 
+  }
+  .route-display-grid {
     @apply grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 
   }
 }

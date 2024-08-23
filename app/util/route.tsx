@@ -7,6 +7,14 @@ class Routes  {
     item = this.stock + "/items"
     itemAttribute = this.stock + "/item-attributes"
 
+    purchases = this.base + "/purchases"
+    purchaseorders = this.purchases + "/orders"
+
+    settings = this.base + "/settings"
+    profile = this.settings + "/profile"
+    account = this.settings + "/account"
+
+
     priceListDetail(id:string):string {
         return `${this.selling}/stock/price-list/${encodeURIComponent(id)}`
     }
@@ -25,6 +33,8 @@ class Routes  {
     toItemDetail(id:string):string{
         return `${this.item}/${encodeURIComponent(id)}`
     }
+
+    
 
 }
 

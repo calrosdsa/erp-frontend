@@ -2,6 +2,9 @@
   "greeting": "Hello",
   "integrations":"Integrations",
 
+  "account":"Account",
+  "profile":"Profile",
+
   "show":"Show",
   "hide":"Hide",
 
@@ -9,6 +12,11 @@
     "companies": "Companies"
   },
   "create":"Create",
+  "info":"Info",
+  "_account":{
+    "lastLogin":"Last Login",
+    "updatePassword":"Update Password"
+  },
   "form": {
     "name":"Name",
     "abbreviation":"Abbreviation",
@@ -17,10 +25,13 @@
     "givenName": "First  Name",
     "phoneNumber": "Phone Number",
     "password":"Password",
+    "newPassword":"New Password",
+    "confirmNewPassword":"Confirm New Password",
     "email": "Email",
     "companyName": "Company Name",
     "clientDetails": "Complete Your Personal Information",
     "country": "Country",
+    "countryCode":"Country Code",
     "item-group": "Item Group",    
     "submit":"Submit",
     "save":"Save",

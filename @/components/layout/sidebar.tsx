@@ -17,7 +17,6 @@ interface SidebarProps {
 export default function Sidebar({ className,data }: SidebarProps) {
   const { isOpen, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
-  const {t} = useTranslation()
   const handleToggle = () => {
     setStatus(true);
     toggle();

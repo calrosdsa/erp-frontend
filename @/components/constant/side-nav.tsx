@@ -7,6 +7,8 @@ import {
   HomeIcon,
   Layers3Icon,
   LayoutDashboard,
+  SettingsIcon,
+  UserIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
@@ -90,16 +92,24 @@ export const NavItems = ({
 
   const purchases = {
     title: t("purchases"),
-    href: "/home/purchases",
+    href: "/home/purchases/orders",
     icon: CreditCardIcon,
-    isChidren: true,
-    children: [] as NavItem[],
+    // isChidren: true,
+    // children: [] as NavItem[],
   };
 
-  const orders = {
-    title: t("orders"),
-    href: "/home/purchases/orders",
+  const account = {
+    title: t("settings"),
+    href: "/home/settings",
+    icon: SettingsIcon,
+    // isChidren: true,
+    // children: [] as NavItem[],
   };
+
+  // const orders = {
+  //   title: t("orders"),
+  //   href: "/home/purchases/orders",
+  // };
 
   switch (session.role) {
     case Role.ROLE_ADMIN: {
@@ -110,11 +120,15 @@ export const NavItems = ({
       break;
     }
     case Role.ROLE_CLIENT: {
-      purchases.children.push(orders);
+      // purchases.children.push(orders);
       navItems.push(purchases);
       break;
     }
   }
+
+  navItems.push(account)
+
+
 
   return [
     {
@@ -123,12 +137,12 @@ export const NavItems = ({
       href: "/home",
       // color: "text-sky-500",
     },
-    {
-      title: "Dashboard",
-      icon: LayoutDashboard,
-      href: "/",
-      // color: "text-sky-500",
-    },
+    // {
+    //   title: "Dashboard",
+    //   icon: LayoutDashboard,
+    //   href: "/",
+    //   // color: "text-sky-500",
+    // },
     ...navItems,
   ];
 };

@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import Typography, { sm, subtitle } from "@/components/typography/Typography";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -27,7 +28,7 @@ const formSchema = z.object({
 });
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const fetcher = useFetcher<typeof action>();
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -87,6 +88,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               </FormItem>
             )}
           />
+
+          {fetcher.data?.error &&
+            <Typography fontSize={sm} textColor="red">{fetcher.data?.error?.detail}</Typography>
+          }
           {/* <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />

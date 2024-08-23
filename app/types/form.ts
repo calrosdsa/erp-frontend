@@ -3,7 +3,7 @@
 
 interface FormItemData {
     typeForm:"input" | "select"
-    type?:"number" | "string"
+    type?:"number" | "string" | "password"
     name:string
     label?:string
     readOnly?:boolean

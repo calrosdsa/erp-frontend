@@ -19,7 +19,7 @@ type Props = {
 };
 
 export function UserNav({ user,openSessionDefaults }: Props) {
-    const { t } = useTranslation()
+    const { t } = useTranslation("common")
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>

@@ -1,5 +1,6 @@
 {
   "errors": {
+    "password_must_match":"Passwords must match!",
     "invalid_type": "Expected {{expected}}, received {{received}}",
     "invalid_type_received_undefined": "Required",
     "invalid_type_received_null": "Required",

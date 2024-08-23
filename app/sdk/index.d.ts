@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/account/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update password */
+        put: operations["update-password"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/account/sign-in": {
         parameters: {
             query?: never;
@@ -32,6 +49,24 @@ export interface paths {
         put?: never;
         /** Sign in a user */
         post: operations["sign-in"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/client": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get client Profile */
+        get: operations["get-client-profile"];
+        /** Update client Profile */
+        put: operations["update-client-profile"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -425,7 +460,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get variant from items */
-        get: operations["get-variants-from-item"];
+        get: operations["get-variant-from-item"];
         put?: never;
         /** Create item variant */
         post: operations["create-item-variant"];
@@ -446,6 +481,40 @@ export interface paths {
         get: operations["get-item-detail"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/teclumobity/item-price": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Retrieve item price */
+        post: operations["get-item-price"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/teclumobity/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Order */
+        post: operations["create-order"];
         delete?: never;
         options?: never;
         head?: never;
@@ -535,6 +604,14 @@ export interface components {
             amount: number;
             currency: string;
         };
+        BillingData: {
+            address: string;
+            city: string;
+            country: string;
+            estado: string;
+            postalCode: string;
+            taxIdNumber: string;
+        };
         CardDetailsStruct: {
             avs_status: string;
             card: components["schemas"]["CardStruct"];
@@ -563,6 +640,7 @@ export interface components {
             prepaid_type: string;
         };
         Client: {
+            ClientKeyValueData: components["schemas"]["ClientKeyValueData"][];
             Company: components["schemas"]["Company"];
             /** Format: int64 */
             CompanyID: number;
@@ -582,6 +660,25 @@ export interface components {
             /** Format: int64 */
             UserID: number;
             Uuid: string;
+        };
+        ClientKeyValueData: {
+            /** Format: int64 */
+            ID?: number;
+            /** Format: int64 */
+            baseId?: number;
+            key: string;
+            value: string;
+        };
+        ClientRequestDto: {
+            companyName: string;
+            country?: components["schemas"]["Country"];
+            email: string;
+            familyName: string;
+            givenName: string;
+            keyValues?: components["schemas"]["ClientKeyValueData"][];
+            metadata?: string;
+            phoneNumber: string;
+            plugins?: components["schemas"]["CompanyPlugins"][];
         };
         Company: {
             CompanyDepartments: components["schemas"]["Company"][];
@@ -655,11 +752,12 @@ export interface components {
              */
             readonly $schema?: string;
             companyName: string;
-            country: components["schemas"]["Country"];
+            country?: components["schemas"]["Country"];
             email: string;
             familyName: string;
             givenName: string;
-            metadata: string;
+            keyValues?: components["schemas"]["ClientKeyValueData"][];
+            metadata?: string;
             phoneNumber: string;
             plugins?: components["schemas"]["CompanyPlugins"][];
         };
@@ -672,6 +770,25 @@ export interface components {
             /** Format: date-time */
             Time: string;
             Valid: boolean;
+        };
+        EditClientRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            familyName: string;
+            givenName: string;
+            organizationName: string;
+            phoneNumber: components["schemas"]["PhoneNumber"];
+        };
+        EntityResponseClientBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["Client"];
         };
         EntityResponseItemAttributeBody: {
             /**
@@ -688,6 +805,14 @@ export interface components {
              */
             readonly $schema?: string;
             result: components["schemas"]["Item"];
+        };
+        EntityResponseItemPriceBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["ItemPrice"];
         };
         EntityResponseResponseSalesOrderDetailBody: {
             /**
@@ -761,7 +886,6 @@ export interface components {
         };
         Item: {
             Code: string;
-            Company?: components["schemas"]["Company"];
             /** Format: int64 */
             CompanyID: number;
             /** Format: date-time */
@@ -782,9 +906,6 @@ export interface components {
             Uuid: string;
         };
         ItemAttribute: {
-            Company: components["schemas"]["Company"];
-            /** Format: int64 */
-            CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
             DeletedAt?: components["schemas"]["DeletedAt"];
@@ -922,7 +1043,6 @@ export interface components {
             Plugin: string;
         };
         ItemVariant: {
-            Item: components["schemas"]["Item"];
             ItemAttributeValue: components["schemas"]["ItemAttributeValue"];
             /** Format: int64 */
             ItemAttributeValueID: number;
@@ -946,6 +1066,15 @@ export interface components {
         };
         ObjectStruct: {
             payment: components["schemas"]["PaymentStruct"];
+        };
+        OrderData: {
+            orderLine: components["schemas"]["OrderLineData"][];
+        };
+        OrderLineData: {
+            /** Format: int64 */
+            itemPriceId: number;
+            /** Format: int64 */
+            quantity: number;
         };
         PaginationResponsePaginationResultListCompanyBody: {
             /**
@@ -1105,6 +1234,10 @@ export interface components {
             price_money: components["schemas"]["Amount"];
             type: string;
         };
+        PhoneNumber: {
+            countryCode: string;
+            number: string;
+        };
         PluginApp: {
             Name: string;
         };
@@ -1246,6 +1379,7 @@ export interface components {
             CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
+            Data: string;
             DeletedAt?: components["schemas"]["DeletedAt"];
             /** Format: date-time */
             DeliveryDate: string;
@@ -1361,6 +1495,35 @@ export interface components {
             /** Format: double */
             Value: number;
         };
+        TecluMobilityOrderRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            billing?: components["schemas"]["BillingData"];
+            client: components["schemas"]["ClientRequestDto"];
+            order: components["schemas"]["OrderData"];
+        };
+        TecluMobilityOrderResponseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            paymentUrl: string;
+        };
+        TecluMobilityRequestItemPriceBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            billingPeriod?: number;
+            itemCode: string;
+            type: string;
+        };
         TotalMoneyStruct: {
             /** Format: int64 */
             amount: number;
@@ -1409,6 +1572,15 @@ export interface components {
              */
             readonly $schema?: string;
             credentials: string;
+        };
+        UpdatePasswordRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            newPassword: string;
+            password: string;
         };
         UpsertItemAttributeValueRequestBody: {
             /**
@@ -1513,6 +1685,49 @@ export interface operations {
             };
         };
     };
+    "update-password": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdatePasswordRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "sign-in": {
         parameters: {
             query?: never;
@@ -1533,6 +1748,88 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SignInResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-client-profile": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseClientBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-client-profile": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditClientRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -2780,7 +3077,7 @@ export interface operations {
             };
         };
     };
-    "get-variants-from-item": {
+    "get-variant-from-item": {
         parameters: {
             query: {
                 page: string;
@@ -2892,6 +3189,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityItemBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-item-price": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TecluMobilityRequestItemPriceBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseItemPriceBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TecluMobilityOrderRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TecluMobilityOrderResponseBody"];
                 };
             };
             /** @description Error */

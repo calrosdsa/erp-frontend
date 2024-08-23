@@ -20,7 +20,7 @@ export default function DetailOrder({
   order: components["schemas"]["SalesOrder"];
   lines: components["schemas"]["SalesItemLine"][];
 }) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
 
   const getTotalRate = () => {
     return lines

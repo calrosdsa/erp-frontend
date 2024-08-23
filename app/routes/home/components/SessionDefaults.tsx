@@ -32,7 +32,7 @@ export const SessionDefault = ({
   companies: components["schemas"]["Company"][];
   close: () => void;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const fetcher = useFetcher();
   const location = useLocation()
   const form = useForm<z.infer<typeof sessionDefaultsFormSchema>>({
@@ -103,7 +103,7 @@ export const SessionDefaultDrawer = ({
   session: SessionData;
   companies: components["schemas"]["Company"][];
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   return (
     <DrawerLayout
       open={open}

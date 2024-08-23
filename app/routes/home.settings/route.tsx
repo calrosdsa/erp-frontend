@@ -16,6 +16,8 @@ export const loader = async({request}:LoaderFunctionArgs )=>{
 }
 export default function Settings(){
     return(
+        <div className="h-full">
         <SettingClient/>
+        </div>
     )
 }
