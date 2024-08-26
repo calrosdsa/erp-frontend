@@ -50,6 +50,10 @@ export interface TableMetaOptions<TData> {
   meta: TableMeta<TData> | undefined;
 }
 
+export interface TableMetaOptions<TData> {
+  meta: TableMeta<TData> | undefined;
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -57,15 +61,17 @@ interface DataTableProps<TData, TValue> {
   paginationOptions?: PaginationOptions;
   expandedOptions?: ExpandedRowOptions<TData>;
   metaOptions?: TableMetaOptions<TData>;
+  metaActions?:TableMetaOptions<TData>;
 }
 
-export function   DataTable<TData, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
   hiddenColumns,
   paginationOptions,
   expandedOptions,
   metaOptions,
+  metaActions,
 }: DataTableProps<TData, TValue>) {
   const onPaginationChange: OnChangeFn<PaginationState> = (updaterOrValue) => {
     let newState: PaginationState | undefined = undefined;
@@ -119,6 +125,7 @@ export function   DataTable<TData, TValue>({
     manualPagination: true,
     meta: {
       ...metaOptions?.meta,
+      ...metaActions?.meta
     },
   });
 

@@ -4,3 +4,8 @@ export const formatQuantity = (quantity:number |undefined,uom:components["schema
     if (quantity == undefined) return ""
     return `${quantity} ${uom.Code}`
 }
+
+export const formatPercentage = (value:number | undefined) =>{
+    if(value== undefined) return ""
+    return `${value}%`
+}

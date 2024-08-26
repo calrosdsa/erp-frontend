@@ -55,6 +55,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/accounting/tax": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Taxes */
+        get: operations["get-taxes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounting/tax/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Tax Detail */
+        get: operations["get-tax-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/client": {
         parameters: {
             query?: never;
@@ -309,7 +343,25 @@ export interface paths {
             cookie?: never;
         };
         /** Get Item groups */
-        get: operations["item-group"];
+        get: operations["item-groups"];
+        put?: never;
+        /** Create Item group */
+        post: operations["create-item-group"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item-group/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get item group detail */
+        get: operations["item-group-detail"];
         put?: never;
         post?: never;
         delete?: never;
@@ -446,6 +498,23 @@ export interface paths {
         put: operations["update-item-price-list"];
         /** Create item price list */
         post: operations["create-item-price-list"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item/price-list/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve Price List Detail */
+        get: operations["get-price-list-detail"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -681,6 +750,7 @@ export interface components {
             plugins?: components["schemas"]["CompanyPlugins"][];
         };
         Company: {
+            Code: string;
             CompanyDepartments: components["schemas"]["Company"][];
             CompanyPlugins: components["schemas"]["CompanyPlugins"][];
             /** Format: date-time */
@@ -689,12 +759,14 @@ export interface components {
             /** Format: int64 */
             ID: number;
             IsParent: boolean;
+            Logo: string;
             Name: string;
             /** Format: int64 */
             Ordinal: number;
             Parent: components["schemas"]["Company"];
             /** Format: int64 */
             ParentID: number | null;
+            SiteUrl: string;
             /** Format: date-time */
             UpdatedAt: string;
             Users: components["schemas"]["User"][];
@@ -719,6 +791,14 @@ export interface components {
             readonly $schema?: string;
             name: string;
             values: components["schemas"]["ItemAttributeValueDto"][];
+        };
+        CreateItemGroupRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
         };
         CreateItemPriceRequestBody: {
             /**
@@ -806,6 +886,14 @@ export interface components {
             readonly $schema?: string;
             result: components["schemas"]["Item"];
         };
+        EntityResponseItemGroupBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["ItemGroup"];
+        };
         EntityResponseItemPriceBody: {
             /**
              * Format: uri
@@ -813,6 +901,14 @@ export interface components {
              */
             readonly $schema?: string;
             result: components["schemas"]["ItemPrice"];
+        };
+        EntityResponseItemPriceListBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["ItemPriceList"];
         };
         EntityResponseResponseSalesOrderDetailBody: {
             /**
@@ -837,6 +933,14 @@ export interface components {
              */
             readonly $schema?: string;
             result: components["schemas"]["ResultEntityItemPrice"];
+        };
+        EntityResponseTaxBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["Tax"];
         };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
@@ -954,6 +1058,7 @@ export interface components {
             uomId?: number;
         };
         ItemGroup: {
+            Code: string;
             Company: components["schemas"]["Company"];
             /** Format: int64 */
             CompanyID: number;
@@ -1140,6 +1245,14 @@ export interface components {
             readonly $schema?: string;
             pagination_result: components["schemas"]["PaginationResultListSalesOrder"];
         };
+        PaginationResponsePaginationResultListTaxBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListTax"];
+        };
         PaginationResultListCompany: {
             results: components["schemas"]["Company"][];
             /** Format: int64 */
@@ -1177,6 +1290,11 @@ export interface components {
         };
         PaginationResultListSalesOrder: {
             results: components["schemas"]["SalesOrder"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListTax: {
+            results: components["schemas"]["Tax"][];
             /** Format: int64 */
             total: number;
         };
@@ -1748,6 +1866,88 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SignInResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-taxes": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListTaxBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-tax-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseTaxBody"];
                 };
             };
             /** @description Error */
@@ -2487,7 +2687,7 @@ export interface operations {
             };
         };
     };
-    "item-group": {
+    "item-groups": {
         parameters: {
             query: {
                 page: string;
@@ -2515,6 +2715,90 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListItemGroupBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-item-group": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateItemGroupRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "item-group-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseItemGroupBody"];
                 };
             };
             /** @description Error */
@@ -3064,6 +3348,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-price-list-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseItemPriceListBody"];
                 };
             };
             /** @description Error */

@@ -7,6 +7,7 @@ export const itemPriceFormSchema = z.object({
     rate:z.string(),
     priceListId:z.number(),
     priceListName:z.string(),
+    taxName:z.string(),
     itemQuantity:z.string(),
     taxId:z.number(),
     plugins:z.array(pluginObjectSchema).optional()

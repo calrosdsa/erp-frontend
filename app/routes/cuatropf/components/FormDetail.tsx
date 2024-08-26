@@ -11,7 +11,7 @@ import { formatCurrency, formatTax } from "~/util/format/formatCurrency";
 
 export default function FormCuatropfDetail() {
   const { data } = useLoaderData<typeof loader>();
-  const { t,i18n } = useTranslation();
+  const { t,i18n } = useTranslation("common");
   const planVariation =
     data.plan_variation.object.subscription_plan_variation_data;
 

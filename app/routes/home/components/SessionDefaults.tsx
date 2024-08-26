@@ -19,14 +19,13 @@ import { SessionData } from "~/sessions";
 import { languages } from "~/util/data/languages-data";
 
 export const sessionDefaultsFormSchema = z.object({
-  companyUuid: z.string(),
-  locale: z.string(),
+  companyUuid: z.string().optional(),
+  locale: z.string().optional(),
 });
 
 export const SessionDefault = ({
   session,
   companies,
-  close,
 }: {
   session: SessionData;
   companies: components["schemas"]["Company"][];

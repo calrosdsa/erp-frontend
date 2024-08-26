@@ -24,11 +24,10 @@ import i18next from "~/i18next.server";
 import { ExternalScripts } from "remix-utils/external-scripts";
 import { Toaster } from "@/components/ui/toaster";
 
-import {
-  PreventFlashOnWrongTheme,
-  ThemeProvider,
-  useTheme,
-} from "remix-themes";
+import { PreventFlashOnWrongTheme, useTheme } from "remix-themes";
+import { getThemeSession } from "./util/theme/theme-server";
+import { Theme, ThemeProvider } from "./util/theme/theme-provider";
+import clsx from "clsx";
 
 export async function action({ request }: ActionFunctionArgs) {
   const body = await request.json();
@@ -43,25 +42,27 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
-  const { getTheme } = await themeSessionResolver(request);
+  // const { getTheme } = await themeSessionResolver(request);
+  const themeSession = await getThemeSession(request);
 
   let _locale = await i18next.getLocale(request);
   if (session.has("locale")) {
     const locale = session.get("locale") || _locale;
     return json({
       locale,
-      theme: getTheme(),
+      // theme: getTheme(),
+      theme: themeSession.getTheme(),
     });
   } else {
     return json({
       locale: _locale,
-      theme: getTheme(),
+      // theme: getTheme(),
+      theme: themeSession.getTheme(),
     });
   }
 }
 
 export let handle = {
-  
   // In the handle export, we can add a i18n key with namespaces our route
   // will need to load. This key can be a single string or an array of strings.
   // TIP: In most cases, you should set this to your defaultNS from your i18n config
@@ -81,7 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <html lang={i18n.resolvedLanguage} dir={i18n.dir()}>
+    <html lang={i18n.resolvedLanguage} dir={i18n.dir()} className={clsx(data.theme)}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -94,13 +95,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <ThemeProvider
-          specifiedTheme={data.theme}
-          themeAction="/action/set-theme"
-        >
-          {children}
-        </ThemeProvider>
-
+    <ThemeProvider specifiedTheme={data.theme}>
+        {children}
+    </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
         <ExternalScripts />
@@ -111,7 +108,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  let data = useLoaderData<typeof loader>();
+  return (
+      <Outlet />
+    // </ThemeProvider>
+
+  );
 }
 
 type DefaultSparseErrorPageProps = {

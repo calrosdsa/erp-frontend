@@ -61,7 +61,7 @@ function ThemeProvider({
 
     persistTheme.submit(
       { theme },
-      { action: 'action/set-theme', method: 'post' }
+      { action: 'set-theme', method: 'post' }
     );
   }, [theme]);
 

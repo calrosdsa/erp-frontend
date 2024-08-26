@@ -46,7 +46,7 @@ const formSchema = z.object({
 export default function FormCuatropf() {
   let scriptLoaded = false;
   const fetcher = useFetcher<typeof action>();
-  let { t, i18n } = useTranslation();
+  let { t, i18n } = useTranslation("common");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({

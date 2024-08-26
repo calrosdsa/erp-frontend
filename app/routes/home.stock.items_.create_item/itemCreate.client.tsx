@@ -206,7 +206,7 @@ export default function CreateItemClient() {
             }}
             onValueChange={(e)=>{
               fetcherDebounce.submit(
-                { query: e },
+                { query: e,action:"get" },
                 {
                   debounceTimeout: 600,
                   method: "POST",
@@ -218,7 +218,7 @@ export default function CreateItemClient() {
             name="itemGroupName"
             onOpen={()=>{
               fetcherDebounce.submit(
-                { query: "" },
+                { query: "",action:"get" },
                 {
                   method: "POST",
                   action: `/home/stock/item-groups`,

@@ -31,7 +31,7 @@ export default function DisplayTextValue({
 
       <div className="bg-accent rounded-md p-[6px] shadow-sm flex justify-between">
       {to != undefined ? (
-        <Link to={to}  className="underline">
+        <Link to={to}  className="underline h-7 items-center flex" >
           <Typography
             fontWeight={500}
             fontSize={sm}

@@ -16,6 +16,7 @@ import { SessionData } from "~/sessions";
 import { NavItem } from "~/types";
 import { Role } from "~/types/enums";
 import { title } from "../typography/Typography";
+import { routes } from "~/util/route";
 
 export const NavItems = ({
   session,
@@ -26,17 +27,31 @@ export const NavItems = ({
 }): NavItem[] => {
   const { t } = useTranslation("common");
   let navItems: NavItem[] = [];
+  const r = routes
   const companies = {
     title: t("company.companies"),
     icon: Building2Icon,
     href: "/home/companies",
     // color: "text-sky-500",
   };
+  const accounting:NavItem = {
+    title: t("accounting"),
+    icon:CreditCardIcon,
+    href:r.accounting,
+    isChildren:true,
+    children:[
+      {
+        title: t("taxes"),
+        href:r.taxes
+      }
+    ]
+  }
+
   const selling: NavItem = {
     title: t("selling"),
     icon: DollarSign,
     href: "/home/selling",
-    isChidren:true,
+    isChildren:true,
     children: [
       {
         title: t("price-list"),
@@ -45,11 +60,11 @@ export const NavItems = ({
     ],
   };
 
-  const stock = {
+  const stock:NavItem = {
     title: t("stock"),
     icon: Layers3Icon,
     href: "/home/stock",
-    isChidren: true,
+    isChildren: true,
     children: [
       {
         title: t("items"),
@@ -64,20 +79,20 @@ export const NavItems = ({
         href: "/home/stock/item-groups",
       },
       {
-        title: t("item-atributes"),
+        title: t("item-attributes"),
         href: "/home/stock/item-attributes",
       },
-      {
-        title: t("warehouse"),
-        href: "/home/stock/warehouse",
-      },
+      // {
+      //   title: t("warehouse"),
+      //   href: "/home/stock/warehouse",
+      // },
     ],
   };
   const plugins: NavItem = {
     title: t("plugins"),
     icon: BlocksIcon,
     href: "/home/plugins",
-    isChidren: true,
+    isChildren: true,
     children: [],
   };
   if (appConfig != undefined) {
@@ -90,19 +105,19 @@ export const NavItems = ({
     });
   }
 
-  const purchases = {
+  const purchases:NavItem = {
     title: t("purchases"),
     href: "/home/purchases/orders",
     icon: CreditCardIcon,
-    // isChidren: true,
+    // isChildren: true,
     // children: [] as NavItem[],
   };
 
-  const account = {
+  const account:NavItem = {
     title: t("settings"),
-    href: "/home/settings",
+    href: "/home/settings/profile",
     icon: SettingsIcon,
-    // isChidren: true,
+    // isChildren: true,
     // children: [] as NavItem[],
   };
 
@@ -114,6 +129,7 @@ export const NavItems = ({
   switch (session.role) {
     case Role.ROLE_ADMIN: {
       navItems.push(companies);
+      navItems.push(accounting)
       navItems.push(selling);
       navItems.push(stock);
       navItems.push(plugins);

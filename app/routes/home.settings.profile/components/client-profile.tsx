@@ -65,7 +65,6 @@ export default function ClientProfile() {
         className=" w-full info-grid-sidebar"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        {JSON.stringify(form.getValues())}
         {client && (
           <>
             <div className=" col-span-full flex justify-between w-full items-center">

@@ -18,8 +18,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         "UPDATE SESSION",
         data.sessionDefault,
       );
-      session.set("locale", data.sessionDefault.locale);
-        session.set("companyUuid", data.sessionDefault.companyUuid);
+      session.set("locale", data.sessionDefault.locale || "");
+        session.set("companyUuid", data.sessionDefault.companyUuid || "");
       return redirect(data.pathName, {
         headers: {
           "Set-Cookie": await commitSession(session),

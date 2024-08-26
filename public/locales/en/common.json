@@ -30,6 +30,7 @@
     "email": "Email",
     "companyName": "Company Name",
     "clientDetails": "Complete Your Personal Information",
+    "enabled":"Enabled",
     "country": "Country",
     "countryCode":"Country Code",
     "item-group": "Item Group",    
@@ -53,6 +54,20 @@
     "startDate":"Start Date",
 
     "orderConfirmation":"Order Confirmation"
+  },
+  "_selling":{
+    "isBuying":"Is Buying",
+    "isSelling":"Is Selling"
+  },
+
+  "info-item":"Info {{item}}",
+
+  "accounting":"Accounting",
+  "taxes":"Taxes",
+  "selling":"Selling",
+  "price-list":"Price List",
+  "_tax":{
+    "base":"Tax"
   },
 
   "sidebar":{
@@ -133,6 +148,7 @@
   "orderInfo":"Order Info",
 
   "table":{
+    "new":"New",
     "createdAt":"Creation Date",
     "updatedAt":"Last Modified",
     "deliverdDate":"Deliverd Date",

@@ -2,9 +2,13 @@
 class Routes  {
     base = "/home"
     selling = this.base + "/selling"
+
     accounting = this.base + "/accounting"
+    taxes =  this.accounting + "/taxes"
+
     stock = this.base + "/stock"
     item = this.stock + "/items"
+    itemGroups = this.stock + "/item-groups"
     itemAttribute = this.stock + "/item-attributes"
 
     purchases = this.base + "/purchases"
@@ -34,7 +38,15 @@ class Routes  {
         return `${this.item}/${encodeURIComponent(id)}`
     }
 
-    
+    //Item group
+    toItemGroupDetail(id:string):string{
+        return `${this.itemGroups}/${encodeURIComponent(id)}`
+    }
+
+    //Acouting
+    toTaxDetail(id:string):string{
+        return `${this.taxes}/${encodeURIComponent(id)}`
+    }
 
 }
 

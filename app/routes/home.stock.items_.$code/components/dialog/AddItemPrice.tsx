@@ -17,6 +17,7 @@ import { components } from "~/sdk";
 import { GlobalState } from "~/types/app";
 import { itemPriceFormSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { action } from "../../route";
+import { pluginObjectSchema } from "~/util/data/schemas/plugin/plugin-schema";
 
 export default function AddItemPrice({
   open,
@@ -30,6 +31,7 @@ export default function AddItemPrice({
   const { t } = useTranslation("common");
   const state = useOutletContext<GlobalState>();
   const fetcher = useFetcher<typeof action>();
+  const fetcherDebounceTaxes = useDebounceFetcher<{ result: components["schemas"]["Tax"][] }>();
   const fetcherDebouncePriceList = useDebounceFetcher<
     | {
         pagination_result: {
@@ -42,25 +44,27 @@ export default function AddItemPrice({
   const [selectedPriceList, setSelectedPriceList] = useState<
     components["schemas"]["ItemPriceList"] | null
   >(null);
+  const [selectedTax, setSelectedTax] =
+    useState<components["schemas"]["Tax"]>();
   const [selectedPlugins, setSelectedPlugins] = useState<
     components["schemas"]["CompanyPlugins"][]
   >([]);
-  const {toast} = useToast()
+  const { toast } = useToast();
 
-  useEffect(()=>{
-    if(fetcher.data?.error){
+  useEffect(() => {
+    if (fetcher.data?.error) {
       toast({
-        title:fetcher.data.error
-      })
+        title: fetcher.data.error,
+      });
     }
-    if(fetcher.data?.message){
+    if (fetcher.data?.message) {
       toast({
-        title:fetcher.data.message
-      })
+        title: fetcher.data.message,
+      });
       //close form dialog
-      onOpenChange(false)
+      onOpenChange(false);
     }
-  },[fetcher.data])
+  }, [fetcher.data]);
 
   return (
     <DrawerLayout
@@ -71,10 +75,9 @@ export default function AddItemPrice({
     >
       <CustomForm
         schema={itemPriceFormSchema}
-        className="create-grid"
+        className="create-grid "
         defaultValues={
           {
-            taxId: 3,
             itemId: item.ID,
           } as z.infer<typeof itemPriceFormSchema>
         }
@@ -95,10 +98,20 @@ export default function AddItemPrice({
         fetcher={fetcher}
         onSubmit={(values: z.infer<typeof itemPriceFormSchema>) => {
           console.log("ITEM", values);
+          const plugins:z.infer<typeof pluginObjectSchema>[] = selectedPlugins.map(item=>{
+            return {
+              plugin:item.Plugin,
+              companyId:item.CompanyID
+            }
+          })
+          const body:z.infer<typeof itemPriceFormSchema> = {
+            ...values,
+            plugins:plugins,
+          }
           fetcher.submit(
             {
               action: "add-item-price",
-              itemPriceFormSchema: values,
+              itemPriceFormSchema: body,
             },
             {
               method: "POST",
@@ -109,11 +122,39 @@ export default function AddItemPrice({
         renderCustomInputs={(form) => {
           return (
             <>
-              <div className="col-span-full">
-                <Typography fontSize={subtitle}>
-                  {t("itemPrice.s")} ({t("form.optional")})
-                </Typography>
-              </div>
+              <FormAutocomplete
+                form={form}
+                data={fetcherDebounceTaxes.data?.result || []}
+                label={t("taxes")}
+                value={"Name"}
+                nameK={"Name"}
+                onSelect={(v) => {
+                  setSelectedTax(v);
+                  form.setValue("taxId", v.ID);
+                }}
+                onValueChange={(e) => {
+                  fetcherDebounceTaxes.submit(
+                    { query: e, action: "get" },
+                    {
+                      debounceTimeout: 600,
+                      method: "POST",
+                      action: `/home/accounting/taxes`,
+                      encType: "application/json",
+                    }
+                  );
+                }}
+                name="taxName"
+                onOpen={() => {
+                  fetcherDebounceTaxes.submit(
+                    { query: "", action: "get" },
+                    {
+                      method: "POST",
+                      action: `/home/accounting/taxes`,
+                      encType: "application/json",
+                    }
+                  );
+                }}
+              />
 
               {selectedPriceList != undefined && (
                 <div className="col-span-full">

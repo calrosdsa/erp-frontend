@@ -10,8 +10,9 @@ import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { UserAvatar } from "@/components/layout/avatar";
 import { UserData } from "~/types/app";
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
+import { routes } from "~/util/route";
 
 type Props = {
     user: UserData;
@@ -20,6 +21,7 @@ type Props = {
 
 export function UserNav({ user,openSessionDefaults }: Props) {
     const { t } = useTranslation("common")
+    const r = routes
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
@@ -29,7 +31,9 @@ export function UserNav({ user,openSessionDefaults }: Props) {
                 />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <div className="flex items-center justify-start gap-4 p-2">
+                <DropdownMenuItem asChild>
+                    <Link  className="flex items-center justify-start gap-4 p-2 cursor-pointer" to={r.profile}>
+
                     <div className="flex flex-col space-y-1 leading-none">
                         {user.FirstName && <p className="font-medium">{user.FirstName}</p>}
                         {user.Email && (
@@ -38,7 +42,8 @@ export function UserNav({ user,openSessionDefaults }: Props) {
                             </p>
                         )}
                     </div>
-                </div>
+                        </Link>
+                </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
