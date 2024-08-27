@@ -1,23 +1,36 @@
+import { z } from "zod";
 import PriceListsClient from "./price-list.client";
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { components } from "~/sdk";
+import { createPriceListSchema } from "~/util/data/schemas/stock/price-list-schema";
 
 type PriceListAction = {
   action: string;
   query: string;
   page?: string;
   size?: string;
+  createPriceList:z.infer<typeof createPriceListSchema>
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as PriceListAction;
   let client = apiClient({ request });
+  let message:string | undefined = undefined
+  let error:string |undefined = undefined
   let pagination_result:
     | components["schemas"]["PaginationResultListItemPriceList"]
     | undefined = undefined;
   switch (data.action) {
+    case "add-price-list":{
+      const res = await client.POST("/stock/item/price-list",{
+        body:data.createPriceList
+      })
+      message = res.data?.message
+      error = res.error?.detail
+      break;
+    }
     case "get": {
       const res = await client.GET("/stock/item/price-list", {
         params: {
@@ -37,6 +50,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
   return json({
     pagination_result,
+    message,error
   });
 };
 

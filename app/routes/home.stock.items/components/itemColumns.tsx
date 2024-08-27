@@ -18,9 +18,9 @@ export const itemColumns = (): ColumnDef<components["schemas"]["Item"]>[] => {
         return <div className="">{index + 1}.-</div>;
       },
     },
-    {
-      accessorKey: "Code",
-      header:t("table.code"),
+      {
+        accessorKey: "Code",
+        header:t("table.code"),
       cell: ({ row }) => {
         const code = row.getValue("Code") as string;
         return <Link to={`./${encodeURIComponent(code)}`}

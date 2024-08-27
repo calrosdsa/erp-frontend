@@ -50,6 +50,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
+      <div className="flex flex-col space-y-2 text-center">
+            <h1 className="text-2xl font-semibold tracking-tight">
+              {t("_account.siginIYouA")}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {t("_account.siginIYouADesc")}
+            </p>
+          </div>
       <Form {...form}>
         <fetcher.Form
           id="submit-form"

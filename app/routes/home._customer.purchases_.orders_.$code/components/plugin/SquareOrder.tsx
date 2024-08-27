@@ -38,7 +38,7 @@ export default function SquareOrder({
     try {
       switch (order.OrderType) {
         case SalesOrderType.ORDER_TYPE_SERVICE: {
-          const d = JSON.parse(data);
+          let d = JSON.parse(data) as SquareSalesOrderResponse;
           setSquareOrderSubscription(d);
           break;
         }
@@ -82,6 +82,13 @@ export default function SquareOrder({
         }}
       />
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {/* <Button
+          onClick={() => {
+            parseData();
+          }}
+        >
+          PARSE
+        </Button> */}
         {squareOrderSubscription != undefined && (
           <>
             <div className=" col-span-full">
@@ -101,33 +108,34 @@ export default function SquareOrder({
               title={t("form.status")}
               value={squareOrderSubscription.subscription.subscription.status}
             />
-            <div className=" col-span-full gap-3">
-              <Typography fontSize={subtitle}>
-                {t("subscription.actions")}
-              </Typography>
+          </>
+        )}
 
-              <div className="py-3">
-                <DataTable
-                  data={
-                    squareOrderSubscription.subscription.subscription.actions ||
-                    []
-                  }
-                  columns={subscriptionActionsColumns()}
-                />
-              </div>
-              {/* {JSON.stringify(squareOrderSubscription.subscription.actions)} */}
-            </div>
+        <div className=" col-span-full gap-3">
+          <Typography fontSize={subtitle}>
+            {t("subscription.actions")}
+          </Typography>
+        </div>
+        <div className="col-span-full">
+          <DataTable
+            data={
+              squareOrderSubscription?.subscription.subscription.actions || []
+            }
+            columns={subscriptionActionsColumns()}
+          />
+        </div>
 
-            <div className=" col-span-full flex space-x-4">
-              {squareOrderSubscription.subscription.subscription.status ==
+        
+        <div className=" col-span-full flex space-x-4">
+              {squareOrderSubscription?.subscription.subscription.status ==
                 SquareSubscriptionStatus.ACTIVE && (
                 <Button onClick={() => setConfirmCancel(true)}>
                   {t("subscription.cancel")}
                 </Button>
               )}
             </div>
-          </>
-        )}
+
+
       </div>
     </>
   );

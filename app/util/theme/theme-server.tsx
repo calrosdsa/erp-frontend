@@ -10,7 +10,6 @@ const themeStorage = createCookieSessionStorage({
     secrets: [getRequiredServerEnvVar('SESSION_SECRET')],
     sameSite: 'lax',
     path: '/',
-    // no theme for you on Kent's 100th birthday! 😂
     expires: new Date('2088-10-18'),
     httpOnly: true,
   },

@@ -12,17 +12,19 @@ import { DefaultValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { makeZodI18nMap } from "zod-i18n-map";
+import SelectForm from "../select/SelectForm";
+import CheckForm from "../input/CheckForm";
 
-interface Props<T extends ZodRawShape> {
+interface Props<T extends object, K extends keyof T> {
   schema: any;
-  formItemsData: FormItemData[];
+  formItemsData: FormItemData<T, K>[];
   onSubmit: (e: any) => void;
   className?: string;
   defaultValues?: any;
   renderCustomInputs?: (form: any) => ReactNode;
-  fetcher: FetcherWithComponents<unknown>
+  fetcher: FetcherWithComponents<unknown>;
 }
-export default function CustomForm<T extends ZodRawShape>({
+export default function CustomForm<T extends object, K extends keyof T>({
   formItemsData,
   schema,
   onSubmit,
@@ -30,7 +32,7 @@ export default function CustomForm<T extends ZodRawShape>({
   defaultValues,
   renderCustomInputs,
   fetcher,
-}: Props<T>) {
+}: Props<T, K>) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
@@ -45,40 +47,47 @@ export default function CustomForm<T extends ZodRawShape>({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(className, "gap-y-2 p-3")}
       >
-        {/* <div className=" col-span-full">
-        {JSON.stringify(form.getValues())}
-        </div> */}
+        {/* <div className=" col-span-full">{JSON.stringify(form.getValues())}</div> */}
         {formItemsData.map((item, idx) => {
-          return (
-            item.typeForm == "input" && (
+          if (item.typeForm == "input") {
+            return (
               <CustomFormField
                 key={idx}
                 label={item.label}
                 name={item.name}
                 form={form}
                 children={(field) => {
-                  return (
-                    <Input
-                      {...field}
-                      type={item.type}
-                      // onChange={(e) => {
-                      //   if (item.type == "number") {
-                      //     field.onChange(Number(e.target.value));
-                      //   }
-                      //   if (item.type == "string") {
-                      //     field.onChange(e.target.value);
-                      //   }
-                      // }}
-                    />
-                  );
+                  return <Input {...field} type={item.type} />;
                 }}
               />
-            )
-          );
+            );
+          }
+
+          if (item.typeForm == "select") {
+            return (
+              <SelectForm
+                key={idx}
+                data={item.data || []}
+                keyName={item.keyName}
+                keyValue={item.keyValue}
+                name={item.name}
+                label={item.label}
+                form={form}
+              />
+            );
+          }
+          if (item.typeForm == "check") {
+            return <CheckForm
+            label={item.label}
+            name={item.name}
+            description={item.description}
+            form={form}
+            />;
+          }
         })}
         {renderCustomInputs != undefined && renderCustomInputs(form)}
-       <div className="col-span-full"></div>
-        
+        <div className="col-span-full"></div>
+
         <Button type="submit" className=" col-span-full w-full mt-3">
           {fetcher.state == "submitting" ? <Icons.spinner /> : t("form.submit")}
         </Button>

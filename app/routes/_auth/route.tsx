@@ -4,6 +4,8 @@ import AuthClient from "./auth.client";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { getSession } from "~/sessions";
 import FallBack from "@/components/layout/Fallback";
+import { components } from "~/sdk";
+import apiClient from "~/apiclient";
 
 let isHydrating = true;
 // export const loader =async({request}:LoaderFunctionArgs)=> {
@@ -15,6 +17,27 @@ let isHydrating = true;
 //   }
 //   return json({ok:true})
 // }
+
+export const loader = async({request}:LoaderFunctionArgs) =>{
+  const url = new URL(request.url)
+  const params = url.searchParams
+  const companyUuid = params.get("uuid")
+  let company:components["schemas"]["Company"] | undefined = undefined
+  if(companyUuid){
+    const client = apiClient({request})
+    const res = await client.GET("/company/{uuid}",{
+      params:{
+        path:{
+          uuid:companyUuid
+        }
+      }
+    })
+    company = res.data?.result
+  }
+  return json({
+    company
+  })
+}
 
 export default function AuthLayout() {
   const [isHydrated, setIsHydrated] = useState(!isHydrating);

@@ -17,10 +17,10 @@ import { CountrySelectItem } from "~/types/app";
 
 interface Props<T extends object, K extends keyof T> {
   data: T[];
-  keyName: K;
-  keyValue: K;
+  keyName?: K;
+  keyValue?: K;
   name: string;
-  label: string;
+  label?: string;
   form: any;
   onValueChange?: (e: T) => void;
 }
@@ -43,7 +43,8 @@ export default function SelectForm<T extends object, K extends keyof T>({
           <Select
             onValueChange={(e) => {
               //   const object = JSON.parse(e)
-              const item =  data.find(t => t[keyValue] == e)
+              if(keyValue == undefined) return
+              const item =  data.find(t =>  t[keyValue] == e)
               if (onValueChange != undefined && item) {
                 onValueChange(item);
               }
@@ -60,8 +61,8 @@ export default function SelectForm<T extends object, K extends keyof T>({
             <SelectContent>
               {data.map((option, idx) => {
                 return (
-                  <SelectItem value={option[keyValue] as string} key={idx}>
-                    {option[keyName]?.toString() || ""}
+                  <SelectItem value={keyValue ? option[keyValue] as string : ""} key={idx}>
+                    {keyName ? option[keyName]?.toString() || "" : ""}
                   </SelectItem>
                 );
               })}

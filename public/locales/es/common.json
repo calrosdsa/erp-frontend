@@ -2,86 +2,121 @@
   "greeting": "Hola",
   "integrations": "Integraciones",
 
+  "account": "Cuenta",
+  "profile": "Perfil",
+
   "show": "Mostrar",
   "hide": "Ocultar",
 
   "company": {
-    "companies": "Empresas"
+    "companies": "Compañías"
   },
   "create": "Crear",
+  "info": "Información",
+  "signin": "Iniciar sesión",
+  "_account": {
+    "lastLogin": "Último inicio de sesión",
+    "updatePassword": "Actualizar contraseña",
+    "siginIYouA": "Inicia sesión en tu cuenta",
+    "siginIYouADesc": "Ingresa tu correo electrónico y contraseña a continuación para acceder a tu cuenta"
+  },
+
   "form": {
     "name": "Nombre",
-    "abbreviation": "Abreviación",
+    "abbreviation": "Abreviatura",
     "code": "Código",
     "familyName": "Apellido",
     "givenName": "Nombre",
-    "phoneNumber": "Número de Teléfono",
+    "phoneNumber": "Número de teléfono",
     "password": "Contraseña",
-    "email": "Correo Electrónico",
-    "companyName": "Nombre de la Empresa",
-    "clientDetails": "Complete su Información Personal",
+    "newPassword": "Nueva contraseña",
+    "confirmNewPassword": "Confirmar nueva contraseña",
+    "email": "Correo electrónico",
+    "companyName": "Nombre de la compañía",
+    "clientDetails": "Completa tu información personal",
+    "enabled": "Habilitado",
     "country": "País",
-    "item-group": "Grupo de Artículos",    
+    "countryCode": "Código del país",
+    "item-group": "Grupo de artículos",
     "submit": "Enviar",
     "save": "Guardar",
-    "uom": "UOM",
+    "uom": "Unidad de medida",
     "optional": "Opcional",
-    "price-list": "Lista de Precios",
+    "price-list": "Lista de precios",
     "currency": "Moneda",
-    "buying": "Compras",
-    "selling": "Ventas",
+    "buying": "Compra",
+    "selling": "Venta",
     "rate": "Tasa",
-    "itemQuantity": "Cantidad de Artículo",
-    "totalQuantity": "Cantidad Total",
+    "itemQuantity": "Cantidad de artículos",
+    "totalQuantity": "Cantidad total",
     "pay": "Pagar",
-    "orderTotal": "Total del Pedido",
+    "orderTotal": "Total del pedido",
     "total": "Total",
     "tax": "Impuesto",
-    "totalTax": "Impuestos Totales",
+    "totalTax": "Impuestos totales",
     "status": "Estado",
-    "startDate": "Fecha de Inicio",
+    "startDate": "Fecha de inicio",
 
-    "orderConfirmation": "Confirmación del Pedido"
+    "orderConfirmation": "Confirmación de pedido",
+    "siteUrl": "URL del sitio",
+    "logo": "Logo"
+  },
+  "_selling": {
+    "isBuying": "Es compra",
+    "isSelling": "Es venta",
+    "isSellingDesc": "Esta lista de precios se usará para vender productos.",
+    "isBuyingDesc": "Esta lista de precios se usará para comprar productos."
+  },
+
+  "info-item": "Información de {{item}}",
+
+  "accounting": "Contabilidad",
+  "taxes": "Impuestos",
+  "selling": "Venta",
+  "price-list": "Lista de precios",
+  "_tax": {
+    "base": "Impuesto"
   },
 
   "sidebar": {
-    "sessionDefaults": "Predeterminados de la Sesión"
+    "sessionDefaults": "Predeterminados de sesión"
   },
   "language": "Idioma",
 
-  "addPlugin": "Agregar Plugin",
-  "applicationId": "ID de la Aplicación",
-  "accessToken": "Token de Acceso",
-  "locationId": "ID de la Ubicación",
-  "apiVersion": "Versión de la API",
+  "addPlugin": "Agregar complemento",
+  "applicationId": "ID de aplicación",
+  "accessToken": "Token de acceso",
+  "locationId": "ID de ubicación",
+  "apiVersion": "Versión de API",
 
-  
   "stock": "Inventario",
   "_stock": {
-    "createItemAttribute": "Crear Atributo de Artículo",
-    "itemAttributeInfo": "Información del Atributo de Artículo",
-    "itemAttributeValues": "Valores del Atributo de Artículo",
-    "itemAttributeValue": "Valor del Atributo de Artículo",
-    "addItemAttributeValue": "Agregar Valor del Atributo de Artículo"
+    "createItemAttribute": "Crear atributo del artículo",
+    "itemAttributeInfo": "Información del atributo del artículo",
+    "itemAttributeValues": "Valores del atributo del artículo",
+    "itemAttributeValue": "Valor del atributo del artículo",
+    "itemAttribute": "Atributo del artículo",
+    "addItemAttributeValue": "Agregar valor del atributo del artículo",
+    "addItemPrice": "Agregar precio del artículo"
   },
   "items": "Artículos",
-  "item-groups": "Grupos de Artículos",
-  "item-attributes": "Atributos de Artículos",
+  "item-groups": "Grupos de artículos",
+  "item-attributes": "Atributos de los artículos",
   "warehouse": "Almacén",
   "home": "Inicio",
-  "companies": "Empresas",
-  "plugins": "Plugins",
+  "companies": "Compañías",
+  "plugins": "Complementos",
 
-  "create_item": "Agregar Artículo",
-  "itemInfo": "Información del Artículo",
+  "create_item": "Agregar artículo",
+  "itemInfo": "Información del artículo",
 
-  "email": "Correo Electrónico",
+  "email": "Correo electrónico",
   "square": "Square",
   "_object": {
-    "objectId": "ID del Objeto",
-    "objectType": "Tipo de Objeto",
-    "presentAtAllLocations": "Presente en Todas las Ubicaciones",
-    "subscriptionPlanVariation": "Variación del Plan de Suscripción",
+    "objectId": "ID del objeto",
+    "objectType": "Tipo de objeto",
+    "presentAtAllLocations": "Presente en todas las ubicaciones",
+    "subscriptionPlanVariation": "ID de variación del plan de suscripción",
     "phases": "Fases"
   },
 
@@ -89,51 +124,60 @@
 
   "purchases": "Compras",
 
-
   "subscription": {
     "base": "Suscripción",
-    "actions": "Acciones de Suscripción",
-    "cancel": "Cancelar Suscripción"
+    "actions": "Acciones de suscripción",
+    "cancel": "Cancelar suscripción"
   },
   "item": {
-    "info": "Información del Artículo",
-    "code": "Código del Artículo",
-    "prices": "Precios del Artículo"
+    "info": "Información del artículo",
+    "code": "Código del artículo",
+    "prices": "Precios del artículo"
+  },
+  "_item": {
+    "variants": "Variantes del artículo",
+    "addVariant": "Agregar variante del artículo",
+    "enableForVariants": "Habilitar artículo para variantes"
   },
 
-  "item-prices": "Precios del Artículo",
+  "item-prices": "Precios de los artículos",
   "itemPrice": {
-    "s": "Precio del Artículo",
-    "p": "Precios del Artículo",
-    "info": "Información del Precio del Artículo"
+    "s": "Precio del artículo",
+    "p": "Precios del artículo",
+    "info": "Información del precio del artículo"
   },
   "priceList": {
-    "info": "Información de la Lista de Precios"
+    "info": "Información de la lista de precios"
   },
 
   "orders": "Pedidos",
-  "orderInfo": "Información del Pedido",
+  "orderInfo": "Información del pedido",
 
   "table": {
-    "createdAt": "Fecha de Creación",
-    "updatedAt": "Última Modificación",
-    "deliverdDate": "Fecha de Entrega",
+    "new": "Nuevo",
+    "createdAt": "Fecha de creación",
+    "updatedAt": "Última modificación",
+    "deliverdDate": "Fecha de entrega",
     "type": "Tipo",
     "ID": "ID",
     "code": "CÓDIGO",
-    "no": "No.",
-    "attributeValue": "Valor del Atributo",
-    "effectiveDate": "Fecha Efectiva",
-    "abbreviation": "Abreviación",
+    "no": "N.º",
+    "attributeValue": "Valor del atributo",
+    "effectiveDate": "Fecha efectiva",
+    "abbreviation": "Abreviatura",
     "ordinal": "Ordinal",
     "cadence": "Cadencia",
-    "periods": "Periodos",
-    "addRow": "Agregar Fila"
+    "periods": "Períodos",
+    "addRow": "Agregar fila"
   },
   "dialog": {
-    "title": "¿Está seguro de que desea proceder con esta acción?",
-    "description": "Por favor, confirme si desea proceder con esta acción. Este paso no se puede deshacer."
+    "title": "¿Estás seguro de que deseas proceder con esta acción?",
+    "description": "Por favor confirma si deseas continuar con esta acción."
   },
   "continue": "Continuar",
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+
+  "actions": {
+    "edit": "Editar"
+  }
 }

@@ -13,10 +13,14 @@
   },
   "create":"Create",
   "info":"Info",
+  "signin":"Sign In",
   "_account":{
     "lastLogin":"Last Login",
-    "updatePassword":"Update Password"
+    "updatePassword":"Update Password",
+    "siginIYouA":"Sign in to your account",
+    "siginIYouADesc":"Enter your email and password below to sign in to your account"
   },
+
   "form": {
     "name":"Name",
     "abbreviation":"Abbreviation",
@@ -53,11 +57,15 @@
     "status":"Status",
     "startDate":"Start Date",
 
-    "orderConfirmation":"Order Confirmation"
+    "orderConfirmation":"Order Confirmation",
+    "siteUrl":"Site Url",
+    "logo":"Logo"
   },
   "_selling":{
     "isBuying":"Is Buying",
-    "isSelling":"Is Selling"
+    "isSelling":"Is Selling",
+    "isSellingDesc":"This price list will be used for selling products.",
+    "isBuyingDesc":"This price list will be used for buying products."
   },
 
   "info-item":"Info {{item}}",

@@ -4,6 +4,7 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { commitSession, getSession } from "~/sessions";
 import apiClient from "~/apiclient";
 import { ClientOnly } from "remix-utils/client-only";
+import { components } from "~/sdk";
 
 export const meta: MetaFunction = () => {
   return [
@@ -42,13 +43,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  
   // console.log("",request.headers)
   const session = await getSession(request.headers.get("Cookie"));
   if (session.has("access_token")) {
     // Redirect to the home page if they are already signed in.
     return redirect("/");
   }
-  return json({ ok: true });
+  
+  return json({ 
+    ok: true,
+   });
 };
 
 // let isHydrating = true;

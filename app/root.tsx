@@ -108,7 +108,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  let data = useLoaderData<typeof loader>();
   return (
       <Outlet />
     // </ThemeProvider>

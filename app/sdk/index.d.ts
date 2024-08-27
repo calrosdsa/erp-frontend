@@ -124,6 +124,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/company/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get company Detial */
+        get: operations["company-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/company/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get company by uuid */
+        get: operations["get-company-by-uuid"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/cuatropf/subscription/{companyUuid}": {
         parameters: {
             query?: never;
@@ -496,8 +530,8 @@ export interface paths {
         get: operations["get-price-lists"];
         /** Update item price list */
         put: operations["update-item-price-list"];
-        /** Create item price list */
-        post: operations["create-item-price-list"];
+        /** Create price list */
+        post: operations["create-price-list"];
         delete?: never;
         options?: never;
         head?: never;
@@ -656,22 +690,12 @@ export interface components {
             amount: number;
             currency: string;
         };
-        AmountMoneyStruct: {
-            /** Format: int64 */
-            amount: number;
-            currency: string;
-        };
         AppConfigStruct: {
             plugins: components["schemas"]["PluginApp"][];
         };
         ApplicationDetailsStruct: {
-            application_id: string;
-            square_product: string;
-        };
-        ApprovedMoneyStruct: {
-            /** Format: int64 */
-            amount: number;
-            currency: string;
+            application_id?: string;
+            square_product?: string;
         };
         BillingData: {
             address: string;
@@ -682,31 +706,31 @@ export interface components {
             taxIdNumber: string;
         };
         CardDetailsStruct: {
-            avs_status: string;
-            card: components["schemas"]["CardStruct"];
-            card_payment_timeline: components["schemas"]["CardPaymentTimelineStruct"];
-            cvv_status: string;
-            entry_method: string;
-            statement_description: string;
-            status: string;
+            avs_status?: string;
+            card?: components["schemas"]["CardStruct"];
+            card_payment_timeline?: components["schemas"]["CardPaymentTimelineStruct"];
+            cvv_status?: string;
+            entry_method?: string;
+            statement_description?: string;
+            status?: string;
         };
         CardPaymentTimelineStruct: {
             /** Format: date-time */
-            authorized_at: string;
+            authorized_at?: string;
             /** Format: date-time */
-            captured_at: string;
+            captured_at?: string;
         };
         CardStruct: {
-            bin: string;
-            card_brand: string;
-            card_type: string;
+            bin?: string;
+            card_brand?: string;
+            card_type?: string;
             /** Format: int64 */
-            exp_month: number;
+            exp_month?: number;
             /** Format: int64 */
-            exp_year: number;
-            fingerprint: string;
-            last_4: string;
-            prepaid_type: string;
+            exp_year?: number;
+            fingerprint?: string;
+            last_4?: string;
+            prepaid_type?: string;
         };
         Client: {
             ClientKeyValueData: components["schemas"]["ClientKeyValueData"][];
@@ -780,8 +804,8 @@ export interface components {
         };
         Country: {
             code: string;
-            label: string;
-            phone: string;
+            label?: string;
+            phone?: string;
         };
         CreateItemAttributeRequestBody: {
             /**
@@ -825,6 +849,17 @@ export interface components {
             readonly $schema?: string;
             itemVariant: components["schemas"]["ItemVariantDto"];
         };
+        CreatePriceListRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            currency: string;
+            isBuying: boolean;
+            isSelling: boolean;
+            name: string;
+        };
         CuatropfSubscriptionRequestBody: {
             /**
              * Format: uri
@@ -842,9 +877,9 @@ export interface components {
             plugins?: components["schemas"]["CompanyPlugins"][];
         };
         DataStruct: {
-            id: string;
-            object: components["schemas"]["ObjectStruct"];
-            type: string;
+            id?: string;
+            object?: components["schemas"]["ObjectStruct"];
+            type?: string;
         };
         DeletedAt: {
             /** Format: date-time */
@@ -869,6 +904,14 @@ export interface components {
              */
             readonly $schema?: string;
             result: components["schemas"]["Client"];
+        };
+        EntityResponseCompanyBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["Company"];
         };
         EntityResponseItemAttributeBody: {
             /**
@@ -977,6 +1020,10 @@ export interface components {
              * @description A URI reference to human-readable documentation for the error.
              * @default about:blank
              */
+            type: string;
+        };
+        ExternalDetails: {
+            source: string;
             type: string;
         };
         GreetingOutputBody: {
@@ -1170,7 +1217,7 @@ export interface components {
             Valid: boolean;
         };
         ObjectStruct: {
-            payment: components["schemas"]["PaymentStruct"];
+            payment?: components["schemas"]["PaymentStruct"];
         };
         OrderData: {
             orderLine: components["schemas"]["OrderLineData"][];
@@ -1299,31 +1346,33 @@ export interface components {
             total: number;
         };
         PaymentStruct: {
-            amount_money: components["schemas"]["AmountMoneyStruct"];
-            application_details: components["schemas"]["ApplicationDetailsStruct"];
-            approved_money: components["schemas"]["ApprovedMoneyStruct"];
-            buyer_email_address: string;
-            card_details: components["schemas"]["CardDetailsStruct"];
+            amount_money?: components["schemas"]["Amount"];
+            application_details?: components["schemas"]["ApplicationDetailsStruct"];
+            approved_money?: components["schemas"]["Amount"];
+            buyer_email_address?: string;
+            capabilities?: string[];
+            card_details?: components["schemas"]["CardDetailsStruct"];
             /** Format: date-time */
-            created_at: string;
-            customer_id: string;
-            delay_action: string;
-            delay_duration: string;
+            created_at?: string;
+            customer_id?: string;
+            delay_action?: string;
+            delay_duration?: string;
             /** Format: date-time */
-            delayed_until: string;
-            id: string;
-            location_id: string;
-            order_id: string;
+            delayed_until?: string;
+            external_details?: components["schemas"]["ExternalDetails"];
+            id?: string;
+            location_id?: string;
+            order_id?: string;
             processing_fee?: components["schemas"]["ProcessFee"][];
-            receipt_number: string;
-            receipt_url: string;
-            source_type: string;
-            status: string;
-            total_money: components["schemas"]["TotalMoneyStruct"];
+            receipt_number?: string;
+            receipt_url?: string;
+            source_type?: string;
+            status?: string;
+            total_money?: components["schemas"]["Amount"];
             /** Format: date-time */
-            updated_at: string;
+            updated_at?: string;
             /** Format: int64 */
-            version: number;
+            version?: number;
         };
         PaymentWeebhookRequestBody: {
             /**
@@ -1332,11 +1381,11 @@ export interface components {
              */
             readonly $schema?: string;
             /** Format: date-time */
-            created_at: string;
-            data: components["schemas"]["DataStruct"];
-            event_id: string;
-            merchant_id: string;
-            type: string;
+            created_at?: string;
+            data?: components["schemas"]["DataStruct"];
+            event_id?: string;
+            merchant_id?: string;
+            type?: string;
         };
         Phase: {
             cadence: string;
@@ -1381,15 +1430,10 @@ export interface components {
             plugins: components["schemas"]["PluginApp"][];
         };
         ProcessFee: {
-            amount_money: components["schemas"]["ProcessFeeAmountMoneyStruct"];
+            amount_money: components["schemas"]["Amount"];
             /** Format: date-time */
             effective_at: string;
             type: string;
-        };
-        ProcessFeeAmountMoneyStruct: {
-            /** Format: int64 */
-            amount: number;
-            currency: string;
         };
         RequestSubscriptionCancelBody: {
             /**
@@ -1641,11 +1685,6 @@ export interface components {
             billingPeriod?: number;
             itemCode: string;
             type: string;
-        };
-        TotalMoneyStruct: {
-            /** Format: int64 */
-            amount: number;
-            currency: string;
         };
         UOMsResponseBody: {
             /**
@@ -2071,6 +2110,80 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "company-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseCompanyBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-company-by-uuid": {
+        parameters: {
+            query?: never;
+            header?: {
+                "Accept-Language"?: string;
+            };
+            path: {
+                uuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseCompanyBody"];
                 };
             };
             /** @description Error */
@@ -3318,7 +3431,7 @@ export interface operations {
             };
         };
     };
-    "create-item-price-list": {
+    "create-price-list": {
         parameters: {
             query?: {
                 query?: string;
@@ -3337,7 +3450,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpsertPriceListRequestBody"];
+                "application/json": components["schemas"]["CreatePriceListRequestBody"];
             };
         };
         responses: {

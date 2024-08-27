@@ -97,7 +97,10 @@ export default function DetailOrder({
           return (
             <div key={idx}>
               {item.Plugin == PluginApp.SQUARE && (
+                <div>
                 <SquareOrder data={item.Data} order={order} />
+                  {/* {item.Data} */}
+                </div>
               )}
             </div>
           );

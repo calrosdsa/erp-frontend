@@ -16,11 +16,21 @@ export default function Header({ data,openSessionDefaults }: {
     <div className="supports-backdrop-blur:bg-background/60 fixed left-0 right-0 top-0 z-20 border-b bg-background/95 backdrop-blur">
       <nav className="flex h-16 items-center justify-between px-4">
         <Link
-          to={"/"}
+          to={"/home"}
           className="hidden items-center justify-between gap-2 md:flex"
         >
-          <Boxes className="h-6 w-6" />
-          <h1 className="text-lg font-semibold">ERP</h1>
+          {(data.activeCompany && data.activeCompany.Logo != "") ?
+
+          <img className="h-16 w-16 object-contain"
+          src={data.activeCompany.Logo}
+          />
+          :
+            <Boxes className="h-6 w-6" />
+          }
+
+          {data.activeCompany &&
+          <h1 className="text-lg font-semibold">{data.activeCompany.Name}</h1>
+          }
         </Link>
         <div className={cn("block md:!hidden")}>
           <MobileSidebar 
