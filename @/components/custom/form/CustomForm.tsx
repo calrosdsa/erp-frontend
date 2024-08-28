@@ -47,7 +47,7 @@ export default function CustomForm<T extends object, K extends keyof T>({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(className, "gap-y-2 p-3")}
       >
-        {/* <div className=" col-span-full">{JSON.stringify(form.getValues())}</div> */}
+        <div className=" col-span-full">{JSON.stringify(form.getFieldState("value").error)}</div>
         {formItemsData.map((item, idx) => {
           if (item.typeForm == "input") {
             return (

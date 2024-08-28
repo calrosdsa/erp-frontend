@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Link, useLoaderData, useSearchParams, useSubmit } from "@remix-run/react"
+import { Link, useLoaderData, useNavigate, useSearchParams, useSubmit } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 import { loader } from "./route"
 import { DataTable } from "@/components/custom/table/CustomTable"
@@ -15,6 +15,7 @@ export default function ItemAttributesClient(){
     const {pagination_result} = useLoaderData<typeof loader>()
     const [searchParams,setSearchParams] = useSearchParams()
     const submit = useSubmit()
+    const navigate = useNavigate()
     const [paginationState, setPaginationState] = useState<PaginationState>({
         pageIndex: Number(searchParams.get("page") || DEFAULT_PAGE),
         pageSize: Number(searchParams.get("size") || DEFAULT_SIZE),
@@ -22,12 +23,15 @@ export default function ItemAttributesClient(){
     const r = routes 
     return (
         <div>
-            <Link to={r.createItemAttributeRoute}>
-            <Button>
-                {t("_stock.createItemAttribute")}            
-            </Button>
-            </Link>
+
             <DataTable
+            metaActions={{
+              meta:{
+                addNew:()=>{
+                  navigate(r.createItemAttributeRoute)
+                }
+              }
+            }}
             data={pagination_result?.results || []}
             columns={itemAttributeColumns()}
             paginationOptions={{

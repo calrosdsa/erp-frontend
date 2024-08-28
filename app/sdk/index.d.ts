@@ -65,7 +65,8 @@ export interface paths {
         /** Get Taxes */
         get: operations["get-taxes"];
         put?: never;
-        post?: never;
+        /** Create Tax */
+        post: operations["create-tax"];
         delete?: never;
         options?: never;
         head?: never;
@@ -124,7 +125,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/company/{id}": {
+    "/company/detail/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -590,6 +591,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/warehouse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Warehouses */
+        get: operations["get-warehouses"];
+        put?: never;
+        /** Create Warehouse */
+        post: operations["create-warehouse"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/warehouse/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Warehouse Detail */
+        get: operations["get-warehouse-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/teclumobity/item-price": {
         parameters: {
             query?: never;
@@ -670,6 +706,25 @@ export interface components {
             readonly $schema?: string;
             company_plugin: components["schemas"]["CompanyPlugins"];
         };
+        Address: {
+            City: string;
+            Company: string;
+            CountryCode: string;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            FullName: string;
+            /** Format: int64 */
+            ID: number;
+            IdentificationNumber: string;
+            PhoneNumber: string;
+            PostalCode: string;
+            Province: string;
+            StreetLine1: string;
+            StreetLine2: string;
+            /** Format: date-time */
+            UpdatedAt: string;
+        };
         Administrator: {
             /** Format: date-time */
             CreatedAt: string;
@@ -683,7 +738,6 @@ export interface components {
             UpdatedAt: string;
             /** Format: int64 */
             UserID: number;
-            Uuid: string;
         };
         Amount: {
             /** Format: int64 */
@@ -734,6 +788,7 @@ export interface components {
         };
         Client: {
             ClientKeyValueData: components["schemas"]["ClientKeyValueData"][];
+            Code: string;
             Company: components["schemas"]["Company"];
             /** Format: int64 */
             CompanyID: number;
@@ -765,6 +820,7 @@ export interface components {
         ClientRequestDto: {
             companyName: string;
             country?: components["schemas"]["Country"];
+            deleteAt?: components["schemas"]["DeletedAt"];
             email: string;
             familyName: string;
             givenName: string;
@@ -860,6 +916,27 @@ export interface components {
             isSelling: boolean;
             name: string;
         };
+        CreateTaxRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            enabled: boolean;
+            name: string;
+            /** Format: double */
+            value: number;
+        };
+        CreateWareHouseRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            enabled?: boolean;
+            isGroup?: boolean;
+            name: string;
+        };
         CuatropfSubscriptionRequestBody: {
             /**
              * Format: uri
@@ -868,6 +945,7 @@ export interface components {
             readonly $schema?: string;
             companyName: string;
             country?: components["schemas"]["Country"];
+            deleteAt?: components["schemas"]["DeletedAt"];
             email: string;
             familyName: string;
             givenName: string;
@@ -985,6 +1063,14 @@ export interface components {
             readonly $schema?: string;
             result: components["schemas"]["Tax"];
         };
+        EntityResponseWareHouseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["WareHouse"];
+        };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
             location?: string;
@@ -1066,7 +1152,6 @@ export interface components {
             Name: string;
             /** Format: date-time */
             UpdatedAt: string;
-            Uuid: string;
         };
         ItemAttributeValue: {
             Abbreviation: string;
@@ -1149,7 +1234,6 @@ export interface components {
             TaxID: number;
             /** Format: date-time */
             UpdatedAt: string;
-            Uuid: string;
             /** Format: date-time */
             ValidFrom: string;
             /** Format: date-time */
@@ -1186,7 +1270,6 @@ export interface components {
             Name: string;
             /** Format: date-time */
             UpdatedAt: string;
-            Uuid: string;
         };
         ItemPricePlugin: {
             /** Format: int64 */
@@ -1300,6 +1383,14 @@ export interface components {
             readonly $schema?: string;
             pagination_result: components["schemas"]["PaginationResultListTax"];
         };
+        PaginationResponsePaginationResultListWareHouseBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListWareHouse"];
+        };
         PaginationResultListCompany: {
             results: components["schemas"]["Company"][];
             /** Format: int64 */
@@ -1344,6 +1435,42 @@ export interface components {
             results: components["schemas"]["Tax"][];
             /** Format: int64 */
             total: number;
+        };
+        PaginationResultListWareHouse: {
+            results: components["schemas"]["WareHouse"][];
+            /** Format: int64 */
+            total: number;
+        };
+        Party: {
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            ID: number;
+            PartyType: components["schemas"]["PartyType"];
+            PartyTypeCode: string;
+            /** Format: date-time */
+            UpdatedAt: string;
+        };
+        PartyAddress: {
+            Address: components["schemas"]["Address"];
+            /** Format: int64 */
+            AddressID: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            IsActive: boolean;
+            IsBillingAddress: boolean;
+            IsShippingAddress: boolean;
+            Party: components["schemas"]["Party"];
+            /** Format: int64 */
+            PartyID: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+        };
+        PartyType: {
+            Code: string;
+            Name: string;
         };
         PaymentStruct: {
             amount_money?: components["schemas"]["Amount"];
@@ -1510,7 +1637,6 @@ export interface components {
             /** Format: date-time */
             UpdatedAt: string;
             Users: components["schemas"]["User"][];
-            Uuid: string;
         };
         SalesItemLine: {
             /** Format: date-time */
@@ -1532,9 +1658,9 @@ export interface components {
             UpdatedAt: string;
         };
         SalesOrder: {
-            Client: components["schemas"]["Client"];
+            BillingAddress: components["schemas"]["PartyAddress"];
             /** Format: int64 */
-            ClientID: number;
+            BillingAddressID: number | null;
             Code: string;
             Company: components["schemas"]["Company"];
             /** Format: int64 */
@@ -1548,10 +1674,15 @@ export interface components {
             /** Format: int64 */
             ID: number;
             OrderType: string;
+            Party: components["schemas"]["Party"];
+            /** Format: int64 */
+            PartyID: number;
             SalesOrderPlugin: components["schemas"]["SalesOrderPlugin"][];
+            ShippingAddress: components["schemas"]["PartyAddress"];
+            /** Format: int64 */
+            ShippingAddressID: number | null;
             /** Format: date-time */
             UpdatedAt: string;
-            Uuid: string;
         };
         SalesOrderPlugin: {
             Data: string;
@@ -1653,7 +1784,6 @@ export interface components {
             Name: string;
             /** Format: date-time */
             UpdatedAt: string;
-            Uuid: string;
             /** Format: double */
             Value: number;
         };
@@ -1793,6 +1923,23 @@ export interface components {
             /** Format: date-time */
             UpdatedAt: string;
             Uuid: string;
+        };
+        WareHouse: {
+            Code: string;
+            Company: components["schemas"]["Company"];
+            /** Format: int64 */
+            CompanyID: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            Enabled: boolean;
+            /** Format: int64 */
+            ID: number;
+            IsGroup: boolean;
+            Name: string;
+            /** Format: date-time */
+            UpdatedAt: string;
+            WareHouseSubgroup: components["schemas"]["WareHouse"][];
         };
     };
     responses: never;
@@ -1946,6 +2093,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListTaxBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-tax": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTaxRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -3640,6 +3830,131 @@ export interface operations {
             };
         };
     };
+    "get-warehouses": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListWareHouseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-warehouse": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWareHouseRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-warehouse-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseWareHouseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-item-price": {
         parameters: {
             query?: never;
@@ -3676,7 +3991,9 @@ export interface operations {
     "create-order": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Accept-Language"?: string;
+            };
             path?: never;
             cookie?: never;
         };

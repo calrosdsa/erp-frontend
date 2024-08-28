@@ -14,15 +14,19 @@
   "create":"Create",
   "info":"Info",
   "signin":"Sign In",
+  "reset-password":"Reset Password",
   "_account":{
     "lastLogin":"Last Login",
     "updatePassword":"Update Password",
     "siginIYouA":"Sign in to your account",
-    "siginIYouADesc":"Enter your email and password below to sign in to your account"
+    "siginIYouADesc":"Enter your email and password below to sign in to your account",
+    "forgotPassword":"Forgot your password?",
+    "resetPassowordMsg":"Enter your user account's verified email address and we will send you a password reset link."
   },
 
   "form": {
     "name":"Name",
+    "value":"Value",
     "abbreviation":"Abbreviation",
     "code":"Code",
     "familyName": "Last Name",
@@ -34,7 +38,7 @@
     "email": "Email",
     "companyName": "Company Name",
     "clientDetails": "Complete Your Personal Information",
-    "enabled":"Enabled",
+    "enabled":"Enable",
     "country": "Country",
     "countryCode":"Country Code",
     "item-group": "Item Group",    
@@ -67,7 +71,10 @@
     "isSellingDesc":"This price list will be used for selling products.",
     "isBuyingDesc":"This price list will be used for buying products."
   },
-
+  "f":{
+    "add-new":"Create new {{o}}",
+    "enable":"Check the box to enable this {{o}}"
+  },
   "info-item":"Info {{item}}",
 
   "accounting":"Accounting",
@@ -101,9 +108,10 @@
     "addItemPrice":"Add Item Price"
   },
   "items": "Items",
+  
   "item-groups": "Item Groups",
   "item-attributes":"Item Attributes",
-  "warehouse": "Warehouse",
+  "warehouses": "Warehouses",
   "home": "H1ome",
   "companies": "Companies",
   "plugins":"Plugins",

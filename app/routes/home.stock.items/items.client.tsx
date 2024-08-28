@@ -3,6 +3,7 @@ import {
   Link,
   useFetcher,
   useLoaderData,
+  useNavigate,
   useRevalidator,
   useSearchParams,
   useSubmit,
@@ -18,24 +19,32 @@ import {
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { routes } from "~/util/route";
 
 const ItemsClient = () => {
   const { t } = useTranslation("common");
   const { data } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
   const submit = useSubmit();
+  const navigate = useNavigate()
+  const r = routes
   const [paginationState, setPaginationState] = useState<PaginationState>({
     pageIndex: Number(searchParams.get("page") || DEFAULT_PAGE),
     pageSize: Number(searchParams.get("size") || DEFAULT_SIZE),
   });
   return (
     <div>
-      <Link to={"./create_item"}>
-        <Button>{t("create_item")}</Button>
-      </Link>
+
       <div className="">
         <DataTable
           data={data?.pagination_result.results || []}
+          metaActions={{
+            meta:{
+              addNew:()=>{
+                navigate(r.toCreateItem())
+              }
+            }
+          }}
           columns={itemColumns()}
           paginationOptions={{
             rowCount:data?.pagination_result.total || 0,

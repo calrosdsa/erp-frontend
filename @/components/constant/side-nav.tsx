@@ -82,10 +82,10 @@ export const NavItems = ({
         title: t("item-attributes"),
         href: "/home/stock/item-attributes",
       },
-      // {
-      //   title: t("warehouse"),
-      //   href: "/home/stock/warehouse",
-      // },
+      {
+        title: t("warehouses"),
+        href: r.warehouses,
+      },
     ],
   };
   const plugins: NavItem = {

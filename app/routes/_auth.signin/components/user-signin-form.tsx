@@ -5,7 +5,7 @@ import { Icons } from "@/components/icons";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useFetcher } from "@remix-run/react";
+import { Link, useFetcher } from "@remix-run/react";
 import { action } from "../route";
 import {
   Form,
@@ -110,6 +110,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               </span>
             </div>
           </div> */}
+          <div className=" flex justify-end">
+            <Link to={"/reset-password"}>
+          <Typography fontSize={sm} className=" underline">
+            {t("_account.forgotPassword")}
+          </Typography>
+            </Link>
+          </div>
           <Button
             className="w-full"
             type="submit"

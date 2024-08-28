@@ -3,7 +3,7 @@
 
 interface FormItemData<T extends object,K extends keyof T> {
     typeForm:"input" | "select" | "check"
-    type?:"number" | "string" | "password" | "boolean"
+    type?:"number" | "string" | "password" | "boolean" | "email"
     name:string
     label?:string
     description?:string

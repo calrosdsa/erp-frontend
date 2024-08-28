@@ -10,6 +10,7 @@ class Routes  {
     item = this.stock + "/items"
     itemGroups = this.stock + "/item-groups"
     itemAttribute = this.stock + "/item-attributes"
+    warehouses =  this.stock + "/warehouses"
 
     purchases = this.base + "/purchases"
     purchaseorders = this.purchases + "/orders"
@@ -18,6 +19,8 @@ class Routes  {
     profile = this.settings + "/profile"
     account = this.settings + "/account"
 
+
+    
 
     priceListDetail(id:string):string {
         return `${this.selling}/stock/price-list/${encodeURIComponent(id)}`
@@ -33,7 +36,10 @@ class Routes  {
         return `${this.itemAttribute}/${encodeURIComponent(id)}`
     }
 
-    //Item
+    //STOCK
+    toCreateItem():string {
+        return this.item + "/create_item"
+    }
     toItemDetail(id:string):string{
         return `${this.item}/${encodeURIComponent(id)}`
     }
