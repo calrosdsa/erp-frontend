@@ -3,21 +3,20 @@ import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemGroupColumns } from "./components/table/columns";
 import { useState } from "react";
-import useCreateGroup from "~/util/hooks/dialog/useCreateGroup";
+import { useCreateItemGroup } from "./components/add-item-group";
 
 export default function ItemGroupsClient() {
   const { paginationResult } = useLoaderData<typeof loader>();
-  const [itemGroupDialog,openDialog] = useCreateGroup();
+  const createItemGroup = useCreateItemGroup()
   return (
     <>
-      {itemGroupDialog}
       <DataTable
         columns={itemGroupColumns()}
         data={paginationResult?.pagination_result.results || []}
         metaActions={{
           meta: {
             addNew: () => {
-                openDialog(true)
+                createItemGroup.onOpenChage(true)
             },
           },
         }}

@@ -27,9 +27,9 @@ export default function CheckForm({ label, form, name, description }: Props) {
           </FormControl>
           <div className="space-y-1 leading-none">
             {description && (
-                <FormDescription>
+                <FormLabel>
                 {description}
-                </FormDescription>
+                </FormLabel>
             )}
           </div>
             </div>

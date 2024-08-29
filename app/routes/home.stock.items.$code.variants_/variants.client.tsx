@@ -1,7 +1,6 @@
 import Typography, { title } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
-import { action, loader } from "../route";
-import { Await, useActionData, useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
+import { Await, useActionData, useFetcher, useLoaderData, useOutletContext, useSubmit } from "@remix-run/react";
 import { components } from "~/sdk";
 import { ItemType } from "~/types/services/item";
 import { Button } from "@/components/ui/button";
@@ -14,13 +13,11 @@ import FallBack from "@/components/layout/Fallback";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemVariantColumns } from "@/components/custom/table/columns/stock/item-variant-columns";
 import useActionTable from "~/util/hooks/useActionTable";
-import AddItemVariant from "./dialog/AddItemVariant";
+import AddItemVariant from "./components/AddItemVariant";
+import { action, loader } from "./route";
+import { ItemGlobalState } from "~/types/app";
 
-
-
-export default function ItemVariants({item}:{
-    item:components["schemas"]["Item"]
-}){
+export default function ItemVariantsClient(){
     const {itemVariants} = useLoaderData<typeof loader>()
     const {t} = useTranslation("common")
     const fetcher = useFetcher<typeof action>()
@@ -28,6 +25,7 @@ export default function ItemVariants({item}:{
     const {toast} = useToast()
     const [meta,state] = useActionTable({})
     const {openDialog,setOpenDialog} = state
+    const {item} = useOutletContext<ItemGlobalState>()
 
 //   const {  } = useLoaderData<typeof loader>();
 

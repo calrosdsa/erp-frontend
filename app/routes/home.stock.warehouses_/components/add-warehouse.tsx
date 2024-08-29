@@ -3,10 +3,12 @@ import CustomFormField from "@/components/custom/form/CustomFormField";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import { useFetcher } from "@remix-run/react";
 import { t } from "i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { createWareHouseSchema } from "~/util/data/schemas/stock/warehouse-schema";
+import { addWareHouseSchema } from "~/util/data/schemas/stock/warehouse-schema";
+import { action } from "../route";
+import { useToast } from "@/components/ui/use-toast";
 
 
 function AddWareHouse({open,onOpenChange}:{
@@ -14,14 +16,29 @@ function AddWareHouse({open,onOpenChange}:{
     onOpenChange:(e:boolean)=>void
 }){
     const {t} = useTranslation("common")
-    const fetcher = useFetcher()
+    const fetcher = useFetcher<typeof action>()
+    const {toast} = useToast()
+    useEffect(()=>{
+        if(fetcher.data?.error){
+            toast({
+                title:fetcher.data.error
+            })
+        }
+        if(fetcher.data?.message){
+            toast({
+                title:fetcher.data.message
+            })
+            onOpenChange(false)
+        }
+    },[fetcher.data])
     return (
         <DrawerLayout
         open={open}
+        title={t("f.add-new",{o:t("_warehouse.base")})}
         onOpenChange={onOpenChange}
         >
             <CustomForm
-            schema={createWareHouseSchema}
+            schema={addWareHouseSchema}
             fetcher={fetcher}
             formItemsData={[
                 {
@@ -29,10 +46,24 @@ function AddWareHouse({open,onOpenChange}:{
                     type:"string",
                     typeForm:"input",
                     label:t("form.name")
-                }
+                },
+                {
+                    name:"enabled",
+                    type:"boolean",
+                    typeForm:"check",
+                    label:t("form.enabled"),
+                    description:t("f.enable",{o:t("_warehouse.base")})
+                },
+                
             ]}
-            onSubmit={(values:z.infer<typeof createWareHouseSchema>)=>{
-                console.log(values)
+            onSubmit={(values:z.infer<typeof addWareHouseSchema>)=>{
+                fetcher.submit({
+                    action:"add-warehouse",
+                    addWareHouse:values
+                },{
+                    method:"POST",
+                    encType:"application/json"
+                })
             }}
             />
         </DrawerLayout>

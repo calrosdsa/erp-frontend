@@ -1,16 +1,16 @@
 import Typography, { title } from "@/components/typography/Typography";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { loader } from "../route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemPriceColumns } from "@/components/custom/table/columns/stock/itemPriceColumns";
 import useActionTable from "~/util/hooks/useActionTable";
-import AddItemPrice from "./dialog/AddItemPrice";
+import AddItemPrice from "./components/AddItemPrice";
 import { components } from "~/sdk";
+import { ItemGlobalState } from "~/types/app";
+import { loader } from "./route";
 
-export default function ItemPrices({item}: {
-  item:components["schemas"]["Item"]
-}) {
+export default function ItemDetailPricesClient() {
+  const {item} = useOutletContext<ItemGlobalState>()
   const { t } = useTranslation("common");
   const { itemPrices } = useLoaderData<typeof loader>();
   const [meta,state] = useActionTable({})
@@ -29,6 +29,7 @@ export default function ItemPrices({item}: {
       </div>
 
       <div className="mt-3">
+        {/* {JSON.stringify(itemPrices)} */}
         <DataTable
           data={itemPrices?.pagination_result.results || []}
           columns={itemPriceColumns({})}

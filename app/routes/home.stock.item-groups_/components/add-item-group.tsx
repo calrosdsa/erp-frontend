@@ -3,21 +3,24 @@ import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import { useFetcher } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { createItemGroupSchema } from "~/util/data/schemas/stock/item-group-schema";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { z } from "zod";
 import { action } from "../route";
+import { create } from "zustand";
+import { routes } from "~/util/route";
 
-export default function AddItemGroupItem({
+ export const AddItemGroupItem=({
   open,
   onOpenChange,
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-}) {
+})=> {
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
   const { toast } = useToast()
+  const r = routes
   useEffect(()=>{
     if(fetcher.data?.error){
         toast({
@@ -49,16 +52,24 @@ export default function AddItemGroupItem({
           },
         ]}
         onSubmit={(e:z.infer<typeof createItemGroupSchema>) => {
-            console.log("VALUES", e);
             fetcher.submit({
                 action:"add-item-group",
                 createItemGroup:e
             },{
                 method:"POST",
-                encType:"application/json"
+                encType:"application/json",
+                action:r.itemGroups,
             })
         }}
       ></CustomForm>
     </DrawerLayout>
   );
 }
+interface CreateItemGroupStore {
+  isOpen: boolean;
+  onOpenChage: (e:boolean) => void;
+}
+export const useCreateItemGroup = create<CreateItemGroupStore>((set)=>({
+  isOpen:false,
+  onOpenChage:(e)=>set((state)=>({ isOpen:e}))
+}))

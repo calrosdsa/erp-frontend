@@ -16,8 +16,10 @@ import { z } from "zod";
 import { components } from "~/sdk";
 import { GlobalState } from "~/types/app";
 import { itemPriceFormSchema } from "~/util/data/schemas/stock/item-price-schema";
-import { action } from "../../route";
+import { action } from "../../home.stock.items.$code/route";
 import { pluginObjectSchema } from "~/util/data/schemas/plugin/plugin-schema";
+import { useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax";
+import { useCreatePriceList } from "~/routes/home.selling_.stock_.price-list/components/add-price-list";
 
 export default function AddItemPrice({
   open,
@@ -31,6 +33,8 @@ export default function AddItemPrice({
   const { t } = useTranslation("common");
   const state = useOutletContext<GlobalState>();
   const fetcher = useFetcher<typeof action>();
+  const createTax = useCreateTax()
+  const createPriceList = useCreatePriceList()
   const fetcherDebounceTaxes = useDebounceFetcher<{ result: components["schemas"]["Tax"][] }>();
   const fetcherDebouncePriceList = useDebounceFetcher<
     | {
@@ -128,6 +132,9 @@ export default function AddItemPrice({
                 label={t("taxes")}
                 value={"Name"}
                 nameK={"Name"}
+                addNew={()=>{
+                  createTax.onOpenChange(true)
+                }}
                 onSelect={(v) => {
                   setSelectedTax(v);
                   form.setValue("taxId", v.ID);
@@ -204,6 +211,9 @@ export default function AddItemPrice({
                       encType: "application/json",
                     }
                   );
+                }}
+                addNew={()=>{
+                  createPriceList.onOpenChange(true)
                 }}
                 name="priceListName"
                 onOpen={() => {

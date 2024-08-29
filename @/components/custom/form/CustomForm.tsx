@@ -47,7 +47,18 @@ export default function CustomForm<T extends object, K extends keyof T>({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(className, "gap-y-2 p-3")}
       >
-        <div className=" col-span-full">{JSON.stringify(form.getFieldState("value").error)}</div>
+        {/* <div className=" col-span-full">{JSON.stringify(form.getValues())}</div> */}
+        {/* <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div>
+        <div className=" col-span-full">{JSON.stringify(form.getFieldState("outOfStockThreshold").error)}</div>
+        <div className=" col-span-full">{JSON.stringify(form.getFieldState("itemId").error)}</div>
+        <div className=" col-span-full">{JSON.stringify(form.getFieldState("warehouseName").error)}</div>
+        <div className=" col-span-full">{JSON.stringify(form.getFieldState("enabled").error)}</div>
+        <div className=" col-span-full">{JSON.stringify(form.getFieldState("stock").error)}</div>
+        <div className=" col-span-full">{JSON.stringify(form.getFieldState("warehouseId").error)}</div> */}
+
+
+
+
         {formItemsData.map((item, idx) => {
           if (item.typeForm == "input") {
             return (
@@ -85,7 +96,9 @@ export default function CustomForm<T extends object, K extends keyof T>({
             />;
           }
         })}
-        {renderCustomInputs != undefined && renderCustomInputs(form)}
+        {renderCustomInputs != undefined && 
+        renderCustomInputs(form)
+        }
         <div className="col-span-full"></div>
 
         <Button type="submit" className=" col-span-full w-full mt-3">

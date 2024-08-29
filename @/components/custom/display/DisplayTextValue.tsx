@@ -1,5 +1,6 @@
 import Typography, { labelF, sm } from "@/components/typography/Typography";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Link } from "@remix-run/react";
@@ -13,14 +14,14 @@ export default function DisplayTextValue({
   title,
   value,
   to,
-  readOnly=true,
-  onChange
+  readOnly = true,
+  onChange,
 }: {
   title: string;
-  value: string | undefined;
+  value: string | undefined | boolean;
   to?: string;
-  readOnly?:boolean
-  onChange?:(e:ChangeEvent<HTMLInputElement>)=>void
+  readOnly?: boolean;
+  onChange?: (e: string | boolean) => void;
   // isEditable?:boolean
 }) {
   const { t } = useTranslation("common");
@@ -30,37 +31,70 @@ export default function DisplayTextValue({
       <Typography fontSize={labelF}>{title}</Typography>
 
       <div className="bg-accent rounded-md p-[6px] shadow-sm flex justify-between">
-      {to != undefined ? (
-        <Link to={to}  className="underline h-7 items-center flex" >
-          <Typography
-            fontWeight={500}
-            fontSize={sm}
-            >
-            {value}
-          </Typography>
-        </Link>
-      ) : (
-        <Input
-        readOnly={readOnly}
-        onChange={(e)=>{
-          if(onChange){
-            onChange(e)
-          }
-        }}
-        className={cn(
-          "focus-visible:ring-0 focus-visible:border-none  border-none ring-0 h-7 ring-offset-0 focus-visible:ring-offset-0",
-          readOnly ? "bg-accent" :""
-        )}
-        value={readOnly ? value || "-" : value || ""}
-        />
-        // <Typography
-        // fontWeight={500}
-        // fontSize={sm}
-        // >
-        //   {value || "-"}
-        // </Typography>
-      )}
-      {/* {!readOnly &&
+        {to != undefined ? (
+          <Link to={to} className="underline h-7 items-center flex">
+            <Typography fontWeight={500} fontSize={sm}>
+              {value}
+            </Typography>
+          </Link>
+        ) : 
+        <>
+          {typeof value == "string" && (
+            <Input
+              readOnly={readOnly}
+              onChange={(e) => {
+                if (onChange) {
+                  onChange(e.target.value);
+                }
+              }}
+              className={cn(
+                "focus-visible:ring-0 focus-visible:border-none  border-none ring-0 h-7 ring-offset-0 focus-visible:ring-offset-0",
+                readOnly ? "bg-accent" : ""
+              )}
+              value={readOnly ? value || "-" : value || ""}
+              />
+            )}
+            {typeof value == "boolean" && (
+              <div className="h-7 w-7 flex justify-center items-center">
+               <Checkbox checked={value} className="h-6 w-6" disabled={readOnly} onCheckedChange={(e)=>{
+                 if(onChange){
+                   onChange(e)
+                  }
+                }} />
+                </div>
+            )}
+            </>
+
+            
+            
+            
+      
+
+          // typeof value == "string" && (
+          //   <Input
+          //     readOnly={readOnly}
+          //     onChange={(e) => {
+          //       if (onChange) {
+          //         onChange(e);
+          //       }
+          //     }}
+          //     className={cn(
+          //       "focus-visible:ring-0 focus-visible:border-none  border-none ring-0 h-7 ring-offset-0 focus-visible:ring-offset-0",
+          //       readOnly ? "bg-accent" : ""
+          //     )}
+          //     value={readOnly ? value || "-" : value || ""}
+          //   />
+          // )
+          
+
+          // <Typography
+          // fontWeight={500}
+          // fontSize={sm}
+          // >
+          //   {value || "-"}
+          // </Typography>
+        }
+        {/* {!readOnly &&
       <Button variant={"default"} size={"icon"} className="h-6 w-6 ">
       <PencilIcon size={14}/>
       </Button>

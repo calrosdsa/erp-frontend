@@ -16,6 +16,12 @@ export type GlobalState = {
     userData?:UserData  
 }
 
+//ONLY AVAILABLE FOR ROUTE CHILDREN OF /home/stock/items/$code
+export type ItemGlobalState = {
+    item:components["schemas"]["Item"]
+    globalState:GlobalState
+}
+
 export type UserData = {
     FirstName:string
     LastName:string

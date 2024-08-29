@@ -38,6 +38,7 @@ interface Props<T extends object, K extends keyof T, V extends keyof T> {
   onValueChange: (e: string) => void;
   onSelect: (v: T) => void;
   className?:string
+  addNew?:()=>void
 }
 
 export default function FormAutocomplete<
@@ -55,7 +56,8 @@ export default function FormAutocomplete<
   name,
   onValueChange,
   onSelect,
-  className
+  className,
+  addNew
 }: Props<T, K, V>) {
   return (
     <div className={cn("",className)}>
@@ -121,10 +123,14 @@ export default function FormAutocomplete<
                   </CommandList>
                 </Command>
                 <div className="pt-2 px-1">
-                  <Button size={"sm"} className=" space-x-2 flex">
+                  {addNew &&
+                  <Button onClick={()=>{
+                      addNew()
+                  }} size={"sm"} className=" space-x-2 flex">
                     <Typography fontSize={xs}>Add New</Typography>
                     <PlusIcon size={15} />
                   </Button>
+                  }
                 </div>
               </PopoverContent>
             </Popover>

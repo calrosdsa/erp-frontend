@@ -81,8 +81,8 @@ export default function ClientProfile() {
                 return (
                   <DisplayTextValue
                     title={t("form.givenName")}
-                    //   onChange={(e)=>updateField("GivenName",e.target.value)}
-                    onChange={(e) => field.onChange(e.target.value)}
+                    //   onChange={(e)=>updateField("GivenName",e)}
+                    onChange={(e) => field.onChange(e)}
                     value={field.value}
                     readOnly={false}
                   />
@@ -97,8 +97,8 @@ export default function ClientProfile() {
                 return (
                   <DisplayTextValue
                     title={t("form.familyName")}
-                    //   onChange={(e)=>updateField("GivenName",e.target.value)}
-                    onChange={(e) => field.onChange(e.target.value)}
+                    //   onChange={(e)=>updateField("GivenName",e)}
+                    onChange={(e) => field.onChange(e)}
                     value={field.value}
                     readOnly={false}
                   />
@@ -118,8 +118,8 @@ export default function ClientProfile() {
                 return (
                   <DisplayTextValue
                     title={t("form.phoneNumber")}
-                    //   onChange={(e)=>updateField("GivenName",e.target.value)}
-                    onChange={(e) => field.onChange(e.target.value)}
+                    //   onChange={(e)=>updateField("GivenName",e)}
+                    onChange={(e) => field.onChange(e)}
                     value={field.value}
                     readOnly={false}
                   />
@@ -134,8 +134,8 @@ export default function ClientProfile() {
                 return (
                   <DisplayTextValue
                     title={t("form.companyName")}
-                    //   onChange={(e)=>updateField("GivenName",e.target.value)}
-                    onChange={(e) => field.onChange(e.target.value)}
+                    //   onChange={(e)=>updateField("GivenName",e)}
+                    onChange={(e) => field.onChange(e)}
                     value={field.value}
                     readOnly={false}
                   />
@@ -150,8 +150,8 @@ export default function ClientProfile() {
                 return (
                   <DisplayTextValue
                     title={t("form.countryCode")}
-                    //   onChange={(e)=>updateField("GivenName",e.target.value)}
-                    onChange={(e) => field.onChange(e.target.value)}
+                    //   onChange={(e)=>updateField("GivenName",e)}
+                    onChange={(e) => field.onChange(e)}
                     value={field.value}
                     readOnly={false}
                   />

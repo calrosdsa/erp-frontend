@@ -2,6 +2,8 @@
 class Routes  {
     base = "/home"
     selling = this.base + "/selling"
+    sellingStock = this.selling + "/stock"
+    priceList = this.sellingStock + "/price-list"
 
     accounting = this.base + "/accounting"
     taxes =  this.accounting + "/taxes"
@@ -23,7 +25,7 @@ class Routes  {
     
 
     priceListDetail(id:string):string {
-        return `${this.selling}/stock/price-list/${encodeURIComponent(id)}`
+        return `${this.priceList}/${encodeURIComponent(id)}`
     }
 
     taxDetailRoute(id:string):string {
@@ -42,6 +44,18 @@ class Routes  {
     }
     toItemDetail(id:string):string{
         return `${this.item}/${encodeURIComponent(id)}`
+    }
+    toItemDetailPrices(id:string):string {
+        return `${this.item}/${encodeURIComponent(id)}/item-prices`
+    }
+    toItemDetailVariants(id:string):string {
+        return `${this.item}/${encodeURIComponent(id)}/variants`
+    }
+    toItemDetailStock(id:string):string {
+        return `${this.item}/${encodeURIComponent(id)}/stock`
+    }
+    toDetailWarehouse(id:string):string{
+        return `${this.warehouses}/${encodeURIComponent(id)}`
     }
 
     //Item group

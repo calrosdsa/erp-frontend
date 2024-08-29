@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
-import ItemGroupsClient from "./itemGroups.client";
+import ItemGroupsClient from "./item-groups.client";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { createItemGroupSchema } from "~/util/data/schemas/stock/item-group-schema";
 import { z } from "zod";

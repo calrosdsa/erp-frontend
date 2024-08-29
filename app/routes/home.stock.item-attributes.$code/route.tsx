@@ -65,7 +65,8 @@ export const action = async({request}:ActionFunctionArgs) =>{
                     abbreviation: itemAttributeV.abbreviation,
                     ordinal: Number(itemAttributeV.ordinal),
                     value: itemAttributeV.value,
-                    itemAttributeId:itemAttributeV.itemAttributeId
+                    itemAttributeId:itemAttributeV.itemAttributeId,
+                    id:itemAttributeV.id
                 }
             })
             if(res.error != undefined) {

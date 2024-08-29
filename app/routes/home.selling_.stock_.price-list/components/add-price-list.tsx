@@ -8,16 +8,18 @@ import { CURRENCY_CODES } from "~/constant"
 import { createPriceListSchema } from "~/util/data/schemas/stock/price-list-schema"
 import { action } from "../route"
 import { useFetcher } from "@remix-run/react"
+import { create } from "zustand"
+import { routes } from "~/util/route"
 
 
-function AddPriceList({open,onOpenChange}:{
+export const AddPriceList =({open,onOpenChange}:{
     open:boolean
     onOpenChange:(e:boolean)=>void
-}){
+})=>{
     const fetcher = useFetcher<typeof action>()
     const {t} = useTranslation("common")
     const {toast} = useToast()
-
+    const r = routes
     useEffect(()=>{
         if(fetcher.data?.error){
             toast({
@@ -44,6 +46,7 @@ function AddPriceList({open,onOpenChange}:{
                     createPriceList:values
                 },{
                     method:"POST",
+                    action:r.priceList,
                     encType:"application/json"
                 })
             }}
@@ -86,11 +89,18 @@ function AddPriceList({open,onOpenChange}:{
     )
 }
 
-export default function useCreatePriceList(){
-    const [open,setOpen] = useState(false)
-    const dialog = open && <AddPriceList
-    open={open}
-    onOpenChange={(e)=>setOpen(e)}
-    />
-    return [dialog,setOpen] as const;
+interface CreatePriceListStore {
+    open:boolean
+    onOpenChange:(e:boolean)=>void
 }
+
+export const useCreatePriceList = create<CreatePriceListStore>((set)=>({
+    open:false,
+    onOpenChange:(e)=>set((state)=>({open:e}))
+}))
+    // const [open,setOpen] = useState(false)
+    // const dialog = open && <AddPriceList
+    // open={open}
+    // onOpenChange={(e)=>setOpen(e)}
+    // />
+    // return [dialog,setOpen] as const;

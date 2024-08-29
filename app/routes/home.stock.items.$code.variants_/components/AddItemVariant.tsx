@@ -10,7 +10,7 @@ import { z } from "zod";
 import { components } from "~/sdk";
 import { itemVariantFormSchema } from "~/util/data/schemas/stock/item-variant-schemas";
 import { routes } from "~/util/route";
-import { action } from "../../route";
+import { action } from "../../home.stock.items.$code/route";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function AddItemVariant({

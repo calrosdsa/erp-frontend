@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import Typography, { headline, sm, title, xs } from "@/components/typography/Typography";
 import { HomeIcon } from "lucide-react";
+import GlobalDialogs from "./components/dialogs";
 
 type RouteItem = {
   name: string;
@@ -60,6 +61,7 @@ export default function HomeLayout({
   return (
     <>
       {/* <CssBaseline /> */}
+      <GlobalDialogs/>
       {openSessionDefaults && (
         <SessionDefaultDrawer
           open={openSessionDefaults}

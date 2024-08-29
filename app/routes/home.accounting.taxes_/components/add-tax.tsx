@@ -7,15 +7,18 @@ import { z } from "zod";
 import { createTaxSchema } from "~/util/data/schemas/accounting/tax-schema";
 import { action } from "../route";
 import { useToast } from "@/components/ui/use-toast";
+import { create } from "zustand";
+import { routes } from "~/util/route";
 
 
-function AddTax({open,onOpenChange}:{
+export const AddTax = ({open,onOpenChange}:{
     open:boolean
     onOpenChange:(e:boolean)=>void
-}) {
+})=> {
     const fetcher = useFetcher<typeof action>()
     const {t} = useTranslation("common")
     const { toast } = useToast()
+    const r = routes
     useEffect(()=>{
         if(fetcher.data?.error){
             toast({
@@ -42,12 +45,12 @@ function AddTax({open,onOpenChange}:{
                 enabled:true
             } as z.infer<typeof createTaxSchema>}
             onSubmit={(values:z.infer<typeof createTaxSchema>)=>{
-                // console.log("VALUES",values)
                 fetcher.submit({
                     action:"add-tax",
                     addTaxData:values,
                 },{
                     method:"POST",
+                    action:r.taxes,
                     encType:"application/json",
                 })
             }}
@@ -79,11 +82,18 @@ function AddTax({open,onOpenChange}:{
     )
 }
 
-export default function useCreateTax(){
-    const [openDialog,setOpenDialog] = useState(false)
-    const dialog = openDialog && <AddTax
-    open={openDialog}
-    onOpenChange={(e)=>setOpenDialog(e)}
-    />
-    return [dialog,setOpenDialog] as const
+type CreateTaxStore = {
+    isOpen:boolean
+    onOpenChange:(e:boolean)=>void
 }
+
+export const useCreateTax = create<CreateTaxStore>((set)=>({
+    isOpen:false,
+    onOpenChange:(e)=>set((state)=>({isOpen:e}))
+}))
+    // const [openDialog,setOpenDialog] = useState(false)
+    // const dialog = openDialog && <AddTax
+    // open={openDialog}
+    // onOpenChange={(e)=>setOpenDialog(e)}
+    // />
+    // return [dialog,setOpenDialog] as const

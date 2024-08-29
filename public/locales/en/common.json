@@ -60,6 +60,7 @@
     "totalTax":"Total Taxes",
     "status":"Status",
     "startDate":"Start Date",
+    "outOfStockThreshold":"Out of Stock Threshold",
 
     "orderConfirmation":"Order Confirmation",
     "siteUrl":"Site Url",
@@ -105,13 +106,17 @@
     "itemAttributeValue":"Item Attribute Value",
     "itemAttribute":"Item Attribute",
     "addItemAttributeValue":"Add Item Attribute Value",
-    "addItemPrice":"Add Item Price"
+    "addItemPrice":"Add Item Price",
+    "addItemStockLevel":"Add item stock"
   },
   "items": "Items",
   
   "item-groups": "Item Groups",
   "item-attributes":"Item Attributes",
   "warehouses": "Warehouses",
+  "_warehouse":{
+    "base":"Warehouse"
+  },
   "home": "H1ome",
   "companies": "Companies",
   "plugins":"Plugins",

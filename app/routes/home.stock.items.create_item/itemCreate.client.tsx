@@ -22,6 +22,7 @@ import { SquareCheckIcon, SquareIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { action } from "./route";
 import { itemFormSchema } from "~/util/data/schemas/stock/item-schemas";
+import { useCreateItemGroup } from "../home.stock.item-groups_/components/add-item-group";
 
 export default function CreateItemClient() {
   const fetcher = useFetcher<typeof action>();
@@ -43,29 +44,14 @@ export default function CreateItemClient() {
       }
     | undefined
   >();
-
-  // const fetcherDebouncePriceList = useDebounceFetcher<
-    // | {
-    //     pagination_result: {
-    //       results: components["schemas"]["ItemPriceList"][];
-    //       total: number;
-    //     };
-    //   }
-    // | undefined
-  // >();
-
+  const createItemGroup = useCreateItemGroup()
   const [selectedItemGroup, setSelectedItemGroup] = useState<
     components["schemas"]["ItemGroup"] | null
   >(null);
-  // const [selectedPriceList, setSelectedPriceList] = useState<
-  //   components["schemas"]["ItemPriceList"] | null
-  // >(null);
 
   const [selectedUom, setSelectedUom] = useState<
   components["schemas"]["UnitOfMeasureTranslation"] | null
 >();
-  // const [selectedPlugins,setSelectedPlugins] = useState<
-  // components["schemas"]["CompanyPlugins"][]>([])
   const { toast } = useToast()
 
 
@@ -82,9 +68,6 @@ export default function CreateItemClient() {
       return;
     }
 
-    // if (selectedPriceList == null) {
-    //   return;
-    // }
     if (selectedUom == null) {
       return;
     }
@@ -95,17 +78,8 @@ export default function CreateItemClient() {
         itemGroupId: selectedItemGroup.ID,
         uomId: selectedUom.UnitOfMeasure.ID,
       },
-      // plugins: selectedPlugins
     };
-    // if(values.rate != undefined && values.itemQuantity != undefined && values.priceListName != undefined){
-    //   body.itemPrice = {
-    //     priceListId: selectedPriceList.ID,
-    //     rate: values.rate,
-    //     itemQuantity: values.itemQuantity,
-    //     taxId: 1,
-    //   }
-    // }
-
+    
     console.log(body)
       fetcher.submit(body, {
       action: "/home/stock/items/create_item",
@@ -197,6 +171,7 @@ export default function CreateItemClient() {
             </label> */}
             <FormAutocomplete
             form={form}
+            addNew={()=>createItemGroup.onOpenChage(true)}
             data={fetcherDebounce.data?.paginationResult.pagination_result.results || []}
             label={t("form.item-group")}
             value={"Name"}

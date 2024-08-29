@@ -1,7 +1,7 @@
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
-import { Row } from "@tanstack/react-table"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Column, Getter, Row, Table } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,24 +14,45 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Pencil, TrashIcon } from "lucide-react"
-import { useTranslation } from "react-i18next"
+} from "@/components/ui/dropdown-menu";
+import { Pencil, TrashIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-// import { labels } from "../data/data"
-// import { taskSchema } from "../data/schema"
+import { SquareCheckIcon, SquareIcon } from "lucide-react";
 
-interface DataTableRowActionsProps<TData> {
-  row: Row<TData>
-  onDelete?:()=>void
-  onEdit?:()=>void
+interface TableCellProps<TData> {
+  getValue: Getter<any>;
+  row: Row<TData>;
+  column: Column<TData, unknown>;
+  table: Table<TData>;
 }
 
-export function DataTableRowActions<TData>({
-  row,onDelete,onEdit
-}: DataTableRowActionsProps<TData>) {
-  const {t} = useTranslation("common")
-//   const task = taskSchema.parse(row.original)
+// export default function TableCellBoolean<TData>({ getValue, row, column, table }:TableCellProps<TData>) {
+//   const initialValue = getValue();
+//   return (
+//     <div>
+//         {typeof initialValue == "boolean" &&(
+//             initialValue? <SquareCheckIcon/>: <SquareIcon/>
+//         )
+//         }
+//     </div>
+//   );
+// };
+
+interface DataTableRowActionsProps<TData> {
+  getValue: Getter<any>;
+  row: Row<TData>;
+  column: Column<TData, unknown>;
+  table: Table<TData>;
+  // row: Row<TData>;
+  // onDelete?: () => void;
+  // onEdit?: () => void;
+}
+
+export function DataTableRowActions<TData>({ getValue, row, column, table }:TableCellProps<TData>) {
+  const { t } = useTranslation("common");
+  const tableMeta: any = table.options.meta;
+  //   const task = taskSchema.parse(row.original)
 
   return (
     <DropdownMenu>
@@ -61,25 +82,34 @@ export function DataTableRowActions<TData>({
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
-        {onEdit != undefined &&
-        <DropdownMenuItem onClick={()=>onEdit()} >
-          {t("actions.edit")}
-          <DropdownMenuShortcut>
-          <Pencil size={12}/>
-          </DropdownMenuShortcut>
-          
-        </DropdownMenuItem>
-        }
+        {tableMeta.onEdit != undefined && (
+          <DropdownMenuItem onClick={() => tableMeta.onEdit(row.index)}>
+            {t("actions.edit")}
+            <DropdownMenuShortcut>
+              <Pencil size={12} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
-        {onDelete != undefined &&
-        <DropdownMenuItem onClick={()=>onDelete()}>
-          Delete
-          <DropdownMenuShortcut>
-            <TrashIcon size={12}/>
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
-        }
+        {tableMeta.onDelete != undefined && (
+        // {onDelete != undefined && (
+          <DropdownMenuItem onClick={() => tableMeta.onDelete(row.index)}>
+            Delete
+            <DropdownMenuShortcut>
+              <TrashIcon size={12} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+        )}
+        {tableMeta.removeRow != undefined && (
+        // {onDelete != undefined && (
+          <DropdownMenuItem onClick={() => tableMeta.removeRow(row.index)}>
+            Remove
+            <DropdownMenuShortcut>
+              <TrashIcon size={12} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

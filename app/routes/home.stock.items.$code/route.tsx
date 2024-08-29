@@ -19,8 +19,6 @@ import { itemPriceFormSchema } from "~/util/data/schemas/stock/item-price-schema
 type ActionData = {
   action: string;
   item: z.infer<typeof itemDtoSchema>;
-  itemVariantFormSchema: z.infer<typeof itemVariantFormSchema>;
-  itemPriceFormSchema: z.infer<typeof itemPriceFormSchema>;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
@@ -44,49 +42,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
       break
     }
-    case "add-variant": {
-      const itemVairantForm = data.itemVariantFormSchema;
-      const res = await client.POST("/stock/item/variant", {
-        body: {
-          itemVariant: {
-            itemAttributeValueId: itemVairantForm.itemAttributeValueId,
-            itemId: itemVairantForm.itemId,
-            name: itemVairantForm.name,
-          },
-        },
-      });
-      console.log(res.error);
-      if (res.error) {
-        error = res.error.detail;
-      }
-      if (res.data) {
-        message = res.data.message;
-      }
-      break;
-    }
-    case "add-item-price": {
-      const itemPriceFormData = data.itemPriceFormSchema;
-      const res = await client.POST("/stock/item/item-price", {
-        body: {
-          itemPrice: {
-            itemId: itemPriceFormData.itemId,
-            itemQuantity: Number(itemPriceFormData.itemQuantity),
-            priceListId: itemPriceFormData.priceListId,
-            rate: Number(itemPriceFormData.rate),
-            taxId: itemPriceFormData.taxId,
-          },
-          plugins: itemPriceFormData.plugins || [],
-        },
-      });
-      console.log(res.error)
-      if (res.data) {
-        message = res.data.message;
-      }
-      if (res.error) {
-        error = res.error.detail;
-      }
-      break;
-    }
+    
   }
   return json({
     error,
@@ -105,36 +61,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
 
-  const itemVariants = client.GET("/stock/item/variant", {
-    params: {
-      query: {
-        size: DEFAULT_SIZE,
-        page: DEFAULT_PAGE,
-        parentId: code || "",
-      },
-    },
-  });
-
-  const itemPrices = await client.GET("/stock/item/item-price/{itemCode}", {
-    params: {
-      query: {
-        size: DEFAULT_SIZE,
-        page: DEFAULT_PAGE,
-      },
-      path: {
-        itemCode: code || "",
-      },
-    },
-  });
   return defer({
     item: res,
-    itemVariants: itemVariants,
-    itemPrices: itemPrices.data,
   });
 };
 
 export default function ItemDetail() {
-  const { item, itemPrices } = useLoaderData<typeof loader>();
+  const { item } = useLoaderData<typeof loader>();
   return (
     <div>
       <Suspense fallback={<FallBack />}>

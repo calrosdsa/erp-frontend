@@ -93,6 +93,7 @@
       //     return (
       //       <div className=" uppercase">
       //         <Link to={`/home/purchases/orders/${encodeURIComponent(code)}`}>
+      
       //         <Typography className=" text-primary underline cursor-pointer">
       //         {code}
       //         </Typography>

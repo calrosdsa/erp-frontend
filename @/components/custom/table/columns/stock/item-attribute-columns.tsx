@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { CornerDownRight, FolderIcon, FolderOpenIcon } from "lucide-react";
 import { components } from "~/sdk";
-import TableCell from "../../table-cell";
+import TableCell from "../../cells/table-cell";
 import { useTranslation } from "react-i18next";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Link } from "@remix-run/react";
@@ -51,13 +51,8 @@ export const itemAttributeValuesColumns = (): ColumnDef<
     },
     {
       id: "actions",
-      cell: ({ row,table }) => {
-        const tableMeta: any = table.options.meta;
-        return <DataTableRowActions row={row} onDelete={() =>tableMeta.removeRow(row.index)}
-        onEdit={()=>tableMeta.onEdit(row.index)}
-         />;
-      },
-    },
+      cell: DataTableRowActions,
+    }
   ];
 };
 
@@ -83,10 +78,7 @@ export const itemAttributeValuesDtoColumns = (): ColumnDef<
     },
     {
       id: "actions",
-      cell: ({ row,table }) => {
-        const tableMeta: any = table.options.meta;
-        return <DataTableRowActions row={row} onDelete={() =>tableMeta.removeRow(row.index)} />;
-      },
+      cell: DataTableRowActions,
     },
   ];
 };

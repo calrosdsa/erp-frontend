@@ -96,6 +96,7 @@ export default function UpsertItemAttributeValue({
             ...body,
             itemAttributeId: itemAttribute.ID,
           };
+          // console.log("VALUES",body,itemAttributeValue)
           fetcher.submit(
             {
               action: itemAttributeValue

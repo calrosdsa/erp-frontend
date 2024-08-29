@@ -520,6 +520,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/level": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Edit item to warehouse */
+        put: operations["edit-item-to-warehouse"];
+        /** Add item to warehouse */
+        post: operations["add-item-to-warehouse"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item/level/item": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve item stock levels */
+        get: operations["get-item-stock-levels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/price-list": {
         parameters: {
             query?: never;
@@ -705,6 +740,22 @@ export interface components {
              */
             readonly $schema?: string;
             company_plugin: components["schemas"]["CompanyPlugins"];
+        };
+        AddStockLevelRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            enabled: boolean;
+            /** Format: int64 */
+            itemId: number;
+            /** Format: int64 */
+            outOfStockThreshold: number;
+            /** Format: int64 */
+            stock: number;
+            /** Format: int64 */
+            warehouseId: number;
         };
         Address: {
             City: string;
@@ -912,8 +963,8 @@ export interface components {
              */
             readonly $schema?: string;
             currency: string;
-            isBuying: boolean;
-            isSelling: boolean;
+            isBuying?: boolean;
+            isSelling?: boolean;
             name: string;
         };
         CreateTaxRequestBody: {
@@ -934,8 +985,9 @@ export interface components {
              */
             readonly $schema?: string;
             enabled?: boolean;
-            isGroup?: boolean;
             name: string;
+            /** Format: int64 */
+            parentId?: number | null;
         };
         CuatropfSubscriptionRequestBody: {
             /**
@@ -1375,6 +1427,14 @@ export interface components {
             readonly $schema?: string;
             pagination_result: components["schemas"]["PaginationResultListSalesOrder"];
         };
+        PaginationResponsePaginationResultListStockLevelBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pagination_result: components["schemas"]["PaginationResultListStockLevel"];
+        };
         PaginationResponsePaginationResultListTaxBody: {
             /**
              * Format: uri
@@ -1428,6 +1488,11 @@ export interface components {
         };
         PaginationResultListSalesOrder: {
             results: components["schemas"]["SalesOrder"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListStockLevel: {
+            results: components["schemas"]["StockLevel"][];
             /** Format: int64 */
             total: number;
         };
@@ -1743,6 +1808,24 @@ export interface components {
             plan_variation: components["schemas"]["RetrieveObjectRequest"];
             square_object: components["schemas"]["SquareObject"];
         };
+        StockLevel: {
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            Enabled: boolean;
+            Item: components["schemas"]["Item"];
+            /** Format: int64 */
+            ItemID: number;
+            /** Format: int64 */
+            OutOfStockThreshold: number;
+            /** Format: int64 */
+            Stock: number;
+            /** Format: date-time */
+            UpdatedAt: string;
+            WareHouse: components["schemas"]["WareHouse"];
+            /** Format: int64 */
+            WareHouseID: number;
+        };
         SubscriptionPlanDataStruct: {
             all_items: boolean;
             name: string;
@@ -1935,8 +2018,12 @@ export interface components {
             Enabled: boolean;
             /** Format: int64 */
             ID: number;
-            IsGroup: boolean;
             Name: string;
+            /** Format: int64 */
+            Ordinal: number;
+            Parent: components["schemas"]["WareHouse"];
+            /** Format: int64 */
+            ParentID: number | null;
             /** Format: date-time */
             UpdatedAt: string;
             WareHouseSubgroup: components["schemas"]["WareHouse"][];
@@ -3524,6 +3611,133 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-item-to-warehouse": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddStockLevelRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "add-item-to-warehouse": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddStockLevelRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-item-stock-levels": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListStockLevelBody"];
                 };
             };
             /** @description Error */
