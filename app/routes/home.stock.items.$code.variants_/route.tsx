@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, defer, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import ItemVariantsClient from "./variants.client";
@@ -48,7 +48,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       },
     },
   });
-  return json({
+  return defer({
     itemVariants: itemVariants,
   });
 };

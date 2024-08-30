@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className=" py-3 space-y-4">
-      {metaOptions == undefined && <DataTableToolbar table={table} />}
+      {metaActions != undefined && <DataTableToolbar table={table} />}
 
       <div className="rounded-md border h-full relative">
         <Table className="">

@@ -60,7 +60,6 @@ export default function FormAutocomplete<
   addNew
 }: Props<T, K, V>) {
   return (
-    <div className={cn("",className)}>
       <FormField
         control={form.control}
         name={name}
@@ -75,7 +74,7 @@ export default function FormAutocomplete<
                     role="combobox"
                     onClick={() => onOpen()}
                     className={cn(
-                      "justify-between h-[37px]",
+                      "justify-between h-[44px]",
                       !field.value && "text-muted-foreground"
                     )}
                   >
@@ -139,6 +138,5 @@ export default function FormAutocomplete<
           </FormItem>
         )}
       />
-    </div>
   );
 }

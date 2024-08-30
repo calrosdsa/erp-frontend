@@ -8,7 +8,8 @@
   "show":"Show",
   "hide":"Hide",
 
-  "company": {
+  "_company": {
+    "base":"Company",
     "companies": "Companies"
   },
   "create":"Create",
@@ -117,7 +118,7 @@
   "_warehouse":{
     "base":"Warehouse"
   },
-  "home": "H1ome",
+  "home": "Home",
   "companies": "Companies",
   "plugins":"Plugins",
 
@@ -150,6 +151,7 @@
     "prices":"Item Prices"
   },
   "_item":{
+    "base":"Item",
     "variants":"Item Variants",
     "addVariant":"Add  item variant",
     "enableForVariants":"Enable item for variants"

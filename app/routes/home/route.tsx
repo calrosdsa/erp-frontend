@@ -58,12 +58,14 @@ export const loader = async ({ request,context }: LoaderFunctionArgs) => {
   let activeCompany: components["schemas"]["Company"] | undefined = undefined;
   let userData: UserData | undefined = undefined;
   const res = await apiClient({ request }).GET("/account");
+  console.log(res.error,res.data?.user.Roles)
   const sessionData = session.data as SessionData;
   if (companyUuid != undefined && res.data != undefined) {
     activeCompany = res.data.user.Companies.find(
       (item) => item.Uuid == companyUuid
     );
   }
+  // nextval('clients_id_seq'::regclass)
 
   if (res.data != undefined) {
     if (role != undefined) {

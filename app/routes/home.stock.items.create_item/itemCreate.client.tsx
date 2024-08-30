@@ -39,11 +39,9 @@ export default function CreateItemClient() {
   >();
 
   const fetcherDebounceUoms = useDebounceFetcher<
-    | {
+     {
         uoms: components["schemas"]["UnitOfMeasureTranslation"][];
-      }
-    | undefined
-  >();
+      }>();
   const createItemGroup = useCreateItemGroup()
   const [selectedItemGroup, setSelectedItemGroup] = useState<
     components["schemas"]["ItemGroup"] | null

@@ -118,7 +118,8 @@ export interface paths {
         /** Get User companies */
         get: operations["companies"];
         put?: never;
-        post?: never;
+        /** Create Company */
+        post: operations["create-company"];
         delete?: never;
         options?: never;
         head?: never;
@@ -134,6 +135,23 @@ export interface paths {
         };
         /** Get company Detial */
         get: operations["company-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/company/valid/parent/companies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Valid Parent Companies */
+        get: operations["valid-parent-companies"];
         put?: never;
         post?: never;
         delete?: never;
@@ -555,6 +573,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/level/warehouse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve warehouse stock levels */
+        get: operations["get-warehouse-stock-levels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/price-list": {
         parameters: {
             query?: never;
@@ -914,6 +949,16 @@ export interface components {
             label?: string;
             phone?: string;
         };
+        CreateCompanyRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
+            /** Format: int64 */
+            parentId?: number | null;
+        };
         CreateItemAttributeRequestBody: {
             /**
              * Format: uri
@@ -963,8 +1008,8 @@ export interface components {
              */
             readonly $schema?: string;
             currency: string;
-            isBuying?: boolean;
-            isSelling?: boolean;
+            isBuying: boolean;
+            isSelling: boolean;
             name: string;
         };
         CreateTaxRequestBody: {
@@ -2400,6 +2445,49 @@ export interface operations {
             };
         };
     };
+    "create-company": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCompanyRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "company-detail": {
         parameters: {
             query?: {
@@ -2428,6 +2516,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseCompanyBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "valid-parent-companies": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyBody"];
                 };
             };
             /** @description Error */
@@ -3711,6 +3840,47 @@ export interface operations {
         };
     };
     "get-item-stock-levels": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListStockLevelBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-warehouse-stock-levels": {
         parameters: {
             query: {
                 page: string;

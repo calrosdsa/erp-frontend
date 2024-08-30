@@ -2,7 +2,7 @@ import CustomForm from "@/components/custom/form/CustomForm";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import SelectForm from "@/components/custom/select/SelectForm";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
-import { useFetcher, useRevalidator } from "@remix-run/react";
+import { useFetcher, useParams, useRevalidator } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
@@ -12,15 +12,16 @@ import { itemVariantFormSchema } from "~/util/data/schemas/stock/item-variant-sc
 import { routes } from "~/util/route";
 import { action } from "../../home.stock.items.$code/route";
 import { useToast } from "@/components/ui/use-toast";
+import { create } from "zustand";
 
-export default function AddItemVariant({
+export default function CreateItemVariant({
   open,
   onOpenChange,
   item,
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  item:components["schemas"]["Item"]
+  item?:components["schemas"]["Item"]
 }) {
   const { t } = useTranslation("common");
   const fetcherDebounce = useDebounceFetcher<
@@ -36,6 +37,7 @@ export default function AddItemVariant({
   const fetcherItemAttribute = useFetcher<
     { itemAttribute:components["schemas"]["ItemAttribute"]} | undefined
   >()
+  const params = useParams()
   const revalidator = useRevalidator()
   const fetcher = useFetcher<typeof action>();
   const r = routes;
@@ -70,12 +72,13 @@ export default function AddItemVariant({
             itemVariantFormSchema:e,
           },{
             method:"POST",
+            action:r.toItemDetailVariants(params.code || ""),
             encType:"application/json"
           })
             console.log("VALUES",e)
         }}
         defaultValues={{
-            itemId:item.ID,
+            itemId:item?.ID,
         } as z.infer<typeof itemVariantFormSchema>}
         formItemsData={[
           {
@@ -100,7 +103,7 @@ export default function AddItemVariant({
                     {
                       debounceTimeout: 600,
                       method: "POST",
-                      action: `/home/stock/item-attributes`,
+                      action: r.itemAttributes,
                       encType: "application/json",
                     }
                   );
@@ -122,7 +125,7 @@ export default function AddItemVariant({
                     { query: "", action: "get" },
                     {
                       method: "POST",
-                      action: `/home/stock/item-attributes`,
+                      action: r.itemAttributes,
                       encType: "application/json",
                     }
                   );
@@ -150,3 +153,16 @@ export default function AddItemVariant({
     </DrawerLayout>
   );
 }
+
+interface CreateItemVariant {
+  open:boolean
+  onOpenChange:(e:boolean)=>void
+  item:components["schemas"]["Item"] | undefined
+  openDialog:(opts:{item?:components["schemas"]["Item"]})=>void
+}
+export const useCreateItemVariant = create<CreateItemVariant>((set)=>({
+  open:false,
+  onOpenChange:(e:boolean)=>set((state)=>({open:e})),
+  item:undefined,
+  openDialog:(opts)=>set((state)=>({item:opts.item,open:true}))
+}))

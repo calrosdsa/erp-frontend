@@ -5,16 +5,16 @@ interface Props  {
     addRow?:()=>void
     onEdit?:(rowIndex:number)=>void
 }
-export default function useActionTable({addRow,onEdit}:Props){
+export default function useActionRow({addRow,onEdit}:Props){
     const [openDialog,setOpenDialog] = useState(false)
     const [selectedRow,setSelecetedRow] = useState<number | undefined>(undefined)
     const options = {
-        addRow:()=>{
-            if(addRow != undefined){
-                addRow()
-            }
-            setOpenDialog(!openDialog)
-        },
+        // addRow:()=>{
+        //     if(addRow != undefined){
+        //         addRow()
+        //     }
+        //     setOpenDialog(!openDialog)
+        // },
         onEdit:(rowIndex:number)=>{
             if(onEdit != undefined){
                 onEdit(rowIndex)

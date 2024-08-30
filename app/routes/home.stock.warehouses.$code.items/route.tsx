@@ -8,7 +8,7 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
     const url = new URL(request.url)
     const searchParams = url.searchParams
 
-    const res = await client.GET("/stock/item/level/item",{
+    const res = await client.GET("/stock/item/level/warehouse",{
         params:{
             query:{
                 page:searchParams.get("page") || DEFAULT_PAGE,
@@ -17,6 +17,7 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
             }
         }
     })
+    
     return json({
         paginationResult:res.data?.pagination_result
     })

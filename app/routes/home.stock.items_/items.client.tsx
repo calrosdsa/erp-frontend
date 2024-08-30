@@ -1,10 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
-  Link,
-  useFetcher,
   useLoaderData,
   useNavigate,
-  useRevalidator,
   useSearchParams,
   useSubmit,
 } from "@remix-run/react";
@@ -13,9 +10,7 @@ import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemColumns } from "./components/itemColumns";
 import {
-  getCoreRowModel,
   PaginationState,
-  TableOptions,
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";

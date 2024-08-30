@@ -5,15 +5,24 @@ import { loader } from "./route";
 import { GlobalState } from "~/types/app";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { columns } from "./components/table/columns";
+import { useCreateCompany } from "./components/create-company";
 
 export default function CompaniesClient() {
   const { t } = useTranslation();
   const { paginationResult } = useLoaderData<typeof loader>();
   const ctxValue = useOutletContext<GlobalState>();
+  const createCompany = useCreateCompany()
 
   return (
     <>
-    <DataTable columns={columns()} data={paginationResult?.pagination_result.results || []} 
+    <DataTable columns={columns()} data={paginationResult?.pagination_result.results || []}
+    metaActions={{
+      meta:{
+        addNew:()=>{
+          createCompany.openDialog({})
+        }
+      }
+    }} 
     hiddenColumns={{
       code:false
     }}

@@ -10,75 +10,77 @@ import TableCellBoolean from "../../cells/table-cell-chek";
 import TableCellDate from "../../cells/table-cell-date";
 import TableCellQuantity from "../../cells/table-cell-quantity";
 import { DataTableRowActions } from "../../data-table-row-actions";
+import TableCellNavigate from "../../cells/table-cell-navigate";
 
-export const itemStockColums = (): ColumnDef<components["schemas"]["StockLevel"]>[] => {
+export const itemStockColums = ({
+  includeWarehouse = false,
+  includeItem = false,
+}: {
+  includeWarehouse?: boolean;
+  includeItem?: boolean;
+}): ColumnDef<components["schemas"]["StockLevel"]>[] => {
   const { t, i18n } = useTranslation("common");
   const r = routes;
+  let columns: ColumnDef<components["schemas"]["StockLevel"]>[] = [];
+  if (includeWarehouse) {
+    columns.push({
+      accessorKey: "WareHouse.Code",
+      id: "warehouseCode",
+    });
+    columns.push({
+      accessorKey: "WareHouse.Name",
+      id: "warehouseName",
+      header: t("_warehouse.base"),
+      cell: ({ ...props }) => <TableCellNavigate
+      {...props}
+      id="warehouseCode"
+      navigate={(e)=>r.toWarehouseItems(e)}
+      />
+    });
+  }
+
+  if (includeItem) {
+    columns.push({
+      accessorKey: "Item.Code",
+      id: "itemCode",
+    });
+    columns.push({
+      accessorKey: "Item.Name",
+      id: "itemName",
+      header: t("_item.base"),
+      cell: ({ ...props }) => <TableCellNavigate
+      {...props}
+      id="itemCode"
+      navigate={(e)=>r.toItemDetailStock(e)}
+      />
+    });
+  }
+
   return [
-    // {
-    //   accessorKey: "Code",
-    //   header: t("form.code"),
-    //   cell: ({ row }) => {
-    //     const code = row.getValue("Code") as string;
-    //     return (
-    //       <div className=" uppercase">
-    //         <Link to={r.toTaxDetail(code)}>
-    //           <Typography className=" text-primary underline cursor-pointer">
-    //             {code}
-    //           </Typography>
-    //         </Link>
-    //       </div>
-    //     );
-    //   },
-    // },
+    ...columns,
     {
-        accessorKey:"WareHouse.Code",
-        id:"warehouseCode",        
+      accessorKey: "Stock",
+      header: t("stock"),
+      cell: TableCellQuantity,
     },
     {
-        accessorKey:"WareHouse.Name",
-        id:"warehouseName",
-        header:t("_warehouse.base"),
-        cell: ({ row }) => {
-            const code = row.getValue("warehouseCode") as string;
-            const value = row.getValue("warehouseName")
-            return (
-              <div className=" uppercase">
-                <Link to={r.toDetailWarehouse(code)}>
-                  <Typography className=" text-primary underline cursor-pointer">
-                    {typeof value == "string" ? value : "-"}
-                  </Typography>
-                </Link>
-              </div>
-            );
-          },
+      accessorKey: "OutOfStockThreshold",
+      header: t("form.outOfStockThreshold"),
+      cell: TableCellQuantity,
     },
     {
-        accessorKey:"Stock",
-        header:t("stock"),
-        cell:TableCellQuantity
-    },
-    {
-        accessorKey:"OutOfStockThreshold",
-        header:t("form.outOfStockThreshold"),
-        cell:TableCellQuantity
-    },
-    {
-        accessorKey: "CreatedAt",
-        header: t("table.createdAt"),
-        cell:({...props})=><TableCellDate     
-        i18n={i18n}
-        {...props}
-        />
+      accessorKey: "CreatedAt",
+      header: t("table.createdAt"),
+      cell: ({ ...props }) => <TableCellDate i18n={i18n} {...props} />,
     },
     {
       accessorKey: "Enabled",
       header: t("form.enabled"),
-      cell:TableCellBoolean
+      cell: TableCellBoolean,
     },
     {
-        id: "actions",
-        cell:DataTableRowActions
-      },
+      id: "actions",
+      cell: DataTableRowActions,
+    },
   ];
 };

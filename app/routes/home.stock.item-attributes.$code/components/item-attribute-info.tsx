@@ -6,7 +6,7 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { z } from "zod";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemAttributeValuesColumns } from "@/components/custom/table/columns/stock/item-attribute-columns";
-import useActionTable from "~/util/hooks/useActionTable";
+import useActionRow from "~/util/hooks/useActionTable";
 import UpsertItemAttributeValue from "./upsert-item-attribute-value";
 import { useEffect, useState } from "react";
 import { components } from "~/sdk";
@@ -14,7 +14,7 @@ import { components } from "~/sdk";
 export default function ItemAttributeInfo() {
   const { itemAttribute } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const [meta, stateActions] = useActionTable({
+  const [meta, stateActions] = useActionRow({
     onEdit:indexRow=>{
       if (indexRow != undefined) {
         const item = itemAttribute?.ItemAttributeValues.find(
@@ -28,7 +28,6 @@ export default function ItemAttributeInfo() {
     }
   });
   const { openDialog, setOpenDialog } = stateActions;
-  const revalidator = useRevalidator()
 
   const [selectedItemAttributeValue, setSelectedItemAttributeValue] = useState<
     components["schemas"]["ItemAttributeValue"] | undefined
@@ -61,6 +60,13 @@ export default function ItemAttributeInfo() {
         <div className="col-span-full">
           <DataTable
             columns={itemAttributeValuesColumns()}
+            metaActions={{
+              meta:{
+                addNew:()=>{
+                  setOpenDialog(true)
+                }
+              }
+            }}
             data={itemAttribute?.ItemAttributeValues || []}
             metaOptions={{
               meta: meta,

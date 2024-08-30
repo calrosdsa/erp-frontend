@@ -6,7 +6,8 @@ export const itemStockSchemaForm = z.object({
     itemId:z.number(),
     enabled:z.boolean().default(true),
     warehouseId:z.number(),
-    warehouseName:z.string().optional()
+    warehouseName:z.string().optional(),
+    itemName:z.string().optional(),
 })
 
 

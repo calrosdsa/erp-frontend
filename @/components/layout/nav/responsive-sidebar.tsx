@@ -33,7 +33,7 @@ export default function ResponsiveSidebar({
   return (
     <div className={cn(
         `${!isDesktop && "flex"}`,
-        "min-w-44 flex-grow h-full px-2"
+        "min-w-44 flex-grow h-full "
         )}>
       {navItems.map((item) => {
         return (

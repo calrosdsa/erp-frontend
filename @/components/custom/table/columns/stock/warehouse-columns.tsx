@@ -18,7 +18,7 @@ export const warehouseColumns = (): ColumnDef<
       const code = row.getValue("Code") as string;
       return (
         <Link
-          to={r.toDetailWarehouse(code)}
+          to={r.toWarehouseInfo(code)}
           className="underline font-semibold"
         >
           {code.toString()}

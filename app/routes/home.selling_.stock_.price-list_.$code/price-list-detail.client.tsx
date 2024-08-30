@@ -18,8 +18,8 @@ export default function PriceListDetailClient() {
             <>
           <DisplayTextValue title={t("form.name")} value={priceList.Name} />
           <DisplayTextValue title={t("form.currency")} value={priceList.Currency} />
-          <DisplayTextValue title={t("_selling.isBuying")} value={priceList.IsBuying.toString()} />
-          <DisplayTextValue title={t("_selling.isSelling")} value={priceList.IsSelling.toString()} />
+          <DisplayTextValue title={t("_selling.isBuying")} value={priceList.IsBuying} />
+          <DisplayTextValue title={t("_selling.isSelling")} value={priceList.IsSelling} />
             </>
 
         )}

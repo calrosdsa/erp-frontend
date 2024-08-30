@@ -9,15 +9,18 @@ import { z } from "zod";
 import { addWareHouseSchema } from "~/util/data/schemas/stock/warehouse-schema";
 import { action } from "../route";
 import { useToast } from "@/components/ui/use-toast";
+import { create } from "zustand";
+import { routes } from "~/util/route";
 
 
-function AddWareHouse({open,onOpenChange}:{
+export const CreateWareHouse = ({open,onOpenChange}:{
     open:boolean
     onOpenChange:(e:boolean)=>void
-}){
+})=>{
     const {t} = useTranslation("common")
     const fetcher = useFetcher<typeof action>()
     const {toast} = useToast()
+    const r = routes
     useEffect(()=>{
         if(fetcher.data?.error){
             toast({
@@ -62,6 +65,7 @@ function AddWareHouse({open,onOpenChange}:{
                     addWareHouse:values
                 },{
                     method:"POST",
+                    action:r.warehouses,
                     encType:"application/json"
                 })
             }}
@@ -71,11 +75,22 @@ function AddWareHouse({open,onOpenChange}:{
     )
 }
 
-export default function useCreateWareHouse(){
-    const [openDialog,setOpenDialog] = useState(false)
-    const dialog = openDialog && <AddWareHouse
-    open={openDialog}
-    onOpenChange={(e)=>setOpenDialog(e)}
-    />
-    return [dialog,setOpenDialog] as const
+interface CreateWareHouse {
+    open:boolean
+    onOpenChange:(e:boolean)=>void
+    openDialog:(opts:{})=>void
 }
+export const useCreateWareHouse = create<CreateWareHouse>((set=>({
+    open:false,
+    onOpenChange:(e)=>set((state)=>({open:e})),
+    openDialog:(opts)=>set((state)=>({open:true}))
+})))
+
+// export default function useCreateWareHouse(){
+//     const [openDialog,setOpenDialog] = useState(false)
+//     const dialog = openDialog && <AddWareHouse
+//     open={openDialog}
+//     onOpenChange={(e)=>setOpenDialog(e)}
+//     />
+    // return [dialog,setOpenDialog] as const
+// }

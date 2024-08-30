@@ -2,8 +2,8 @@ import { useLoaderData } from "@remix-run/react"
 import { loader } from "./route"
 import ItemPriceInfo from "./components/ItemPriceInfo"
 import { PluginApp } from "~/types/enums"
-import SquareItemPrice from "../home.stock.item-prices/components/plugin/SquareItemPrice"
 import { useTranslation } from "react-i18next"
+import SquareItemPrice from "../home.stock.item-prices_/components/plugin/SquareItemPrice"
 
 
 export default function ItemPriceDetailClient(){

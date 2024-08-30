@@ -8,115 +8,129 @@
   "show": "Mostrar",
   "hide": "Ocultar",
 
-  "company": {
-    "companies": "Compañías"
+  "_company": {
+    "base": "Empresa",
+    "companies": "Empresas"
   },
   "create": "Crear",
   "info": "Información",
-  "signin": "Iniciar sesión",
+  "signin": "Iniciar Sesión",
+  "reset-password": "Restablecer Contraseña",
   "_account": {
-    "lastLogin": "Último inicio de sesión",
-    "updatePassword": "Actualizar contraseña",
+    "lastLogin": "Último Inicio de Sesión",
+    "updatePassword": "Actualizar Contraseña",
     "siginIYouA": "Inicia sesión en tu cuenta",
-    "siginIYouADesc": "Ingresa tu correo electrónico y contraseña a continuación para acceder a tu cuenta"
+    "siginIYouADesc": "Ingresa tu correo electrónico y contraseña a continuación para iniciar sesión en tu cuenta",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassowordMsg": "Ingresa la dirección de correo electrónico verificada de tu cuenta y te enviaremos un enlace para restablecer la contraseña."
   },
 
   "form": {
     "name": "Nombre",
+    "value": "Valor",
     "abbreviation": "Abreviatura",
     "code": "Código",
     "familyName": "Apellido",
     "givenName": "Nombre",
-    "phoneNumber": "Número de teléfono",
+    "phoneNumber": "Número de Teléfono",
     "password": "Contraseña",
-    "newPassword": "Nueva contraseña",
-    "confirmNewPassword": "Confirmar nueva contraseña",
-    "email": "Correo electrónico",
-    "companyName": "Nombre de la compañía",
-    "clientDetails": "Completa tu información personal",
-    "enabled": "Habilitado",
+    "newPassword": "Nueva Contraseña",
+    "confirmNewPassword": "Confirmar Nueva Contraseña",
+    "email": "Correo Electrónico",
+    "companyName": "Nombre de la Empresa",
+    "clientDetails": "Completa tu Información Personal",
+    "enabled": "Habilitar",
     "country": "País",
-    "countryCode": "Código del país",
-    "item-group": "Grupo de artículos",
+    "countryCode": "Código del País",
+    "item-group": "Grupo de Artículos",
     "submit": "Enviar",
     "save": "Guardar",
-    "uom": "Unidad de medida",
+    "uom": "UOM",
     "optional": "Opcional",
-    "price-list": "Lista de precios",
+    "price-list": "Lista de Precios",
     "currency": "Moneda",
     "buying": "Compra",
     "selling": "Venta",
     "rate": "Tasa",
-    "itemQuantity": "Cantidad de artículos",
-    "totalQuantity": "Cantidad total",
+    "itemQuantity": "Cantidad de Artículos",
+    "totalQuantity": "Cantidad Total",
     "pay": "Pagar",
-    "orderTotal": "Total del pedido",
+    "orderTotal": "Total del Pedido",
     "total": "Total",
     "tax": "Impuesto",
-    "totalTax": "Impuestos totales",
+    "totalTax": "Impuestos Totales",
     "status": "Estado",
-    "startDate": "Fecha de inicio",
+    "startDate": "Fecha de Inicio",
+    "outOfStockThreshold": "Umbral de Agotado",
 
-    "orderConfirmation": "Confirmación de pedido",
-    "siteUrl": "URL del sitio",
-    "logo": "Logo"
+    "orderConfirmation": "Confirmación del Pedido",
+    "siteUrl": "URL del Sitio",
+    "logo": "Logotipo"
   },
   "_selling": {
-    "isBuying": "Es compra",
-    "isSelling": "Es venta",
+    "isBuying": "Está Comprando",
+    "isSelling": "Está Vendiendo",
     "isSellingDesc": "Esta lista de precios se usará para vender productos.",
     "isBuyingDesc": "Esta lista de precios se usará para comprar productos."
   },
-
-  "info-item": "Información de {{item}}",
+  "f": {
+    "add-new": "Crear nuevo {{o}}",
+    "enable": "Marca la casilla para habilitar este {{o}}"
+  },
+  "info-item": "Información {{item}}",
 
   "accounting": "Contabilidad",
   "taxes": "Impuestos",
   "selling": "Venta",
-  "price-list": "Lista de precios",
+  "price-list": "Lista de Precios",
   "_tax": {
     "base": "Impuesto"
   },
 
   "sidebar": {
-    "sessionDefaults": "Predeterminados de sesión"
+    "sessionDefaults": "Valores Predeterminados de Sesión"
   },
   "language": "Idioma",
 
-  "addPlugin": "Agregar complemento",
-  "applicationId": "ID de aplicación",
-  "accessToken": "Token de acceso",
-  "locationId": "ID de ubicación",
+  "addPlugin": "Agregar Plugin",
+  "applicationId": "ID de Aplicación",
+  "accessToken": "Token de Acceso",
+  "locationId": "ID de Ubicación",
   "apiVersion": "Versión de API",
 
   "stock": "Inventario",
   "_stock": {
-    "createItemAttribute": "Crear atributo del artículo",
-    "itemAttributeInfo": "Información del atributo del artículo",
-    "itemAttributeValues": "Valores del atributo del artículo",
-    "itemAttributeValue": "Valor del atributo del artículo",
-    "itemAttribute": "Atributo del artículo",
-    "addItemAttributeValue": "Agregar valor del atributo del artículo",
-    "addItemPrice": "Agregar precio del artículo"
+    "createItemAttribute": "Crear Atributo de Artículo",
+    "itemAttributeInfo": "Información del Atributo del Artículo",
+    "itemAttributeValues": "Valores del Atributo del Artículo",
+    "itemAttributeValue": "Valor del Atributo del Artículo",
+    "itemAttribute": "Atributo del Artículo",
+    "addItemAttributeValue": "Agregar Valor del Atributo del Artículo",
+    "addItemPrice": "Agregar Precio del Artículo",
+    "addItemStockLevel": "Agregar Nivel de Inventario del Artículo"
   },
   "items": "Artículos",
-  "item-groups": "Grupos de artículos",
-  "item-attributes": "Atributos de los artículos",
-  "warehouse": "Almacén",
+
+  "item-groups": "Grupos de Artículos",
+  "item-attributes": "Atributos del Artículo",
+  "warehouses": "Almacenes",
+  "_warehouse": {
+    "base": "Almacén"
+  },
   "home": "Inicio",
-  "companies": "Compañías",
-  "plugins": "Complementos",
+  "companies": "Empresas",
+  "plugins": "Plugins",
 
-  "create_item": "Agregar artículo",
-  "itemInfo": "Información del artículo",
+  "create_item": "Agregar Artículo",
+  "itemInfo": "Información del Artículo",
 
-  "email": "Correo electrónico",
-  "square": "Square",
+  "email": "Correo Electrónico",
+  "square": "Cuadrado",
   "_object": {
-    "objectId": "ID del objeto",
-    "objectType": "Tipo de objeto",
-    "presentAtAllLocations": "Presente en todas las ubicaciones",
-    "subscriptionPlanVariation": "ID de variación del plan de suscripción",
+    "objectId": "ID de Objeto",
+    "objectType": "Tipo de Objeto",
+    "presentAtAllLocations": "Presente en Todas las Ubicaciones",
+    "subscriptionPlanVariation": "ID de Variación del Plan de Suscripción",
     "phases": "Fases"
   },
 
@@ -126,53 +140,54 @@
 
   "subscription": {
     "base": "Suscripción",
-    "actions": "Acciones de suscripción",
-    "cancel": "Cancelar suscripción"
+    "actions": "Acciones de Suscripción",
+    "cancel": "Cancelar Suscripción"
   },
   "item": {
-    "info": "Información del artículo",
-    "code": "Código del artículo",
-    "prices": "Precios del artículo"
+    "info": "Información del Artículo",
+    "code": "Código del Artículo",
+    "prices": "Precios del Artículo"
   },
   "_item": {
-    "variants": "Variantes del artículo",
-    "addVariant": "Agregar variante del artículo",
-    "enableForVariants": "Habilitar artículo para variantes"
+    "base": "Artículo",
+    "variants": "Variantes del Artículo",
+    "addVariant": "Agregar Variante del Artículo",
+    "enableForVariants": "Habilitar Artículo para Variantes"
   },
 
-  "item-prices": "Precios de los artículos",
+  "item-prices": "Precios del Artículo",
   "itemPrice": {
-    "s": "Precio del artículo",
-    "p": "Precios del artículo",
-    "info": "Información del precio del artículo"
+    "s": "Precio del Artículo",
+    "p": "Precios del Artículo",
+    "info": "Información del Precio del Artículo"
   },
   "priceList": {
-    "info": "Información de la lista de precios"
+    "info": "Información de la Lista de Precios"
   },
 
   "orders": "Pedidos",
-  "orderInfo": "Información del pedido",
+  "orderInfo": "Información del Pedido",
 
   "table": {
     "new": "Nuevo",
-    "createdAt": "Fecha de creación",
-    "updatedAt": "Última modificación",
-    "deliverdDate": "Fecha de entrega",
+    "createdAt": "Fecha de Creación",
+    "updatedAt": "Última Modificación",
+    "deliverdDate": "Fecha de Entrega",
     "type": "Tipo",
     "ID": "ID",
     "code": "CÓDIGO",
-    "no": "N.º",
-    "attributeValue": "Valor del atributo",
-    "effectiveDate": "Fecha efectiva",
+    "no": "No.",
+    "attributeValue": "Valor del Atributo",
+    "effectiveDate": "Fecha Efectiva",
     "abbreviation": "Abreviatura",
     "ordinal": "Ordinal",
     "cadence": "Cadencia",
     "periods": "Períodos",
-    "addRow": "Agregar fila"
+    "addRow": "Agregar Fila"
   },
   "dialog": {
-    "title": "¿Estás seguro de que deseas proceder con esta acción?",
-    "description": "Por favor confirma si deseas continuar con esta acción."
+    "title": "¿Estás seguro de que deseas continuar con esta acción?",
+    "description": "Por favor confirma si deseas proceder con esta acción."
   },
   "continue": "Continuar",
   "cancel": "Cancelar",

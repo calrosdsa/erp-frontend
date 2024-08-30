@@ -2,16 +2,16 @@ import { useLoaderData, useOutletContext } from "@remix-run/react"
 import { loader } from "./route"
 import { DataTable } from "@/components/custom/table/CustomTable"
 import { itemStockColums } from "@/components/custom/table/columns/stock/item-stock-columns"
-import { useUpsertItemStockLevel } from "./components/add-item-stock-level"
+import { useUpsertItemStockLevel } from "./components/upsert-item-stock-level"
 import { ItemGlobalState } from "~/types/app"
-import useActionTable from "~/util/hooks/useActionTable"
+import useActionRow from "~/util/hooks/useActionTable"
 
 
 export default function ItemStockClient(){
     const {paginationResult} = useLoaderData<typeof loader>()
     const upsertItemStockLevel = useUpsertItemStockLevel()
     const {item} = useOutletContext<ItemGlobalState>()
-    const [meta, stateActions] = useActionTable({
+    const [meta, stateActions] = useActionRow({
         onEdit:indexRow=>{
           if (indexRow != undefined) {
             const itemStock = paginationResult?.results?.find(
@@ -27,14 +27,14 @@ export default function ItemStockClient(){
         <div>
             <DataTable
             data={paginationResult?.results || []}
-            columns={itemStockColums()}
+            columns={itemStockColums({includeWarehouse:true})}
             hiddenColumns={{
                 warehouseCode:false
             }}
             metaActions={{
                 meta:{
                     addNew:()=>{
-                        upsertItemStockLevel.onOpenDialog(true,item)
+                        upsertItemStockLevel.onOpenDialog({open:true,item:item})
                     }
                 }
             }}

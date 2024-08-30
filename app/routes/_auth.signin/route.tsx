@@ -25,7 +25,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
   if (res.response.ok && res.data != undefined) {
     session.set("access_token", res.data.access_token);
-    if (res.data.user.Roles.length == 1) {
+    session.set("locale", "en");
+    if(res.data.user.Companies && res.data.user.Companies.length > 0){
+      session.set("companyUuid", res.data.user.Companies[0]?.Uuid || "");
+    }
+      if (res.data.user.Roles.length == 1) {
       session.set("role", res.data.user.Roles[0]?.Code as string);
     }
     return redirect("/home", {

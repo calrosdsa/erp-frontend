@@ -16,13 +16,13 @@ import { useMediaQuery } from "usehooks-ts";
 import ResponsiveSidebar from "@/components/layout/nav/responsive-sidebar";
 import { routes } from "~/util/route";
 import { useTranslation } from "react-i18next";
+import DetailLayout from "@/components/layout/detail-layout";
 
 export default function SettingClient() {
-    const isDesktop = useMediaQuery("(min-width: 768px)")
     const r = routes 
     const {t} = useTranslation("common")
     const globalState = useOutletContext<GlobalState>()
-    const sidebarNavItems = [
+    const navItems = [
       {
         title: t("profile"),
         href: r.profile,
@@ -34,16 +34,12 @@ export default function SettingClient() {
     ];
   return (
     <>
-      <div className={`h-full p-2 ${!isDesktop ? "flex flex-col":"flex"}`}>
-      <ResponsiveSidebar navItems={sidebarNavItems}/>
-      <Separator orientation="vertical" className="h-auto"/>
-
-      <div className="px-4 py-2 w-full">
+      <DetailLayout 
+      navItems={navItems}>
       <Outlet
       context={globalState}
       />
-      </div>
-      </div>
+      </DetailLayout>
     </>
   );
 }

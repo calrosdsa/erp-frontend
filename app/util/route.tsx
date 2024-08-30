@@ -1,6 +1,9 @@
 
 class Routes  {
     base = "/home"
+
+    companies = this.base + "/companies"
+
     selling = this.base + "/selling"
     sellingStock = this.selling + "/stock"
     priceList = this.sellingStock + "/price-list"
@@ -9,9 +12,10 @@ class Routes  {
     taxes =  this.accounting + "/taxes"
 
     stock = this.base + "/stock"
-    item = this.stock + "/items"
+    items = this.stock + "/items"
+    itemPrices = this.stock + "/item-prices"
     itemGroups = this.stock + "/item-groups"
-    itemAttribute = this.stock + "/item-attributes"
+    itemAttributes = this.stock + "/item-attributes"
     warehouses =  this.stock + "/warehouses"
 
     purchases = this.base + "/purchases"
@@ -32,30 +36,36 @@ class Routes  {
         return `${this.accounting}/taxes/${encodeURIComponent(id)}`
     }
 
-    createItemAttributeRoute= `${this.itemAttribute}/create`
+    createItemAttributeRoute= `${this.itemAttributes}/create`
 
     toItemAttributeDetail(id:string):string {
-        return `${this.itemAttribute}/${encodeURIComponent(id)}`
+        return `${this.itemAttributes}/${encodeURIComponent(id)}`
     }
 
     //STOCK
     toCreateItem():string {
-        return this.item + "/create_item"
+        return this.items + "/create_item"
+    }
+    toItem(id:string):string {
+        return `${this.items}/${encodeURIComponent(id)}`
     }
     toItemDetail(id:string):string{
-        return `${this.item}/${encodeURIComponent(id)}`
+        return `${this.items}/${encodeURIComponent(id)}/item-prices`
     }
     toItemDetailPrices(id:string):string {
-        return `${this.item}/${encodeURIComponent(id)}/item-prices`
+        return `${this.items}/${encodeURIComponent(id)}/item-prices`
     }
     toItemDetailVariants(id:string):string {
-        return `${this.item}/${encodeURIComponent(id)}/variants`
+        return `${this.items}/${encodeURIComponent(id)}/variants`
     }
     toItemDetailStock(id:string):string {
-        return `${this.item}/${encodeURIComponent(id)}/stock`
+        return `${this.items}/${encodeURIComponent(id)}/stock`
     }
-    toDetailWarehouse(id:string):string{
-        return `${this.warehouses}/${encodeURIComponent(id)}`
+    toWarehouseInfo(id:string):string{
+        return `${this.warehouses}/${encodeURIComponent(id)}/info`
+    }
+    toWarehouseItems(id:string):string{
+        return `${this.warehouses}/${encodeURIComponent(id)}/items`
     }
 
     //Item group

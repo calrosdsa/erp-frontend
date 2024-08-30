@@ -3,8 +3,8 @@ import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemPriceColumns } from "@/components/custom/table/columns/stock/itemPriceColumns";
-import useActionTable from "~/util/hooks/useActionTable";
-import AddItemPrice from "./components/AddItemPrice";
+import useActionRow from "~/util/hooks/useActionTable";
+import AddItemPrice, { useAddItemPrice } from "../home.stock.item-prices_/components/add-item-price";
 import { components } from "~/sdk";
 import { ItemGlobalState } from "~/types/app";
 import { loader } from "./route";
@@ -13,17 +13,18 @@ export default function ItemDetailPricesClient() {
   const {item} = useOutletContext<ItemGlobalState>()
   const { t } = useTranslation("common");
   const { itemPrices } = useLoaderData<typeof loader>();
-  const [meta,state] = useActionTable({})
+  const addItemPrice = useAddItemPrice()
+  // const [meta,state] = useActionRow({})
 
   return (
     <>
-    {state.openDialog && 
+    {/* {state.openDialog && 
     <AddItemPrice
     open={state.openDialog}
     onOpenChange={(e)=>state.setOpenDialog(e)}
     item={item}
     />
-    }
+    } */}
       <div className=" col-span-full">
         <Typography fontSize={title}>{t("item.prices")}</Typography>
       </div>
@@ -36,9 +37,16 @@ export default function ItemDetailPricesClient() {
           hiddenColumns={{
             Currency: false,
           }}
-          metaOptions={{
-            meta:meta
+          metaActions={{
+            meta:{
+              addNew:()=>{
+                addItemPrice.onOpenDialog({item:item})
+              }
+            }
           }}
+          // metaOptions={{
+          //   meta:meta
+          // }}
         />
       </div>
     </>

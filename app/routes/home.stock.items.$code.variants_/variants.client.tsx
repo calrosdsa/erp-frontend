@@ -1,6 +1,6 @@
 import Typography, { title } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
-import { Await, useActionData, useFetcher, useLoaderData, useOutletContext, useSubmit } from "@remix-run/react";
+import { Await, useActionData, useFetcher, useLoaderData, useOutletContext, useParams, useSubmit } from "@remix-run/react";
 import { components } from "~/sdk";
 import { ItemType } from "~/types/services/item";
 import { Button } from "@/components/ui/button";
@@ -12,10 +12,11 @@ import { z } from "zod";
 import FallBack from "@/components/layout/Fallback";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemVariantColumns } from "@/components/custom/table/columns/stock/item-variant-columns";
-import useActionTable from "~/util/hooks/useActionTable";
-import AddItemVariant from "./components/AddItemVariant";
+import useActionRow from "~/util/hooks/useActionTable";
+import AddItemVariant, { useCreateItemVariant } from "./components/create-item-variant";
 import { action, loader } from "./route";
 import { ItemGlobalState } from "~/types/app";
+import { routes } from "~/util/route";
 
 export default function ItemVariantsClient(){
     const {itemVariants} = useLoaderData<typeof loader>()
@@ -23,10 +24,10 @@ export default function ItemVariantsClient(){
     const fetcher = useFetcher<typeof action>()
     const [enableVariantsConfirmation,setEnableVariantsConfirmation] =useState(false)
     const {toast} = useToast()
-    const [meta,state] = useActionTable({})
-    const {openDialog,setOpenDialog} = state
+    const createItemVariant = useCreateItemVariant()
+    const params = useParams()
     const {item} = useOutletContext<ItemGlobalState>()
-
+    const r = routes
 //   const {  } = useLoaderData<typeof loader>();
 
     useEffect(()=>{
@@ -44,13 +45,6 @@ export default function ItemVariantsClient(){
     },[fetcher.data])
     return (
         <>
-        {openDialog &&
-        <AddItemVariant
-        open={openDialog}
-        onOpenChange={(e)=>setOpenDialog(e)}
-        item={item}
-        />
-        }
         {enableVariantsConfirmation && 
         <CustomAlertDialog
         open={enableVariantsConfirmation}
@@ -68,7 +62,8 @@ export default function ItemVariantsClient(){
                 item:newItem
             },{
                 method:"post",
-                encType:"application/json"
+                action:r.toItem(params.code || ""),
+                encType:"application/json",
             })
         }}
         loading={fetcher.state == "submitting"}
@@ -96,12 +91,16 @@ export default function ItemVariantsClient(){
               const vData =  itemVariants.data as components["schemas"]["PaginationResponsePaginationResultListItemVariantBody"]
               return (
                   <div>
-                    {/* {JSON.stringify(vData.pagination_result.results)} */}
+                    {/* {JSON.stringify(vData)} */}
                     <DataTable
                     columns={itemVariantColumns()}
                     data={vData.pagination_result.results || []}
-                    metaOptions={{
-                        meta:meta
+                    metaActions={{
+                        meta:{
+                            addNew:()=>{
+                                createItemVariant.openDialog({item})
+                            }
+                        }
                     }}
                     />
                     {/* {JSON.stringify(itemVariants)}     */}

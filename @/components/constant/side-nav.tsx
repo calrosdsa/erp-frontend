@@ -29,7 +29,7 @@ export const NavItems = ({
   let navItems: NavItem[] = [];
   const r = routes
   const companies = {
-    title: t("company.companies"),
+    title: t("_company.companies"),
     icon: Building2Icon,
     href: "/home/companies",
     // color: "text-sky-500",

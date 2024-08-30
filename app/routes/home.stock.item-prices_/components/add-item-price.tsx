@@ -20,6 +20,9 @@ import { action } from "../../home.stock.items.$code/route";
 import { pluginObjectSchema } from "~/util/data/schemas/plugin/plugin-schema";
 import { useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax";
 import { useCreatePriceList } from "~/routes/home.selling_.stock_.price-list/components/add-price-list";
+import { create } from "zustand";
+import { routes } from "~/util/route";
+import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 
 export default function AddItemPrice({
   open,
@@ -28,14 +31,19 @@ export default function AddItemPrice({
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  item: components["schemas"]["Item"];
+  item: components["schemas"]["Item"] | undefined;
 }) {
   const { t } = useTranslation("common");
   const state = useOutletContext<GlobalState>();
   const fetcher = useFetcher<typeof action>();
-  const createTax = useCreateTax()
-  const createPriceList = useCreatePriceList()
-  const fetcherDebounceTaxes = useDebounceFetcher<{ result: components["schemas"]["Tax"][] }>();
+  const createTax = useCreateTax();
+  const createPriceList = useCreatePriceList();
+  const itemsDebounceFetcher = useDebounceFetcher<{
+    items: components["schemas"]["Item"][];
+  }>();
+  const fetcherDebounceTaxes = useDebounceFetcher<{
+    result: components["schemas"]["Tax"][];
+  }>();
   const fetcherDebouncePriceList = useDebounceFetcher<
     | {
         pagination_result: {
@@ -48,8 +56,8 @@ export default function AddItemPrice({
   const [selectedPriceList, setSelectedPriceList] = useState<
     components["schemas"]["ItemPriceList"] | null
   >(null);
-  const [selectedTax, setSelectedTax] =
-    useState<components["schemas"]["Tax"]>();
+  const r = routes;
+
   const [selectedPlugins, setSelectedPlugins] = useState<
     components["schemas"]["CompanyPlugins"][]
   >([]);
@@ -82,7 +90,7 @@ export default function AddItemPrice({
         className="create-grid "
         defaultValues={
           {
-            itemId: item.ID,
+            itemId: item?.ID,
           } as z.infer<typeof itemPriceFormSchema>
         }
         formItemsData={[
@@ -102,16 +110,17 @@ export default function AddItemPrice({
         fetcher={fetcher}
         onSubmit={(values: z.infer<typeof itemPriceFormSchema>) => {
           console.log("ITEM", values);
-          const plugins:z.infer<typeof pluginObjectSchema>[] = selectedPlugins.map(item=>{
-            return {
-              plugin:item.Plugin,
-              companyId:item.CompanyID
-            }
-          })
-          const body:z.infer<typeof itemPriceFormSchema> = {
+          const plugins: z.infer<typeof pluginObjectSchema>[] =
+            selectedPlugins.map((item) => {
+              return {
+                plugin: item.Plugin,
+                companyId: item.CompanyID,
+              };
+            });
+          const body: z.infer<typeof itemPriceFormSchema> = {
             ...values,
-            plugins:plugins,
-          }
+            plugins: plugins,
+          };
           fetcher.submit(
             {
               action: "add-item-price",
@@ -119,6 +128,7 @@ export default function AddItemPrice({
             },
             {
               method: "POST",
+              action: r.itemPrices,
               encType: "application/json",
             }
           );
@@ -126,26 +136,65 @@ export default function AddItemPrice({
         renderCustomInputs={(form) => {
           return (
             <>
+              {item == undefined &&
+                <FormAutocomplete
+                  form={form}
+                  data={itemsDebounceFetcher.data?.items || []}
+                  label={t("items")}
+                  value={"Name"}
+                  nameK={"Name"}
+                  // addNew={()=>{
+                  //   createTax.onOpenChange(true)
+                  // }}
+                  onSelect={(v) => {
+                    // setSelectedTax(v);
+                    form.setValue("itemId", v.ID);
+                  }}
+                  onValueChange={(e) => {
+                    itemsDebounceFetcher.submit(
+                      { query: e, action: "get" },
+                      {
+                        debounceTimeout: DEFAULT_DEBOUNCE_TIME,
+                        method: "POST",
+                        action: r.items,
+                        encType: "application/json",
+                      }
+                    );
+                  }}
+                  name="itemName"
+                  onOpen={() => {
+                    itemsDebounceFetcher.submit(
+                      { query: "", action: "get" },
+                      {
+                        method: "POST",
+                        action: r.items,
+                        encType: "application/json",
+                      }
+                    );
+                  }}
+                />
+              }
+
               <FormAutocomplete
                 form={form}
                 data={fetcherDebounceTaxes.data?.result || []}
                 label={t("taxes")}
                 value={"Name"}
                 nameK={"Name"}
-                addNew={()=>{
-                  createTax.onOpenChange(true)
+                addNew={() => {
+                  createTax.onOpenChange(true);
                 }}
                 onSelect={(v) => {
-                  setSelectedTax(v);
+                  // setSelectedTax(v);
                   form.setValue("taxId", v.ID);
                 }}
                 onValueChange={(e) => {
                   fetcherDebounceTaxes.submit(
                     { query: e, action: "get" },
                     {
-                      debounceTimeout: 600,
+                      debounceTimeout: DEFAULT_DEBOUNCE_TIME,
                       method: "POST",
-                      action: `/home/accounting/taxes`,
+                      action: r.taxes,
                       encType: "application/json",
                     }
                   );
@@ -156,7 +205,7 @@ export default function AddItemPrice({
                     { query: "", action: "get" },
                     {
                       method: "POST",
-                      action: `/home/accounting/taxes`,
+                      action: r.taxes,
                       encType: "application/json",
                     }
                   );
@@ -205,15 +254,15 @@ export default function AddItemPrice({
                   fetcherDebouncePriceList.submit(
                     { query: e, action: "get" },
                     {
-                      debounceTimeout: 600,
+                      debounceTimeout: DEFAULT_DEBOUNCE_TIME,
                       method: "POST",
-                      action: `/home/selling/stock/price-list`,
+                      action: r.priceList,
                       encType: "application/json",
                     }
                   );
                 }}
-                addNew={()=>{
-                  createPriceList.onOpenChange(true)
+                addNew={() => {
+                  createPriceList.onOpenChange(true);
                 }}
                 name="priceListName"
                 onOpen={() => {
@@ -221,7 +270,7 @@ export default function AddItemPrice({
                     { query: "", action: "get" },
                     {
                       method: "POST",
-                      action: `/home/selling/stock/price-list`,
+                      action: r.priceList,
                       encType: "application/json",
                     }
                   );
@@ -249,3 +298,16 @@ export default function AddItemPrice({
     </DrawerLayout>
   );
 }
+
+interface AddItemPriceStore {
+  item: components["schemas"]["Item"] | undefined;
+  open: boolean;
+  onOpenChange: (e: boolean) => void;
+  onOpenDialog: (opts: { item?: components["schemas"]["Item"] }) => void;
+}
+export const useAddItemPrice = create<AddItemPriceStore>((set) => ({
+  item: undefined,
+  open: false,
+  onOpenChange: (e: boolean) => set((state) => ({ open: e })),
+  onOpenDialog: (opts) => set((state) => ({ item: opts.item, open: true })),
+}));
