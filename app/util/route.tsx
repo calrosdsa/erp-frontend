@@ -1,5 +1,6 @@
 
 class Routes  {
+    api = "/api"
     base = "/home"
 
     companies = this.base + "/companies"

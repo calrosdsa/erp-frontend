@@ -5,19 +5,20 @@ import { User as UserIcon } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { UserData } from "~/types/app"
 import { fullName } from "~/util/convertor/convertor"
+import { components } from "~/sdk"
 
 interface UserAvatarProps extends AvatarProps {
-    user: UserData
+    user: components["schemas"]["Profile"]
 }
 
 export function UserAvatar({ user, ...props }: UserAvatarProps) {
     return (
         <Avatar {...props}>
-            {user.Image != undefined ? (
+            {user.Avatar != undefined ? (
                 <AvatarImage alt="Picture" src={""} />
             ) : (
                 <AvatarFallback>
-                    <span className="sr-only">{fullName(user.FirstName,user.LastName)}</span>
+                    <span className="sr-only">{fullName(user.GivenName,user.FamilyName)}</span>
                     <UserIcon className="h-4 w-4" />
                 </AvatarFallback>
             )}

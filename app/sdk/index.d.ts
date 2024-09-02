@@ -38,6 +38,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/account/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get user sessions */
+        get: operations["get-sessions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/account/sign-in": {
         parameters: {
             query?: never;
@@ -811,20 +828,6 @@ export interface components {
             /** Format: date-time */
             UpdatedAt: string;
         };
-        Administrator: {
-            /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            EmailAddress: string;
-            FirstName: string;
-            /** Format: int64 */
-            ID: number;
-            LastName: string;
-            /** Format: date-time */
-            UpdatedAt: string;
-            /** Format: int64 */
-            UserID: number;
-        };
         Amount: {
             /** Format: int64 */
             amount: number;
@@ -1127,6 +1130,14 @@ export interface components {
              */
             readonly $schema?: string;
             result: components["schemas"]["ItemPriceList"];
+        };
+        EntityResponseListUserRelationBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            result: components["schemas"]["UserRelation"][];
         };
         EntityResponseResponseSalesOrderDetailBody: {
             /**
@@ -1672,6 +1683,30 @@ export interface components {
             effective_at: string;
             type: string;
         };
+        Profile: {
+            Avatar: string | null;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            EmailAddress: string;
+            FamilyName: string;
+            GivenName: string;
+            /** Format: int64 */
+            ID: number;
+            PhoneNumber: string;
+            ProfileKeyValue: components["schemas"]["ProfileKeyValue"][];
+            /** Format: date-time */
+            UpdatedAt: string;
+            Uuid: string;
+        };
+        ProfileKeyValue: {
+            /** Format: int64 */
+            ID?: number;
+            /** Format: int64 */
+            baseId?: number;
+            key: string;
+            value: string;
+        };
         RequestSubscriptionCancelBody: {
             /**
              * Format: uri
@@ -1820,6 +1855,7 @@ export interface components {
             /** @description Access token of the user */
             access_token: string;
             user: components["schemas"]["User"];
+            user_relations: components["schemas"]["UserRelation"][];
         };
         SquareCatalogResponseBody: {
             /**
@@ -2037,9 +2073,6 @@ export interface components {
             entity: components["schemas"]["ItemDto"];
         };
         User: {
-            Administrator: components["schemas"]["Administrator"];
-            Clients: components["schemas"]["Client"][];
-            Companies: components["schemas"]["Company"][];
             /** Format: date-time */
             CreatedAt: string;
             DeletedAt?: components["schemas"]["DeletedAt"];
@@ -2047,9 +2080,27 @@ export interface components {
             ID: number;
             Identifier: string;
             LastLogin: components["schemas"]["NullTime"];
-            Roles: components["schemas"]["Role"][];
             /** Format: date-time */
             UpdatedAt: string;
+            UserRelation: components["schemas"]["UserRelation"];
+            Uuid: string;
+        };
+        UserRelation: {
+            Company: components["schemas"]["Company"];
+            /** Format: int64 */
+            CompanyID: number;
+            /** Format: date-time */
+            CreatedAt: string;
+            DeletedAt?: components["schemas"]["DeletedAt"];
+            Profile: components["schemas"]["Profile"];
+            /** Format: int64 */
+            ProfileID: number;
+            Role: components["schemas"]["Role"];
+            /** Format: int64 */
+            RoleID: number;
+            User: components["schemas"]["User"];
+            /** Format: int64 */
+            UserID: number;
             Uuid: string;
         };
         WareHouse: {
@@ -2151,6 +2202,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-sessions": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListUserRelationBody"];
                 };
             };
             /** @description Error */

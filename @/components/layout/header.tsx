@@ -39,11 +39,10 @@ export default function Header({ data,openSessionDefaults }: {
         </div>
 
         <div className="flex items-center gap-2">
-          {data.userData != undefined && <UserNav
-           user={data.userData} 
+          {data.profile != undefined && <UserNav
+           user={data.profile} 
            openSessionDefaults={openSessionDefaults}
-           />}
-         
+           />}         
           <ThemeToggle />
           {/* <Button size="sm"
                             onClick={() => {

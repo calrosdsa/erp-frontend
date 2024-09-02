@@ -8,6 +8,7 @@ export type SessionData = {
   companyUuid:string
   role:string
   userSessionUuid:string
+  sessionUuid:string
 };
 
 type SessionFlashData = {

@@ -26,11 +26,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (res.response.ok && res.data != undefined) {
     session.set("access_token", res.data.access_token);
     session.set("locale", "en");
-    if(res.data.user.Companies && res.data.user.Companies.length > 0){
-      session.set("companyUuid", res.data.user.Companies[0]?.Uuid || "");
-    }
-      if (res.data.user.Roles.length == 1) {
-      session.set("role", res.data.user.Roles[0]?.Code as string);
+    if(res.data.user.UserRelation){
+      session.set("companyUuid", res.data.user.UserRelation.Company.Uuid || "");
+      session.set("role", res.data.user.UserRelation.Role.Code as string);
+      session.set("sessionUuid", res.data.user.UserRelation.Uuid)
     }
     return redirect("/home", {
       headers: {

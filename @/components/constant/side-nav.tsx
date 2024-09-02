@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   SettingsIcon,
   UserIcon,
+  UsersIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
@@ -88,6 +89,16 @@ export const NavItems = ({
       },
     ],
   };
+
+  const users: NavItem = {
+    title: t("users"),
+    icon: UsersIcon,
+    href: "/home/users",
+    isChildren: true,
+    children: [],
+  };
+
+
   const plugins: NavItem = {
     title: t("plugins"),
     icon: BlocksIcon,
@@ -132,6 +143,7 @@ export const NavItems = ({
       navItems.push(accounting)
       navItems.push(selling);
       navItems.push(stock);
+      navItems.push(users)
       navItems.push(plugins);
       break;
     }
@@ -143,6 +155,7 @@ export const NavItems = ({
   }
 
   navItems.push(account)
+
 
 
 

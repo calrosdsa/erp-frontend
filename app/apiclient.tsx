@@ -18,6 +18,7 @@ const authMiddl = (appRequest: Request) => {
       const session = await getSession(appRequest.headers.get("Cookie"));
       const bearerToken = session.get("access_token") as string;
       const activeCompany = session.get("companyUuid") as string;
+      const sessionUuid = session.get("sessionUuid") as string;      
       const locale = session.get("locale") as string;
       const userSessionUuid = session.get("userSessionUuid") as string;
       const role = session.get("role");
@@ -35,6 +36,7 @@ const authMiddl = (appRequest: Request) => {
       request.headers.set("Authorization", `Bearer ${bearerToken}`);
       request.headers.set("Active-Company", activeCompany);
       request.headers.set("Accept-Language", locale);
+      request.headers.set("Session-Uuid", sessionUuid);
       
       request.headers.set("Session", appRequest.headers.get("Cookie") || "");
 

@@ -2,6 +2,8 @@ import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { commitSession, getSession } from "~/sessions";
 import { sessionDefaultsFormSchema } from "../home/components/SessionDefaults";
 import { z } from "zod";
+import apiClient from "~/apiclient";
+import { components } from "~/sdk";
 
 type ApiAction = {
   action:string
@@ -9,9 +11,16 @@ type ApiAction = {
   sessionDefault:z.infer<typeof sessionDefaultsFormSchema>
 }
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const client = apiClient({request})
   const data:ApiAction = await request.json();
+  let sessions:components["schemas"]["UserRelation"][]=[]
   console.log(data)
   switch (data.action) {
+    case "get-sessions":{
+      const res  =await client.GET("/account/sessions")
+      sessions = res.data?.result || []
+      break;
+    }
     case "update-session-defaults":
       const session = await getSession(request.headers.get("Cookie"));
       console.log(
@@ -19,14 +28,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         data.sessionDefault,
       );
       session.set("locale", data.sessionDefault.locale || "");
-        session.set("companyUuid", data.sessionDefault.companyUuid || "");
+        session.set("sessionUuid", data.sessionDefault.sessionUuid || "");
       return redirect(data.pathName, {
         headers: {
           "Set-Cookie": await commitSession(session),
         },
       });
   }
-  return json({});
+  return json({
+    sessions
+  });
 };
 
 // export const action = async({request}:ActionFunctionArgs) =>{

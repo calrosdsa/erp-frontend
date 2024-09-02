@@ -7,13 +7,21 @@ import {
   LoaderFunctionArgs,
   redirect,
 } from "@remix-run/node";
-import { commitSession, destroySession, getSession, SessionData } from "~/sessions";
+import {
+  commitSession,
+  destroySession,
+  getSession,
+  SessionData,
+} from "~/sessions";
 import apiClient from "~/apiclient";
 import { GlobalState, UserData } from "~/types/app";
 import { components } from "~/sdk";
 import { ClientOnly } from "remix-utils/client-only";
 import { Role } from "~/types/enums";
-import { administratorToUserData, clientToUserData } from "~/util/convertor/entityToUserData";
+import {
+  administratorToUserData,
+  clientToUserData,
+} from "~/util/convertor/entityToUserData";
 import FallBack from "@/components/layout/Fallback";
 
 let isHydrating = true;
@@ -22,7 +30,7 @@ type HomeActions = {
   action: string;
 };
 
-export const action = async ({ request,context }: ActionFunctionArgs) => {
+export const action = async ({ request, context }: ActionFunctionArgs) => {
   const data = await request.formData();
   switch (data.get("action")) {
     case "signout":
@@ -37,79 +45,32 @@ export const action = async ({ request,context }: ActionFunctionArgs) => {
   }
 };
 
-export const loader = async ({ request,context }: LoaderFunctionArgs) => {
-        console.log("API URL CONTEXT",context)
-  const session = await getSession(request.headers.get("Cookie"));  
+export const loader = async ({ request, context }: LoaderFunctionArgs) => {
+  console.log("API URL CONTEXT", context);
+  const session = await getSession(request.headers.get("Cookie"));
   if (!session.has("access_token")) {
     // Redirect to the home page if they are already signed in.
     return redirect("/signin");
   }
-
-  const companyUuid = session.get("companyUuid");
-  const role = session.get("role");
-
-  // if (!session.has("companyID")) {
-  //   console.log(request.url);
-  //   if (!request.url.includes("settings")) {
-  //     return redirect("/home/settings?action=session");
-  //   }
-  // }
-
-  let activeCompany: components["schemas"]["Company"] | undefined = undefined;
-  let userData: UserData | undefined = undefined;
   const res = await apiClient({ request }).GET("/account");
-  console.log(res.error,res.data?.user.Roles)
   const sessionData = session.data as SessionData;
-  if (companyUuid != undefined && res.data != undefined) {
-    activeCompany = res.data.user.Companies.find(
-      (item) => item.Uuid == companyUuid
-    );
-  }
-  // nextval('clients_id_seq'::regclass)
-
-  if (res.data != undefined) {
-    if (role != undefined) {
-      switch (role) {
-        case Role.ROLE_CLIENT:{
-          if (res.data?.user.Clients.length > 0) {
-            userData = clientToUserData(res.data?.user.Clients[0]);
-            const currenCompany= res.data.user.Companies.find(item =>item.ID == userData?.CompanyID)
-            if(currenCompany != undefined){
-              activeCompany = currenCompany
-              console.log("setting company uuid",activeCompany.Uuid)
-              session.set("companyUuid",activeCompany.Uuid)
-              if(userData != undefined){
-                session.set("userSessionUuid",userData.Uuid)
-              }
-
-              
-              // console.log("CURRENCT COMPANY",activeCompany)
-            }
-          }
-          // session.set("companyUuid",)
-          break
-        }
-        case Role.ROLE_ADMIN:{
-          userData = administratorToUserData(res.data.user.Administrator)
-          break 
-        }
-      }
-    }
-  }
-  return json({
-    data: res.data,
-    session: sessionData,
-    activeCompany: activeCompany,
-    userData:userData
-  },{
-    headers: {
-      "Set-Cookie": await commitSession(session),
+  console.log(res.data?.user.UserRelation.Profile)
+  return json(
+    {
+      data: res.data,
+      session: sessionData,
+      activeCompany: res.data?.user.UserRelation.Company,
     },
-  });
+    {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    }
+  );
 };
 
 export default function Home() {
-  const { data, session, activeCompany,userData } = useLoaderData<typeof loader>();
+  const { data, session, activeCompany } = useLoaderData<typeof loader>();
 
   return (
     <ClientOnly fallback={<FallBack />}>
@@ -122,7 +83,8 @@ export default function Home() {
                 appConfig: data?.appConfig,
                 session: session,
                 activeCompany: activeCompany,
-                userData:userData
+                role: data?.user.UserRelation.Role,
+                profile: data?.user.UserRelation.Profile,
               }}
             >
               <Outlet
@@ -132,7 +94,8 @@ export default function Home() {
                     appConfig: data?.appConfig,
                     session: session,
                     activeCompany: activeCompany,
-                    userData:userData
+                    role: data?.user.UserRelation.Role,
+                    profile: data?.user.UserRelation.Profile,
                   } as GlobalState
                 }
               />

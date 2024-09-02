@@ -67,7 +67,7 @@ export default function HomeLayout({
           open={openSessionDefaults}
           close={() => setOpenSessionDefaults(false)}
           session={globalState.session}
-          companies={globalState.user?.Companies || []}
+          companies={[]}
         />
       )}
 

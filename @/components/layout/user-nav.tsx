@@ -13,9 +13,10 @@ import { UserData } from "~/types/app";
 import { Form, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { routes } from "~/util/route";
+import { components } from "~/sdk";
 
 type Props = {
-    user: UserData;
+    user: components["schemas"]["Profile"];
     openSessionDefaults: () => void;
 };
 
@@ -35,10 +36,10 @@ export function UserNav({ user,openSessionDefaults }: Props) {
                     <Link  className="flex items-center justify-start gap-4 p-2 cursor-pointer" to={r.profile}>
 
                     <div className="flex flex-col space-y-1 leading-none">
-                        {user.FirstName && <p className="font-medium">{user.FirstName}</p>}
-                        {user.Email && (
+                        {user.GivenName && <p className="font-medium">{user.GivenName}</p>}
+                        {user.FamilyName && (
                             <p className="w-[200px] truncate text-sm text-zinc-700">
-                                {user.Email}
+                                {user.FamilyName}
                             </p>
                         )}
                     </div>

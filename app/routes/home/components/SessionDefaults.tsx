@@ -7,19 +7,23 @@ import {
   FormItem,
   FormLabel,
   Form,
+  FormMessage,
 } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFetcher, useLocation, useRevalidator } from "@remix-run/react";
 import { FormEvent, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { action } from "~/routes/api/route";
 import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
 import { languages } from "~/util/data/languages-data";
+import { routes } from "~/util/route";
 
 export const sessionDefaultsFormSchema = z.object({
-  companyUuid: z.string().optional(),
+  sessionUuid: z.string().optional(),
   locale: z.string().optional(),
 });
 
@@ -32,12 +36,13 @@ export const SessionDefault = ({
   close: () => void;
 }) => {
   const { t } = useTranslation("common");
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
   const location = useLocation()
+  const r= routes 
   const form = useForm<z.infer<typeof sessionDefaultsFormSchema>>({
     resolver: zodResolver(sessionDefaultsFormSchema),
     defaultValues:{
-      companyUuid:session.companyUuid,
+      sessionUuid:session.sessionUuid,
       locale:session.locale
     }
   });
@@ -58,6 +63,16 @@ export const SessionDefault = ({
     );
   };
 
+  useEffect(()=>{
+    fetcher.submit({
+      action:"get-sessions"
+    },{
+      encType:"application/json",
+      method:"post",
+      action:r.api
+    })
+  },[])
+
   return (
     <Form {...form}>
       <fetcher.Form
@@ -67,14 +82,46 @@ export const SessionDefault = ({
         className="grid gap-y-3"
         // onSubmit={onSubmit}
       >
-        <SelectForm
-          name="companyUuid"
-          form={form}
-          label={t("form.companyName")}
-          keyName="Name"
-          keyValue="Uuid"
-          data={companies}
-        />
+        {/* {JSON.stringify(fetcher.data?.sessions)} */}
+        <FormField
+      control={form.control}
+      name={"sessionUuid"}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{t("_company.base")}</FormLabel>
+          <Select
+            onValueChange={(e) => {
+              //   const object = JSON.parse(e)
+             
+              // const item =  data.find(t =>  t[keyValue] == e)
+              // if (onValueChange != undefined && item) {
+              //   onValueChange(item);
+              // }
+              // console.log(e);
+              field.onChange(e);
+            }}
+            defaultValue={field.value}
+          >
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a option" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              {fetcher.data?.sessions.map((option, idx) => {
+                return (
+                  <SelectItem value={option.Uuid} key={idx}>
+                    {option.Company.Name}
+                  </SelectItem>
+                );
+              })}
+            
+            </SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
 
         <SelectForm
           name="locale"
