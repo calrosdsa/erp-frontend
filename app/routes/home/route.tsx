@@ -15,7 +15,7 @@ import {
 } from "~/sessions";
 import apiClient from "~/apiclient";
 import { GlobalState, UserData } from "~/types/app";
-import { components } from "~/sdk";
+import { components } from "index";
 import { ClientOnly } from "remix-utils/client-only";
 import { Role } from "~/types/enums";
 import {
@@ -24,11 +24,6 @@ import {
 } from "~/util/convertor/entityToUserData";
 import FallBack from "@/components/layout/Fallback";
 
-let isHydrating = true;
-
-type HomeActions = {
-  action: string;
-};
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const data = await request.formData();
@@ -54,7 +49,6 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   }
   const res = await apiClient({ request }).GET("/account");
   const sessionData = session.data as SessionData;
-  console.log(res.data?.user.UserRelation.Profile)
   return json(
     {
       data: res.data,

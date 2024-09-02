@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { z } from "zod";
-import { components } from "~/sdk";
+import { components } from "index";
 import { GlobalState } from "~/types/app";
 import { itemPriceFormSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { action } from "../../home.stock.items.$code/route";

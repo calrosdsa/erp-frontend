@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
-import { components } from "~/sdk"
+import { components } from "index"
 import { getSession } from "~/sessions"
 import ProfileClient from "./profile.client"
 import { Role } from "~/types/enums"

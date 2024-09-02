@@ -7,7 +7,7 @@ import { upsertItemAttributeValueSchema } from "./components/upsert-item-attribu
 import { useTranslation } from "react-i18next";
 import { makeZodI18nMap } from "zod-i18n-map";
 import { Order } from "~/types/enums";
-import { components } from "~/sdk";
+import { components } from "index";
 
 type ActionData = {
     action:string

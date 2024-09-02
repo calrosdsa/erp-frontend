@@ -3,7 +3,7 @@ import PriceListsClient from "./price-list.client";
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { components } from "~/sdk";
+import { components } from "index";
 import { createPriceListSchema } from "~/util/data/schemas/stock/price-list-schema";
 
 type PriceListAction = {

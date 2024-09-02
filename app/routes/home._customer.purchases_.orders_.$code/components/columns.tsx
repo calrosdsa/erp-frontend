@@ -3,7 +3,7 @@ import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
+import { components } from "index";
 import { SubscriptionAction } from "~/types/plugin/square/subscription";
 import {
   formatCurrency,

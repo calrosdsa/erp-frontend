@@ -1,4 +1,4 @@
-import { components } from "~/sdk";
+import { components } from "index";
 
 
 export const formatCurrency=(input: number | undefined,currency:string,language:string): string =>{

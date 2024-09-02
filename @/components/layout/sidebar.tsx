@@ -47,7 +47,7 @@ export default function Sidebar({ className,data }: SidebarProps) {
             <SideNav
               className="text-background opacity-0 transition-all duration-300 group-hover:z-50 group-hover:ml-4 group-hover:rounded group-hover:bg-foreground group-hover:p-2
                group-hover:opacity-100 overflow-auto"
-              items={NavItems({session:data.session,appConfig:data.appConfig})}
+              items={NavItems({data})}
             />
           </div>
         </div>

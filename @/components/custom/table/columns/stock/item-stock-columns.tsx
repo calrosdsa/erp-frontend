@@ -3,7 +3,7 @@ import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
+import { components } from "index";
 import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
 import TableCellBoolean from "../../cells/table-cell-chek";
@@ -34,7 +34,7 @@ export const itemStockColums = ({
       cell: ({ ...props }) => <TableCellNavigate
       {...props}
       id="warehouseCode"
-      navigate={(e)=>r.toWarehouseItems(e)}
+      navigate={(name,id)=>r.toWarehouseItems(id)}
       />
     });
   }
@@ -51,9 +51,9 @@ export const itemStockColums = ({
       cell: ({ ...props }) => <TableCellNavigate
       {...props}
       id="itemCode"
-      navigate={(e)=>r.toItemDetailStock(e)}
+      navigate={(name,id)=>r.toItemDetailStock(id)}
       />
-    });
+    }); 
   }
 
   return [

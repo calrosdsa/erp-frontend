@@ -5,7 +5,7 @@ import { User as UserIcon } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { UserData } from "~/types/app"
 import { fullName } from "~/util/convertor/convertor"
-import { components } from "~/sdk"
+import { components } from "index"
 
 interface UserAvatarProps extends AvatarProps {
     user: components["schemas"]["Profile"]

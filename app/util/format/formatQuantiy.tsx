@@ -1,4 +1,4 @@
-import { components } from "~/sdk";
+import { components } from "index";
 
 export const formatQuantity = (quantity:number |undefined,uom:components["schemas"]["UnitOfMeasure"]) =>{
     if (quantity == undefined) return ""

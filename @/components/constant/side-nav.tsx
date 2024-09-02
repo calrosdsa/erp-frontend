@@ -12,47 +12,50 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
+import { components } from "index";
 import { SessionData } from "~/sessions";
 import { NavItem } from "~/types";
-import { Role } from "~/types/enums";
+import { Entity, Role } from "~/types/enums";
 import { title } from "../typography/Typography";
 import { routes } from "~/util/route";
+import { GlobalState } from "~/types/app";
+import { useMemo } from "react";
 
-export const NavItems = ({
-  session,
-  appConfig,
-}: {
-  session: SessionData;
-  appConfig: components["schemas"]["AppConfigStruct"] | undefined;
-}): NavItem[] => {
+export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
   let navItems: NavItem[] = [];
-  const r = routes
+  const r = routes;
+  const { appConfig, user, role } = data;
+  const entities = role?.RoleActions.filter(
+    (item) => item.Action.Name == "view"
+  ).map((item) => item.Action.EntityID);
+
+  console.log("running", entities);
   const companies = {
     title: t("_company.companies"),
     icon: Building2Icon,
     href: "/home/companies",
     // color: "text-sky-500",
   };
-  const accounting:NavItem = {
+
+  const accounting: NavItem = {
     title: t("accounting"),
-    icon:CreditCardIcon,
-    href:r.accounting,
-    isChildren:true,
-    children:[
+    icon: CreditCardIcon,
+    href: r.accounting,
+    isChildren: true,
+    children: [
       {
         title: t("taxes"),
-        href:r.taxes
-      }
-    ]
-  }
+        href: r.taxes,
+      },
+    ],
+  };
 
   const selling: NavItem = {
     title: t("selling"),
     icon: DollarSign,
     href: "/home/selling",
-    isChildren:true,
+    isChildren: true,
     children: [
       {
         title: t("price-list"),
@@ -60,44 +63,60 @@ export const NavItems = ({
       },
     ],
   };
+  let stockChildrens: NavItem[] = [];
+  if (entities?.includes(Entity.ITEM)) {
+    stockChildrens.push({
+      title: t("items"),
+      href: "/home/stock/items",
+    });
+  }
+  if (entities?.includes(Entity.ITEM_PRICE)) {
+    stockChildrens.push({
+      title: t("itemPrice.p"),
+      href: "/home/stock/item-prices",
+    });
+  }
+  if (entities?.includes(Entity.ITEM_GROUP)) {
+    stockChildrens.push({
+      title: t("item-groups"),
+      href: "/home/stock/item-groups",
+    });
+  }
+  if (entities?.includes(Entity.ITEM_ATTRIBUTES)) {
+    stockChildrens.push({
+      title: t("item-attributes"),
+      href: "/home/stock/item-attributes",
+    });
+  }
+  if (entities?.includes(Entity.ITEM_WAREHOUSE)) {
+    stockChildrens.push({
+      title: t("warehouses"),
+      href: r.warehouses,
+    });
+  }
 
-  const stock:NavItem = {
+  const stock: NavItem = {
     title: t("stock"),
     icon: Layers3Icon,
     href: "/home/stock",
     isChildren: true,
-    children: [
-      {
-        title: t("items"),
-        href: "/home/stock/items",
-      },
-      {
-        title: t("itemPrice.p"),
-        href: "/home/stock/item-prices",
-      },
-      {
-        title: t("item-groups"),
-        href: "/home/stock/item-groups",
-      },
-      {
-        title: t("item-attributes"),
-        href: "/home/stock/item-attributes",
-      },
-      {
-        title: t("warehouses"),
-        href: r.warehouses,
-      },
-    ],
+    children: stockChildrens,
   };
 
+  let usersChildren: NavItem[] = [];
+  if (entities?.includes(Entity.ROLE)) {
+    usersChildren.push({
+      title: t("roles"),
+      href: r.roles,
+    });
+  }
   const users: NavItem = {
     title: t("users"),
     icon: UsersIcon,
     href: "/home/users",
     isChildren: true,
-    children: [],
+    children: usersChildren,
   };
-
 
   const plugins: NavItem = {
     title: t("plugins"),
@@ -116,7 +135,7 @@ export const NavItems = ({
     });
   }
 
-  const purchases:NavItem = {
+  const purchases: NavItem = {
     title: t("purchases"),
     href: "/home/purchases/orders",
     icon: CreditCardIcon,
@@ -124,7 +143,7 @@ export const NavItems = ({
     // children: [] as NavItem[],
   };
 
-  const account:NavItem = {
+  const account: NavItem = {
     title: t("settings"),
     href: "/home/settings/profile",
     icon: SettingsIcon,
@@ -137,27 +156,30 @@ export const NavItems = ({
   //   href: "/home/purchases/orders",
   // };
 
-  switch (session.role) {
-    case Role.ROLE_ADMIN: {
-      navItems.push(companies);
-      navItems.push(accounting)
-      navItems.push(selling);
-      navItems.push(stock);
-      navItems.push(users)
-      navItems.push(plugins);
-      break;
-    }
-    case Role.ROLE_CLIENT: {
-      // purchases.children.push(orders);
-      navItems.push(purchases);
-      break;
-    }
+  // switch (session.role) {
+  // case Role.ROLE_ADMIN: {
+  if (entities?.includes(Entity.COMPANY)) {
+    navItems.push(companies);
   }
+  navItems.push(accounting);
+  navItems.push(selling);
+  if (stockChildrens.length > 0) {
+    navItems.push(stock);
+  }
+  if (usersChildren.length > 0) {
+    navItems.push(users);
+  }
+  navItems.push(plugins);
+  // break;
+  // }
+  // case Role.ROLE_CLIENT: {
+  // purchases.children.push(orders);
+  navItems.push(purchases);
+  // break;
+  // }
+  // }
 
-  navItems.push(account)
-
-
-
+  navItems.push(account);
 
   return [
     {

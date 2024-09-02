@@ -4,7 +4,7 @@ import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
 import { addWareHouseSchema } from "~/util/data/schemas/stock/warehouse-schema";
-import { components } from "~/sdk";
+import { components } from "index";
 
 type ActionData = {
     action:string

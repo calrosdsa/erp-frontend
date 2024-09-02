@@ -1,7 +1,7 @@
   import { Link } from "@remix-run/react";
   import { ColumnDef } from "@tanstack/react-table";
   import { useTranslation } from "react-i18next";
-  import { components } from "~/sdk";
+  import { components } from "index";
   import { formatCurrency } from "~/util/format/formatCurrency";
   import { formatLongDate } from "~/util/format/formatDate";
 

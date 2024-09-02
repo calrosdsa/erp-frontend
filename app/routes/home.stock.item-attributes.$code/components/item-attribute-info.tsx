@@ -6,10 +6,10 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { z } from "zod";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemAttributeValuesColumns } from "@/components/custom/table/columns/stock/item-attribute-columns";
-import useActionRow from "~/util/hooks/useActionTable";
+import useActionRow from "~/util/hooks/useActionRow";
 import UpsertItemAttributeValue from "./upsert-item-attribute-value";
 import { useEffect, useState } from "react";
-import { components } from "~/sdk";
+import { components } from "index";
 
 export default function ItemAttributeInfo() {
   const { itemAttribute } = useLoaderData<typeof loader>();

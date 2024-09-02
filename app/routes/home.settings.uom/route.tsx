@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json } from "@remix-run/node"
 import apiClient from "~/apiclient"
-import { components } from "~/sdk"
+import { components } from "index"
 
 
 type ActionUOM = {

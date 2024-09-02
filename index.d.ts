@@ -281,6 +281,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get roles */
+        get: operations["get roles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/role/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get role */
+        get: operations["get role"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/role/entity-actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get entity actions */
+        get: operations["get entity actions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/role/role-definitions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get role definitions */
+        get: operations["get role definitions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/selling/salesorder/client": {
         parameters: {
             query?: never;
@@ -777,6 +845,14 @@ export interface components {
             appConfig: components["schemas"]["AppConfigStruct"];
             user: components["schemas"]["User"];
         };
+        Action: {
+            Entity: components["schemas"]["Entity"];
+            /** Format: int64 */
+            EntityID: number;
+            /** Format: int64 */
+            ID: number;
+            Name: string;
+        };
         AddPluginRequestBody: {
             /**
              * Format: uri
@@ -1075,12 +1151,22 @@ export interface components {
             organizationName: string;
             phoneNumber: components["schemas"]["PhoneNumber"];
         };
+        Entity: {
+            /** Format: int64 */
+            ID: number;
+            Name: string;
+        };
+        EntityActions: {
+            actions: components["schemas"]["Action"][];
+            entity: components["schemas"]["Entity"];
+        };
         EntityResponseClientBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["Client"];
         };
         EntityResponseCompanyBody: {
@@ -1089,6 +1175,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["Company"];
         };
         EntityResponseItemAttributeBody: {
@@ -1097,6 +1184,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["ItemAttribute"];
         };
         EntityResponseItemBody: {
@@ -1105,6 +1193,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["Item"];
         };
         EntityResponseItemGroupBody: {
@@ -1113,6 +1202,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["ItemGroup"];
         };
         EntityResponseItemPriceBody: {
@@ -1121,6 +1211,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["ItemPrice"];
         };
         EntityResponseItemPriceListBody: {
@@ -1129,6 +1220,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["ItemPriceList"];
         };
         EntityResponseListUserRelationBody: {
@@ -1137,6 +1229,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["UserRelation"][];
         };
         EntityResponseResponseSalesOrderDetailBody: {
@@ -1145,6 +1238,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["ResponseSalesOrderDetail"];
         };
         EntityResponseResultEntityItemBody: {
@@ -1153,6 +1247,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["ResultEntityItem"];
         };
         EntityResponseResultEntityItemPriceBody: {
@@ -1161,7 +1256,26 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["ResultEntityItemPrice"];
+        };
+        EntityResponseResultEntityListEntityActionsBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            result: components["schemas"]["ResultEntityListEntityActions"];
+        };
+        EntityResponseResultEntityRoleBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            result: components["schemas"]["ResultEntityRole"];
         };
         EntityResponseTaxBody: {
             /**
@@ -1169,6 +1283,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["Tax"];
         };
         EntityResponseWareHouseBody: {
@@ -1177,6 +1292,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             result: components["schemas"]["WareHouse"];
         };
         ErrorDetail: {
@@ -1425,6 +1541,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListCompany"];
         };
         PaginationResponsePaginationResultListItemAttributeBody: {
@@ -1433,6 +1550,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListItemAttribute"];
         };
         PaginationResponsePaginationResultListItemBody: {
@@ -1441,6 +1559,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListItem"];
         };
         PaginationResponsePaginationResultListItemGroupBody: {
@@ -1449,6 +1568,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListItemGroup"];
         };
         PaginationResponsePaginationResultListItemPriceBody: {
@@ -1457,6 +1577,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListItemPrice"];
         };
         PaginationResponsePaginationResultListItemPriceListBody: {
@@ -1465,6 +1586,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListItemPriceList"];
         };
         PaginationResponsePaginationResultListItemVariantBody: {
@@ -1473,7 +1595,26 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListItemVariant"];
+        };
+        PaginationResponsePaginationResultListRoleActionsBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            pagination_result: components["schemas"]["PaginationResultListRoleActions"];
+        };
+        PaginationResponsePaginationResultListRoleBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            pagination_result: components["schemas"]["PaginationResultListRole"];
         };
         PaginationResponsePaginationResultListSalesOrderBody: {
             /**
@@ -1481,6 +1622,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListSalesOrder"];
         };
         PaginationResponsePaginationResultListStockLevelBody: {
@@ -1489,6 +1631,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListStockLevel"];
         };
         PaginationResponsePaginationResultListTaxBody: {
@@ -1497,6 +1640,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListTax"];
         };
         PaginationResponsePaginationResultListWareHouseBody: {
@@ -1505,6 +1649,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListWareHouse"];
         };
         PaginationResultListCompany: {
@@ -1539,6 +1684,16 @@ export interface components {
         };
         PaginationResultListItemVariant: {
             results: components["schemas"]["ItemVariant"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListRole: {
+            results: components["schemas"]["Role"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListRoleActions: {
+            results: components["schemas"]["RoleActions"][];
             /** Format: int64 */
             total: number;
         };
@@ -1739,6 +1894,12 @@ export interface components {
         ResultEntityItemPrice: {
             entity: components["schemas"]["ItemPrice"];
         };
+        ResultEntityListEntityActions: {
+            entity: components["schemas"]["EntityActions"][];
+        };
+        ResultEntityRole: {
+            entity: components["schemas"]["Role"];
+        };
         RetrieveCatalogRequest: {
             object: components["schemas"]["RetrieveCatalogRequestObjectStruct"];
         };
@@ -1773,15 +1934,25 @@ export interface components {
         };
         Role: {
             Code: string;
+            Company: components["schemas"]["Company"];
+            /** Format: int64 */
+            CompanyID: number;
             /** Format: date-time */
             CreatedAt: string;
             DeletedAt?: components["schemas"]["DeletedAt"];
             Description: string;
             /** Format: int64 */
             ID: number;
+            RoleActions: components["schemas"]["RoleActions"][];
             /** Format: date-time */
             UpdatedAt: string;
-            Users: components["schemas"]["User"][];
+        };
+        RoleActions: {
+            Action: components["schemas"]["Action"];
+            /** Format: int64 */
+            ActionID: number;
+            /** Format: int64 */
+            RoleID: number;
         };
         SalesItemLine: {
             /** Format: date-time */
@@ -2941,6 +3112,168 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get roles": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get role": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityRoleBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get entity actions": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityListEntityActionsBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get role definitions": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleActionsBody"];
                 };
             };
             /** @description Error */

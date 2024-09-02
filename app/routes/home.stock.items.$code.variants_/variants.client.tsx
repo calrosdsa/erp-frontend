@@ -1,7 +1,7 @@
 import Typography, { title } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
 import { Await, useActionData, useFetcher, useLoaderData, useOutletContext, useParams, useSubmit } from "@remix-run/react";
-import { components } from "~/sdk";
+import { components } from "index";
 import { ItemType } from "~/types/services/item";
 import { Button } from "@/components/ui/button";
 import { Suspense, useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import { z } from "zod";
 import FallBack from "@/components/layout/Fallback";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemVariantColumns } from "@/components/custom/table/columns/stock/item-variant-columns";
-import useActionRow from "~/util/hooks/useActionTable";
+import useActionRow from "~/util/hooks/useActionRow";
 import AddItemVariant, { useCreateItemVariant } from "./components/create-item-variant";
 import { action, loader } from "./route";
 import { ItemGlobalState } from "~/types/app";

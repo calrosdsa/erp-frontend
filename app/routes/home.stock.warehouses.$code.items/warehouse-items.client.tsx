@@ -1,7 +1,7 @@
 import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { loader } from "./route";
 import { useUpsertItemStockLevel } from "../home.stock.items.$code.stock_/components/upsert-item-stock-level";
-import useActionRow from "~/util/hooks/useActionTable";
+import useActionRow from "~/util/hooks/useActionRow";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemStockColums } from "@/components/custom/table/columns/stock/item-stock-columns";
 import { WarehouseGlobalState } from "~/types/app";

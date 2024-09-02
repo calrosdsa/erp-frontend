@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import CreateItemClient from "./itemCreate.client";
 import apiClient from "~/apiclient";
-import { components } from "~/sdk";
+import { components } from "index";
 import { routes } from "~/util/route";
 
 

@@ -1,7 +1,7 @@
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import Typography, { title } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
+import { components } from "index";
 
 export default function ItemInfo({
   data,

@@ -5,7 +5,7 @@ import {
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { components } from "~/sdk";
+import { components } from "index";
 import { GlobalState } from "~/types/app";
 import { z } from "zod";
 import { useForm } from "react-hook-form";

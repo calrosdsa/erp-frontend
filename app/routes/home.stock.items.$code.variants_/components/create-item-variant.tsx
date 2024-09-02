@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { z } from "zod";
-import { components } from "~/sdk";
+import { components } from "index";
 import { itemVariantFormSchema } from "~/util/data/schemas/stock/item-variant-schemas";
 import { routes } from "~/util/route";
 import { action } from "../../home.stock.items.$code/route";

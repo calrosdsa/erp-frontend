@@ -6,7 +6,7 @@ import Typography, {
 } from "@/components/typography/Typography";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
+import { components } from "index";
 import { SalesOrderType } from "~/types/enums";
 import {
   SquareSalesOrderResponse,

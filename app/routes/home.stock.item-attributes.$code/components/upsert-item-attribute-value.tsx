@@ -5,7 +5,7 @@ import { useFetcher, useRevalidator } from "@remix-run/react";
 import { useTranslation, withTranslation } from "react-i18next";
 import { z } from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
-import { components } from "~/sdk";
+import { components } from "index";
 import { action } from "../route";
 import { useEffect } from "react";
 

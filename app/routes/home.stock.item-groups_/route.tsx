@@ -4,7 +4,7 @@ import ItemGroupsClient from "./item-groups.client";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { createItemGroupSchema } from "~/util/data/schemas/stock/item-group-schema";
 import { z } from "zod";
-import { components } from "~/sdk";
+import { components } from "index";
 
 type ActionData = {
   action: string;

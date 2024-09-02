@@ -1,201 +1,208 @@
 {
   "greeting": "Hello",
-  "integrations":"Integrations",
+  "integrations": "Integrations",
 
-  "account":"Account",
-  "profile":"Profile",
+  "account": "Account",
+  "profile": "Profile",
 
-  "show":"Show",
-  "hide":"Hide",
+  "show": "Show",
+  "hide": "Hide",
 
   "_company": {
-    "base":"Company",
+    "base": "Company",
     "companies": "Companies"
   },
-  "create":"Create",
-  "info":"Info",
-  "signin":"Sign In",
-  "reset-password":"Reset Password",
-  "_account":{
-    "lastLogin":"Last Login",
-    "updatePassword":"Update Password",
-    "siginIYouA":"Sign in to your account",
-    "siginIYouADesc":"Enter your email and password below to sign in to your account",
-    "forgotPassword":"Forgot your password?",
-    "resetPassowordMsg":"Enter your user account's verified email address and we will send you a password reset link."
+  "create": "Create",
+  "info": "Info",
+  "signin": "Sign In",
+  "reset-password": "Reset Password",
+  "_account": {
+    "lastLogin": "Last Login",
+    "updatePassword": "Update Password",
+    "siginIYouA": "Sign in to your account",
+    "siginIYouADesc": "Enter your email and password below to sign in to your account",
+    "forgotPassword": "Forgot your password?",
+    "resetPassowordMsg": "Enter your user account's verified email address and we will send you a password reset link."
   },
 
   "form": {
-    "name":"Name",
-    "value":"Value",
-    "abbreviation":"Abbreviation",
-    "code":"Code",
+    "name": "Name",
+    "description": "Description",
+    "value": "Value",
+    "abbreviation": "Abbreviation",
+    "code": "Code",
     "familyName": "Last Name",
     "givenName": "First  Name",
     "phoneNumber": "Phone Number",
-    "password":"Password",
-    "newPassword":"New Password",
-    "confirmNewPassword":"Confirm New Password",
+    "password": "Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
     "email": "Email",
     "companyName": "Company Name",
     "clientDetails": "Complete Your Personal Information",
-    "enabled":"Enable",
+    "enabled": "Enable",
     "country": "Country",
-    "countryCode":"Country Code",
-    "item-group": "Item Group",    
-    "submit":"Submit",
-    "save":"Save",
-    "uom":"UOM",
-    "optional":"Optional",
-    "price-list":"Price List",
-    "currency":"Currency",
-    "buying":"Buying",
-    "selling":"Selling",
-    "rate":"Rate",
-    "itemQuantity":"Item Quantity",
-    "totalQuantity":"Total Quantity",
-    "pay":"Pay",
-    "orderTotal":"Order Total",
-    "total":"Total",
-    "tax":"Tax",
-    "totalTax":"Total Taxes",
-    "status":"Status",
-    "startDate":"Start Date",
-    "outOfStockThreshold":"Out of Stock Threshold",
+    "countryCode": "Country Code",
+    "item-group": "Item Group",
+    "submit": "Submit",
+    "save": "Save",
+    "uom": "UOM",
+    "optional": "Optional",
+    "price-list": "Price List",
+    "currency": "Currency",
+    "buying": "Buying",
+    "selling": "Selling",
+    "rate": "Rate",
+    "itemQuantity": "Item Quantity",
+    "totalQuantity": "Total Quantity",
+    "pay": "Pay",
+    "orderTotal": "Order Total",
+    "total": "Total",
+    "tax": "Tax",
+    "totalTax": "Total Taxes",
+    "status": "Status",
+    "startDate": "Start Date",
+    "outOfStockThreshold": "Out of Stock Threshold",
 
-    "orderConfirmation":"Order Confirmation",
-    "siteUrl":"Site Url",
-    "logo":"Logo"
+    "orderConfirmation": "Order Confirmation",
+    "siteUrl": "Site Url",
+    "logo": "Logo"
   },
-  "_selling":{
-    "isBuying":"Is Buying",
-    "isSelling":"Is Selling",
-    "isSellingDesc":"This price list will be used for selling products.",
-    "isBuyingDesc":"This price list will be used for buying products."
+  "_selling": {
+    "isBuying": "Is Buying",
+    "isSelling": "Is Selling",
+    "isSellingDesc": "This price list will be used for selling products.",
+    "isBuyingDesc": "This price list will be used for buying products."
   },
-  "f":{
-    "add-new":"Create new {{o}}",
-    "enable":"Check the box to enable this {{o}}"
+  "f": {
+    "add-new": "Create new {{o}}",
+    "edit":"Edit {{o}}",
+    "enable": "Check the box to enable this {{o}}"
   },
-  "info-item":"Info {{item}}",
+  "info-item": "Info {{item}}",
 
-  "accounting":"Accounting",
-  "taxes":"Taxes",
-  "selling":"Selling",
-  "price-list":"Price List",
-  "_tax":{
-    "base":"Tax"
+  "accounting": "Accounting",
+  "taxes": "Taxes",
+  "selling": "Selling",
+  "price-list": "Price List",
+  "_tax": {
+    "base": "Tax"
   },
 
-  "sidebar":{
-    "sessionDefaults":"Session Defaults"
+  "_role": {
+    "permissions": "Role permissions",
+    "base": "Role"
   },
-  "language":"Language",
+  "entity":"Entity",
+  "action":"Action",
 
-  "addPlugin":"Add Plugin",
-  "applicationId":"Application ID",
-  "accessToken":"Access Token",
-  "locationId":"Location ID",
-  "apiVersion":"Api Version",
 
-  
+  "sidebar": {
+    "sessionDefaults": "Session Defaults"
+  },
+  "language": "Language",
+
+  "addPlugin": "Add Plugin",
+  "applicationId": "Application ID",
+  "accessToken": "Access Token",
+  "locationId": "Location ID",
+  "apiVersion": "Api Version",
+
   "stock": "Stock",
-  "_stock":{
-    "createItemAttribute":"Create Item Attribute",
-    "itemAttributeInfo":"Item Attribute Info",
-    "itemAttributeValues":"Item Attribute Values",
-    "itemAttributeValue":"Item Attribute Value",
-    "itemAttribute":"Item Attribute",
-    "addItemAttributeValue":"Add Item Attribute Value",
-    "addItemPrice":"Add Item Price",
-    "addItemStockLevel":"Add item stock"
+  "_stock": {
+    "createItemAttribute": "Create Item Attribute",
+    "itemAttributeInfo": "Item Attribute Info",
+    "itemAttributeValues": "Item Attribute Values",
+    "itemAttributeValue": "Item Attribute Value",
+    "itemAttribute": "Item Attribute",
+    "addItemAttributeValue": "Add Item Attribute Value",
+    "addItemPrice": "Add Item Price",
+    "addItemStockLevel": "Add item stock"
   },
   "items": "Items",
-  
+
   "item-groups": "Item Groups",
-  "item-attributes":"Item Attributes",
+  "item-attributes": "Item Attributes",
   "warehouses": "Warehouses",
-  "_warehouse":{
-    "base":"Warehouse"
+  "_warehouse": {
+    "base": "Warehouse"
   },
   "home": "Home",
   "companies": "Companies",
-  "plugins":"Plugins",
+  "plugins": "Plugins",
 
-  "create_item":"Add Item",
-  "itemInfo":"Item Information",
+  "create_item": "Add Item",
+  "itemInfo": "Item Information",
 
-  "email":"Email",
-  "square":"Square",
-  "_object":{
-    "objectId":"Object ID",
-    "objectType":"Object Type",
-    "presentAtAllLocations":"Present At All Locations",
-    "subscriptionPlanVariation":"Subscription Plan Variation Id",
-    "phases":"Phases"
+  "email": "Email",
+  "square": "Square",
+  "_object": {
+    "objectId": "Object ID",
+    "objectType": "Object Type",
+    "presentAtAllLocations": "Present At All Locations",
+    "subscriptionPlanVariation": "Subscription Plan Variation Id",
+    "phases": "Phases"
   },
 
-  "settings":"Settings",
+  "settings": "Settings",
 
-  "purchases":"Purchases",
+  "purchases": "Purchases",
 
-
-  "subscription":{
-    "base":"Subscription",
-    "actions":"Subscription Actions",
-    "cancel":"Cancel Subscription"
+  "subscription": {
+    "base": "Subscription",
+    "actions": "Subscription Actions",
+    "cancel": "Cancel Subscription"
   },
-  "item":{
-    "info":"Item Info",
-    "code":"Item Code",
-    "prices":"Item Prices"
+  "item": {
+    "info": "Item Info",
+    "code": "Item Code",
+    "prices": "Item Prices"
   },
-  "_item":{
-    "base":"Item",
-    "variants":"Item Variants",
-    "addVariant":"Add  item variant",
-    "enableForVariants":"Enable item for variants"
-  },
-
-  "item-prices":"Item Prices",
-  "itemPrice":{
-    "s":"Item Price",
-    "p":"Item Prices",
-    "info":"Item Price Info"
-  },
-  "priceList":{
-    "info":"Price list info"
+  "_item": {
+    "base": "Item",
+    "variants": "Item Variants",
+    "addVariant": "Add  item variant",
+    "enableForVariants": "Enable item for variants"
   },
 
-  "orders":"Orders",
-  "orderInfo":"Order Info",
-
-  "table":{
-    "new":"New",
-    "createdAt":"Creation Date",
-    "updatedAt":"Last Modified",
-    "deliverdDate":"Deliverd Date",
-    "type":"Type",
-    "ID":"ID",
-    "code":"CODE",
-    "no":"No.",
-    "attributeValue":"Attribute Value",
-    "effectiveDate":"Effective Date",
-    "abbreviation":"Abbreviation",
-    "ordinal":"Ordinal",
-    "cadence":"Cadence",
-    "periods":"Periods",
-    "addRow":"Add Row"
+  "item-prices": "Item Prices",
+  "itemPrice": {
+    "s": "Item Price",
+    "p": "Item Prices",
+    "info": "Item Price Info"
   },
-  "dialog":{
-    "title":"Are you sure you want to proceed with this action?",
-    "description":"Please confirm if you wish to proceed with this action."
+  "priceList": {
+    "info": "Price list info"
   },
-  "continue":"Continue",
-  "cancel":"Cancel",
 
-  "actions":{
-    "edit":"Edit"
+  "orders": "Orders",
+  "orderInfo": "Order Info",
+
+  "table": {
+    "new": "New",
+    "createdAt": "Creation Date",
+    "updatedAt": "Last Modified",
+    "deliverdDate": "Deliverd Date",
+    "type": "Type",
+    "ID": "ID",
+    "code": "CODE",
+    "no": "No.",
+    "attributeValue": "Attribute Value",
+    "effectiveDate": "Effective Date",
+    "abbreviation": "Abbreviation",
+    "ordinal": "Ordinal",
+    "cadence": "Cadence",
+    "periods": "Periods",
+    "addRow": "Add Row"
+  },
+  "dialog": {
+    "title": "Are you sure you want to proceed with this action?",
+    "description": "Please confirm if you wish to proceed with this action."
+  },
+  "continue": "Continue",
+  "cancel": "Cancel",
+
+  "actions": {
+    "edit": "Edit"
   }
-
 }

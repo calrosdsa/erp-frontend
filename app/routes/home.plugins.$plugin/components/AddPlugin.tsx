@@ -10,7 +10,7 @@ import { useFetcher } from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { components } from "~/sdk";
+import { components } from "index";
 import { SessionData } from "~/sessions";
 
 export const addPluginFormSchema = z.object({

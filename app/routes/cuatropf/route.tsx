@@ -5,7 +5,7 @@ import apiClient from "~/apiclient";
 import CuatropfClient from "./cuatropf.client";
 import { useEffect, useState } from "react";
 import { ExternalScriptsFunction } from "remix-utils/external-scripts";
-import { components } from "~/sdk";
+import { components } from "index";
 import { ClientOnly } from "remix-utils/client-only";
 import FallBack from "@/components/layout/Fallback";
 

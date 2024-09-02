@@ -4,7 +4,7 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { commitSession, getSession } from "~/sessions";
 import apiClient from "~/apiclient";
 import { ClientOnly } from "remix-utils/client-only";
-import { components } from "~/sdk";
+import { components } from "index";
 
 export const meta: MetaFunction = () => {
   return [

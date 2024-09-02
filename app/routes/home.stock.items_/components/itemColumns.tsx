@@ -5,7 +5,7 @@ import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
+import { components } from "index";
 import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
 
@@ -21,7 +21,7 @@ export const itemColumns = (): ColumnDef<components["schemas"]["Item"]>[] => {
         <TableCellNavigate
           {...props}
           id="code"
-          navigate={(e) => r.toItemDetail(e)}
+          navigate={(name,id) => r.toItemDetail(id)}
         />
       ),
     },

@@ -4,7 +4,7 @@ import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { CornerDownRight, FolderIcon, FolderOpenIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
+import { components } from "index";
 
 export const columns = (): ColumnDef<components["schemas"]["Company"]>[] => {
   const { t } = useTranslation("common");

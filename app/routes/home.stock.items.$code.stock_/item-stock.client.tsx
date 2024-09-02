@@ -4,7 +4,7 @@ import { DataTable } from "@/components/custom/table/CustomTable"
 import { itemStockColums } from "@/components/custom/table/columns/stock/item-stock-columns"
 import { useUpsertItemStockLevel } from "./components/upsert-item-stock-level"
 import { ItemGlobalState } from "~/types/app"
-import useActionRow from "~/util/hooks/useActionTable"
+import useActionRow from "~/util/hooks/useActionRow"
 
 
 export default function ItemStockClient(){

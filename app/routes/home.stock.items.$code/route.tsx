@@ -10,7 +10,7 @@ import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { Await, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
 import FallBack from "@/components/layout/Fallback";
-import { components } from "~/sdk";
+import { components } from "index";
 import { itemDtoSchema } from "~/util/data/schemas/stock/item-schemas";
 import { z } from "zod";
 import { itemVariantFormSchema } from "~/util/data/schemas/stock/item-variant-schemas";

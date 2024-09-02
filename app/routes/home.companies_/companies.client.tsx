@@ -1,4 +1,3 @@
-
 import { useTranslation } from "react-i18next";
 import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { loader } from "./route";
@@ -6,31 +5,40 @@ import { GlobalState } from "~/types/app";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { columns } from "./components/table/columns";
 import { useCreateCompany } from "./components/create-company";
+import { useActions } from "~/util/hooks/useActions";
 
 export default function CompaniesClient() {
   const { t } = useTranslation();
   const { paginationResult } = useLoaderData<typeof loader>();
-  const ctxValue = useOutletContext<GlobalState>();
-  const createCompany = useCreateCompany()
+  const state = useOutletContext<GlobalState>();
+  const createCompany = useCreateCompany();
+  const [permission] = useActions({
+    roleActions: state.role?.RoleActions,
+    actions: paginationResult?.actions,
+  });
 
   return (
     <>
-    <DataTable columns={columns()} data={paginationResult?.pagination_result.results || []}
-    metaActions={{
-      meta:{
-        addNew:()=>{
-          createCompany.openDialog({})
-        }
-      }
-    }} 
-    hiddenColumns={{
-      code:false
-    }}
-    expandedOptions={{
-      getSubRows:row=> row.CompanyDepartments
-    }}
-    />
-     
+      <DataTable
+        columns={columns()}
+        data={paginationResult?.pagination_result.results || []}
+        metaActions={{
+          meta: {
+            ...(permission?.create && {
+              addNew: () => {
+                createCompany.openDialog({});
+              },
+            }),
+          },
+        }}
+        hiddenColumns={{
+          code: false,
+        }}
+        expandedOptions={{
+          getSubRows: (row) => row.CompanyDepartments,
+        }}
+      />
+
       {/* <OrderTable
         headerValues={[
           { name: "", style: { width: 60, padding: "12px 6px" } },

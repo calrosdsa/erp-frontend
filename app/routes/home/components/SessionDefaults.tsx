@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { action } from "~/routes/api/route";
-import { components } from "~/sdk";
+import { components } from "index";
 import { SessionData } from "~/sessions";
 import { languages } from "~/util/data/languages-data";
 import { routes } from "~/util/route";

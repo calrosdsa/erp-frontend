@@ -1,4 +1,4 @@
-import { components } from "~/sdk";
+import { components } from "index";
 import { UserData } from "~/types/app";
 
 

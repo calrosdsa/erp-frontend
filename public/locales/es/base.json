@@ -1,0 +1,6 @@
+{
+    "_role":{
+        "permission":"Role permission",
+        "base":"Role"
+    }
+}

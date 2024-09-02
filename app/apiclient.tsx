@@ -1,5 +1,5 @@
 import createClient, { Middleware } from "openapi-fetch";
-import { paths } from "./sdk";
+import { paths } from "..";
 import { getSession } from "./sessions";
 import { Role } from "./types/enums";
 import { API_URL } from "./constant";

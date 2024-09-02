@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import CompaniesClient from "./companies.client";
 import apiClient from "~/apiclient";
-import { components } from "~/sdk";
+import { components } from "index";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
 import { createCompanySchema } from "~/util/data/schemas/company/company-schemas";
@@ -77,7 +77,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       },
     },
   });
-  console.log("data", res.error, res.data?.pagination_result.results.length);
+  console.log("data", res.error, res.data?.actions);
   return json({
     paginationResult: res.data,
   });

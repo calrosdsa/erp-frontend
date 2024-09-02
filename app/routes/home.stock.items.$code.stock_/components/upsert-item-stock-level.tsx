@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { components } from "~/sdk";
+import { components } from "index";
 import { action } from "../route";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import CustomForm from "@/components/custom/form/CustomForm";

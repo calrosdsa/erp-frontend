@@ -7,7 +7,7 @@ import { createCompanySchema } from "~/util/data/schemas/company/company-schemas
 import { action } from "../route";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { components } from "~/sdk";
+import { components } from "index";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { routes } from "~/util/route";

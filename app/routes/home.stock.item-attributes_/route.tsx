@@ -2,7 +2,7 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import ItemAttributesClient from "./item-attributes.client";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { components } from "~/sdk";
+import { components } from "index";
 
 type PriceListAction = {
     action: string;

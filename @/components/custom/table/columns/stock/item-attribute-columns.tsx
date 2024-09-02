@@ -2,7 +2,7 @@ import ButtonExpandRow from "@/components/custom/button/ButtonExpandRow";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { CornerDownRight, FolderIcon, FolderOpenIcon } from "lucide-react";
-import { components } from "~/sdk";
+import { components } from "index";
 import TableCell from "../../cells/table-cell";
 import { useTranslation } from "react-i18next";
 import { DataTableRowActions } from "../../data-table-row-actions";

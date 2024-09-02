@@ -3,10 +3,6 @@ import { Column, Getter, Row, Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { SquareCheckIcon, SquareIcon } from "lucide-react";
 
-type Option = {
-  label: string;
-  value: string;
-};
 interface TableCellProps<TData> {
     getValue:Getter<any>
     row:Row<TData>,

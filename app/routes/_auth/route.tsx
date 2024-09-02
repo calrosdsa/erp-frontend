@@ -4,7 +4,7 @@ import AuthClient from "./auth.client";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { getSession } from "~/sessions";
 import FallBack from "@/components/layout/Fallback";
-import { components } from "~/sdk";
+import { components } from "index";
 import apiClient from "~/apiclient";
 
 let isHydrating = true;

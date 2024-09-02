@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { components } from "~/sdk";
+import { components } from "index";
 import CountrySelect from "@/components/custom/select/CountrySelect";
 import { toast, useToast } from "@/components/ui/use-toast";
 

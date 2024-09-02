@@ -3,7 +3,7 @@ import { loader } from "./route";
 import ItemInfo from "./components/ItemInfo";
 import ItemPrices from "../home.stock.items.$code.item-prices_/Item-detail-prices.client";
 import { Separator } from "@/components/ui/separator";
-import { components } from "~/sdk";
+import { components } from "index";
 import HorizontalNavTabs from "@/components/layout/nav/horizontal-nav-tabs";
 import { routes } from "~/util/route";
 import { useTranslation } from "react-i18next";

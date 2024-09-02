@@ -19,6 +19,11 @@ class Routes  {
     itemAttributes = this.stock + "/item-attributes"
     warehouses =  this.stock + "/warehouses"
 
+    users = this.base + "/users"
+    roles = this.users + "/roles"
+
+
+
     purchases = this.base + "/purchases"
     purchaseorders = this.purchases + "/orders"
 
@@ -77,6 +82,11 @@ class Routes  {
     //Acouting
     toTaxDetail(id:string):string{
         return `${this.taxes}/${encodeURIComponent(id)}`
+    }
+
+    //Users
+    toRoleDetail(name:string,id:string):string {
+        return `${this.roles}/${encodeURIComponent(name)}?v=${id}`
     }
 
 }

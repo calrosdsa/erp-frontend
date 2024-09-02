@@ -3,7 +3,7 @@ import { commitSession, getSession } from "~/sessions";
 import { sessionDefaultsFormSchema } from "../home/components/SessionDefaults";
 import { z } from "zod";
 import apiClient from "~/apiclient";
-import { components } from "~/sdk";
+import { components } from "index";
 
 type ApiAction = {
   action:string

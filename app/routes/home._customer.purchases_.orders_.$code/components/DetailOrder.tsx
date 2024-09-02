@@ -2,7 +2,7 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import Typography, { title } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
+import { components } from "index";
 import { formatLongDate } from "~/util/format/formatDate";
 import { itemLineColumns } from "./columns";
 import {

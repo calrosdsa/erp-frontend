@@ -2,7 +2,7 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import ItemPricesClient from "./item-prices.client";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { components } from "~/sdk";
+import { components } from "index";
 import { itemPriceFormSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { z } from "zod";
 

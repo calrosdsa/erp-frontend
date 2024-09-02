@@ -3,9 +3,9 @@ import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemPriceColumns } from "@/components/custom/table/columns/stock/itemPriceColumns";
-import useActionRow from "~/util/hooks/useActionTable";
+import useActionRow from "~/util/hooks/useActionRow";
 import AddItemPrice, { useAddItemPrice } from "../home.stock.item-prices_/components/add-item-price";
-import { components } from "~/sdk";
+import { components } from "index";
 import { ItemGlobalState } from "~/types/app";
 import { loader } from "./route";
 

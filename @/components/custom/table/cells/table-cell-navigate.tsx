@@ -15,18 +15,17 @@ interface TableCellProps<TData> {
     table:Table<TData>
     // name:string
     id:string
-    navigate:(r:string)=>string
+    navigate:(name:string,id:string)=>string
 }
 
 export default function TableCellNavigate<TData>({ getValue, row, column, table ,id,navigate}:TableCellProps<TData>) {
   const nameR = getValue();
   const idN = row.getValue(id);
-  // const nameR = row.getValue(name);
   return (
     <div>
-        {typeof idN == "string" &&(
+        {typeof idN != "undefined" &&(
           <div className=" uppercase">
-          <Link to={navigate(idN)}>
+          <Link to={navigate(nameR,idN?.toString() || "")}>
             <Typography className=" text-primary underline cursor-pointer">
               {typeof  nameR == "string" ? nameR : "-"}
             </Typography>
