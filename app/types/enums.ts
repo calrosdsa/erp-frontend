@@ -18,14 +18,15 @@ export enum Order {
 }
 
 export enum Entity {
-    COMPANY = 1,
-    ITEM = 2,
-    ITEM_PRICE = 3,
-    ITEM_GROUP = 4,
-    ITEM_STOCK = 5,
-    ITEM_ATTRIBUTES = 6,
-    ITEM_WAREHOUSE = 7,
-    TAX = 8,
-    PRICE_LIST = 9,
-    ROLE = 10,
+    COMPANY_ENTITY_ID = 1,
+    ITEM_ENTITY_ID = 2,
+    ITEM_PRICE_ENTITY_ID = 3,
+    ITEM_GROUP_ENTITY_ID = 4,
+    ITEM_STOCK_ENTITY_ID = 5,
+    ITEM_ATTRIBUTES_ENTITY_ID = 6,
+    ITEM_WAREHOUSE_ENTITY_ID = 7,
+    TAX_ENTITY_ID = 8,
+    PRICE_LIST_ENTITY_ID = 9,
+    ROLE_ENTITY_ID = 10,
+    USERS_ENTITY_ID = 11,
 }

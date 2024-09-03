@@ -1,5 +1,6 @@
 import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax"
 import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
+import { CreateUser, useCreateUser } from "~/routes/home.manage.users_/components/create-user"
 import { AddPriceList, useCreatePriceList } from "~/routes/home.selling_.stock_.price-list/components/add-price-list"
 import { AddItemGroupItem, useCreateItemGroup } from "~/routes/home.stock.item-groups_/components/add-item-group"
 import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.item-prices_/components/add-item-price"
@@ -18,8 +19,17 @@ export default function GlobalDialogs(){
     const createWareHouse = useCreateWareHouse()
 
     const createCompany = useCreateCompany()
+
+    const createUser = useCreateUser()
     return (
         <>
+        {createUser.open && 
+        <CreateUser
+        open={createUser.open}
+        onOpenChange={createUser.onOpenChange}
+        permission={createUser.permission}
+        />
+        }
         {createWareHouse.open && 
         <CreateWareHouse
         open={createWareHouse.open}

@@ -5,14 +5,14 @@ import { GlobalState } from "~/types/app";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { columns } from "./components/table/columns";
 import { useCreateCompany } from "./components/create-company";
-import { useActions } from "~/util/hooks/useActions";
+import { usePermission } from "~/util/hooks/useActions";
 
 export default function CompaniesClient() {
   const { t } = useTranslation();
   const { paginationResult } = useLoaderData<typeof loader>();
   const state = useOutletContext<GlobalState>();
   const createCompany = useCreateCompany();
-  const [permission] = useActions({
+  const [permission] = usePermission({
     roleActions: state.role?.RoleActions,
     actions: paginationResult?.actions,
   });

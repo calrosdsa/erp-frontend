@@ -1,6 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
-import { components } from "index";
 import TableCellDate from "../../cells/table-cell-date";
 import i18n from "~/i18n";
 import TableCellNavigate from "../../cells/table-cell-navigate";
@@ -8,6 +7,10 @@ import { routes } from "~/util/route";
 import TableCellEntityActions from "../../cells/table-cell-entity-actions";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
+import { z } from "zod";
+import { roleActionSelected } from "~/util/data/schemas/manage/role-schema";
+import { components } from "~/sdk";
 
 export const roleEntitiesActionColumns = ({roleActions}:{
     roleActions:components["schemas"]["RoleActions"][]
@@ -39,12 +42,13 @@ export const roleEntitiesActionColumns = ({roleActions}:{
     ]
 }
 
-export const roleActionColumns = ({roleActions}:{
-    roleActions:components["schemas"]["RoleActions"][]
+export const roleActionColumns = ({selected,setSelected}:{
+    selected:z.infer<typeof roleActionSelected>[]
+    setSelected:(e:z.infer<typeof roleActionSelected>[])=>void
 }):ColumnDef<components["schemas"]["Action"]>[] =>{
 
-    let roleActionsIds= roleActions.map(item=>item.ActionID)
     let columns:ColumnDef<components["schemas"]["Action"]>[] = [];
+    
     const r= routes
     const {t} = useTranslation("common")
     columns.push({
@@ -58,22 +62,22 @@ export const roleActionColumns = ({roleActions}:{
     });
     columns.push({
         id: "select",
-        header: ({ table }) => (
-          <Checkbox
-            checked={
-              table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && "indeterminate") 
-            }
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="Select all"
-          />
-        ),
         cell: ({ row }) =>  {
             const id = row.getValue("id") as number
             return (
                 <Checkbox
-                checked={row.getIsSelected() || roleActionsIds.includes(id)}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                checked={selected.find(t=>t.actionId == id)?.selected}
+                onCheckedChange={(value) =>{
+                    const n = selected.map(t=>{
+                        if(t.actionId == id){
+                            if(typeof value == "boolean"){
+                                t.selected = value
+                            }
+                        }
+                        return t
+                    })
+                    setSelected(n)
+                    }}
                 aria-label="Select row"
                 />
             )

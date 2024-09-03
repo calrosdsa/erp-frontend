@@ -19,8 +19,9 @@ class Routes  {
     itemAttributes = this.stock + "/item-attributes"
     warehouses =  this.stock + "/warehouses"
 
-    users = this.base + "/users"
-    roles = this.users + "/roles"
+    manage = this.base + "/manage"
+    users = this.manage + "/users"
+    roles = this.manage + "/roles"
 
 
 
@@ -84,7 +85,10 @@ class Routes  {
         return `${this.taxes}/${encodeURIComponent(id)}`
     }
 
-    //Users
+    //Manage
+    toUserProfileDetail(name:string,id:string):string {
+        return `${this.users}/${encodeURIComponent(name)}?v=${id}`
+    }
     toRoleDetail(name:string,id:string):string {
         return `${this.roles}/${encodeURIComponent(name)}?v=${id}`
     }

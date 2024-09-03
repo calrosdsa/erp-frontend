@@ -1,4 +1,4 @@
-import { components } from "index";
+import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
 
 export type CountrySelectItem = {

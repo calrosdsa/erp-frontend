@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import { components } from "index";
+import { components } from "~/sdk";
+import { Permission } from "~/types/permission";
 
 
-interface Permission {
-    create:boolean
-    edit:boolean
-    view:boolean
-}
-export function useActions({actions,roleActions}:{
+
+export function usePermission({actions,roleActions}:{
     actions?:components["schemas"]["Action"][]
     roleActions?:components["schemas"]["RoleActions"][]
 }){

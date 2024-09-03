@@ -24,13 +24,16 @@
     "forgotPassword": "Forgot your password?",
     "resetPassowordMsg": "Enter your user account's verified email address and we will send you a password reset link."
   },
-
+  "_user":{
+    "base":"User"
+  },
   "form": {
     "name": "Name",
     "description": "Description",
     "value": "Value",
     "abbreviation": "Abbreviation",
     "code": "Code",
+    "fullName":"Full Name",
     "familyName": "Last Name",
     "givenName": "First  Name",
     "phoneNumber": "Phone Number",

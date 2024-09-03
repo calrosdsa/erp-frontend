@@ -14,7 +14,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { routes } from "~/util/route";
-import { useActions } from "~/util/hooks/useActions";
+import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 
 const ItemsClient = () => {
@@ -22,7 +22,7 @@ const ItemsClient = () => {
   const { data } = useLoaderData<typeof loader>();
   const state = useOutletContext<GlobalState>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [permission] = useActions({
+  const [permission] = usePermission({
     roleActions: state.role?.RoleActions,
     actions: data?.actions,
   });

@@ -13,7 +13,7 @@ import { UserData } from "~/types/app";
 import { Form, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { routes } from "~/util/route";
-import { components } from "index";
+import { components } from "~/sdk";
 
 type Props = {
     user: components["schemas"]["Profile"];

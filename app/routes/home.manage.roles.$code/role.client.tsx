@@ -5,7 +5,7 @@ import { roleDefinitionColumns, roleEntitiesActionColumns } from "@/components/c
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { useActions } from "~/util/hooks/useActions";
+import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { EditRolePermission, useEditRolePermission } from "./components/edit-role-permission";
 import useActionRow from "~/util/hooks/useActionRow";
@@ -14,7 +14,7 @@ export default function RoleClient() {
   const { role, actions, roleActions,entityActions } = useLoaderData<typeof loader>();
   const state = useOutletContext<GlobalState>();
   const { t } = useTranslation("common");
-  const [permission] = useActions({
+  const [permission] = usePermission({
     roleActions: state.role?.RoleActions,
     actions: actions,
   });
@@ -22,7 +22,7 @@ export default function RoleClient() {
   const [meta,stateActions] = useActionRow({
     onEdit:indexRow=>{
         const eActions = entityActions?.entity.find((t,idx)=>idx == indexRow)
-        editRolePermission.openDialog({roleActions:roleActions,entityActions:eActions})
+        editRolePermission.openDialog({roleActions:roleActions,entityActions:eActions,role:role})
     }
   })
   //   const {t:tBase} = useTranslation("base");
@@ -35,6 +35,7 @@ export default function RoleClient() {
     onOpenChange={editRolePermission.onOpenChange}
     roleActions={editRolePermission.roleActions}
     entityActions={editRolePermission.entityActions}
+    role={editRolePermission.role}
     />
     }
       <div className="info-grid">

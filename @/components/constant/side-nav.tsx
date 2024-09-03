@@ -8,11 +8,11 @@ import {
   Layers3Icon,
   LayoutDashboard,
   SettingsIcon,
+  UserCogIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { components } from "index";
 import { SessionData } from "~/sessions";
 import { NavItem } from "~/types";
 import { Entity, Role } from "~/types/enums";
@@ -30,7 +30,6 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     (item) => item.Action.Name == "view"
   ).map((item) => item.Action.EntityID);
 
-  console.log("running", entities);
   const companies = {
     title: t("_company.companies"),
     icon: Building2Icon,
@@ -64,31 +63,31 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     ],
   };
   let stockChildrens: NavItem[] = [];
-  if (entities?.includes(Entity.ITEM)) {
+  if (entities?.includes(Entity.ITEM_ENTITY_ID)) {
     stockChildrens.push({
       title: t("items"),
       href: "/home/stock/items",
     });
   }
-  if (entities?.includes(Entity.ITEM_PRICE)) {
+  if (entities?.includes(Entity.ITEM_PRICE_ENTITY_ID)) {
     stockChildrens.push({
       title: t("itemPrice.p"),
       href: "/home/stock/item-prices",
     });
   }
-  if (entities?.includes(Entity.ITEM_GROUP)) {
+  if (entities?.includes(Entity.ITEM_GROUP_ENTITY_ID)) {
     stockChildrens.push({
       title: t("item-groups"),
       href: "/home/stock/item-groups",
     });
   }
-  if (entities?.includes(Entity.ITEM_ATTRIBUTES)) {
+  if (entities?.includes(Entity.ITEM_ATTRIBUTES_ENTITY_ID)) {
     stockChildrens.push({
       title: t("item-attributes"),
       href: "/home/stock/item-attributes",
     });
   }
-  if (entities?.includes(Entity.ITEM_WAREHOUSE)) {
+  if (entities?.includes(Entity.ITEM_WAREHOUSE_ENTITY_ID)) {
     stockChildrens.push({
       title: t("warehouses"),
       href: r.warehouses,
@@ -104,15 +103,24 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   };
 
   let usersChildren: NavItem[] = [];
-  if (entities?.includes(Entity.ROLE)) {
+  if (entities?.includes(Entity.ROLE_ENTITY_ID)) {
     usersChildren.push({
       title: t("roles"),
       href: r.roles,
     });
   }
-  const users: NavItem = {
-    title: t("users"),
-    icon: UsersIcon,
+  if(entities?.includes(Entity.USERS_ENTITY_ID)){
+    usersChildren.push({
+      title:t("users"),
+      href:r.users,
+    })
+  }
+
+
+
+  const manage: NavItem = {
+    title: t("manage"),
+    icon: UserCogIcon,
     href: "/home/users",
     isChildren: true,
     children: usersChildren,
@@ -158,7 +166,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
 
   // switch (session.role) {
   // case Role.ROLE_ADMIN: {
-  if (entities?.includes(Entity.COMPANY)) {
+  if (entities?.includes(Entity.COMPANY_ENTITY_ID)) {
     navItems.push(companies);
   }
   navItems.push(accounting);
@@ -167,7 +175,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     navItems.push(stock);
   }
   if (usersChildren.length > 0) {
-    navItems.push(users);
+    navItems.push(manage);
   }
   navItems.push(plugins);
   // break;

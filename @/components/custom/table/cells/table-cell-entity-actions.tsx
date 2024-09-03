@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import { SquareCheckIcon, SquareIcon } from "lucide-react";
 import { formatLongDate } from "~/util/format/formatDate";
 import { i18n } from "i18next";
-import { components } from "index";
 import { Badge } from "@/components/ui/badge";
+import { components } from "~/sdk";
 
 
 interface TableCellProps<TData> {
@@ -22,7 +22,6 @@ export default function TableCellEntityActions<TData>({ getValue, row, column, t
   const parseActions = () =>{
     try{
         // const d = JSON.parse(initialValue) as components["schemas"]["Action"][]
-        console.log(initialValue)
         setActions(initialValue)
     }catch(err){
         console.log(err)

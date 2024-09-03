@@ -1,5 +1,4 @@
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { useEffect, useState } from "react";
 import HomeLayout from "./homeLayout";
 import {
   ActionFunctionArgs,
@@ -14,16 +13,9 @@ import {
   SessionData,
 } from "~/sessions";
 import apiClient from "~/apiclient";
-import { GlobalState, UserData } from "~/types/app";
-import { components } from "index";
+import { GlobalState } from "~/types/app";
 import { ClientOnly } from "remix-utils/client-only";
-import { Role } from "~/types/enums";
-import {
-  administratorToUserData,
-  clientToUserData,
-} from "~/util/convertor/entityToUserData";
 import FallBack from "@/components/layout/Fallback";
-
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const data = await request.formData();
@@ -48,6 +40,15 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
     return redirect("/signin");
   }
   const res = await apiClient({ request }).GET("/account");
+  if (res.error) {
+    if ((res.error.status = 401)) {
+      return redirect("/signin", {
+        headers: {
+          "Set-Cookie": await destroySession(session),
+        },
+      });
+    }
+  }
   const sessionData = session.data as SessionData;
   return json(
     {
