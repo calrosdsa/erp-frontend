@@ -4,6 +4,7 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import { z } from "zod";
 import apiClient from "~/apiclient"
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
+import { components } from "~/sdk";
 import { createUserSchema } from "~/util/data/schemas/manage/user-schema";
 
 type ActionData = {
@@ -15,17 +16,36 @@ export const action = async({request}:ActionFunctionArgs)=>{
     const data= await request.json() as ActionData
     let message:string | undefined = undefined
     let error:string | undefined = undefined
+    let partyTypes:components["schemas"]["PartyType"][] = []
     switch(data.action){
         case "create-user":{
+            const d = data.createUser
             const res = await client.POST("/user/profile",{
-                body:data.createUser
+                body:{
+                    roleId:d.roleId,
+                    email:d.email,
+                    givenName:d.givenName,
+                    familyName:d.familyName,
+                    phoneNumber:d.phoneNumber,
+                    companyIds:d.companyIds,
+                    partyCode:d.partyCode,
+                    keyValue:d.keyValue
+                }
             })
+            message = res.data?.message
+            error = res.error?.detail
             break
+        }
+        case "party-types":{
+            console.log("GETTING PARTY USERS")
+            const res = await client.GET("/party/type/users")
+            partyTypes = res.data?.result.entity || []
+            break;
         }
     }
 
     return json({
-        message,error
+        message,error,partyTypes
     })
 }
 

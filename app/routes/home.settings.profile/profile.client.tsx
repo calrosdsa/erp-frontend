@@ -5,7 +5,7 @@ import ClientProfile from "./components/client-profile"
 
 
 export default function ProfileClient(){
-    const globalState = useOutletContext<GlobalState>()
+    const globalState = useOutletContext<GlobalState>() 
     return (
         <div className="w-full">
            {globalState.session.role == Role.ROLE_CLIENT &&

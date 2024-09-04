@@ -1,10 +1,10 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import CompaniesClient from "./companies.client";
 import apiClient from "~/apiclient";
-import { components } from "index";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
 import { createCompanySchema } from "~/util/data/schemas/company/company-schemas";
+import { components } from "~/sdk";
 
 type CompaniesAction = {
   action: string;
@@ -38,7 +38,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const res = await client.GET("/company", {
         params: {
           query: {
-            query: data.query,
+            query: data.query || "",
+            page: data.page || DEFAULT_PAGE,
+            size: data.size || DEFAULT_SIZE,
+          },
+        },
+      });
+        companies = res.data?.pagination_result.results || [];
+      break;
+    }
+    case "user-companies":{
+      const res = await client.GET("/company/user/companies", {
+        params: {
+          query: {
+            query: data.query || "",
             page: data.page || DEFAULT_PAGE,
             size: data.size || DEFAULT_SIZE,
           },

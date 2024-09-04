@@ -38,7 +38,7 @@ export default function SelectForm<T extends object, K extends keyof T>({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="w-full flex flex-col">
           <FormLabel>{label}</FormLabel>
           <Select
             onValueChange={(e) => {

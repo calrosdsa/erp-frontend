@@ -16,7 +16,7 @@ export default function CustomFormField({form,label,description,name,children}:P
         control={form.control}
         name={name}
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="">
             {label != undefined &&
             <FormLabel>{label}</FormLabel>
             }

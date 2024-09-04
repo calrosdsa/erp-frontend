@@ -61,7 +61,7 @@ export default function HomeLayout({
   return (
     <>
       {/* <CssBaseline /> */}
-      <GlobalDialogs/>
+      <GlobalDialogs  globalState={globalState}/>
       {openSessionDefaults && (
         <SessionDefaultDrawer
           open={openSessionDefaults}

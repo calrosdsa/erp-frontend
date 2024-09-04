@@ -7,9 +7,12 @@ import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.item-prices_/
 import { UpsertItemStockLevel, useUpsertItemStockLevel } from "~/routes/home.stock.items.$code.stock_/components/upsert-item-stock-level"
 import CreateItemVariant, { useCreateItemVariant } from "~/routes/home.stock.items.$code.variants_/components/create-item-variant"
 import { CreateWareHouse, useCreateWareHouse } from "~/routes/home.stock.warehouses_/components/add-warehouse"
+import { GlobalState } from "~/types/app"
 
 
-export default function GlobalDialogs(){
+export default function GlobalDialogs({globalState}:{
+    globalState:GlobalState
+}){
     const createItemGroup = useCreateItemGroup()
     const addItemStockLevel = useUpsertItemStockLevel()
     const createTax = useCreateTax()
@@ -28,6 +31,7 @@ export default function GlobalDialogs(){
         open={createUser.open}
         onOpenChange={createUser.onOpenChange}
         permission={createUser.permission}
+        globalState={globalState}
         />
         }
         {createWareHouse.open && 

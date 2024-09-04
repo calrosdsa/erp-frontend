@@ -160,6 +160,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/company/user/companies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get user companies */
+        get: operations["user-companies"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/company/valid/parent/companies": {
         parameters: {
             query?: never;
@@ -220,6 +237,23 @@ export interface paths {
         };
         /** Get greeting by name */
         get: operations["get-greeting-by-name"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/party/type/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Party User Types */
+        get: operations["get party user types"];
         put?: never;
         post?: never;
         delete?: never;
@@ -291,7 +325,8 @@ export interface paths {
         /** Get roles */
         get: operations["get roles"];
         put?: never;
-        post?: never;
+        /** Create Role */
+        post: operations["create role"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1149,6 +1184,15 @@ export interface components {
             isSelling: boolean;
             name: string;
         };
+        CreateRoleRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            description: string;
+            name: string;
+        };
         CreateTaxRequestBody: {
             /**
              * Format: uri
@@ -1353,6 +1397,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
             result: components["schemas"]["ResultEntityListEntityActions"];
+        };
+        EntityResponseResultEntityListPartyTypeBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            result: components["schemas"]["ResultEntityListPartyType"];
         };
         EntityResponseResultEntityProfileBody: {
             /**
@@ -1697,14 +1750,14 @@ export interface components {
             actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListItemVariant"];
         };
-        PaginationResponsePaginationResultListProfileBody: {
+        PaginationResponsePaginationResultListProfileDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
-            pagination_result: components["schemas"]["PaginationResultListProfile"];
+            pagination_result: components["schemas"]["PaginationResultListProfileDto"];
         };
         PaginationResponsePaginationResultListRoleActionsBody: {
             /**
@@ -1795,8 +1848,8 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListProfile: {
-            results: components["schemas"]["Profile"][];
+        PaginationResultListProfileDto: {
+            results: components["schemas"]["ProfileDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -1961,12 +2014,24 @@ export interface components {
             GivenName: string;
             /** Format: int64 */
             ID: number;
+            Party: components["schemas"]["Party"];
             PhoneNumber: string;
             ProfileKeyValue: components["schemas"]["ProfileKeyValue"][];
             /** Format: date-time */
             UpdatedAt: string;
             UserRelation: components["schemas"]["UserRelation"];
             Uuid: string;
+        };
+        ProfileDto: {
+            emailAddress: string;
+            familyName: string;
+            givenName: string;
+            /** Format: int64 */
+            id: number;
+            partyCode: string;
+            partyName: string;
+            phoneNumber: string;
+            uuid: string;
         };
         ProfileKeyValue: {
             /** Format: int64 */
@@ -2010,6 +2075,9 @@ export interface components {
         };
         ResultEntityListEntityActions: {
             entity: components["schemas"]["EntityActions"][];
+        };
+        ResultEntityListPartyType: {
+            entity: components["schemas"]["PartyType"][];
         };
         ResultEntityProfile: {
             entity: components["schemas"]["Profile"];
@@ -2907,6 +2975,47 @@ export interface operations {
             };
         };
     };
+    "user-companies": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "valid-parent-companies": {
         parameters: {
             query: {
@@ -3038,6 +3147,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GreetingOutputBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get party user types": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityListPartyTypeBody"];
                 };
             };
             /** @description Error */
@@ -3270,6 +3418,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create role": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRoleRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -5056,7 +5247,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListProfileBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListProfileDtoBody"];
                 };
             };
             /** @description Error */

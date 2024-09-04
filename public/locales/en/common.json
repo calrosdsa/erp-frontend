@@ -37,6 +37,7 @@
     "familyName": "Last Name",
     "givenName": "First  Name",
     "phoneNumber": "Phone Number",
+    "type": "Type",
     "password": "Password",
     "newPassword": "New Password",
     "confirmNewPassword": "Confirm New Password",
@@ -91,7 +92,8 @@
   "_tax": {
     "base": "Tax"
   },
-
+  
+  "roles":"Roles",
   "_role": {
     "permissions": "Role permissions",
     "base": "Role"
@@ -186,7 +188,6 @@
     "createdAt": "Creation Date",
     "updatedAt": "Last Modified",
     "deliverdDate": "Deliverd Date",
-    "type": "Type",
     "ID": "ID",
     "code": "CODE",
     "no": "No.",

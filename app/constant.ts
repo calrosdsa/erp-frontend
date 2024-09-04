@@ -5,6 +5,9 @@ export const DEFAULT_DEBOUNCE_TIME = 600
 export const DEFAULT_SIZE = "20"
 export const DEFAULT_PAGE = "0"
 
+export const MAX_DEFAULT_SIZE = "30"
+
+
 export const DEFAULT_COMPANY_NAME = "ERP"
 
 export const CURRENCY_CODES:CurrencyCode[] = [
@@ -22,5 +25,5 @@ type CurrencyCode = {
 }  
   
 
-export const MIN_LENGTH = 3
-export const MAX_LENGTH = 50
+export const DEFAULT_MIN_LENGTH = 1
+export const DEFAULT_MAX_LENGTH = 50

@@ -1,5 +1,10 @@
 import { z } from "zod";
+import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 
+export const createRoleSchema = z.object({
+    name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+    description:z.string().min(DEFAULT_MIN_LENGTH).max(255),
+})
 
 export const roleActionSelected = z.object({
     selected:z.boolean(),

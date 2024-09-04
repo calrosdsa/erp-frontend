@@ -7,12 +7,12 @@ import { createCompanySchema } from "~/util/data/schemas/company/company-schemas
 import { action } from "../route";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { components } from "index";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { routes } from "~/util/route";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
+import { components } from "~/sdk";
 
 export const CreateCompany = ({
   open,
@@ -93,7 +93,6 @@ export const CreateCompany = ({
                 }}
                 name="parentName"
                 nameK="Name"
-                value={"Name"}
                 label={t("companies")}
                 onOpen={()=>{
                     validParentCompaniesFetcher.submit(

@@ -9,26 +9,28 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
-import { FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 interface Props<T extends object, K extends keyof T> {
   data: T[];
-  keyName: K;
+  keyName?: K;
+  keyValue?:K;
   name: string;
   form: any;
   label?: string;
   description?: string;
-  onSelect:(t:T[])=>void
+  onSelect: (t: T[]) => void;
 }
 
 export function MultiSelect<T extends object, K extends keyof T>({
   data,
   keyName,
+  keyValue,
   name,
   form,
   description,
   label,
-  onSelect
+  onSelect,
 }: Props<T, K>) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -36,6 +38,7 @@ export function MultiSelect<T extends object, K extends keyof T>({
   const [inputValue, setInputValue] = React.useState("");
 
   const handleUnselect = React.useCallback((item: T) => {
+    if(typeof keyName == "undefined") return
     setSelected((prev) => prev.filter((s) => s[keyName] !== item[keyName]));
   }, []);
 
@@ -65,9 +68,9 @@ export function MultiSelect<T extends object, K extends keyof T>({
 
   React.useEffect(() => {
     if (selected.length > 0) {
-      const selectedValues = selected.map((item) => item[keyName]);
+      const selectedValues = selected.map((item) =>keyValue != undefined && item[keyValue]);
       form.setValue(name, selectedValues);
-      onSelect(selected)
+      onSelect(selected);
     }
   }, [selected]);
 
@@ -76,7 +79,7 @@ export function MultiSelect<T extends object, K extends keyof T>({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col ">
+        <FormItem className="flex flex-col w-full">
           <FormLabel>{label}</FormLabel>
           <Command
             onKeyDown={handleKeyDown}
@@ -86,24 +89,26 @@ export function MultiSelect<T extends object, K extends keyof T>({
               <div className="flex flex-wrap gap-1">
                 {selected.map((item, idx) => {
                   return (
-                    <Badge key={idx} variant="secondary">
-                      {item[keyName]?.toString() || ""}
-                      <button
-                        className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleUnselect(item);
-                          }
-                        }}
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                        onClick={() => handleUnselect(item)}
-                      >
-                        <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                      </button>
-                    </Badge>
+                    typeof keyName != "undefined" && (
+                      <Badge key={idx} variant="secondary">
+                        {item[keyName]?.toString() || ""}
+                        <button
+                          className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handleUnselect(item);
+                            }
+                          }}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          onClick={() => handleUnselect(item)}
+                        >
+                          <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                        </button>
+                      </Badge>
+                    )
                   );
                 })}
                 {/* Avoid having the "Search" Icon */}
@@ -137,7 +142,9 @@ export function MultiSelect<T extends object, K extends keyof T>({
                             }}
                             className={"cursor-pointer"}
                           >
-                            {item[keyName]?.toString() || ""}
+                            {(typeof keyName != "undefined" &&
+                              item[keyName]?.toString()) ||
+                              ""}
                           </CommandItem>
                         );
                       })}
@@ -147,6 +154,8 @@ export function MultiSelect<T extends object, K extends keyof T>({
               </CommandList>
             </div>
           </Command>
+          <FormDescription>{description}</FormDescription>
+            <FormMessage />
         </FormItem>
       )}
     />

@@ -37,31 +37,38 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     // color: "text-sky-500",
   };
 
+  let accountingChildrens: NavItem[] = [];
+  if (entities?.includes(Entity.TAX_ENTITY_ID)) {
+    accountingChildrens.push({
+      title: t("taxes"),
+      href: r.taxes,
+    });
+  }
+
   const accounting: NavItem = {
     title: t("accounting"),
     icon: CreditCardIcon,
     href: r.accounting,
     isChildren: true,
-    children: [
-      {
-        title: t("taxes"),
-        href: r.taxes,
-      },
-    ],
+    children: accountingChildrens,
   };
+
+  let sellingChildrends: NavItem[] = [];
+  if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
+    sellingChildrends.push({
+      title: t("price-list"),
+      href: r.priceList,
+    });
+  }
 
   const selling: NavItem = {
     title: t("selling"),
     icon: DollarSign,
-    href: "/home/selling",
+    href: r.selling,
     isChildren: true,
-    children: [
-      {
-        title: t("price-list"),
-        href: "/home/selling/stock/price-list",
-      },
-    ],
+    children: sellingChildrends,
   };
+
   let stockChildrens: NavItem[] = [];
   if (entities?.includes(Entity.ITEM_ENTITY_ID)) {
     stockChildrens.push({
@@ -109,14 +116,12 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
       href: r.roles,
     });
   }
-  if(entities?.includes(Entity.USERS_ENTITY_ID)){
+  if (entities?.includes(Entity.USERS_ENTITY_ID)) {
     usersChildren.push({
-      title:t("users"),
-      href:r.users,
-    })
+      title: t("users"),
+      href: r.users,
+    });
   }
-
-
 
   const manage: NavItem = {
     title: t("manage"),
@@ -169,8 +174,14 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (entities?.includes(Entity.COMPANY_ENTITY_ID)) {
     navItems.push(companies);
   }
-  navItems.push(accounting);
-  navItems.push(selling);
+  if (accountingChildrens.length > 0) {
+    navItems.push(accounting);
+  }
+
+  if (sellingChildrends.length > 0) {
+    navItems.push(selling);
+  }
+
   if (stockChildrens.length > 0) {
     navItems.push(stock);
   }

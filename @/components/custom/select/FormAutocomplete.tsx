@@ -26,10 +26,9 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-interface Props<T extends object, K extends keyof T, V extends keyof T> {
+interface Props<T extends object, K extends keyof T> {
   data: T[];
   nameK: K;
-  value: V;
   name: string;
   onOpen: () => void;
   form: any;
@@ -44,11 +43,9 @@ interface Props<T extends object, K extends keyof T, V extends keyof T> {
 export default function FormAutocomplete<
   T extends object,
   K extends keyof T,
-  V extends keyof T
 >({
   data,
   nameK,
-  value,
   form,
   label,
   onOpen,
@@ -58,13 +55,13 @@ export default function FormAutocomplete<
   onSelect,
   className,
   addNew
-}: Props<T, K, V>) {
+}: Props<T, K>) {
   return (
       <FormField
         control={form.control}
         name={name}
         render={({ field }) => (
-          <FormItem className="flex flex-col ">
+          <FormItem className="flex flex-col w-full ">
             <FormLabel>{label}</FormLabel>
             <Popover>
               <PopoverTrigger asChild>
@@ -74,13 +71,13 @@ export default function FormAutocomplete<
                     role="combobox"
                     onClick={() => onOpen()}
                     className={cn(
-                      "justify-between h-[44px]",
+                      "justify-between",
                       !field.value && "text-muted-foreground"
                     )}
                   >
                     {field.value
                       ? data
-                          .find((item) => item[value] === field.value)
+                          .find((item) => item[nameK] === field.value)
                           ?.[nameK]?.toString()
                       : "Select item"}
                     <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
@@ -100,17 +97,17 @@ export default function FormAutocomplete<
                     <CommandGroup>
                       {data.map((item, idx) => (
                         <CommandItem
-                          value={(item[value] as string) || ""}
+                          value={(item[nameK] as string) || ""}
                           key={idx}
                           onSelect={() => {
-                            form.setValue(name, item[value]);
+                            form.setValue(name, item[nameK]);
                             onSelect(item);
                           }}
                         >
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
-                              item[value] === field.value
+                              item[nameK] === field.value
                                 ? "opacity-100"
                                 : "opacity-0"
                             )}

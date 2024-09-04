@@ -8,6 +8,7 @@ export const keyValue = z.object({
 export const createUserSchema = z.object({
     email:z.string().email(),
     roleId:z.number(),
+    roleName:z.string(),
     partyCode:z.string(),
     companyIds:z.array(z.number()),
     givenName:z.string().min(3).max(50),

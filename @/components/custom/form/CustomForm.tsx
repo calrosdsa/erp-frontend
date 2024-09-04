@@ -14,17 +14,19 @@ import { useTranslation } from "react-i18next";
 import { makeZodI18nMap } from "zod-i18n-map";
 import SelectForm from "../select/SelectForm";
 import CheckForm from "../input/CheckForm";
+import { MultiSelect } from "../select/MultiSelect";
+import { Textarea } from "@/components/ui/textarea";
 
-interface Props<T extends object, K extends keyof T> {
+interface Props {
   schema: any;
-  formItemsData: FormItemData<T, K>[];
+  formItemsData: FormItemData<any, any>[];
   onSubmit: (e: any) => void;
   className?: string;
   defaultValues?: any;
   renderCustomInputs?: (form: any) => ReactNode;
   fetcher: FetcherWithComponents<unknown>;
 }
-export default function CustomForm<T extends object, K extends keyof T>({
+export default function CustomForm({
   formItemsData,
   schema,
   onSubmit,
@@ -32,7 +34,7 @@ export default function CustomForm<T extends object, K extends keyof T>({
   defaultValues,
   renderCustomInputs,
   fetcher,
-}: Props<T, K>) {
+}: Props) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
@@ -45,7 +47,7 @@ export default function CustomForm<T extends object, K extends keyof T>({
       <fetcher.Form
         method="post"
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn(className, "gap-y-3 grid p-3 ")}
+        className={cn(className, "gap-y-3 grid p-3")}
       >
         {/* <div className=" col-span-full">{JSON.stringify(form.getValues())}</div> */}
         {/* <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div>
@@ -55,9 +57,6 @@ export default function CustomForm<T extends object, K extends keyof T>({
         <div className=" col-span-full">{JSON.stringify(form.getFieldState("enabled").error)}</div>
         <div className=" col-span-full">{JSON.stringify(form.getFieldState("stock").error)}</div>
         <div className=" col-span-full">{JSON.stringify(form.getFieldState("warehouseId").error)}</div> */}
-
-
-
 
         {formItemsData.map((item, idx) => {
           if (item.typeForm == "input") {
@@ -73,7 +72,30 @@ export default function CustomForm<T extends object, K extends keyof T>({
               />
             );
           }
+          if (item.typeForm == "textarea") {
+            return (
+              <CustomFormField
+                key={idx}
+                label={item.label}
+                name={item.name}
+                form={form}
+                children={(field) => {
+                  return <Textarea {...field} />;
+                }}
+              />
+            );
+          }
 
+          if (item.typeForm == "check") {
+            return (
+              <CheckForm
+                label={item.label}
+                name={item.name}
+                description={item.description}
+                form={form}
+              />
+            );
+          }
           if (item.typeForm == "select") {
             return (
               <SelectForm
@@ -87,18 +109,26 @@ export default function CustomForm<T extends object, K extends keyof T>({
               />
             );
           }
-          if (item.typeForm == "check") {
-            return <CheckForm
-            label={item.label}
-            name={item.name}
-            description={item.description}
-            form={form}
-            />;
+          if (item.typeForm == "multiselect") {
+            return (
+              <MultiSelect
+                label={item.label}
+                data={item.data || []}
+                keyName={item.keyName}
+                description={item.description}
+                keyValue={item.keyValue}
+                name={item.name}
+                onSelect={(e) => {
+                  if (item.onSelect) {
+                    item.onSelect(e);
+                  }
+                }}
+                form={form}
+              />
+            );
           }
         })}
-        {renderCustomInputs != undefined && 
-        renderCustomInputs(form)
-        }
+        {renderCustomInputs != undefined && renderCustomInputs(form)}
         <div className="col-span-full"></div>
 
         <Button type="submit" className=" col-span-full w-full mt-3">
