@@ -20,6 +20,7 @@ import { title } from "../typography/Typography";
 import { routes } from "~/util/route";
 import { GlobalState } from "~/types/app";
 import { useMemo } from "react";
+import { BuyingNav } from "./buying-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -29,6 +30,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const entities = role?.RoleActions.filter(
     (item) => item.Action.Name == "view"
   ).map((item) => item.Action.EntityID);
+
+  const buyingNav = BuyingNav({
+    entities:entities
+  })
 
   const companies = {
     title: t("_company.companies"),
@@ -53,20 +58,6 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     children: accountingChildrens,
   };
 
-  let buyingChildrens:NavItem[] = [];
-  if(entities?.includes(Entity.SUPPLIER_ENTITY_ID)){
-    buyingChildrens.push({
-      title: t("supplier-groups"),
-      href: r.supplierGroups,
-    });
-  }
-  const buying:NavItem = {
-    title: t("buying"),
-    icon: CreditCardIcon,
-    href: r.buying,
-    isChildren: true,
-    children: buyingChildrens,
-  }
 
   let sellingChildrends: NavItem[] = [];
   if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
@@ -193,8 +184,8 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     navItems.push(accounting);
   }
 
-  if(buyingChildrens.length >0) {
-    navItems.push(buying)
+  if(buyingNav.children && buyingNav.children.length > 0) {
+    navItems.push(buyingNav)
   }
 
   if (sellingChildrends.length > 0) {

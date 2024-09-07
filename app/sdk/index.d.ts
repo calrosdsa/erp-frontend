@@ -262,6 +262,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/group/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve group */
+        get: operations["get group"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/group/{group}": {
         parameters: {
             query?: never;
@@ -270,7 +287,7 @@ export interface paths {
             cookie?: never;
         };
         /** Retrieve groups by party code */
-        get: operations["get group by party code"];
+        get: operations["get groups by party code"];
         put?: never;
         post?: never;
         delete?: never;
@@ -867,6 +884,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/supplier": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve suppliers */
+        get: operations["get suppliers"];
+        put?: never;
+        /** Create supplier */
+        post: operations["create supplier"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/supplier/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve supplier */
+        get: operations["get supplier"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/teclumobity/item-price": {
         parameters: {
             query?: never;
@@ -1171,6 +1223,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            enabled: boolean;
             is_group: boolean;
             name: string;
             parent?: components["schemas"]["GroupDto"];
@@ -1236,6 +1289,16 @@ export interface components {
              */
             readonly $schema?: string;
             description: string;
+            name: string;
+        };
+        CreateSupplierRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            enabled: boolean;
+            group: components["schemas"]["GroupDto"];
             name: string;
         };
         CreateTaxRequestBody: {
@@ -1416,6 +1479,15 @@ export interface components {
             actions: components["schemas"]["Action"][];
             result: components["schemas"]["ResponseSalesOrderDetail"];
         };
+        EntityResponseResultEntityGroupDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            result: components["schemas"]["ResultEntityGroupDto"];
+        };
         EntityResponseResultEntityItemBody: {
             /**
              * Format: uri
@@ -1469,6 +1541,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
             result: components["schemas"]["ResultEntityRole"];
+        };
+        EntityResponseResultEntitySupplierDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            result: components["schemas"]["ResultEntitySupplierDto"];
         };
         EntityResponseTaxBody: {
             /**
@@ -1541,6 +1622,7 @@ export interface components {
         GroupDto: {
             /** Format: date-time */
             created_at: string;
+            enabled: boolean;
             is_group: boolean;
             name: string;
             /** Format: int64 */
@@ -1858,6 +1940,15 @@ export interface components {
             actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListStockLevel"];
         };
+        PaginationResponsePaginationResultListSupplierDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            pagination_result: components["schemas"]["PaginationResultListSupplierDto"];
+        };
         PaginationResponsePaginationResultListTaxBody: {
             /**
              * Format: uri
@@ -1938,6 +2029,11 @@ export interface components {
         };
         PaginationResultListStockLevel: {
             results: components["schemas"]["StockLevel"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListSupplierDto: {
+            results: components["schemas"]["SupplierDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2136,6 +2232,9 @@ export interface components {
             lines: components["schemas"]["SalesItemLine"][];
             order: components["schemas"]["SalesOrder"];
         };
+        ResultEntityGroupDto: {
+            entity: components["schemas"]["GroupDto"];
+        };
         ResultEntityItem: {
             entity: components["schemas"]["Item"];
         };
@@ -2153,6 +2252,9 @@ export interface components {
         };
         ResultEntityRole: {
             entity: components["schemas"]["Role"];
+        };
+        ResultEntitySupplierDto: {
+            entity: components["schemas"]["SupplierDto"];
         };
         RetrieveCatalogRequest: {
             object: components["schemas"]["RetrieveCatalogRequestObjectStruct"];
@@ -2359,6 +2461,14 @@ export interface components {
             name: string;
             phases: components["schemas"]["Phase"][];
             subscription_plan_id: string;
+        };
+        SupplierDto: {
+            /** Format: date-time */
+            created_at: string;
+            enabled: boolean;
+            group: components["schemas"]["GroupDto"];
+            name: string;
+            uuid: string;
         };
         Tax: {
             Code: string;
@@ -2717,6 +2827,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -2803,6 +2914,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -2924,6 +3036,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3010,6 +3123,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -3049,6 +3163,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3090,6 +3205,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3272,11 +3388,54 @@ export interface operations {
             };
         };
     };
-    "get group by party code": {
+    "get group": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityGroupDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get groups by party code": {
         parameters: {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3550,6 +3709,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3636,6 +3796,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -3757,6 +3918,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3798,6 +3960,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4013,6 +4176,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4140,6 +4304,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4226,6 +4391,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -4265,6 +4431,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4437,6 +4604,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -4476,6 +4644,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4605,6 +4774,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -4644,6 +4814,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4773,6 +4944,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4814,6 +4986,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4855,6 +5028,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4984,6 +5158,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -5023,6 +5198,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -5109,6 +5285,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -5148,6 +5325,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -5234,6 +5412,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -5255,6 +5434,133 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseWareHouseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get suppliers": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListSupplierDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create supplier": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSupplierRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get supplier": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntitySupplierDtoBody"];
                 };
             };
             /** @description Error */
@@ -5380,6 +5686,7 @@ export interface operations {
             query: {
                 page: string;
                 size: string;
+                enabled?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -5466,6 +5773,7 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;

@@ -28,6 +28,7 @@ export const CreateGroup = ({open,onOpenChange,partyType}:{
             toast({
                 title:fetcher.data.message
             })
+            onOpenChange(false)
         }
         if(fetcher.data?.error){
             toast({
@@ -41,12 +42,12 @@ export const CreateGroup = ({open,onOpenChange,partyType}:{
         onOpenChange={onOpenChange}
         title={t("f.add-new",{o:t("group")})}
         >
-            {JSON.stringify(partyType)}
             <CustomForm
             schema={createGroupSchema}
             fetcher={fetcher}
             defaultValues={{
                 party_type_code:partyType?.toString(),
+                enabled:true,
             } as z.infer<typeof createGroupSchema>}
             onSubmit={(values:z.infer<typeof createGroupSchema>)=>{
                 fetcher.submit({
@@ -71,6 +72,13 @@ export const CreateGroup = ({open,onOpenChange,partyType}:{
                     description:t("form.isGroupDescription"),
                     typeForm:"check",
                     type:"boolean"
+                },
+                {
+                    name:"enabled",
+                    label:t("form.enabled"),
+                    type:"boolean",
+                    typeForm:"check",
+                    description:t("f.enable",{o:t("_supplier.base")})
                 }
             ]}
             />

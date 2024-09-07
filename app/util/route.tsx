@@ -7,6 +7,7 @@ class Routes  {
 
     buying = this.base +"/buying"
     supplierGroups = this.buying +"/supplier-groups"
+    suppliers = this.buying +"/suppliers"
 
     selling = this.base + "/selling"
     sellingStock = this.selling + "/stock"
@@ -86,6 +87,10 @@ class Routes  {
     //Acouting
     toTaxDetail(id:string):string{
         return `${this.taxes}/${encodeURIComponent(id)}`
+    }
+    //Buyinh
+    toSupplierGroup(name:string,id:string):string{
+        return `${this.supplierGroups}/${encodeURIComponent(name)}?id=${id}`
     }
 
     //Manage

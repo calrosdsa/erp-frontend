@@ -14,15 +14,10 @@ export const action = async({request}:ActionFunctionArgs)=>{
     let message:string | undefined = undefined
     let error:string | undefined = undefined
     switch(data.action){
+        
         case "create-group":{
-            const d = data.createGroup
             const res = await client.POST("/group",{
-                body:{
-                    name:d.name,
-                    is_group:d.is_group,
-                    party_type_code:d.party_type_code,
-                    parent:d.parent
-                }
+                body:data.createGroup
             })
             message = res.data?.message
             error = res.error?.detail

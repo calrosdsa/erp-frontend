@@ -6,6 +6,7 @@ export const groupSchema = z.object({
     is_group:z.boolean(),
     ordinal:z.number(),
     created_at:z.string(),
+    enabled:z.boolean(),
     uuid:z.string(),
 })
 
@@ -14,4 +15,5 @@ export const createGroupSchema = z.object({
     is_group:z.boolean().default(false),
     parent:groupSchema.optional(),
     party_type_code:z.string(),
+    enabled:z.boolean(),
 })

@@ -1,4 +1,5 @@
 import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax"
+import { CreateSupplier, useCreateSupplier } from "~/routes/home.buying.suppliers_/components/create-supplier"
 import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
 import { CreateGroup, useCreateGroup } from "~/routes/home.groups/components/create-group"
 import { CreateUser, useCreateUser } from "~/routes/home.manage.users_/components/create-user"
@@ -15,6 +16,9 @@ export default function GlobalDialogs({globalState}:{
     globalState:GlobalState
 }){
     const createGroup = useCreateGroup()
+
+    const createSupplier = useCreateSupplier()
+
     const createItemGroup = useCreateItemGroup()
     const addItemStockLevel = useUpsertItemStockLevel()
     const createTax = useCreateTax()
@@ -28,6 +32,12 @@ export default function GlobalDialogs({globalState}:{
     const createUser = useCreateUser()
     return (
         <>
+        {createSupplier.open &&
+        <CreateSupplier
+        open={createSupplier.open}
+        onOpenChange={createSupplier.onOpenChange}
+        />
+        }
         {createGroup.open &&
         <CreateGroup
         open={createGroup.open}

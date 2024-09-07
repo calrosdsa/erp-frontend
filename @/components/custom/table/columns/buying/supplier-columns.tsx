@@ -1,3 +1,4 @@
+
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import TableCellDate from "../../cells/table-cell-date";
@@ -5,10 +6,10 @@ import { routes } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 
-export const groupColumns = ({}:{
-}):ColumnDef<components["schemas"]["GroupDto"]>[] =>{
+export const supplierColumns = ({}:{
+}):ColumnDef<components["schemas"]["SupplierDto"]>[] =>{
 
-    let columns:ColumnDef<components["schemas"]["GroupDto"]>[] = [];
+    let columns:ColumnDef<components["schemas"]["SupplierDto"]>[] = [];
     const r= routes
     const {t,i18n} = useTranslation("common")
     columns.push({
