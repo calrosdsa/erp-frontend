@@ -49,7 +49,7 @@ export default function CustomForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(className, "gap-y-3 grid p-3")}
       >
-        {/* <div className=" col-span-full">{JSON.stringify(form.getValues())}</div> */}
+        <div className=" col-span-full">{JSON.stringify(form.getValues())}</div>
         {/* <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div>
         <div className=" col-span-full">{JSON.stringify(form.getFieldState("outOfStockThreshold").error)}</div>
         <div className=" col-span-full">{JSON.stringify(form.getFieldState("itemId").error)}</div>

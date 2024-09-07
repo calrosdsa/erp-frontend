@@ -29,4 +29,9 @@ export enum Entity {
     PRICE_LIST_ENTITY_ID = 9,
     ROLE_ENTITY_ID = 10,
     USERS_ENTITY_ID = 11,
+    SUPPLIER_ENTITY_ID = 12,
+}
+
+export enum PartyType {
+	PARTY_SUPPLIER_GROUP = "supplierGroup"
 }

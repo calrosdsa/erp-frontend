@@ -2,8 +2,11 @@
 class Routes  {
     api = "/api"
     base = "/home"
-
+    groups = this.base + "/groups"
     companies = this.base + "/companies"
+
+    buying = this.base +"/buying"
+    supplierGroups = this.buying +"/supplier-groups"
 
     selling = this.base + "/selling"
     sellingStock = this.selling + "/stock"

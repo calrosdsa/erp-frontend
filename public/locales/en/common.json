@@ -7,10 +7,15 @@
 
   "show": "Show",
   "hide": "Hide",
-
+  "group":"Group",
   "_company": {
     "base": "Company",
     "companies": "Companies"
+  },
+  "supplier-groups":"Supplier Groups",
+  "suppliers":"Suppliers",
+  "_supplier":{
+    "base":"Supplier"
   },
   "create": "Create",
   "info": "Info",
@@ -67,7 +72,8 @@
     "status": "Status",
     "startDate": "Start Date",
     "outOfStockThreshold": "Out of Stock Threshold",
-
+    "isGroup":"Is Group",
+    "isGroupDescription":"Check this box to organize it as a group or folder.",
     "orderConfirmation": "Order Confirmation",
     "siteUrl": "Site Url",
     "logo": "Logo"

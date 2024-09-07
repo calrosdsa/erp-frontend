@@ -53,6 +53,21 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     children: accountingChildrens,
   };
 
+  let buyingChildrens:NavItem[] = [];
+  if(entities?.includes(Entity.SUPPLIER_ENTITY_ID)){
+    buyingChildrens.push({
+      title: t("supplier-groups"),
+      href: r.supplierGroups,
+    });
+  }
+  const buying:NavItem = {
+    title: t("buying"),
+    icon: CreditCardIcon,
+    href: r.buying,
+    isChildren: true,
+    children: buyingChildrens,
+  }
+
   let sellingChildrends: NavItem[] = [];
   if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
     sellingChildrends.push({
@@ -176,6 +191,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   }
   if (accountingChildrens.length > 0) {
     navItems.push(accounting);
+  }
+
+  if(buyingChildrens.length >0) {
+    navItems.push(buying)
   }
 
   if (sellingChildrends.length > 0) {

@@ -245,6 +245,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/group": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Group */
+        post: operations["create group"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/group/{group}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve groups by party code */
+        get: operations["get group by party code"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/party/type/users": {
         parameters: {
             query?: never;
@@ -1131,6 +1165,17 @@ export interface components {
             /** Format: int64 */
             parentId?: number | null;
         };
+        CreateGroupRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            is_group: boolean;
+            name: string;
+            parent?: components["schemas"]["GroupDto"];
+            party_type_code: string;
+        };
         CreateItemAttributeRequestBody: {
             /**
              * Format: uri
@@ -1493,6 +1538,15 @@ export interface components {
             /** @description Greeting message */
             message: string;
         };
+        GroupDto: {
+            /** Format: date-time */
+            created_at: string;
+            is_group: boolean;
+            name: string;
+            /** Format: int64 */
+            ordinal: number;
+            uuid: string;
+        };
         Item: {
             Code: string;
             /** Format: int64 */
@@ -1696,6 +1750,15 @@ export interface components {
             actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListCompany"];
         };
+        PaginationResponsePaginationResultListGroupDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            pagination_result: components["schemas"]["PaginationResultListGroupDto"];
+        };
         PaginationResponsePaginationResultListItemAttributeBody: {
             /**
              * Format: uri
@@ -1818,6 +1881,11 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListGroupDto: {
+            results: components["schemas"]["GroupDto"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListItem: {
             results: components["schemas"]["Item"][];
             /** Format: int64 */
@@ -1913,6 +1981,7 @@ export interface components {
         PartyType: {
             Code: string;
             Name: string;
+            Type: string;
         };
         PaymentStruct: {
             amount_money?: components["schemas"]["Amount"];
@@ -3147,6 +3216,92 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GreetingOutputBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create group": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateGroupRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get group by party code": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                group: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListGroupDtoBody"];
                 };
             };
             /** @description Error */
