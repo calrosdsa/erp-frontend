@@ -18,9 +18,16 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
             }
         }
     })
-
+    const resDescendents = await client.GET("/group/descendents/{id}",{
+        params:{
+            path:{
+                id:searchParams.get("id") || "",
+            }
+        }
+    })
     return json({
         group:res.data?.result.entity,
+        groupDescendents:resDescendents.data?.result.entity,
         actions:res.data?.actions
     })
 }

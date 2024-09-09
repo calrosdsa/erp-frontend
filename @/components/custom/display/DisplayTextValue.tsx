@@ -63,6 +63,9 @@ export default function DisplayTextValue({
                 }} />
                 </div>
             )}
+            {value == null &&
+            "-"
+            }
             </>
 
             

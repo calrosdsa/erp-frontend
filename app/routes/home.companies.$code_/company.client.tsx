@@ -14,7 +14,6 @@ export default function CompanyClient() {
         <Typography fontSize={subtitle} className=" col-span-full">
           {t("info")}
         </Typography>
-        {JSON.stringify(company)}
 
         {company && (
           <>

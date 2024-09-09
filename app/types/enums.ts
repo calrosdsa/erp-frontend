@@ -30,8 +30,11 @@ export enum Entity {
     ROLE_ENTITY_ID = 10,
     USERS_ENTITY_ID = 11,
     SUPPLIER_ENTITY_ID = 12,
+    PURCHASE_ORDER_ENTITY_ID = 14,
 }
 
 export enum PartyType {
-	PARTY_SUPPLIER_GROUP = "supplierGroup"
+	PARTY_SUPPLIER_GROUP = "supplierGroup",
+	PARTY_PURCHASE_ORDER = "purchaseOrder"
+    
 }

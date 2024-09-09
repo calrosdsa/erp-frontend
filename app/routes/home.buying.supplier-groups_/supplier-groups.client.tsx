@@ -13,7 +13,7 @@ export default function SupplierGroupsClient(){
     const {paginationResult,actions} = useLoaderData<typeof loader>()
     const [permission] = usePermission({
         actions:actions,
-        roleActions:globalState.role?.RoleActions
+        roleActions:globalState.roleActions
     })
     const createGroup = useCreateGroup()
     return (

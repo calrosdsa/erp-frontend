@@ -262,6 +262,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/group/descendents/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get group descendents */
+        get: operations["get group descendents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/group/detail/{id}": {
         parameters: {
             query?: never;
@@ -279,7 +296,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/group/{group}": {
+    "/group/{party}": {
         parameters: {
             query?: never;
             header?: never;
@@ -288,6 +305,23 @@ export interface paths {
         };
         /** Retrieve groups by party code */
         get: operations["get groups by party code"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/order/{party}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve orders by party code */
+        get: operations["get orders by party code"];
         put?: never;
         post?: never;
         delete?: never;
@@ -360,6 +394,23 @@ export interface paths {
         /** Update plugin credentials */
         put: operations["update-plugin-credentials"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/purchase/order/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create supplier */
+        post: operations["create supplier"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1295,6 +1346,18 @@ export interface components {
             isSelling: boolean;
             name: string;
         };
+        CreatePurchaseOrderRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            currency: components["schemas"]["CurrencyDto"];
+            /** Format: date-time */
+            delivery_date?: string | null;
+            lines: components["schemas"]["OrderLineRequest"][];
+            name: string;
+        };
         CreateRoleRequestBody: {
             /**
              * Format: uri
@@ -1370,6 +1433,9 @@ export interface components {
             phoneNumber: string;
             plugins?: components["schemas"]["CompanyPlugins"][];
         };
+        CurrencyDto: {
+            code: string;
+        };
         DataStruct: {
             id?: string;
             object?: components["schemas"]["ObjectStruct"];
@@ -1399,8 +1465,7 @@ export interface components {
             readonly $schema?: string;
             actionSelecteds: components["schemas"]["ActionSelected"][];
             entityName: string;
-            /** Format: int64 */
-            roleId: number;
+            role_uuid: string;
         };
         Entity: {
             /** Format: int64 */
@@ -1537,6 +1602,15 @@ export interface components {
             actions: components["schemas"]["Action"][];
             result: components["schemas"]["ResultEntityListEntityActions"];
         };
+        EntityResponseResultEntityListGroupHierarchyDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            result: components["schemas"]["ResultEntityListGroupHierarchyDto"];
+        };
         EntityResponseResultEntityListPartyTypeBody: {
             /**
              * Format: uri
@@ -1546,14 +1620,14 @@ export interface components {
             actions: components["schemas"]["Action"][];
             result: components["schemas"]["ResultEntityListPartyType"];
         };
-        EntityResponseResultEntityProfileBody: {
+        EntityResponseResultEntityProfileDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
-            result: components["schemas"]["ResultEntityProfile"];
+            result: components["schemas"]["ResultEntityProfileDto"];
         };
         EntityResponseResultEntityRoleDtoBody: {
             /**
@@ -1649,6 +1723,14 @@ export interface components {
             name: string;
             /** Format: int64 */
             ordinal: number;
+            uuid: string;
+        };
+        GroupHierarchyDto: {
+            /** Format: int64 */
+            depth: number;
+            is_group: boolean;
+            name: string;
+            parent_uuid: string | null;
             uuid: string;
         };
         Item: {
@@ -1834,10 +1916,25 @@ export interface components {
         OrderData: {
             orderLine: components["schemas"]["OrderLineData"][];
         };
+        OrderDto: {
+            code: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            delivery_date: string | null;
+            name: string;
+            uuid: string;
+        };
         OrderLineData: {
             /** Format: int64 */
             itemPriceId: number;
             /** Format: int64 */
+            quantity: number;
+        };
+        OrderLineRequest: {
+            /** Format: int64 */
+            item_price_id: number;
+            /** Format: int32 */
             quantity: number;
         };
         PaginationResponsePaginationResultListCompanyDtoBody: {
@@ -1911,6 +2008,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListItemVariant"];
+        };
+        PaginationResponsePaginationResultListOrderDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            pagination_result: components["schemas"]["PaginationResultListOrderDto"];
         };
         PaginationResponsePaginationResultListProfileLBody: {
             /**
@@ -2021,6 +2127,11 @@ export interface components {
         };
         PaginationResultListItemVariant: {
             results: components["schemas"]["ItemVariant"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListOrderDto: {
+            results: components["schemas"]["OrderDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2185,29 +2296,13 @@ export interface components {
             effective_at: string;
             type: string;
         };
-        Profile: {
-            avatar: string | null;
-            /** Format: date-time */
-            created_at: string;
-            deleted_at: components["schemas"]["DeletedAt"];
-            email_address: string;
+        ProfileDto: {
+            email: string;
             family_name: string;
             given_name: string;
             /** Format: int64 */
             id: number;
-            party: components["schemas"]["Party"];
             phone_number: string | null;
-            /** Format: date-time */
-            updated_at: string | null;
-            uuid: string;
-        };
-        ProfileDto: {
-            emailAddress: string;
-            familyName: string;
-            givenName: string;
-            /** Format: int64 */
-            id: number;
-            phoneNumber: string | null;
             uuid: string;
         };
         ProfileL: {
@@ -2261,11 +2356,14 @@ export interface components {
         ResultEntityListEntityActions: {
             entity: components["schemas"]["EntityActions"][];
         };
+        ResultEntityListGroupHierarchyDto: {
+            entity: components["schemas"]["GroupHierarchyDto"][];
+        };
         ResultEntityListPartyType: {
             entity: components["schemas"]["PartyType"][];
         };
-        ResultEntityProfile: {
-            entity: components["schemas"]["Profile"];
+        ResultEntityProfileDto: {
+            entity: components["schemas"]["ProfileDto"];
         };
         ResultEntityRoleDto: {
             entity: components["schemas"]["RoleDto"];
@@ -3382,6 +3480,48 @@ export interface operations {
             };
         };
     };
+    "get group descendents": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityListGroupHierarchyDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get group": {
         parameters: {
             query?: {
@@ -3442,7 +3582,7 @@ export interface operations {
                 Role?: string;
             };
             path: {
-                group: string;
+                party: string;
             };
             cookie?: never;
         };
@@ -3455,6 +3595,50 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListGroupDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get orders by party code": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                party: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListOrderDtoBody"];
                 };
             };
             /** @description Error */
@@ -3680,6 +3864,49 @@ export interface operations {
         responses: {
             /** @description OK */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create supplier": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePurchaseOrderRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5788,7 +6015,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityProfileBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityProfileDtoBody"];
                 };
             };
             /** @description Error */

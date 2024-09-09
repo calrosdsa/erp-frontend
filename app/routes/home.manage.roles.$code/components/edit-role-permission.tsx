@@ -53,7 +53,7 @@ export const EditRolePermission = ({
     if (!entityActions) return;
     const body: z.infer<typeof updateRoleActionsSchema> = {
       actionSelecteds: selected,
-      roleId: role.id,
+      role_uuid: role.uuid,
       entityName:entityActions.entity.name,
     };
     console.log(body)
@@ -87,6 +87,7 @@ export const EditRolePermission = ({
       onOpenChange={onOpenChange}
     >
       <div className="grid gap-y-4">
+        {/* {JSON.stringify(role)} */}
         <DataTable
           data={entityActions?.actions || []}
           columns={roleActionColumns({

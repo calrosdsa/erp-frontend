@@ -18,21 +18,21 @@ export default function UserClient(){
 
             <DisplayTextValue
             title={t("form.givenName")}
-            value={profile?.GivenName}
+            value={profile?.given_name}
             />
 
             <DisplayTextValue
             title={t("form.familyName")}
-            value={profile?.FamilyName}
+            value={profile?.family_name}
             />
             <DisplayTextValue
             title={t("form.email")}
-            value={profile?.EmailAddress}
+            value={profile?.email}
             />
-            <DisplayTextValue
+            {/* <DisplayTextValue
             title={t("_role.base")}
             value={profile?.UserRelation.Role.Code}
-            />
+            /> */}
         </div>
         </>
     )

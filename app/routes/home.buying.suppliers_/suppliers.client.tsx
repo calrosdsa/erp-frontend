@@ -13,7 +13,7 @@ export default function SuppliersClient (){
     const createSupplier = useCreateSupplier()
     const [permission] = usePermission({
         actions:actions,
-        roleActions:globalState.role?.RoleActions
+        roleActions:globalState.roleActions
     })
     return (
         <div>

@@ -22,10 +22,10 @@ export const action = async({request}:ActionFunctionArgs)=>{
     let actions:components["schemas"]["Action"][] =[]
     switch(data.action){
         case "get":{
-            const res= await client.GET("/group/{group}",{
+            const res= await client.GET("/group/{party}",{
                 params:{
                     path:{
-                        group:data.partyType
+                        party:data.partyType
                     },
                     query:{
                         page:DEFAULT_PAGE,

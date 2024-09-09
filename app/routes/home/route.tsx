@@ -97,6 +97,7 @@ export default function Home() {
                     activeCompany: company,
                     role: role,
                     profile: profile,
+                    roleActions:roleActions,
                   } as GlobalState
                 }
               />

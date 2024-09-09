@@ -6,8 +6,8 @@ import { fullName } from "~/util/convertor/convertor"
 import { routes } from "~/util/route"
 
 
-export const profileColumms = ({}):ColumnDef<components["schemas"]["ProfileDto"]>[] =>{
-    let columns:ColumnDef<components["schemas"]["ProfileDto"]>[] = []
+export const profileColumms = ({}):ColumnDef<components["schemas"]["ProfileL"]>[] =>{
+    let columns:ColumnDef<components["schemas"]["ProfileL"]>[] = []
     const {t,i18n} = useTranslation("common")
     const r = routes
     columns.push({

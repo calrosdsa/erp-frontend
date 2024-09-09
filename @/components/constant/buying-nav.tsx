@@ -23,6 +23,12 @@ export const BuyingNav = ({ entities }: {
       href: r.suppliers,
     });
   }
+  if(entities?.includes(Entity.PURCHASE_ORDER_ENTITY_ID)){
+    buyingChildrens.push({
+      title: t("purchase-orders"),
+      href: r.purchaseOrders,
+    });
+  }
   const buying:NavItem = {
     title: t("buying"),
     icon: CreditCardIcon,

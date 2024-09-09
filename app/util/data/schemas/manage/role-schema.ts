@@ -13,7 +13,7 @@ export const roleActionSelected = z.object({
 })
 
 export const updateRoleActionsSchema = z.object({
-    roleId:z.number(),
+    role_uuid:z.string(),
     entityName:z.string(),
     actionSelecteds:z.array(roleActionSelected)
 })

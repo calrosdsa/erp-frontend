@@ -8,14 +8,14 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
     const client =apiClient({request})
     const url= new URL(request.url)
     const searchParams = url.searchParams
-    const res = await client.GET("/group/{group}",{
+    const res = await client.GET("/group/{party}",{
         params:{
             query:{
                 page:searchParams.get("page") || DEFAULT_PAGE,
                 size:searchParams.get("size") || DEFAULT_SIZE,
             },
             path:{
-                group:PartyType.PARTY_SUPPLIER_GROUP,
+                party:PartyType.PARTY_SUPPLIER_GROUP,
             },
         }
     })

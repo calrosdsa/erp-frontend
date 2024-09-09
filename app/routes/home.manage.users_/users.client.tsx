@@ -11,7 +11,7 @@ export default function UsersClient() {
   const state = useOutletContext<GlobalState>();
   const [permission] = usePermission({
     actions: actions,
-    roleActions: state.role?.RoleActions,
+    roleActions: state.roleActions,
   });
   const createUser = useCreateUser()
   return (

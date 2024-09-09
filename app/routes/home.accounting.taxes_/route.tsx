@@ -2,9 +2,9 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import TaxesClient from "./taxes.client";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { components } from "index";
 import { z } from "zod";
 import { createTaxSchema } from "~/util/data/schemas/accounting/tax-schema";
+import { components } from "~/sdk";
 
 
 type ActionData = {
@@ -45,6 +45,7 @@ export const action = async({request}:ActionFunctionArgs) =>{
         result,
         message,
         error,
+        
     })
 }
 
@@ -62,7 +63,8 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
     })
 
     return json({
-        result:res.data?.pagination_result
+        result:res.data?.pagination_result,
+        actions:res.data?.actions
     })
 }
 

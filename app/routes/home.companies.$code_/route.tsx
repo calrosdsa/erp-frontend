@@ -15,7 +15,7 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
             }
         }
     })
-    console.log(res.error)
+    console.log(res.data)
     return json({
         company:res.data?.result
     })

@@ -8,6 +8,7 @@ class Routes  {
     buying = this.base +"/buying"
     supplierGroups = this.buying +"/supplier-groups"
     suppliers = this.buying +"/suppliers"
+    purchaseOrders = this.buying + "/purchase-orders"
 
     selling = this.base + "/selling"
     sellingStock = this.selling + "/stock"
@@ -94,6 +95,15 @@ class Routes  {
     //Buyinh
     toSupplierGroup(name:string,id:string):string{
         return `${this.supplierGroups}/${encodeURIComponent(name)}?id=${id}`
+    }
+    toSupplierDetail(name:string,id:string):string{
+        return `${this.suppliers}/${encodeURIComponent(name)}?id=${id}`
+    }
+    toPurchaseOrderDetail(name:string,id:string):string {
+        return `${this.purchaseOrders}/${encodeURIComponent(name)}?id=${id}`
+    }
+    toPurchaseOrderCreate():string {
+        return `${this.purchaseOrders}/create`
     }
 
     //Manage

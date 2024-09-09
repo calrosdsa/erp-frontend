@@ -160,7 +160,7 @@ export default function CustomForm({
         {renderCustomInputs != undefined && renderCustomInputs(form)}
         <div className="col-span-full"></div>
 
-        <Button type="submit" className=" col-span-full w-full mt-3">
+        <Button type="submit" className=" w-full mt-3">
           {fetcher.state == "submitting" ? <Icons.spinner /> : t("form.submit")}
         </Button>
       </fetcher.Form>
