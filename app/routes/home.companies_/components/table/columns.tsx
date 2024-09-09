@@ -1,67 +1,41 @@
 import ButtonExpandRow from "@/components/custom/button/ButtonExpandRow";
+import TableCellDate from "@/components/custom/table/cells/table-cell-date";
+import TableCellNameNavigation from "@/components/custom/table/cells/table-cell-name_navigation";
+import TableCellNavigate from "@/components/custom/table/cells/table-cell-navigate";
 import { Button } from "@/components/ui/button";
 import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { CornerDownRight, FolderIcon, FolderOpenIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { components } from "index";
+import { components } from "~/sdk";
+import { routes } from "~/util/route";
 
-export const columns = (): ColumnDef<components["schemas"]["Company"]>[] => {
-  const { t } = useTranslation("common");
+export const columns = (): ColumnDef<components["schemas"]["CompanyDto"]>[] => {
+  const { t,i18n } = useTranslation("common");
+  const r = routes
   return [
    
     {
       header: "Name",
-      accessorKey: "Name",
-      cell: ({ row, getValue }) => {
-        const code = row.getValue("code") as string;
-
-        return (
-          <div className="flex space-x-2 items-center ">
-            <div>
-              {row.getCanExpand() ? (
-                <Button
-                  variant={"ghost"}
-                  size={"sm"}
-                  {...{
-                    onClick: row.getToggleExpandedHandler(),
-                    style: { cursor: "pointer" },
-                  }}
-                >
-                  {row.getIsExpanded() ? (
-                    <FolderOpenIcon size={18} strokeWidth={"1.2"} />
-                  ) : (
-                    <FolderIcon size={18} strokeWidth={"1.2"} />
-                  )}
-                </Button>
-              ) : (
-                <CornerDownRight
-                  size={18}
-                  className="mx-3"
-                  strokeWidth={"1.2"}
-                />
-              )}
-            </div>
-            <div>
-              <Link
-                to={`./${encodeURIComponent(code)}`}
-                className="underline font-semibold"
-              >
-                {getValue<boolean>()}
-              </Link>
-            </div>
-          </div>
-        );
-      },
+      accessorKey: "name",
+      cell:({...props})=>{
+        const rowData = props.row.original
+        return(
+          <TableCellNameNavigation
+          {...props}
+          navigate={(name)=> r.toCompanyDetail(name,rowData.uuid)}
+          />
+        )
+      }
     },
+    
     {
-      accessorKey: "Code",
-      id:"code",
-      header:t("table.code"),
-    },
-    {
-      accessorKey: "CreatedAt",
-      header: "Fecha de Creacion",
+      accessorKey: "created_at",
+      header: t("table.createdAt"),
+      cell:({...props})=><TableCellDate
+      {...props}
+      i18n={i18n}
+      />
     },
   ];
 };

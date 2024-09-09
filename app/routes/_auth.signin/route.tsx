@@ -4,7 +4,6 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { commitSession, getSession } from "~/sessions";
 import apiClient from "~/apiclient";
 import { ClientOnly } from "remix-utils/client-only";
-import { components } from "index";
 
 export const meta: MetaFunction = () => {
   return [
@@ -26,10 +25,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (res.response.ok && res.data != undefined) {
     session.set("access_token", res.data.access_token);
     session.set("locale", "en");
-    if(res.data.user.UserRelation){
-      session.set("companyUuid", res.data.user.UserRelation.Company.Uuid || "");
-      session.set("role", res.data.user.UserRelation.Role.Code as string);
-      session.set("sessionUuid", res.data.user.UserRelation.Uuid)
+    if(res.data.user_relation){
+      // session.set("companyUuid", res.data.user.UserRelation.Company.Uuid || "");
+      session.set("sessionUuid", res.data.user_relation.uuid)
     }
     return redirect("/home", {
       headers: {

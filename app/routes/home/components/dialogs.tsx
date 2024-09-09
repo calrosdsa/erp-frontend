@@ -36,6 +36,7 @@ export default function GlobalDialogs({globalState}:{
         <CreateSupplier
         open={createSupplier.open}
         onOpenChange={createSupplier.onOpenChange}
+        globalState={globalState}
         />
         }
         {createGroup.open &&

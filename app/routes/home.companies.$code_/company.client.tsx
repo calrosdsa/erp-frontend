@@ -14,22 +14,23 @@ export default function CompanyClient() {
         <Typography fontSize={subtitle} className=" col-span-full">
           {t("info")}
         </Typography>
+        {JSON.stringify(company)}
 
         {company && (
           <>
-            <DisplayTextValue value={company.Name} title={t("form.name")} />
+            <DisplayTextValue value={company.name} title={t("form.name")} />
             <DisplayTextValue
-              value={formatLongDate(company.CreatedAt, i18n.language)}
+              value={formatLongDate(company.created_at, i18n.language)}
               title={t("table.createdAt")}
             />
 
             <DisplayTextValue
-              value={company.SiteUrl}
+              value={company.site_url}
               title={t("form.siteUrl")}
             />
 
             <DisplayTextValue
-              value={company.Logo}
+              value={company.logo}
               title={t("form.logo")}
             />
           </>

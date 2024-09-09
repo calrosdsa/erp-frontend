@@ -13,7 +13,7 @@ export default function CompaniesClient() {
   const state = useOutletContext<GlobalState>();
   const createCompany = useCreateCompany();
   const [permission] = usePermission({
-    roleActions: state.role?.RoleActions,
+    roleActions: state.roleActions,
     actions: paginationResult?.actions,
   });
 
@@ -34,9 +34,9 @@ export default function CompaniesClient() {
         hiddenColumns={{
           code: false,
         }}
-        expandedOptions={{
-          getSubRows: (row) => row.CompanyDepartments,
-        }}
+        // expandedOptions={{
+        //   getSubRows: (row) => row.CompanyDepartments,
+        // }}
       />
 
       {/* <OrderTable

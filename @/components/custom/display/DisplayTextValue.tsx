@@ -18,7 +18,7 @@ export default function DisplayTextValue({
   onChange,
 }: {
   title: string;
-  value: string | undefined | boolean;
+  value: string | undefined | boolean | null;
   to?: string;
   readOnly?: boolean;
   onChange?: (e: string | boolean) => void;

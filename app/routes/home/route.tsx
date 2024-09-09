@@ -47,14 +47,19 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
           "Set-Cookie": await destroySession(session),
         },
       });
-    }
+    } 
   }
   const sessionData = session.data as SessionData;
   return json(
     {
       data: res.data,
       session: sessionData,
-      activeCompany: res.data?.user.UserRelation.Company,
+      user: res.data?.user,
+      role: res.data?.role,
+      profile: res.data?.profile,
+      company: res.data?.company,
+      roleActions:res.data?.role_actions,
+      // activeCompany: res.data?.user.UserRelation.Company,
     },
     {
       headers: {
@@ -65,7 +70,7 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 };
 
 export default function Home() {
-  const { data, session, activeCompany } = useLoaderData<typeof loader>();
+  const { data, session, user,profile,role,company,roleActions} = useLoaderData<typeof loader>();
 
   return (
     <ClientOnly fallback={<FallBack />}>
@@ -74,23 +79,24 @@ export default function Home() {
           <div>
             <HomeLayout
               globalState={{
-                user: data?.user,
-                appConfig: data?.appConfig,
+                // appConfig: data?.appConfig,
                 session: session,
-                activeCompany: activeCompany,
-                role: data?.user.UserRelation.Role,
-                profile: data?.user.UserRelation.Profile,
+                user: user,
+                activeCompany: company,
+                role: role,
+                profile: profile,
+                roleActions:roleActions || [],
               }}
             >
               <Outlet
                 context={
                   {
                     user: data?.user,
-                    appConfig: data?.appConfig,
+                    // appConfig: data?.appConfig,
                     session: session,
-                    activeCompany: activeCompany,
-                    role: data?.user.UserRelation.Role,
-                    profile: data?.user.UserRelation.Profile,
+                    activeCompany: company,
+                    role: role,
+                    profile: profile,
                   } as GlobalState
                 }
               />

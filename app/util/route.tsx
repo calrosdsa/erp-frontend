@@ -37,6 +37,9 @@ class Routes  {
     account = this.settings + "/account"
 
 
+    toCompanyDetail(name:string,id:string):string {
+        return `${this.companies}/${encodeURIComponent(name)}?id=${id}`
+    }
     
 
     priceListDetail(id:string):string {

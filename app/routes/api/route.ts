@@ -3,7 +3,7 @@ import { commitSession, getSession } from "~/sessions";
 import { sessionDefaultsFormSchema } from "../home/components/SessionDefaults";
 import { z } from "zod";
 import apiClient from "~/apiclient";
-import { components } from "index";
+import { components } from "~/sdk";
 
 type ApiAction = {
   action:string
@@ -13,7 +13,7 @@ type ApiAction = {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({request})
   const data:ApiAction = await request.json();
-  let sessions:components["schemas"]["UserRelation"][]=[]
+  let sessions:components["schemas"]["UserRelationDto"][]=[]
   console.log(data)
   switch (data.action) {
     case "get-sessions":{

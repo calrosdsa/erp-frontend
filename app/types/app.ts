@@ -9,11 +9,12 @@ export type CountrySelectItem = {
 }
 
 export type GlobalState = {
-    appConfig?: components["schemas"]["AppConfigStruct"];
-    user?: components["schemas"]["User"];
-    profile?:components["schemas"]["Profile"];
-    role?:components["schemas"]["Role"];
-    activeCompany?: components["schemas"]["Company"];
+    // appConfig?: components["schemas"]["AppConfigStruct"];
+    user?: components["schemas"]["UserDto"];
+    profile?:components["schemas"]["ProfileDto"];
+    role?:components["schemas"]["RoleDto"];
+    roleActions:components["schemas"]["RoleActionDto"][]
+    activeCompany?: components["schemas"]["CompanyDto"];
     session:SessionData;
     userData?:UserData  
 }

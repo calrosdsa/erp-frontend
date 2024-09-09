@@ -16,6 +16,7 @@ import SelectForm from "../select/SelectForm";
 import CheckForm from "../input/CheckForm";
 import { MultiSelect } from "../select/MultiSelect";
 import { Textarea } from "@/components/ui/textarea";
+import FormAutocomplete from "../select/FormAutocomplete";
 
 interface Props {
   schema: any;
@@ -89,6 +90,7 @@ export default function CustomForm({
           if (item.typeForm == "check") {
             return (
               <CheckForm
+                key={idx}
                 label={item.label}
                 name={item.name}
                 description={item.description}
@@ -112,6 +114,7 @@ export default function CustomForm({
           if (item.typeForm == "multiselect") {
             return (
               <MultiSelect
+                key={idx}
                 label={item.label}
                 data={item.data || []}
                 keyName={item.keyName}
@@ -119,14 +122,40 @@ export default function CustomForm({
                 keyValue={item.keyValue}
                 name={item.name}
                 onSelect={(e) => {
-                  if (item.onSelect) {
-                    item.onSelect(e);
+                  if (item.onSelectArray) {
+                    item.onSelectArray(e);
                   }
                 }}
                 form={form}
               />
             );
           }
+            // if (item.typeForm == "autocomplete") {
+            //   return (
+            //     <FormAutocomplete
+            //       key={idx}
+            //       form={form}
+            //       label={item.label}
+            //       data={item.data || []}
+            //       onOpen={() => {
+            //         if (item.onValueChange) {
+            //           item.onValueChange("");
+            //         }
+            //       }}
+            //       onValueChange={(e) => {
+            //         if(item.onValueChange){
+            //           item.onValueChange(e)
+            //         }
+            //       }}
+            //       name={item.name}
+            //       nameK={item.keyName}
+            //       onSelect={(v) => {
+            //         form.setValue(item.name, v);
+            //       }}
+            //       addNew={item.actions?.addNew}
+            //     />
+            //   );
+            // }
         })}
         {renderCustomInputs != undefined && renderCustomInputs(form)}
         <div className="col-span-full"></div>

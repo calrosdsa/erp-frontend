@@ -28,9 +28,9 @@ export const EditRolePermission = ({
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  roleActions?: components["schemas"]["RoleActions"][];
+  roleActions?: components["schemas"]["RoleActionDto"][];
   entityActions?: components["schemas"]["EntityActions"];
-  role?: components["schemas"]["Role"];
+  role?: components["schemas"]["RoleDto"];
 }) => {
   const { t } = useTranslation("common");
   const [selected, setSelected] = useState<
@@ -38,10 +38,10 @@ export const EditRolePermission = ({
   >(
     entityActions?.actions.map((item) => {
       return {
-        actionId: item.ID,
-        actionName:item.Name,
+        actionId: item.id,
+        actionName:item.name,
         selected:
-          roleActions?.map((t) => t.ActionID).includes(item.ID) || false,
+          roleActions?.map((t) => t.action_id).includes(item.id) || false,
       };
     }) || []
   );
@@ -53,8 +53,8 @@ export const EditRolePermission = ({
     if (!entityActions) return;
     const body: z.infer<typeof updateRoleActionsSchema> = {
       actionSelecteds: selected,
-      roleId: role.ID,
-      entityName:entityActions.entity.Name,
+      roleId: role.id,
+      entityName:entityActions.entity.name,
     };
     console.log(body)
     fetcher.submit({
@@ -105,14 +105,14 @@ export const EditRolePermission = ({
 
 interface EditRolePermissionStore {
   entityActions?: components["schemas"]["EntityActions"] | undefined;
-  roleActions: components["schemas"]["RoleActions"][];
-  role: components["schemas"]["Role"] | undefined;
+  roleActions: components["schemas"]["RoleActionDto"][];
+  role: components["schemas"]["RoleDto"] | undefined;
   open: boolean;
   onOpenChange: (e: boolean) => void;
   openDialog: (opts: {
-    roleActions: components["schemas"]["RoleActions"][];
+    roleActions: components["schemas"]["RoleActionDto"][];
     entityActions?: components["schemas"]["EntityActions"];
-    role: components["schemas"]["Role"] | undefined;
+    role: components["schemas"]["RoleDto"] | undefined;
   }) => void;
 }
 export const useEditRolePermission = create<EditRolePermissionStore>((set) => ({

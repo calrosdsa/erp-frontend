@@ -16,8 +16,13 @@ export const action = async({request}:ActionFunctionArgs)=>{
     let error:string | undefined = undefined
     switch(data.action){
         case "create-supplier":{
+            const d = data.createSupplier
             const res = await client.POST("/supplier",{
-                body:data.createSupplier
+                body:{
+                    group:d.group,
+                    name:d.name,
+                    enabled:d.enabled
+                }
             })
             message = res.data?.message
             error = res.error?.detail

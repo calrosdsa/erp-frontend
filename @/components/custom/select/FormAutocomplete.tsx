@@ -32,7 +32,7 @@ interface Props<T extends object, K extends keyof T> {
   name: string;
   onOpen: () => void;
   form: any;
-  label: string;
+  label: string | undefined;
   description?: string;
   onValueChange: (e: string) => void;
   onSelect: (v: T) => void;
@@ -62,7 +62,9 @@ export default function FormAutocomplete<
         name={name}
         render={({ field }) => (
           <FormItem className="flex flex-col w-full ">
+            {label &&
             <FormLabel>{label}</FormLabel>
+            }
             <Popover>
               <PopoverTrigger asChild>
                 <FormControl>

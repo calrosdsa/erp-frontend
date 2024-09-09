@@ -26,10 +26,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
   let navItems: NavItem[] = [];
   const r = routes;
-  const { appConfig, user, role } = data;
-  const entities = role?.RoleActions.filter(
-    (item) => item.Action.Name == "view"
-  ).map((item) => item.Action.EntityID);
+  const { user, role,roleActions } = data;
+  const entities = roleActions.filter(
+    (item) => item.action.name == "view"
+  ).map((item) => item.action.entity_id);
 
   const buyingNav = BuyingNav({
     entities:entities
@@ -137,22 +137,22 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     children: usersChildren,
   };
 
-  const plugins: NavItem = {
-    title: t("plugins"),
-    icon: BlocksIcon,
-    href: "/home/plugins",
-    isChildren: true,
-    children: [],
-  };
-  if (appConfig != undefined) {
-    appConfig.plugins.map((item) => {
-      const navItem: NavItem = {
-        title: t(item.Name),
-        href: `/home/plugins/${item.Name}`,
-      };
-      plugins.children?.push(navItem);
-    });
-  }
+  // const plugins: NavItem = {
+  //   title: t("plugins"),
+  //   icon: BlocksIcon,
+  //   href: "/home/plugins",
+  //   isChildren: true,
+  //   children: [],
+  // };
+  // if (appConfig != undefined) {
+  //   appConfig.plugins.map((item) => {
+  //     const navItem: NavItem = {
+  //       title: t(item.Name),
+  //       href: `/home/plugins/${item.Name}`,
+  //     };
+  //     plugins.children?.push(navItem);
+  //   });
+  // }
 
   const purchases: NavItem = {
     title: t("purchases"),
@@ -198,7 +198,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (usersChildren.length > 0) {
     navItems.push(manage);
   }
-  navItems.push(plugins);
+  // navItems.push(plugins);
   // break;
   // }
   // case Role.ROLE_CLIENT: {

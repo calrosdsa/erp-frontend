@@ -1015,16 +1015,26 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            appConfig: components["schemas"]["AppConfigStruct"];
-            user: components["schemas"]["User"];
+            company: components["schemas"]["CompanyDto"];
+            profile: components["schemas"]["ProfileDto"];
+            role: components["schemas"]["RoleDto"];
+            role_actions: components["schemas"]["RoleActionDto"][];
+            user: components["schemas"]["UserDto"];
         };
         Action: {
-            Entity: components["schemas"]["Entity"];
+            entity: components["schemas"]["Entity"];
             /** Format: int64 */
-            EntityID: number;
+            entity_id: number;
             /** Format: int64 */
-            ID: number;
-            Name: string;
+            id: number;
+            name: string;
+        };
+        ActionDto: {
+            /** Format: int64 */
+            entity_id: number;
+            /** Format: int64 */
+            id: number;
+            name: string;
         };
         ActionSelected: {
             /** Format: int64 */
@@ -1087,9 +1097,6 @@ export interface components {
             /** Format: int64 */
             amount: number;
             currency: string;
-        };
-        AppConfigStruct: {
-            plugins: components["schemas"]["PluginApp"][];
         };
         ApplicationDetailsStruct: {
             application_id?: string;
@@ -1174,27 +1181,33 @@ export interface components {
             plugins?: components["schemas"]["CompanyPlugins"][];
         };
         Company: {
-            Code: string;
-            CompanyDepartments: components["schemas"]["Company"][];
-            CompanyPlugins: components["schemas"]["CompanyPlugins"][];
+            code: string;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
+            created_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
             /** Format: int64 */
-            ID: number;
-            IsParent: boolean;
-            Logo: string;
-            Name: string;
+            id: number;
+            is_parent: boolean;
+            logo: string | null;
+            name: string;
+            /** Format: int32 */
+            ordinal: number;
             /** Format: int64 */
-            Ordinal: number;
-            Parent: components["schemas"]["Company"];
-            /** Format: int64 */
-            ParentID: number | null;
-            SiteUrl: string;
+            parent_id: number | null;
+            site_url: string | null;
             /** Format: date-time */
-            UpdatedAt: string;
-            Users: components["schemas"]["User"][];
-            Uuid: string;
+            updated_at: string | null;
+            uuid: string;
+        };
+        CompanyDto: {
+            /** Format: date-time */
+            created_at: string;
+            logo: string | null;
+            name: string;
+            /** Format: int64 */
+            ordinal: number;
+            site_url: string | null;
+            uuid: string;
         };
         CompanyPlugins: {
             /** Format: int64 */
@@ -1391,8 +1404,8 @@ export interface components {
         };
         Entity: {
             /** Format: int64 */
-            ID: number;
-            Name: string;
+            id: number;
+            name: string;
         };
         EntityActions: {
             actions: components["schemas"]["Action"][];
@@ -1415,6 +1428,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
             result: components["schemas"]["Company"];
+        };
+        EntityResponseCompanyDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["Action"][];
+            result: components["schemas"]["CompanyDto"];
         };
         EntityResponseItemAttributeBody: {
             /**
@@ -1461,14 +1483,14 @@ export interface components {
             actions: components["schemas"]["Action"][];
             result: components["schemas"]["ItemPriceList"];
         };
-        EntityResponseListUserRelationBody: {
+        EntityResponseListUserRelationDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
-            result: components["schemas"]["UserRelation"][];
+            result: components["schemas"]["UserRelationDto"][];
         };
         EntityResponseResponseSalesOrderDetailBody: {
             /**
@@ -1533,14 +1555,14 @@ export interface components {
             actions: components["schemas"]["Action"][];
             result: components["schemas"]["ResultEntityProfile"];
         };
-        EntityResponseResultEntityRoleBody: {
+        EntityResponseResultEntityRoleDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
-            result: components["schemas"]["ResultEntityRole"];
+            result: components["schemas"]["ResultEntityRoleDto"];
         };
         EntityResponseResultEntitySupplierDtoBody: {
             /**
@@ -1806,11 +1828,6 @@ export interface components {
             key: string;
             value: string;
         };
-        NullTime: {
-            /** Format: date-time */
-            Time: string;
-            Valid: boolean;
-        };
         ObjectStruct: {
             payment?: components["schemas"]["PaymentStruct"];
         };
@@ -1823,14 +1840,14 @@ export interface components {
             /** Format: int64 */
             quantity: number;
         };
-        PaginationResponsePaginationResultListCompanyBody: {
+        PaginationResponsePaginationResultListCompanyDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
-            pagination_result: components["schemas"]["PaginationResultListCompany"];
+            pagination_result: components["schemas"]["PaginationResultListCompanyDto"];
         };
         PaginationResponsePaginationResultListGroupDtoBody: {
             /**
@@ -1895,32 +1912,32 @@ export interface components {
             actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListItemVariant"];
         };
-        PaginationResponsePaginationResultListProfileDtoBody: {
+        PaginationResponsePaginationResultListProfileLBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
-            pagination_result: components["schemas"]["PaginationResultListProfileDto"];
+            pagination_result: components["schemas"]["PaginationResultListProfileL"];
         };
-        PaginationResponsePaginationResultListRoleActionsBody: {
+        PaginationResponsePaginationResultListRoleActionDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
-            pagination_result: components["schemas"]["PaginationResultListRoleActions"];
+            pagination_result: components["schemas"]["PaginationResultListRoleActionDto"];
         };
-        PaginationResponsePaginationResultListRoleBody: {
+        PaginationResponsePaginationResultListRoleDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["Action"][];
-            pagination_result: components["schemas"]["PaginationResultListRole"];
+            pagination_result: components["schemas"]["PaginationResultListRoleDto"];
         };
         PaginationResponsePaginationResultListSalesOrderBody: {
             /**
@@ -1967,8 +1984,8 @@ export interface components {
             actions: components["schemas"]["Action"][];
             pagination_result: components["schemas"]["PaginationResultListWareHouse"];
         };
-        PaginationResultListCompany: {
-            results: components["schemas"]["Company"][];
+        PaginationResultListCompanyDto: {
+            results: components["schemas"]["CompanyDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2007,18 +2024,18 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListProfileDto: {
-            results: components["schemas"]["ProfileDto"][];
+        PaginationResultListProfileL: {
+            results: components["schemas"]["ProfileL"][];
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListRole: {
-            results: components["schemas"]["Role"][];
+        PaginationResultListRoleActionDto: {
+            results: components["schemas"]["RoleActionDto"][];
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListRoleActions: {
-            results: components["schemas"]["RoleActions"][];
+        PaginationResultListRoleDto: {
+            results: components["schemas"]["RoleDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2049,14 +2066,14 @@ export interface components {
         };
         Party: {
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
+            created_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
             /** Format: int64 */
-            ID: number;
-            PartyType: components["schemas"]["PartyType"];
-            PartyTypeCode: string;
+            id: number;
+            party_type: components["schemas"]["PartyType"];
+            party_type_code: string;
             /** Format: date-time */
-            UpdatedAt: string;
+            updated_at: string | null;
         };
         PartyAddress: {
             Address: components["schemas"]["Address"];
@@ -2075,9 +2092,8 @@ export interface components {
             UpdatedAt: string;
         };
         PartyType: {
-            Code: string;
-            Name: string;
-            Type: string;
+            code: string;
+            name: string | null;
         };
         PaymentStruct: {
             amount_money?: components["schemas"]["Amount"];
@@ -2170,24 +2186,33 @@ export interface components {
             type: string;
         };
         Profile: {
-            Avatar: string | null;
+            avatar: string | null;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            EmailAddress: string;
-            FamilyName: string;
-            GivenName: string;
+            created_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
+            email_address: string;
+            family_name: string;
+            given_name: string;
             /** Format: int64 */
-            ID: number;
-            Party: components["schemas"]["Party"];
-            PhoneNumber: string;
-            ProfileKeyValue: components["schemas"]["ProfileKeyValue"][];
+            id: number;
+            party: components["schemas"]["Party"];
+            phone_number: string | null;
             /** Format: date-time */
-            UpdatedAt: string;
-            UserRelation: components["schemas"]["UserRelation"];
-            Uuid: string;
+            updated_at: string | null;
+            uuid: string;
         };
         ProfileDto: {
+            emailAddress: string;
+            familyName: string;
+            givenName: string;
+            /** Format: int64 */
+            id: number;
+            phoneNumber: string | null;
+            uuid: string;
+        };
+        ProfileL: {
+            /** Format: date-time */
+            createdAt: string;
             emailAddress: string;
             familyName: string;
             givenName: string;
@@ -2197,14 +2222,6 @@ export interface components {
             partyName: string;
             phoneNumber: string;
             uuid: string;
-        };
-        ProfileKeyValue: {
-            /** Format: int64 */
-            ID?: number;
-            /** Format: int64 */
-            baseId?: number;
-            key: string;
-            value: string;
         };
         RequestSubscriptionCancelBody: {
             /**
@@ -2250,8 +2267,8 @@ export interface components {
         ResultEntityProfile: {
             entity: components["schemas"]["Profile"];
         };
-        ResultEntityRole: {
-            entity: components["schemas"]["Role"];
+        ResultEntityRoleDto: {
+            entity: components["schemas"]["RoleDto"];
         };
         ResultEntitySupplierDto: {
             entity: components["schemas"]["SupplierDto"];
@@ -2288,27 +2305,23 @@ export interface components {
             /** Format: int64 */
             version: number;
         };
-        Role: {
-            Code: string;
-            Company: components["schemas"]["Company"];
+        RoleActionDto: {
+            action: components["schemas"]["ActionDto"];
             /** Format: int64 */
-            CompanyID: number;
-            /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            Description: string;
+            action_id: number;
             /** Format: int64 */
-            ID: number;
-            RoleActions: components["schemas"]["RoleActions"][];
-            /** Format: date-time */
-            UpdatedAt: string;
+            role_id: number;
         };
-        RoleActions: {
-            Action: components["schemas"]["Action"];
+        RoleDto: {
+            code: string;
+            /** Format: date-time */
+            created_at: string;
+            description: string | null;
             /** Format: int64 */
-            ActionID: number;
-            /** Format: int64 */
-            RoleID: number;
+            id: number;
+            /** Format: date-time */
+            updated_at: string | null;
+            uuid: string;
         };
         SalesItemLine: {
             /** Format: date-time */
@@ -2381,8 +2394,8 @@ export interface components {
             readonly $schema?: string;
             /** @description Access token of the user */
             access_token: string;
-            user: components["schemas"]["User"];
-            user_relations: components["schemas"]["UserRelation"][];
+            user: components["schemas"]["UserDto"];
+            user_relation: components["schemas"]["UserRelationDto"];
         };
         SquareCatalogResponseBody: {
             /**
@@ -2607,36 +2620,17 @@ export interface components {
             readonly $schema?: string;
             entity: components["schemas"]["ItemDto"];
         };
-        User: {
+        UserDto: {
+            identifier: string;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            ID: number;
-            Identifier: string;
-            LastLogin: components["schemas"]["NullTime"];
-            /** Format: date-time */
-            UpdatedAt: string;
-            UserRelation: components["schemas"]["UserRelation"];
-            Uuid: string;
+            last_login: string | null;
+            uuid: string;
         };
-        UserRelation: {
-            Company: components["schemas"]["Company"];
-            /** Format: int64 */
-            CompanyID: number;
-            /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            Profile: components["schemas"]["Profile"];
-            /** Format: int64 */
-            ProfileID: number;
-            Role: components["schemas"]["Role"];
-            /** Format: int64 */
-            RoleID: number;
-            User: components["schemas"]["User"];
-            /** Format: int64 */
-            UserID: number;
-            Uuid: string;
+        UserRelationDto: {
+            company: components["schemas"]["CompanyDto"];
+            profile: components["schemas"]["ProfileDto"];
+            role: components["schemas"]["RoleDto"];
+            uuid: string;
         };
         WareHouse: {
             Code: string;
@@ -2650,7 +2644,7 @@ export interface components {
             /** Format: int64 */
             ID: number;
             Name: string;
-            /** Format: int64 */
+            /** Format: int32 */
             Ordinal: number;
             Parent: components["schemas"]["WareHouse"];
             /** Format: int64 */
@@ -2775,7 +2769,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseListUserRelationBody"];
+                    "application/json": components["schemas"]["EntityResponseListUserRelationDtoBody"];
                 };
             };
             /** @description Error */
@@ -3059,7 +3053,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyDtoBody"];
                 };
             };
             /** @description Error */
@@ -3144,7 +3138,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseCompanyBody"];
+                    "application/json": components["schemas"]["EntityResponseCompanyDtoBody"];
                 };
             };
             /** @description Error */
@@ -3186,7 +3180,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyDtoBody"];
                 };
             };
             /** @description Error */
@@ -3228,7 +3222,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyDtoBody"];
                 };
             };
             /** @description Error */
@@ -3732,7 +3726,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleDtoBody"];
                 };
             };
             /** @description Error */
@@ -3817,7 +3811,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityRoleBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityRoleDtoBody"];
                 };
             };
             /** @description Error */
@@ -3941,7 +3935,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleActionsBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleActionDtoBody"];
                 };
             };
             /** @description Error */
@@ -5709,7 +5703,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListProfileDtoBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListProfileLBody"];
                 };
             };
             /** @description Error */

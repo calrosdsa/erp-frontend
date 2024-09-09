@@ -15,7 +15,7 @@ export default function RoleClient() {
   const state = useOutletContext<GlobalState>();
   const { t } = useTranslation("common");
   const [permission] = usePermission({
-    roleActions: state.role?.RoleActions,
+    roleActions: state.roleActions,
     actions: actions,
   });
   const editRolePermission = useEditRolePermission()
@@ -42,15 +42,17 @@ export default function RoleClient() {
         <Typography fontSize={subtitle} className=" col-span-full">
           {t("info")}
         </Typography>
-        <DisplayTextValue title={t("form.name")} value={role?.Code} />
+        <DisplayTextValue title={t("form.name")} value={role?.code} />
         <DisplayTextValue
           title={t("form.description")}
-          value={role?.Description}
+          value={role?.description}
         />
 
         <Typography fontSize={subtitle} className=" col-span-full">
           {t("_role.permissions")}
         </Typography>
+
+        {/* {JSON.stringify(roleActions)} */}
 
         <div className=" col-span-full">
           <DataTable

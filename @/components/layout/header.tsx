@@ -19,17 +19,17 @@ export default function Header({ data,openSessionDefaults }: {
           to={"/home"}
           className="hidden items-center justify-between gap-2 md:flex"
         >
-          {(data.activeCompany && data.activeCompany.Logo != "") ?
+          {(data.activeCompany && data.activeCompany.logo) ?
 
           <img className="h-16 w-16 object-contain"
-          src={data.activeCompany.Logo}
+          src={data.activeCompany.logo || ""}
           />
           :
             <Boxes className="h-6 w-6" />
           }
 
           {data.activeCompany &&
-          <h1 className="text-lg font-semibold">{data.activeCompany.Name}</h1>
+          <h1 className="text-lg font-semibold">{data.activeCompany.name}</h1>
           }
         </Link>
         <div className={cn("block md:!hidden")}>

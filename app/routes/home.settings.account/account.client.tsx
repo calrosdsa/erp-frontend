@@ -32,14 +32,14 @@ export default function AccountClient() {
         <>
           <DisplayTextValue
             title={t("form.email")}
-            value={globalState.user.Identifier}
+            value={globalState.user.identifier}
           />
 
           <DisplayTextValue
             title={t("_account.lastLogin")}
             value={
-                globalState.user.LastLogin.Valid ? 
-              formatLongDate(globalState.user.LastLogin.Time,i18n.language)
+                globalState.user.last_login ? 
+              formatLongDate(globalState.user.last_login,i18n.language)
               : ""
             }
             />

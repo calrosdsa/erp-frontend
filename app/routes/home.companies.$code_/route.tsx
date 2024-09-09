@@ -5,10 +5,13 @@ import CompanyClient from "./company.client"
 
 export const loader = async({request,params}:LoaderFunctionArgs) =>{
     const client = apiClient({request})
+    const url = new URL(request.url)
+    const searchParams = url.searchParams
+
     const res = await client.GET("/company/detail/{id}",{
         params:{
             path:{
-                id:params.code || ""
+                id:searchParams.get("id") || ""
             }
         }
     })

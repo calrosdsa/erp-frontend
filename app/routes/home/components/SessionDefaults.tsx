@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { action } from "~/routes/api/route";
-import { components } from "index";
+import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
 import { languages } from "~/util/data/languages-data";
 import { routes } from "~/util/route";
@@ -29,10 +29,8 @@ export const sessionDefaultsFormSchema = z.object({
 
 export const SessionDefault = ({
   session,
-  companies,
 }: {
   session: SessionData;
-  companies: components["schemas"]["Company"][];
   close: () => void;
 }) => {
   const { t } = useTranslation("common");
@@ -110,8 +108,8 @@ export const SessionDefault = ({
             <SelectContent>
               {fetcher.data?.sessions.map((option, idx) => {
                 return (
-                  <SelectItem value={option.Uuid} key={idx}>
-                    {option.Company.Name}
+                  <SelectItem value={option.uuid} key={idx}>
+                    {option.company.name}
                   </SelectItem>
                 );
               })}
@@ -142,12 +140,10 @@ export const SessionDefaultDrawer = ({
   open,
   close,
   session,
-  companies,
 }: {
   open: boolean;
   close: () => void;
   session: SessionData;
-  companies: components["schemas"]["Company"][];
 }) => {
   const { t } = useTranslation("common");
   return (
@@ -156,7 +152,7 @@ export const SessionDefaultDrawer = ({
       onOpenChange={(e)=>close()}
       title={t("sidebar.sessionDefaults")}
     >
-      <SessionDefault session={session} companies={companies} close={close} />
+      <SessionDefault session={session} close={close} />
     </DrawerLayout>
   );
 };

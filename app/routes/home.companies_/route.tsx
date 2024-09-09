@@ -17,7 +17,7 @@ type CompaniesAction = {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as CompaniesAction;
   let client = apiClient({ request });
-  let companies:components["schemas"]["Company"][] = []
+  let companies:components["schemas"]["CompanyDto"][] = []
   let message:string | undefined = undefined
   let error:string | undefined = undefined
   switch (data.action) {

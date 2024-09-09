@@ -13,7 +13,7 @@ export default function RolesClient(){
     const globalState = useOutletContext<GlobalState>()
     const [permission] = usePermission({
         actions:actions,
-        roleActions:globalState.role?.RoleActions
+        roleActions:globalState.roleActions
     })
     return (
         <>
@@ -23,8 +23,6 @@ export default function RolesClient(){
         onOpenChange={createRole.onOpenChange}
         />
         }
-            {/* RolesCLient
-            {JSON.stringify(data)} */}
             <DataTable
             metaActions={{
                 meta:{

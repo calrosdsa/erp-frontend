@@ -2,7 +2,7 @@
 
 
 interface FormItemData<T extends object,K extends keyof T> {
-    typeForm:"input" | "select" | "check" | "multiselect" | "textarea"
+    typeForm:"input" | "select" | "check" | "multiselect" | "textarea" | "autocomplete"
     type?:"number" | "string" | "password" | "boolean" | "email" | "tel"
     name:string
     label?:string
@@ -14,5 +14,10 @@ interface FormItemData<T extends object,K extends keyof T> {
     data?:T[]
     keyName?:K
     keyValue?:K
-    onSelect?:(e:T[])=>void
+    onSelectArray?:(e:T[])=>void
+    onSelect?:(e:T)=>void
+    // actions?:{
+    //     addNew?:()=>void
+    // }
+    // onSelect?:(e:T)=>void
 }

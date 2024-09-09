@@ -16,7 +16,7 @@ import { routes } from "~/util/route";
 import { components } from "~/sdk";
 
 type Props = {
-    user: components["schemas"]["Profile"];
+    user: components["schemas"]["ProfileDto"];
     openSessionDefaults: () => void;
 };
 
@@ -36,10 +36,10 @@ export function UserNav({ user,openSessionDefaults }: Props) {
                     <Link  className="flex items-center justify-start gap-4 p-2 cursor-pointer" to={r.profile}>
 
                     <div className="flex flex-col space-y-1 leading-none">
-                        {user.GivenName && <p className="font-medium">{user.GivenName}</p>}
-                        {user.FamilyName && (
+                        {user.givenName && <p className="font-medium">{user.givenName}</p>}
+                        {user.familyName && (
                             <p className="w-[200px] truncate text-sm text-zinc-700">
-                                {user.FamilyName}
+                                {user.familyName}
                             </p>
                         )}
                     </div>

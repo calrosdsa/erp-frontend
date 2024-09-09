@@ -18,7 +18,7 @@ interface TableCellProps<TData> {
 
 export default function TableCellEntityActions<TData>({ getValue, row, column, table,roleActions }:TableCellProps<TData>) {
   const initialValue = getValue();
-  const [actions,setActions] = useState<components["schemas"]["Action"][]>([])
+  const [actions,setActions] = useState<components["schemas"]["ActionDto"][]>([])
   const parseActions = () =>{
     try{
         // const d = JSON.parse(initialValue) as components["schemas"]["Action"][]
@@ -37,8 +37,8 @@ export default function TableCellEntityActions<TData>({ getValue, row, column, t
             return (
                 <Badge
                 key={idx}
-                variant={roleActions.includes(item.ID)?"default":"outline"}
-                >{item.Name}</Badge>
+                variant={roleActions.includes(item.id)?"default":"outline"}
+                >{item.name}</Badge>
             )
         })
         }

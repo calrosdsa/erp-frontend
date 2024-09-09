@@ -6,7 +6,7 @@ import { Permission } from "~/types/permission";
 
 export function usePermission({actions,roleActions}:{
     actions?:components["schemas"]["Action"][]
-    roleActions?:components["schemas"]["RoleActions"][]
+    roleActions?:components["schemas"]["RoleActionDto"][]
 }){
     const [permission,setPermissions] = useState<Permission>({
         create:false,
@@ -19,7 +19,7 @@ export function usePermission({actions,roleActions}:{
         actions?.map((item)=>{
             p = {
                 ...p,
-                [item.Name]:roleActions?.map(t=>t.ActionID).includes(item.ID)
+                [item.name]:roleActions?.map(t=>t.action_id).includes(item.id)
             }
         })
         setPermissions(p)

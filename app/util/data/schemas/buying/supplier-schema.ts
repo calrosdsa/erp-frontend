@@ -5,6 +5,7 @@ import { groupSchema } from "../group-schema";
 
 export const createSupplierSchema = z.object({
     name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+    groupName:z.string().optional(),
     group:groupSchema,
     enabled:z.boolean()
 })
