@@ -774,6 +774,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/item-price/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Item Price For Order */
+        get: operations["get-item-prices-for-order"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/item-price/{itemCode}": {
         parameters: {
             query?: never;
@@ -1333,7 +1350,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            itemPrice: components["schemas"]["ItemPriceDto"];
+            itemPrice: components["schemas"]["ItemPriceStruct"];
             plugins: components["schemas"]["PluginDto"][];
         };
         CreateItemRequestBody: {
@@ -1629,6 +1646,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntityListGroupHierarchyDto"];
         };
+        EntityResponseResultEntityListItemPriceDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            result: components["schemas"]["ResultEntityListItemPriceDto"];
+        };
         EntityResponseResultEntityListPartyTypeBody: {
             /**
              * Format: uri
@@ -1870,18 +1896,18 @@ export interface components {
             ValidUpTo: string | null;
         };
         ItemPriceDto: {
-            /** Format: int64 */
-            itemId?: number;
-            /** Format: int64 */
+            code: string;
+            /** Format: int32 */
             itemQuantity: number;
-            /** Format: int64 */
-            priceListId: number;
-            /** Format: double */
+            item_code: string;
+            item_name: string;
+            item_uuid: string;
+            /** Format: int32 */
             rate: number;
-            /** Format: int64 */
-            taxId: number;
+            uom: string;
+            uuid: string;
             /** Format: date-time */
-            validFrom?: string;
+            validFrom?: string | null;
             /** Format: date-time */
             validUpTo?: string | null;
         };
@@ -1906,6 +1932,22 @@ export interface components {
             BaseID: number;
             Data: string;
             Plugin: string;
+        };
+        ItemPriceStruct: {
+            /** Format: int64 */
+            itemId?: number;
+            /** Format: int64 */
+            itemQuantity: number;
+            /** Format: int64 */
+            priceListId: number;
+            /** Format: double */
+            rate: number;
+            /** Format: int64 */
+            taxId: number;
+            /** Format: date-time */
+            validFrom?: string | null;
+            /** Format: date-time */
+            validUpTo?: string | null;
         };
         ItemVariant: {
             ItemAttributeValue: components["schemas"]["ItemAttributeValue"];
@@ -2390,6 +2432,9 @@ export interface components {
         };
         ResultEntityListGroupHierarchyDto: {
             entity: components["schemas"]["GroupHierarchyDto"][];
+        };
+        ResultEntityListItemPriceDto: {
+            entity: components["schemas"]["ItemPriceDto"][];
         };
         ResultEntityListPartyType: {
             entity: components["schemas"]["PartyType"][];
@@ -5091,6 +5136,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityItemPriceBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-item-prices-for-order": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                currency: string;
+                isBuying?: boolean;
+                isSelling?: boolean;
+                enabled?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityListItemPriceDtoBody"];
                 };
             };
             /** @description Error */

@@ -16,16 +16,18 @@ export default function CustomFormField({form,label,description,name,children}:P
         control={form.control}
         name={name}
         render={({ field }) => (
-          <FormItem className="">
+          <FormItem className="flex flex-col">
             {label != undefined &&
             <FormLabel>{label}</FormLabel>
             }
             <FormControl>
               {children(field)}
             </FormControl>
+            {description &&
             <FormDescription>
             {description}
             </FormDescription>
+            }
             <FormMessage />
           </FormItem>
         )}

@@ -1,4 +1,5 @@
 import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax"
+import { AddLineOrder, useAddLineOrder } from "~/routes/home.buying.purchase-orders.create/components/add-line-order"
 import { CreateSupplier, useCreateSupplier } from "~/routes/home.buying.suppliers_/components/create-supplier"
 import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
 import { CreateGroup, useCreateGroup } from "~/routes/home.groups/components/create-group"
@@ -30,8 +31,17 @@ export default function GlobalDialogs({globalState}:{
     const createCompany = useCreateCompany()
 
     const createUser = useCreateUser()
+    const addLineOrder = useAddLineOrder()
     return (
         <>
+        {(addLineOrder.open && addLineOrder.currency)&& 
+        <AddLineOrder
+        open={addLineOrder.open}
+        currency={addLineOrder.currency}
+        onOpenChange={addLineOrder.onOpenChange}
+        setOrderLine={(e)=>addLineOrder.setOrderLine(e)}
+        />
+        }
         {createSupplier.open &&
         <CreateSupplier
         open={createSupplier.open}

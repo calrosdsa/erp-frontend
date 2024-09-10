@@ -16,6 +16,15 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import CustomFormDate from "@/components/custom/form/CustomFormDate";
+import { useItemPriceForOrders } from "~/util/hooks/fetchers/useItemPriceForOrder";
+import { useEffect } from "react";
+import { DataTable } from "@/components/custom/table/CustomTable";
+import { orderLineColumns } from "@/components/custom/table/columns/order/order-line-column";
+import Typography, { subtitle } from "@/components/typography/Typography";
+import useEditableTable from "~/util/hooks/useEditableTable";
+import useEditTable from "~/util/hooks/useEditTable";
+import { useAddLineOrder } from "./components/add-line-order";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
@@ -28,13 +37,30 @@ export default function CreatePurchaseOrdersClient() {
   const form = useForm<z.infer<typeof createPurchaseSchema>>({
     resolver: zodResolver(createPurchaseSchema),
   });
-
+  const addLineOrder = useAddLineOrder()
+  const [metaOptions] = useEditTable({
+    form:form,
+    name:"lines",
+    onAddRow:()=>{
+      addLineOrder.openDialog({currency:"USD"})
+      console.log("ON ADD ROW")
+    }
+  })
   const onSubmit = (values: z.infer<typeof createPurchaseSchema>) => {
     console.log(values);
   };
 
+  useEffect(()=>{
+    if(addLineOrder.orderLine){
+      const orderLines = form.getValues().lines
+      const n = [...orderLines,addLineOrder.orderLine]
+      form.setValue("lines",n)
+    }
+  },[addLineOrder.orderLine])
+ 
   return (
     <div>
+      {/* {JSON.stringify(itemPriceDebounceFetcher.data?.itemPriceForOrders)} */}
       <Form {...form}>
         <fetcher.Form
           method="post"
@@ -74,7 +100,27 @@ export default function CreatePurchaseOrdersClient() {
                 form.setValue("currency", v.code);
               }}
             />
+
+            <CustomFormDate
+            form={form}
+            name="delivery_date"
+            label={t("form.deliveryDate")}
+            />
+
           </div>
+          <div>
+            <Typography fontSize={subtitle}>
+            {t("items")}
+            </Typography>
+            <DataTable
+            data={form.getValues().lines || []}
+            columns={orderLineColumns({})}
+            metaOptions={{
+              meta:metaOptions
+          }}
+            />
+          </div>
+
         </fetcher.Form>
       </Form>
     </div>

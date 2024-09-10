@@ -34,6 +34,8 @@
   },
   "form": {
     "name": "Name",
+    "deliveryDate": "Delivery Date",
+    "pickADate":"Pick a Date",
     "description": "Description",
     "value": "Value",
     "abbreviation": "Abbreviation",
@@ -64,6 +66,7 @@
     "rate": "Rate",
     "itemQuantity": "Item Quantity",
     "totalQuantity": "Total Quantity",
+    "quantity":"Quantity",
     "pay": "Pay",
     "orderTotal": "Order Total",
     "total": "Total",
@@ -164,12 +167,12 @@
     "actions": "Subscription Actions",
     "cancel": "Cancel Subscription"
   },
-  "item": {
+ 
+  "_item": {
     "info": "Item Info",
     "code": "Item Code",
-    "prices": "Item Prices"
-  },
-  "_item": {
+    "prices": "Item Prices",
+    "quantity":"Item Quantity",
     "base": "Item",
     "variants": "Item Variants",
     "addVariant": "Add  item variant",

@@ -13,7 +13,6 @@ import { action } from "./route";
 import { useToast } from "@/components/ui/use-toast";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemAttributeValuesDtoColumns } from "@/components/custom/table/columns/stock/item-attribute-columns";
-import { components } from "index";
 import useEditableTable from "~/util/hooks/useEditableTable";
 
 export const valuesSchema = z.object({

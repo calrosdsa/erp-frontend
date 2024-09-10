@@ -2,12 +2,12 @@ import ButtonExpandRow from "@/components/custom/button/ButtonExpandRow";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { CornerDownRight, FolderIcon, FolderOpenIcon } from "lucide-react";
-import { components } from "index";
 import TableCell from "../../cells/table-cell";
 import { useTranslation } from "react-i18next";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Link } from "@remix-run/react";
 import { routes } from "~/util/route";
+import { components } from "~/sdk";
 
 export const itemAttributeColumns = ():ColumnDef<components["schemas"]["ItemAttribute"]>[] =>{
     const {t} = useTranslation("common")

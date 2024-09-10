@@ -1,23 +1,43 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import ItemPricesClient from "./item-prices.client";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { components } from "index";
+import { DEFAULT_ENABLED, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { itemPriceFormSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { z } from "zod";
+import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
   query: string;
   itemPriceFormSchema: z.infer<typeof itemPriceFormSchema>;
+  currency:string
+  isSelling:boolean
+  isBuying:boolean
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
+
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   let itemPrices: components["schemas"]["ItemPrice"][] = [];
+  let itemPriceForOrders:components["schemas"]["ItemPriceDto"][] = [];
   switch (data.action) {
+    case "item-price-for-orders":{
+      const res = await client.GET("/stock/item/item-price/order",{
+        params:{
+          query:{
+            query:data.query || "",
+            enabled:DEFAULT_ENABLED,
+            currency:data.currency,
+            isSelling:data.isSelling,
+            isBuying:data.isBuying,
+          }
+        }
+      })
+      itemPriceForOrders = res.data?.result.entity || []
+      break;
+    }
     case "get": {
       const res = await client.GET("/stock/item/item-price", {
         params: {
@@ -54,6 +74,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     message,
     error,
     itemPrices,
+    itemPriceForOrders,
   });
 };
 

@@ -141,7 +141,6 @@ export default function AddItemPrice({
                   form={form}
                   data={itemsDebounceFetcher.data?.items || []}
                   label={t("items")}
-                  value={"Name"}
                   nameK={"Name"}
                   // addNew={()=>{
                   //   createTax.onOpenChange(true)
@@ -179,7 +178,6 @@ export default function AddItemPrice({
                 form={form}
                 data={fetcherDebounceTaxes.data?.result || []}
                 label={t("taxes")}
-                value={"Name"}
                 nameK={"Name"}
                 addNew={() => {
                   createTax.onOpenChange(true);
@@ -244,7 +242,6 @@ export default function AddItemPrice({
                   fetcherDebouncePriceList.data?.pagination_result.results || []
                 }
                 label={t("form.price-list")}
-                value={"Name"}
                 nameK={"Name"}
                 onSelect={(v) => {
                   setSelectedPriceList(v);
@@ -281,7 +278,7 @@ export default function AddItemPrice({
                 <Typography fontSize={title}>{t("integrations")}</Typography>
               </div>
 
-              <div className="">
+              {/* <div className="">
                 <MultiSelect
                   data={state?.activeCompany?.CompanyPlugins || []}
                   keyName={"Plugin"}
@@ -290,7 +287,7 @@ export default function AddItemPrice({
                   name="pluginList"
                   onSelect={(v) => setSelectedPlugins(v)}
                 />
-              </div>
+              </div> */}
             </>
           );
         }}
