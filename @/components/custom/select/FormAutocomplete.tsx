@@ -30,7 +30,7 @@ interface Props<T extends object, K extends keyof T> {
   data: T[];
   nameK: K;
   name: string;
-  onOpen: () => void;
+  onOpen?: () => void;
   form: any;
   label: string | undefined;
   description?: string;
@@ -71,7 +71,7 @@ export default function FormAutocomplete<
                   <Button
                     variant="outline"
                     role="combobox"
-                    onClick={() => onOpen()}
+                    onClick={() => onValueChange("")}
                     className={cn(
                       "justify-between",
                       !field.value && "text-muted-foreground"

@@ -5,7 +5,7 @@ import { Permission } from "~/types/permission";
 
 
 export function usePermission({actions,roleActions}:{
-    actions?:components["schemas"]["Action"][]
+    actions?:components["schemas"]["ActionDto"][]
     roleActions?:components["schemas"]["RoleActionDto"][]
 }){
     const [permission,setPermissions] = useState<Permission>({

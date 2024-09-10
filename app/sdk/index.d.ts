@@ -228,6 +228,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/currency": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get currencies */
+        get: operations["get currencies"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/greeting/{name}": {
         parameters: {
             query?: never;
@@ -409,8 +426,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create supplier */
-        post: operations["create supplier"];
+        /** Create purchase order */
+        post: operations["create purchase order"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1357,6 +1374,7 @@ export interface components {
             delivery_date?: string | null;
             lines: components["schemas"]["OrderLineRequest"][];
             name: string;
+            supplier: components["schemas"]["SupplierDto"];
         };
         CreateRoleRequestBody: {
             /**
@@ -1482,7 +1500,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["Client"];
         };
         EntityResponseCompanyBody: {
@@ -1491,7 +1509,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["Company"];
         };
         EntityResponseCompanyDtoBody: {
@@ -1500,7 +1518,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["CompanyDto"];
         };
         EntityResponseItemAttributeBody: {
@@ -1509,7 +1527,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ItemAttribute"];
         };
         EntityResponseItemBody: {
@@ -1518,7 +1536,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["Item"];
         };
         EntityResponseItemGroupBody: {
@@ -1527,7 +1545,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ItemGroup"];
         };
         EntityResponseItemPriceBody: {
@@ -1536,7 +1554,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ItemPrice"];
         };
         EntityResponseItemPriceListBody: {
@@ -1545,7 +1563,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ItemPriceList"];
         };
         EntityResponseListUserRelationDtoBody: {
@@ -1554,7 +1572,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["UserRelationDto"][];
         };
         EntityResponseResponseSalesOrderDetailBody: {
@@ -1563,7 +1581,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResponseSalesOrderDetail"];
         };
         EntityResponseResultEntityGroupDtoBody: {
@@ -1572,7 +1590,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntityGroupDto"];
         };
         EntityResponseResultEntityItemBody: {
@@ -1581,7 +1599,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntityItem"];
         };
         EntityResponseResultEntityItemPriceBody: {
@@ -1590,7 +1608,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntityItemPrice"];
         };
         EntityResponseResultEntityListEntityActionsBody: {
@@ -1599,7 +1617,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntityListEntityActions"];
         };
         EntityResponseResultEntityListGroupHierarchyDtoBody: {
@@ -1608,7 +1626,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntityListGroupHierarchyDto"];
         };
         EntityResponseResultEntityListPartyTypeBody: {
@@ -1617,7 +1635,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntityListPartyType"];
         };
         EntityResponseResultEntityProfileDtoBody: {
@@ -1626,7 +1644,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntityProfileDto"];
         };
         EntityResponseResultEntityRoleDtoBody: {
@@ -1635,7 +1653,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntityRoleDto"];
         };
         EntityResponseResultEntitySupplierDtoBody: {
@@ -1644,7 +1662,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["ResultEntitySupplierDto"];
         };
         EntityResponseTaxBody: {
@@ -1653,7 +1671,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["Tax"];
         };
         EntityResponseWareHouseBody: {
@@ -1662,7 +1680,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             result: components["schemas"]["WareHouse"];
         };
         ErrorDetail: {
@@ -1943,8 +1961,17 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListCompanyDto"];
+        };
+        PaginationResponsePaginationResultListCurrencyDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListCurrencyDto"];
         };
         PaginationResponsePaginationResultListGroupDtoBody: {
             /**
@@ -1952,7 +1979,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListGroupDto"];
         };
         PaginationResponsePaginationResultListItemAttributeBody: {
@@ -1961,7 +1988,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItemAttribute"];
         };
         PaginationResponsePaginationResultListItemBody: {
@@ -1970,7 +1997,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItem"];
         };
         PaginationResponsePaginationResultListItemGroupBody: {
@@ -1979,7 +2006,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItemGroup"];
         };
         PaginationResponsePaginationResultListItemPriceBody: {
@@ -1988,7 +2015,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItemPrice"];
         };
         PaginationResponsePaginationResultListItemPriceListBody: {
@@ -1997,7 +2024,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItemPriceList"];
         };
         PaginationResponsePaginationResultListItemVariantBody: {
@@ -2006,7 +2033,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItemVariant"];
         };
         PaginationResponsePaginationResultListOrderDtoBody: {
@@ -2015,7 +2042,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListOrderDto"];
         };
         PaginationResponsePaginationResultListProfileLBody: {
@@ -2024,7 +2051,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListProfileL"];
         };
         PaginationResponsePaginationResultListRoleActionDtoBody: {
@@ -2033,7 +2060,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListRoleActionDto"];
         };
         PaginationResponsePaginationResultListRoleDtoBody: {
@@ -2042,7 +2069,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListRoleDto"];
         };
         PaginationResponsePaginationResultListSalesOrderBody: {
@@ -2051,7 +2078,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListSalesOrder"];
         };
         PaginationResponsePaginationResultListStockLevelBody: {
@@ -2060,7 +2087,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListStockLevel"];
         };
         PaginationResponsePaginationResultListSupplierDtoBody: {
@@ -2069,7 +2096,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListSupplierDto"];
         };
         PaginationResponsePaginationResultListTaxBody: {
@@ -2078,7 +2105,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListTax"];
         };
         PaginationResponsePaginationResultListWareHouseBody: {
@@ -2087,11 +2114,16 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            actions: components["schemas"]["Action"][];
+            actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListWareHouse"];
         };
         PaginationResultListCompanyDto: {
             results: components["schemas"]["CompanyDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListCurrencyDto: {
+            results: components["schemas"]["CurrencyDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -3402,6 +3434,48 @@ export interface operations {
             };
         };
     };
+    "get currencies": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCurrencyDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-greeting-by-name": {
         parameters: {
             query?: never;
@@ -3882,7 +3956,7 @@ export interface operations {
             };
         };
     };
-    "create supplier": {
+    "create purchase order": {
         parameters: {
             query?: {
                 query?: string;

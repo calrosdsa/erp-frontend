@@ -4,25 +4,25 @@ import { components } from "~/sdk"
 import { routes } from "~/util/route"
 
 
-export const useRoleDebounceFetcher = () =>{
+export const useCurrencyDebounceFetcher = () =>{
     const r = routes
-    const rolesFetcherDebounce = useDebounceFetcher<{
+    const fetcherDebounce = useDebounceFetcher<{
         actions:components["schemas"]["ActionDto"][],
-        roles:components["schemas"]["RoleDto"][],
+        currencies:components["schemas"]["CurrencyDto"][],
     }>()
 
     const onChange = (e:string)=>{
-        rolesFetcherDebounce.submit({
-            action:"get",
+        fetcherDebounce.submit({
+            action:"get-currencies",
             query:e
         },{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,
             encType:"application/json",
-            action:r.roles
+            action:r.apiData
         })
     }
     
 
-    return [rolesFetcherDebounce,onChange] as const
+    return [fetcherDebounce,onChange] as const
 }

@@ -9,8 +9,10 @@ export const orderLineSchema = z.object({
 
 export const createPurchaseSchema = z.object({
     supplier:supplierDtoSchema,
+    supplierName:z.string(),
     name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
     delivery_date:z.string().optional(),
+    currencyName:z.string(),
     currency:z.string(),
     lines:z.array(orderLineSchema),
 })

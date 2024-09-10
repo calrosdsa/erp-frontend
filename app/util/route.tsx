@@ -1,6 +1,7 @@
 
 class Routes  {
     api = "/api"
+    apiData = this.api + "/data"
     base = "/home"
     groups = this.base + "/groups"
     companies = this.base + "/companies"

@@ -1,19 +1,24 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
+import { DEFAULT_ENABLED, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
 import SuppliersClient from "./suppliers.client"
 import { z } from "zod"
 import { createSupplierSchema } from "~/util/data/schemas/buying/supplier-schema"
+import { components } from "~/sdk"
 
 type ActionData = {
     action:string
     createSupplier:z.infer<typeof createSupplierSchema>
+    query:string
 }
 export const action = async({request}:ActionFunctionArgs)=>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
     let message:string | undefined = undefined
     let error:string | undefined = undefined
+    let suppliers:components["schemas"]["SupplierDto"][] = []
+    const url = new URL(request.url)
+    const searchParams = url.searchParams
     switch(data.action){
         case "create-supplier":{
             const d = data.createSupplier
@@ -28,9 +33,23 @@ export const action = async({request}:ActionFunctionArgs)=>{
             error = res.error?.detail
             break;
         }
+        case "get":{
+            const res = await client.GET("/supplier",{
+                params:{
+                    query:{
+                        page:searchParams.get("page") || DEFAULT_PAGE,
+                        size:searchParams.get("size") || DEFAULT_SIZE,
+                        enabled:DEFAULT_ENABLED,
+                        query:data.query || "",
+                    }
+                }
+            })
+            suppliers = res.data?.pagination_result.results || []
+            break;
+        }
     }
     return json({
-        message,error
+        message,error,suppliers
     })
 }
 

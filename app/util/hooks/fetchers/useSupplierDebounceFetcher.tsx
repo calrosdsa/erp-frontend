@@ -1,35 +1,26 @@
-import { useEffect } from "react"
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
 import { components } from "~/sdk"
-import { PartyType } from "~/types/enums"
 import { routes } from "~/util/route"
-import { usePermission } from "../useActions"
 
 
-export const useGroupDebounceFetcher = ({partyType}:{
-    partyType:PartyType
-}) =>{
+export const useSupplierDebounceFetcher = () =>{
     const r = routes
-    const debounceFetcher = useDebounceFetcher<{
+    const fetcherDebounce = useDebounceFetcher<{
         actions:components["schemas"]["ActionDto"][],
-        groups:components["schemas"]["GroupDto"][],
+        suppliers:components["schemas"]["SupplierDto"][],
     }>()
 
     const onChange = (e:string)=>{
-        debounceFetcher.submit({
+        fetcherDebounce.submit({
             action:"get",
-            query:e,
-            partyType:partyType.toString(),
+            query:e
         },{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,
             encType:"application/json",
-            action:r.groups
+            action:r.suppliers
         })
     }
-    
- 
-
-    return [debounceFetcher,onChange] as const
+    return [fetcherDebounce,onChange] as const
 }
