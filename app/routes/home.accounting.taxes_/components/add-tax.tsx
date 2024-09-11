@@ -64,7 +64,7 @@ export const AddTax = ({open,onOpenChange}:{
                 {
                     name:"value",
                     label:t("form.value"),
-                    type:"number",
+                    type:"string",
                     typeForm:"input",
                 },
                 {

@@ -1,6 +1,7 @@
 import { Boxes } from "lucide-react";
 
 export const DEFAULT_DEBOUNCE_TIME = 600;
+export const DEFAULT_CURRENCY = "USD"
 
 export const DEFAULT_SIZE = "20";
 export const DEFAULT_PAGE = "0";

@@ -44,8 +44,8 @@ class Routes  {
     }
     
 
-    priceListDetail(id:string):string {
-        return `${this.priceList}/${encodeURIComponent(id)}`
+    priceListDetail(name:string,id:string):string {
+        return `${this.priceList}/${encodeURIComponent(name)}?id=${id}`
     }
 
     taxDetailRoute(id:string):string {
@@ -84,7 +84,7 @@ class Routes  {
         return `${this.warehouses}/${encodeURIComponent(id)}/items`
     }
 
-    //Item group
+    //Item group                                                                            
     toItemGroupDetail(id:string):string{
         return `${this.itemGroups}/${encodeURIComponent(id)}`
     }

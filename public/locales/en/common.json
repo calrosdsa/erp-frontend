@@ -44,6 +44,7 @@
     "familyName": "Last Name",
     "givenName": "First  Name",
     "phoneNumber": "Phone Number",
+    "amount":"Amount",
     "type": "Type",
     "password": "Password",
     "newPassword": "New Password",
@@ -191,7 +192,10 @@
 
   "orders": "Orders",
   "orderInfo": "Order Info",
-
+  "_order":{
+    "base":"order",
+    "orderItems":"Order Items"
+  },
   "table": {
     "new": "New",
     "createdAt": "Creation Date",

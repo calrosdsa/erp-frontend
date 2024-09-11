@@ -1,6 +1,7 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import TaxDetailClient from "./tax.client";
 import apiClient from "~/apiclient";
+import { handleError } from "~/util/api/handle-status-code";
 
 
 
@@ -14,9 +15,10 @@ export const loader = async({request,params}:LoaderFunctionArgs)=>{
             }
         }
     })
-
+    handleError(res.error)
+    console.log(res.error)
     return json({
-        tax:res.data?.result
+        tax:res.data?.result.entity
     })
 }
 

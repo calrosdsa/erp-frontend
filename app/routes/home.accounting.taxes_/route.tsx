@@ -5,6 +5,7 @@ import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
 import { createTaxSchema } from "~/util/data/schemas/accounting/tax-schema";
 import { components } from "~/sdk";
+import { handleError } from "~/util/api/handle-status-code";
 
 
 type ActionData = {
@@ -61,6 +62,7 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
             }
         }
     })
+    handleError(res.error)
 
     return json({
         result:res.data?.pagination_result,

@@ -330,6 +330,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/order/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve order */
+        get: operations["get order"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order/{party}": {
         parameters: {
             query?: never;
@@ -337,8 +354,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Retrieve orders by party code */
-        get: operations["get orders by party code"];
+        /** Retrieve orders */
+        get: operations["get orders"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1389,7 +1406,7 @@ export interface components {
             currency: components["schemas"]["CurrencyDto"];
             /** Format: date-time */
             delivery_date?: string | null;
-            lines: components["schemas"]["OrderLineRequest"][];
+            lines: components["schemas"]["OrderLineDto"][];
             name: string;
             supplier: components["schemas"]["SupplierDto"];
         };
@@ -1518,6 +1535,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["Client"];
         };
         EntityResponseCompanyBody: {
@@ -1527,6 +1545,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["Company"];
         };
         EntityResponseCompanyDtoBody: {
@@ -1536,6 +1555,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["CompanyDto"];
         };
         EntityResponseItemAttributeBody: {
@@ -1545,6 +1565,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ItemAttribute"];
         };
         EntityResponseItemBody: {
@@ -1554,6 +1575,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["Item"];
         };
         EntityResponseItemGroupBody: {
@@ -1563,6 +1585,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ItemGroup"];
         };
         EntityResponseItemPriceBody: {
@@ -1572,16 +1595,8 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ItemPrice"];
-        };
-        EntityResponseItemPriceListBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            result: components["schemas"]["ItemPriceList"];
         };
         EntityResponseListUserRelationDtoBody: {
             /**
@@ -1590,6 +1605,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["UserRelationDto"][];
         };
         EntityResponseResponseSalesOrderDetailBody: {
@@ -1599,6 +1615,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResponseSalesOrderDetail"];
         };
         EntityResponseResultEntityGroupDtoBody: {
@@ -1608,6 +1625,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntityGroupDto"];
         };
         EntityResponseResultEntityItemBody: {
@@ -1617,6 +1635,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntityItem"];
         };
         EntityResponseResultEntityItemPriceBody: {
@@ -1626,6 +1645,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntityItemPrice"];
         };
         EntityResponseResultEntityListEntityActionsBody: {
@@ -1635,6 +1655,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntityListEntityActions"];
         };
         EntityResponseResultEntityListGroupHierarchyDtoBody: {
@@ -1644,6 +1665,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntityListGroupHierarchyDto"];
         };
         EntityResponseResultEntityListItemPriceDtoBody: {
@@ -1653,6 +1675,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntityListItemPriceDto"];
         };
         EntityResponseResultEntityListPartyTypeBody: {
@@ -1662,7 +1685,28 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntityListPartyType"];
+        };
+        EntityResponseResultEntityOrderDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ResultEntityOrderDto"];
+        };
+        EntityResponseResultEntityPriceListDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ResultEntityPriceListDto"];
         };
         EntityResponseResultEntityProfileDtoBody: {
             /**
@@ -1671,6 +1715,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntityProfileDto"];
         };
         EntityResponseResultEntityRoleDtoBody: {
@@ -1680,6 +1725,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntityRoleDto"];
         };
         EntityResponseResultEntitySupplierDtoBody: {
@@ -1689,16 +1735,18 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ResultEntitySupplierDto"];
         };
-        EntityResponseTaxBody: {
+        EntityResponseResultEntityTaxBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
-            result: components["schemas"]["Tax"];
+            message: string;
+            result: components["schemas"]["ResultEntityTax"];
         };
         EntityResponseWareHouseBody: {
             /**
@@ -1707,6 +1755,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["WareHouse"];
         };
         ErrorDetail: {
@@ -1897,19 +1946,19 @@ export interface components {
         };
         ItemPriceDto: {
             code: string;
-            /** Format: int32 */
-            itemQuantity: number;
             item_code: string;
             item_name: string;
+            /** Format: int32 */
+            item_quantity: number;
             item_uuid: string;
             /** Format: int32 */
             rate: number;
             uom: string;
             uuid: string;
             /** Format: date-time */
-            validFrom?: string | null;
+            valid_from?: string | null;
             /** Format: date-time */
-            validUpTo?: string | null;
+            valid_up_to?: string | null;
         };
         ItemPriceList: {
             Code: string;
@@ -1980,9 +2029,11 @@ export interface components {
             code: string;
             /** Format: date-time */
             created_at: string;
+            currency: string;
             /** Format: date-time */
             delivery_date: string | null;
             name: string;
+            order_lines: components["schemas"]["OrderLineDto"][];
             uuid: string;
         };
         OrderLineData: {
@@ -1991,9 +2042,10 @@ export interface components {
             /** Format: int64 */
             quantity: number;
         };
-        OrderLineRequest: {
-            /** Format: int64 */
-            item_price_id: number;
+        OrderLineDto: {
+            /** Format: int32 */
+            amount: number;
+            item_price: components["schemas"]["ItemPriceDto"];
             /** Format: int32 */
             quantity: number;
         };
@@ -2060,15 +2112,6 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItemPrice"];
         };
-        PaginationResponsePaginationResultListItemPriceListBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListItemPriceList"];
-        };
         PaginationResponsePaginationResultListItemVariantBody: {
             /**
              * Format: uri
@@ -2086,6 +2129,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListOrderDto"];
+        };
+        PaginationResponsePaginationResultListPriceListDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListPriceListDto"];
         };
         PaginationResponsePaginationResultListProfileLBody: {
             /**
@@ -2194,11 +2246,6 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListItemPriceList: {
-            results: components["schemas"]["ItemPriceList"][];
-            /** Format: int64 */
-            total: number;
-        };
         PaginationResultListItemVariant: {
             results: components["schemas"]["ItemVariant"][];
             /** Format: int64 */
@@ -2206,6 +2253,11 @@ export interface components {
         };
         PaginationResultListOrderDto: {
             results: components["schemas"]["OrderDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListPriceListDto: {
+            results: components["schemas"]["PriceListDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2364,6 +2416,15 @@ export interface components {
             readonly $schema?: string;
             plugins: components["schemas"]["PluginApp"][];
         };
+        PriceListDto: {
+            /** Format: date-time */
+            created_at: string;
+            currency: string;
+            is_buying: boolean;
+            is_selling: boolean;
+            name: string;
+            uuid: string;
+        };
         ProcessFee: {
             amount_money: components["schemas"]["Amount"];
             /** Format: date-time */
@@ -2439,6 +2500,12 @@ export interface components {
         ResultEntityListPartyType: {
             entity: components["schemas"]["PartyType"][];
         };
+        ResultEntityOrderDto: {
+            entity: components["schemas"]["OrderDto"];
+        };
+        ResultEntityPriceListDto: {
+            entity: components["schemas"]["PriceListDto"];
+        };
         ResultEntityProfileDto: {
             entity: components["schemas"]["ProfileDto"];
         };
@@ -2447,6 +2514,9 @@ export interface components {
         };
         ResultEntitySupplierDto: {
             entity: components["schemas"]["SupplierDto"];
+        };
+        ResultEntityTax: {
+            entity: components["schemas"]["Tax"];
         };
         RetrieveCatalogRequest: {
             object: components["schemas"]["RetrieveCatalogRequestObjectStruct"];
@@ -2654,7 +2724,7 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             enabled: boolean;
-            group: components["schemas"]["GroupDto"];
+            group?: components["schemas"]["GroupDto"];
             name: string;
             uuid: string;
         };
@@ -3104,7 +3174,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseTaxBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityTaxBody"];
                 };
             };
             /** @description Error */
@@ -3727,7 +3797,49 @@ export interface operations {
             };
         };
     };
-    "get orders by party code": {
+    "get order": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityOrderDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get orders": {
         parameters: {
             query: {
                 page: string;
@@ -4030,7 +4142,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityOrderDtoBody"];
                 };
             };
             /** @description Error */
@@ -5434,7 +5546,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceListBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListPriceListDtoBody"];
                 };
             };
             /** @description Error */
@@ -5562,7 +5674,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseItemPriceListBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityPriceListDtoBody"];
                 };
             };
             /** @description Error */

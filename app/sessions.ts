@@ -1,6 +1,5 @@
 // app/sessions.ts
 import { createCookieSessionStorage, redirect } from "@remix-run/node"; // or cloudflare/deno
-import { createThemeSessionResolver } from "remix-themes"
 
 export type SessionData = {
   access_token: string;
@@ -43,18 +42,18 @@ const { getSession, commitSession, destroySession } =
 export { getSession, commitSession, destroySession };
 
 
-const themeSessionStorage = createCookieSessionStorage({
-  cookie: {
-    name: '__remix-themes',
-    path: "/",
-    httpOnly: true,
-    sameSite: "lax",
-    secrets: ["s3cr3t"],
-    // Set domain and secure only if in production
-    // ...(isProduction
-    //   ? { domain: "your-production-domain.com", secure: true }
-    //   : {}),
-  },
-})
+// const themeSessionStorage = createCookieSessionStorage({
+//   cookie: {
+//     name: '__remix-themes',
+//     path: "/",
+//     httpOnly: true,
+//     sameSite: "lax",
+//     secrets: ["s3cr3t"],
+//     // Set domain and secure only if in production
+//     // ...(isProduction
+//     //   ? { domain: "your-production-domain.com", secure: true }
+//     //   : {}),
+//   },
+// })
  
-export const themeSessionResolver = createThemeSessionResolver(themeSessionStorage)
+// export const themeSessionResolver = createThemeSessionResolver(themeSessionStorage)

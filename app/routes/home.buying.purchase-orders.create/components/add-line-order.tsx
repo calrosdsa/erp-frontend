@@ -41,9 +41,9 @@ export const AddLineOrder = ({
         onSubmit={(values: z.infer<typeof orderLineSchema>) => {
             const orderLine:z.infer<typeof orderLineSchema> = {
                 item_price:values.item_price,
-                quantity:values.quantity,
-                amount:1000
-            }
+                quantity:values.quantity.toString(),
+                amount:values.item_price.rate * values.quantity
+            } as any
             setOrderLine(orderLine)
 
         }}
@@ -116,6 +116,7 @@ export const AddLineOrder = ({
 interface AddLineOrderStore {
   open: boolean;
   currency?: string;
+  clearOrderLine:()=>void,
   onOpenChange: (e: boolean) => void;
   openDialog: (opts: { currency: string }) => void;
   orderLine?:z.infer<typeof orderLineSchema>;
@@ -123,6 +124,7 @@ interface AddLineOrderStore {
 }
 
 export const useAddLineOrder = create<AddLineOrderStore>((set) => ({
+  clearOrderLine:()=>set((state)=>({orderLine:undefined})),
   open: false,
   onOpenChange: (e) => set((state) => ({ open: e })),
   orderLine:undefined,

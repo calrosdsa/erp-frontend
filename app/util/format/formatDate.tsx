@@ -7,3 +7,4 @@ export const formatLongDate = (date:string | undefined,locale:string) =>{
       );
     return formattedDate  
 }
+

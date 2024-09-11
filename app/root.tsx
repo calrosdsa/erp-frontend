@@ -17,14 +17,13 @@ import {
   LoaderFunctionArgs,
   redirect,
 } from "@remix-run/node";
-import { commitSession, getSession, themeSessionResolver } from "./sessions";
+import { commitSession, getSession } from "./sessions";
 import { useChangeLanguage } from "remix-i18next/react";
 import { useTranslation } from "react-i18next";
 import i18next from "~/i18next.server";
 import { ExternalScripts } from "remix-utils/external-scripts";
 import { Toaster } from "@/components/ui/toaster";
 
-import { PreventFlashOnWrongTheme, useTheme } from "remix-themes";
 import { getThemeSession } from "./util/theme/theme-server";
 import { Theme, ThemeProvider } from "./util/theme/theme-provider";
 import clsx from "clsx";
@@ -82,7 +81,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <html lang={i18n.resolvedLanguage} dir={i18n.dir()} className={clsx(data.theme)}>
+    <html lang={i18n.resolvedLanguage} dir={i18n.dir()} className={clsx(data?.theme || Theme.LIGHT)}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -95,7 +94,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-    <ThemeProvider specifiedTheme={data.theme}>
+    <ThemeProvider specifiedTheme={data?.theme || Theme.LIGHT}>
         {children}
     </ThemeProvider>
         <ScrollRestoration />

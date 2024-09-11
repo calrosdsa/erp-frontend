@@ -3,8 +3,9 @@ import PriceListsClient from "./price-list.client";
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { components } from "index";
 import { createPriceListSchema } from "~/util/data/schemas/stock/price-list-schema";
+import { components } from "~/sdk";
+import { handleError } from "~/util/api/handle-status-code";
 
 type PriceListAction = {
   action: string;
@@ -19,9 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let client = apiClient({ request });
   let message:string | undefined = undefined
   let error:string |undefined = undefined
-  let pagination_result:
-    | components["schemas"]["PaginationResultListItemPriceList"]
-    | undefined = undefined;
+  let priceLists:components["schemas"]["PriceListDto"][] = []
   switch (data.action) {
     case "add-price-list":{
       const res = await client.POST("/stock/item/price-list",{
@@ -42,14 +41,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         },
       });
       if (res.data != undefined) {
-        pagination_result = res.data.pagination_result;
+        priceLists = res.data.pagination_result.results;
       }
       console.log(res.error)
       break;
     }
   }
   return json({
-    pagination_result,
+    priceLists,
     message,error
   });
 };
@@ -68,8 +67,10 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
             }
         }
     })
+    handleError(res.error)
     return json({
-        data:res.data
+        paginationResult:res.data?.pagination_result,
+        actions:res.data?.actions,
     })
 }
 

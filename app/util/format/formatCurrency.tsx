@@ -1,4 +1,4 @@
-import { components } from "index";
+import { components } from "~/sdk";
 
 
 export const formatCurrency=(input: number | undefined,currency:string,language:string): string =>{
@@ -13,7 +13,13 @@ export const formatCurrency=(input: number | undefined,currency:string,language:
         currency: currency,
       }).format(Number(number.toFixed(2)))
     return formatted;
-  }
+}
+
+export const sumTotal = (values:number[])=>{
+  if(values.length == 0) return 0
+  const total = values.reduce((prev,curr)=>prev+curr,0)
+  return total
+}
 
 
 export const formatTax = (tax:components["schemas"]["Tax"],itemPrice:number,currency:string,language:string):string =>{
