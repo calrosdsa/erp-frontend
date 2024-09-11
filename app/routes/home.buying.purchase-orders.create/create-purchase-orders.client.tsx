@@ -1,5 +1,5 @@
 import CustomForm from "@/components/custom/form/CustomForm";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useRevalidator } from "@remix-run/react";
 import { action } from "./route";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
@@ -25,6 +25,7 @@ import Typography, { subtitle } from "@/components/typography/Typography";
 import useEditableTable from "~/util/hooks/useEditableTable";
 import useEditTable from "~/util/hooks/useEditTable";
 import { useAddLineOrder } from "./components/add-line-order";
+import ConditionalTooltip from "@/components/custom-ui/conditional-tooltip";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
@@ -34,8 +35,13 @@ export default function CreatePurchaseOrdersClient() {
     useCurrencyDebounceFetcher();
   const { t } = useTranslation("common");
   const { toast } = useToast();
+  const revalidator = useRevalidator()
+
   const form = useForm<z.infer<typeof createPurchaseSchema>>({
     resolver: zodResolver(createPurchaseSchema),
+    defaultValues:{
+      lines:[],
+    }
   });
   const addLineOrder = useAddLineOrder()
   const [metaOptions] = useEditTable({
@@ -54,13 +60,17 @@ export default function CreatePurchaseOrdersClient() {
     if(addLineOrder.orderLine){
       const orderLines = form.getValues().lines
       const n = [...orderLines,addLineOrder.orderLine]
+      // console.log("LINES",orderLines,addLineOrder.orderLine)
       form.setValue("lines",n)
+      addLineOrder.onOpenChange(false)
+      revalidator.revalidate()
     }
   },[addLineOrder.orderLine])
  
   return (
     <div>
-      {/* {JSON.stringify(itemPriceDebounceFetcher.data?.itemPriceForOrders)} */}
+      {JSON.stringify(form.getValues().currency)}
+      
       <Form {...form}>
         <fetcher.Form
           method="post"
@@ -98,6 +108,7 @@ export default function CreatePurchaseOrdersClient() {
               label={t("form.currency")}
               onSelect={(v) => {
                 form.setValue("currency", v.code);
+                revalidator.revalidate()
               }}
             />
 
@@ -116,7 +127,11 @@ export default function CreatePurchaseOrdersClient() {
             data={form.getValues().lines || []}
             columns={orderLineColumns({})}
             metaOptions={{
-              meta:metaOptions
+              meta:{ 
+                ...metaOptions,
+                tooltipMessage:t("tooltip.selectCurrency"),
+                enableTooltipMessage:form.getValues().currency == undefined,
+              }
           }}
             />
           </div>

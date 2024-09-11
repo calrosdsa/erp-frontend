@@ -1,3 +1,4 @@
+import ConditionalTooltip from "@/components/custom-ui/conditional-tooltip";
 import { Button } from "@/components/ui/button";
 import { Table } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
@@ -14,14 +15,20 @@ export default function DataTableEditFooter<TData>({
   return (
     <div className="py-2">
       {meta.addRow && (
-        <Button
+        <ConditionalTooltip
           variant="outline"
           type="button"
           className="h-8"
-          onClick={() => meta?.addRow()}
+          enableTooltip={meta.enableTooltipMessage}
+          onClick={() => {
+            if (!meta.enableTooltipMessage) {
+              meta?.addRow();
+            }
+          }}
+          tooltipContent={<p>{meta.tooltipMessage}</p>}
         >
           {t("table.addRow")}
-        </Button>
+        </ConditionalTooltip>
       )}
     </div>
   );

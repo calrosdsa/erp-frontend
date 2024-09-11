@@ -217,5 +217,8 @@
 
   "actions": {
     "edit": "Edit"
+  },
+  "tooltip":{
+    "selectCurrency":"Please select your currency."
   }
 }
