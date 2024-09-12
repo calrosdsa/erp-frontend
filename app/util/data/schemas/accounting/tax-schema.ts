@@ -7,3 +7,8 @@ export  const createTaxSchema = z.object({
     value:z.preprocess((a)=>parseFloat(z.string().parse(a)),z.number()),
     enabled:z.boolean(),
 })
+
+export const taxSchema = z.object({
+    name:z.string(),
+    uuid:z.string(),
+})

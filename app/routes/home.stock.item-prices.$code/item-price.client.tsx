@@ -15,7 +15,7 @@ export default function ItemPriceDetailClient(){
             <ItemPriceInfo
             />
 
-            {itemPriceData.result.entity.ItemPricePlugin.map((item,idx)=>{
+            {/* {itemPriceData.result.entity.ItemPricePlugin.map((item,idx)=>{
                 return (
                     <div key={idx}>
                         {item.Plugin == PluginApp.SQUARE &&
@@ -25,7 +25,7 @@ export default function ItemPriceDetailClient(){
                         }
                     </div>
                 )
-            })}
+            })} */}
         </div>
     )
 }

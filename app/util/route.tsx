@@ -35,8 +35,11 @@ class Routes  {
     purchaseorders = this.purchases + "/orders"
 
     settings = this.base + "/settings"
+    uom = this.settings + "/uom"
     profile = this.settings + "/profile"
     account = this.settings + "/account"
+
+
 
 
     toCompanyDetail(name:string,id:string):string {
@@ -48,14 +51,14 @@ class Routes  {
         return `${this.priceList}/${encodeURIComponent(name)}?id=${id}`
     }
 
-    taxDetailRoute(id:string):string {
+    taxDetailRoute(name:string,id:string):string {
         return `${this.accounting}/taxes/${encodeURIComponent(id)}`
     }
 
     createItemAttributeRoute= `${this.itemAttributes}/create`
 
-    toItemAttributeDetail(id:string):string {
-        return `${this.itemAttributes}/${encodeURIComponent(id)}`
+    toItemAttributeDetail(name:string,id:string):string {
+        return `${this.itemAttributes}/${encodeURIComponent(name)}?id=${id}`
     }
 
     //STOCK
@@ -65,11 +68,11 @@ class Routes  {
     toItem(id:string):string {
         return `${this.items}/${encodeURIComponent(id)}`
     }
-    toItemDetail(id:string):string{
-        return `${this.items}/${encodeURIComponent(id)}/item-prices`
+    toItemDetail(name:string,id:string):string{
+        return `${this.items}/${encodeURIComponent(name)}?id=${id}`
     }
-    toItemDetailPrices(id:string):string {
-        return `${this.items}/${encodeURIComponent(id)}/item-prices`
+    toItemDetailPrices(name:string,id:string):string {
+        return `${this.items}/${encodeURIComponent(name)}/item-prices?id=${id}`
     }
     toItemDetailVariants(id:string):string {
         return `${this.items}/${encodeURIComponent(id)}/variants`
@@ -77,11 +80,11 @@ class Routes  {
     toItemDetailStock(id:string):string {
         return `${this.items}/${encodeURIComponent(id)}/stock`
     }
-    toWarehouseInfo(id:string):string{
-        return `${this.warehouses}/${encodeURIComponent(id)}/info`
+    toWarehouseInfo(name:string,id:string):string{
+        return `${this.warehouses}/${encodeURIComponent(name)}/info?id=${id}`
     }
-    toWarehouseItems(id:string):string{
-        return `${this.warehouses}/${encodeURIComponent(id)}/items`
+    toWarehouseItems(name:string,id:string):string{
+        return `${this.warehouses}/${encodeURIComponent(name)}/items?id=${id}`
     }
 
     //Item group                                                                            
@@ -90,8 +93,8 @@ class Routes  {
     }
 
     //Acouting
-    toTaxDetail(id:string):string{
-        return `${this.taxes}/${encodeURIComponent(id)}`
+    toTaxDetail(name:string,id:string):string{
+        return `${this.taxes}/${encodeURIComponent(name)}?id=${id}`
     }
     //Buyinh
     toSupplierGroup(name:string,id:string):string{

@@ -1,7 +1,7 @@
   import { Link } from "@remix-run/react";
   import { ColumnDef } from "@tanstack/react-table";
   import { useTranslation } from "react-i18next";
-  import { components } from "index";
+import { components } from "~/sdk";
   import { formatCurrency } from "~/util/format/formatCurrency";
   import { formatLongDate } from "~/util/format/formatDate";
 
@@ -9,9 +9,9 @@
     includeItem,
   }: {
     includeItem?: boolean;
-  } ): ColumnDef<components["schemas"]["ItemPrice"]>[] => {
+  } ): ColumnDef<components["schemas"]["ItemPriceDto"]>[] => {
     const { t, i18n } = useTranslation("common");
-    let columns: ColumnDef<components["schemas"]["ItemPrice"]>[] = [];
+    let columns: ColumnDef<components["schemas"]["ItemPriceDto"]>[] = [];
 
     columns.push({
       id: "index",
@@ -21,10 +21,10 @@
       },
     });
     columns.push({
-      accessorKey: "Code",
+      accessorKey: "uuid",
       header: t("table.code"),
       cell: ({ row }) => {
-        const code = row.getValue("Code") as string;
+        const code = row.getValue("uuid") as string;
         return (
           <Link
             to={`/home/stock/item-prices/${encodeURIComponent(code)}`}
@@ -36,11 +36,11 @@
       },
     })
     columns.push({
-      accessorKey: "Rate",
+      accessorKey: "rate",
       header: t("form.rate"),
       cell: ({ row }) => {
-        const rate = row.getValue("Rate");
-        const currency = row.getValue("Currency") as string;
+        const rate = row.getValue("rate");
+        const currency = row.getValue("currency") as string;
         return (
           <div className="">
             {formatCurrency(Number(rate), currency, i18n.language)}
@@ -48,9 +48,9 @@
         );
       },
     })
-    columns.push({ accessorKey: "ItemPriceList.Currency", id: "Currency",header:t("form.currency") });
+    columns.push({ accessorKey: "currency",header:t("form.currency") });
     columns.push({
-      accessorKey: "ItemQuantity",
+      accessorKey: "item_quantity",
       header: t("form.itemQuantity"),
     })
     columns.push({
@@ -64,14 +64,13 @@
     })
 
     if (includeItem) {
-      columns.push({ accessorKey: "Item.Code", id: "itemCode" });
+      columns.push({ accessorKey: "item_code", id: "itemCode" });
 
       columns.push({
-        accessorKey: "Item.Name",
-        id:"itemName",
+        accessorKey: "item_name",
         header: t("item.code"),
         cell: ({ row }) => {
-          const itemName = row.getValue("itemName") as string
+          const itemName = row.getValue("item_name") as string
           const code = row.getValue("itemCode") as string;
           return (
             <Link

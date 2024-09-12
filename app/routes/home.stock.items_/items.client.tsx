@@ -19,12 +19,12 @@ import { GlobalState } from "~/types/app";
 
 const ItemsClient = () => {
   const { t } = useTranslation("common");
-  const { data } = useLoaderData<typeof loader>();
-  const state = useOutletContext<GlobalState>();
+  const { paginationResult,actions } = useLoaderData<typeof loader>();
+  const globalState = useOutletContext<GlobalState>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [permission] = usePermission({
-    roleActions: state.role?.RoleActions,
-    actions: data?.actions,
+    roleActions: globalState.roleActions,
+    actions: actions,
   });
   const submit = useSubmit();
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const ItemsClient = () => {
     <div>
       <div className="">
         <DataTable
-          data={data?.pagination_result.results || []}
+          data={paginationResult?.results || []}
           metaActions={{
             meta: {
               ...(permission?.create && {
@@ -49,7 +49,7 @@ const ItemsClient = () => {
           }}
           columns={itemColumns()}
           paginationOptions={{
-            rowCount: data?.pagination_result.total || 0,
+            rowCount: paginationResult?.total || 0,
             onPaginationChange: (e) => {
               const fD = new FormData();
               fD.append("page", e.pageIndex.toString());

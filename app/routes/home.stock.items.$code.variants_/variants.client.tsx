@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Suspense, useEffect, useState } from "react";
 import CustomAlertDialog from "@/components/custom/dialog/CustomAlertDialog";
 import { useToast } from "@/components/ui/use-toast";
-import { itemDtoSchema, itemFormSchema } from "~/util/data/schemas/stock/item-schemas";
+import { itemDtoSchema, createItemSchema } from "~/util/data/schemas/stock/item-schemas";
 import { z } from "zod";
 import FallBack from "@/components/layout/Fallback";
 import { DataTable } from "@/components/custom/table/CustomTable";

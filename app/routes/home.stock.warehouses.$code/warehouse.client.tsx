@@ -10,16 +10,15 @@ export default function WareHouseClient() {
   // const globalState = useOutletContext<GlobalState>()
   const { warehouse } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const params = useParams()
   const r = routes;
   const navItems = [
     {
       title: t("info"),
-      href: r.toWarehouseInfo(params.code || ""),
+      href: r.toWarehouseInfo(warehouse?.name || "",warehouse?.uuid || ""),
     },
     {
       title: t("items"),
-      href: r.toWarehouseItems(params.code || ""),
+      href: r.toWarehouseItems(warehouse?.name || "",warehouse?.uuid || ""),
     },
   ];
   return (

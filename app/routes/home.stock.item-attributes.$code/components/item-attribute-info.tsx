@@ -9,7 +9,6 @@ import { itemAttributeValuesColumns } from "@/components/custom/table/columns/st
 import useActionRow from "~/util/hooks/useActionRow";
 import UpsertItemAttributeValue from "./upsert-item-attribute-value";
 import { useEffect, useState } from "react";
-import { components } from "index";
 
 export default function ItemAttributeInfo() {
   const { itemAttribute } = useLoaderData<typeof loader>();
@@ -50,7 +49,7 @@ export default function ItemAttributeInfo() {
             {t("_stock.itemAttributeInfo")}
           </Typography>
         </div>
-        <DisplayTextValue title={t("form.name")} value={itemAttribute?.Name} />
+        <DisplayTextValue title={t("form.name")} value={itemAttribute?.name} />
 
         <div className="col-span-full">
           <Typography fontSize={title}>

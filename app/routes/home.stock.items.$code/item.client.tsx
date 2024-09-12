@@ -3,26 +3,22 @@ import { loader } from "./route";
 import ItemInfo from "./components/ItemInfo";
 import ItemPrices from "../home.stock.items.$code.item-prices_/Item-detail-prices.client";
 import { Separator } from "@/components/ui/separator";
-import { components } from "index";
 import HorizontalNavTabs from "@/components/layout/nav/horizontal-nav-tabs";
 import { routes } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { ItemGlobalState } from "~/types/app";
+import { components } from "~/sdk";
 
-export default function ItemDetailClient({
-  data
-}:{
-  data:components["schemas"]["EntityResponseResultEntityItemBody"]
-}) {
-
+export default function ItemDetailClient() {
   const r = routes
   const params = useParams()
+  const {item} = useLoaderData<typeof loader>()
     const {t} = useTranslation("common")
     // const globalState = useOutletContext<GlobalState>()
     const tabNavItems = [
       {
         title: t("item-prices"),
-        href: r.toItemDetailPrices(params.code || ""),
+        href: r.toItemDetailPrices(item?.name || "",item?.uuid || ""),
       },
       {
         title: t("_item.variants"),
@@ -36,7 +32,7 @@ export default function ItemDetailClient({
 
   return (
     <div className="grid gap-y-5">
-      {data?.result != undefined && <ItemInfo data={data.result.entity} />}
+      {item != undefined && <ItemInfo data={item} />}
 
 
       <div className="py-2">
@@ -48,7 +44,7 @@ export default function ItemDetailClient({
       <Outlet
       context={
         {
-          item:data.result.entity
+          item:item
         } as ItemGlobalState
       }
       />

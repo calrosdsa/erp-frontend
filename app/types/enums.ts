@@ -35,6 +35,7 @@ export enum Entity {
 
 export enum PartyType {
 	PARTY_SUPPLIER_GROUP = "supplierGroup",
+	PARTY_ITEM_GROUP = "itemGroup",
 	PARTY_PURCHASE_ORDER = "purchaseOrder"
     
 }

@@ -1,47 +1,39 @@
 import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
-import { components } from "index";
+import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
+import TableCellDate from "../../cells/table-cell-date";
+import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
+
 
 export const warehouseColumns = (): ColumnDef<
-  components["schemas"]["WareHouse"]
+  components["schemas"]["WareHouseDto"]
 >[] => {
   const { t,i18n } = useTranslation("common");
   const r = routes
-  let columns: ColumnDef<components["schemas"]["WareHouse"]>[] = [];
+  let columns: ColumnDef<components["schemas"]["WareHouseDto"]>[] = [];
   columns.push({
-    accessorKey: "Code",
+    accessorKey: "name",
     header: t("table.code"),
-    cell: ({ row }) => {
-      const code = row.getValue("Code") as string;
+    cell:({...props})=>{
+      const rowData = props.row.original
       return (
-        <Link
-          to={r.toWarehouseInfo(code)}
-          className="underline font-semibold"
-        >
-          {code.toString()}
-        </Link>
-      );
-    },
+        <TableCellNameNavigation
+        {...props}
+        navigate={(name)=>r.toWarehouseInfo(name,rowData.uuid)}
+        />
+      )}
   });
+  
   columns.push({
-    header: t("form.name"),
-    accessorKey: "Name",
-  })
-  columns.push({
-    accessorKey: "CreatedAt",
+    accessorKey: "created_at",
     header: t("table.createdAt"),
-    cell: ({ row }) => {
-      const date = row.getValue("CreatedAt");
-      const longDate = formatLongDate(date as string,i18n.language)
-      return (
-        <div className="">
-          {longDate}
-        </div>
-      );
-    },
+    cell:({...props})=><TableCellDate
+    {...props}
+    i18n={i18n}
+    />
   })
 
   return columns;

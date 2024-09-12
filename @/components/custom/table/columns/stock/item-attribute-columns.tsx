@@ -8,26 +8,27 @@ import { DataTableRowActions } from "../../data-table-row-actions";
 import { Link } from "@remix-run/react";
 import { routes } from "~/util/route";
 import { components } from "~/sdk";
+import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 
-export const itemAttributeColumns = ():ColumnDef<components["schemas"]["ItemAttribute"]>[] =>{
+export const itemAttributeColumns = ():ColumnDef<components["schemas"]["ItemAttributeDto"]>[] =>{
     const {t} = useTranslation("common")
     const r = routes
     return [
         {
             header: t("form.name"),
-            accessorKey:"Name",
-            cell:({row}) =>{
-                const name = row.getValue("Name") as string
-                return (
-                    <Link to={r.toItemAttributeDetail(name)} className="underline">
-                        {name}
-                    </Link>
-                )
+            accessorKey:"name",
+            cell:({...props}) =>{
+                const rowData = props.row.original
+                return <TableCellNameNavigation
+                {...props}
+                navigate={(name)=>r.toItemAttributeDetail(name,rowData.uuid)}
+                />
+                
             }
         },
         {
             header: t("table.createdAt"),
-            accessorKey:"CreatedAt"
+            accessorKey:"created_at"
         },
     ]
 }

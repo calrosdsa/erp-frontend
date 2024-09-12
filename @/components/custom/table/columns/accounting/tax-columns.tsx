@@ -6,39 +6,33 @@ import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
+import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
+import TableCellDate from "../../cells/table-cell-date";
 
-export const taxColumns = (): ColumnDef<components["schemas"]["Tax"]>[] => {
+export const taxColumns = (): ColumnDef<components["schemas"]["TaxDto"]>[] => {
   const { t, i18n } = useTranslation("common");
   const r = routes;
   return [
     {
-      accessorKey: "Code",
-      header: t("form.code"),
-      cell: ({ row }) => {
-        const code = row.getValue("Code") as string;
-        return (
-          <div className=" uppercase">
-            <Link to={r.toTaxDetail(code)}>
-              <Typography className=" text-primary underline cursor-pointer">
-                {code}
-              </Typography>
-            </Link>
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "Name",
+      accessorKey: "name",
       header: t("form.name"),
+      cell:({...props})=>{
+        const rowData = props.row.original
+        return(
+          <TableCellNameNavigation
+          {...props}
+          navigate={(name)=>r.toTaxDetail(name,rowData.uuid)}
+          />
+        )
+      }
     },
     {
-      accessorKey: "CreatedAt",
+      accessorKey: "created_at",
       header: t("table.createdAt"),
-      cell: ({ row }) => {
-        const date = row.getValue("CreatedAt");
-        const longDate = formatLongDate(date as string, i18n.language);
-        return <div className="">{longDate}</div>;
-      },
+      cell: ({ ...props }) => <TableCellDate
+      {...props}
+      i18n={i18n}
+      />
     },
   ];
 };

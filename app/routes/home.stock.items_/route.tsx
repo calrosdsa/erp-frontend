@@ -2,7 +2,7 @@ import apiClient from "~/apiclient";
 import ItemsClient from "./items.client";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { components } from "index";
+import { components } from "~/sdk";
 
 type ActionData = {
     action:string
@@ -13,7 +13,7 @@ type ActionData = {
 export const action = async({request}:LoaderFunctionArgs)=>{
     const client = apiClient({request})
     const data  = await request.json() as ActionData
-    let items:components["schemas"]["Item"][] = []
+    let items:components["schemas"]["ItemDto"][] = []
     let message:string | undefined = undefined
     let error:string | undefined = undefined
     switch(data.action){
@@ -48,8 +48,10 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
             }
         }
     })
+    
     return json({
-        data:res.data
+        paginationResult:res.data?.pagination_result,
+        actions:res.data?.actions
     })
 }
 

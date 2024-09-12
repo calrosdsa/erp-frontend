@@ -2,7 +2,7 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import ItemAttributesClient from "./item-attributes.client";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { components } from "index";
+import { components } from "~/sdk";
 
 type PriceListAction = {
     action: string;
@@ -55,7 +55,8 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
     })
 
     return json({
-        pagination_result:res.data?.pagination_result
+        paginationResult:res.data?.pagination_result,
+        actions:res.data?.actions
     })
 }
 

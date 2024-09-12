@@ -8,7 +8,7 @@ import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { useAddItemPrice } from "./components/add-item-price";
 
 export default function ItemPricesClient() {
-  const { data } = useLoaderData<typeof loader>();
+  const { paginationResult,actions } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
   const addItemPrice = useAddItemPrice();
   const submit = useSubmit();
@@ -29,11 +29,11 @@ export default function ItemPricesClient() {
             },
           },
         }}
-        data={data?.pagination_result.results || []}
+        data={paginationResult?.results || []}
         columns={itemPriceColumns({ includeItem: true })}
         paginationOptions={{
           paginationState: paginationState,
-          rowCount: data?.pagination_result.total || 0,
+          rowCount: paginationResult?.total || 0,
           onPaginationChange: (e) => {
             const fD = new FormData();
             fD.append("page", e.pageIndex.toString());

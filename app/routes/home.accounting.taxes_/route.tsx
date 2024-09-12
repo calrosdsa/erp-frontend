@@ -15,7 +15,7 @@ type ActionData = {
 export const action = async({request}:ActionFunctionArgs) =>{
     const client = apiClient({request})
     const data =await request.json() as ActionData
-    let result:components["schemas"]["Tax"][] = []
+    let taxes:components["schemas"]["TaxDto"][] = []
     let message:string | undefined = undefined
     let error:string | undefined = undefined
     switch(data.action){
@@ -37,13 +37,13 @@ export const action = async({request}:ActionFunctionArgs) =>{
                 }
             })
             if(res.data){
-                result = res.data.pagination_result.results
+                taxes = res.data.pagination_result.results
             }
             break;
         }
     }
     return json({
-        result,
+        taxes,
         message,
         error,
         

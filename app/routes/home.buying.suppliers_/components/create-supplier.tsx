@@ -34,7 +34,7 @@ export const CreateSupplier = ({
   const createGroup = useCreateGroup();
   const [groupPermission] = usePermission({
     actions: groupDebounceFetcher.data?.actions,
-    roleActions: globalState.role?.RoleActions,
+    roleActions: globalState.roleActions,
   });
   const d = groupDebounceFetcher.data?.groups || [];
   const r = routes;
@@ -100,7 +100,6 @@ export const CreateSupplier = ({
                 form={form}
                 label={t("group")}
                 data={groupDebounceFetcher.data?.groups || []}
-                onOpen={() => onChangeGroupName("")}
                 onValueChange={(e) => onChangeGroupName(e)}
                 name="groupName"
                 nameK={"name"}

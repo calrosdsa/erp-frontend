@@ -21,7 +21,7 @@ export type GlobalState = {
 
 //ONLY AVAILABLE FOR ROUTE CHILDREN OF /home/stock/items/$code
 export type ItemGlobalState = {
-    item:components["schemas"]["Item"]
+    item:components["schemas"]["ItemDetailDto"]
     // globalState:GlobalState
 }
 

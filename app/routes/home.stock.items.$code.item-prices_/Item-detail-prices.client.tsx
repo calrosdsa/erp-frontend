@@ -5,7 +5,6 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemPriceColumns } from "@/components/custom/table/columns/stock/itemPriceColumns";
 import useActionRow from "~/util/hooks/useActionRow";
 import AddItemPrice, { useAddItemPrice } from "../home.stock.item-prices_/components/add-item-price";
-import { components } from "index";
 import { ItemGlobalState } from "~/types/app";
 import { loader } from "./route";
 
@@ -40,7 +39,7 @@ export default function ItemDetailPricesClient() {
           metaActions={{
             meta:{
               addNew:()=>{
-                addItemPrice.onOpenDialog({item:item})
+                addItemPrice.onOpenDialog({itemUuid:item.uuid})
               }
             }
           }}

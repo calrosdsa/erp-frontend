@@ -5,7 +5,6 @@ import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/compon
 import { CreateGroup, useCreateGroup } from "~/routes/home.groups/components/create-group"
 import { CreateUser, useCreateUser } from "~/routes/home.manage.users_/components/create-user"
 import { AddPriceList, useCreatePriceList } from "~/routes/home.selling_.stock_.price-list/components/add-price-list"
-import { AddItemGroupItem, useCreateItemGroup } from "~/routes/home.stock.item-groups_/components/add-item-group"
 import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.item-prices_/components/add-item-price"
 import { UpsertItemStockLevel, useUpsertItemStockLevel } from "~/routes/home.stock.items.$code.stock_/components/upsert-item-stock-level"
 import CreateItemVariant, { useCreateItemVariant } from "~/routes/home.stock.items.$code.variants_/components/create-item-variant"
@@ -20,7 +19,6 @@ export default function GlobalDialogs({globalState}:{
 
     const createSupplier = useCreateSupplier()
 
-    const createItemGroup = useCreateItemGroup()
     const addItemStockLevel = useUpsertItemStockLevel()
     const createTax = useCreateTax()
     const createPriceList = useCreatePriceList()
@@ -86,7 +84,7 @@ export default function GlobalDialogs({globalState}:{
         {addItemPrice.open && 
         <AddItemPrice
         open={addItemPrice.open}
-        item={addItemPrice.item}
+        itemUuid={addItemPrice.itemUuid}
         onOpenChange={addItemPrice.onOpenChange}
         />
         }
@@ -100,12 +98,6 @@ export default function GlobalDialogs({globalState}:{
         <AddTax
         open={createTax.isOpen}
         onOpenChange={createTax.onOpenChange}
-        />
-        }
-        {createItemGroup.isOpen &&
-        <AddItemGroupItem
-        open={createItemGroup.isOpen}
-        onOpenChange={createItemGroup.onOpenChage}
         />
         }
         {addItemStockLevel.isOpen && 

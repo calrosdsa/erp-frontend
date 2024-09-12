@@ -2,14 +2,14 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import ItemPricesClient from "./item-prices.client";
 import { DEFAULT_ENABLED, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { itemPriceFormSchema } from "~/util/data/schemas/stock/item-price-schema";
+import { createItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { z } from "zod";
 import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
   query: string;
-  itemPriceFormSchema: z.infer<typeof itemPriceFormSchema>;
+  createItemPrice: z.infer<typeof createItemPriceSchema>;
   currency:string
   isSelling:boolean
   isBuying:boolean
@@ -20,7 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
-  let itemPrices: components["schemas"]["ItemPrice"][] = [];
+  let itemPrices: components["schemas"]["ItemPriceDto"][] = [];
   let itemPriceForOrders:components["schemas"]["ItemPriceDto"][] = [];
   switch (data.action) {
     case "item-price-for-orders":{
@@ -52,17 +52,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "add-item-price": {
-      const itemPriceFormData = data.itemPriceFormSchema;
+      const d = data.createItemPrice;
+      console.log("DATA",d)
       const res = await client.POST("/stock/item/item-price", {
         body: {
-          itemPrice: {
-            itemId: itemPriceFormData.itemId,
-            itemQuantity: Number(itemPriceFormData.itemQuantity),
-            priceListId: itemPriceFormData.priceListId,
-            rate: Number(itemPriceFormData.rate),
-            taxId: itemPriceFormData.taxId,
-          },
-          plugins: itemPriceFormData.plugins || [],
+            itemQuantity: d.itemQuantity,
+            rate: d.rate,
+            item_uuid:d.itemUuid,
+            tax_uuid:d.taxUuid,
+            price_list_uuid:d.priceListUuid
         },
       });
       message = res.data?.message
@@ -92,7 +90,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
   console.log(res.data);
   return json({
-    data: res.data,
+    paginationResult: res.data?.pagination_result,
+    actions:res.data?.actions
   });
 };
 

@@ -381,23 +381,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/payment/webhook": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Payment square wenhook */
-        post: operations["payment-webhook"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/plugin": {
         parameters: {
             query?: never;
@@ -537,108 +520,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/selling/salesorder/client": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get client sales orders */
-        get: operations["client-sales-orders"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/selling/salesorder/{code}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get sales order detail */
-        get: operations["sale-order-detail"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/square/subscription/cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Cancel square subscription */
-        post: operations["cancel-square-subscription"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/square/test": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Test Event */
-        get: operations["test-event"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/square/{uuid}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get square catalog */
-        get: operations["get-catalog-square"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/square/{uuid}/{object_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get square object */
-        get: operations["get-object-square"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/stock/item": {
         parameters: {
             query?: never;
@@ -655,41 +536,6 @@ export interface paths {
         put: operations["update-item"];
         /** Create item */
         post: operations["create-item"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/stock/item-group": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Item groups */
-        get: operations["item-groups"];
-        put?: never;
-        /** Create Item group */
-        post: operations["create-item-group"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/stock/item-group/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get item group detail */
-        get: operations["item-group-detail"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1021,40 +867,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/teclumobity/item-price": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Retrieve item price */
-        post: operations["get-item-price"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/teclumobity/order": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create Order */
-        post: operations["create-order"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/uom": {
         parameters: {
             query?: never;
@@ -1169,75 +981,12 @@ export interface components {
             enabled: boolean;
             /** Format: int64 */
             itemId: number;
-            /** Format: int64 */
+            /** Format: int32 */
             outOfStockThreshold: number;
-            /** Format: int64 */
+            /** Format: int32 */
             stock: number;
             /** Format: int64 */
             warehouseId: number;
-        };
-        Address: {
-            City: string;
-            Company: string;
-            CountryCode: string;
-            /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            FullName: string;
-            /** Format: int64 */
-            ID: number;
-            IdentificationNumber: string;
-            PhoneNumber: string;
-            PostalCode: string;
-            Province: string;
-            StreetLine1: string;
-            StreetLine2: string;
-            /** Format: date-time */
-            UpdatedAt: string;
-        };
-        Amount: {
-            /** Format: int64 */
-            amount: number;
-            currency: string;
-        };
-        ApplicationDetailsStruct: {
-            application_id?: string;
-            square_product?: string;
-        };
-        BillingData: {
-            address: string;
-            city: string;
-            country: string;
-            estado: string;
-            postalCode: string;
-            taxIdNumber: string;
-        };
-        CardDetailsStruct: {
-            avs_status?: string;
-            card?: components["schemas"]["CardStruct"];
-            card_payment_timeline?: components["schemas"]["CardPaymentTimelineStruct"];
-            cvv_status?: string;
-            entry_method?: string;
-            statement_description?: string;
-            status?: string;
-        };
-        CardPaymentTimelineStruct: {
-            /** Format: date-time */
-            authorized_at?: string;
-            /** Format: date-time */
-            captured_at?: string;
-        };
-        CardStruct: {
-            bin?: string;
-            card_brand?: string;
-            card_type?: string;
-            /** Format: int64 */
-            exp_month?: number;
-            /** Format: int64 */
-            exp_year?: number;
-            fingerprint?: string;
-            last_4?: string;
-            prepaid_type?: string;
         };
         Client: {
             ClientKeyValueData: components["schemas"]["ClientKeyValueData"][];
@@ -1269,18 +1018,6 @@ export interface components {
             baseId?: number;
             key: string;
             value: string;
-        };
-        ClientRequestDto: {
-            companyName: string;
-            country?: components["schemas"]["Country"];
-            deleteAt?: components["schemas"]["DeletedAt"];
-            email: string;
-            familyName: string;
-            givenName: string;
-            keyValues?: components["schemas"]["ClientKeyValueData"][];
-            metadata?: string;
-            phoneNumber: string;
-            plugins?: components["schemas"]["CompanyPlugins"][];
         };
         Company: {
             code: string;
@@ -1353,22 +1090,23 @@ export interface components {
             name: string;
             values: components["schemas"]["ItemAttributeValueDto"][];
         };
-        CreateItemGroupRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            name: string;
-        };
         CreateItemPriceRequestBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            itemPrice: components["schemas"]["ItemPriceStruct"];
-            plugins: components["schemas"]["PluginDto"][];
+            /** Format: int32 */
+            itemQuantity: number;
+            item_uuid: string;
+            price_list_uuid: string;
+            /** Format: double */
+            rate: number;
+            tax_uuid: string;
+            /** Format: date-time */
+            validFrom?: string | null;
+            /** Format: date-time */
+            validUpTo?: string | null;
         };
         CreateItemRequestBody: {
             /**
@@ -1376,7 +1114,9 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            item: components["schemas"]["ItemDto"];
+            group: components["schemas"]["GroupDto"];
+            name: string;
+            uom: components["schemas"]["UOMDto"];
         };
         CreateItemVariantRequestBody: {
             /**
@@ -1488,11 +1228,6 @@ export interface components {
         CurrencyDto: {
             code: string;
         };
-        DataStruct: {
-            id?: string;
-            object?: components["schemas"]["ObjectStruct"];
-            type?: string;
-        };
         DeletedAt: {
             /** Format: date-time */
             Time: string;
@@ -1558,7 +1293,7 @@ export interface components {
             message: string;
             result: components["schemas"]["CompanyDto"];
         };
-        EntityResponseItemAttributeBody: {
+        EntityResponseItemAttributeDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -1566,9 +1301,9 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             message: string;
-            result: components["schemas"]["ItemAttribute"];
+            result: components["schemas"]["ItemAttributeDto"];
         };
-        EntityResponseItemBody: {
+        EntityResponseItemDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -1576,27 +1311,7 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             message: string;
-            result: components["schemas"]["Item"];
-        };
-        EntityResponseItemGroupBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            message: string;
-            result: components["schemas"]["ItemGroup"];
-        };
-        EntityResponseItemPriceBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            message: string;
-            result: components["schemas"]["ItemPrice"];
+            result: components["schemas"]["ItemDto"];
         };
         EntityResponseListUserRelationDtoBody: {
             /**
@@ -1608,16 +1323,6 @@ export interface components {
             message: string;
             result: components["schemas"]["UserRelationDto"][];
         };
-        EntityResponseResponseSalesOrderDetailBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            message: string;
-            result: components["schemas"]["ResponseSalesOrderDetail"];
-        };
         EntityResponseResultEntityGroupDtoBody: {
             /**
              * Format: uri
@@ -1628,7 +1333,7 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityGroupDto"];
         };
-        EntityResponseResultEntityItemBody: {
+        EntityResponseResultEntityItemAttributeDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -1636,7 +1341,17 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             message: string;
-            result: components["schemas"]["ResultEntityItem"];
+            result: components["schemas"]["ResultEntityItemAttributeDto"];
+        };
+        EntityResponseResultEntityItemDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ResultEntityItemDetailDto"];
         };
         EntityResponseResultEntityItemPriceBody: {
             /**
@@ -1738,7 +1453,7 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntitySupplierDto"];
         };
-        EntityResponseResultEntityTaxBody: {
+        EntityResponseResultEntityTaxDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -1746,9 +1461,9 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             message: string;
-            result: components["schemas"]["ResultEntityTax"];
+            result: components["schemas"]["ResultEntityTaxDto"];
         };
-        EntityResponseWareHouseBody: {
+        EntityResponseResultEntityWareHouseDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -1756,7 +1471,7 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             message: string;
-            result: components["schemas"]["WareHouse"];
+            result: components["schemas"]["ResultEntityWareHouseDto"];
         };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
@@ -1795,10 +1510,6 @@ export interface components {
              */
             type: string;
         };
-        ExternalDetails: {
-            source: string;
-            type: string;
-        };
         GreetingOutputBody: {
             /**
              * Format: uri
@@ -1807,6 +1518,27 @@ export interface components {
             readonly $schema?: string;
             /** @description Greeting message */
             message: string;
+        };
+        Group: {
+            company: components["schemas"]["Company"];
+            /** Format: int64 */
+            company_id: number;
+            /** Format: date-time */
+            created_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
+            enabled: boolean;
+            /** Format: int64 */
+            id: number;
+            is_group: boolean;
+            name: string;
+            /** Format: int32 */
+            ordinal: number;
+            /** Format: int64 */
+            parent_id: number | null;
+            party: components["schemas"]["Party"];
+            /** Format: date-time */
+            updated_at: string | null;
+            uuid: string;
         };
         GroupDto: {
             /** Format: date-time */
@@ -1827,52 +1559,33 @@ export interface components {
             uuid: string;
         };
         Item: {
-            Code: string;
+            code: string;
             /** Format: int64 */
-            CompanyID: number;
+            company_id: number;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
+            created_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
+            group: components["schemas"]["Group"];
             /** Format: int64 */
-            ID: number;
-            ItemGroup?: components["schemas"]["ItemGroup"];
+            group_id: number;
             /** Format: int64 */
-            ItemGroupID: number;
-            ItemType: string;
-            Name: string;
-            UnitOfMeasure: components["schemas"]["UnitOfMeasure"];
+            id: number;
+            item_type: string;
+            name: string;
             /** Format: int64 */
-            UnitOfMeasureID: number;
+            parent_id: number | null;
+            unit_of_measure: components["schemas"]["UnitOfMeasure"];
+            /** Format: int64 */
+            unit_of_measure_id: number;
             /** Format: date-time */
-            UpdatedAt: string;
-            Uuid: string;
+            updated_at: string | null;
+            uuid: string;
         };
-        ItemAttribute: {
+        ItemAttributeDto: {
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            ID: number;
-            ItemAttributeValues: components["schemas"]["ItemAttributeValue"][];
-            Name: string;
-            /** Format: date-time */
-            UpdatedAt: string;
-        };
-        ItemAttributeValue: {
-            Abbreviation: string;
-            /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            ID: number;
-            ItemAttribute: components["schemas"]["ItemAttribute"];
-            /** Format: int64 */
-            ItemAttributeID: number;
-            /** Format: int64 */
-            Ordinal: number;
-            /** Format: date-time */
-            UpdatedAt: string;
-            Value: string;
+            created_at: string;
+            name: string;
+            uuid: string;
         };
         ItemAttributeValueDto: {
             abbreviation: string;
@@ -1880,72 +1593,66 @@ export interface components {
             id?: number;
             /** Format: int64 */
             itemAttributeId?: number;
-            /** Format: int64 */
+            /** Format: int32 */
             ordinal: number;
             value: string;
         };
-        ItemDto: {
-            /** Format: int64 */
-            id?: number;
-            /** Format: int64 */
-            itemGroupId: number;
-            itemType?: string;
+        ItemDetailDto: {
+            code: string;
+            group: components["schemas"]["GroupDto"];
+            /** Format: date-time */
+            itemGroupId: string;
+            itemType: string;
             name: string;
-            /** Format: int64 */
-            uomId?: number;
+            uom: components["schemas"]["UOMDto"];
+            uuid: string;
         };
-        ItemGroup: {
-            Code: string;
-            Company: components["schemas"]["Company"];
-            /** Format: int64 */
-            CompanyID: number;
+        ItemDto: {
+            code: string;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            ID: number;
-            IsParent: boolean;
-            Name: string;
-            Parent: components["schemas"]["ItemGroup"];
-            /** Format: int64 */
-            ParentID: number | null;
-            /** Format: date-time */
-            UpdatedAt: string;
-            Uuid: string;
+            created_at: string;
+            itemType: string;
+            name: string;
+            uuid: string;
         };
         ItemPrice: {
-            Code: string;
-            Company: components["schemas"]["Company"];
+            company: components["schemas"]["Company"];
             /** Format: int64 */
-            CompanyID: number;
+            company_id: number;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
+            created_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
             /** Format: int64 */
-            ID: number;
-            Item: components["schemas"]["Item"];
+            id: number;
+            item: components["schemas"]["Item"];
             /** Format: int64 */
-            ItemID: number;
-            ItemPriceList: components["schemas"]["ItemPriceList"];
+            item_id: number;
+            /** Format: int32 */
+            item_quantity: number;
+            price_list: components["schemas"]["PriceList"];
             /** Format: int64 */
-            ItemPriceListID: number;
-            ItemPricePlugin: components["schemas"]["ItemPricePlugin"][];
+            price_list_id: number;
+            /** Format: int32 */
+            rate: number;
+            tax: components["schemas"]["Tax"];
             /** Format: int64 */
-            ItemQuantity: number;
+            tax_id: number;
+            unit_of_measure: components["schemas"]["UnitOfMeasure"];
             /** Format: int64 */
-            Rate: number;
-            Tax: components["schemas"]["Tax"];
-            /** Format: int64 */
-            TaxID: number;
+            unit_of_measure_id: number | null;
             /** Format: date-time */
-            UpdatedAt: string;
+            updated_at: string | null;
+            uuid: string;
             /** Format: date-time */
-            ValidFrom: string;
+            valid_from: string | null;
             /** Format: date-time */
-            ValidUpTo: string | null;
+            valid_up_to: string | null;
         };
         ItemPriceDto: {
             code: string;
+            /** Format: date-time */
+            created_at: string;
+            currency: string;
             item_code: string;
             item_name: string;
             /** Format: int32 */
@@ -1960,53 +1667,15 @@ export interface components {
             /** Format: date-time */
             valid_up_to?: string | null;
         };
-        ItemPriceList: {
-            Code: string;
-            /** Format: int64 */
-            CompanyID: number;
-            /** Format: date-time */
-            CreatedAt: string;
-            Currency: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            ID: number;
-            IsBuying: boolean;
-            IsSelling: boolean;
-            Name: string;
-            /** Format: date-time */
-            UpdatedAt: string;
-        };
-        ItemPricePlugin: {
-            /** Format: int64 */
-            BaseID: number;
-            Data: string;
-            Plugin: string;
-        };
-        ItemPriceStruct: {
-            /** Format: int64 */
-            itemId?: number;
-            /** Format: int64 */
-            itemQuantity: number;
-            /** Format: int64 */
-            priceListId: number;
-            /** Format: double */
-            rate: number;
-            /** Format: int64 */
-            taxId: number;
-            /** Format: date-time */
-            validFrom?: string | null;
-            /** Format: date-time */
-            validUpTo?: string | null;
-        };
         ItemVariant: {
-            ItemAttributeValue: components["schemas"]["ItemAttributeValue"];
+            item: components["schemas"]["Item"];
             /** Format: int64 */
-            ItemAttributeValueID: number;
+            item_attribute_value_id: number;
             /** Format: int64 */
-            ItemID: number;
-            Variant: components["schemas"]["Item"];
+            item_id: number;
+            variant: components["schemas"]["Item"];
             /** Format: int64 */
-            VariantID: number;
+            variant_id: number;
         };
         ItemVariantDto: {
             /** Format: int64 */
@@ -2019,12 +1688,6 @@ export interface components {
             key: string;
             value: string;
         };
-        ObjectStruct: {
-            payment?: components["schemas"]["PaymentStruct"];
-        };
-        OrderData: {
-            orderLine: components["schemas"]["OrderLineData"][];
-        };
         OrderDto: {
             code: string;
             /** Format: date-time */
@@ -2035,12 +1698,6 @@ export interface components {
             name: string;
             order_lines: components["schemas"]["OrderLineDto"][];
             uuid: string;
-        };
-        OrderLineData: {
-            /** Format: int64 */
-            itemPriceId: number;
-            /** Format: int64 */
-            quantity: number;
         };
         OrderLineDto: {
             /** Format: int32 */
@@ -2076,41 +1733,32 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListGroupDto"];
         };
-        PaginationResponsePaginationResultListItemAttributeBody: {
+        PaginationResponsePaginationResultListItemAttributeDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListItemAttribute"];
+            pagination_result: components["schemas"]["PaginationResultListItemAttributeDto"];
         };
-        PaginationResponsePaginationResultListItemBody: {
+        PaginationResponsePaginationResultListItemDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListItem"];
+            pagination_result: components["schemas"]["PaginationResultListItemDto"];
         };
-        PaginationResponsePaginationResultListItemGroupBody: {
+        PaginationResponsePaginationResultListItemPriceDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListItemGroup"];
-        };
-        PaginationResponsePaginationResultListItemPriceBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListItemPrice"];
+            pagination_result: components["schemas"]["PaginationResultListItemPriceDto"];
         };
         PaginationResponsePaginationResultListItemVariantBody: {
             /**
@@ -2166,15 +1814,6 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListRoleDto"];
         };
-        PaginationResponsePaginationResultListSalesOrderBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListSalesOrder"];
-        };
         PaginationResponsePaginationResultListStockLevelBody: {
             /**
              * Format: uri
@@ -2193,23 +1832,23 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListSupplierDto"];
         };
-        PaginationResponsePaginationResultListTaxBody: {
+        PaginationResponsePaginationResultListTaxDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListTax"];
+            pagination_result: components["schemas"]["PaginationResultListTaxDto"];
         };
-        PaginationResponsePaginationResultListWareHouseBody: {
+        PaginationResponsePaginationResultListWareHouseDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListWareHouse"];
+            pagination_result: components["schemas"]["PaginationResultListWareHouseDto"];
         };
         PaginationResultListCompanyDto: {
             results: components["schemas"]["CompanyDto"][];
@@ -2226,23 +1865,18 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListItem: {
-            results: components["schemas"]["Item"][];
+        PaginationResultListItemAttributeDto: {
+            results: components["schemas"]["ItemAttributeDto"][];
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListItemAttribute: {
-            results: components["schemas"]["ItemAttribute"][];
+        PaginationResultListItemDto: {
+            results: components["schemas"]["ItemDto"][];
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListItemGroup: {
-            results: components["schemas"]["ItemGroup"][];
-            /** Format: int64 */
-            total: number;
-        };
-        PaginationResultListItemPrice: {
-            results: components["schemas"]["ItemPrice"][];
+        PaginationResultListItemPriceDto: {
+            results: components["schemas"]["ItemPriceDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2276,11 +1910,6 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListSalesOrder: {
-            results: components["schemas"]["SalesOrder"][];
-            /** Format: int64 */
-            total: number;
-        };
         PaginationResultListStockLevel: {
             results: components["schemas"]["StockLevel"][];
             /** Format: int64 */
@@ -2291,13 +1920,13 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListTax: {
-            results: components["schemas"]["Tax"][];
+        PaginationResultListTaxDto: {
+            results: components["schemas"]["TaxDto"][];
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListWareHouse: {
-            results: components["schemas"]["WareHouse"][];
+        PaginationResultListWareHouseDto: {
+            results: components["schemas"]["WareHouseDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2312,81 +1941,9 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
         };
-        PartyAddress: {
-            Address: components["schemas"]["Address"];
-            /** Format: int64 */
-            AddressID: number;
-            /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            IsActive: boolean;
-            IsBillingAddress: boolean;
-            IsShippingAddress: boolean;
-            Party: components["schemas"]["Party"];
-            /** Format: int64 */
-            PartyID: number;
-            /** Format: date-time */
-            UpdatedAt: string;
-        };
         PartyType: {
             code: string;
             name: string | null;
-        };
-        PaymentStruct: {
-            amount_money?: components["schemas"]["Amount"];
-            application_details?: components["schemas"]["ApplicationDetailsStruct"];
-            approved_money?: components["schemas"]["Amount"];
-            buyer_email_address?: string;
-            capabilities?: string[];
-            card_details?: components["schemas"]["CardDetailsStruct"];
-            /** Format: date-time */
-            created_at?: string;
-            customer_id?: string;
-            delay_action?: string;
-            delay_duration?: string;
-            /** Format: date-time */
-            delayed_until?: string;
-            external_details?: components["schemas"]["ExternalDetails"];
-            id?: string;
-            location_id?: string;
-            order_id?: string;
-            processing_fee?: components["schemas"]["ProcessFee"][];
-            receipt_number?: string;
-            receipt_url?: string;
-            source_type?: string;
-            status?: string;
-            total_money?: components["schemas"]["Amount"];
-            /** Format: date-time */
-            updated_at?: string;
-            /** Format: int64 */
-            version?: number;
-        };
-        PaymentWeebhookRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: date-time */
-            created_at?: string;
-            data?: components["schemas"]["DataStruct"];
-            event_id?: string;
-            merchant_id?: string;
-            type?: string;
-        };
-        Phase: {
-            cadence: string;
-            /** Format: int64 */
-            ordinal: number;
-            /** Format: int64 */
-            periods: number;
-            pricing: components["schemas"]["PhasePricingStruct"];
-            uid: string;
-        };
-        PhasePricingStruct: {
-            price: components["schemas"]["Amount"];
-            price_money: components["schemas"]["Amount"];
-            type: string;
         };
         PhoneNumber: {
             countryCode: string;
@@ -2403,11 +1960,6 @@ export interface components {
             readonly $schema?: string;
             company_plugin: components["schemas"]["CompanyPlugins"];
         };
-        PluginDto: {
-            /** Format: int64 */
-            companyId?: number;
-            plugin: string;
-        };
         PluginsResponseBody: {
             /**
              * Format: uri
@@ -2415,6 +1967,22 @@ export interface components {
              */
             readonly $schema?: string;
             plugins: components["schemas"]["PluginApp"][];
+        };
+        PriceList: {
+            /** Format: int64 */
+            company_id: number;
+            /** Format: date-time */
+            created_at: string;
+            currency: string;
+            deleted_at: components["schemas"]["DeletedAt"];
+            /** Format: int64 */
+            id: number;
+            is_buying: boolean;
+            is_selling: boolean;
+            name: string;
+            /** Format: date-time */
+            updated_at: string | null;
+            uuid: string;
         };
         PriceListDto: {
             /** Format: date-time */
@@ -2424,12 +1992,6 @@ export interface components {
             is_selling: boolean;
             name: string;
             uuid: string;
-        };
-        ProcessFee: {
-            amount_money: components["schemas"]["Amount"];
-            /** Format: date-time */
-            effective_at: string;
-            type: string;
         };
         ProfileDto: {
             email: string;
@@ -2453,14 +2015,6 @@ export interface components {
             phoneNumber: string;
             uuid: string;
         };
-        RequestSubscriptionCancelBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            subscriptionId: string;
-        };
         ResponseMessageBody: {
             /**
              * Format: uri
@@ -2472,18 +2026,14 @@ export interface components {
             };
             message: string;
         };
-        ResponseSalesOrderDetail: {
-            Body: components["schemas"]["ResponseSalesOrderDetailBodyStruct"];
-        };
-        ResponseSalesOrderDetailBodyStruct: {
-            lines: components["schemas"]["SalesItemLine"][];
-            order: components["schemas"]["SalesOrder"];
-        };
         ResultEntityGroupDto: {
             entity: components["schemas"]["GroupDto"];
         };
-        ResultEntityItem: {
-            entity: components["schemas"]["Item"];
+        ResultEntityItemAttributeDto: {
+            entity: components["schemas"]["ItemAttributeDto"];
+        };
+        ResultEntityItemDetailDto: {
+            entity: components["schemas"]["ItemDetailDto"];
         };
         ResultEntityItemPrice: {
             entity: components["schemas"]["ItemPrice"];
@@ -2515,40 +2065,11 @@ export interface components {
         ResultEntitySupplierDto: {
             entity: components["schemas"]["SupplierDto"];
         };
-        ResultEntityTax: {
-            entity: components["schemas"]["Tax"];
+        ResultEntityTaxDto: {
+            entity: components["schemas"]["TaxDto"];
         };
-        RetrieveCatalogRequest: {
-            object: components["schemas"]["RetrieveCatalogRequestObjectStruct"];
-        };
-        RetrieveCatalogRequestObjectStruct: {
-            /** Format: date-time */
-            created_at: string;
-            id: string;
-            is_deleted: boolean;
-            present_at_all_locations: boolean;
-            subscription_plan_data: components["schemas"]["SubscriptionPlanDataStruct"];
-            type: string;
-            /** Format: date-time */
-            updated_at: string;
-            /** Format: int64 */
-            version: number;
-        };
-        RetrieveObjectRequest: {
-            object: components["schemas"]["RetrieveObjectRequestObjectStruct"];
-        };
-        RetrieveObjectRequestObjectStruct: {
-            /** Format: date-time */
-            created_at: string;
-            id: string;
-            is_deleted: boolean;
-            present_at_all_locations: boolean;
-            subscription_plan_variation_data: components["schemas"]["SubscriptionPlanVariationDataStruct"];
-            type: string;
-            /** Format: date-time */
-            updated_at: string;
-            /** Format: int64 */
-            version: number;
+        ResultEntityWareHouseDto: {
+            entity: components["schemas"]["WareHouseDto"];
         };
         RoleActionDto: {
             action: components["schemas"]["ActionDto"];
@@ -2567,58 +2088,6 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
             uuid: string;
-        };
-        SalesItemLine: {
-            /** Format: date-time */
-            CreatedAt: string;
-            Currency: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            ID: number;
-            ItemPrice: components["schemas"]["ItemPrice"];
-            /** Format: int64 */
-            ItemPriceID: number;
-            /** Format: int64 */
-            ItemQuantity: number;
-            /** Format: int64 */
-            Rate: number;
-            /** Format: int64 */
-            SalesOrderID: number;
-            /** Format: date-time */
-            UpdatedAt: string;
-        };
-        SalesOrder: {
-            BillingAddress: components["schemas"]["PartyAddress"];
-            /** Format: int64 */
-            BillingAddressID: number | null;
-            Code: string;
-            Company: components["schemas"]["Company"];
-            /** Format: int64 */
-            CompanyID: number;
-            /** Format: date-time */
-            CreatedAt: string;
-            Data: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            /** Format: date-time */
-            DeliveryDate: string;
-            /** Format: int64 */
-            ID: number;
-            OrderType: string;
-            Party: components["schemas"]["Party"];
-            /** Format: int64 */
-            PartyID: number;
-            SalesOrderPlugin: components["schemas"]["SalesOrderPlugin"][];
-            ShippingAddress: components["schemas"]["PartyAddress"];
-            /** Format: int64 */
-            ShippingAddressID: number | null;
-            /** Format: date-time */
-            UpdatedAt: string;
-        };
-        SalesOrderPlugin: {
-            Data: string;
-            Plugin: string;
-            /** Format: int64 */
-            SalesOrderID: number;
         };
         SignInRequestBody: {
             /**
@@ -2642,83 +2111,23 @@ export interface components {
             user: components["schemas"]["UserDto"];
             user_relation: components["schemas"]["UserRelationDto"];
         };
-        SquareCatalogResponseBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            catalog: components["schemas"]["RetrieveCatalogRequest"];
-            objects: components["schemas"]["SquareObject"][];
-        };
-        SquareObject: {
-            /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            ItemGroupId: number;
-            ItemPrice: components["schemas"]["ItemPrice"];
-            /** Format: int64 */
-            ItemPriceID: number;
-            ObjectId: string;
-            ObjectVariationId: string;
-            /** Format: date-time */
-            UpdatedAt: string;
-        };
-        SquareObjectResponseBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            plan_variation: components["schemas"]["RetrieveObjectRequest"];
-            square_object: components["schemas"]["SquareObject"];
-        };
         StockLevel: {
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            Enabled: boolean;
-            Item: components["schemas"]["Item"];
-            /** Format: int64 */
-            ItemID: number;
-            /** Format: int64 */
-            OutOfStockThreshold: number;
-            /** Format: int64 */
-            Stock: number;
-            /** Format: date-time */
-            UpdatedAt: string;
-            WareHouse: components["schemas"]["WareHouse"];
-            /** Format: int64 */
-            WareHouseID: number;
-        };
-        SubscriptionPlanDataStruct: {
-            all_items: boolean;
-            name: string;
-            subscription_plan_variations: components["schemas"]["SubscriptionPlanVariation"][];
-        };
-        SubscriptionPlanVariation: {
-            /** Format: date-time */
             created_at: string;
-            id: string;
-            is_deleted: boolean;
-            present_at_all_locations: boolean;
-            subscription_plan_variation_data: components["schemas"]["SubscriptionPlanVariationSubscriptionPlanVariationDataStruct"];
-            type: string;
-            /** Format: date-time */
-            updated_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
+            enabled: boolean;
+            item: components["schemas"]["Item"];
             /** Format: int64 */
-            version: number;
-        };
-        SubscriptionPlanVariationDataStruct: {
-            name: string;
-            phases: components["schemas"]["Phase"][];
-            subscription_plan_id: string;
-        };
-        SubscriptionPlanVariationSubscriptionPlanVariationDataStruct: {
-            name: string;
-            phases: components["schemas"]["Phase"][];
-            subscription_plan_id: string;
+            item_id: number;
+            /** Format: int32 */
+            out_of_stock_threshold: number;
+            /** Format: int32 */
+            stock: number;
+            /** Format: date-time */
+            updated_at: string | null;
+            ware_house: components["schemas"]["WareHouse"];
+            /** Format: int64 */
+            ware_house_id: number;
         };
         SupplierDto: {
             /** Format: date-time */
@@ -2729,49 +2138,34 @@ export interface components {
             uuid: string;
         };
         Tax: {
-            Code: string;
+            company: components["schemas"]["Company"];
             /** Format: int64 */
-            CompanyID: number;
+            company_id: number;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            Enabled: boolean;
+            created_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
+            enabled: boolean;
             /** Format: int64 */
-            ID: number;
-            Name: string;
+            id: number;
+            name: string;
             /** Format: date-time */
-            UpdatedAt: string;
+            updated_at: string | null;
+            uuid: string;
             /** Format: double */
-            Value: number;
+            value: number;
         };
-        TecluMobilityOrderRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            billing?: components["schemas"]["BillingData"];
-            client: components["schemas"]["ClientRequestDto"];
-            order: components["schemas"]["OrderData"];
+        TaxDto: {
+            /** Format: date-time */
+            created_at: string;
+            enabled: boolean;
+            name: string;
+            uuid: string;
+            /** Format: double */
+            value: number;
         };
-        TecluMobilityOrderResponseBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            paymentUrl: string;
-        };
-        TecluMobilityRequestItemPriceBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            billingPeriod?: number;
-            itemCode: string;
-            type: string;
+        UOMDto: {
+            code: string;
+            name: string;
         };
         UOMsResponseBody: {
             /**
@@ -2779,35 +2173,34 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            results: components["schemas"]["UnitOfMeasureTranslation"][];
+            results: components["schemas"]["UOMDto"][];
         };
         UnitOfMeasure: {
-            Code: string;
+            code: string;
             /** Format: int64 */
-            CompanyID: number | null;
+            company_id: number | null;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            Enabled: boolean;
+            created_at: string | null;
+            deleted_at: components["schemas"]["DeletedAt"];
+            enabled: boolean | null;
             /** Format: int64 */
-            ID: number;
-            UnitOfMeasureTranslation?: components["schemas"]["UnitOfMeasureTranslation"];
+            id: number;
+            unit_of_measure_translation: components["schemas"]["UnitOfMeasureTranslation"];
             /** Format: date-time */
-            UpdatedAt: string;
+            updated_at: string | null;
         };
         UnitOfMeasureTranslation: {
             /** Format: int64 */
-            BaseId: number;
+            base_id: number;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
+            created_at: string | null;
+            deleted_at: components["schemas"]["DeletedAt"];
             /** Format: int64 */
-            ID: number;
-            LanguageCode: string;
-            Name: string;
-            UnitOfMeasure: components["schemas"]["UnitOfMeasure"];
+            id: number;
+            language_code: string;
+            name: string;
             /** Format: date-time */
-            UpdatedAt: string;
+            updated_at: string | null;
         };
         UpdateCredentialsPluginRequestBody: {
             /**
@@ -2837,7 +2230,7 @@ export interface components {
             id?: number;
             /** Format: int64 */
             itemAttributeId?: number;
-            /** Format: int64 */
+            /** Format: int32 */
             ordinal: number;
             value: string;
         };
@@ -2855,7 +2248,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            itemPriceList: components["schemas"]["ItemPriceList"];
+            itemPriceList: components["schemas"]["PriceList"];
         };
         UpsertRequestEntityItemDtoBody: {
             /**
@@ -2878,25 +2271,29 @@ export interface components {
             uuid: string;
         };
         WareHouse: {
-            Code: string;
-            Company: components["schemas"]["Company"];
             /** Format: int64 */
-            CompanyID: number;
+            company_id: number;
             /** Format: date-time */
-            CreatedAt: string;
-            DeletedAt?: components["schemas"]["DeletedAt"];
-            Enabled: boolean;
+            created_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
+            enabled: boolean;
             /** Format: int64 */
-            ID: number;
-            Name: string;
-            /** Format: int32 */
-            Ordinal: number;
-            Parent: components["schemas"]["WareHouse"];
+            id: number;
+            name: string;
             /** Format: int64 */
-            ParentID: number | null;
+            ordinal: number;
+            /** Format: int64 */
+            parent_id: number | null;
             /** Format: date-time */
-            UpdatedAt: string;
-            WareHouseSubgroup: components["schemas"]["WareHouse"][];
+            updated_at: string | null;
+            uuid: string;
+        };
+        WareHouseDto: {
+            /** Format: date-time */
+            created_at: string;
+            enabled: boolean;
+            name: string;
+            uuid: string;
         };
     };
     responses: never;
@@ -3089,7 +2486,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListTaxBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListTaxDtoBody"];
                 };
             };
             /** @description Error */
@@ -3174,7 +2571,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityTaxBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityTaxDtoBody"];
                 };
             };
             /** @description Error */
@@ -3922,39 +3319,6 @@ export interface operations {
             };
         };
     };
-    "payment-webhook": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PaymentWeebhookRequestBody"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
     plugins: {
         parameters: {
             query?: never;
@@ -4407,222 +3771,6 @@ export interface operations {
             };
         };
     };
-    "client-sales-orders": {
-        parameters: {
-            query: {
-                page: string;
-                size: string;
-                enabled?: string;
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListSalesOrderBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "sale-order-detail": {
-        parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path: {
-                code: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntityResponseResponseSalesOrderDetailBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "cancel-square-subscription": {
-        parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestSubscriptionCancelBody"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "test-event": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-catalog-square": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                uuid: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SquareCatalogResponseBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-object-square": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                object_id: string;
-                uuid: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SquareObjectResponseBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
     "get-items": {
         parameters: {
             query: {
@@ -4651,7 +3799,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemDtoBody"];
                 };
             };
             /** @description Error */
@@ -4737,134 +3885,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseItemBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "item-groups": {
-        parameters: {
-            query: {
-                page: string;
-                size: string;
-                enabled?: string;
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemGroupBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "create-item-group": {
-        parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateItemGroupRequestBody"];
-            };
-        };
-        responses: {
-            /** @description Created */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "item-group-detail": {
-        parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-                party?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntityResponseItemGroupBody"];
+                    "application/json": components["schemas"]["EntityResponseItemDtoBody"];
                 };
             };
             /** @description Error */
@@ -4906,7 +3927,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemAttributeBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemAttributeDtoBody"];
                 };
             };
             /** @description Error */
@@ -4949,7 +3970,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseItemAttributeBody"];
+                    "application/json": components["schemas"]["EntityResponseItemAttributeDtoBody"];
                 };
             };
             /** @description Error */
@@ -5077,7 +4098,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseItemAttributeBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityItemAttributeDtoBody"];
                 };
             };
             /** @description Error */
@@ -5119,7 +4140,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceDtoBody"];
                 };
             };
             /** @description Error */
@@ -5334,7 +4355,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceDtoBody"];
                 };
             };
             /** @description Error */
@@ -5801,7 +4822,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityItemBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityItemDetailDtoBody"];
                 };
             };
             /** @description Error */
@@ -5843,7 +4864,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListWareHouseBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListWareHouseDtoBody"];
                 };
             };
             /** @description Error */
@@ -5928,7 +4949,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseWareHouseBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityWareHouseDtoBody"];
                 };
             };
             /** @description Error */
@@ -6056,74 +5077,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntitySupplierDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-item-price": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TecluMobilityRequestItemPriceBody"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntityResponseItemPriceBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "create-order": {
-        parameters: {
-            query?: never;
-            header?: {
-                "Accept-Language"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TecluMobilityOrderRequestBody"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TecluMobilityOrderResponseBody"];
                 };
             };
             /** @description Error */

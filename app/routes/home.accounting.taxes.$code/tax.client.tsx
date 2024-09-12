@@ -17,15 +17,15 @@ export default function TaxDetailClient() {
 
         {tax && (
           <>
-            <DisplayTextValue title={t("form.name")} value={tax.Name} />
+            <DisplayTextValue title={t("form.name")} value={tax.name} />
             <DisplayTextValue
               title={t("form.rate")}
-              value={formatPercentage(tax.Value)}
+              value={formatPercentage(tax.value)}
             />
 
             <DisplayTextValue
               title={t("form.enabled")}
-              value={tax.Enabled.toString()}
+              value={tax.enabled.toString()}
             />
 
           </>

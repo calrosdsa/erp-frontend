@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Link, useLoaderData, useNavigate, useSearchParams, useSubmit } from "@remix-run/react"
+import { Link, useLoaderData, useNavigate, useOutletContext, useSearchParams, useSubmit } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 import { loader } from "./route"
 import { DataTable } from "@/components/custom/table/CustomTable"
@@ -8,11 +8,18 @@ import { PaginationState } from "@tanstack/react-table"
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
 import { useState } from "react"
 import { routes } from "~/util/route"
+import { GlobalState } from "~/types/app"
+import { usePermission } from "~/util/hooks/useActions"
 
 
 export default function ItemAttributesClient(){
     const {t,i18n} = useTranslation("common")
-    const {pagination_result} = useLoaderData<typeof loader>()
+    const globalState= useOutletContext<GlobalState>()
+    const {paginationResult,actions} = useLoaderData<typeof loader>()
+    const [permission] = usePermission({
+      actions:actions,
+      roleActions:globalState.roleActions,
+    })
     const [searchParams,setSearchParams] = useSearchParams()
     const submit = useSubmit()
     const navigate = useNavigate()
@@ -20,6 +27,7 @@ export default function ItemAttributesClient(){
         pageIndex: Number(searchParams.get("page") || DEFAULT_PAGE),
         pageSize: Number(searchParams.get("size") || DEFAULT_SIZE),
       });
+
     const r = routes 
     return (
         <div>
@@ -27,15 +35,17 @@ export default function ItemAttributesClient(){
             <DataTable
             metaActions={{
               meta:{
-                addNew:()=>{
-                  navigate(r.createItemAttributeRoute)
-                }
+                ...(permission?.create && {
+                  addNew:()=>{
+                    navigate(r.createItemAttributeRoute)
+                  }
+                }) 
               }
             }}
-            data={pagination_result?.results || []}
+            data={paginationResult?.results || []}
             columns={itemAttributeColumns()}
             paginationOptions={{
-                rowCount:pagination_result?.total || 0,
+                rowCount:paginationResult?.total || 0,
                 onPaginationChange:  (e) => {
                   const fD = new FormData();
                   fD.append("page", e.pageIndex.toString());

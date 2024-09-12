@@ -20,28 +20,28 @@ export default function ItemPriceInfo(){
           <Typography fontSize={title}>{t("itemPrice.info")}</Typography>
         </div>
 
-        <DisplayTextValue title={t("form.code")} value={entity.Code} />
+        {/* <DisplayTextValue title={t("form.code")} value={entity.code} /> */}
 
-        <DisplayTextValue title={t("form.rate")} value={formatCurrency(entity.Rate,entity.ItemPriceList.Currency,i18n.language)} />
+        <DisplayTextValue title={t("form.rate")} value={formatCurrency(entity.rate,entity.price_list.currency,i18n.language)} />
 
-        <DisplayTextValue title={t("form.currency")} value={entity.ItemPriceList.Currency} />
+        <DisplayTextValue title={t("form.currency")} value={entity.price_list.currency} />
 
 
-        <DisplayTextValue title={t("form.itemQuantity")} value={formatQuantity(entity.ItemQuantity,entity.Item.UnitOfMeasure)} />
+        <DisplayTextValue title={t("form.itemQuantity")} value={formatQuantity(entity.item_quantity,entity.item.unit_of_measure)} />
 
 
 
 
         <DisplayTextValue
           title={t("form.price-list")}
-          value={entity.ItemPriceList.Name}
-          to={r.priceListDetail(entity.ItemPriceList.Code)}
+          value={entity.price_list.name}
+          to={r.priceListDetail(entity.price_list.name,entity.price_list.uuid)}
         />
 
         <DisplayTextValue
           title={t("form.tax")}
-          value={entity.Tax.Name}
-          to={r.taxDetailRoute(entity.Tax.Code)}
+          value={entity.tax.name}
+          to={r.taxDetailRoute(entity.tax.name,entity.tax.uuid)}
         />
 
         

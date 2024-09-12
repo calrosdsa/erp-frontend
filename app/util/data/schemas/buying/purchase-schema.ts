@@ -53,5 +53,6 @@ export const itemPriceSchemaToItemPriceDto = (
     item_code: d.item_code,
     uom: d.uom,
     item_uuid: d.item_uuid,
+    currency:"",
   };
 };

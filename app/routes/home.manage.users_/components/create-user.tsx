@@ -140,7 +140,7 @@ export const CreateUser = ({open,onOpenChange,permission,globalState}:{
             renderCustomInputs={(form)=>{
                 return (
                     <>
-                    <FormAutocomplete
+                    {/* <FormAutocomplete
                     form={form}
                     label={t("roles")}
                     data={rolesFetcherDebounce.data?.roles || []}
@@ -151,7 +151,7 @@ export const CreateUser = ({open,onOpenChange,permission,globalState}:{
                     onSelect={(v)=>{
                         form.setValue("roleId", v.ID);
                     }}
-                    />
+                    /> */}
                     </>
                 )
             }}

@@ -54,6 +54,7 @@ export default function DisplayTextValue({
               value={readOnly ? value || "-" : value || ""}
               />
             )}
+            
             {typeof value == "boolean" && (
               <div className="h-7 w-7 flex justify-center items-center">
                <Checkbox checked={value} className="h-6 w-6" disabled={readOnly} onCheckedChange={(e)=>{
