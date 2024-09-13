@@ -1,9 +1,8 @@
 import { create } from "zustand";
-import { components } from "index";
 import { action } from "../route";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import CustomForm from "@/components/custom/form/CustomForm";
-import { itemStockSchemaForm } from "~/util/data/schemas/stock/item-stock-schema";
+import { addStockLevelSchema } from "~/util/data/schemas/stock/item-stock-schema";
 import { z } from "zod";
 import { useFetcher, useParams } from "@remix-run/react";
 import { toast, useToast } from "@/components/ui/use-toast";
@@ -13,30 +12,30 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { routes } from "~/util/route";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouses_/components/add-warehouse";
+import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
+import { useItemDebounceFetcher } from "~/util/hooks/fetchers/useItemDebounceFetcher";
+import { components } from "~/sdk";
 
 export const UpsertItemStockLevel = ({
   open,
   onOpenChange,
-  item,
-  warehouse,
+  itemUuid,
+  warehouseUuid,
   stockLevel,
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  item: components["schemas"]["Item"] | undefined;
-  warehouse?: components["schemas"]["WareHouse"] | undefined;
-  stockLevel?: components["schemas"]["StockLevel"] | undefined;
+  itemUuid?: string;
+  warehouseUuid?: string;
+  stockLevel?: components["schemas"]["StockLevelDto"] | undefined;
 }) => {
   const fetcher = useFetcher<typeof action>();
   const { toast } = useToast();
   const { t } = useTranslation("common");
-  const createWareHouse = useCreateWareHouse()
-  const warehousesDebounceFetcher = useDebounceFetcher<{
-    warehouses: components["schemas"]["WareHouse"][];
-  }>();
-  const itemsDebounceFetcher = useDebounceFetcher<{
-    items: components["schemas"]["Item"][];
-  }>();
+  const createWareHouse = useCreateWareHouse();
+  const [warehousesDebounceFetcher, onWarehouseNameChange] =
+    useWarehouseDebounceFetcher();
+  const [itemsDebounceFetcher, onItemNameChange] = useItemDebounceFetcher();
   const params = useParams();
   const r = routes;
 
@@ -60,17 +59,17 @@ export const UpsertItemStockLevel = ({
       title={t("_stock.addItemStockLevel")}
     >
       <CustomForm
-        schema={itemStockSchemaForm}
+        schema={addStockLevelSchema}
         fetcher={fetcher}
         defaultValues={
           {
-            itemId: item?.ID || stockLevel?.ItemID,
-            warehouseId: warehouse?.ID || stockLevel?.WareHouseID,
-            stock: stockLevel?.Stock.toString() as any,
+            itemUuid: itemUuid || stockLevel?.item_uuid,
+            warehouseUuid: warehouseUuid || stockLevel?.warehouse_uuid,
+            stock: stockLevel?.stock.toString() as any,
             outOfStockThreshold:
-              stockLevel?.OutOfStockThreshold.toString() as any,
-            enabled: stockLevel?.Enabled,
-          } as z.infer<typeof itemStockSchemaForm>
+              stockLevel?.out_of_stock_threshold.toString() as any,
+            enabled: stockLevel?.enabled,
+          } as z.infer<typeof addStockLevelSchema>
         }
         formItemsData={[
           {
@@ -93,7 +92,7 @@ export const UpsertItemStockLevel = ({
             description: "",
           },
         ]}
-        onSubmit={(values: z.infer<typeof itemStockSchemaForm>) => {
+        onSubmit={(values: z.infer<typeof addStockLevelSchema>) => {
           fetcher.submit(
             {
               action: stockLevel
@@ -103,7 +102,7 @@ export const UpsertItemStockLevel = ({
             },
             {
               method: "POST",
-              action: r.toItemDetailStock(params.code || ""),
+              action: r.toItemDetailStock("Item",values.itemUuid),
               encType: "application/json",
             }
           );
@@ -111,77 +110,35 @@ export const UpsertItemStockLevel = ({
         renderCustomInputs={(form) => {
           return (
             <>
-              {(warehouse == undefined && stockLevel== undefined) && (
-                  <FormAutocomplete
-                    form={form}
-                    data={warehousesDebounceFetcher.data?.warehouses || []}
-                    label={t("warehouses")}
-                    value={"Name"}
-                    nameK={"Name"}
-                    name="warehouseName"
-                    addNew={()=>{
-                      createWareHouse.openDialog({})
-                    }}
-                    onSelect={(e) => {
-                      form.setValue("warehouseId", e.ID);
-                    }}
-                    onValueChange={(e) => {
-                      warehousesDebounceFetcher.submit(
-                        { query: e, action: "get" },
-                        {
-                          debounceTimeout: 600,
-                          method: "POST",
-                          action: r.warehouses,
-                          encType: "application/json",
-                        }
-                      );
-                    }}
-                    onOpen={() => {
-                      warehousesDebounceFetcher.submit(
-                        { query: "", action: "get" },
-                        {
-                          method: "POST",
-                          action: r.warehouses,
-                          encType: "application/json",
-                        }
-                      );
-                    }}
-                  />
-                )}
-              {(item == undefined && stockLevel == undefined) && (
-                  <FormAutocomplete
-                    form={form}
-                    data={itemsDebounceFetcher.data?.items || []}
-                    label={t("items")}
-                    value={"Name"}
-                    nameK={"Name"}
-                    name="itemName"
-                    onSelect={(e) => {
-                      form.setValue("itemId", e.ID);
-                    }}
-                    onValueChange={(e) => {
-                      itemsDebounceFetcher.submit(
-                        { query: e, action: "get" },
-                        {
-                          debounceTimeout: 600,
-                          method: "POST",
-                          action: r.items,
-                          encType: "application/json",
-                        }
-                      );
-                    }}
-                    onOpen={() => {
-                      itemsDebounceFetcher.submit(
-                        { query: "", action: "get" },
-                        {
-                          method: "POST",
-                          action: r.items,
-                          encType: "application/json",
-                        }
-                      );
-                    }}
-                  />
-                )}
+              {warehouseUuid == undefined && stockLevel == undefined && (
+                <FormAutocomplete
+                  form={form}
+                  data={warehousesDebounceFetcher.data?.warehouses || []}
+                  label={t("warehouses")}
+                  nameK={"name"}
+                  name="warehouseName"
+                  // addNew={() => {
+                  //   createWareHouse.openDialog({});
+                  // }}
+                  onSelect={(e) => {
+                    form.setValue("warehouseUuid", e.uuid);
+                  }}
+                  onValueChange={onWarehouseNameChange}
+                />
+              )}
+              {itemUuid == undefined && stockLevel == undefined && (
+                <FormAutocomplete
+                  form={form}
+                  data={itemsDebounceFetcher.data?.items || []}
+                  label={t("items")}
+                  nameK={"name"}
+                  name="itemName"
+                  onSelect={(e) => {
+                    form.setValue("itemUuid", e.name);
+                  }}
+                  onValueChange={onItemNameChange}
+                />
+              )}
             </>
           );
         }}
@@ -191,30 +148,30 @@ export const UpsertItemStockLevel = ({
 };
 
 type AddItemStocklevel = {
-  item: components["schemas"]["Item"] | undefined;
-  warehouse: components["schemas"]["WareHouse"] | undefined;
-  stockLevel: components["schemas"]["StockLevel"] | undefined;
+  itemUuid: string | undefined;
+  warehouseUuid: string | undefined;
+  stockLevel: components["schemas"]["StockLevelDto"] | undefined;
   isOpen: boolean;
   onOpenDialog: (opts: {
     open: boolean;
-    item?: components["schemas"]["Item"];
-    warehouse?: components["schemas"]["WareHouse"];
+    itemUuid?: string;
+    warehouseUuid?: string;
   }) => void;
   onOpenChange: (e: boolean) => void;
-  editStockLevel: (stockLevel: components["schemas"]["StockLevel"]) => void;
+  editStockLevel: (stockLevel: components["schemas"]["StockLevelDto"]) => void;
 };
 
 export const useUpsertItemStockLevel = create<AddItemStocklevel>((set) => ({
   isOpen: false,
-  item: undefined,
-  warehouse: undefined,
+  itemUuid: undefined,
+  warehouseUuid: undefined,
   stockLevel: undefined,
   onOpenChange: (open) => set((state) => ({ isOpen: open })),
   onOpenDialog: (opts) =>
     set((state) => ({
       isOpen: opts.open,
-      item: opts.item,
-      warehouse: opts.warehouse,
+      itemUuid: opts.itemUuid,
+      warehouseUuid: opts.warehouseUuid,
     })),
   editStockLevel: (stockL) =>
     set((state) => ({

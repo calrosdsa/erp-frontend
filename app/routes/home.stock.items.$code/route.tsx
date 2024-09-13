@@ -10,38 +10,44 @@ import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { Await, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
 import FallBack from "@/components/layout/Fallback";
-import { itemDtoSchema } from "~/util/data/schemas/stock/item-schemas";
 import { z } from "zod";
-import { itemVariantFormSchema } from "~/util/data/schemas/stock/item-variant-schemas";
 import { components } from "~/sdk";
+import { updateItemSchema } from "~/util/data/schemas/stock/item-schemas";
 
 type ActionData = {
   action: string;
-  item: z.infer<typeof itemDtoSchema>;
+  updateItem: z.infer<typeof updateItemSchema>;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
+  const url = new URL(request.url)
+  const searchParams = url.searchParams
   let error: string | undefined = undefined;
   let message: string | undefined = undefined;
-  // switch (data.action) {
-  //   case "update-item": {
-  //     console.log(data.item);
-  //     const res = await client.PUT("/stock/item", {
-  //       body: {
-  //         entity: data.item,
-  //       },
-  //     });
-  //     console.log(res.error);
-  //     if (res.data) {
-  //       message = res.data.message;
-  //     if (res.error) {
-  //       error = res.error.detail;
-  //     }
-  //     break
-  //   }
-    
-  // }
+  switch (data.action) {
+    case "update-item": {
+      const d = data.updateItem
+      const res = await client.PUT("/stock/item", {
+        body: {
+          name:d.name,
+          item_type:d.itemType,
+        },
+        params:{
+          query:{
+            parentId:searchParams.get("id") || ""
+          }
+        }
+      });
+      if (res.data) {
+        message = res.data.message;
+      }
+      if (res.error) {
+        error = res.error.detail
+      }
+      break
+    }
+  }
   return json({
     error,
     message,

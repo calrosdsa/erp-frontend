@@ -74,11 +74,11 @@ class Routes  {
     toItemDetailPrices(name:string,id:string):string {
         return `${this.items}/${encodeURIComponent(name)}/item-prices?id=${id}`
     }
-    toItemDetailVariants(id:string):string {
-        return `${this.items}/${encodeURIComponent(id)}/variants`
+    toItemDetailVariants(name:string,id:string):string {
+        return `${this.items}/${encodeURIComponent(name)}/variants?id=${id}`
     }
-    toItemDetailStock(id:string):string {
-        return `${this.items}/${encodeURIComponent(id)}/stock`
+    toItemDetailStock(name:string,id:string):string {
+        return `${this.items}/${encodeURIComponent(name)}/stock?id=${id}`
     }
     toWarehouseInfo(name:string,id:string):string{
         return `${this.warehouses}/${encodeURIComponent(name)}/info?id=${id}`

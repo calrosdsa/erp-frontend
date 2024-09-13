@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData, useParams } from "@remix-run/react";
+import { Outlet, useLoaderData, useOutletContext, useParams } from "@remix-run/react";
 import { loader } from "./route";
 import ItemInfo from "./components/ItemInfo";
 import ItemPrices from "../home.stock.items.$code.item-prices_/Item-detail-prices.client";
@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import HorizontalNavTabs from "@/components/layout/nav/horizontal-nav-tabs";
 import { routes } from "~/util/route";
 import { useTranslation } from "react-i18next";
-import { ItemGlobalState } from "~/types/app";
+import { GlobalState, ItemGlobalState } from "~/types/app";
 import { components } from "~/sdk";
 
 export default function ItemDetailClient() {
@@ -14,7 +14,7 @@ export default function ItemDetailClient() {
   const params = useParams()
   const {item} = useLoaderData<typeof loader>()
     const {t} = useTranslation("common")
-    // const globalState = useOutletContext<GlobalState>()
+    const globalState = useOutletContext<GlobalState>()
     const tabNavItems = [
       {
         title: t("item-prices"),
@@ -22,11 +22,11 @@ export default function ItemDetailClient() {
       },
       {
         title: t("_item.variants"),
-        href: r.toItemDetailVariants(params.code || ""),
+        href: r.toItemDetailVariants(item?.name || "",item?.uuid || ""),
       },
       {
         title: t("stock"),
-        href: r.toItemDetailStock(params.code || ""),
+        href: r.toItemDetailStock(item?.name || "",item?.uuid || ""),
       },
     ];
 
@@ -44,7 +44,8 @@ export default function ItemDetailClient() {
       <Outlet
       context={
         {
-          item:item
+          item:item,
+          globalState:globalState
         } as ItemGlobalState
       }
       />

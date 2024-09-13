@@ -5,11 +5,17 @@ import useActionRow from "~/util/hooks/useActionRow";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemStockColums } from "@/components/custom/table/columns/stock/item-stock-columns";
 import { WarehouseGlobalState } from "~/types/app";
+import { usePermission } from "~/util/hooks/useActions";
 
 export default function WareHouseItemsClient(){
-    const {paginationResult} = useLoaderData<typeof loader>()
+    const {paginationResult,actions} = useLoaderData<typeof loader>()
     const upsertItemStockLevel = useUpsertItemStockLevel()
-    const {warehouse} = useOutletContext<WarehouseGlobalState>()
+    const {warehouse,globalState} = useOutletContext<WarehouseGlobalState>()
+    const [itemStockPermission] = usePermission({
+        actions:actions,
+        roleActions:globalState.roleActions
+    })
+
     const [meta, stateActions] = useActionRow({
         onEdit:indexRow=>{
           if (indexRow != undefined) {
@@ -17,6 +23,7 @@ export default function WareHouseItemsClient(){
                 (t, index) => index == indexRow
               );
               if(itemStock){
+                itemStock.warehouse_uuid = warehouse.uuid
                 upsertItemStockLevel.editStockLevel(itemStock)
               }
           }
@@ -33,9 +40,11 @@ export default function WareHouseItemsClient(){
         }}
         metaActions={{
             meta:{
-                addNew:()=>{
-                    upsertItemStockLevel.onOpenDialog({open:true,warehouse:warehouse})
-                }
+                ...(itemStockPermission?.create && {
+                    addNew:()=>{
+                        upsertItemStockLevel.onOpenDialog({open:true,warehouseUuid:warehouse.uuid})
+                    }
+                })
             }
         }}
         metaOptions={{

@@ -1,4 +1,4 @@
-import { useLoaderData, useRevalidator } from "@remix-run/react";
+import { useLoaderData, useOutletContext, useRevalidator } from "@remix-run/react";
 import { loader } from "../route";
 import Typography, { title } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
@@ -9,17 +9,19 @@ import { itemAttributeValuesColumns } from "@/components/custom/table/columns/st
 import useActionRow from "~/util/hooks/useActionRow";
 import UpsertItemAttributeValue from "./upsert-item-attribute-value";
 import { useEffect, useState } from "react";
+import { components } from "~/sdk";
+import { usePermission } from "~/util/hooks/useActions";
+import { GlobalState } from "~/types/app";
 
 export default function ItemAttributeInfo() {
-  const { itemAttribute } = useLoaderData<typeof loader>();
+  const { itemAttribute,actions } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const [meta, stateActions] = useActionRow({
     onEdit:indexRow=>{
       if (indexRow != undefined) {
-        const item = itemAttribute?.ItemAttributeValues.find(
+        const item = itemAttribute?.item_attribute_values.find(
           (t, index) => index == indexRow
         );
-        console.log(item)
         if (item) {
           setSelectedItemAttributeValue(item)
         }
@@ -27,9 +29,13 @@ export default function ItemAttributeInfo() {
     }
   });
   const { openDialog, setOpenDialog } = stateActions;
-
+  const globalState = useOutletContext<GlobalState>()
+  const [permission] = usePermission({
+    roleActions:globalState.roleActions,
+    actions:actions,
+  })
   const [selectedItemAttributeValue, setSelectedItemAttributeValue] = useState<
-    components["schemas"]["ItemAttributeValue"] | undefined
+    components["schemas"]["ItemAttributeValueDto"] | undefined
   >(undefined);
 
   return (
@@ -61,12 +67,14 @@ export default function ItemAttributeInfo() {
             columns={itemAttributeValuesColumns()}
             metaActions={{
               meta:{
-                addNew:()=>{
-                  setOpenDialog(true)
-                }
+                ...(permission?.edit && {
+                  addNew:()=>{
+                    setOpenDialog(true)
+                  }
+                })
               }
             }}
-            data={itemAttribute?.ItemAttributeValues || []}
+            data={itemAttribute?.item_attribute_values || []}
             metaOptions={{
               meta: meta,
             }}

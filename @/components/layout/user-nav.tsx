@@ -36,10 +36,10 @@ export function UserNav({ user,openSessionDefaults }: Props) {
                     <Link  className="flex items-center justify-start gap-4 p-2 cursor-pointer" to={r.profile}>
 
                     <div className="flex flex-col space-y-1 leading-none">
-                        {user.givenName && <p className="font-medium">{user.givenName}</p>}
-                        {user.familyName && (
+                        {user.given_name && <p className="font-medium">{user.given_name}</p>}
+                        {user.family_name && (
                             <p className="w-[200px] truncate text-sm text-zinc-700">
-                                {user.familyName}
+                                {user.family_name}
                             </p>
                         )}
                     </div>
@@ -63,7 +63,7 @@ export function UserNav({ user,openSessionDefaults }: Props) {
                         className="w-full"
                     >
                         <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
-                        Log Out
+                        {t("_auth.signout")}
                     </Button>
                 </Form>
                 </DropdownMenuItem>

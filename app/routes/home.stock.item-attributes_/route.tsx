@@ -12,9 +12,7 @@ type PriceListAction = {
   export const action = async ({ request }: ActionFunctionArgs) => {
     const data = (await request.json()) as PriceListAction;
     let client = apiClient({ request });
-    let pagination_result:
-      | components["schemas"]['PaginationResultListItemAttribute']
-      | undefined = undefined;
+    let itemAttributes:components["schemas"]["ItemAttributeDto"][] = []
     switch (data.action) {
       case "get": {
         const res = await client.GET("/stock/item/item-attribute", {
@@ -27,14 +25,13 @@ type PriceListAction = {
           },
         });
         if (res.data != undefined) {
-          pagination_result = res.data.pagination_result;
+          itemAttributes = res.data.pagination_result.results || [];
         }
-        console.log("FAIL ITEM ATTRIBUTES",res.error)
         break;
       }
     }
     return json({
-      pagination_result,
+      itemAttributes,
     });
   };
   

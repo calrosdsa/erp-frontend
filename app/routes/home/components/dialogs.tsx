@@ -102,10 +102,10 @@ export default function GlobalDialogs({globalState}:{
         }
         {addItemStockLevel.isOpen && 
         <UpsertItemStockLevel
-        item={addItemStockLevel.item}
+        itemUuid={addItemStockLevel.itemUuid}
         open={addItemStockLevel.isOpen}
         onOpenChange={addItemStockLevel.onOpenChange}
-        warehouse={addItemStockLevel.warehouse}
+        warehouseUuid={addItemStockLevel.warehouseUuid}
         stockLevel={addItemStockLevel.stockLevel}
         />
         }

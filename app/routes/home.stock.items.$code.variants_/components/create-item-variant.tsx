@@ -7,12 +7,13 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { z } from "zod";
-import { components } from "index";
-import { itemVariantFormSchema } from "~/util/data/schemas/stock/item-variant-schemas";
 import { routes } from "~/util/route";
 import { action } from "../../home.stock.items.$code/route";
 import { useToast } from "@/components/ui/use-toast";
 import { create } from "zustand";
+import { components } from "~/sdk";
+import { useItemAttributeFetcher } from "~/util/hooks/fetchers/useItemAttributeFetcher";
+import { createItemVariantSchema } from "~/util/data/schemas/stock/item-variant-schemas";
 
 export default function CreateItemVariant({
   open,
@@ -21,22 +22,16 @@ export default function CreateItemVariant({
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  item?:components["schemas"]["Item"]
+  item?:{
+    name:string
+    uuid:string
+  }
 }) {
   const { t } = useTranslation("common");
-  const fetcherDebounce = useDebounceFetcher<
-    | {
-        pagination_result: {
-          results: components["schemas"]["ItemAttribute"][];
-          total: number;
-        };
-      }
-    | undefined
-  >();
-
-  const fetcherItemAttribute = useFetcher<
-    { itemAttribute:components["schemas"]["ItemAttribute"]} | undefined
-  >()
+  const fetcherItemAttribute = useDebounceFetcher<{
+    itemAttribute:components["schemas"]["ItemAttributeDto"]
+  }>();
+  const [itemAttributeFetcher,onItemAttributeChange] = useItemAttributeFetcher()
   const params = useParams()
   const revalidator = useRevalidator()
   const fetcher = useFetcher<typeof action>();
@@ -64,22 +59,22 @@ export default function CreateItemVariant({
     >
         {/* {JSON.stringify(fetcherItemAttribute.data)} */}
       <CustomForm
-        schema={itemVariantFormSchema}
+        schema={createItemVariantSchema}
         fetcher={fetcher}
-        onSubmit={(e: z.infer<typeof itemVariantFormSchema>) => {
+        onSubmit={(e: z.infer<typeof createItemVariantSchema>) => {
           fetcher.submit({
             action:"add-variant",
-            itemVariantFormSchema:e,
+            createItemVariant:e,
           },{
             method:"POST",
-            action:r.toItemDetailVariants(params.code || ""),
+            action:r.toItemDetailVariants(item?.name || "",item?.uuid || ""),
             encType:"application/json"
           })
             console.log("VALUES",e)
         }}
         defaultValues={{
-            itemId:item?.ID,
-        } as z.infer<typeof itemVariantFormSchema>}
+          itemUuid:item?.uuid,
+        } as z.infer<typeof createItemVariantSchema>}
         formItemsData={[
           {
             name: "name",
@@ -93,54 +88,31 @@ export default function CreateItemVariant({
             <div className="py-2">
               <FormAutocomplete
                 form={form}
-                data={fetcherDebounce.data?.pagination_result.results || []}
+                data={itemAttributeFetcher.data?.itemAttributes || []}
                 label={t("_stock.itemAttribute")}
-                value={"Name"}
-                nameK={"Name"}
-                onValueChange={(e) => {
-                  fetcherDebounce.submit(
-                    { query: e, action: "get" },
-                    {
-                      debounceTimeout: 600,
-                      method: "POST",
-                      action: r.itemAttributes,
-                      encType: "application/json",
-                    }
-                  );
-                }}
+                nameK={"name"}
+                onValueChange={onItemAttributeChange}
                 onSelect={(v) => {
                 //   setSelectedItemAttribute(v);
                   fetcherItemAttribute.submit({
-                    code: v.Name,
                     action: "get",
                 },{
                     method:"POST",
-                    action:r.toItemAttributeDetail(v.Name),
+                    action:r.toItemAttributeDetail(v.name,v.uuid),
                     encType:"application/json"
                 })
                 }}
                 name="itemAttributeName"
-                onOpen={() => {
-                  fetcherDebounce.submit(
-                    { query: "", action: "get" },
-                    {
-                      method: "POST",
-                      action: r.itemAttributes,
-                      encType: "application/json",
-                    }
-                  );
-                }}
               />
               {fetcherItemAttribute.data != undefined && (
                 <SelectForm
                   form={form}
-                  data={fetcherItemAttribute.data.itemAttribute.ItemAttributeValues}
-                  keyName={"Value"}
-                  keyValue={"Value"}
+                  data={fetcherItemAttribute.data.itemAttribute.item_attribute_values}
+                  keyName={"value"}
+                  keyValue={"value"}
                   name="itemAttributeValueName"
                   onValueChange={(e)=>{
-                    console.log("UPDATING",e.ID)
-                    form.setValue("itemAttributeValueId",e.ID)
+                    form.setValue("itemAttributeValueId",e.id)
                     revalidator.revalidate()
                   }}
                   label={t("_stock.itemAttributeValue")}
@@ -157,8 +129,14 @@ export default function CreateItemVariant({
 interface CreateItemVariant {
   open:boolean
   onOpenChange:(e:boolean)=>void
-  item:components["schemas"]["Item"] | undefined
-  openDialog:(opts:{item?:components["schemas"]["Item"]})=>void
+  item?: {
+    name:string
+    uuid:string
+  }
+  openDialog:(opts:{item?:{
+    name:string
+    uuid:string
+  }})=>void
 }
 export const useCreateItemVariant = create<CreateItemVariant>((set)=>({
   open:false,

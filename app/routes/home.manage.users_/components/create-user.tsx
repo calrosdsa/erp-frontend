@@ -125,33 +125,33 @@ export const CreateUser = ({open,onOpenChange,permission,globalState}:{
                     typeForm:"select",
                     label:t("form.type"),
                     data:fetcherPartyTypesUser.data?.partyTypes || [],
-                    keyName:"Name",
-                    keyValue:"Code"
+                    keyName:"name",
+                    keyValue:"code"
                 },
                 {
                     name:"companyIds",
                     typeForm:"multiselect",
                     label:t("companies"),
                     data:companiesFetcher.data?.companies || [],
-                    keyName:"Name",
-                    keyValue:"ID",
+                    keyName:"name",
+                    keyValue:"id",
                 }
             ]}
             renderCustomInputs={(form)=>{
                 return (
                     <>
-                    {/* <FormAutocomplete
+                    <FormAutocomplete
                     form={form}
                     label={t("roles")}
                     data={rolesFetcherDebounce.data?.roles || []}
                     onOpen={()=>onRoleNameChange("")}
                     onValueChange={(e)=>onRoleNameChange(e)}
                     name="roleName"
-                    nameK={"Code"}
+                    nameK={"code"}
                     onSelect={(v)=>{
-                        form.setValue("roleId", v.ID);
+                        form.setValue("roleUuid", v.uuid);
                     }}
-                    /> */}
+                    />
                     </>
                 )
             }}

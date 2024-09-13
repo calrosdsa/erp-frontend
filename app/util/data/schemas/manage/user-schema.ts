@@ -7,7 +7,7 @@ export const keyValue = z.object({
 
 export const createUserSchema = z.object({
     email:z.string().email(),
-    roleId:z.number(),
+    roleUuid:z.string(),
     roleName:z.string(),
     partyCode:z.string(),
     companyIds:z.array(z.number()),

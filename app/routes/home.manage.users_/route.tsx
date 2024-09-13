@@ -16,20 +16,20 @@ export const action = async({request}:ActionFunctionArgs)=>{
     const data= await request.json() as ActionData
     let message:string | undefined = undefined
     let error:string | undefined = undefined
-    let partyTypes:components["schemas"]["PartyType"][] = []
+    let partyTypes:components["schemas"]["PartyTypeDto"][] = []
     switch(data.action){
         case "create-user":{
             const d = data.createUser
             const res = await client.POST("/user/profile",{
                 body:{
-                    roleId:d.roleId,
+                    role_uuid:d.roleUuid,
                     email:d.email,
-                    givenName:d.givenName,
-                    familyName:d.familyName,
-                    phoneNumber:d.phoneNumber,
-                    companyIds:d.companyIds,
-                    partyCode:d.partyCode,
-                    keyValue:d.keyValue
+                    given_name:d.givenName,
+                    family_name:d.familyName,
+                    phone_number:d.phoneNumber,
+                    company_ids:d.companyIds,
+                    party_code:d.partyCode,
+                    key_value_data:d.keyValue
                 }
             })
             message = res.data?.message

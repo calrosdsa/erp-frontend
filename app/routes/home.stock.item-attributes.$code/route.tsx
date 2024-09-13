@@ -7,26 +7,27 @@ import { upsertItemAttributeValueSchema } from "./components/upsert-item-attribu
 import { useTranslation } from "react-i18next";
 import { makeZodI18nMap } from "zod-i18n-map";
 import { Order } from "~/types/enums";
-import { components } from "index";
+import { components } from "~/sdk";
 
 type ActionData = {
     action:string
     itemAttributeData:z.infer<typeof upsertItemAttributeValueSchema>
-    code:string
 }
 export const action = async({request}:ActionFunctionArgs) =>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
     console.log("ACTION DATA    ",data)
+    const url = new URL(request.url)
+    const searchParams = url.searchParams
     let error:string | undefined = undefined
     let responseMessage:string | undefined = undefined
-    let itemAttribute:components["schemas"]["ItemAttribute"] | undefined =  undefined
+    let itemAttribute:components["schemas"]["ItemAttributeDto"] | undefined =  undefined
     switch(data.action){
         case "get" :{
             const res = await client.GET("/stock/item/item-attribute/{id}",{
                 params:{
                     path:{
-                        id:decodeURIComponent(data.code) || "",
+                        id:searchParams.get("id") || "",
                     },
                     query:{
                         order:Order.ASC,
@@ -36,7 +37,7 @@ export const action = async({request}:ActionFunctionArgs) =>{
                 }
             })
             if(res.data){
-                itemAttribute = res.data.result
+                itemAttribute = res.data.result.entity
             }
             break;
         } 
@@ -87,11 +88,12 @@ export const action = async({request}:ActionFunctionArgs) =>{
 
 export const loader = async({request,params}:LoaderFunctionArgs) =>{
     const client = apiClient({request})
-    console.log("NAME",decodeURIComponent(params.code||""))
+    const url = new URL(request.url)
+    const searchParams = url.searchParams
     const res = await client.GET("/stock/item/item-attribute/{id}",{
         params:{
             path:{
-                id:decodeURIComponent(params.code || "") ,
+                id:searchParams.get("id") || "",
             },
             query:{
                 order:Order.ASC,
@@ -103,7 +105,8 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
     
     return json({
         error:res.error,
-        itemAttribute:res.data?.result
+        itemAttribute:res.data?.result.entity,
+        actions:res.data?.actions,
     })
 }
 

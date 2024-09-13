@@ -15,11 +15,7 @@ export const createItemSchema = z.object({
   // pluginList:z.array(z.string()).optional(),
 });
 
-export const itemDtoSchema = z.object({
-  id: z.number().optional(),
+export const updateItemSchema = z.object({
   name:z.string(),
-  uomId:z.number(),
-  itemGroupId: z.number(),
-  //Optional fields
-  itemType: z.string().optional(),
+  itemType: z.string(),
 });

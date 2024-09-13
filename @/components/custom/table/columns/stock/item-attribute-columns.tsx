@@ -34,20 +34,20 @@ export const itemAttributeColumns = ():ColumnDef<components["schemas"]["ItemAttr
 }
 
 export const itemAttributeValuesColumns = (): ColumnDef<
-  components["schemas"]["ItemAttributeValue"]
+  components["schemas"]["ItemAttributeValueDto"]
 >[] => {
   const { t } = useTranslation("common");
   return [
     {
       header: t("table.no"),
-      accessorKey: "Ordinal",
+      accessorKey: "ordinal",
     },
     {
-      accessorKey: "Value",
+      accessorKey: "value",
       header: t("table.attributeValue"),
     },
     {
-      accessorKey: "Abbreviation",
+      accessorKey: "abbreviation",
       header: t("table.abbreviation"),
     },
     {

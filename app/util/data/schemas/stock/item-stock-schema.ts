@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-export const itemStockSchemaForm = z.object({
+export const addStockLevelSchema = z.object({
     stock:z.preprocess((a)=>parseInt(z.string().parse(a)),z.number()),
     outOfStockThreshold:z.preprocess((a)=>parseInt(z.string().parse(a)),z.number()),
-    itemId:z.number(),
     enabled:z.boolean().default(true),
-    warehouseId:z.number(),
+    warehouseUuid:z.string(),
     warehouseName:z.string().optional(),
+    itemUuid:z.string(),
     itemName:z.string().optional(),
 })
 

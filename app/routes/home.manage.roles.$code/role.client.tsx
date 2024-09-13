@@ -60,7 +60,7 @@ export default function RoleClient() {
               meta: {
                 ...(permission?.edit && {
                   addNew: () => {
-                    console.log("dsa");
+                    
                   },
                 }),
               },

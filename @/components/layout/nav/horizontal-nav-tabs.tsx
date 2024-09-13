@@ -21,7 +21,7 @@ export default function HorizontalNavTabs({navItems}:{
                 className={cn(
                   buttonVariants({ variant: "ghost" }),
                   "group relative flex h-12 justify-start",
-                  path === item.href && "bg-muted font-bold hover:bg-muted"
+                  item.href.includes(path) && "bg-muted font-bold hover:bg-muted"
                 )}
               >
                 {item.icon != undefined && (

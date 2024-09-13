@@ -3,11 +3,11 @@ import ItemStockClient from "./item-stock.client";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
-import { itemStockSchemaForm } from "~/util/data/schemas/stock/item-stock-schema";
+import { addStockLevelSchema } from "~/util/data/schemas/stock/item-stock-schema";
 
 type ActionData = {
     action:string
-    addItemStockLevel:z.infer<typeof itemStockSchemaForm>
+    addItemStockLevel:z.infer<typeof addStockLevelSchema>
 }
 export const action = async({request}:ActionFunctionArgs)=>{
     const client = apiClient({request})
@@ -19,9 +19,9 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const d = data.addItemStockLevel
             const res = await client.POST("/stock/item/level",{
                 body:{
-                    itemId:d.itemId,
+                    item_uuid:d.itemUuid,
                     enabled:d.enabled,
-                    warehouseId:d.warehouseId,
+                    warehouse_uuid:d.warehouseUuid,
                     stock:d.stock,
                     outOfStockThreshold:d.outOfStockThreshold
                 }
@@ -35,9 +35,9 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const d = data.addItemStockLevel
             const res = await client.PUT("/stock/item/level",{
                 body:{
-                    itemId:d.itemId,
+                    item_uuid:d.itemUuid,
                     enabled:d.enabled,
-                    warehouseId:d.warehouseId,
+                    warehouse_uuid:d.warehouseUuid,
                     stock:d.stock,
                     outOfStockThreshold:d.outOfStockThreshold
                 }
@@ -63,12 +63,13 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
             query:{
                 page:searchParams.get("page") || DEFAULT_PAGE,
                 size:searchParams.get("size") || DEFAULT_SIZE,
-                parentId:params.code || "",
+                parentId:searchParams.get("id") || "",
             }
         }
     })
     return json({
-        paginationResult:res.data?.pagination_result
+        paginationResult:res.data?.pagination_result,
+        actions:res.data?.actions
     })
 }
 

@@ -7,7 +7,7 @@ import { routes } from "~/util/route";
 import DetailLayout from "@/components/layout/detail-layout";
 
 export default function WareHouseClient() {
-  // const globalState = useOutletContext<GlobalState>()
+  const globalState = useOutletContext<GlobalState>()
   const { warehouse } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const r = routes;
@@ -27,7 +27,8 @@ export default function WareHouseClient() {
    >
     <Outlet
     context={{
-      warehouse:warehouse
+      warehouse:warehouse,
+      globalState:globalState,
     } as WarehouseGlobalState}
     />
     </DetailLayout>

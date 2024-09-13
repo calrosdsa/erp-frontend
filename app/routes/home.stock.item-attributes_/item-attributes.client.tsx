@@ -31,7 +31,6 @@ export default function ItemAttributesClient(){
     const r = routes 
     return (
         <div>
-
             <DataTable
             metaActions={{
               meta:{

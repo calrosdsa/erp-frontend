@@ -919,6 +919,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/user/profile/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get profile session */
+        get: operations["get-profile-session"];
+        /**
+         * Update profile session
+         * @description Update profile base on the currency session of the user
+         */
+        put: operations["update-profile-session"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -979,14 +1000,12 @@ export interface components {
              */
             readonly $schema?: string;
             enabled: boolean;
-            /** Format: int64 */
-            itemId: number;
+            item_uuid: string;
             /** Format: int32 */
             outOfStockThreshold: number;
             /** Format: int32 */
             stock: number;
-            /** Format: int64 */
-            warehouseId: number;
+            warehouse_uuid: string;
         };
         Client: {
             ClientKeyValueData: components["schemas"]["ClientKeyValueData"][];
@@ -1124,7 +1143,10 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            itemVariant: components["schemas"]["ItemVariantDto"];
+            /** Format: int32 */
+            attribute_value_id: number;
+            item_uuid: string;
+            name: string;
         };
         CreatePriceListRequestBody: {
             /**
@@ -1186,16 +1208,15 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            companyIds?: number[];
+            company_ids?: number[];
             /** Format: email */
             email: string;
-            familyName: string;
-            givenName: string;
-            keyValueData?: components["schemas"]["KeyValueData"][];
-            partyCode: string;
-            phoneNumber?: string;
-            /** Format: int64 */
-            roleId: number;
+            family_name: string;
+            given_name: string;
+            key_value_data?: components["schemas"]["KeyValueData"][];
+            party_code: string;
+            phone_number?: string;
+            role_uuid: string;
         };
         CreateWareHouseRequestBody: {
             /**
@@ -1253,6 +1274,11 @@ export interface components {
             actionSelecteds: components["schemas"]["ActionSelected"][];
             entityName: string;
             role_uuid: string;
+        };
+        EditableProfileFields: {
+            family_name: string;
+            given_name: string;
+            phone_number?: string | null;
         };
         Entity: {
             /** Format: int64 */
@@ -1393,7 +1419,7 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityListItemPriceDto"];
         };
-        EntityResponseResultEntityListPartyTypeBody: {
+        EntityResponseResultEntityListPartyTypeDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -1401,7 +1427,7 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             message: string;
-            result: components["schemas"]["ResultEntityListPartyType"];
+            result: components["schemas"]["ResultEntityListPartyTypeDto"];
         };
         EntityResponseResultEntityOrderDtoBody: {
             /**
@@ -1584,12 +1610,15 @@ export interface components {
         ItemAttributeDto: {
             /** Format: date-time */
             created_at: string;
+            /** Format: int64 */
+            id: number;
+            item_attribute_values: components["schemas"]["ItemAttributeValueDto"][];
             name: string;
             uuid: string;
         };
         ItemAttributeValueDto: {
             abbreviation: string;
-            /** Format: int64 */
+            /** Format: int32 */
             id?: number;
             /** Format: int64 */
             itemAttributeId?: number;
@@ -1599,10 +1628,10 @@ export interface components {
         };
         ItemDetailDto: {
             code: string;
-            group: components["schemas"]["GroupDto"];
             /** Format: date-time */
-            itemGroupId: string;
-            itemType: string;
+            created_at: string;
+            group: components["schemas"]["GroupDto"];
+            item_type: string;
             name: string;
             uom: components["schemas"]["UOMDto"];
             uuid: string;
@@ -1611,7 +1640,7 @@ export interface components {
             code: string;
             /** Format: date-time */
             created_at: string;
-            itemType: string;
+            item_type: string;
             name: string;
             uuid: string;
         };
@@ -1667,22 +1696,14 @@ export interface components {
             /** Format: date-time */
             valid_up_to?: string | null;
         };
-        ItemVariant: {
-            item: components["schemas"]["Item"];
-            /** Format: int64 */
-            item_attribute_value_id: number;
-            /** Format: int64 */
-            item_id: number;
-            variant: components["schemas"]["Item"];
-            /** Format: int64 */
-            variant_id: number;
-        };
         ItemVariantDto: {
-            /** Format: int64 */
-            itemAttributeValueId: number;
-            /** Format: int64 */
-            itemId: number;
+            attibute_abbreviation: string;
+            attibute_value: string;
+            code: string;
+            /** Format: date-time */
+            created_at: string;
             name: string;
+            uuid: string;
         };
         KeyValueData: {
             key: string;
@@ -1760,14 +1781,14 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItemPriceDto"];
         };
-        PaginationResponsePaginationResultListItemVariantBody: {
+        PaginationResponsePaginationResultListItemVariantDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListItemVariant"];
+            pagination_result: components["schemas"]["PaginationResultListItemVariantDto"];
         };
         PaginationResponsePaginationResultListOrderDtoBody: {
             /**
@@ -1814,14 +1835,14 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListRoleDto"];
         };
-        PaginationResponsePaginationResultListStockLevelBody: {
+        PaginationResponsePaginationResultListStockLevelDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListStockLevel"];
+            pagination_result: components["schemas"]["PaginationResultListStockLevelDto"];
         };
         PaginationResponsePaginationResultListSupplierDtoBody: {
             /**
@@ -1880,8 +1901,8 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListItemVariant: {
-            results: components["schemas"]["ItemVariant"][];
+        PaginationResultListItemVariantDto: {
+            results: components["schemas"]["ItemVariantDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -1910,8 +1931,8 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListStockLevel: {
-            results: components["schemas"]["StockLevel"][];
+        PaginationResultListStockLevelDto: {
+            results: components["schemas"]["StockLevelDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -1943,7 +1964,11 @@ export interface components {
         };
         PartyType: {
             code: string;
-            name: string | null;
+            name: string;
+        };
+        PartyTypeDto: {
+            code: string;
+            name: string;
         };
         PhoneNumber: {
             countryCode: string;
@@ -2047,8 +2072,8 @@ export interface components {
         ResultEntityListItemPriceDto: {
             entity: components["schemas"]["ItemPriceDto"][];
         };
-        ResultEntityListPartyType: {
-            entity: components["schemas"]["PartyType"][];
+        ResultEntityListPartyTypeDto: {
+            entity: components["schemas"]["PartyTypeDto"][];
         };
         ResultEntityOrderDto: {
             entity: components["schemas"]["OrderDto"];
@@ -2083,8 +2108,6 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             description: string | null;
-            /** Format: int64 */
-            id: number;
             /** Format: date-time */
             updated_at: string | null;
             uuid: string;
@@ -2111,23 +2134,19 @@ export interface components {
             user: components["schemas"]["UserDto"];
             user_relation: components["schemas"]["UserRelationDto"];
         };
-        StockLevel: {
+        StockLevelDto: {
             /** Format: date-time */
             created_at: string;
-            deleted_at: components["schemas"]["DeletedAt"];
             enabled: boolean;
-            item: components["schemas"]["Item"];
-            /** Format: int64 */
-            item_id: number;
+            item_name: string;
+            item_uuid: string;
             /** Format: int32 */
             out_of_stock_threshold: number;
             /** Format: int32 */
             stock: number;
-            /** Format: date-time */
-            updated_at: string | null;
-            ware_house: components["schemas"]["WareHouse"];
-            /** Format: int64 */
-            ware_house_id: number;
+            uuid: string;
+            warehouse_name: string;
+            warehouse_uuid: string;
         };
         SupplierDto: {
             /** Format: date-time */
@@ -2210,6 +2229,15 @@ export interface components {
             readonly $schema?: string;
             credentials: string;
         };
+        UpdateItemRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            item_type: string;
+            name: string;
+        };
         UpdatePasswordRequestBody: {
             /**
              * Format: uri
@@ -2219,6 +2247,14 @@ export interface components {
             newPassword: string;
             password: string;
         };
+        UpdateProfileRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            profile: components["schemas"]["EditableProfileFields"];
+        };
         UpsertItemAttributeValueRequestBody: {
             /**
              * Format: uri
@@ -2226,7 +2262,7 @@ export interface components {
              */
             readonly $schema?: string;
             abbreviation: string;
-            /** Format: int64 */
+            /** Format: int32 */
             id?: number;
             /** Format: int64 */
             itemAttributeId?: number;
@@ -2250,14 +2286,6 @@ export interface components {
             readonly $schema?: string;
             itemPriceList: components["schemas"]["PriceList"];
         };
-        UpsertRequestEntityItemDtoBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            entity: components["schemas"]["ItemDto"];
-        };
         UserDto: {
             identifier: string;
             /** Format: date-time */
@@ -2268,24 +2296,6 @@ export interface components {
             company: components["schemas"]["CompanyDto"];
             profile: components["schemas"]["ProfileDto"];
             role: components["schemas"]["RoleDto"];
-            uuid: string;
-        };
-        WareHouse: {
-            /** Format: int64 */
-            company_id: number;
-            /** Format: date-time */
-            created_at: string;
-            deleted_at: components["schemas"]["DeletedAt"];
-            enabled: boolean;
-            /** Format: int64 */
-            id: number;
-            name: string;
-            /** Format: int64 */
-            ordinal: number;
-            /** Format: int64 */
-            parent_id: number | null;
-            /** Format: date-time */
-            updated_at: string | null;
             uuid: string;
         };
         WareHouseDto: {
@@ -3305,7 +3315,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityListPartyTypeBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityListPartyTypeDtoBody"];
                 };
             };
             /** @description Error */
@@ -3832,7 +3842,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpsertRequestEntityItemDtoBody"];
+                "application/json": components["schemas"]["UpdateItemRequestBody"];
             };
         };
         responses: {
@@ -4483,7 +4493,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListStockLevelBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListStockLevelDtoBody"];
                 };
             };
             /** @description Error */
@@ -4525,7 +4535,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListStockLevelBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListStockLevelDtoBody"];
                 };
             };
             /** @description Error */
@@ -4737,7 +4747,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemVariantBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemVariantDtoBody"];
                 };
             };
             /** @description Error */
@@ -5243,6 +5253,88 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityProfileDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-profile-session": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityProfileDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-profile-session": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

@@ -18,16 +18,14 @@ import { useEffect } from "react";
 import useEditFields from "~/util/hooks/useEditFields";
 import { toast, useToast } from "@/components/ui/use-toast";
 
-export default function ClientProfile() {
-  const { client } = useLoaderData<typeof loader>();
+export default function ProfileInfo() {
+  const { profile } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const defaultValues = {
-    givenName: client?.GivenName,
-    familyName: client?.FamilyName,
-    organizationName: client?.OrganizationName,
-    countryCode: client?.CountryCode,
-    phoneNumber: client?.PhoneNumber,
+    givenName: profile?.given_name,
+    familyName: profile?.family_name,
+    phoneNumber: profile?.phone_number,
   };
   const { form, hasChanged } = useEditFields({
     schema: updateClientSchema,
@@ -65,7 +63,7 @@ export default function ClientProfile() {
         className=" w-full info-grid-sidebar"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        {client && (
+        {profile && (
           <>
             <div className=" col-span-full flex justify-between w-full items-center">
               <Typography fontSize={title}>{t("info")}</Typography>
@@ -108,7 +106,7 @@ export default function ClientProfile() {
 
             <DisplayTextValue
               title={t("form.email")}
-              value={client.EmailAddress}
+              value={profile.email}
             />
 
             <CustomFormField
@@ -127,7 +125,7 @@ export default function ClientProfile() {
               }}
             />
 
-            <CustomFormField
+            {/* <CustomFormField
               form={form}
               name="organizationName"
               children={(field) => {
@@ -157,15 +155,15 @@ export default function ClientProfile() {
                   />
                 );
               }}
-            />
+            /> */}
 
-            {client.ClientKeyValueData?.map((item, idx) => {
+            {/* {profile.ClientKeyValueData?.map((item, idx) => {
               return (
                 <div key={idx}>
                   <DisplayTextValue title={item.key} value={item.value} />
                 </div>
               );
-            })}
+            })} */}
 
             {/* <CustomForm
             fetcher={fetcher}

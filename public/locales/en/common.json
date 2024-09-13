@@ -19,7 +19,11 @@
   },
   "create": "Create",
   "info": "Info",
-  "signin": "Sign In",
+  "_auth": {
+    "signin": "Sign In",
+    "signout":"Sign Out"
+  },
+
   "reset-password": "Reset Password",
   "_account": {
     "lastLogin": "Last Login",

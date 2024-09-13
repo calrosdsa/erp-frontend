@@ -5,9 +5,9 @@ import { useFetcher, useRevalidator } from "@remix-run/react";
 import { useTranslation, withTranslation } from "react-i18next";
 import { z } from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
-import { components } from "index";
 import { action } from "../route";
 import { useEffect } from "react";
+import { components } from "~/sdk";
 
 export const upsertItemAttributeValueSchema = z.object({
   value: z.string(),
@@ -26,8 +26,8 @@ export default function UpsertItemAttributeValue({
   open: boolean;
   close: () => void;
   title: string;
-  itemAttributeValue?: components["schemas"]["ItemAttributeValue"];
-  itemAttribute: components["schemas"]["ItemAttribute"];
+  itemAttributeValue?: components["schemas"]["ItemAttributeValueDto"];
+  itemAttribute: components["schemas"]["ItemAttributeDto"];
 }) {
   const { t } = useTranslation("common");
   z.setErrorMap(
@@ -63,10 +63,10 @@ export default function UpsertItemAttributeValue({
         fetcher={fetcher}
         className="grid grid-cols-1"
         defaultValues={{
-            ordinal:itemAttributeValue?.Ordinal.toString(),
-            value:itemAttributeValue?.Value,
-            abbreviation:itemAttributeValue?.Abbreviation,
-            id:itemAttributeValue?.ID
+            ordinal:itemAttributeValue?.ordinal.toString(),
+            value:itemAttributeValue?.value,
+            abbreviation:itemAttributeValue?.abbreviation,
+            id:itemAttributeValue?.id
         } as z.infer<typeof upsertItemAttributeValueSchema>}
         formItemsData={[
           {
@@ -94,7 +94,7 @@ export default function UpsertItemAttributeValue({
           let body = e;
           body = {
             ...body,
-            itemAttributeId: itemAttribute.ID,
+            itemAttributeId: itemAttribute.id,
           };
           // console.log("VALUES",body,itemAttributeValue)
           fetcher.submit(

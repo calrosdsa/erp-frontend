@@ -3,7 +3,6 @@ import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { components } from "index";
 import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
 import TableCellBoolean from "../../cells/table-cell-chek";
@@ -11,6 +10,8 @@ import TableCellDate from "../../cells/table-cell-date";
 import TableCellQuantity from "../../cells/table-cell-quantity";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import TableCellNavigate from "../../cells/table-cell-navigate";
+import { components } from "~/sdk";
+import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 
 export const itemStockColums = ({
   includeWarehouse = false,
@@ -18,63 +19,58 @@ export const itemStockColums = ({
 }: {
   includeWarehouse?: boolean;
   includeItem?: boolean;
-}): ColumnDef<components["schemas"]["StockLevel"]>[] => {
+}): ColumnDef<components["schemas"]["StockLevelDto"]>[] => {
   const { t, i18n } = useTranslation("common");
   const r = routes;
-  let columns: ColumnDef<components["schemas"]["StockLevel"]>[] = [];
+  let columns: ColumnDef<components["schemas"]["StockLevelDto"]>[] = [];
   if (includeWarehouse) {
     columns.push({
-      accessorKey: "WareHouse.Code",
-      id: "warehouseCode",
-    });
-    columns.push({
-      accessorKey: "WareHouse.Name",
-      id: "warehouseName",
+      accessorKey: "warehouse_name",
       header: t("_warehouse.base"),
-      cell: ({ ...props }) => <TableCellNavigate
+      cell: ({ ...props }) => {
+        const rowData = props.row.original
+      return <TableCellNameNavigation
       {...props}
-      id="warehouseCode"
-      navigate={(name,id)=>r.toWarehouseItems(id)}
+      navigate={(name)=>r.toWarehouseItems(name,rowData.warehouse_uuid)}
       />
+    }
     });
   }
 
   if (includeItem) {
+   
     columns.push({
-      accessorKey: "Item.Code",
-      id: "itemCode",
-    });
-    columns.push({
-      accessorKey: "Item.Name",
-      id: "itemName",
+      accessorKey: "item_name",
       header: t("_item.base"),
-      cell: ({ ...props }) => <TableCellNavigate
+      cell: ({ ...props }) => {
+        const rowData = props.row.original
+      return <TableCellNameNavigation
       {...props}
-      id="itemCode"
-      navigate={(name,id)=>r.toItemDetailStock(id)}
+      navigate={(name)=>r.toItemDetailStock(name,rowData.item_uuid)}
       />
+      }
     }); 
   }
 
   return [
     ...columns,
     {
-      accessorKey: "Stock",
+      accessorKey: "stock",
       header: t("stock"),
       cell: TableCellQuantity,
     },
     {
-      accessorKey: "OutOfStockThreshold",
+      accessorKey: "out_of_stock_threshold",
       header: t("form.outOfStockThreshold"),
       cell: TableCellQuantity,
     },
     {
-      accessorKey: "CreatedAt",
+      accessorKey: "created_at",
       header: t("table.createdAt"),
       cell: ({ ...props }) => <TableCellDate i18n={i18n} {...props} />,
     },
     {
-      accessorKey: "Enabled",
+      accessorKey: "enabled",
       header: t("form.enabled"),
       cell: TableCellBoolean,
     },

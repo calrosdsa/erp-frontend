@@ -22,12 +22,12 @@ export type GlobalState = {
 //ONLY AVAILABLE FOR ROUTE CHILDREN OF /home/stock/items/$code
 export type ItemGlobalState = {
     item:components["schemas"]["ItemDetailDto"]
-    // globalState:GlobalState
+    globalState:GlobalState
 }
 
 export type WarehouseGlobalState = {
-    warehouse:components["schemas"]["WareHouse"]
-    // globalState:GlobalState
+    warehouse:components["schemas"]["WareHouseDto"]
+    globalState:GlobalState
 }
 
 export type UserData = {

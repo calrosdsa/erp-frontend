@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 
-export const itemVariantFormSchema = z.object({
+export const createItemVariantSchema = z.object({
     name:z.string(),
-    itemId:z.number(),
+    itemUuid:z.string(),
     itemAttributeName: z.string(),
     itemAttributeValueName: z.string(),
     itemAttributeValueId: z.number(),
