@@ -88,7 +88,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
       href: "/home/stock/item-prices",
     });
   }
-  if (entities?.includes(Entity.ITEM_GROUP_ENTITY_ID)) {
+  if (entities?.includes(Entity.ITEM_ENTITY_ID)) {
     stockChildrens.push({
       title: t("item-groups"),
       href: "/home/stock/item-groups",

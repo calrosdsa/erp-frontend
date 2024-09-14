@@ -7,12 +7,18 @@ import useActionRow from "~/util/hooks/useActionRow";
 import AddItemPrice, { useAddItemPrice } from "../home.stock.item-prices_/components/add-item-price";
 import { ItemGlobalState } from "~/types/app";
 import { loader } from "./route";
+import { usePermission } from "~/util/hooks/useActions";
 
 export default function ItemDetailPricesClient() {
-  const {item} = useOutletContext<ItemGlobalState>()
+  const {item,globalState} = useOutletContext<ItemGlobalState>()
   const { t } = useTranslation("common");
-  const { itemPrices } = useLoaderData<typeof loader>();
+  const { paginationResult,actions } = useLoaderData<typeof loader>();
+  const [permission] = usePermission({
+    actions:actions,
+    roleActions:globalState.roleActions,
+  })
   const addItemPrice = useAddItemPrice()
+
   // const [meta,state] = useActionRow({})
 
   return (
@@ -25,22 +31,24 @@ export default function ItemDetailPricesClient() {
     />
     } */}
       <div className=" col-span-full">
-        <Typography fontSize={title}>{t("item.prices")}</Typography>
+        <Typography fontSize={title}>{t("_item.prices")}</Typography>
       </div>
 
       <div className="mt-3">
         {/* {JSON.stringify(itemPrices)} */}
         <DataTable
-          data={itemPrices?.pagination_result.results || []}
+          data={paginationResult?.results || []}
           columns={itemPriceColumns({})}
           hiddenColumns={{
             Currency: false,
           }}
           metaActions={{
             meta:{
-              addNew:()=>{
-                addItemPrice.onOpenDialog({itemUuid:item.uuid})
-              }
+              ...(permission?.create && {
+                addNew:()=>{
+                  addItemPrice.onOpenDialog({itemUuid:item.uuid})
+                }
+              })
             }
           }}
           // metaOptions={{

@@ -47,12 +47,14 @@ class Routes  {
     }
     
 
-    priceListDetail(name:string,id:string):string {
+    priceListDetail(name?:string,id?:string):string {
+        if(!name) return "N/A"
         return `${this.priceList}/${encodeURIComponent(name)}?id=${id}`
     }
 
-    taxDetailRoute(name:string,id:string):string {
-        return `${this.accounting}/taxes/${encodeURIComponent(id)}`
+    taxDetailRoute(name?:string,id?:string):string {
+        if(!name) return "N/A"
+        return `${this.accounting}/taxes/${encodeURIComponent(name)}?id=${id}`
     }
 
     createItemAttributeRoute= `${this.itemAttributes}/create`

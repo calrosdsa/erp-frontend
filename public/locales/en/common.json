@@ -179,6 +179,7 @@
     "prices": "Item Prices",
     "quantity":"Item Quantity",
     "base": "Item",
+    "type":"Item Type",
     "variants": "Item Variants",
     "addVariant": "Add  item variant",
     "enableForVariants": "Enable item for variants"

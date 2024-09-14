@@ -13,12 +13,12 @@ export default function ItemInfo({
     <div>
       <div className="info-grid">
         <div className=" col-span-full">
-          <Typography fontSize={title}>{t("item.info")}</Typography>
+          <Typography fontSize={title}>{t("_item.info")}</Typography>
         </div>
 
         <DisplayTextValue title={t("form.name")} value={data.name} />
 
-        <DisplayTextValue title={t("item.code")} value={data.code} />
+        <DisplayTextValue title={t("_item.code")} value={data.code} />
 
         <DisplayTextValue
           title={t("form.item-group")}

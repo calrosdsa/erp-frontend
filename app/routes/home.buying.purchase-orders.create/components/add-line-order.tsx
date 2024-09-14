@@ -65,7 +65,7 @@ export const AddLineOrder = ({
                 data={itemPriceDebounceFetcher.data?.itemPriceForOrders || []}
                 nameK={"item_name"}
                 label={t("_item.base")}
-                name="itemName"
+                name="item_name"
                 form={form}
                 onValueChange={onItemPriceChange}
                 onSelect={(e) => {
@@ -89,7 +89,7 @@ export const AddLineOrder = ({
                   />
                   <DisplayTextValue
                     title={t("form.code")}
-                    value={itemPrice.code}
+                    value={itemPrice.item_code}
                   />
                   <DisplayTextValue
                     title={t("form.rate")}

@@ -4,6 +4,7 @@
 import { components } from "~/sdk";
   import { formatCurrency } from "~/util/format/formatCurrency";
   import { formatLongDate } from "~/util/format/formatDate";
+import TableCellDate from "../../cells/table-cell-date";
 
   export const itemPriceColumns = ({
     includeItem,
@@ -22,7 +23,7 @@ import { components } from "~/sdk";
     });
     columns.push({
       accessorKey: "uuid",
-      header: t("table.code"),
+      header: t("table.ID"),
       cell: ({ row }) => {
         const code = row.getValue("uuid") as string;
         return (
@@ -54,12 +55,13 @@ import { components } from "~/sdk";
       header: t("form.itemQuantity"),
     })
     columns.push({
-      accessorKey: "CreatedAt",
+      accessorKey: "created_at",
       header: t("table.createdAt"),
-      cell: ({ row }) => {
-        const date = row.getValue("CreatedAt");
-        const longDate = formatLongDate(date as string, i18n.language);
-        return <div className="">{longDate}</div>;
+      cell: ({ ...props }) => {
+        return <TableCellDate
+        {...props}
+        i18n={i18n}
+        />;
       },
     })
 

@@ -3,6 +3,7 @@ import ItemsClient from "./items.client";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { components } from "~/sdk";
+import { handleError } from "~/util/api/handle-status-code";
 
 type ActionData = {
     action:string
@@ -48,6 +49,7 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
             }
         }
     })
+    handleError(res.error)
     
     return json({
         paginationResult:res.data?.pagination_result,

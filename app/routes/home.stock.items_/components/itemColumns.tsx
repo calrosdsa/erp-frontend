@@ -15,9 +15,8 @@ export const itemColumns = (): ColumnDef<components["schemas"]["ItemDto"]>[] => 
   const r = routes;
   return [
     {
-      accessorKey: "code",
-      header: t("table.code"),
-      id: "code",
+      accessorKey: "name",
+      header: t("form.name"),
       cell: ({ ...props }) => {
         const rowData = props.row.original
         return (
@@ -29,8 +28,12 @@ export const itemColumns = (): ColumnDef<components["schemas"]["ItemDto"]>[] => 
       }
     },
     {
-      accessorKey: "name",
-      header: t("form.name"),
+      accessorKey: "code",
+      header: t("table.code"),
+    },
+    {
+      accessorKey: "item_type",
+      header: t("_item.type"),
     },
     {
       accessorKey: "created_at",

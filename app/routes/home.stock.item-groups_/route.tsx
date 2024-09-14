@@ -3,6 +3,7 @@ import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { PartyType } from "~/types/enums";
 import ItemGroupsClient from "./item-groups.client";
+import { handleError } from "~/util/api/handle-status-code";
 
 export const loader = async({request}:LoaderFunctionArgs) =>{
     const client =apiClient({request})
@@ -19,6 +20,7 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
             },
         }
     })
+    handleError(res.error)
     return json({
         paginationResult:res.data?.pagination_result,
         actions:res.data?.actions,

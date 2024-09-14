@@ -9,8 +9,7 @@ import { routes } from "~/util/route"
 
 
 export default function ItemPriceInfo(){
-    const {itemPriceData} = useLoaderData<typeof loader>()
-    const {entity} = itemPriceData.result
+    const {itemPrice,actions} = useLoaderData<typeof loader>()
     const {t,i18n} = useTranslation("common")
     const r = routes
     return(
@@ -22,26 +21,26 @@ export default function ItemPriceInfo(){
 
         {/* <DisplayTextValue title={t("form.code")} value={entity.code} /> */}
 
-        <DisplayTextValue title={t("form.rate")} value={formatCurrency(entity.rate,entity.price_list.currency,i18n.language)} />
+        <DisplayTextValue title={t("form.rate")} value={formatCurrency(itemPrice?.rate,itemPrice?.price_list.currency,i18n.language)} />
 
-        <DisplayTextValue title={t("form.currency")} value={entity.price_list.currency} />
+        <DisplayTextValue title={t("form.currency")} value={itemPrice?.price_list.currency} />
 
 
-        <DisplayTextValue title={t("form.itemQuantity")} value={formatQuantity(entity.item_quantity,entity.item.unit_of_measure)} />
+        <DisplayTextValue title={t("form.itemQuantity")} value={formatQuantity(itemPrice?.item_quantity,itemPrice?.item.unit_of_measure)} />
 
 
 
 
         <DisplayTextValue
           title={t("form.price-list")}
-          value={entity.price_list.name}
-          to={r.priceListDetail(entity.price_list.name,entity.price_list.uuid)}
+          value={itemPrice?.price_list.name}
+          to={r.priceListDetail(itemPrice?.price_list.name,itemPrice?.price_list.uuid)}
         />
 
         <DisplayTextValue
           title={t("form.tax")}
-          value={entity.tax.name}
-          to={r.taxDetailRoute(entity.tax.name,entity.tax.uuid)}
+          value={itemPrice?.tax.name}
+          to={r.taxDetailRoute(itemPrice?.tax.name,itemPrice?.tax.uuid)}
         />
 
         

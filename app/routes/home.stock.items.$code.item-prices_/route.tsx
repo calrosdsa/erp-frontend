@@ -61,7 +61,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   return json({
-    itemPrices: itemPrices.data,
+    paginationResult: itemPrices.data?.pagination_result,
+    actions:itemPrices.data?.actions
   });
 };
 

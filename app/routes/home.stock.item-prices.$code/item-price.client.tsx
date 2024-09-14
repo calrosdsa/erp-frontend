@@ -7,14 +7,11 @@ import SquareItemPrice from "../home.stock.item-prices_/components/plugin/Square
 
 
 export default function ItemPriceDetailClient(){
-    const {itemPriceData} = useLoaderData<typeof loader>()
-
     return (
         <div className="grid gap-y-5">
             {/* {JSON.stringify({itemPrice})} */}
             <ItemPriceInfo
             />
-
             {/* {itemPriceData.result.entity.ItemPricePlugin.map((item,idx)=>{
                 return (
                     <div key={idx}>

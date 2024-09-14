@@ -124,7 +124,7 @@ export default function CreateItemClient() {
                 {...(groupPermission?.create && {
                   addNew: () =>
                     createGroup.openDialog({
-                      partyType: PartyType.PARTY_SUPPLIER_GROUP,
+                      partyType: PartyType.PARTY_ITEM_GROUP,
                     }),
                 })}
               />

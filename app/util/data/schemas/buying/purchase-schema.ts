@@ -33,11 +33,11 @@ export const createPurchaseSchema = z.object({
 
 export const orderLineSchemaToOrderLineDto = (
   d: z.infer<typeof orderLineSchema>
-): components["schemas"]["OrderLineDto"] => {
+): components["schemas"]["LineOrder"] => {
   return {
     amount: d.amount || 0,
     quantity: d.quantity,
-    item_price: itemPriceSchemaToItemPriceDto(d.item_price),
+    item_price_uuid: d.item_price.uuid,
   };
 };
 
@@ -48,6 +48,7 @@ export const itemPriceSchemaToItemPriceDto = (
     code: d.code,
     uuid: d.uuid,
     rate: d.rate,
+    created_at:"",
     item_quantity: d.item_quantity,
     item_name: d.item_name,
     item_code: d.item_code,

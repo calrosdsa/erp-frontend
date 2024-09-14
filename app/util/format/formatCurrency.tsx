@@ -1,8 +1,11 @@
 import { components } from "~/sdk";
 
 
-export const formatCurrency=(input: number | undefined,currency:string,language:string): string =>{
+export const formatCurrency=(input: number | undefined,currency:string| undefined,language:string): string =>{
     if (input == undefined) {
+      return "";
+    }
+    if (currency == undefined) {
       return "";
     }
     // Convert the input string to a number and divide by 100
@@ -23,11 +26,11 @@ export const sumTotal = (values:number[])=>{
 
 
 export const formatTax = (tax:components["schemas"]["Tax"],itemPrice:number,currency:string,language:string):string =>{
-    return formatCurrency(itemPrice * ((tax.Value)/100),currency,language)
+    return formatCurrency(itemPrice * ((tax.value)/100),currency,language)
   }
 
 export const formatTotalTax = (tax:components["schemas"]["Tax"],itemPrice:number):number =>{
-  return itemPrice * ((tax.Value)/100)
+  return itemPrice * ((tax.value)/100)
 }
 
 

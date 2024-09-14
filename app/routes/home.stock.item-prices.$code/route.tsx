@@ -1,8 +1,7 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import ItemPriceDetailClient from "./item-price.client"
-import SquareItemPrice from "../home.stock.item-prices/components/plugin/SquareItemPrice"
-import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
+import { handleError } from "~/util/api/handle-status-code"
 
 
 export const loader = async({request,params}:LoaderFunctionArgs) =>{
@@ -15,17 +14,17 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
             },
         }
     })
-    if(res.data == undefined){
-        throw new Error("Fail to fetch data")
-    }
+    handleError(res.error)
     return json({
-        itemPriceData:res.data
+        itemPrice:res.data?.result.entity,
+        actions:res.data?.actions,
     })
 }
 
 export default function ItemPriceDetail(){
     return (
         <div>
+            {/* asdmask */}
             <ItemPriceDetailClient/>
         </div>
     )

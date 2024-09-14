@@ -1060,6 +1060,8 @@ export interface components {
         CompanyDto: {
             /** Format: date-time */
             created_at: string;
+            /** Format: int64 */
+            id: number;
             logo: string | null;
             name: string;
             /** Format: int64 */
@@ -1168,7 +1170,7 @@ export interface components {
             currency: components["schemas"]["CurrencyDto"];
             /** Format: date-time */
             delivery_date?: string | null;
-            lines: components["schemas"]["OrderLineDto"][];
+            lines: components["schemas"]["LineOrder"][];
             name: string;
             supplier: components["schemas"]["SupplierDto"];
         };
@@ -1668,7 +1670,7 @@ export interface components {
             tax_id: number;
             unit_of_measure: components["schemas"]["UnitOfMeasure"];
             /** Format: int64 */
-            unit_of_measure_id: number | null;
+            unit_of_measure_id: number;
             /** Format: date-time */
             updated_at: string | null;
             uuid: string;
@@ -1708,6 +1710,13 @@ export interface components {
         KeyValueData: {
             key: string;
             value: string;
+        };
+        LineOrder: {
+            /** Format: int32 */
+            amount: number;
+            item_price_uuid: string;
+            /** Format: int32 */
+            quantity: number;
         };
         OrderDto: {
             code: string;
