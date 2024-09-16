@@ -4,8 +4,8 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { groupColumns } from "@/components/custom/table/columns/group/group-columns";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import { useCreateGroup } from "../home.groups/components/create-group";
 import { PartyType } from "~/types/enums";
+import { useCreateGroup } from "../home.groups.$party_/components/create-group";
 
 export default function SupplierGroupsClient() {
   const globalState = useOutletContext<GlobalState>();
@@ -19,7 +19,7 @@ export default function SupplierGroupsClient() {
     <div>
       <DataTable
         data={paginationResult?.results || []}
-        columns={groupColumns({})}
+        columns={groupColumns({party:PartyType.PARTY_ITEM_GROUP})}
         metaActions={{
           meta: {
             ...(permission?.create && {

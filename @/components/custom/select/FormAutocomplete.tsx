@@ -35,7 +35,7 @@ interface Props<T extends object, K extends keyof T> {
   label: string | undefined;
   description?: string;
   onValueChange: (e: string) => void;
-  onSelect: (v: T) => void;
+  onSelect?: (v: T) => void;
   className?: string;
   addNew?: () => void;
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
@@ -101,7 +101,9 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                           key={idx}
                           onSelect={() => {
                             form.setValue(name, item[nameK]);
-                            onSelect(item);
+                            if(onSelect){
+                              onSelect(item);
+                            }
                           }}
                         >
                         {onCustomDisplay(item, idx)}
@@ -112,7 +114,9 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                           key={idx}
                           onSelect={() => {
                             form.setValue(name, item[nameK]);
-                            onSelect(item);
+                            if(onSelect){
+                              onSelect(item);
+                            }
                           }}
                         >
                           <Check

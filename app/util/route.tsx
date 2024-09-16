@@ -1,3 +1,4 @@
+import { PartyType } from "~/types/enums"
 
 class Routes  {
     api = "/api"
@@ -13,6 +14,9 @@ class Routes  {
 
     selling = this.base + "/selling"
     sellingStock = this.selling + "/stock"
+    customerGroups = this.selling + "/customer-groups"
+    customers = this.selling + "/customers"
+
     priceList = this.sellingStock + "/price-list"
 
     accounting = this.base + "/accounting"
@@ -45,8 +49,21 @@ class Routes  {
     toCompanyDetail(name:string,id:string):string {
         return `${this.companies}/${encodeURIComponent(name)}?id=${id}`
     }
-    
 
+    toGroupsByParty(party:PartyType):string {
+        return `${this.groups}/${encodeURIComponent(party)}`
+    }
+
+    toGroupDetail(party:string,name:string,id:string):string{
+        return `${this.groups}/${encodeURIComponent(party)}/${encodeURIComponent(name)}?id=${id}`
+    }
+
+
+    //Selling
+    customerDetail(name?:string,id?:string):string {
+        if(!name) return "N/A"
+        return `${this.customers}/${encodeURIComponent(name)}?id=${id}`
+    }
     priceListDetail(name?:string,id?:string):string {
         if(!name) return "N/A"
         return `${this.priceList}/${encodeURIComponent(name)}?id=${id}`

@@ -25,7 +25,7 @@ export const useGroupDebounceFetcher = ({partyType}:{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,
             encType:"application/json",
-            action:r.groups
+            action:r.toGroupsByParty(partyType)
         })
     }
     

@@ -14,7 +14,7 @@ import { useEffect } from "react"
 export const CreateGroup = ({open,onOpenChange,partyType}:{
     open:boolean
     onOpenChange:(e:boolean)=>void
-    partyType?:PartyType
+    partyType?:string
 }) =>{
     const fetcher = useFetcher<typeof action>()
     const {t} = useTranslation("common")
@@ -90,8 +90,8 @@ export const CreateGroup = ({open,onOpenChange,partyType}:{
 interface CreateGroupStore {
     open:boolean
     onOpenChange:(e:boolean)=>void
-    openDialog:(opts:{partyType:PartyType})=>void
-    partyType:PartyType | undefined
+    openDialog:(opts:{partyType:string})=>void
+    partyType:string | undefined
 }
 export const useCreateGroup = create<CreateGroupStore>((set)=>({
     open:false,

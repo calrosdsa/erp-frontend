@@ -31,11 +31,14 @@ export enum Entity {
     USERS_ENTITY_ID = 11,
     SUPPLIER_ENTITY_ID = 12,
     PURCHASE_ORDER_ENTITY_ID = 14,
+    CUSTOMER = 15,
 }
 
 export enum PartyType {
 	PARTY_SUPPLIER_GROUP = "supplierGroup",
 	PARTY_ITEM_GROUP = "itemGroup",
+	PARTY_CUSTOMER_GROUP = "customerGroup",
+
 	PARTY_PURCHASE_ORDER = "purchaseOrder"
     
 }

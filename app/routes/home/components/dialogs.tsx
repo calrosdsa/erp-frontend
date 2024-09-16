@@ -2,9 +2,10 @@ import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components
 import { AddLineOrder, useAddLineOrder } from "~/routes/home.buying.purchase-orders.create/components/add-line-order"
 import { CreateSupplier, useCreateSupplier } from "~/routes/home.buying.suppliers_/components/create-supplier"
 import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
-import { CreateGroup, useCreateGroup } from "~/routes/home.groups/components/create-group"
+import { CreateGroup, useCreateGroup } from "~/routes/home.groups.$party_/components/create-group"
 import { CreateUser, useCreateUser } from "~/routes/home.manage.users_/components/create-user"
-import { AddPriceList, useCreatePriceList } from "~/routes/home.selling_.stock_.price-list/components/add-price-list"
+import { CreateCustomer, useCreateCustomer } from "~/routes/home.selling.customers_/components/create-customer"
+import { AddPriceList, useCreatePriceList } from "~/routes/home.selling.stock.price-list_/components/add-price-list"
 import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.item-prices_/components/add-item-price"
 import { UpsertItemStockLevel, useUpsertItemStockLevel } from "~/routes/home.stock.items.$code.stock_/components/upsert-item-stock-level"
 import CreateItemVariant, { useCreateItemVariant } from "~/routes/home.stock.items.$code.variants_/components/create-item-variant"
@@ -28,10 +29,19 @@ export default function GlobalDialogs({globalState}:{
 
     const createCompany = useCreateCompany()
 
+    const createCustomer = useCreateCustomer()
+
     const createUser = useCreateUser()
     const addLineOrder = useAddLineOrder()
     return (
         <>
+        {createCustomer.open &&
+        <CreateCustomer
+        open={createCustomer.open}
+        onOpenChange={createCustomer.onOpenChange}
+        globalState={globalState}
+        />
+        }
         {(addLineOrder.open && addLineOrder.currency)&& 
         <AddLineOrder
         open={addLineOrder.open}

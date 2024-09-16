@@ -7,7 +7,9 @@
 
   "show": "Show",
   "hide": "Hide",
-  "group":"Group",
+  "_group":{
+    "base":"Group"
+  },
   "_company": {
     "base": "Company",
     "companies": "Companies"
@@ -91,6 +93,13 @@
     "isSelling": "Is Selling",
     "isSellingDesc": "This price list will be used for selling products.",
     "isBuyingDesc": "This price list will be used for buying products."
+  },
+  "customers":"Customers",
+  "customerGroup":"Customer Groups",
+  "_customer":{
+    "base":"Customer",
+    "create":"Create New Customer",
+    "info":"Customer Info"
   },
   "f": {
     "add-new": "Create new {{o}}",

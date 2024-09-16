@@ -245,6 +245,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/customer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve customers */
+        get: operations["get customers"];
+        put?: never;
+        /** Create customer */
+        post: operations["create customer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/customer/customer-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Customer types */
+        get: operations["customer types"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/customer/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve customer */
+        get: operations["get customer"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/greeting/{name}": {
         parameters: {
             query?: never;
@@ -1090,6 +1142,16 @@ export interface components {
             /** Format: int64 */
             parentId?: number | null;
         };
+        CreateCustomerRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            customer_type: string;
+            group_uuid: string;
+            name: string;
+        };
         CreateGroupRequestBody: {
             /**
              * Format: uri
@@ -1170,7 +1232,7 @@ export interface components {
             currency: components["schemas"]["CurrencyDto"];
             /** Format: date-time */
             delivery_date?: string | null;
-            lines: components["schemas"]["LineOrder"][];
+            lines: components["schemas"]["OrderLine"][];
             name: string;
             supplier: components["schemas"]["SupplierDto"];
         };
@@ -1250,6 +1312,19 @@ export interface components {
         };
         CurrencyDto: {
             code: string;
+        };
+        CustomerDto: {
+            /** Format: date-time */
+            created_at: string;
+            customer_type: string;
+            group_name?: string;
+            group_uuid?: string;
+            name: string;
+            uuid: string;
+        };
+        CustomerType: {
+            code: string;
+            name: string;
         };
         DeletedAt: {
             /** Format: date-time */
@@ -1351,6 +1426,16 @@ export interface components {
             message: string;
             result: components["schemas"]["UserRelationDto"][];
         };
+        EntityResponseResultEntityCustomerDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ResultEntityCustomerDto"];
+        };
         EntityResponseResultEntityGroupDtoBody: {
             /**
              * Format: uri
@@ -1381,7 +1466,7 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityItemDetailDto"];
         };
-        EntityResponseResultEntityItemPriceBody: {
+        EntityResponseResultEntityItemPriceDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -1389,7 +1474,17 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             message: string;
-            result: components["schemas"]["ResultEntityItemPrice"];
+            result: components["schemas"]["ResultEntityItemPriceDto"];
+        };
+        EntityResponseResultEntityListCustomerTypeBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ResultEntityListCustomerType"];
         };
         EntityResponseResultEntityListEntityActionsBody: {
             /**
@@ -1683,14 +1778,18 @@ export interface components {
             code: string;
             /** Format: date-time */
             created_at: string;
-            currency: string;
             item_code: string;
             item_name: string;
             /** Format: int32 */
             item_quantity: number;
             item_uuid: string;
+            price_list_currency: string;
+            price_list_name: string;
+            price_list_uuid: string;
             /** Format: int32 */
             rate: number;
+            tax_name: string;
+            tax_uuid: string;
             uom: string;
             uuid: string;
             /** Format: date-time */
@@ -1711,13 +1810,6 @@ export interface components {
             key: string;
             value: string;
         };
-        LineOrder: {
-            /** Format: int32 */
-            amount: number;
-            item_price_uuid: string;
-            /** Format: int32 */
-            quantity: number;
-        };
         OrderDto: {
             code: string;
             /** Format: date-time */
@@ -1728,6 +1820,13 @@ export interface components {
             name: string;
             order_lines: components["schemas"]["OrderLineDto"][];
             uuid: string;
+        };
+        OrderLine: {
+            /** Format: int32 */
+            amount: number;
+            item_price_uuid: string;
+            /** Format: int32 */
+            quantity: number;
         };
         OrderLineDto: {
             /** Format: int32 */
@@ -1753,6 +1852,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListCurrencyDto"];
+        };
+        PaginationResponsePaginationResultListCustomerDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListCustomerDto"];
         };
         PaginationResponsePaginationResultListGroupDtoBody: {
             /**
@@ -1887,6 +1995,11 @@ export interface components {
         };
         PaginationResultListCurrencyDto: {
             results: components["schemas"]["CurrencyDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListCustomerDto: {
+            results: components["schemas"]["CustomerDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2060,6 +2173,9 @@ export interface components {
             };
             message: string;
         };
+        ResultEntityCustomerDto: {
+            entity: components["schemas"]["CustomerDto"];
+        };
         ResultEntityGroupDto: {
             entity: components["schemas"]["GroupDto"];
         };
@@ -2069,8 +2185,11 @@ export interface components {
         ResultEntityItemDetailDto: {
             entity: components["schemas"]["ItemDetailDto"];
         };
-        ResultEntityItemPrice: {
-            entity: components["schemas"]["ItemPrice"];
+        ResultEntityItemPriceDto: {
+            entity: components["schemas"]["ItemPriceDto"];
+        };
+        ResultEntityListCustomerType: {
+            entity: components["schemas"]["CustomerType"][];
         };
         ResultEntityListEntityActions: {
             entity: components["schemas"]["EntityActions"][];
@@ -2994,6 +3113,172 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListCurrencyDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get customers": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCustomerDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create customer": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCustomerRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "customer types": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityListCustomerTypeBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get customer": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityCustomerDtoBody"];
                 };
             };
             /** @description Error */
@@ -4287,7 +4572,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityItemPriceBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityItemPriceDtoBody"];
                 };
             };
             /** @description Error */

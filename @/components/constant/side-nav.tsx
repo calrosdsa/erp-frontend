@@ -21,6 +21,7 @@ import { routes } from "~/util/route";
 import { GlobalState } from "~/types/app";
 import { useMemo } from "react";
 import { BuyingNav } from "./buying-nav";
+import { SellingNav } from "./selling-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -33,6 +34,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
 
   const buyingNav = BuyingNav({
     entities:entities
+  })
+
+  const sellingNav = SellingNav({
+    entities:entities,
   })
 
   const companies = {
@@ -59,21 +64,9 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   };
 
 
-  let sellingChildrends: NavItem[] = [];
-  if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
-    sellingChildrends.push({
-      title: t("price-list"),
-      href: r.priceList,
-    });
-  }
+ 
 
-  const selling: NavItem = {
-    title: t("selling"),
-    icon: DollarSign,
-    href: r.selling,
-    isChildren: true,
-    children: sellingChildrends,
-  };
+ 
 
   let stockChildrens: NavItem[] = [];
   if (entities?.includes(Entity.ITEM_ENTITY_ID)) {
@@ -187,9 +180,8 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if(buyingNav.children && buyingNav.children.length > 0) {
     navItems.push(buyingNav)
   }
-
-  if (sellingChildrends.length > 0) {
-    navItems.push(selling);
+  if(sellingNav.children && sellingNav.children.length > 0) {
+    navItems.push(sellingNav)
   }
 
   if (stockChildrens.length > 0) {

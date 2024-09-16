@@ -13,8 +13,8 @@ import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceF
 import { PartyType } from "~/types/enums";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { useCreateGroup } from "~/routes/home.groups/components/create-group";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
+import { useCreateGroup } from "~/routes/home.groups.$party_/components/create-group";
 
 export const CreateSupplier = ({
   open,

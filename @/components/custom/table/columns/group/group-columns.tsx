@@ -5,7 +5,10 @@ import { routes } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 
-export const groupColumns = ({}:{
+export const groupColumns = ({
+    party
+}:{
+    party:string
 }):ColumnDef<components["schemas"]["GroupDto"]>[] =>{
 
     let columns:ColumnDef<components["schemas"]["GroupDto"]>[] = [];
@@ -20,7 +23,7 @@ export const groupColumns = ({}:{
                 <TableCellNameNavigation
                 {...props}
                 navigate={(name)=>{
-                    return r.toSupplierGroup(name,rowD.uuid)
+                    return r.toGroupDetail(party,name,rowD.uuid)
                 }}
                 />
             )

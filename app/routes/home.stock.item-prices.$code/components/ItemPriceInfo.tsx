@@ -21,26 +21,24 @@ export default function ItemPriceInfo(){
 
         {/* <DisplayTextValue title={t("form.code")} value={entity.code} /> */}
 
-        <DisplayTextValue title={t("form.rate")} value={formatCurrency(itemPrice?.rate,itemPrice?.price_list.currency,i18n.language)} />
+        <DisplayTextValue title={t("form.rate")} value={formatCurrency(itemPrice?.rate,itemPrice?.price_list_currency,i18n.language)} />
 
-        <DisplayTextValue title={t("form.currency")} value={itemPrice?.price_list.currency} />
-
-
-        <DisplayTextValue title={t("form.itemQuantity")} value={formatQuantity(itemPrice?.item_quantity,itemPrice?.item.unit_of_measure)} />
+        <DisplayTextValue title={t("form.currency")} value={itemPrice?.price_list_currency} />
+        <DisplayTextValue title={t("form.itemQuantity")} value={formatQuantity(itemPrice?.item_quantity,itemPrice?.uom)} />
 
 
 
 
         <DisplayTextValue
           title={t("form.price-list")}
-          value={itemPrice?.price_list.name}
-          to={r.priceListDetail(itemPrice?.price_list.name,itemPrice?.price_list.uuid)}
+          value={itemPrice?.price_list_name}
+          to={r.priceListDetail(itemPrice?.price_list_name,itemPrice?.price_list_uuid)}
         />
 
         <DisplayTextValue
           title={t("form.tax")}
-          value={itemPrice?.tax.name}
-          to={r.taxDetailRoute(itemPrice?.tax.name,itemPrice?.tax.uuid)}
+          value={itemPrice?.tax_name}
+          to={r.taxDetailRoute(itemPrice?.tax_name,itemPrice?.tax_uuid)}
         />
 
         
