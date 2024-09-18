@@ -7,14 +7,26 @@
 
   "show": "Mostrar",
   "hide": "Ocultar",
-
+  "_group": {
+    "base": "Grupo"
+  },
   "_company": {
-    "base": "Empresa",
-    "companies": "Empresas"
+    "base": "Compañía",
+    "companies": "Compañías"
+  },
+  "purchase-orders": "Órdenes de Compra",
+  "supplier-groups": "Grupos de Proveedores",
+  "suppliers": "Proveedores",
+  "_supplier": {
+    "base": "Proveedor"
   },
   "create": "Crear",
   "info": "Información",
-  "signin": "Iniciar Sesión",
+  "_auth": {
+    "signin": "Iniciar Sesión",
+    "signout": "Cerrar Sesión"
+  },
+
   "reset-password": "Restablecer Contraseña",
   "_account": {
     "lastLogin": "Último Inicio de Sesión",
@@ -24,28 +36,46 @@
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "resetPassowordMsg": "Ingresa la dirección de correo electrónico verificada de tu cuenta y te enviaremos un enlace para restablecer la contraseña."
   },
-
+  "address": "Dirección",
+  "manage": "Administrar",
+  "users": "Usuarios",
+  "_user": {
+    "base": "Usuario"
+  },
   "form": {
     "name": "Nombre",
+    "deliveryDate": "Fecha de Entrega",
+    "pickADate": "Seleccionar una Fecha",
+    "description": "Descripción",
     "value": "Valor",
     "abbreviation": "Abreviatura",
     "code": "Código",
+    "fullName": "Nombre Completo",
     "familyName": "Apellido",
     "givenName": "Nombre",
     "phoneNumber": "Número de Teléfono",
+    "amount": "Monto",
+    "type": "Tipo",
     "password": "Contraseña",
     "newPassword": "Nueva Contraseña",
     "confirmNewPassword": "Confirmar Nueva Contraseña",
     "email": "Correo Electrónico",
-    "companyName": "Nombre de la Empresa",
+    "companyName": "Nombre de la Compañía",
     "clientDetails": "Completa tu Información Personal",
     "enabled": "Habilitar",
     "country": "País",
-    "countryCode": "Código del País",
+    "countryCode": "Código de País",
     "item-group": "Grupo de Artículos",
     "submit": "Enviar",
     "save": "Guardar",
-    "uom": "UOM",
+    "uom": "Unidad de Medida",
+    "city": "Ciudad",
+    "company": "Compañía",
+    "province": "Provincia",
+    "postalCode": "Código Postal",
+    "identificationNumber": "Número de Identificación",
+    "streetLine1": "Línea de Calle 1",
+    "streetLine2": "Línea de Calle 2",
     "optional": "Opcional",
     "price-list": "Lista de Precios",
     "currency": "Moneda",
@@ -54,27 +84,37 @@
     "rate": "Tasa",
     "itemQuantity": "Cantidad de Artículos",
     "totalQuantity": "Cantidad Total",
+    "quantity": "Cantidad",
     "pay": "Pagar",
-    "orderTotal": "Total del Pedido",
+    "orderTotal": "Total de la Orden",
     "total": "Total",
     "tax": "Impuesto",
     "totalTax": "Impuestos Totales",
     "status": "Estado",
     "startDate": "Fecha de Inicio",
-    "outOfStockThreshold": "Umbral de Agotado",
-
-    "orderConfirmation": "Confirmación del Pedido",
+    "outOfStockThreshold": "Umbral de Agotamiento de Stock",
+    "isGroup": "Es Grupo",
+    "isGroupDescription": "Marca esta casilla para organizarlo como un grupo o carpeta.",
+    "orderConfirmation": "Confirmación de Pedido",
     "siteUrl": "URL del Sitio",
-    "logo": "Logotipo"
+    "logo": "Logo"
   },
   "_selling": {
     "isBuying": "Está Comprando",
     "isSelling": "Está Vendiendo",
-    "isSellingDesc": "Esta lista de precios se usará para vender productos.",
-    "isBuyingDesc": "Esta lista de precios se usará para comprar productos."
+    "isSellingDesc": "Esta lista de precios se utilizará para vender productos.",
+    "isBuyingDesc": "Esta lista de precios se utilizará para comprar productos."
+  },
+  "customers": "Clientes",
+  "customerGroup": "Grupos de Clientes",
+  "_customer": {
+    "base": "Cliente",
+    "create": "Crear Nuevo Cliente",
+    "info": "Información del Cliente"
   },
   "f": {
     "add-new": "Crear nuevo {{o}}",
+    "edit": "Editar {{o}}",
     "enable": "Marca la casilla para habilitar este {{o}}"
   },
   "info-item": "Información {{item}}",
@@ -87,8 +127,16 @@
     "base": "Impuesto"
   },
 
+  "roles": "Roles",
+  "_role": {
+    "permissions": "Permisos del Rol",
+    "base": "Rol"
+  },
+  "entity": "Entidad",
+  "action": "Acción",
+
   "sidebar": {
-    "sessionDefaults": "Valores Predeterminados de Sesión"
+    "sessionDefaults": "Predeterminados de Sesión"
   },
   "language": "Idioma",
 
@@ -96,29 +144,29 @@
   "applicationId": "ID de Aplicación",
   "accessToken": "Token de Acceso",
   "locationId": "ID de Ubicación",
-  "apiVersion": "Versión de API",
+  "apiVersion": "Versión de la API",
 
   "stock": "Inventario",
   "_stock": {
     "createItemAttribute": "Crear Atributo de Artículo",
-    "itemAttributeInfo": "Información del Atributo del Artículo",
-    "itemAttributeValues": "Valores del Atributo del Artículo",
-    "itemAttributeValue": "Valor del Atributo del Artículo",
-    "itemAttribute": "Atributo del Artículo",
-    "addItemAttributeValue": "Agregar Valor del Atributo del Artículo",
-    "addItemPrice": "Agregar Precio del Artículo",
-    "addItemStockLevel": "Agregar Nivel de Inventario del Artículo"
+    "itemAttributeInfo": "Información del Atributo de Artículo",
+    "itemAttributeValues": "Valores del Atributo de Artículo",
+    "itemAttributeValue": "Valor del Atributo de Artículo",
+    "itemAttribute": "Atributo de Artículo",
+    "addItemAttributeValue": "Agregar Valor de Atributo de Artículo",
+    "addItemPrice": "Agregar Precio de Artículo",
+    "addItemStockLevel": "Agregar nivel de stock de artículo"
   },
   "items": "Artículos",
 
   "item-groups": "Grupos de Artículos",
-  "item-attributes": "Atributos del Artículo",
+  "item-attributes": "Atributos de Artículo",
   "warehouses": "Almacenes",
   "_warehouse": {
     "base": "Almacén"
   },
   "home": "Inicio",
-  "companies": "Empresas",
+  "companies": "Compañías",
   "plugins": "Plugins",
 
   "create_item": "Agregar Artículo",
@@ -134,7 +182,7 @@
     "phases": "Fases"
   },
 
-  "settings": "Configuración",
+  "settings": "Configuraciones",
 
   "purchases": "Compras",
 
@@ -143,37 +191,40 @@
     "actions": "Acciones de Suscripción",
     "cancel": "Cancelar Suscripción"
   },
-  "item": {
+
+  "_item": {
     "info": "Información del Artículo",
     "code": "Código del Artículo",
-    "prices": "Precios del Artículo"
-  },
-  "_item": {
+    "prices": "Precios del Artículo",
+    "quantity": "Cantidad de Artículo",
     "base": "Artículo",
-    "variants": "Variantes del Artículo",
-    "addVariant": "Agregar Variante del Artículo",
-    "enableForVariants": "Habilitar Artículo para Variantes"
+    "type": "Tipo de Artículo",
+    "variants": "Variantes de Artículo",
+    "addVariant": "Agregar variante de artículo",
+    "enableForVariants": "Habilitar artículo para variantes"
   },
 
-  "item-prices": "Precios del Artículo",
+  "item-prices": "Precios de Artículo",
   "itemPrice": {
-    "s": "Precio del Artículo",
-    "p": "Precios del Artículo",
-    "info": "Información del Precio del Artículo"
+    "s": "Precio de Artículo",
+    "p": "Precios de Artículo",
+    "info": "Información del Precio de Artículo"
   },
   "priceList": {
-    "info": "Información de la Lista de Precios"
+    "info": "Información de la lista de precios"
   },
 
-  "orders": "Pedidos",
+  "orders": "Órdenes",
   "orderInfo": "Información del Pedido",
-
+  "_order": {
+    "base": "pedido",
+    "orderItems": "Artículos del Pedido"
+  },
   "table": {
     "new": "Nuevo",
     "createdAt": "Fecha de Creación",
     "updatedAt": "Última Modificación",
     "deliverdDate": "Fecha de Entrega",
-    "type": "Tipo",
     "ID": "ID",
     "code": "CÓDIGO",
     "no": "No.",
@@ -192,7 +243,11 @@
   "continue": "Continuar",
   "cancel": "Cancelar",
 
+
   "actions": {
     "edit": "Editar"
+  },
+  "tooltip": {
+    "selectCurrency": "Por favor selecciona tu moneda."
   }
 }

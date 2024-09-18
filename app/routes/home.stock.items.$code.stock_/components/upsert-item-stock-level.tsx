@@ -166,7 +166,20 @@ export const useUpsertItemStockLevel = create<AddItemStocklevel>((set) => ({
   itemUuid: undefined,
   warehouseUuid: undefined,
   stockLevel: undefined,
-  onOpenChange: (open) => set((state) => ({ isOpen: open })),
+  onOpenChange: (open) => set((state) => {
+    if(open){
+      return ({
+        isOpen: open 
+      })
+    }else {
+      return ({
+        isOpen: open,
+        itemUuid:undefined,
+        warehouseUuid:undefined,
+        stockLevel:undefined,
+      })
+    }
+    }),
   onOpenDialog: (opts) =>
     set((state) => ({
       isOpen: opts.open,

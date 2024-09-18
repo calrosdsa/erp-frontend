@@ -14,6 +14,7 @@
     "base": "Company",
     "companies": "Companies"
   },
+  "purchase-orders":"Purchase Orders",
   "supplier-groups":"Supplier Groups",
   "suppliers":"Suppliers",
   "_supplier":{
@@ -35,6 +36,12 @@
     "forgotPassword": "Forgot your password?",
     "resetPassowordMsg": "Enter your user account's verified email address and we will send you a password reset link."
   },
+  "address":"Address",
+  "_address":{
+    "references":"Address References"
+  },
+  "manage":"Manage",
+  "users":"Users",
   "_user":{
     "base":"User"
   },
@@ -65,6 +72,13 @@
     "submit": "Submit",
     "save": "Save",
     "uom": "UOM",
+    "city": "City",
+    "company":"Company",
+    "province":"Province",
+    "postalCode":"Postal Code",
+    "identificationNumber":"Identification Number",
+    "streetLine1": "Street Line 1",
+    "streetLine2": "Street Line 2",
     "optional": "Optional",
     "price-list": "Price List",
     "currency": "Currency",

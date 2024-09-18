@@ -8,6 +8,7 @@ interface FormItemData<T extends object,K extends keyof T> {
     label?:string
     show?:boolean
     description?:string
+    required?:boolean
     readOnly?:boolean
     // className?:string
     onValueChange?:(value:string)=>void

@@ -416,6 +416,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/party/address": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Addresses */
+        get: operations["get addresses"];
+        put?: never;
+        /** Create Address */
+        post: operations["create address"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/party/address/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Address */
+        get: operations["get address"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/party/type/users": {
         parameters: {
             query?: never;
@@ -1059,6 +1094,33 @@ export interface components {
             stock: number;
             warehouse_uuid: string;
         };
+        AddressDto: {
+            city: string;
+            company: string | null;
+            country_code: string | null;
+            email: string | null;
+            identification_number: string | null;
+            phone_number: string | null;
+            postal_code: string | null;
+            province: string | null;
+            street_line1: string;
+            street_line2: string;
+            title: string;
+            uuid: string;
+        };
+        AddressRequestData: {
+            city: string;
+            company?: string;
+            country_code?: string;
+            email?: string;
+            identification_number?: string;
+            phone_number?: string;
+            postal_code?: string;
+            province?: string;
+            street_line_1: string;
+            street_line_2: string;
+            title: string;
+        };
         Client: {
             ClientKeyValueData: components["schemas"]["ClientKeyValueData"][];
             Code: string;
@@ -1211,6 +1273,15 @@ export interface components {
             attribute_value_id: number;
             item_uuid: string;
             name: string;
+        };
+        CreatePartyAddressRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            address: components["schemas"]["AddressRequestData"];
+            billing_address?: components["schemas"]["PartyAddressRequestData"];
         };
         CreatePriceListRequestBody: {
             /**
@@ -1425,6 +1496,16 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             message: string;
             result: components["schemas"]["UserRelationDto"][];
+        };
+        EntityResponseResultEntityAddressDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ResultEntityAddressDto"];
         };
         EntityResponseResultEntityCustomerDtoBody: {
             /**
@@ -1835,6 +1916,15 @@ export interface components {
             /** Format: int32 */
             quantity: number;
         };
+        PaginationResponsePaginationResultListAddressDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListAddressDto"];
+        };
         PaginationResponsePaginationResultListCompanyDtoBody: {
             /**
              * Format: uri
@@ -1988,6 +2078,11 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListWareHouseDto"];
         };
+        PaginationResultListAddressDto: {
+            results: components["schemas"]["AddressDto"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListCompanyDto: {
             results: components["schemas"]["CompanyDto"][];
             /** Format: int64 */
@@ -2084,6 +2179,11 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
         };
+        PartyAddressRequestData: {
+            is_active: boolean;
+            is_billing_address: boolean;
+            is_shipping_address: boolean;
+        };
         PartyType: {
             code: string;
             name: string;
@@ -2172,6 +2272,9 @@ export interface components {
                 [key: string]: string | undefined;
             };
             message: string;
+        };
+        ResultEntityAddressDto: {
+            entity: components["schemas"]["AddressDto"];
         };
         ResultEntityCustomerDto: {
             entity: components["schemas"]["CustomerDto"];
@@ -3571,6 +3674,133 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListOrderDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get addresses": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListAddressDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create address": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePartyAddressRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get address": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityAddressDtoBody"];
                 };
             };
             /** @description Error */

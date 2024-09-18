@@ -4,6 +4,11 @@ class Routes  {
     api = "/api"
     apiData = this.api + "/data"
     base = "/home"
+
+    address = this.base + "/address"
+    createAddress = this.address + "/create"
+
+
     groups = this.base + "/groups"
     companies = this.base + "/companies"
 
@@ -45,6 +50,9 @@ class Routes  {
 
 
 
+    toAddressDetail(name:string,id:string):string {
+        return `${this.address}/${encodeURIComponent(name)}?id=${id}`
+    }
 
     toCompanyDetail(name:string,id:string):string {
         return `${this.companies}/${encodeURIComponent(name)}?id=${id}`

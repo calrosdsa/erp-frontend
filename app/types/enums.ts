@@ -32,6 +32,7 @@ export enum Entity {
     SUPPLIER_ENTITY_ID = 12,
     PURCHASE_ORDER_ENTITY_ID = 14,
     CUSTOMER = 15,
+    ADDRESS = 16,
 }
 
 export enum PartyType {

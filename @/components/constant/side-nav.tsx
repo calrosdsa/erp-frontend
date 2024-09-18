@@ -7,6 +7,7 @@ import {
   HomeIcon,
   Layers3Icon,
   LayoutDashboard,
+  MapPinHouseIcon,
   SettingsIcon,
   UserCogIcon,
   UserIcon,
@@ -44,6 +45,13 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     title: t("_company.companies"),
     icon: Building2Icon,
     href: "/home/companies",
+    // color: "text-sky-500",
+  };
+
+  const addresses = {
+    title: t("address"),
+    icon: MapPinHouseIcon,
+    href: r.address,
     // color: "text-sky-500",
   };
 
@@ -190,12 +198,15 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (usersChildren.length > 0) {
     navItems.push(manage);
   }
+  if (entities?.includes(Entity.ADDRESS)) {
+    navItems.push(addresses);
+  }
   // navItems.push(plugins);
   // break;
   // }
   // case Role.ROLE_CLIENT: {
   // purchases.children.push(orders);
-  navItems.push(purchases);
+  // navItems.push(purchases);
   // break;
   // }
   // }

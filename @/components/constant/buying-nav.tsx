@@ -30,7 +30,7 @@ export const BuyingNav = ({ entities }: {
     });
   }
   const buying:NavItem = {
-    title: t("buying"),
+    title: t("form.buying"),
     icon: CreditCardIcon,
     href: r.buying,
     isChildren: true,

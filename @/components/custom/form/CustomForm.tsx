@@ -26,9 +26,11 @@ interface Props {
   defaultValues?: any;
   renderCustomInputs?: (form: any) => ReactNode;
   fetcher: FetcherWithComponents<unknown>;
+  buttonClassName?:string
 }
 export default function CustomForm({
   formItemsData,
+  buttonClassName,
   schema,
   onSubmit,
   className,
@@ -69,8 +71,9 @@ export default function CustomForm({
                 label={item.label}
                 name={item.name}
                 form={form}
+                required={item.required}
                 children={(field) => {
-                  return <Input {...field} type={item.type} />;
+                  return <Input {...field} type={item.type} required={item.required || false}/>;
                 }}
               />
             );
@@ -162,9 +165,11 @@ export default function CustomForm({
         {renderCustomInputs != undefined && renderCustomInputs(form)}
         <div className="col-span-full"></div>
 
-        <Button type="submit" className=" w-full mt-3 col-span-full">
+        <div className={cn(buttonClassName, "")}>
+        <Button type="submit" className=" w-min ">
           {fetcher.state == "submitting" ? <Icons.spinner /> : t("form.submit")}
         </Button>
+        </div>
       </fetcher.Form>
     </Form>
   );

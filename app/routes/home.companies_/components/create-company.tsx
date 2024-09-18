@@ -75,7 +75,7 @@ export const CreateCompany = ({
                 form={form}
                 data={validParentCompaniesFetcher.data?.companies || []}
                 onSelect={(v)=>{
-                  form.setValue("parentId", v.ID);
+                  form.setValue("parentId", v.id);
                 }}
                 onValueChange={(e) => {
                   validParentCompaniesFetcher.submit(
@@ -92,7 +92,7 @@ export const CreateCompany = ({
                   );
                 }}
                 name="parentName"
-                nameK="Name"
+                nameK="name"
                 label={t("companies")}
                 onOpen={()=>{
                     validParentCompaniesFetcher.submit(

@@ -8,17 +8,19 @@ interface Props {
     label?:string
     name:string
     description?:string
+    required?:boolean,
     children:(field: ControllerRenderProps<FieldValues, string>)=>ReactNode
 }
-export default function CustomFormField({form,label,description,name,children}:Props){
+export default function CustomFormField({form,label,description,name,children,required=false}:Props){
     return (
         <FormField
         control={form.control}
         name={name}
+        
         render={({ field }) => (
           <FormItem className="flex flex-col">
             {label != undefined &&
-            <FormLabel>{label}</FormLabel>
+            <FormLabel>{label} {required && " *"}</FormLabel>
             }
             <FormControl>
               {children(field)}

@@ -40,16 +40,20 @@ import TableCellDate from "../../cells/table-cell-date";
       accessorKey: "rate",
       header: t("form.rate"),
       cell: ({ row }) => {
-        const rate = row.getValue("rate");
-        const currency = row.getValue("currency") as string;
+        const rowData = row.original;
+        const currency = rowData.price_list_currency;
         return (
           <div className="">
-            {formatCurrency(Number(rate), currency, i18n.language)}
+            {formatCurrency(Number(rowData.rate), currency, i18n.language)}
           </div>
         );
       },
     })
-    columns.push({ accessorKey: "currency",header:t("form.currency") });
+    columns.push({ 
+      accessorKey: "price_list_currency",
+      header:t("form.currency"),
+      
+    });
     columns.push({
       accessorKey: "item_quantity",
       header: t("form.itemQuantity"),
