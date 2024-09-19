@@ -451,6 +451,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/party/address/references": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Address References */
+        get: operations["get address references"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/party/parties-by-references/{party_type}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Party by reference */
+        get: operations["get party by reference"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/party/references": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Party references */
+        get: operations["get party references"];
+        put?: never;
+        /** add party reference */
+        post: operations["add party reference"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/party/type/users": {
         parameters: {
             query?: never;
@@ -1099,6 +1151,8 @@ export interface components {
             company: string | null;
             country_code: string | null;
             email: string | null;
+            /** Format: int64 */
+            id: number;
             identification_number: string | null;
             phone_number: string | null;
             postal_code: string | null;
@@ -1281,7 +1335,8 @@ export interface components {
              */
             readonly $schema?: string;
             address: components["schemas"]["AddressRequestData"];
-            billing_address?: components["schemas"]["PartyAddressRequestData"];
+            /** Format: int64 */
+            party_reference?: number | null;
         };
         CreatePriceListRequestBody: {
             /**
@@ -1596,6 +1651,16 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             message: string;
             result: components["schemas"]["ResultEntityListItemPriceDto"];
+        };
+        EntityResponseResultEntityListPartyDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ResultEntityListPartyDto"];
         };
         EntityResponseResultEntityListPartyTypeDtoBody: {
             /**
@@ -2006,6 +2071,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListOrderDto"];
         };
+        PaginationResponsePaginationResultListPartyReferenceDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListPartyReferenceDto"];
+        };
         PaginationResponsePaginationResultListPriceListDtoBody: {
             /**
              * Format: uri
@@ -2128,6 +2202,11 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListPartyReferenceDto: {
+            results: components["schemas"]["PartyReferenceDto"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListPriceListDto: {
             results: components["schemas"]["PriceListDto"][];
             /** Format: int64 */
@@ -2179,10 +2258,16 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
         };
-        PartyAddressRequestData: {
-            is_active: boolean;
-            is_billing_address: boolean;
-            is_shipping_address: boolean;
+        PartyDto: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+        };
+        PartyReferenceDto: {
+            code: string;
+            name: string;
+            reference: string;
+            uuid: string;
         };
         PartyType: {
             code: string;
@@ -2262,6 +2347,17 @@ export interface components {
             phoneNumber: string;
             uuid: string;
         };
+        RequestAddPartyReferenceBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            party_id: number;
+            /** Format: int64 */
+            reference_id: number;
+        };
         ResponseMessageBody: {
             /**
              * Format: uri
@@ -2274,57 +2370,79 @@ export interface components {
             message: string;
         };
         ResultEntityAddressDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["AddressDto"];
         };
         ResultEntityCustomerDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["CustomerDto"];
         };
         ResultEntityGroupDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["GroupDto"];
         };
         ResultEntityItemAttributeDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["ItemAttributeDto"];
         };
         ResultEntityItemDetailDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["ItemDetailDto"];
         };
         ResultEntityItemPriceDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["ItemPriceDto"];
         };
         ResultEntityListCustomerType: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["CustomerType"][];
         };
         ResultEntityListEntityActions: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["EntityActions"][];
         };
         ResultEntityListGroupHierarchyDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["GroupHierarchyDto"][];
         };
         ResultEntityListItemPriceDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["ItemPriceDto"][];
         };
+        ResultEntityListPartyDto: {
+            addresses: components["schemas"]["AddressDto"][];
+            entity: components["schemas"]["PartyDto"][];
+        };
         ResultEntityListPartyTypeDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["PartyTypeDto"][];
         };
         ResultEntityOrderDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["OrderDto"];
         };
         ResultEntityPriceListDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["PriceListDto"];
         };
         ResultEntityProfileDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["ProfileDto"];
         };
         ResultEntityRoleDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["RoleDto"];
         };
         ResultEntitySupplierDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["SupplierDto"];
         };
         ResultEntityTaxDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["TaxDto"];
         };
         ResultEntityWareHouseDto: {
+            addresses: components["schemas"]["AddressDto"][];
             entity: components["schemas"]["WareHouseDto"];
         };
         RoleActionDto: {
@@ -2384,6 +2502,8 @@ export interface components {
             created_at: string;
             enabled: boolean;
             group?: components["schemas"]["GroupDto"];
+            /** Format: int64 */
+            id: number;
             name: string;
             uuid: string;
         };
@@ -3801,6 +3921,171 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityAddressDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get address references": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityListPartyTypeDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get party by reference": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                party_type: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityListPartyDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get party references": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListPartyReferenceDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "add party reference": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestAddPartyReferenceBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

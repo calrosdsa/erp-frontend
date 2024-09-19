@@ -3,11 +3,14 @@ import { loader } from "./route"
 import Typography, { subtitle } from "@/components/typography/Typography"
 import { useTranslation } from "react-i18next"
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue"
+import { PartyReferences } from "../home.party/components/party-references"
+import { PartyType } from "~/types/enums"
 
 
 export default function AddressClient(){
     const { address,actions } = useLoaderData<typeof loader>()
     const {t} = useTranslation("common")
+    
     return (
         <div>
             <div className="info-grid">
@@ -55,6 +58,14 @@ export default function AddressClient(){
               <Typography fontSize={subtitle} className=" col-span-full">
                 {t("_address.references")}
               </Typography>
+            </div>
+
+            <div className=" mx-2">
+              {address &&
+              <PartyReferences
+              partyId={address.id}
+              />
+            }
             </div>
 
         </div>

@@ -17,6 +17,7 @@ import CheckForm from "../input/CheckForm";
 import { MultiSelect } from "../select/MultiSelect";
 import { Textarea } from "@/components/ui/textarea";
 import FormAutocomplete from "../select/FormAutocomplete";
+import { components } from "~/sdk";
 
 interface Props {
   schema: any;
@@ -52,6 +53,7 @@ export default function CustomForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(className, "gap-y-3 grid p-3")}
       >
+        
         {/* <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div> */}
 
         {/* <div className=" col-span-full">{JSON.stringify(form.getValues())}</div> */}
@@ -110,6 +112,7 @@ export default function CustomForm({
                 data={item.data || []}
                 keyName={item.keyName}
                 keyValue={item.keyValue}
+                onValueChange={(e)=>item.onSelect && item.onSelect(e)}
                 name={item.name}
                 label={item.label}
                 form={form}

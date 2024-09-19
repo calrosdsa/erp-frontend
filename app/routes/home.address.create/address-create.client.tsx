@@ -1,4 +1,4 @@
-import { useFetcher } from "@remix-run/react"
+import { useFetcher, useSearchParams } from "@remix-run/react"
 import { action } from "./route"
 import { useToast } from "@/components/ui/use-toast"
 import { useTranslation } from "react-i18next"
@@ -21,6 +21,7 @@ export default function AddressCreateClient(){
     const {toast} = useToast()
     const {t} = useTranslation("common")
     const r =routes
+    const [searchParams] = useSearchParams()
     // const form = useForm<z.infer<typeof createAddressSchema>>({
     //     resolver:zodResolver(createAddressSchema),
     //     defaultValues:{}
@@ -40,6 +41,9 @@ export default function AddressCreateClient(){
         schema={createAddressSchema}
         className=" create-grid"
         buttonClassName=""
+        defaultValues={{
+            partyReferenceId:Number(searchParams.get("referenceId"))
+        } as z.infer<typeof createAddressSchema>}
         onSubmit={(values:z.infer<typeof createAddressSchema>)=>{
             fetcher.submit({
                 action:"create-address",

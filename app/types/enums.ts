@@ -40,6 +40,11 @@ export enum PartyType {
 	PARTY_ITEM_GROUP = "itemGroup",
 	PARTY_CUSTOMER_GROUP = "customerGroup",
 
-	PARTY_PURCHASE_ORDER = "purchaseOrder"
+	PARTY_PURCHASE_ORDER = "purchaseOrder",
+
+	PARTY_SUPPLIER = "supplier",
+	PARTY_CUSTOMER = "customer",
+	PARTY_WAREHOUSE = "warehouse",
+
     
 }

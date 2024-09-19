@@ -32,7 +32,8 @@ export const action = async({request}:ActionFunctionArgs)=>{
                         postal_code:d.postalCode,
                         identification_number:d.identificationNumber,
                         company:d.company,
-                    }
+                    },
+                    party_reference:d.partyReferenceId,
                 }
             })
             console.log(res.data,res.error)

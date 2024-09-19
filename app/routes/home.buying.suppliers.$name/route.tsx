@@ -17,7 +17,8 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
 
     return json({
         supplier:res.data?.result.entity,
-        actions:res.data?.actions
+        actions:res.data?.actions,
+        addresses:res.data?.result.addresses,
     })
 }
 

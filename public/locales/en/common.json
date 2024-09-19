@@ -38,7 +38,8 @@
   },
   "address":"Address",
   "_address":{
-    "references":"Address References"
+    "references":"Address References",
+    "info":"Address Info"
   },
   "manage":"Manage",
   "users":"Users",
@@ -238,7 +239,9 @@
     "ordinal": "Ordinal",
     "cadence": "Cadence",
     "periods": "Periods",
-    "addRow": "Add Row"
+    "addRow": "Add Row",
+    "reference":"Reference",
+    "referenceName":"Reference Name"
   },
   "dialog": {
     "title": "Are you sure you want to proceed with this action?",

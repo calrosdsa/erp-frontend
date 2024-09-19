@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 
-interface Props {
+interface Props <T extends FieldValues> {
     schema:any
     defaultValues:any
 }
-export default function useEditFields({schema,defaultValues}:Props){
-    const form = useForm<z.infer<typeof schema>>({
+export default function useEditFields<T extends FieldValues>({schema,defaultValues}:Props<T>){
+    const form = useForm<T>({
         resolver: zodResolver(schema),
         defaultValues: defaultValues,
       });

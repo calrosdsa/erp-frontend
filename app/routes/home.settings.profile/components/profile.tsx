@@ -27,7 +27,7 @@ export default function ProfileInfo() {
     familyName: profile?.family_name,
     phoneNumber: profile?.phone_number,
   };
-  const { form, hasChanged } = useEditFields({
+  const { form, hasChanged } = useEditFields<z.infer<typeof updateClientSchema>>({
     schema: updateClientSchema,
     defaultValues,
   });

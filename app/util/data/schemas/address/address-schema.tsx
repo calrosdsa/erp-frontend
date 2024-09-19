@@ -13,5 +13,6 @@ export const createAddressSchema = z.object({
     countryCode:z.string().optional(),
     postalCode:z.string().optional(),
     identificationNumber:z.string().optional(),
+    partyReferenceId:z.number().optional(),
 })
 

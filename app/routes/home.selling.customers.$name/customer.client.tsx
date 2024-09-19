@@ -6,6 +6,7 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue"
 import { formatLongDate } from "~/util/format/formatDate"
 import { routes } from "~/util/route"
 import { PartyType } from "~/types/enums"
+import { PartyAddresses } from "../home.party/components/party-addresses"
 
 
 export default function CustomerClient(){
@@ -26,7 +27,7 @@ export default function CustomerClient(){
                 />
                 <DisplayTextValue
                 value={customer?.customer_type}
-                title={t("form.name")}
+                title={t("form.type")}
                 />
                 <DisplayTextValue
                 value={formatLongDate(customer?.created_at,i18n.language)}
@@ -37,6 +38,14 @@ export default function CustomerClient(){
                 title={t("_group.base")}
                 to={r.toGroupsByParty(PartyType.PARTY_CUSTOMER_GROUP)}
                 />
+
+
+            </div>
+
+            <div >
+
+                {/* <PartyAddresses/> */}
+                
             </div>
         </div>
     )
