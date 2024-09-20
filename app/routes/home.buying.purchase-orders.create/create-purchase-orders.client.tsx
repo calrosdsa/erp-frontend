@@ -1,5 +1,5 @@
 import CustomForm from "@/components/custom/form/CustomForm";
-import { useFetcher, useNavigate, useRevalidator } from "@remix-run/react";
+import { useFetcher, useNavigate, useOutletContext, useRevalidator } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { createPurchaseSchema } from "~/util/data/schemas/buying/purchase-schema";
@@ -30,6 +30,9 @@ import { action } from "./route";
 import OrderSumary from "@/components/custom/display/order-sumary";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { sumTotal } from "~/util/format/formatCurrency";
+import { usePermission } from "~/util/hooks/useActions";
+import { GlobalState } from "~/types/app";
+import { useCreateSupplier } from "../home.buying.suppliers_/components/create-supplier";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
@@ -37,6 +40,13 @@ export default function CreatePurchaseOrdersClient() {
     useSupplierDebounceFetcher();
   const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
+  const globalState = useOutletContext<GlobalState>()
+  const [supplierPermission] = usePermission({
+    actions:supplierDebounceFetcher.data?.actions,
+    roleActions:globalState.roleActions,
+  })
+  const createSupplier = useCreateSupplier()
+
   const { t,i18n } = useTranslation("common");
   const { toast } = useToast();
   const revalidator = useRevalidator();
@@ -131,6 +141,11 @@ export default function CreatePurchaseOrdersClient() {
                 onSelect={(v) => {
                   form.setValue("supplier", v);
                 }}
+                {...(supplierPermission?.create && {
+                  addNew:()=>{
+                    createSupplier.openDialog({})
+                  }
+                })}
               />
 
               <FormAutocomplete

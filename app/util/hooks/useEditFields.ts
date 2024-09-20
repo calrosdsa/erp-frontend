@@ -3,11 +3,11 @@ import { useEffect, useState } from "react"
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 
-interface Props <T extends FieldValues> {
+interface Props {
     schema:any
     defaultValues:any
 }
-export default function useEditFields<T extends FieldValues>({schema,defaultValues}:Props<T>){
+export default function useEditFields<T extends FieldValues>({schema,defaultValues}:Props){
     const form = useForm<T>({
         resolver: zodResolver(schema),
         defaultValues: defaultValues,

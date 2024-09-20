@@ -22,10 +22,6 @@ export default function AddressCreateClient(){
     const {t} = useTranslation("common")
     const r =routes
     const [searchParams] = useSearchParams()
-    // const form = useForm<z.infer<typeof createAddressSchema>>({
-    //     resolver:zodResolver(createAddressSchema),
-    //     defaultValues:{}
-    // })
 
     useEffect(()=>{
         if(fetcher.data?.error){
@@ -39,7 +35,7 @@ export default function AddressCreateClient(){
         <CustomForm
         fetcher={fetcher}
         schema={createAddressSchema}
-        className=" create-grid"
+        className="create-grid"
         buttonClassName=""
         defaultValues={{
             partyReferenceId:Number(searchParams.get("referenceId"))
@@ -127,6 +123,22 @@ export default function AddressCreateClient(){
                 name:"identificationNumber",
                 typeForm:"input",
                 type:"string"
+            },
+
+            {
+                label:t("form.enabled"),
+                name:"enabled",
+                typeForm:"check",
+            },
+            {
+                label:t("form.isShippingAddress"),
+                name:"isShippingAddress",
+                typeForm:"check",
+            },
+            {
+                label:t("form.isBillingAddress"),
+                name:"isBillingAddress",
+                typeForm:"check",
             },
 
         ]}

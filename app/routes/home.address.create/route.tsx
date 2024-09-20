@@ -32,6 +32,9 @@ export const action = async({request}:ActionFunctionArgs)=>{
                         postal_code:d.postalCode,
                         identification_number:d.identificationNumber,
                         company:d.company,
+                        is_shipping_address:d.isShippingAddress,
+                        is_billing_address:d.isBillingAddress,
+                        enabled:d.enabled,
                     },
                     party_reference:d.partyReferenceId,
                 }

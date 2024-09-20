@@ -19,6 +19,7 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
         supplier:res.data?.result.entity,
         actions:res.data?.actions,
         addresses:res.data?.result.addresses,
+        contacts:res.data?.result.contacts,
     })
 }
 

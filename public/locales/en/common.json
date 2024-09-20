@@ -39,7 +39,18 @@
   "address":"Address",
   "_address":{
     "references":"Address References",
-    "info":"Address Info"
+    "info":"Address Info",
+    "list":"Addresses",
+    "addAnother":"Add Another Address",
+    "add":"Add Address",
+    "empty":"No addresses yet"
+  },
+  "contact":"Contact",
+  "_contact":{
+    "list":"Contacts",
+    "addAnother":"Add Another Contact",
+    "add":"Add Contact",
+    "empty":"No contacts yet"
   },
   "manage":"Manage",
   "users":"Users",
@@ -47,6 +58,7 @@
     "base":"User"
   },
   "form": {
+    "gender":"Gender",
     "name": "Name",
     "deliveryDate": "Delivery Date",
     "pickADate":"Pick a Date",
@@ -101,7 +113,9 @@
     "isGroupDescription":"Check this box to organize it as a group or folder.",
     "orderConfirmation": "Order Confirmation",
     "siteUrl": "Site Url",
-    "logo": "Logo"
+    "logo": "Logo",
+    "isShippingAddress":"Is Shipping Address",
+    "isBillingAddress":"Is Shipping Address"
   },
   "_selling": {
     "isBuying": "Is Buying",
@@ -255,5 +269,10 @@
   },
   "tooltip":{
     "selectCurrency":"Please select your currency."
+  },
+  "gender":{
+    "male":"Male",
+    "female":"Female",
+    "noBinary":"No Binary"
   }
 }

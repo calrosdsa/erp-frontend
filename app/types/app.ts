@@ -1,6 +1,12 @@
 import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
 
+
+export type Gender = {
+    name:string
+    code:string
+}
+
 export type CountrySelectItem = {
     code: string;
     label: string;

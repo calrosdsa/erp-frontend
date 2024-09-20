@@ -468,6 +468,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/party/contact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Contacts */
+        get: operations["get contacts"];
+        put?: never;
+        /** Create Contact */
+        post: operations["create contact"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/party/contact/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Contact */
+        get: operations["get contact"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/party/parties-by-references/{party_type}": {
         parameters: {
             query?: never;
@@ -497,6 +532,23 @@ export interface paths {
         put?: never;
         /** add party reference */
         post: operations["add party reference"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/party/references/type": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Party type references */
+        get: operations["get party type references"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1167,7 +1219,10 @@ export interface components {
             company?: string;
             country_code?: string;
             email?: string;
+            enabled: boolean;
             identification_number?: string;
+            is_billing_address: boolean;
+            is_shipping_address: boolean;
             phone_number?: string;
             postal_code?: string;
             province?: string;
@@ -1243,6 +1298,26 @@ export interface components {
             Credentials?: string;
             Plugin: string;
         };
+        ContactData: {
+            /** Format: email */
+            email: string;
+            family_name?: string | null;
+            gender?: string | null;
+            given_name: string;
+            phone_number?: string | null;
+        };
+        ContactDto: {
+            /** Format: date-time */
+            created_at: string;
+            email: string;
+            family_name: string | null;
+            gender: string | null;
+            given_name: string;
+            /** Format: int64 */
+            id: number;
+            phone_number: string | null;
+            uuid: string;
+        };
         Country: {
             code: string;
             label?: string;
@@ -1257,6 +1332,16 @@ export interface components {
             name: string;
             /** Format: int64 */
             parentId?: number | null;
+        };
+        CreateContactBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            contact: components["schemas"]["ContactData"];
+            /** Format: int64 */
+            party_reference?: number | null;
         };
         CreateCustomerRequestBody: {
             /**
@@ -1999,6 +2084,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListCompanyDto"];
         };
+        PaginationResponsePaginationResultListContactDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListContactDto"];
+        };
         PaginationResponsePaginationResultListCurrencyDtoBody: {
             /**
              * Format: uri
@@ -2159,6 +2253,11 @@ export interface components {
         };
         PaginationResultListCompanyDto: {
             results: components["schemas"]["CompanyDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListContactDto: {
+            results: components["schemas"]["ContactDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2358,6 +2457,24 @@ export interface components {
             /** Format: int64 */
             reference_id: number;
         };
+        ResponseDataContactDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            result: components["schemas"]["ContactDto"];
+        };
+        ResponseDataListPartyTypeDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            result: components["schemas"]["PartyTypeDto"][];
+        };
         ResponseMessageBody: {
             /**
              * Format: uri
@@ -2371,78 +2488,97 @@ export interface components {
         };
         ResultEntityAddressDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["AddressDto"];
         };
         ResultEntityCustomerDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CustomerDto"];
         };
         ResultEntityGroupDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["GroupDto"];
         };
         ResultEntityItemAttributeDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemAttributeDto"];
         };
         ResultEntityItemDetailDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemDetailDto"];
         };
         ResultEntityItemPriceDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemPriceDto"];
         };
         ResultEntityListCustomerType: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CustomerType"][];
         };
         ResultEntityListEntityActions: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["EntityActions"][];
         };
         ResultEntityListGroupHierarchyDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["GroupHierarchyDto"][];
         };
         ResultEntityListItemPriceDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemPriceDto"][];
         };
         ResultEntityListPartyDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PartyDto"][];
         };
         ResultEntityListPartyTypeDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PartyTypeDto"][];
         };
         ResultEntityOrderDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["OrderDto"];
         };
         ResultEntityPriceListDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PriceListDto"];
         };
         ResultEntityProfileDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ProfileDto"];
         };
         ResultEntityRoleDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["RoleDto"];
         };
         ResultEntitySupplierDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["SupplierDto"];
         };
         ResultEntityTaxDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["TaxDto"];
         };
         ResultEntityWareHouseDto: {
             addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["WareHouseDto"];
         };
         RoleActionDto: {
@@ -3973,6 +4109,123 @@ export interface operations {
             };
         };
     };
+    "get contacts": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListContactDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create contact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateContactBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataContactDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get contact": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataContactDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get party by reference": {
         parameters: {
             query?: {
@@ -4086,6 +4339,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get party type references": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListPartyTypeDtoBody"];
                 };
             };
             /** @description Error */

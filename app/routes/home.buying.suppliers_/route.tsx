@@ -17,6 +17,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
     let message:string | undefined = undefined
     let error:string | undefined = undefined
     let suppliers:components["schemas"]["SupplierDto"][] = []
+    let actions:components["schemas"]["ActionDto"][] = []
     const url = new URL(request.url)
     const searchParams = url.searchParams
     switch(data.action){
@@ -45,11 +46,12 @@ export const action = async({request}:ActionFunctionArgs)=>{
                 }
             })
             suppliers = res.data?.pagination_result.results || []
+            actions = res.data?.actions || []
             break;
         }
     }
     return json({
-        message,error,suppliers
+        message,error,suppliers,actions
     })
 }
 

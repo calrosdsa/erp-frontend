@@ -12,12 +12,12 @@ export const PartyAddresses = ({
 }) =>{
     const {t} = useTranslation("common")
     return (
-        <div className="py-3">
+        <div className="py-3 grid ">
             <Typography fontSize={subtitle}>
-                {t("_address.info")}
+                {t("_address.list")}
             </Typography>
 
-            <div className="py-6">
+            <div className="py-3">
             <AddressesComponent
             onAddAddress={onAddAddress}
             addresses={addresses}

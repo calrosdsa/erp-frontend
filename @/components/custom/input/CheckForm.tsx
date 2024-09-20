@@ -19,9 +19,9 @@ export default function CheckForm({ label, form, name, description }: Props) {
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem  className="pt-1">
+        <FormItem  className="flex flex-col">
             {label && <FormLabel>{label}</FormLabel>}
-            <div className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 ">
+            <div className="flex flex-row items-center space-x-3 space-y-0 rounded-md border py-3 px-2">
           <FormControl >
             <Checkbox checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>

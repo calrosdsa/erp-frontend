@@ -4,6 +4,7 @@ import { groupSchema } from "../group-schema";
 
 
 export const supplierDtoSchema=z.object({
+    id:z.number(),
     name:z.string(),
     uuid:z.string(),
     enabled:z.boolean(),

@@ -47,9 +47,9 @@ export const action = async({request}:ActionFunctionArgs) =>{
             error = res.error?.detail
             break;
         }
-        case "address-references":{
-            const res = await client.GET("/party/address/references")
-            partyOptions = res.data?.result.entity || []
+        case "references-options":{
+            const res = await client.GET("/party/references/type")
+            partyOptions = res.data?.result || []
             break;
         }
         case "parties":{

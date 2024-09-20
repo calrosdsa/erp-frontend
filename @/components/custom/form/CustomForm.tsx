@@ -8,7 +8,7 @@ import { t } from "i18next";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { FormEvent, ReactNode } from "react";
-import { DefaultValues, useForm } from "react-hook-form";
+import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { makeZodI18nMap } from "zod-i18n-map";
@@ -29,7 +29,7 @@ interface Props {
   fetcher: FetcherWithComponents<unknown>;
   buttonClassName?:string
 }
-export default function CustomForm({
+export default function CustomForm<T extends FieldValues>({
   formItemsData,
   buttonClassName,
   schema,
@@ -39,7 +39,7 @@ export default function CustomForm({
   renderCustomInputs,
   fetcher,
 }: Props) {
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm<T>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
   });
@@ -54,7 +54,7 @@ export default function CustomForm({
         className={cn(className, "gap-y-3 grid p-3")}
       >
         
-        {/* <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div> */}
+        <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div>
 
         {/* <div className=" col-span-full">{JSON.stringify(form.getValues())}</div> */}
         {/* <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div>

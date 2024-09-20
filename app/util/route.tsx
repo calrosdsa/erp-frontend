@@ -7,6 +7,7 @@ class Routes {
   party = this.base + "/party";
 
   address = this.base + "/address";
+  contact = this.base + "/contact";
   createAddress = this.address + "/create";
 
   groups = this.base + "/groups";
@@ -67,6 +68,15 @@ class Routes {
   toAddressDetail(name: string, id: string): string {
     return `${this.address}/${encodeURIComponent(name)}?id=${id}`;
   }
+  toContactDetail(name: string, id: string): string {
+    return `${this.contact}/${encodeURIComponent(name)}?id=${id}`;
+  }
+
+  toCreateContact(id?:number){
+    if(id) { return `${this.contact}/create?referenceId=${id}` }
+    return `${this.contact}/create`
+  }
+
 
   toCompanyDetail(name: string, id: string): string {
     return `${this.companies}/${encodeURIComponent(name)}?id=${id}`;

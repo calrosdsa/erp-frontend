@@ -14,10 +14,8 @@ import { routes } from "~/util/route"
 export const PartyReferences = ({
     partyId,
 }:{
-    // partyType:PartyType
     partyId:number
 }) =>{
-    const [partyReferences,setPartyReferences] = useState<z.infer<typeof partyReferencesSchema>[]>([])
     const addReference = useAddReference()
     const partyReferencesfetcher = useFetcher<typeof action>()
     const r = routes
@@ -39,10 +37,10 @@ export const PartyReferences = ({
         <>
         {addReference.open &&
         <AddReference
+        updateReferences={()=>getPartyReferences()}
         onOpenChange={addReference.onOpenChange}
         open={addReference.open}
         partyId={partyId}
-        initialAction="address-references"
         />
         }
             <DataTable

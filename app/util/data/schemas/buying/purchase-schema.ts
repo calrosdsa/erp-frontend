@@ -33,7 +33,7 @@ export const createPurchaseSchema = z.object({
 
 export const orderLineSchemaToOrderLineDto = (
   d: z.infer<typeof orderLineSchema>
-): components["schemas"]["LineOrder"] => {
+): components["schemas"]["OrderLine"] => {
   return {
     amount: d.amount || 0,
     quantity: d.quantity,
@@ -41,19 +41,18 @@ export const orderLineSchemaToOrderLineDto = (
   };
 };
 
-export const itemPriceSchemaToItemPriceDto = (
-  d: z.infer<typeof itemPriceDtoSchema>
-): components["schemas"]["ItemPriceDto"] => {
-  return {
-    code: d.code,
-    uuid: d.uuid,
-    rate: d.rate,
-    created_at:"",
-    item_quantity: d.item_quantity,
-    item_name: d.item_name,
-    item_code: d.item_code,
-    uom: d.uom,
-    item_uuid: d.item_uuid,
-    currency:"",
-  };
-};
+// export const itemPriceSchemaToItemPriceDto = (
+//   d: z.infer<typeof itemPriceDtoSchema>
+// ): components["schemas"]["ItemPriceDto"] => {
+//   return {
+//     code: d.code,
+//     uuid: d.uuid,
+//     rate: d.rate,
+//     created_at:"",
+//     item_quantity: d.item_quantity,
+//     item_name: d.item_name,
+//     item_code: d.item_code,
+//     uom: d.uom,
+//     item_uuid: d.item_uuid,
+//   };
+// };

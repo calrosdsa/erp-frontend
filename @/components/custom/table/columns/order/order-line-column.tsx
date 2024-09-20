@@ -7,6 +7,7 @@ import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { z } from "zod";
 import { orderLineSchema } from "~/util/data/schemas/buying/purchase-schema";
 import TableCellPrice from "../../cells/table-cell-price";
+import TableCellIndex from "../../cells/table-cell-index";
 
 export const orderLineColumns = ({
   currency,
@@ -16,6 +17,10 @@ export const orderLineColumns = ({
   let columns: ColumnDef<z.infer<typeof orderLineSchema>>[] = [];
   const r = routes;
   const { t, i18n } = useTranslation("common");
+  columns.push({
+    header:t("table.no"),
+    cell:TableCellIndex
+  })
   columns.push({
     accessorKey: "item_price.item_code",
     header: t("_item.code"),

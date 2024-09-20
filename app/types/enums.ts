@@ -33,6 +33,8 @@ export enum Entity {
     PURCHASE_ORDER_ENTITY_ID = 14,
     CUSTOMER = 15,
     ADDRESS = 16,
+    CONTACT = 17,
+
 }
 
 export enum PartyType {

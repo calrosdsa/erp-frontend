@@ -17,14 +17,15 @@ import { toast, useToast } from "@/components/ui/use-toast";
 export const AddReference = ({
   open,
   onOpenChange,
-  initialAction,
 //   onAddNewReference,
-  partyId
+  partyId,
+  updateReferences,
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
+  updateReferences:()=>void
 //   onAddNewReference:(e:z.infer<typeof addPartyReferencesSchema>)=>void
-  initialAction: string;
+  // initialAction: string;
   partyId:number
 }) => {
   const fetcher = useFetcher<typeof action>();
@@ -57,7 +58,7 @@ export const AddReference = ({
   const getPartyRefernceOptions = () => {
     referenceOptsFetcher.submit(
       {
-        action: initialAction,
+        action: "references-options",
       },
       {
         method: "POST",
@@ -80,6 +81,7 @@ export const AddReference = ({
         toast({
             title:fetcher.data.message
         })
+        updateReferences()
         onOpenChange(false)
     }
   },[fetcher.data])

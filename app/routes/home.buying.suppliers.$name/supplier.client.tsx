@@ -7,9 +7,10 @@ import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
 import Addresses from "../home.address_/route";
 import { PartyAddresses } from "../home.party/components/party-addresses";
+import { PartyContacts } from "../home.party/components/party-contacts";
 
 export default function SupplierClient() {
-  const { supplier, actions,addresses } = useLoaderData<typeof loader>();
+  const { supplier, actions,addresses,contacts } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate()
   const r = routes;
@@ -33,11 +34,18 @@ export default function SupplierClient() {
           />
         )}
       </div>
-      <div className=" xl:grid xl:grid-cols-2">
+      <div className=" xl:grid xl:grid-cols-2 gap-4 ">
         <PartyAddresses
         addresses={addresses}
         onAddAddress={()=>{
           navigate(r.toCreateAddress(supplier?.id))
+        }}
+        />
+
+        <PartyContacts
+        contacts={contacts}
+        onAddContact={()=>{
+          navigate(r.toCreateContact(supplier?.id))
         }}
         />
       </div>

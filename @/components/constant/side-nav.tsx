@@ -2,6 +2,7 @@ import {
   BlocksIcon,
   BookOpenCheck,
   Building2Icon,
+  ContactIcon,
   CreditCardIcon,
   DollarSign,
   HomeIcon,
@@ -52,6 +53,13 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     title: t("address"),
     icon: MapPinHouseIcon,
     href: r.address,
+    // color: "text-sky-500",
+  };
+
+  const contacts = {
+    title: t("contact"),
+    icon: ContactIcon,
+    href: r.contact,
     // color: "text-sky-500",
   };
 
@@ -200,6 +208,9 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   }
   if (entities?.includes(Entity.ADDRESS)) {
     navItems.push(addresses);
+  }
+  if (entities?.includes(Entity.CONTACT)) {
+    navItems.push(contacts);
   }
   // navItems.push(plugins);
   // break;

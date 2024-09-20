@@ -13,11 +13,11 @@ interface TableCellProps<TData> {
     row:Row<TData>,
     column: Column<TData, unknown>
     table:Table<TData>
-    // name:string
+    name?:string
     navigate:(name:string)=>string
 }
 
-export default function TableCellNameNavigation<TData>({ getValue, row, column, table,navigate}:TableCellProps<TData>) {
+export default function TableCellNameNavigation<TData>({ getValue, row, column, table,navigate,name}:TableCellProps<TData>) {
   const nameR = getValue();
   return (
     <div>
@@ -25,7 +25,8 @@ export default function TableCellNameNavigation<TData>({ getValue, row, column, 
           <div className=" uppercase">
           <Link to={navigate(nameR)}>
             <Typography className=" text-primary underline cursor-pointer">
-              {typeof  nameR == "string" ? nameR : "-"}
+              {name ? name :
+              typeof  nameR == "string" ? nameR : "-"}
             </Typography>
           </Link>
         </div>

@@ -14,5 +14,9 @@ export const createAddressSchema = z.object({
     postalCode:z.string().optional(),
     identificationNumber:z.string().optional(),
     partyReferenceId:z.number().optional(),
+
+    isBillingAddress:z.boolean(),
+    isShippingAddress:z.boolean(),
+    enabled:z.boolean(),
 })
 
