@@ -92,20 +92,19 @@ export default function DetailOrder({
         )}
       </div>
 
-      <div className="mt-5">
+      {/* <div className="mt-5">
         {order.SalesOrderPlugin.map((item, idx) => {
           return (
             <div key={idx}>
               {item.Plugin == PluginApp.SQUARE && (
                 <div>
                 <SquareOrder data={item.Data} order={order} />
-                  {/* {item.Data} */}
                 </div>
               )}
             </div>
           );
         })}
-      </div>
+      </div> */}
     </div>
   );
 }

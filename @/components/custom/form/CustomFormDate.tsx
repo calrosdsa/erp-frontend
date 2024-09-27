@@ -24,11 +24,13 @@ export default function CustomFormDate({
   label,
   name,
   description,
+  isDatetime,
 }: {
   form: any;
   name: string;
   label: string;
   description?: string;
+  isDatetime?:boolean
 }) {
   const { t } = useTranslation("common");
   return (
@@ -50,7 +52,10 @@ export default function CustomFormDate({
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {field.value ? (
+                    isDatetime?
                     format(field.value, "PPP HH:mm:ss")
+                    :
+                    format(field.value, "PPP")
                   ) : (
                     <span>{t("form.pickADate")}</span>
                   )}
@@ -64,9 +69,11 @@ export default function CustomFormDate({
                 onSelect={field.onChange}
                 initialFocus
               />
+              {isDatetime &&
               <div className="p-3 border-t border-border">
                 <TimePicker setDate={field.onChange} date={field.value} />
               </div>
+              }
             </PopoverContent>
           </Popover>
           {description && <FormDescription>{description}</FormDescription>}

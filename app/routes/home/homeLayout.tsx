@@ -14,6 +14,8 @@ import {
 import Typography, { headline, sm, title, xs } from "@/components/typography/Typography";
 import { HomeIcon } from "lucide-react";
 import GlobalDialogs from "./components/dialogs";
+import ToolBar from "@/components/layout/toolbar/Toolbar";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 type RouteItem = {
   name: string;
@@ -32,6 +34,8 @@ export default function HomeLayout({
   const [openSessionDefaults, setOpenSessionDefaults] = React.useState(false);
 
   const [routesName, setRoutesName] = React.useState<string[]>([]);
+
+  const toolbar = useToolbar()
 
   const getRoutes = () => {
     const routesName = location.pathname.split("/").map((word) => t(word));
@@ -54,6 +58,7 @@ export default function HomeLayout({
 
   React.useEffect(() => {
     getRoutes();
+    toolbar.resetState()
   }, [location.pathname]);
   React.useEffect(() => {
     setOpenSessionDefaults(false);
@@ -134,9 +139,9 @@ export default function HomeLayout({
               </Breadcrumb>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
-              <Typography fontSize={22}>{getRouteName()}</Typography>
-            </div>
+            <ToolBar
+            title={getRouteName()}/>
+
             <div className="h-full">
             {children}
             </div>

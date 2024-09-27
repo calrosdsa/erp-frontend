@@ -13,6 +13,9 @@ export const itemPriceDtoSchema = z.object({
   item_code: z.string(),
   item_uuid: z.string(),
   uom: z.string(),
+  tax_name:z.string(),
+  tax_uuid:z.string(),
+  tax_value:z.number(),
 });
 
 export const orderLineSchema = z.object({
@@ -24,8 +27,9 @@ export const orderLineSchema = z.object({
 export const createPurchaseSchema = z.object({
   supplier: supplierDtoSchema,
   supplierName: z.string(),
-  name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+  // name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
   delivery_date: z.date().optional(),
+  date: z.date(),
   currencyName: z.string(),
   currency: currencySchema,
   lines: z.array(orderLineSchema),

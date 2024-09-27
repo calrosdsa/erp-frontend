@@ -25,10 +25,11 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const res = await client.POST("/purchase/order/",{
                 body:{
                     supplier:d.supplier,
-                    name:d.name,
+                    // name:d.name,
                     currency:currencySchemaToCurrencyDto(d.currency),
                     delivery_date:d.delivery_date?.toString(),
                     lines:lines,
+                    date:d.date.toString()
                 }
             })
             message = res.data?.message

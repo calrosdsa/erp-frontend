@@ -1,7 +1,8 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node"
 import PurchaseOrderClient from "./purchase-order.client"
 import apiClient from "~/apiclient"
-import { PartyType } from "~/types/enums"
+import { PartyType } from "~/gen/common"
+
 
 
 export const loader = async ({request}:LoaderFunctionArgs)=>{
@@ -14,14 +15,16 @@ export const loader = async ({request}:LoaderFunctionArgs)=>{
                 id:searchParams.get("id") ||  ""
             },
             query:{
-                party:PartyType.PARTY_PURCHASE_ORDER
+                party:PartyType[PartyType.purchaseOrder]
             }
         }
     })
-
+    // res.data?.related_actions
+    console.log("PARTY",res.data?.associated_actions[PartyType[PartyType.purchaseInvoice]])
     return json({
         actions:res.data?.actions,
-        order:res.data?.result.entity
+        order:res.data?.result.entity,
+        associatedActions:res.data?.associated_actions
     })
 }
 

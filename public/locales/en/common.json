@@ -60,6 +60,7 @@
   "form": {
     "gender":"Gender",
     "name": "Name",
+    "date":"Date",
     "deliveryDate": "Delivery Date",
     "pickADate":"Pick a Date",
     "description": "Description",
@@ -265,6 +266,7 @@
   "cancel": "Cancel",
 
   "actions": {
+    "base":"actions",
     "edit": "Edit"
   },
   "tooltip":{

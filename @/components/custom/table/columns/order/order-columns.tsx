@@ -13,7 +13,7 @@ export const orderColumns = ({}:{
     const r= routes
     const {t,i18n} = useTranslation("common")
     columns.push({
-        accessorKey: "name",
+        accessorKey: "code",
         header:t("form.name"),
         cell:({...props})=>{
             const rowD = props.row.original

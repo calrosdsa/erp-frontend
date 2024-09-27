@@ -382,6 +382,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/invoice": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Purchase Invoice */
+        get: operations["get purchase invoices"];
+        put?: never;
+        /** Create Purchase Invoice */
+        post: operations["create purchase invoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order/detail/{id}": {
         parameters: {
             query?: never;
@@ -1365,6 +1383,20 @@ export interface components {
             parent?: components["schemas"]["GroupDto"];
             party_type_code: string;
         };
+        CreateInvoiceBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            currency: components["schemas"]["CurrencyDto"];
+            /** Format: date-time */
+            date: string;
+            /** Format: date-time */
+            due_date?: string | null;
+            lines: components["schemas"]["OrderLine"][];
+            supplier_uuid: string;
+        };
         CreateItemAttributeRequestBody: {
             /**
              * Format: uri
@@ -1442,9 +1474,10 @@ export interface components {
             readonly $schema?: string;
             currency: components["schemas"]["CurrencyDto"];
             /** Format: date-time */
+            date: string;
+            /** Format: date-time */
             delivery_date?: string | null;
             lines: components["schemas"]["OrderLine"][];
-            name: string;
             supplier: components["schemas"]["SupplierDto"];
         };
         CreateRoleRequestBody: {
@@ -1584,6 +1617,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["Client"];
         };
@@ -1594,6 +1630,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["Company"];
         };
@@ -1604,6 +1643,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["CompanyDto"];
         };
@@ -1614,6 +1656,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ItemAttributeDto"];
         };
@@ -1624,6 +1669,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ItemDto"];
         };
@@ -1634,6 +1682,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["UserRelationDto"][];
         };
@@ -1644,6 +1695,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityAddressDto"];
         };
@@ -1654,6 +1708,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityCustomerDto"];
         };
@@ -1664,6 +1721,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityGroupDto"];
         };
@@ -1674,6 +1734,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityItemAttributeDto"];
         };
@@ -1684,6 +1747,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityItemDetailDto"];
         };
@@ -1694,6 +1760,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityItemPriceDto"];
         };
@@ -1704,6 +1773,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityListCustomerType"];
         };
@@ -1714,6 +1786,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityListEntityActions"];
         };
@@ -1724,6 +1799,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityListGroupHierarchyDto"];
         };
@@ -1734,6 +1812,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityListItemPriceDto"];
         };
@@ -1744,6 +1825,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityListPartyDto"];
         };
@@ -1754,6 +1838,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityListPartyTypeDto"];
         };
@@ -1764,6 +1851,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityOrderDto"];
         };
@@ -1774,6 +1864,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityPriceListDto"];
         };
@@ -1784,6 +1877,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityProfileDto"];
         };
@@ -1794,6 +1890,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityRoleDto"];
         };
@@ -1804,6 +1903,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntitySupplierDto"];
         };
@@ -1814,6 +1916,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityTaxDto"];
         };
@@ -1824,6 +1929,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ResultEntityWareHouseDto"];
         };
@@ -1912,6 +2020,19 @@ export interface components {
             parent_uuid: string | null;
             uuid: string;
         };
+        InvoiceDto: {
+            code: string;
+            /** Format: date-time */
+            created_at: string;
+            currency: string;
+            /** Format: date-time */
+            date: string;
+            /** Format: date-time */
+            due_date: string | null;
+            party_name: string;
+            party_type: string;
+            party_uuid: string;
+        };
         Item: {
             code: string;
             /** Format: int64 */
@@ -1972,6 +2093,20 @@ export interface components {
             name: string;
             uuid: string;
         };
+        ItemLineDto: {
+            /** Format: int32 */
+            amount: number;
+            item_code: string;
+            item_name: string;
+            /** Format: int64 */
+            item_price_rate: number;
+            item_uuid: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: double */
+            tax_value: number;
+            uom: string;
+        };
         ItemPrice: {
             company: components["schemas"]["Company"];
             /** Format: int64 */
@@ -2021,6 +2156,8 @@ export interface components {
             rate: number;
             tax_name: string;
             tax_uuid: string;
+            /** Format: double */
+            tax_value: number;
             uom: string;
             uuid: string;
             /** Format: date-time */
@@ -2048,21 +2185,13 @@ export interface components {
             currency: string;
             /** Format: date-time */
             delivery_date: string | null;
-            name: string;
-            order_lines: components["schemas"]["OrderLineDto"][];
+            order_lines: components["schemas"]["ItemLineDto"][];
             uuid: string;
         };
         OrderLine: {
             /** Format: int32 */
             amount: number;
             item_price_uuid: string;
-            /** Format: int32 */
-            quantity: number;
-        };
-        OrderLineDto: {
-            /** Format: int32 */
-            amount: number;
-            item_price: components["schemas"]["ItemPriceDto"];
             /** Format: int32 */
             quantity: number;
         };
@@ -2119,6 +2248,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListGroupDto"];
+        };
+        PaginationResponsePaginationResultListInvoiceDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListInvoiceDto"];
         };
         PaginationResponsePaginationResultListItemAttributeDtoBody: {
             /**
@@ -2273,6 +2411,11 @@ export interface components {
         };
         PaginationResultListGroupDto: {
             results: components["schemas"]["GroupDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListInvoiceDto: {
+            results: components["schemas"]["InvoiceDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2464,7 +2607,18 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["ContactDto"];
+        };
+        ResponseDataInvoiceDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["InvoiceDto"];
         };
         ResponseDataListPartyTypeDtoBody: {
             /**
@@ -2473,6 +2627,7 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            message: string;
             result: components["schemas"]["PartyTypeDto"][];
         };
         ResponseMessageBody: {
@@ -3844,6 +3999,81 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListGroupDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get purchase invoices": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListInvoiceDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create purchase invoice": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateInvoiceBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataInvoiceDtoBody"];
                 };
             };
             /** @description Error */

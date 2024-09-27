@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package erp.api_v1;
+
+// option go_package = "/api_v1";
+
+option go_package = "/proto";
+
+
+message Result {
+    string message = 1;
+}
+
+enum PartyType {
+    supplierGroup = 0;      // 1 - 1
+    itemGroup = 1;          // 2 - 1
+    warehouse = 2;          // 3 - 1
+    stockLevel = 3;         // 4 - 1
+    item = 4;               // 5 - 1
+    itemAttribute = 5;      // 6 - 1
+    itemPrice = 6;          // 7 - 1
+    supplier = 7;           // 8 - 1
+    purchaseOrder = 8;      // 9 - 1
+    tax = 9;                // 10 - 1
+    customer = 10;          // 11 - 1
+    customerGroup = 11;     // 12 - 1
+    admin = 12;             // 13 - 1
+    employee = 13;          // 14 - 1
+    client = 14;            // 15 - 1
+    address = 15;           // 16 - 1
+    contact = 16;           // 17 - 1
+    purchaseInvoice = 17;   // 18 - 1
+    company = 18;           // 19 - 1
+}
+
+enum State {
+    UNSPECIFIED = 0;              // State is unspecified
+    DRAFT = 1;                    // The purchase order is created but not submitted
+    PENDING_APPROVAL = 2;        // Awaiting approval from relevant authority
+    APPROVED = 3;                 // The purchase order has been approved
+    BILLED_AWAITING_PAYMENT = 4;  // Invoice has been issued, awaiting payment
+    INVOICED_UNPAID = 5;         // Invoice exists but payment is pending
+    PARTIALLY_PAID = 6;          // Part of the purchase order amount has been paid
+    SHIPPED = 7;                  // Goods/services have been shipped
+    RECEIVED = 8;                 // Goods/services have been received
+    COMPLETED = 9;                // All processes finalized
+    CANCELLED = 10;               // The purchase order has been cancelled
+    ON_HOLD = 11;                 // The purchase order is temporarily on hold
+    RETURNED = 12;                // Items have been returned to the vendor
+    CLOSED = 13;                  // The purchase order is closed
+}
+

@@ -1,3 +1,5 @@
+
+
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import CustomForm from "@/components/custom/form/CustomForm";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
@@ -26,7 +28,7 @@ export const AddLineOrder = ({
   const { t, i18n } = useTranslation("common");
   const [itemPriceDebounceFetcher, onItemPriceChange] = useItemPriceForOrders({
     isBuying: true,
-    currency: "USD",
+    currency: currency,
   });
   const revalidator = useRevalidator();
   return (

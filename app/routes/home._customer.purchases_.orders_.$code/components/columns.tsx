@@ -3,7 +3,7 @@ import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { components } from "index";
+import { components } from "~/sdk";
 import { SubscriptionAction } from "~/types/plugin/square/subscription";
 import {
   formatCurrency,
@@ -27,7 +27,9 @@ export const subscriptionActionsColumns = ():ColumnDef<SubscriptionAction>[] =>{
 }
 
 export const itemLineColumns = (): ColumnDef<
-  components["schemas"]["SalesItemLine"]
+  // components["schemas"]["SalesItemLine"]
+  components["schemas"]["OrderLine"]
+  
 >[] => {
   const { t, i18n } = useTranslation("common");
 

@@ -4,13 +4,13 @@ import { formatCurrency } from "~/util/format/formatCurrency";
 
 interface OrderSummaryProps {
   orderTotal: number;
-  taxRate: number;
+  orderTax:number;
   i18n:i18n;
   currency:string
 }
 
-export default function OrderSumary({ orderTotal, taxRate,i18n,currency }: OrderSummaryProps) {
-  const taxAmount = orderTotal * taxRate;
+export default function OrderSumary({ orderTotal, orderTax,i18n,currency }: OrderSummaryProps) {
+  const taxAmount = orderTax;
   const totalWithTax = orderTotal + taxAmount;
 
   // const formatCurrency = (amount: number) => {
@@ -33,7 +33,7 @@ export default function OrderSumary({ orderTotal, taxRate,i18n,currency }: Order
               <span className="text-lg font-semibold">{formatCurrency(orderTotal,currency,i18n.language)}</span>
             </div>
             <div className="flex justify-between items-center md:flex-col md:items-start">
-              <span className="text-sm font-medium text-gray-500 md:mb-1">Tax ({(taxRate * 100).toFixed(2)}%):</span>
+              {/* <span className="text-sm font-medium text-gray-500 md:mb-1">Tax ({(taxRate * 100).toFixed(2)}%):</span> */}
               <span className="text-lg font-semibold">{formatCurrency(taxAmount,currency,i18n.language)}</span>
             </div>
           </div>

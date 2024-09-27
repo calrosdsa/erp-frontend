@@ -21,8 +21,9 @@ export const formatCurrency=(input: number | undefined,currency:string| undefine
 export const sumTotal = (values:number[])=>{
   if(values.length == 0) return 0
   const total = values.reduce((prev,curr)=>prev+curr,0)
-  return total
+  return total  
 }
+
 
 
 export const formatTax = (tax:components["schemas"]["Tax"],itemPrice:number,currency:string,language:string):string =>{
@@ -35,7 +36,9 @@ export const formatTotalTax = (tax:components["schemas"]["Tax"],itemPrice:number
 
 
 
-  export const getTaxPorcent = (tax:number,itemPrice:number,currency:string,language:string):string =>{
+
+  export const getTaxPorcent = (tax:number,itemPrice:number,currency?:string,language?:string):string =>{
+    if(currency == undefined || language == undefined) return "-"
     return formatCurrency(itemPrice * ((tax)/100),currency,language)
   }
 

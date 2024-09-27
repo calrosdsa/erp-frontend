@@ -17,6 +17,7 @@ class Routes {
   supplierGroups = this.buying + "/supplier-groups";
   suppliers = this.buying + "/suppliers";
   purchaseOrders = this.buying + "/purchase-orders";
+  purchaseInvoices = this.buying + "/purchase-invoice";
 
   selling = this.base + "/selling";
   sellingStock = this.selling + "/stock";
@@ -71,7 +72,7 @@ class Routes {
   toContactDetail(name: string, id: string): string {
     return `${this.contact}/${encodeURIComponent(name)}?id=${id}`;
   }
-
+  
   toCreateContact(id?:number){
     if(id) { return `${this.contact}/create?referenceId=${id}` }
     return `${this.contact}/create`
@@ -85,7 +86,7 @@ class Routes {
   toGroupsByParty(party: PartyType): string {
     return `${this.groups}/${encodeURIComponent(party)}`;
   }
-
+  
   toGroupDetail(party: string, name: string, id: string): string {
     return `${this.groups}/${encodeURIComponent(party)}/${encodeURIComponent(
       name
@@ -101,7 +102,7 @@ class Routes {
     if (!name) return "N/A";
     return `${this.priceList}/${encodeURIComponent(name)}?id=${id}`;
   }
-
+  
   taxDetailRoute(name?: string, id?: string): string {
     if (!name) return "N/A";
     return `${this.accounting}/taxes/${encodeURIComponent(name)}?id=${id}`;
@@ -163,6 +164,13 @@ class Routes {
   toPurchaseOrderCreate(): string {
     return `${this.purchaseOrders}/create`;
   }
+  toPurchaseInvoiceDetail(id:string):string {
+    return `${this.purchaseInvoices}/${id}`
+  }
+  toPurchaseInvoiceCreate():string {
+    return `${this.purchaseInvoices}/create`
+  }
+  
 
   //Manage
   toUserProfileDetail(name: string, id: string): string {

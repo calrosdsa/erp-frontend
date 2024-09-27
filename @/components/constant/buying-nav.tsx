@@ -29,6 +29,13 @@ export const BuyingNav = ({ entities }: {
       href: r.purchaseOrders,
     });
   }
+  if(entities?.includes(Entity.PURCHASE_INVOICE_ENTITY_ID)){
+    buyingChildrens.push({
+      title: t("purchase-invoice"),
+      href: r.purchaseInvoices,
+    });
+  }
+
   const buying:NavItem = {
     title: t("form.buying"),
     icon: CreditCardIcon,

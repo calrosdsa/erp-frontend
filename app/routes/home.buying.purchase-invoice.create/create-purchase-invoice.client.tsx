@@ -15,14 +15,14 @@ import { useEffect } from "react";
 import { routes } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Button } from "@/components/ui/button";
-import { action } from "./route";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCreateSupplier } from "../home.buying.suppliers_/components/create-supplier";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
+import { action } from "./route";
 
-export default function CreatePurchaseOrdersClient() {
-  const fetcher = useFetcher<typeof action>();
+export default function CreatePurchaseInvoiceClient() {
+  const fetcher = useFetcher<typeof action>()
   const [supplierDebounceFetcher, onSupplierChange] =
     useSupplierDebounceFetcher();
   const [currencyDebounceFetcher, onCurrencyChange] =
@@ -69,11 +69,10 @@ export default function CreatePurchaseOrdersClient() {
       toast({
         title: fetcher.data.message,
       });
-      if (fetcher.data?.order) {
+      if (fetcher.data?.invoice) {
         navigate(
-          r.toPurchaseOrderDetail(
-            fetcher.data.order.code,
-            fetcher.data.order.uuid
+          r.toPurchaseInvoiceDetail(
+            fetcher.data.invoice.uuid,
           )
         );
       }
