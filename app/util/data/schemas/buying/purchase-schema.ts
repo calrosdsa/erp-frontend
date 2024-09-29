@@ -5,16 +5,16 @@ import { components } from "~/sdk";
 import { currencySchema } from "../app/currency-schema";
 
 export const itemPriceDtoSchema = z.object({
-  code: z.string(),
-  uuid: z.string(),
+  code: z.string().optional(),
+  uuid: z.string().optional(),
   rate: z.number(),
-  item_quantity: z.number(),
+  item_quantity: z.number().optional(),
   item_name: z.string(),
   item_code: z.string(),
   item_uuid: z.string(),
   uom: z.string(),
-  tax_name:z.string(),
-  tax_uuid:z.string(),
+  tax_name:z.string().optional(),
+  tax_uuid:z.string().optional(),
   tax_value:z.number(),
 });
 
@@ -41,7 +41,7 @@ export const orderLineSchemaToOrderLineDto = (
   return {
     amount: d.amount || 0,
     quantity: d.quantity,
-    item_price_uuid: d.item_price.uuid,
+    item_price_uuid: d.item_price.uuid || "",
   };
 };
 

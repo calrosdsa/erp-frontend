@@ -10,7 +10,7 @@ import TableCellPrice from "../../cells/table-cell-price";
 import TableCellIndex from "../../cells/table-cell-index";
 import { formatTax, getTaxPorcent } from "~/util/format/formatCurrency";
 
-export const orderLineColumns = ({
+export const  orderLineColumns = ({
   currency,
 }: {
   currency?: string;

@@ -400,6 +400,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Order */
+        post: operations["create order"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order/detail/{id}": {
         parameters: {
             query?: never;
@@ -1394,8 +1411,10 @@ export interface components {
             date: string;
             /** Format: date-time */
             due_date?: string | null;
+            invoice_party_type: string;
             lines: components["schemas"]["OrderLine"][];
-            supplier_uuid: string;
+            party_type: string;
+            party_uuid: string;
         };
         CreateItemAttributeRequestBody: {
             /**
@@ -1445,6 +1464,22 @@ export interface components {
             item_uuid: string;
             name: string;
         };
+        CreateOrderRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            currency: components["schemas"]["CurrencyDto"];
+            /** Format: date-time */
+            date: string;
+            /** Format: date-time */
+            delivery_date?: string | null;
+            lines: components["schemas"]["OrderLine"][];
+            order_party_type: string;
+            party_type: string;
+            party_uuid: string;
+        };
         CreatePartyAddressRequestBody: {
             /**
              * Format: uri
@@ -1478,7 +1513,8 @@ export interface components {
             /** Format: date-time */
             delivery_date?: string | null;
             lines: components["schemas"]["OrderLine"][];
-            supplier: components["schemas"]["SupplierDto"];
+            party_type: string;
+            party_uuid: string;
         };
         CreateRoleRequestBody: {
             /**
@@ -2032,6 +2068,7 @@ export interface components {
             party_name: string;
             party_type: string;
             party_uuid: string;
+            uuid: string;
         };
         Item: {
             code: string;
@@ -2100,6 +2137,7 @@ export interface components {
             item_name: string;
             /** Format: int64 */
             item_price_rate: number;
+            item_price_uuid: string;
             item_uuid: string;
             /** Format: int32 */
             quantity: number;
@@ -2184,8 +2222,12 @@ export interface components {
             created_at: string;
             currency: string;
             /** Format: date-time */
+            date: string;
+            /** Format: date-time */
             delivery_date: string | null;
             order_lines: components["schemas"]["ItemLineDto"][];
+            party_name: string;
+            party_uuid: string;
             uuid: string;
         };
         OrderLine: {
@@ -3202,7 +3244,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -3411,7 +3452,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -3771,7 +3811,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -3891,7 +3930,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -4087,6 +4125,49 @@ export interface operations {
             };
         };
     };
+    "create order": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateOrderRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityOrderDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get order": {
         parameters: {
             query?: {
@@ -4265,7 +4346,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -4421,7 +4501,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -4953,7 +5032,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -5418,7 +5496,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -5588,7 +5665,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -6015,7 +6091,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -6142,7 +6217,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -6269,7 +6343,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -6396,7 +6469,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -6562,7 +6634,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
             };
             header?: {
                 Authorization?: string;

@@ -44,7 +44,7 @@ export default function ItemLineForm({
         <DataTable
           data={form.getValues().lines || []}
           columns={orderLineColumns({
-            currency:addLineOrder.currency
+            currency:form.getValues().currency.code
           })}
           metaOptions={{
             meta: {

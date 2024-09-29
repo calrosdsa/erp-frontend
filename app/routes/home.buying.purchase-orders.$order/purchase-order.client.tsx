@@ -16,6 +16,10 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { ActionToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
+import { useCreatePurchaseInvoice } from "../home.buying.purchase-invoice.create/use-purchase-invoice";
+import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
+import { orderLineSchema } from "~/util/data/schemas/buying/purchase-schema";
+import { z } from "zod";
 
 export default function PurchaseOrderClient() {
   const { order, actions,associatedActions } = useLoaderData<typeof loader>();
@@ -30,6 +34,8 @@ export default function PurchaseOrderClient() {
   })
   const { t,i18n} = useTranslation("common");
   const toolbar = useToolbar()
+  const createPurchaseInvoice = useCreatePurchaseInvoice()
+
   const r = routes
   const navigate = useNavigate()
 
@@ -38,6 +44,29 @@ export default function PurchaseOrderClient() {
     const actions:ActionToolbar[] = []
     if(purchaseInvoicePermission?.create) {
       actions.push({label:"Create Purchase Invoice",onClick:()=>{
+        createPurchaseInvoice.setData({payload:{
+            party_name:order?.party_name,
+            party_uuid:order?.party_uuid,
+            currency:order?.currency,
+            lines:order?.order_lines.map((line)=>{
+              const d:z.infer<typeof orderLineSchema> =  {
+                amount:line.amount,
+                quantity:line.quantity.toString() as any,
+                item_price:{
+                  uuid:line.item_price_uuid,
+                  rate:line.item_price_rate,
+                  tax_value:line.tax_value,
+                  item_code:line.item_code,
+                  item_name:line.item_name,
+                  item_uuid:line.item_uuid,
+                  uom:line.uom,     
+                }
+              }
+              return d
+            }) || []
+          // supplier:order.
+        }})
+        
         navigate(r.toPurchaseInvoiceCreate())
       },Icon:PlusIcon})
     }
@@ -57,14 +86,16 @@ export default function PurchaseOrderClient() {
         <Typography fontSize={subtitle} className=" col-span-full">
           {t("info")}
         </Typography>
+
+        <DisplayTextValue title={t("_supplier.base")} value={order?.party_name} />
         <DisplayTextValue title={t("form.code")} value={order?.code} />
         <DisplayTextValue
-          title={t("table.createdAt")}
-          value={order?.created_at}
+          title={t("form.date")}
+          value={formatMediumDate(order?.date,i18n.language)}
         />
         <DisplayTextValue
           title={t("form.deliveryDate")}
-          value={order?.delivery_date}
+          value={formatMediumDate(order?.delivery_date,i18n.language)}
         />
 
         <div className=" col-span-full">

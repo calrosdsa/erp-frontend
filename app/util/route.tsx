@@ -164,8 +164,8 @@ class Routes {
   toPurchaseOrderCreate(): string {
     return `${this.purchaseOrders}/create`;
   }
-  toPurchaseInvoiceDetail(id:string):string {
-    return `${this.purchaseInvoices}/${id}`
+  toPurchaseInvoiceDetail(code:string,id:string):string {
+    return `${this.purchaseInvoices}/${code}?id=${id}`
   }
   toPurchaseInvoiceCreate():string {
     return `${this.purchaseInvoices}/create`

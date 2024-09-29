@@ -6,6 +6,7 @@ import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice
 import { orderLineSchemaToOrderLineDto } from "~/util/data/schemas/buying/purchase-schema"
 import { currencySchemaToCurrencyDto } from "~/util/data/schemas/app/currency-schema"
 import { components } from "~/sdk"
+import { PartyType } from "~/gen/common"
 
 type ActionData ={
     action:string
@@ -21,10 +22,13 @@ export const action = async({request}:ActionFunctionArgs)=>{
     switch(data.action){
         case "create-purchase-invoice":{
             const d = data.createPurchaseInvoice
+            console.log('DATA',d)
             const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
             const res = await client.POST("/invoice",{
                 body:{
-                    supplier_uuid:d.supplier.uuid,
+                    party_uuid:d.supplier.uuid,
+                    party_type:PartyType[PartyType.supplier],
+                    invoice_party_type:PartyType[PartyType.purchaseInvoice],
                     due_date:d.due_date?.toString(),
                     date:d.date.toString(),
                     lines:lines,

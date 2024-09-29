@@ -74,11 +74,12 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                     !field.value && "text-muted-foreground"
                   )}
                 >
-                  {field.value
+                  {field.value || "Select item"}
+                  {/* {field.value
                     ? data
                         .find((item) => item[nameK] === field.value)
                         ?.[nameK]?.toString()
-                    : "Select item"}
+                    : "Select item"} */}
                   <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
                 </Button>
               </FormControl>

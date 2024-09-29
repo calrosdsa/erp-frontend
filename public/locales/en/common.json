@@ -61,6 +61,7 @@
     "gender":"Gender",
     "name": "Name",
     "date":"Date",
+    "dueDate":"Due Date",
     "deliveryDate": "Delivery Date",
     "pickADate":"Pick a Date",
     "description": "Description",

@@ -1,7 +1,6 @@
 import { useFetcher, useNavigate, useOutletContext, useRevalidator } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
-import { createPurchaseSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
@@ -20,6 +19,8 @@ import { GlobalState } from "~/types/app";
 import { useCreateSupplier } from "../home.buying.suppliers_/components/create-supplier";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { action } from "./route";
+import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
+import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>()
@@ -34,30 +35,47 @@ export default function CreatePurchaseInvoiceClient() {
   })
   const createSupplier = useCreateSupplier()
 
+  const createPurchaseInvoice = useCreatePurchaseInvoice()
+
   const { t,i18n } = useTranslation("common");
   const { toast } = useToast();
   const revalidator = useRevalidator();
   const navigate = useNavigate();
   const r = routes;
-  const form = useForm<z.infer<typeof createPurchaseSchema>>({
-    resolver: zodResolver(createPurchaseSchema),
+  const form = useForm<z.infer<typeof createPurchaseInvoiceSchema>>({
+    resolver: zodResolver(createPurchaseInvoiceSchema),
     defaultValues: {
-      lines: [],
+      supplierName:createPurchaseInvoice.payload?.party_name || "",
+      supplier:{
+        name:createPurchaseInvoice.payload?.party_name || "",
+        uuid:createPurchaseInvoice.payload?.party_uuid || "",
+      },
+      currency:{
+        code:createPurchaseInvoice.payload?.currency || "",
+      },
+      currencyName:createPurchaseInvoice.payload?.currency,
+      lines:createPurchaseInvoice.payload?.lines || [],
       date:new Date(),
     },
   });
   
-  const onSubmit = (values: z.infer<typeof createPurchaseSchema>) => {
+  const onSubmit = (values: z.infer<typeof createPurchaseInvoiceSchema>) => {
     console.log(values);
     fetcher.submit({
-      action:"create-purchase-order",
-      createPurchaseOrder:values
+      action:"create-purchase-invoice",
+      createPurchaseInvoice:values
   } as any,{
       method:"POST",
       encType:"application/json",
-      action:r.toPurchaseOrderCreate(),
+      action:r.toPurchaseInvoiceCreate(),
   })
   };
+
+  useEffect(()=>{
+    form.setValue("supplierName",createPurchaseInvoice.payload?.party_name || "")
+    revalidator.revalidate()
+    console.log("REVALIDATIONS...")
+  },[createPurchaseInvoice])
 
   useEffect(() => {
     if (fetcher.data?.error) {
@@ -72,6 +90,7 @@ export default function CreatePurchaseInvoiceClient() {
       if (fetcher.data?.invoice) {
         navigate(
           r.toPurchaseInvoiceDetail(
+            fetcher.data.invoice.code,
             fetcher.data.invoice.uuid,
           )
         );
@@ -83,6 +102,7 @@ export default function CreatePurchaseInvoiceClient() {
 
   return (
     <div>
+      {JSON.stringify(form.formState.errors)}
       <FormLayout>
         <Form {...form}>
           <fetcher.Form
@@ -129,9 +149,9 @@ export default function CreatePurchaseInvoiceClient() {
 
               <CustomFormDate
                 form={form}
-                name="delivery_date"
+                name="due_date"
                 isDatetime={true}
-                label={t("form.deliveryDate")}
+                label={t("form.dueDate")}
               />
 
             </div>

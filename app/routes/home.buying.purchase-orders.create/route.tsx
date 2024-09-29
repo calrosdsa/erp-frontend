@@ -5,6 +5,7 @@ import { createPurchaseSchema, orderLineSchemaToOrderLineDto } from "~/util/data
 import apiClient from "~/apiclient";
 import { currencySchemaToCurrencyDto } from "~/util/data/schemas/app/currency-schema";
 import { components } from "~/sdk";
+import { PartyType } from "~/gen/common";
 
 
 type ActionData = {
@@ -22,10 +23,11 @@ export const action = async({request}:ActionFunctionArgs)=>{
         case "create-purchase-order":{
             const d = data.createPurchaseOrder
             const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
-            const res = await client.POST("/purchase/order/",{
+            const res = await client.POST("/order",{
                 body:{
-                    supplier:d.supplier,
-                    // name:d.name,
+                    party_uuid:d.supplier.uuid,
+                    party_type:PartyType[PartyType.supplier],
+                    order_party_type:PartyType[PartyType.purchaseOrder],
                     currency:currencySchemaToCurrencyDto(d.currency),
                     delivery_date:d.delivery_date?.toString(),
                     lines:lines,
