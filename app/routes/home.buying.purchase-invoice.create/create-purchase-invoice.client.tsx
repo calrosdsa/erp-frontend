@@ -45,6 +45,7 @@ export default function CreatePurchaseInvoiceClient() {
   const form = useForm<z.infer<typeof createPurchaseInvoiceSchema>>({
     resolver: zodResolver(createPurchaseInvoiceSchema),
     defaultValues: {
+      order_uuid:createPurchaseInvoice.payload?.order_uuid,
       supplierName:createPurchaseInvoice.payload?.party_name || "",
       supplier:{
         name:createPurchaseInvoice.payload?.party_name || "",

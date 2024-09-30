@@ -8,6 +8,7 @@ interface Payload {
     party_name?:string
     party_uuid?:string
     currency?:string
+    order_uuid?:string
     lines:z.infer<typeof orderLineSchema>[]
 }
 interface CreatePurchaseInvoiceStore {

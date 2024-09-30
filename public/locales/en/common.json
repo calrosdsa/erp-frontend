@@ -20,6 +20,9 @@
   "_supplier":{
     "base":"Supplier"
   },
+  "_invoice":{
+      "base":"Invoice"
+  },
   "create": "Create",
   "info": "Info",
   "_auth": {

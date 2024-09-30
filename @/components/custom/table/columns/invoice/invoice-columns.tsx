@@ -25,10 +25,11 @@ export const invoiceColumns = (): ColumnDef<
       accessorKey: "code",
       header: t("form.code"),
       cell: ({ ...props }) => {
+        const rowData = props.row.original
         return (
           <TableCellNameNavigation
             {...props}
-            navigate={(name) => r.toPurchaseInvoiceDetail(name)}
+            navigate={(name) => r.toPurchaseInvoiceDetail(name,rowData.uuid)}
           />
         );
       },

@@ -40,7 +40,6 @@ export default function PurchaseOrderClient() {
   const navigate = useNavigate()
 
   const setUpToolBar = ()=> {
-
     const actions:ActionToolbar[] = []
     if(purchaseInvoicePermission?.create) {
       actions.push({label:"Create Purchase Invoice",onClick:()=>{
@@ -48,6 +47,7 @@ export default function PurchaseOrderClient() {
             party_name:order?.party_name,
             party_uuid:order?.party_uuid,
             currency:order?.currency,
+            order_uuid:order?.uuid,
             lines:order?.order_lines.map((line)=>{
               const d:z.infer<typeof orderLineSchema> =  {
                 amount:line.amount,

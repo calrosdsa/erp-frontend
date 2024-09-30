@@ -400,6 +400,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/invoice/purchase/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Purchase Invoice
+         * @description Get Detail purchase invoice
+         */
+        get: operations["get purchase invoice"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order": {
         parameters: {
             query?: never;
@@ -1413,7 +1433,10 @@ export interface components {
             due_date?: string | null;
             invoice_party_type: string;
             lines: components["schemas"]["OrderLine"][];
+            /** Format: uuid */
+            order_uuid?: string;
             party_type: string;
+            /** Format: uuid */
             party_uuid: string;
         };
         CreateItemAttributeRequestBody: {
@@ -1763,6 +1786,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityGroupDto"];
         };
+        EntityResponseResultEntityInvoiceDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityInvoiceDetailDto"];
+        };
         EntityResponseResultEntityItemAttributeDtoBody: {
             /**
              * Format: uri
@@ -2056,6 +2092,10 @@ export interface components {
             parent_uuid: string | null;
             uuid: string;
         };
+        InvoiceDetailDto: {
+            invoice: components["schemas"]["InvoiceDto"];
+            item_lines: components["schemas"]["ItemLineDto"][];
+        };
         InvoiceDto: {
             code: string;
             /** Format: date-time */
@@ -2068,6 +2108,7 @@ export interface components {
             party_name: string;
             party_type: string;
             party_uuid: string;
+            state: string;
             uuid: string;
         };
         Item: {
@@ -2697,6 +2738,11 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["GroupDto"];
+        };
+        ResultEntityInvoiceDetailDto: {
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["InvoiceDetailDto"];
         };
         ResultEntityItemAttributeDto: {
             addresses: components["schemas"]["AddressDto"][];
@@ -4112,6 +4158,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataInvoiceDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get purchase invoice": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityInvoiceDetailDtoBody"];
                 };
             };
             /** @description Error */

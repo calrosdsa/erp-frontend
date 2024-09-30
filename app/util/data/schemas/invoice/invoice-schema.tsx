@@ -6,6 +6,7 @@ import { orderLineSchema } from "../buying/purchase-schema";
 export const createPurchaseInvoiceSchema = z.object({
     supplier: supplierDtoSchema,
     supplierName: z.string(),
+    order_uuid:z.string().optional(),
     // name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
     due_date: z.date().optional(),
     date: z.date(),
