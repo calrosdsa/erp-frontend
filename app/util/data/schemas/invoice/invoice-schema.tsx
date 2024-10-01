@@ -14,3 +14,4 @@ export const createPurchaseInvoiceSchema = z.object({
     currency: currencySchema,
     lines: z.array(orderLineSchema),
   });
+

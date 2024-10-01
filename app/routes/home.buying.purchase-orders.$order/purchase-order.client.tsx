@@ -16,7 +16,7 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { ActionToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
-import { useCreatePurchaseInvoice } from "../home.buying.purchase-invoice.create/use-purchase-invoice";
+import { useCreatePurchaseInvoice } from "../home.buying.$partyInvoice.create/use-purchase-invoice";
 import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
 import { orderLineSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { z } from "zod";

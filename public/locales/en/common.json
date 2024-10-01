@@ -88,6 +88,8 @@
     "countryCode": "Country Code",
     "item-group": "Item Group",
     "submit": "Submit",
+    "cancel":"Cancel",
+    "party":"Party",
     "save": "Save",
     "uom": "UOM",
     "city": "City",
@@ -280,5 +282,8 @@
     "male":"Male",
     "female":"Female",
     "noBinary":"No Binary"
+  },
+  "alert":{
+    "submit":"Please submit this document for confirmation."
   }
 }

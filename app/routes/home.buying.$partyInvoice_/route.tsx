@@ -2,7 +2,7 @@ import { json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
 import { handleError } from "~/util/api/handle-status-code"
-import PurchaseInvoicesClient from "./purchase-invoice.client"
+import InvoicesClient from "./invoices.client"
 
 
 export const loader = async({request}:LoaderFunctionArgs)=>{
@@ -25,5 +25,5 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
 }
 
 export default function PurchaseInvoices(){
-    return <PurchaseInvoicesClient/>
+    return <InvoicesClient/>
 }

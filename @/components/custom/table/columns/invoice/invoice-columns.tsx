@@ -10,6 +10,7 @@ import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
 import { PartyType } from "~/gen/common";
 import TableCellIndex from "../../cells/table-cell-index";
+import TableCellStatus from "../../cells/table-cell-status";
 
 export const invoiceColumns = (): ColumnDef<
   components["schemas"]["InvoiceDto"]
@@ -50,6 +51,11 @@ export const invoiceColumns = (): ColumnDef<
           </>
         );
       },
+    },
+    {
+      accessorKey:"state",
+      header:t("form.status"),
+      cell:TableCellStatus
     },
     {
       accessorKey: "created_at",

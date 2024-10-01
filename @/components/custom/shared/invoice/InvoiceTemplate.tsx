@@ -7,6 +7,7 @@ import { displayItemLineColumns } from "../../table/columns/order/order-line-col
 import { sumTotal } from "~/util/format/formatCurrency"
 import OrderSumary from "../../display/order-sumary"
 import { DEFAULT_CURRENCY } from "~/constant"
+import { formatMediumDate } from "~/util/format/formatDate"
 
 
 export default function InvoiceTemplate({invoiceDetail}:{
@@ -29,11 +30,11 @@ export default function InvoiceTemplate({invoiceDetail}:{
                 
                 <DisplayTextValue
                 title={t("form.date")}
-                value={invoice?.date}
+                value={formatMediumDate(invoice?.date,i18n.language)}
                 />
                 <DisplayTextValue
                 title={t("form.dueDate")}
-                value={invoice?.due_date}
+                value={formatMediumDate(invoice?.due_date,i18n.language)}
                 />
                 <DisplayTextValue
                 title={t("form.currency")}

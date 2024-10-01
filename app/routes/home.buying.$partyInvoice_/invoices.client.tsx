@@ -7,7 +7,7 @@ import { invoiceColumns } from "@/components/custom/table/columns/invoice/invoic
 import { routes } from "~/util/route"
 
 
-export default function PurchaseInvoicesClient(){
+export default function InvoicesClient(){
     const {paginationResult,actions} = useLoaderData<typeof loader>()
     const globalState = useOutletContext<GlobalState>()
     const [permission] = usePermission({

@@ -1,4 +1,4 @@
-import { PartyType } from "~/types/enums";
+import { PartyType } from "~/gen/common";
 
 class Routes {
   api = "/api";
@@ -17,7 +17,7 @@ class Routes {
   supplierGroups = this.buying + "/supplier-groups";
   suppliers = this.buying + "/suppliers";
   purchaseOrders = this.buying + "/purchase-orders";
-  purchaseInvoices = this.buying + "/purchase-invoice";
+  purchaseInvoices = this.buying + `/${PartyType[PartyType.purchaseInvoice]}`;
 
   selling = this.base + "/selling";
   sellingStock = this.selling + "/stock";
@@ -50,11 +50,11 @@ class Routes {
 
   toReferenceDetail(partyType: string, name: string, id: string): string {
     switch (partyType) {
-      case PartyType.PARTY_CUSTOMER:
+      case PartyType[PartyType.customer]:
         return this.customerDetail(name, id);
-      case PartyType.PARTY_SUPPLIER:
+      case PartyType[PartyType.supplier]:
         return this.toSupplierDetail(name, id);
-      case PartyType.PARTY_WAREHOUSE:
+      case PartyType[PartyType.warehouse]:
         return this.toWarehouseInfo(name, id);
       default:
         return this.base;

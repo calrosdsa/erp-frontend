@@ -49,6 +49,7 @@ export enum PartyType {
   /** company - 19 - 1 */
   company = 18,
   UNRECOGNIZED = -1,
+  PARTY_CUSTOMER,
 }
 
 export function partyTypeFromJSON(object: any): PartyType {
@@ -168,8 +169,8 @@ export enum State {
   UNSPECIFIED = 0,
   /** DRAFT - The purchase order is created but not submitted */
   DRAFT = 1,
-  /** PENDING_APPROVAL - Awaiting approval from relevant authority */
-  PENDING_APPROVAL = 2,
+  /** PENDING - Awaiting approval from relevant authority */
+  PENDING = 2,
   /** APPROVED - The purchase order has been approved */
   APPROVED = 3,
   /** BILLED_AWAITING_PAYMENT - Invoice has been issued, awaiting payment */
@@ -192,6 +193,7 @@ export enum State {
   RETURNED = 12,
   /** CLOSED - The purchase order is closed */
   CLOSED = 13,
+  OVERDUE = 14,
   UNRECOGNIZED = -1,
 }
 
@@ -204,8 +206,8 @@ export function stateFromJSON(object: any): State {
     case "DRAFT":
       return State.DRAFT;
     case 2:
-    case "PENDING_APPROVAL":
-      return State.PENDING_APPROVAL;
+    case "PENDING":
+      return State.PENDING;
     case 3:
     case "APPROVED":
       return State.APPROVED;
@@ -239,6 +241,9 @@ export function stateFromJSON(object: any): State {
     case 13:
     case "CLOSED":
       return State.CLOSED;
+    case 14:
+    case "OVERDUE":
+      return State.OVERDUE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -252,8 +257,8 @@ export function stateToJSON(object: State): string {
       return "UNSPECIFIED";
     case State.DRAFT:
       return "DRAFT";
-    case State.PENDING_APPROVAL:
-      return "PENDING_APPROVAL";
+    case State.PENDING:
+      return "PENDING";
     case State.APPROVED:
       return "APPROVED";
     case State.BILLED_AWAITING_PAYMENT:
@@ -276,7 +281,57 @@ export function stateToJSON(object: State): string {
       return "RETURNED";
     case State.CLOSED:
       return "CLOSED";
+    case State.OVERDUE:
+      return "OVERDUE";
     case State.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum EventState {
+  UNSPECIFIED_EVENT = 0,
+  /** SUBMIT_EVENT - used to transition state from DRAFT to other state */
+  SUBMIT_EVENT = 1,
+  /** CANCEL_EVENT - used to transition from any state to  CANCELLED */
+  CANCEL_EVENT = 2,
+  /** APPROVED_EVENT - used to transition from any state to APPROVED */
+  APPROVED_EVENT = 3,
+  UNRECOGNIZED = -1,
+}
+
+export function eventStateFromJSON(object: any): EventState {
+  switch (object) {
+    case 0:
+    case "UNSPECIFIED_EVENT":
+      return EventState.UNSPECIFIED_EVENT;
+    case 1:
+    case "SUBMIT_EVENT":
+      return EventState.SUBMIT_EVENT;
+    case 2:
+    case "CANCEL_EVENT":
+      return EventState.CANCEL_EVENT;
+    case 3:
+    case "APPROVED_EVENT":
+      return EventState.APPROVED_EVENT;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return EventState.UNRECOGNIZED;
+  }
+}
+
+export function eventStateToJSON(object: EventState): string {
+  switch (object) {
+    case EventState.UNSPECIFIED_EVENT:
+      return "UNSPECIFIED_EVENT";
+    case EventState.SUBMIT_EVENT:
+      return "SUBMIT_EVENT";
+    case EventState.CANCEL_EVENT:
+      return "CANCEL_EVENT";
+    case EventState.APPROVED_EVENT:
+      return "APPROVED_EVENT";
+    case EventState.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

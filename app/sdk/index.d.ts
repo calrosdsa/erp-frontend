@@ -420,6 +420,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/invoice/update-state": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Invoice State */
+        put: operations["update invoice state"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order": {
         parameters: {
             query?: never;
@@ -2985,6 +3002,18 @@ export interface components {
             readonly $schema?: string;
             profile: components["schemas"]["EditableProfileFields"];
         };
+        UpdateStateWithEventBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            current_state: string;
+            events: number[];
+            party_type: string;
+            /** Format: uuid */
+            party_uuid: string;
+        };
         UpsertItemAttributeValueRequestBody: {
             /**
              * Format: uri
@@ -4012,12 +4041,12 @@ export interface operations {
     };
     "get group": {
         parameters: {
-            query?: {
+            query: {
                 query?: string;
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
+                party: string;
             };
             header?: {
                 Authorization?: string;
@@ -4173,12 +4202,12 @@ export interface operations {
     };
     "get purchase invoice": {
         parameters: {
-            query?: {
+            query: {
                 query?: string;
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
+                party: string;
             };
             header?: {
                 Authorization?: string;
@@ -4200,6 +4229,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityInvoiceDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update invoice state": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -4258,12 +4330,12 @@ export interface operations {
     };
     "get order": {
         parameters: {
-            query?: {
+            query: {
                 query?: string;
                 order?: string;
                 column?: string;
                 parentId?: string;
-                party?: string;
+                party: string;
             };
             header?: {
                 Authorization?: string;

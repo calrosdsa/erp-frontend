@@ -36,7 +36,7 @@ enum PartyType {
 enum State {
     UNSPECIFIED = 0;              // State is unspecified
     DRAFT = 1;                    // The purchase order is created but not submitted
-    PENDING_APPROVAL = 2;        // Awaiting approval from relevant authority
+    PENDING = 2;        // Awaiting approval from relevant authority
     APPROVED = 3;                 // The purchase order has been approved
     BILLED_AWAITING_PAYMENT = 4;  // Invoice has been issued, awaiting payment
     INVOICED_UNPAID = 5;         // Invoice exists but payment is pending
@@ -48,5 +48,13 @@ enum State {
     ON_HOLD = 11;                 // The purchase order is temporarily on hold
     RETURNED = 12;                // Items have been returned to the vendor
     CLOSED = 13;                  // The purchase order is closed
+    OVERDUE = 14;
 }
 
+
+enum EventState {
+    UNSPECIFIED_EVENT = 0;
+    SUBMIT_EVENT = 1;  //used to transition state from DRAFT to other state
+    CANCEL_EVENT = 2;  //used to transition from any state to  CANCELLED
+    APPROVED_EVENT = 3; //used to transition from any state to APPROVED
+}

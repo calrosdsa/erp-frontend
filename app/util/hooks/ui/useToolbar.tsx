@@ -1,19 +1,21 @@
 import { create } from "zustand";
-import { State } from "~/gen/common";
+import { EventState, State } from "~/gen/common";
 import { ActionToolbar } from "~/types/actions";
 
 interface ToolbarStore {
     actions:ActionToolbar[]
     title?:string
+    loading?:boolean
     state?:State
-    onSubmit?:()=>void
+    onChangeState?:(event:EventState)=>void
     onSave?:()=>void
     resetState:()=>void
+    setLoading:(loading:boolean)=>void
     setToolbar:(opts:{
         actions?:ActionToolbar[],
         state?:State
         title?:string
-        onSubmit?:()=>void
+        onChangeState?:(event:EventState)=>void
         onSave?:()=>void
     })=>void
 }
@@ -21,6 +23,8 @@ export const useToolbar = create<ToolbarStore>((set)=>({
     actions:[],
     title:undefined,
     state:undefined,
+    loading:false,
+    setLoading:(e)=>set((state)=>({loading:e})),
     resetState:()=>set((state)=>({
         actions:[],
         title:undefined
@@ -30,7 +34,7 @@ export const useToolbar = create<ToolbarStore>((set)=>({
         title:opts.title,
         state:opts.state,
         onSave:opts.onSave,
-        onSubmit:opts.onSubmit,
+        onChangeState:opts.onChangeState,
     })),
 
 }))
