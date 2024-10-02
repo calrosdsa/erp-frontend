@@ -21,7 +21,12 @@
     "base":"Supplier"
   },
   "_invoice":{
-      "base":"Invoice"
+      "base":"Invoice",
+      "create":"Create Invoice"
+  },
+  "_payment":{
+    "base":"Payment",
+    "create":"Create Payment"
   },
   "create": "Create",
   "info": "Info",

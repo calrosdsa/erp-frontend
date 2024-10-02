@@ -20,7 +20,7 @@ export const loader = async ({request}:LoaderFunctionArgs)=>{
         }
     })
     // res.data?.related_actions
-    console.log("PARTY",res.data?.associated_actions[PartyType[PartyType.purchaseInvoice]])
+    console.log("PARTY",res.data?.associated_actions[PartyType[PartyType.payment]])
     return json({
         actions:res.data?.actions,
         order:res.data?.result.entity,

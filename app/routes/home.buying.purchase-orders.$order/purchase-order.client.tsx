@@ -32,6 +32,10 @@ export default function PurchaseOrderClient() {
     actions:associatedActions && associatedActions[PartyType[PartyType.purchaseInvoice]],
     roleActions:globalState.roleActions
   })
+  const [paymentPermission] = usePermission({
+    actions:associatedActions && associatedActions[PartyType[PartyType.payment]],
+    roleActions:globalState.roleActions,
+  })
   const { t,i18n} = useTranslation("common");
   const toolbar = useToolbar()
   const createPurchaseInvoice = useCreatePurchaseInvoice()
@@ -41,8 +45,13 @@ export default function PurchaseOrderClient() {
 
   const setUpToolBar = ()=> {
     const actions:ActionToolbar[] = []
+    if(paymentPermission?.create) {
+      actions.push({label:t("_payment.create"),onClick:()=>{
+        navigate(r.toPaymentCreate())
+      },Icon:PlusIcon})
+    }
     if(purchaseInvoicePermission?.create) {
-      actions.push({label:"Create Purchase Invoice",onClick:()=>{
+      actions.push({label:t("_invoice.create"),onClick:()=>{
         createPurchaseInvoice.setData({payload:{
             party_name:order?.party_name,
             party_uuid:order?.party_uuid,
@@ -64,9 +73,8 @@ export default function PurchaseOrderClient() {
               }
               return d
             }) || []
-          // supplier:order.
-        }})
-        
+        }
+      })
         navigate(r.toPurchaseInvoiceCreate())
       },Icon:PlusIcon})
     }

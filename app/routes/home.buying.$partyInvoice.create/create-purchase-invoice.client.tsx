@@ -103,7 +103,6 @@ export default function CreatePurchaseInvoiceClient() {
 
   return (
     <div>
-      {JSON.stringify(form.formState.errors)}
       <FormLayout>
         <Form {...form}>
           <fetcher.Form

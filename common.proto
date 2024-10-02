@@ -31,6 +31,7 @@ enum PartyType {
     contact = 16;           // 17 - 1
     purchaseInvoice = 17;   // 18 - 1
     company = 18;           // 19 - 1
+    payment = 19;           
 }
 
 enum State {

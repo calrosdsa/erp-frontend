@@ -28,6 +28,8 @@ class Routes {
 
   accounting = this.base + "/accounting";
   taxes = this.accounting + "/taxes";
+  payment = this.accounting + "/payment"
+
 
   stock = this.base + "/stock";
   items = this.stock + "/items";
@@ -101,6 +103,10 @@ class Routes {
   priceListDetail(name?: string, id?: string): string {
     if (!name) return "N/A";
     return `${this.priceList}/${encodeURIComponent(name)}?id=${id}`;
+  }
+
+  toPaymentCreate(){
+    return `${this.payment}/create`
   }
   
   taxDetailRoute(name?: string, id?: string): string {
