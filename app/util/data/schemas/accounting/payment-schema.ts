@@ -6,7 +6,8 @@ export const createPaymentSchema = z.object({
     amount:z.preprocess((a)=>parseFloat(z.string().parse(a)),z.number()),
     paymentType:z.string(),
     modeOfPayment:z.string(),
-
+    
+    partyType:z.string(),
     partyName:z.string().optional(),
     partyUuid:z.string(),
     partyBankAccount:z.string().optional(),

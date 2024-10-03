@@ -437,6 +437,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Accounts */
+        get: operations["get-acconts"];
+        put?: never;
+        /** Create Ledger */
+        post: operations["create-ledger"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ledger/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Ledger Detail */
+        get: operations["get-ledger-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order": {
         parameters: {
             query?: never;
@@ -582,7 +617,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Party by reference */
+        /**
+         * Get Party by reference
+         * @description Retrieve parties by party type.
+         */
         get: operations["get party by reference"];
         put?: never;
         post?: never;
@@ -617,7 +655,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Party type references */
+        /**
+         * Get Party type references
+         * @description Retrieve the allowed party types for reference
+         */
         get: operations["get party type references"];
         put?: never;
         post?: never;
@@ -655,6 +696,23 @@ export interface paths {
         put?: never;
         /** Create Payment */
         post: operations["create-payment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment/parties": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Parties Type */
+        get: operations["get-parties-type"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1521,6 +1579,20 @@ export interface components {
             item_uuid: string;
             name: string;
         };
+        CreateLedgerBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            account_type: string;
+            description?: string;
+            enabled: boolean;
+            is_group?: boolean;
+            ledger_no?: string | null;
+            name: string;
+            parent_uuid?: string | null;
+        };
         CreateOrderRequestBody: {
             /**
              * Format: uri
@@ -1892,6 +1964,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityItemPriceDto"];
+        };
+        EntityResponseResultEntityLedgerDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityLedgerDetailDto"];
         };
         EntityResponseResultEntityListCustomerTypeBody: {
             /**
@@ -2312,6 +2397,28 @@ export interface components {
             key: string;
             value: string;
         };
+        LedgerDetailDto: {
+            account_type: string;
+            /** Format: date-time */
+            created_at: string;
+            description: string;
+            is_group: boolean;
+            ledger_no: string | null;
+            name: string;
+            parent_name: string;
+            parent_uuid: string;
+            uuid: string;
+        };
+        LedgerDto: {
+            account_type: string;
+            /** Format: date-time */
+            created_at: string;
+            description: string;
+            is_group: boolean;
+            ledger_no: string | null;
+            name: string;
+            uuid: string;
+        };
         OrderDto: {
             code: string;
             /** Format: date-time */
@@ -2431,6 +2538,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItemVariantDto"];
+        };
+        PaginationResponsePaginationResultListLedgerDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListLedgerDto"];
         };
         PaginationResponsePaginationResultListOrderDtoBody: {
             /**
@@ -2577,6 +2693,11 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListLedgerDto: {
+            results: components["schemas"]["LedgerDto"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListOrderDto: {
             results: components["schemas"]["OrderDto"][];
             /** Format: int64 */
@@ -2642,6 +2763,7 @@ export interface components {
             /** Format: int64 */
             id: number;
             name: string;
+            uuid: string;
         };
         PartyReferenceDto: {
             code: string;
@@ -2771,6 +2893,16 @@ export interface components {
             message: string;
             result: components["schemas"]["InvoiceDto"];
         };
+        ResponseDataLedgerDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["LedgerDto"];
+        };
         ResponseDataListPartyTypeDtoBody: {
             /**
              * Format: uri
@@ -2836,6 +2968,11 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemPriceDto"];
+        };
+        ResultEntityLedgerDetailDto: {
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["LedgerDetailDto"];
         };
         ResultEntityListCustomerType: {
             addresses: components["schemas"]["AddressDto"][];
@@ -4346,6 +4483,122 @@ export interface operations {
             };
         };
     };
+    "get-acconts": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListLedgerDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLedgerBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataLedgerDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-ledger-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityLedgerDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create order": {
         parameters: {
             query?: {
@@ -4980,6 +5233,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataPaymentDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-parties-type": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListPartyTypeDtoBody"];
                 };
             };
             /** @description Error */

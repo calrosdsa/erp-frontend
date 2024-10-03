@@ -16,8 +16,12 @@ export const action = async({request}:ActionFunctionArgs)=>{
     let error:string | undefined = undefined
     let message:string |  undefined = undefined
     let payment:components["schemas"]["PaymentDto"] | undefined = undefined
+    let partiesType:components["schemas"]["PartyType"][] = []
     switch(data.action){
         case "payment-parties":{
+            const res = await client.GET("/payment/parties")
+            partiesType = res.data?.result || []
+            console.log("payment parties type",res.error)
             break;
         }
         case "create-payment":{
@@ -44,7 +48,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
         }
     }
     return json({
-        error,message,payment
+        error,message,payment,partiesType
     })
 }
 

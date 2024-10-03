@@ -342,6 +342,90 @@ export function eventStateToJSON(object: EventState): string {
   }
 }
 
+export enum PaymentType {
+  RECEIVE = 0,
+  PAY = 1,
+  INTERNAL_TRANSFER = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function paymentTypeFromJSON(object: any): PaymentType {
+  switch (object) {
+    case 0:
+    case "RECEIVE":
+      return PaymentType.RECEIVE;
+    case 1:
+    case "PAY":
+      return PaymentType.PAY;
+    case 2:
+    case "INTERNAL_TRANSFER":
+      return PaymentType.INTERNAL_TRANSFER;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return PaymentType.UNRECOGNIZED;
+  }
+}
+
+export function paymentTypeToJSON(object: PaymentType): string {
+  switch (object) {
+    case PaymentType.RECEIVE:
+      return "RECEIVE";
+    case PaymentType.PAY:
+      return "PAY";
+    case PaymentType.INTERNAL_TRANSFER:
+      return "INTERNAL_TRANSFER";
+    case PaymentType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum AccountRootType {
+  ASSET = 0,
+  LIABILITIES = 1,
+  REVENUE = 2,
+  EXPENSE = 3,
+  UNRECOGNIZED = -1,
+}
+
+export function accountRootTypeFromJSON(object: any): AccountRootType {
+  switch (object) {
+    case 0:
+    case "ASSET":
+      return AccountRootType.ASSET;
+    case 1:
+    case "LIABILITIES":
+      return AccountRootType.LIABILITIES;
+    case 2:
+    case "REVENUE":
+      return AccountRootType.REVENUE;
+    case 3:
+    case "EXPENSE":
+      return AccountRootType.EXPENSE;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return AccountRootType.UNRECOGNIZED;
+  }
+}
+
+export function accountRootTypeToJSON(object: AccountRootType): string {
+  switch (object) {
+    case AccountRootType.ASSET:
+      return "ASSET";
+    case AccountRootType.LIABILITIES:
+      return "LIABILITIES";
+    case AccountRootType.REVENUE:
+      return "REVENUE";
+    case AccountRootType.EXPENSE:
+      return "EXPENSE";
+    case AccountRootType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export interface Result {
   message: string;
 }

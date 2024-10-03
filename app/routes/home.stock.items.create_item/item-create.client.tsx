@@ -23,10 +23,10 @@ import { action } from "./route";
 import { createItemSchema } from "~/util/data/schemas/stock/item-schemas";
 import { useUomDebounceFetcher } from "~/util/hooks/fetchers/useUomDebounceFetcher";
 import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
-import { PartyType } from "~/types/enums";
 import { usePermission } from "~/util/hooks/useActions";
 import { components } from "~/sdk";
-import { useCreateGroup } from "../home.groups/components/create-group";
+import { PartyType } from "~/gen/common";
+import { useCreateGroup } from "../home.groups.$party_/components/create-group";
 
 export default function CreateItemClient() {
   const fetcher = useFetcher<typeof action>();
@@ -34,7 +34,7 @@ export default function CreateItemClient() {
   const globalState = useOutletContext<GlobalState>();
   const [uomsDebounceFetcher, onUomNameChange] = useUomDebounceFetcher();
   const [groupDebounceFetcher, onChangeGroupName] = useGroupDebounceFetcher({
-    partyType: PartyType.PARTY_ITEM_GROUP,
+    partyType: PartyType.itemGroup,
   });
   const createGroup = useCreateGroup();
   const [groupPermission] = usePermission({
@@ -124,7 +124,7 @@ export default function CreateItemClient() {
                 {...(groupPermission?.create && {
                   addNew: () =>
                     createGroup.openDialog({
-                      partyType: PartyType.PARTY_ITEM_GROUP,
+                      partyType: PartyType[PartyType.itemGroup],
                     }),
                 })}
               />

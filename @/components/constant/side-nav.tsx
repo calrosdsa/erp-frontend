@@ -1,18 +1,12 @@
 import {
-  BlocksIcon,
-  BookOpenCheck,
   Building2Icon,
   ContactIcon,
   CreditCardIcon,
-  DollarSign,
   HomeIcon,
   Layers3Icon,
-  LayoutDashboard,
   MapPinHouseIcon,
   SettingsIcon,
   UserCogIcon,
-  UserIcon,
-  UsersIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { SessionData } from "~/sessions";
@@ -24,6 +18,7 @@ import { GlobalState } from "~/types/app";
 import { useMemo } from "react";
 import { BuyingNav } from "./buying-nav";
 import { SellingNav } from "./selling-nav";
+import { AccountingNav } from "./accounting-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -40,6 +35,9 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
 
   const sellingNav = SellingNav({
     entities:entities,
+  })
+  const accountingNav = AccountingNav({
+    entities:entities
   })
 
   const companies = {
@@ -63,22 +61,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     // color: "text-sky-500",
   };
 
-  let accountingChildrens: NavItem[] = [];
-  if (entities?.includes(Entity.TAX_ENTITY_ID)) {
-    accountingChildrens.push({
-      title: t("taxes"),
-      href: r.taxes,
-    });
-  }
-
-  const accounting: NavItem = {
-    title: t("accounting"),
-    icon: CreditCardIcon,
-    href: r.accounting,
-    isChildren: true,
-    children: accountingChildrens,
-  };
-
+  
 
  
 
@@ -189,8 +172,8 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (entities?.includes(Entity.COMPANY_ENTITY_ID)) {
     navItems.push(companies);
   }
-  if (accountingChildrens.length > 0) {
-    navItems.push(accounting);
+  if (accountingNav.children && accountingNav.children.length > 0) {
+    navItems.push(accountingNav);
   }
 
   if(buyingNav.children && buyingNav.children.length > 0) {
@@ -199,6 +182,8 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if(sellingNav.children && sellingNav.children.length > 0) {
     navItems.push(sellingNav)
   }
+
+
 
   if (stockChildrens.length > 0) {
     navItems.push(stock);

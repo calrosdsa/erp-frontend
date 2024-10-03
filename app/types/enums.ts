@@ -34,7 +34,9 @@ export enum Entity {
     CUSTOMER = 15,
     ADDRESS = 16,
     CONTACT = 17,
-    PURCHASE_INVOICE_ENTITY_ID = 18
+    PURCHASE_INVOICE_ENTITY_ID = 18,
+    PAYMENT_ENTITY_ID = 19,
+    LEDGER_ENTITY_ID = 20,
 }
 
 export enum PartyType {

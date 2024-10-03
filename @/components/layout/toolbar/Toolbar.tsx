@@ -24,7 +24,7 @@ export default function ToolBar({ title }: { title: string }) {
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
         <div className="flex flex-wrap space-x-2 ">
           <Typography fontSize={22}>
-            {toolbarState.title ? toolbarState.title : title}
+            {toolbarState.title != undefined ? toolbarState.title : title}
           </Typography>
           {toolbarState.state && (
             <Badge variant={"outline"} className="">
@@ -111,6 +111,28 @@ export default function ToolBar({ title }: { title: string }) {
                   </Button>
                 )}
             </>
+          )}
+          {toolbarState.onSave && (
+             <Button
+             size={"sm"}
+             onClick={() =>{
+              if(toolbarState.onSave){
+                toolbarState.onSave()
+              }else{
+                alert("NO ON SAVE")
+              }
+             }
+             }
+             className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
+             disabled={toolbarState.loading}
+             variant={"outline"}
+           >
+             {toolbarState.loading ? (
+               <Icons.spinner className="h-5 w-5 animate-spin" />
+             ) : (
+               t("form.save")
+             )}
+           </Button>
           )}
         </div>
       </div>

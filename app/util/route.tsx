@@ -28,8 +28,8 @@ class Routes {
 
   accounting = this.base + "/accounting";
   taxes = this.accounting + "/taxes";
-  payment = this.accounting + "/payment"
-
+  chartOfAccount = this.accounting + "/account";
+  payment = this.accounting + "/payment";
 
   stock = this.base + "/stock";
   items = this.stock + "/items";
@@ -63,9 +63,11 @@ class Routes {
     }
   }
 
-  toCreateAddress(id?:number){
-    if(id) { return `${this.createAddress}?referenceId=${id}` }
-    return this.createAddress
+  toCreateAddress(id?: number) {
+    if (id) {
+      return `${this.createAddress}?referenceId=${id}`;
+    }
+    return this.createAddress;
   }
 
   toAddressDetail(name: string, id: string): string {
@@ -74,21 +76,22 @@ class Routes {
   toContactDetail(name: string, id: string): string {
     return `${this.contact}/${encodeURIComponent(name)}?id=${id}`;
   }
-  
-  toCreateContact(id?:number){
-    if(id) { return `${this.contact}/create?referenceId=${id}` }
-    return `${this.contact}/create`
-  }
 
+  toCreateContact(id?: number) {
+    if (id) {
+      return `${this.contact}/create?referenceId=${id}`;
+    }
+    return `${this.contact}/create`;
+  }
 
   toCompanyDetail(name: string, id: string): string {
     return `${this.companies}/${encodeURIComponent(name)}?id=${id}`;
   }
 
   toGroupsByParty(party: PartyType): string {
-    return `${this.groups}/${encodeURIComponent(party)}`;
+    return `${this.groups}/${encodeURIComponent(PartyType[party])}`;
   }
-  
+
   toGroupDetail(party: string, name: string, id: string): string {
     return `${this.groups}/${encodeURIComponent(party)}/${encodeURIComponent(
       name
@@ -105,13 +108,16 @@ class Routes {
     return `${this.priceList}/${encodeURIComponent(name)}?id=${id}`;
   }
 
-  toPaymentCreate(){
-    return `${this.payment}/create`
+  toPaymentCreate() {
+    return `${this.payment}/create`;
   }
-  
+
   taxDetailRoute(name?: string, id?: string): string {
     if (!name) return "N/A";
     return `${this.accounting}/taxes/${encodeURIComponent(name)}?id=${id}`;
+  }
+  toCreateAccountLedger():string{
+    return `${this.chartOfAccount}/new`
   }
 
   createItemAttributeRoute = `${this.itemAttributes}/create`;
@@ -155,6 +161,9 @@ class Routes {
   toTaxDetail(name: string, id: string): string {
     return `${this.taxes}/${encodeURIComponent(name)}?id=${id}`;
   }
+  toAccountLedgerDetail(name:string,id:string):string {
+     return `${this.chartOfAccount}/${encodeURIComponent(name)}?id=${id}`
+  }
   //Buyinh
   toSupplierGroup(name?: string, id?: string): string {
     return `${this.supplierGroups}/${encodeURIComponent(
@@ -170,13 +179,12 @@ class Routes {
   toPurchaseOrderCreate(): string {
     return `${this.purchaseOrders}/create`;
   }
-  toPurchaseInvoiceDetail(code:string,id:string):string {
-    return `${this.purchaseInvoices}/${code}?id=${id}`
+  toPurchaseInvoiceDetail(code: string, id: string): string {
+    return `${this.purchaseInvoices}/${code}?id=${id}`;
   }
-  toPurchaseInvoiceCreate():string {
-    return `${this.purchaseInvoices}/create`
+  toPurchaseInvoiceCreate(): string {
+    return `${this.purchaseInvoices}/create`;
   }
-  
 
   //Manage
   toUserProfileDetail(name: string, id: string): string {

@@ -1,5 +1,9 @@
 
-
+//For selected items that are not objects, such as an array of strings.
+interface SelectItem {
+    name:string,
+    value:string
+}
 
 interface FormItemData<T extends object,K extends keyof T> {
     typeForm:"input" | "select" | "check" | "multiselect" | "textarea" | "autocomplete"

@@ -10,11 +10,11 @@ import { createSupplierSchema } from "~/util/data/schemas/buying/supplier-schema
 import { z } from "zod";
 import { routes } from "~/util/route";
 import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
-import { PartyType } from "~/types/enums";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useCreateGroup } from "~/routes/home.groups.$party_/components/create-group";
+import { PartyType } from "~/gen/common";
 
 export const CreateSupplier = ({
   open,
@@ -29,7 +29,7 @@ export const CreateSupplier = ({
   const { t } = useTranslation("common");
   const { toast } = useToast();
   const [groupDebounceFetcher, onChangeGroupName] = useGroupDebounceFetcher({
-    partyType: PartyType.PARTY_SUPPLIER_GROUP,
+    partyType: PartyType.supplierGroup,
   });
   const createGroup = useCreateGroup();
   const [groupPermission] = usePermission({
@@ -109,7 +109,7 @@ export const CreateSupplier = ({
                 {...(groupPermission?.create && {
                   addNew: () =>
                     createGroup.openDialog({
-                      partyType: PartyType.PARTY_SUPPLIER_GROUP,
+                      partyType: PartyType[PartyType.supplierGroup],
                     }),
                 })}
               />

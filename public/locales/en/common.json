@@ -26,7 +26,9 @@
   },
   "_payment":{
     "base":"Payment",
-    "create":"Create Payment"
+    "create":"Create Payment",
+    "type":"Type of Payment",
+    "paymentFromTo":"Payment From / To"
   },
   "create": "Create",
   "info": "Info",
@@ -43,6 +45,12 @@
     "siginIYouADesc": "Enter your email and password below to sign in to your account",
     "forgotPassword": "Forgot your password?",
     "resetPassowordMsg": "Enter your user account's verified email address and we will send you a password reset link."
+  },
+  "_ledger":{
+    "base":"Account",
+    "type":"Account Type",
+    "no":"Account No.",
+    "chartOfAccounts":"Chart of Accounts"
   },
   "address":"Address",
   "_address":{
@@ -95,6 +103,7 @@
     "submit": "Submit",
     "cancel":"Cancel",
     "party":"Party",
+    "partyType":"Party Type",
     "save": "Save",
     "uom": "UOM",
     "city": "City",
@@ -108,6 +117,7 @@
     "price-list": "Price List",
     "currency": "Currency",
     "buying": "Buying",
+    "paymentType":"Payment Type",
     "selling": "Selling",
     "rate": "Rate",
     "itemQuantity": "Item Quantity",
@@ -122,13 +132,15 @@
     "startDate": "Start Date",
     "outOfStockThreshold": "Out of Stock Threshold",
     "isGroup":"Is Group",
-    "isGroupDescription":"Check this box to organize it as a group or folder.",
+    "isGroupDescription":"Check this box to organize it as a group.",
     "orderConfirmation": "Order Confirmation",
     "siteUrl": "Site Url",
     "logo": "Logo",
     "isShippingAddress":"Is Shipping Address",
-    "isBillingAddress":"Is Shipping Address"
+    "isBillingAddress":"Is Shipping Address",
+    "paidAmount":"Paid Amount ({{o}})"
   },
+  "accounts":"Accounts",
   "_selling": {
     "isBuying": "Is Buying",
     "isSelling": "Is Selling",
@@ -290,5 +302,12 @@
   },
   "alert":{
     "submit":"Please submit this document for confirmation."
-  }
+  },
+  "RECEIVE":"Receive",
+  "PAY":"Pay",
+  "INTERNAL_TRANSFER":"Internal Transfer",
+  "ASSET":"Asset",
+  "LIABILITIES":"Liabilities",
+  "EXPENSE":"Expense",
+  "REVENUE":"Revenue"
 }

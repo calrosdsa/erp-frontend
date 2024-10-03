@@ -1,8 +1,9 @@
 import { CreditCardIcon, DollarSign } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { PartyType } from "~/gen/common";
 import { NavItem } from "~/types";
 import { GlobalState } from "~/types/app";
-import { Entity, PartyType } from "~/types/enums";
+import { Entity } from "~/types/enums";
 import { routes } from "~/util/route";
 
 export const SellingNav = ({ entities }: { 
@@ -20,7 +21,7 @@ export const SellingNav = ({ entities }: {
   if(entities?.includes(Entity.CUSTOMER)){
     sellingChildrens.push({
       title: t("customerGroup"),
-      href: r.toGroupsByParty(PartyType.PARTY_CUSTOMER_GROUP),
+      href: r.toGroupsByParty(PartyType.customer),
     });
   }
 

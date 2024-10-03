@@ -13,6 +13,7 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { toast, useToast } from "@/components/ui/use-toast";
+import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 
 export const AddReference = ({
   open,
@@ -36,24 +37,27 @@ export const AddReference = ({
   const [selectedPartyType, setSelectedPartyType] = useState<
     components["schemas"]["PartyTypeDto"] | undefined
   >(undefined);
-  const partiesDebounceFetcher = useDebounceFetcher<{
-    parties:components["schemas"]["PartyDto"][]
-  }>()
-  const revalidator = useRevalidator()
+  // const partiesDebounceFetcher = useDebounceFetcher<{
+  //   parties:components["schemas"]["PartyDto"][]
+  // }>()
+  const [partiesDebounceFetcher,onPartyNameChange] = usePartyDebounceFetcher({
+    partyType:selectedPartyType?.code
+  })
 
-  const onPartyNameChange = (e:string) =>{
-    if(selectedPartyType == undefined) return 
-    partiesDebounceFetcher.submit({
-        action:"parties",
-        partyType:selectedPartyType.code,
-        query:e
-    },{
-        debounceTimeout:DEFAULT_DEBOUNCE_TIME,
-        action:r.party,
-        method:"POST",
-        encType:"application/json"
-    })
-  }
+
+  // const onPartyNameChange = (e:string) =>{
+  //   if(selectedPartyType == undefined) return 
+  //   partiesDebounceFetcher.submit({
+  //       action:"parties",
+  //       partyType:selectedPartyType.code,
+  //       query:e
+  //   },{
+  //       debounceTimeout:DEFAULT_DEBOUNCE_TIME,
+  //       action:r.party,
+  //       method:"POST",
+  //       encType:"application/json"
+  //   })
+  // }
 
   const getPartyRefernceOptions = () => {
     referenceOptsFetcher.submit(

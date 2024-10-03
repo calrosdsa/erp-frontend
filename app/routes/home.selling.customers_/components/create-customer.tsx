@@ -11,11 +11,11 @@ import { z } from "zod"
 import { loader } from "~/root"
 import { routes } from "~/util/route"
 import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher"
-import { PartyType } from "~/types/enums"
 import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import { useCreateGroup } from "~/routes/home.groups.$party_/components/create-group"
+import { PartyType } from "~/gen/common"
 
 
 export const CreateCustomer = ({open,onOpenChange,globalState}:{
@@ -28,7 +28,7 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
     const {t} = useTranslation("common")
     const customerTypeFetcher = useFetcher<typeof action>()
     const [groupDebounceFetcher,onGroupNameChange] = useGroupDebounceFetcher({
-        partyType:PartyType.PARTY_CUSTOMER_GROUP
+        partyType:PartyType.customerGroup
     })
     const [groupPermission] = usePermission({
         actions:groupDebounceFetcher.data?.actions,
@@ -109,7 +109,7 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
                     label={t("group")}
                     {...(groupPermission?.create && {
                         addNew:()=>{
-                            createGroup.openDialog({partyType:PartyType.PARTY_CUSTOMER_GROUP})
+                            createGroup.openDialog({partyType:PartyType[PartyType.customerGroup]})
                         }
                     })}
                     onSelect={(e)=>{

@@ -23,6 +23,7 @@ export const action = async({request}:ActionFunctionArgs) =>{
     let partyOptions:components["schemas"]["PartyTypeDto"][] =[]
     let partyReferencesPagination:components["schemas"]["PaginationResultListPartyReferenceDto"] | undefined = undefined
     switch(data.action){
+        // Retrive party references by partyId
         case "party-references":{
             const res = await client.GET("/party/references",{
                 params:{
@@ -47,11 +48,14 @@ export const action = async({request}:ActionFunctionArgs) =>{
             error = res.error?.detail
             break;
         }
+
+        //Retrieve the allowed party types for reference
         case "references-options":{
             const res = await client.GET("/party/references/type")
             partyOptions = res.data?.result || []
             break;
         }
+        // Retrieve parties by party type.
         case "parties":{
             console.log(data)
             const res =await client.GET("/party/parties-by-references/{party_type}",{

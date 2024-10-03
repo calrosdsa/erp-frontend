@@ -2,9 +2,9 @@ import { useEffect } from "react"
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
 import { components } from "~/sdk"
-import { PartyType } from "~/types/enums"
 import { routes } from "~/util/route"
 import { usePermission } from "../useActions"
+import { PartyType } from "~/gen/common"
 
 
 export const useGroupDebounceFetcher = ({partyType}:{

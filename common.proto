@@ -32,6 +32,7 @@ enum PartyType {
     purchaseInvoice = 17;   // 18 - 1
     company = 18;           // 19 - 1
     payment = 19;           
+    ledger = 20;
 }
 
 enum State {
@@ -58,4 +59,18 @@ enum EventState {
     SUBMIT_EVENT = 1;  //used to transition state from DRAFT to other state
     CANCEL_EVENT = 2;  //used to transition from any state to  CANCELLED
     APPROVED_EVENT = 3; //used to transition from any state to APPROVED
+}
+
+
+enum PaymentType {
+    RECEIVE = 0;
+    PAY = 1;
+    INTERNAL_TRANSFER = 2;
+}
+
+enum AccountRootType {
+    ASSET = 0;
+    LIABILITIES = 1;
+    REVENUE = 2;
+    EXPENSE = 3;
 }
