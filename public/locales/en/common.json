@@ -50,7 +50,9 @@
     "base":"Account",
     "type":"Account Type",
     "no":"Account No.",
-    "chartOfAccounts":"Chart of Accounts"
+    "chartOfAccounts":"Chart of Accounts",
+    "paidFrom":"Account Paid From",
+    "paidTo":"Account Paid To"
   },
   "address":"Address",
   "_address":{
@@ -155,6 +157,7 @@
     "info":"Customer Info"
   },
   "f": {
+    "parent":"Parent {{o}}",
     "add-new": "Create new {{o}}",
     "edit":"Edit {{o}}",
     "enable": "Check the box to enable this {{o}}"

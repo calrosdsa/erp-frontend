@@ -26,7 +26,8 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     parent_uuid:d.parentUuid,
                     ledger_no:d.ledgerNo,
                     enabled:d.enabled,
-                    is_group:d.isGroup
+                    is_group:d.isGroup,
+                    currency:d.currency
                 }
             })
             error = res.error?.detail

@@ -1586,6 +1586,7 @@ export interface components {
              */
             readonly $schema?: string;
             account_type: string;
+            currency?: string;
             description?: string;
             enabled: boolean;
             is_group?: boolean;
@@ -1619,26 +1620,26 @@ export interface components {
             /** Format: int64 */
             party_reference?: number | null;
         };
-        CreatePaymentBody: {
+        CreatePayment: {
             /** Format: int64 */
             amount: number;
             mode_of_payment: string;
             payment_type: string;
             postuing_date: string;
         };
-        CreatePaymentParty: {
-            company_bank_account?: string | null;
-            party_bank_account?: string | null;
-            party_uuid: string;
-        };
-        CreatePaymentRequestBody: {
+        CreatePaymentBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            payment: components["schemas"]["CreatePaymentBody"];
+            payment: components["schemas"]["CreatePayment"];
             payment_party: components["schemas"]["CreatePaymentParty"];
+        };
+        CreatePaymentParty: {
+            company_bank_account?: string | null;
+            party_bank_account?: string | null;
+            party_uuid: string;
         };
         CreatePriceListRequestBody: {
             /**
@@ -2402,6 +2403,7 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             description: string;
+            enabled: boolean;
             is_group: boolean;
             ledger_no: string | null;
             name: string;
@@ -2414,6 +2416,7 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             description: string;
+            enabled: boolean;
             is_group: boolean;
             ledger_no: string | null;
             name: string;
@@ -3431,6 +3434,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3639,6 +3643,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3765,6 +3770,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3807,6 +3813,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3917,6 +3924,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -3959,6 +3967,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4285,6 +4294,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4329,6 +4339,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4489,10 +4500,13 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
                 parentId?: string;
+                is_credit_balance?: string;
+                is_debit_balance?: string;
             };
             header?: {
                 Authorization?: string;
@@ -4690,6 +4704,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4734,6 +4749,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -4899,6 +4915,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -5056,6 +5073,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -5222,7 +5240,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreatePaymentRequestBody"];
+                "application/json": components["schemas"]["CreatePaymentBody"];
             };
         };
         responses: {
@@ -5492,6 +5510,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -5700,6 +5719,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -5742,6 +5762,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -5870,6 +5891,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -6082,6 +6104,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -6294,6 +6317,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -6424,6 +6448,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -6466,6 +6491,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -6508,6 +6534,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -6677,6 +6704,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -6803,6 +6831,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -6929,6 +6958,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -7094,6 +7124,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;

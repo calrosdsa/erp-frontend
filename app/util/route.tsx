@@ -161,8 +161,8 @@ class Routes {
   toTaxDetail(name: string, id: string): string {
     return `${this.taxes}/${encodeURIComponent(name)}?id=${id}`;
   }
-  toAccountLedgerDetail(name:string,id:string):string {
-     return `${this.chartOfAccount}/${encodeURIComponent(name)}?id=${id}`
+  toAccountLedgerDetail(name?:string,id?:string):string {
+     return `${this.chartOfAccount}/${encodeURIComponent(name || "")}?id=${id}`
   }
   //Buyinh
   toSupplierGroup(name?: string, id?: string): string {

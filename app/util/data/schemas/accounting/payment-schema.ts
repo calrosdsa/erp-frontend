@@ -8,8 +8,13 @@ export const createPaymentSchema = z.object({
     modeOfPayment:z.string(),
     
     partyType:z.string(),
-    partyName:z.string().optional(),
     partyUuid:z.string(),
     partyBankAccount:z.string().optional(),
     companyBankAccount:z.string().optional(),
+
+    //UUID
+    accountPaidFrom:z.string(),
+    accountPaidTo:z.string(),
+    accountPaidFromName:z.string(),
+    accountPaidToName:z.string()
 })
