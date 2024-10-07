@@ -52,7 +52,8 @@
     "no":"Account No.",
     "chartOfAccounts":"Chart of Accounts",
     "paidFrom":"Account Paid From",
-    "paidTo":"Account Paid To"
+    "paidTo":"Account Paid To",
+    "currency":"Account Currency ({{o}})"
   },
   "address":"Address",
   "_address":{
@@ -76,9 +77,12 @@
     "base":"User"
   },
   "form": {
+    "from":"From",
+    "to":"To",
     "gender":"Gender",
     "name": "Name",
     "date":"Date",
+    "postingDate":"Posting Date",
     "dueDate":"Due Date",
     "deliveryDate": "Delivery Date",
     "pickADate":"Pick a Date",
@@ -263,7 +267,7 @@
   "orders": "Orders",
   "orderInfo": "Order Info",
   "_order":{
-    "base":"order",
+    "base":"Order",
     "orderItems":"Order Items"
   },
   "table": {

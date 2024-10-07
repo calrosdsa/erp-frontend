@@ -16,17 +16,17 @@ export const action = async({request,params}:ActionFunctionArgs) =>{
     const body = await request.json() as OrderCustomerActions
     console.log(body)
     switch(body.action){
-        case "square-cancel-subscription":{
-            const res = await client.POST("/square/subscription/cancel",{
-                body:JSON.parse(body.data)
-            })
-            if(res.error != undefined){
-                return json({
-                    errorAction:res.error.detail
-                })
-            }
-            break;
-        }
+        // case "square-cancel-subscription":{
+        //     const res = await client.POST("/square/subscription/cancel",{
+        //         body:JSON.parse(body.data)
+        //     })
+        //     if(res.error != undefined){
+        //         return json({
+        //             errorAction:res.error.detail
+        //         })
+        //     }
+        //     break;
+        // }
     }
     return json({
         errorAction:undefined

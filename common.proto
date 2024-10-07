@@ -33,6 +33,7 @@ enum PartyType {
     company = 18;           // 19 - 1
     payment = 19;           
     ledger = 20;
+    purchaseReceipt = 21;
 }
 
 enum State {
@@ -74,3 +75,4 @@ enum AccountRootType {
     REVENUE = 2;
     EXPENSE = 3;
 }
+

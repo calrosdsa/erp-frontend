@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import PaymentCreateClient from "./create-payment.client";
 import apiClient from "~/apiclient";
 import { z } from "zod";
@@ -30,25 +30,36 @@ export const action = async({request}:ActionFunctionArgs)=>{
                 body:{
                     payment:{
                         amount:d.amount,
-                        mode_of_payment:d.modeOfPayment,
                         payment_type:d.paymentType,
                         postuing_date:d.postingDate.toString(),
                     },
                     payment_party:{
                         party_uuid:d.partyUuid,
+                        party_type:d.partyType,
                         party_bank_account:d.partyBankAccount,
                         company_bank_account:d.companyBankAccount,
+                    },
+                    payment_accounts:{
+                        paid_from:d.accountPaidFrom,
+                        paid_to:d.accountPaidTo,
                     }
                 }
             })
             error = res.error?.detail
             message = res.data?.message
             payment = res.data?.result
+            console.log(res.error,res.data)
             break
         }
     }
     return json({
         error,message,payment,partiesType
+    })
+}
+
+export const loader = async({request}:LoaderFunctionArgs)=>{
+    return json({
+        message:"DATA"
     })
 }
 

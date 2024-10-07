@@ -13,11 +13,16 @@ class Routes {
   groups = this.base + "/groups";
   companies = this.base + "/companies";
 
+  invoice = this.base + "/invoice"
+  order = this.base + "/order"
+  receipt = this.base + "/receipt"
+
+
   buying = this.base + "/buying";
   supplierGroups = this.buying + "/supplier-groups";
   suppliers = this.buying + "/suppliers";
-  purchaseOrders = this.buying + "/purchase-orders";
-  purchaseInvoices = this.buying + `/${PartyType[PartyType.purchaseInvoice]}`;
+  purchaseOrders = this.order + `/${PartyType[PartyType.purchaseOrder]}`;
+  purchaseInvoices = this.invoice + `/${PartyType[PartyType.purchaseInvoice]}`;
 
   selling = this.base + "/selling";
   sellingStock = this.selling + "/stock";
@@ -111,6 +116,9 @@ class Routes {
   toPaymentCreate() {
     return `${this.payment}/create`;
   }
+  toPaymentDetail(code?:string){
+    return `${this.payment}/${encodeURIComponent(code || "")}`
+  }
 
   taxDetailRoute(name?: string, id?: string): string {
     if (!name) return "N/A";
@@ -186,6 +194,16 @@ class Routes {
     return `${this.purchaseInvoices}/create`;
   }
 
+  toReceipt(partyType:string):string {
+    return `${this.receipt}/${encodeURIComponent(partyType)}`
+  }
+  toReceiptDetail(partyType:string,code:string):string {
+    return `${this.receipt}/${encodeURIComponent(partyType)}/${encodeURIComponent(code)}`
+  }
+  toCreateReceipt(partyType:string):string {
+    return `${this.receipt}/${encodeURIComponent(partyType)}/new`
+  }
+
   //Manage
   toUserProfileDetail(name: string, id: string): string {
     return `${this.users}/${encodeURIComponent(name)}?v=${id}`;
@@ -193,6 +211,19 @@ class Routes {
   toRoleDetail(name: string, id: string): string {
     return `${this.roles}/${encodeURIComponent(name)}?v=${id}`;
   }
+
+
+  toPartyDetailPage(name: string, id: string,partyType:string): string {
+    switch(partyType){
+      case PartyType[PartyType.customer]:
+        return `${this.customers}/${encodeURIComponent(name)}?id=${id}`;
+      case PartyType[PartyType.supplier]:
+        return `${this.suppliers}/${encodeURIComponent(name)}?id=${id}`;
+      default:
+        return this.base
+    }
+  }
+
 }
 
 export const routes = new Routes();

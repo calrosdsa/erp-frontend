@@ -26,9 +26,9 @@ export default function ToolBar({ title }: { title: string }) {
           <Typography fontSize={22}>
             {toolbarState.title != undefined ? toolbarState.title : title}
           </Typography>
-          {toolbarState.state && (
+          {toolbarState.status && (
             <Badge variant={"outline"} className="">
-              {State[toolbarState.state]}
+              {State[toolbarState.status]}
             </Badge>
           )}
         </div>
@@ -70,9 +70,9 @@ export default function ToolBar({ title }: { title: string }) {
             </DropdownMenu>
           )}
 
-          {toolbarState.state && (
+          {toolbarState.status && (
             <>
-              {toolbarState.state == State.DRAFT &&
+              {toolbarState.status == State.DRAFT &&
                 toolbarState.onChangeState && (
                   <Button
                     size={"sm"}
@@ -91,7 +91,7 @@ export default function ToolBar({ title }: { title: string }) {
                   </Button>
                 )}
 
-              {(toolbarState.state != State.CANCELLED && toolbarState.state != State.DRAFT) &&
+              {(toolbarState.status != State.CANCELLED && toolbarState.status != State.DRAFT) &&
                 toolbarState.onChangeState && (
                   <Button
                     size={"sm"}
@@ -136,7 +136,7 @@ export default function ToolBar({ title }: { title: string }) {
           )}
         </div>
       </div>
-      {toolbarState.state == State.DRAFT && (
+      {toolbarState.status == State.DRAFT && (
         <MessageAlert message="Submit to confirm" />
       )}
     </div>

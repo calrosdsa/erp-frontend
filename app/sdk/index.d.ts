@@ -692,10 +692,28 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get Payments */
+        get: operations["get-payments"];
         put?: never;
         /** Create Payment */
         post: operations["create-payment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Payment Detial */
+        get: operations["get payment detail"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -766,6 +784,57 @@ export interface paths {
         put?: never;
         /** Create purchase order */
         post: operations["create purchase order"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Ledger */
+        post: operations["create-ledger"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/receipt/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Receipt Detail */
+        get: operations["get-receipt-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/receipt/{party}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Receipts */
+        get: operations["get-receipts"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1524,7 +1593,7 @@ export interface components {
             /** Format: date-time */
             due_date?: string | null;
             invoice_party_type: string;
-            lines: components["schemas"]["OrderLine"][];
+            lines: components["schemas"]["LineItemDto"][];
             /** Format: uuid */
             order_uuid?: string;
             party_type: string;
@@ -1605,7 +1674,7 @@ export interface components {
             date: string;
             /** Format: date-time */
             delivery_date?: string | null;
-            lines: components["schemas"]["OrderLine"][];
+            lines: components["schemas"]["LineItemDto"][];
             order_party_type: string;
             party_type: string;
             party_uuid: string;
@@ -1621,11 +1690,15 @@ export interface components {
             party_reference?: number | null;
         };
         CreatePayment: {
-            /** Format: int64 */
+            /** Format: double */
             amount: number;
-            mode_of_payment: string;
             payment_type: string;
+            /** Format: date-time */
             postuing_date: string;
+        };
+        CreatePaymentAccounts: {
+            paid_from: string;
+            paid_to: string;
         };
         CreatePaymentBody: {
             /**
@@ -1634,11 +1707,13 @@ export interface components {
              */
             readonly $schema?: string;
             payment: components["schemas"]["CreatePayment"];
+            payment_accounts: components["schemas"]["CreatePaymentAccounts"];
             payment_party: components["schemas"]["CreatePaymentParty"];
         };
         CreatePaymentParty: {
             company_bank_account?: string | null;
             party_bank_account?: string | null;
+            party_type: string;
             party_uuid: string;
         };
         CreatePriceListRequestBody: {
@@ -1663,9 +1738,21 @@ export interface components {
             date: string;
             /** Format: date-time */
             delivery_date?: string | null;
-            lines: components["schemas"]["OrderLine"][];
+            lines: components["schemas"]["LineItemDto"][];
             party_type: string;
             party_uuid: string;
+        };
+        CreateReceipt: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            currency: string;
+            lines: components["schemas"]["LineItemDto"][];
+            party_type: string;
+            party_uuid: string;
+            posting_date: string;
         };
         CreateRoleRequestBody: {
             /**
@@ -2070,6 +2157,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityOrderDto"];
         };
+        EntityResponseResultEntityPaymentDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityPaymentDetailDto"];
+        };
         EntityResponseResultEntityPriceListDtoBody: {
             /**
              * Format: uri
@@ -2095,6 +2195,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityProfileDto"];
+        };
+        EntityResponseResultEntityReceiptDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityReceiptDetailDto"];
         };
         EntityResponseResultEntityRoleDtoBody: {
             /**
@@ -2422,6 +2535,13 @@ export interface components {
             name: string;
             uuid: string;
         };
+        LineItemDto: {
+            /** Format: int32 */
+            amount: number;
+            item_price_uuid: string;
+            /** Format: int32 */
+            quantity: number;
+        };
         OrderDto: {
             code: string;
             /** Format: date-time */
@@ -2434,14 +2554,8 @@ export interface components {
             order_lines: components["schemas"]["ItemLineDto"][];
             party_name: string;
             party_uuid: string;
+            status: string;
             uuid: string;
-        };
-        OrderLine: {
-            /** Format: int32 */
-            amount: number;
-            item_price_uuid: string;
-            /** Format: int32 */
-            quantity: number;
         };
         PaginationResponsePaginationResultListAddressDtoBody: {
             /**
@@ -2569,6 +2683,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListPartyReferenceDto"];
         };
+        PaginationResponsePaginationResultListPaymentDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListPaymentDto"];
+        };
         PaginationResponsePaginationResultListPriceListDtoBody: {
             /**
              * Format: uri
@@ -2586,6 +2709,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListProfileL"];
+        };
+        PaginationResponsePaginationResultListReceiptDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListReceiptDto"];
         };
         PaginationResponsePaginationResultListRoleActionDtoBody: {
             /**
@@ -2711,6 +2843,11 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListPaymentDto: {
+            results: components["schemas"]["PaymentDto"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListPriceListDto: {
             results: components["schemas"]["PriceListDto"][];
             /** Format: int64 */
@@ -2718,6 +2855,11 @@ export interface components {
         };
         PaginationResultListProfileL: {
             results: components["schemas"]["ProfileL"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListReceiptDto: {
+            results: components["schemas"]["ReceiptDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -2782,18 +2924,43 @@ export interface components {
             code: string;
             name: string;
         };
-        PaymentDto: {
+        PaymentDetailDto: {
             PartyBankAccount: string | null;
             /** Format: int64 */
             amount: number;
+            code: string;
             company_bank_account: string | null;
-            mode_of_payment: string;
+            /** Format: date-time */
+            created_at: string;
+            paid_from_currency: string;
+            paid_from_name: string;
+            paid_from_uuid: string;
+            paid_to_currency: string;
+            paid_to_name: string;
+            paid_to_uuid: string;
             party_name: string;
             party_type: string;
             party_uuid: string;
             payment_type: string;
             /** Format: date-time */
-            posting_data: string;
+            posting_date: string;
+            status: string;
+        };
+        PaymentDto: {
+            PartyBankAccount: string | null;
+            /** Format: int64 */
+            amount: number;
+            code: string;
+            company_bank_account: string | null;
+            /** Format: date-time */
+            created_at: string;
+            party_name: string;
+            party_type: string;
+            party_uuid: string;
+            payment_type: string;
+            /** Format: date-time */
+            posting_date: string;
+            status: string;
         };
         PhoneNumber: {
             countryCode: string;
@@ -2865,6 +3032,21 @@ export interface components {
             phoneNumber: string;
             uuid: string;
         };
+        ReceiptDetailDto: {
+            item_lines: components["schemas"]["ItemLineDto"][];
+            receipt: components["schemas"]["ReceiptDto"];
+        };
+        ReceiptDto: {
+            code: string;
+            /** Format: date-time */
+            created_at: string;
+            currency: string;
+            party_name: string;
+            party_type: string;
+            party_uuid: string;
+            /** Format: date-time */
+            posting_date: string;
+        };
         RequestAddPartyReferenceBody: {
             /**
              * Format: uri
@@ -2925,6 +3107,16 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             message: string;
             result: components["schemas"]["PaymentDto"];
+        };
+        ResponseDataReceiptDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ReceiptDto"];
         };
         ResponseMessageBody: {
             /**
@@ -3012,6 +3204,11 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["OrderDto"];
         };
+        ResultEntityPaymentDetailDto: {
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["PaymentDetailDto"];
+        };
         ResultEntityPriceListDto: {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
@@ -3021,6 +3218,11 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ProfileDto"];
+        };
+        ResultEntityReceiptDetailDto: {
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["ReceiptDetailDto"];
         };
         ResultEntityRoleDto: {
             addresses: components["schemas"]["AddressDto"][];
@@ -5231,6 +5433,49 @@ export interface operations {
             };
         };
     };
+    "get-payments": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListPaymentDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-payment": {
         parameters: {
             query?: never;
@@ -5251,6 +5496,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataPaymentDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get payment detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityPaymentDetailDtoBody"];
                 };
             };
             /** @description Error */
@@ -5491,6 +5777,136 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityOrderDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-ledger": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateReceipt"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataReceiptDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-receipt-detail": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityReceiptDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-receipts": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                party: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListReceiptDtoBody"];
                 };
             };
             /** @description Error */

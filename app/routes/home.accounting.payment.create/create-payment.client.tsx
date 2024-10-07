@@ -1,5 +1,4 @@
-import { useFetcher, useRevalidator } from "@remix-run/react";
-import { action } from "./route";
+import { useFetcher, useNavigate, useRevalidator } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useRef, useState } from "react";
@@ -21,6 +20,8 @@ import CustomFormField from "@/components/custom/form/CustomFormField";
 import { Input } from "@/components/ui/input";
 import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { routes } from "~/util/route";
+import { action } from "./route";
 
 export default function PaymentCreateClient() {
   const fetcherPaymentPartiesType = useFetcher<typeof action>();
@@ -30,13 +31,12 @@ export default function PaymentCreateClient() {
   const [paymentTypes, setPaymentTypes] = useState<SelectItem[]>([]);
   const form = useForm<z.infer<typeof createPaymentSchema>>({
     resolver: zodResolver(createPaymentSchema),
-    defaultValues: {
-      modeOfPayment:"PAYMENT"
-    },
+    defaultValues: {},
   });
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const toolbar = useToolbar()
-
+  const toolbar = useToolbar();
+  const navigate = useNavigate();
+  const r = routes;
   const [accountPaidFromFetcher, onAccountPaidFromChange] =
     useAccountLedgerDebounceFetcher({
       isGroup: false,
@@ -61,7 +61,7 @@ export default function PaymentCreateClient() {
       }
     );
   };
-  
+
   const onSubmit = (values: z.infer<typeof createPaymentSchema>) => {
     fetcher.submit(
       {
@@ -92,13 +92,13 @@ export default function PaymentCreateClient() {
     setPaymentTypes(n);
   };
 
-  const setUpToolbar = ()=>{
+  const setUpToolbar = () => {
     toolbar.setToolbar({
       onSave: () => {
         inputRef.current?.click();
       },
     });
-  }
+  };
 
   useEffect(() => {
     setUpPaymentTypes();
@@ -111,18 +111,18 @@ export default function PaymentCreateClient() {
       toast({
         title: fetcher.data.error,
       });
+    }
 
-      if (fetcher.data?.message) {
-        toast({
-          title: fetcher.data.message,
-        });
-      }
+    if (fetcher.data?.message) {
+      toast({
+        title: fetcher.data.message,
+      });
+      navigate(r.toPaymentDetail(fetcher.data.payment?.code))
     }
   }, [fetcher.data]);
   return (
     <FormLayout>
       <Form {...form}>
-        {JSON.stringify(form.formState.errors)}
         <fetcher.Form
           method="post"
           onSubmit={form.handleSubmit(onSubmit)}

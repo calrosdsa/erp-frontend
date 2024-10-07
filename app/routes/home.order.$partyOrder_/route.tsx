@@ -1,5 +1,5 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import PurchasesClient from "./purchases.client";
+import OrdersClient from "./orders.client";
 import { Laptop } from "lucide-react";
 import apiClient from "~/apiclient";
 import { PartyType } from "~/types/enums";
@@ -28,5 +28,5 @@ export const loader = async ({request}:LoaderFunctionArgs)=>{
 }
 
 export default function Purchases(){
-    return <PurchasesClient/>
+    return <OrdersClient/>
 }

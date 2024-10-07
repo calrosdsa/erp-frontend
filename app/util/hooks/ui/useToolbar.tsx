@@ -6,14 +6,14 @@ interface ToolbarStore {
     actions:ActionToolbar[]
     title?:string
     loading?:boolean
-    state?:State
+    status?:State
     onChangeState?:(event:EventState)=>void
     onSave?:()=>void
     resetState:()=>void
     setLoading:(loading:boolean)=>void
     setToolbar:(opts:{
         actions?:ActionToolbar[],
-        state?:State
+        status?:State
         title?:string
         onChangeState?:(event:EventState)=>void
         onSave?:()=>void
@@ -22,17 +22,18 @@ interface ToolbarStore {
 export const useToolbar = create<ToolbarStore>((set)=>({
     actions:[],
     title:undefined,
-    state:undefined,
+    status:undefined,
     loading:false,
     setLoading:(e)=>set((state)=>({loading:e})),
     resetState:()=>set((state)=>({
         actions:[],
-        title:undefined
+        title:undefined,
+        status:undefined,
     })),
     setToolbar:(opts)=>set((state)=>({
         actions:opts.actions || [],
         title:opts.title,
-        state:opts.state,
+        status:opts.status,
         onSave:opts.onSave,
         onChangeState:opts.onChangeState,
     })),

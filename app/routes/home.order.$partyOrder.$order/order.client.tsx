@@ -10,13 +10,13 @@ import { DEFAULT_CURRENCY } from "~/constant";
 import { sumTotal } from "~/util/format/formatCurrency";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { PartyType } from "~/gen/common";
+import { PartyType, stateFromJSON } from "~/gen/common";
 import { useEffect } from "react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { ActionToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
-import { useCreatePurchaseInvoice } from "../home.buying.$partyInvoice.create/use-purchase-invoice";
+import { useCreatePurchaseInvoice } from "../home.invoice.$partyInvoice.create/use-purchase-invoice";
 import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
 import { orderLineSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { z } from "zod";
@@ -80,7 +80,9 @@ export default function PurchaseOrderClient() {
     }
     toolbar.setToolbar({
       actions:actions,
-      title:"PURCHASE"
+      title:`${t("_order.base")}(${order?.code})`,
+      status:stateFromJSON(order?.status),
+      
     })
   }
 
@@ -91,6 +93,7 @@ export default function PurchaseOrderClient() {
   return (
     <div>
       <div className="info-grid">
+        {/* {JSON.stringify(order)} */}
         <Typography fontSize={subtitle} className=" col-span-full">
           {t("info")}
         </Typography>

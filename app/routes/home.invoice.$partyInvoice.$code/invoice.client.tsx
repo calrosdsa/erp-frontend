@@ -22,7 +22,7 @@ export default function InvoiceDetailClient(){
     const setUpToolBar = () =>{
         toolbarState.setToolbar({
             title:`${t("_invoice.base")}(${invoiceDetail?.invoice.code})`,
-            state:stateFromJSON(invoiceDetail?.invoice.state),
+            status:stateFromJSON(invoiceDetail?.invoice.state),
             onChangeState:(e)=>{
                 const body:z.infer<typeof updateStateWithEventSchema> = {
                     current_state:invoiceDetail?.invoice.state || "", 

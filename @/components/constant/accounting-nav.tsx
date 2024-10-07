@@ -24,6 +24,12 @@ export const AccountingNav = ({ entities }: {
       href: r.taxes,
     });
   }
+  if(entities?.includes(Entity.PAYMENT_ENTITY_ID)){
+    accountingChildrens.push({
+      title:t("_payment.base"),
+      href:r.payment,
+    })
+  }
 
 //   if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
 //     accountingChildrens.push({

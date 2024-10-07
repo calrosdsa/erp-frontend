@@ -1,5 +1,5 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node"
-import PurchaseOrderClient from "./purchase-order.client"
+import PurchaseOrderClient from "./order.client"
 import apiClient from "~/apiclient"
 import { PartyType } from "~/gen/common"
 
