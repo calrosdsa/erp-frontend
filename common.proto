@@ -76,3 +76,10 @@ enum AccountRootType {
     EXPENSE = 3;
 }
 
+
+
+enum ItemLineType {
+    ITEM_LINE_ORDER = 0;
+    ITEM_LINE_INVOICE = 1;
+    ITEM_LINE_RECEIPT = 2;
+}

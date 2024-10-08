@@ -58,7 +58,7 @@ export function DrawerLayout({open,onOpenChange,children,title,description,class
       {/* <DrawerTrigger asChild>
         <Button variant="outline">Edit Profile</Button>
       </DrawerTrigger> */}
-      <DrawerContent>
+      <DrawerContent className="p-2">
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>

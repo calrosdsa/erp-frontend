@@ -16,6 +16,7 @@ async function hydrate() {
     .use(Backend) // Setup your backend
     .init({
       ...i18n, // spread the configuration
+      
       // This function detects the namespaces your routes rendered while SSR use
       ns: getInitialNamespaces(),
       backend: { 

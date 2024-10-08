@@ -20,9 +20,16 @@
   "_supplier":{
     "base":"Supplier"
   },
+  "_purchase":{
+    "base":"Purchase"
+  },
   "_invoice":{
       "base":"Invoice",
       "create":"Create Invoice"
+  },
+  "_receipt":{
+    "base":"Receipt",
+    "f":"{{o}} Receipt"
   },
   "_payment":{
     "base":"Payment",
@@ -117,6 +124,7 @@
     "province":"Province",
     "postalCode":"Postal Code",
     "identificationNumber":"Identification Number",
+    "currencyAndPriceList":"Currency and Price List",
     "streetLine1": "Street Line 1",
     "streetLine2": "Street Line 2",
     "optional": "Optional",
@@ -164,7 +172,10 @@
     "parent":"Parent {{o}}",
     "add-new": "Create new {{o}}",
     "edit":"Edit {{o}}",
-    "enable": "Check the box to enable this {{o}}"
+    "enable": "Check the box to enable this {{o}}",
+    "accepted":"Accepted {{o}}",
+    "rejected":"Rejected {{o}}",
+    "and":"{{o}} and {{p}}"
   },
   "info-item": "Info {{item}}",
 

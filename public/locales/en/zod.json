@@ -1,4 +1,7 @@
 {
+  "custom": {
+    "required":"Required value"
+  },
   "errors": {
     "password_must_match":"Passwords must match!",
     "invalid_type": "Expected {{expected}}, received {{received}}",

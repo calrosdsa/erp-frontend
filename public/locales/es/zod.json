@@ -1,5 +1,7 @@
 {
-    
+  "custom": {
+    "required":"Valor requerido"
+  },
   "errors": {
     "invalid_type": "Se esperaba {{expected}}, se recibió {{received}}",
     "invalid_type_received_undefined": "Requerido",

@@ -200,8 +200,8 @@ class Routes {
   toReceiptDetail(partyType:string,code:string):string {
     return `${this.receipt}/${encodeURIComponent(partyType)}/${encodeURIComponent(code)}`
   }
-  toCreateReceipt(partyType:string):string {
-    return `${this.receipt}/${encodeURIComponent(partyType)}/new`
+  toCreateReceipt(partyType?:string):string {
+    return `${this.receipt}/${encodeURIComponent(partyType||"nan")}/new`
   }
 
   //Manage

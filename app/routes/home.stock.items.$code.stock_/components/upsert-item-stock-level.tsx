@@ -34,7 +34,7 @@ export const UpsertItemStockLevel = ({
   const { t } = useTranslation("common");
   const createWareHouse = useCreateWareHouse();
   const [warehousesDebounceFetcher, onWarehouseNameChange] =
-    useWarehouseDebounceFetcher();
+    useWarehouseDebounceFetcher({isGroup:false});
   const [itemsDebounceFetcher, onItemNameChange] = useItemDebounceFetcher();
   const params = useParams();
   const r = routes;

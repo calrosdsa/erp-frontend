@@ -3,26 +3,7 @@ import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 import { supplierDtoSchema } from "./supplier-schema";
 import { components } from "~/sdk";
 import { currencySchema } from "../app/currency-schema";
-
-export const itemPriceDtoSchema = z.object({
-  code: z.string().optional(),
-  uuid: z.string().optional(),
-  rate: z.number(),
-  item_quantity: z.number().optional(),
-  item_name: z.string(),
-  item_code: z.string(),
-  item_uuid: z.string(),
-  uom: z.string(),
-  tax_name:z.string().optional(),
-  tax_uuid:z.string().optional(),
-  tax_value:z.number(),
-});
-
-export const orderLineSchema = z.object({
-  item_price: itemPriceDtoSchema,
-  quantity: z.preprocess((a) => parseFloat(z.string().parse(a)), z.number()),
-  amount: z.number().optional(),
-});
+import { lineItemSchema } from "../stock/item-line-schema";
 
 export const createPurchaseSchema = z.object({
   supplier: supplierDtoSchema,
@@ -32,18 +13,23 @@ export const createPurchaseSchema = z.object({
   date: z.date(),
   currencyName: z.string(),
   currency: currencySchema,
-  lines: z.array(orderLineSchema),
+  lines: z.array(lineItemSchema),
 });
 
 export const orderLineSchemaToOrderLineDto = (
-  d: z.infer<typeof orderLineSchema>
-): components["schemas"]["OrderLine"] => {
+  d: z.infer<typeof lineItemSchema>
+): components["schemas"]["LineItemDto"] => {
   return {
-    amount: d.amount || 0,
-    quantity: d.quantity,
+    amount: 0,
+    quantity: Number(d.quantity),
     item_price_uuid: d.item_price.uuid || "",
   };
 };
+
+
+
+
+
 
 // export const itemPriceSchemaToItemPriceDto = (
 //   d: z.infer<typeof itemPriceDtoSchema>

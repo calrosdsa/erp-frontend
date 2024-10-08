@@ -65,7 +65,6 @@ export default function HomeLayout({
   }, [location]);
   return (
     <>
-      {/* <CssBaseline /> */}
       <GlobalDialogs  globalState={globalState}/>
       {openSessionDefaults && (
         <SessionDefaultDrawer
@@ -139,8 +138,8 @@ export default function HomeLayout({
               </Breadcrumb>
             </div>
 
-            <ToolBar
-            title={getRouteName()}/>
+            {/* <ToolBar
+            title={getRouteName()}/> */}
 
             <div className="h-full">
             {children}

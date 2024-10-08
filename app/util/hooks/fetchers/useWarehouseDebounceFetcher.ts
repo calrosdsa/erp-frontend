@@ -7,7 +7,9 @@ import { routes } from "~/util/route"
 import { usePermission } from "../useActions"
 
 
-export const useWarehouseDebounceFetcher = () =>{
+export const useWarehouseDebounceFetcher = ({isGroup}:{
+    isGroup:boolean
+}) =>{
     const r = routes
     const debounceFetcher = useDebounceFetcher<{
         actions:components["schemas"]["ActionDto"][],
@@ -15,9 +17,11 @@ export const useWarehouseDebounceFetcher = () =>{
     }>()
 
     const onChange = (e:string)=>{
+        
         debounceFetcher.submit({
             action:"get",
             query:e,
+            isGroup:isGroup,
         },{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,

@@ -20,6 +20,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCreateSupplier } from "../home.buying.suppliers_/components/create-supplier";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
+import { ItemLineType } from "~/gen/common";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
@@ -138,6 +139,7 @@ export default function CreatePurchaseOrdersClient() {
             </div>
          <ItemLineForm
          form={form}
+         itemLineType={ItemLineType.ITEM_LINE_ORDER}
          />
               <Button className=" max-w-40" loading={fetcher.state == "submitting"} type="submit">
                 {t("form.submit")}

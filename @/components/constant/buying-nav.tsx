@@ -1,5 +1,6 @@
 import { CreditCardIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { PartyType } from "~/gen/common";
 import { NavItem } from "~/types";
 import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
@@ -34,6 +35,13 @@ export const BuyingNav = ({ entities }: {
       title: t("purchase-invoice"),
       href: r.purchaseInvoices,
     });
+  }
+
+  if(entities?.includes(Entity.PURCHASE_RECEIPT_ENTITY_ID)){
+    buyingChildrens.push({
+      title: t("_receipt.f",{o:t("_purchase.base")}),
+      href:r.toReceipt(PartyType[PartyType.purchaseReceipt])
+    })
   }
 
   const buying:NavItem = {

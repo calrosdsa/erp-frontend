@@ -48,6 +48,7 @@ export default function GlobalDialogs({globalState}:{
         currency={addLineOrder.currency}
         onOpenChange={addLineOrder.onOpenChange}
         setOrderLine={(e)=>addLineOrder.setOrderLine(e)}
+        itemLineType={addLineOrder.itemLineType}
         />
         }
         {createSupplier.open &&

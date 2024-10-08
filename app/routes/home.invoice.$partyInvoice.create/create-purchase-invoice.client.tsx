@@ -21,6 +21,7 @@ import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { action } from "./route";
 import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
+import { ItemLineType } from "~/gen/common";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>()
@@ -156,6 +157,7 @@ export default function CreatePurchaseInvoiceClient() {
 
             </div>
          <ItemLineForm
+         itemLineType={ItemLineType.ITEM_LINE_INVOICE}
          form={form}
          />
               <Button className=" max-w-40" loading={fetcher.state == "submitting"} type="submit">

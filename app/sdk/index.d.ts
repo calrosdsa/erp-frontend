@@ -799,8 +799,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create Ledger */
-        post: operations["create-ledger"];
+        /** Create Receipt` */
+        post: operations["create-receipt"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1748,11 +1748,13 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            accepted_warehouse: string;
             currency: string;
             lines: components["schemas"]["LineItemDto"][];
             party_type: string;
             party_uuid: string;
             posting_date: string;
+            rejected_warehouse?: string | null;
         };
         CreateRoleRequestBody: {
             /**
@@ -2536,11 +2538,13 @@ export interface components {
             uuid: string;
         };
         LineItemDto: {
+            accepted_warehouse?: string;
             /** Format: int32 */
             amount: number;
             item_price_uuid: string;
             /** Format: int32 */
             quantity: number;
+            rejected_warehouse?: string | null;
         };
         OrderDto: {
             code: string;
@@ -5790,7 +5794,7 @@ export interface operations {
             };
         };
     };
-    "create-ledger": {
+    "create-receipt": {
         parameters: {
             query?: {
                 query?: string;

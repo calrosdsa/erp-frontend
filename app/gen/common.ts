@@ -438,6 +438,45 @@ export function accountRootTypeToJSON(object: AccountRootType): string {
   }
 }
 
+export enum ItemLineType {
+  ITEM_LINE_ORDER = 0,
+  ITEM_LINE_INVOICE = 1,
+  ITEM_LINE_RECEIPT = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function itemLineTypeFromJSON(object: any): ItemLineType {
+  switch (object) {
+    case 0:
+    case "ITEM_LINE_ORDER":
+      return ItemLineType.ITEM_LINE_ORDER;
+    case 1:
+    case "ITEM_LINE_INVOICE":
+      return ItemLineType.ITEM_LINE_INVOICE;
+    case 2:
+    case "ITEM_LINE_RECEIPT":
+      return ItemLineType.ITEM_LINE_RECEIPT;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ItemLineType.UNRECOGNIZED;
+  }
+}
+
+export function itemLineTypeToJSON(object: ItemLineType): string {
+  switch (object) {
+    case ItemLineType.ITEM_LINE_ORDER:
+      return "ITEM_LINE_ORDER";
+    case ItemLineType.ITEM_LINE_INVOICE:
+      return "ITEM_LINE_INVOICE";
+    case ItemLineType.ITEM_LINE_RECEIPT:
+      return "ITEM_LINE_RECEIPT";
+    case ItemLineType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export interface Result {
   message: string;
 }
