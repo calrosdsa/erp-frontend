@@ -11,7 +11,7 @@ type ActionData = {
     createReceipt:z.infer<typeof createReceiptSchema>
 }
 
-export const action = async({request}:ActionFunctionArgs)=>{
+export const action = async({request,params}:ActionFunctionArgs)=>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
     let message:string | undefined = undefined
@@ -23,15 +23,23 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
             const res =await client.POST("/receipt",{
                 body:{
-                    currency:d.currency.code,
-                    posting_date:d.postingDate.toString(),
-                    party_uuid:d.partyUuid,
-                    party_type:d.partyType,
-                    lines:lines,
-                    accepted_warehouse:d.acceptedWarehouse,
-                    rejected_warehouse:d.rejectedWarehouse,
+                    receipt:{
+                        posting_date:d.postingDate.toString(),
+                        currency:d.currency.code,
+                        party_receipt:params.partyReceipt || "",
+
+                        party_uuid:d.partyUuid,
+                        party_type:d.partyType,
+                        reference:d.reference,
+                    },
+                    items:{
+                        lines: lines,
+                        accepted_warehouse: d.acceptedWarehouse,
+                        rejected_warehouse: d.rejectedWarehouse,
+                    }
                 }
             })
+            console.log(res.error)
             message = res.data?.message
             error=res.error?.detail
             receipt = res.data?.result

@@ -58,7 +58,10 @@ export default function HomeLayout({
 
   React.useEffect(() => {
     getRoutes();
-    toolbar.resetState()
+    if(toolbar.isMounted){
+      console.log("RESET TOOLBAR")
+      toolbar.resetState()
+    }
   }, [location.pathname]);
   React.useEffect(() => {
     setOpenSessionDefaults(false);
@@ -138,8 +141,8 @@ export default function HomeLayout({
               </Breadcrumb>
             </div>
 
-            {/* <ToolBar
-            title={getRouteName()}/> */}
+            <ToolBar
+            title={getRouteName()}/>
 
             <div className="h-full">
             {children}

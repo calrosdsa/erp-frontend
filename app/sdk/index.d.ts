@@ -1743,17 +1743,27 @@ export interface components {
             party_uuid: string;
         };
         CreateReceipt: {
+            currency: string;
+            party_receipt: string;
+            party_type: string;
+            party_uuid: string;
+            /** Format: date-time */
+            posting_date: string;
+            /** Format: int64 */
+            reference?: number | null;
+        };
+        CreateReceiptBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            items: components["schemas"]["CreateReceiptItemLines"];
+            receipt: components["schemas"]["CreateReceipt"];
+        };
+        CreateReceiptItemLines: {
             accepted_warehouse: string;
-            currency: string;
             lines: components["schemas"]["LineItemDto"][];
-            party_type: string;
-            party_uuid: string;
-            posting_date: string;
             rejected_warehouse?: string | null;
         };
         CreateRoleRequestBody: {
@@ -2428,16 +2438,19 @@ export interface components {
             uuid: string;
         };
         ItemLineDto: {
-            /** Format: int32 */
-            amount: number;
+            /** Format: int64 */
+            id: number;
             item_code: string;
             item_name: string;
             /** Format: int64 */
             item_price_rate: number;
             item_price_uuid: string;
             item_uuid: string;
+            line_type: string;
             /** Format: int32 */
             quantity: number;
+            /** Format: int32 */
+            rate: number;
             /** Format: double */
             tax_value: number;
             uom: string;
@@ -2538,13 +2551,22 @@ export interface components {
             uuid: string;
         };
         LineItemDto: {
-            accepted_warehouse?: string;
             /** Format: int32 */
             amount: number;
+            /** Format: int32 */
+            item_line_reference?: number;
             item_price_uuid: string;
+            line_receipt?: components["schemas"]["LineItemReceiptDto"];
             /** Format: int32 */
             quantity: number;
-            rejected_warehouse?: string | null;
+        };
+        LineItemReceiptDto: {
+            /** Format: int32 */
+            accepted_quantity: number;
+            accepted_warehouse?: string;
+            /** Format: int32 */
+            rejected_quantity: number;
+            rejected_warehouse?: string;
         };
         OrderDto: {
             code: string;
@@ -2555,6 +2577,8 @@ export interface components {
             date: string;
             /** Format: date-time */
             delivery_date: string | null;
+            /** Format: int64 */
+            id: number;
             order_lines: components["schemas"]["ItemLineDto"][];
             party_name: string;
             party_uuid: string;
@@ -5813,7 +5837,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateReceipt"];
+                "application/json": components["schemas"]["CreateReceiptBody"];
             };
         };
         responses: {

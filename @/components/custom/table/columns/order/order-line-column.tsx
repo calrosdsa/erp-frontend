@@ -125,41 +125,57 @@ export const displayItemLineColumns = ({
     accessorKey: "item_name",
     header: t("form.name"),
   });
-  columns.push({
-    accessorKey: "uom",
-    header: t("form.uom"),
-  });
+  // columns.push({
+  //   accessorKey: "uom",
+  //   header: t("form.uom"),
+  // });
   columns.push({
     accessorKey: "quantity",
     header: t("_item.quantity"),
   });
 
   columns.push({
-    accessorKey: "amount",
-    header: t("form.amount"),
+    accessorKey: "rate",
+    header: t("form.rate"),
     cell: ({ ...props }) => {
       return currency ? (
         <TableCellPrice {...props} currency={currency} i18n={i18n} />
       ) : (
         "-"
-
       );
     },
   });
 
   columns.push({
-    accessorKey: "amount",
-    header: t("form.tax"),
+    id: "amount",
+    header: t("form.amount"),
     cell: ({ ...props }) => {
       const rowData = props.row.original
-      const taxPrice = getTaxPorcent(rowData.tax_value,rowData.item_price_rate,currency,i18n.language)
+      const total = rowData.rate * rowData.quantity
       return currency ? (
-        <TableCellPrice {...props} currency={currency} i18n={i18n} price={taxPrice}/>
+        <TableCellPrice {...props} currency={currency} i18n={i18n}
+        price={total}/>
       ) : (
         "-"
       );
     },
   });
+
+  // columns.push({
+  //   accessorKey: "amount",
+  //   header: t("form.tax"),
+  //   cell: ({ ...props }) => {
+  //     const rowData = props.row.original
+  //     const taxPrice = getTaxPorcent(rowData.tax_value,rowData.item_price_rate,currency,i18n.language)
+  //     return currency ? (
+  //       <TableCellPrice {...props} currency={currency} i18n={i18n} price={taxPrice}/>
+  //     ) : (
+  //       "-"
+  //     );
+  //   },
+  // });
+
+
   // columns.push({
   //     id: "actions-row",
   //     cell: DataTableRowActions,

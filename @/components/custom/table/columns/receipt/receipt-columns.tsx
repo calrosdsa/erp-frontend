@@ -12,7 +12,11 @@ import { PartyType } from "~/gen/common";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
 
-export const receiptColumns = (): ColumnDef<
+export const receiptColumns = ({
+  receiptPartyType
+}:{
+  receiptPartyType:string
+}): ColumnDef<
   components["schemas"]["ReceiptDto"]
 >[] => {
   const { t, i18n } = useTranslation("common");
@@ -26,32 +30,31 @@ export const receiptColumns = (): ColumnDef<
       accessorKey: "code",
       header: t("form.code"),
       cell: ({ ...props }) => {
-        const rowData = props.row.original
         return (
           <TableCellNameNavigation
             {...props}
-            navigate={(name) => r.toReceiptDetail(rowData.party_type,name)}
+            navigate={(name) => r.toReceiptDetail(receiptPartyType,name)}
           />
         );
       },
     },
-    // {
-    //   accessorKey: "party_name",
-    //   header: t("form.party"),
-    //   cell: ({ ...props }) => {
-    //     const rowData = props.row.original;
-    //     return (
-    //       <>
-    //         {rowData.party_type == PartyType[PartyType.supplier] && (
-    //           <TableCellNameNavigation
-    //             {...props}
-    //             navigate={(name) => r.toSupplierDetail(name,rowData.party_uuid)}
-    //           />
-    //         )}
-    //       </>
-    //     );
-    //   },
-    // },
+    {
+      accessorKey: "party_name",
+      header: t("form.party"),
+      cell: ({ ...props }) => {
+        const rowData = props.row.original;
+        return (
+          <>
+            {rowData.party_type == PartyType[PartyType.supplier] && (
+              <TableCellNameNavigation
+                {...props}
+                navigate={(name) => r.toSupplierDetail(name,rowData.party_uuid)}
+              />
+            )}
+          </>
+        );
+      },
+    },
     {
       accessorKey:"status",
       header:t("form.status"),

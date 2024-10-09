@@ -54,7 +54,7 @@ export default function ToolBar({ title }: { title: string }) {
                     <DropdownMenuItem
                       key={idx}
                       onClick={() => item.onClick()}
-                      className="flex space-x-2"
+                      className="flex space-x-2 justify-between"
                     >
                       <span>{item.label}</span>
                       {item.Icon && <item.Icon className="h-3 w-3" />}

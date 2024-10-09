@@ -4,6 +4,7 @@ import { ActionToolbar } from "~/types/actions";
 
 interface ToolbarStore {
     actions:ActionToolbar[]
+    isMounted:boolean
     title?:string
     loading?:boolean
     status?:State
@@ -21,6 +22,7 @@ interface ToolbarStore {
 }
 export const useToolbar = create<ToolbarStore>((set)=>({
     actions:[],
+    isMounted:false,
     title:undefined,
     status:undefined,
     loading:false,
@@ -31,6 +33,7 @@ export const useToolbar = create<ToolbarStore>((set)=>({
         status:undefined,
     })),
     setToolbar:(opts)=>set((state)=>({
+        isMounted:true,
         actions:opts.actions || [],
         title:opts.title,
         status:opts.status,

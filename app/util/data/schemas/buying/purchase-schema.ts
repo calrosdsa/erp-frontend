@@ -4,6 +4,7 @@ import { supplierDtoSchema } from "./supplier-schema";
 import { components } from "~/sdk";
 import { currencySchema } from "../app/currency-schema";
 import { lineItemSchema } from "../stock/item-line-schema";
+import { ItemLineType } from "~/gen/common";
 
 export const createPurchaseSchema = z.object({
   supplier: supplierDtoSchema,
@@ -16,14 +17,26 @@ export const createPurchaseSchema = z.object({
   lines: z.array(lineItemSchema),
 });
 
+
 export const orderLineSchemaToOrderLineDto = (
   d: z.infer<typeof lineItemSchema>
 ): components["schemas"]["LineItemDto"] => {
-  return {
+  const line:components["schemas"]["LineItemDto"]  = {
     amount: 0,
     quantity: Number(d.quantity),
     item_price_uuid: d.item_price.uuid || "",
-  };
+    item_line_reference:d.itemLineReference,
+  }
+  if(d.lineType == ItemLineType.ITEM_LINE_RECEIPT){
+    line.line_receipt = {
+      accepted_quantity:Number(d.lineItemReceipt?.acceptedQuantity),
+      rejected_quantity:Number(d.lineItemReceipt?.rejectedQuantity),
+      accepted_warehouse:d.lineItemReceipt?.acceptedWarehouse,
+      rejected_warehouse:d.lineItemReceipt?.rejectedWarehouse,
+    }
+  }
+
+  return line;
 };
 
 

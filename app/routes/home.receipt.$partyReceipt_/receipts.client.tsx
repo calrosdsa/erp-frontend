@@ -5,6 +5,7 @@ import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { receiptColumns } from "@/components/custom/table/columns/receipt/receipt-columns";
 import { routes } from "~/util/route";
+import { PartyType } from "~/gen/common";
 
 
 export default function ReceiptsClient(){
@@ -31,7 +32,9 @@ export default function ReceiptsClient(){
                 }
             }}
             data={paginationResult?.results || []}
-            columns={receiptColumns()}
+            columns={receiptColumns({
+                receiptPartyType:params.partyReceipt || PartyType[PartyType.purchaseReceipt]
+            })}
             />
         </div>
     )

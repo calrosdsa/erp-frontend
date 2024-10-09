@@ -1,6 +1,7 @@
 {
   "custom": {
-    "required":"Required value"
+    "required":"Required value",
+    "not_a_number":"Not a number"
   },
   "errors": {
     "password_must_match":"Passwords must match!",

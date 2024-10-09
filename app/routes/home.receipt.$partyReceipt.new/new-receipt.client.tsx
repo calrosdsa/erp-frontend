@@ -15,7 +15,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ItemLineType, PartyType } from "~/gen/common";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
@@ -26,6 +26,8 @@ import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDeb
 import Typography, { subtitle } from "@/components/typography/Typography";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
+import { useCreateReceipt } from "./use-create-receipt";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 export default function NewReceiptClient() {
   const fetcher = useFetcher<typeof action>();
@@ -39,18 +41,29 @@ export default function NewReceiptClient() {
     roleActions: globalState.roleActions,
   });
   const createSupplier = useCreateSupplier();
-
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const r = routes;
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation("common");
+  const createReceipt = useCreateReceipt();
+  const { payload } = createReceipt;
   const form = useForm<z.infer<typeof createReceiptSchema>>({
     resolver: zodResolver(createReceiptSchema),
-    defaultValues:{
-        lines:[],
-    }
+    defaultValues: {
+      partyName: payload?.party_name,
+      partyUuid: payload?.party_uuid,
+      partyType: payload?.party_type,
+      currency: {
+        code: payload?.currency,
+      },
+      currencyName: payload?.currency,
+      reference: payload?.reference,
+      lines: payload?.lines || [],
+    },
   });
   const revalidator = useRevalidator();
+  const toolbar = useToolbar();
   const params = useParams();
   const { partyReceipt } = params;
   const onSubmit = (values: z.infer<typeof createReceiptSchema>) => {
@@ -66,6 +79,20 @@ export default function NewReceiptClient() {
       }
     );
   };
+
+  const setUpToolbar = () => {
+    toolbar.setToolbar({
+      title: t("f.add-new", { o: t("_receipt.base").toLocaleLowerCase() }),
+      onSave: () => {
+        inputRef.current?.click();
+      },
+    });
+  };
+
+  useEffect(() => {
+    setUpToolbar();
+  }, []);
+
   useEffect(() => {
     if (fetcher.data?.error) {
       toast({
@@ -82,6 +109,7 @@ export default function NewReceiptClient() {
     <div>
       <FormLayout>
         <Form {...form}>
+          {JSON.stringify(form.formState.errors)}
           <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="create-grid">
               {partyReceipt == PartyType[PartyType.purchaseReceipt] && (
@@ -102,9 +130,12 @@ export default function NewReceiptClient() {
                   })}
                 />
               )}
-              
 
-              <CustomFormDate form={form} name="postingDate" label={t("form.postingDate")} />
+              <CustomFormDate
+                form={form}
+                name="postingDate"
+                label={t("form.postingDate")}
+              />
 
               <Typography className=" col-span-full" fontSize={subtitle}>
                 {t("form.currencyAndPriceList")}
@@ -121,16 +152,16 @@ export default function NewReceiptClient() {
                   revalidator.revalidate();
                 }}
               />
-             
 
               <div className=" col-span-full">
-              <ItemLineForm 
-                form={form}
-                configuteWarehouse={true}
-                itemLineType={ItemLineType.ITEM_LINE_RECEIPT}
+                <ItemLineForm
+                  form={form}
+                  configuteWarehouse={true}
+                  itemLineType={ItemLineType.ITEM_LINE_RECEIPT}
                 />
-                </div>
+              </div>
             </div>
+            <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>
         </Form>
       </FormLayout>

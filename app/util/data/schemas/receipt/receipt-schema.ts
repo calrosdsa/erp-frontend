@@ -4,11 +4,12 @@ import { currencySchema } from "../app/currency-schema";
 import { lineItemSchema } from "../stock/item-line-schema";
 
 export const createReceiptSchema = z.object({
+
     partyType:z.string(),
     partyUuid:z.string(),
     partyName:z.string(),
 
-    order_uuid:z.string().optional(),
+    reference:z.number().optional(),
     // name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
     postingDate: z.date(),
     currencyName: z.string(),
@@ -20,5 +21,9 @@ export const createReceiptSchema = z.object({
 
     currency: currencySchema,
     lines: z.array(lineItemSchema),
-  });
+  })
+  // .superRefine((data,ctx)=>{
+    
+  // })
+  ;
 

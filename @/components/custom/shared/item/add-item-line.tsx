@@ -45,7 +45,7 @@ export const AddLineOrder = ({
   const form = useForm<z.infer<typeof lineItemSchema>>({
     resolver: zodResolver(lineItemSchema),
     defaultValues: {
-      lineType:ItemLineType.ITEM_LINE_ORDER
+      lineType:itemLineType
     },
   });
   const { item_price } = form.getValues();
@@ -53,7 +53,8 @@ export const AddLineOrder = ({
   const onSubmit = (values: z.infer<typeof lineItemSchema>) => {
     const orderLine: z.infer<typeof lineItemSchema> = {
       ...values,
-      amount: values.item_price.rate * Number(values.quantity),
+      // amount: values.item_price.rate * Number(values.quantity),
+
 
     } as any;
     setOrderLine(orderLine);
@@ -68,6 +69,8 @@ export const AddLineOrder = ({
       <FormLayout>
         <Form {...form}>
           {JSON.stringify(form.formState.errors)}
+          {/* {JSON.stringify(form.getValues())} */}
+
           <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid md:grid-cols-2 gap-3">
               <FormAutocomplete
@@ -91,10 +94,11 @@ export const AddLineOrder = ({
                 }}
               />
 
+              {itemLineType == ItemLineType.ITEM_LINE_ORDER &&
               <CustomFormField
-                name="quantity"
-                required={true}
-                label={t("form.quantity")}
+              name="quantity"
+              required={true}
+              label={t("form.quantity")}
                 form={form}
                 children={(field) => {
                   return (
@@ -104,7 +108,8 @@ export const AddLineOrder = ({
                     />
                   );
                 }}
-              />
+                />
+              }
 
               {itemLineType == ItemLineType.ITEM_LINE_RECEIPT && (
                 <>

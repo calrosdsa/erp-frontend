@@ -10,7 +10,7 @@ import { DEFAULT_CURRENCY } from "~/constant";
 import { sumTotal } from "~/util/format/formatCurrency";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { PartyType, stateFromJSON } from "~/gen/common";
+import { ItemLineType, itemLineTypeFromJSON, PartyType, stateFromJSON } from "~/gen/common";
 import { useEffect } from "react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { ActionToolbar } from "~/types/actions";
@@ -18,8 +18,9 @@ import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
 import { useCreatePurchaseInvoice } from "../home.invoice.$partyInvoice.create/use-purchase-invoice";
 import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
-import { orderLineSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { z } from "zod";
+import { lineItemSchema, mapToLineItem } from "~/util/data/schemas/stock/item-line-schema";
+import { useCreateReceipt } from "../home.receipt.$partyReceipt.new/use-create-receipt";
 
 export default function PurchaseOrderClient() {
   const { order, actions,associatedActions } = useLoaderData<typeof loader>();
@@ -36,46 +37,49 @@ export default function PurchaseOrderClient() {
     actions:associatedActions && associatedActions[PartyType[PartyType.payment]],
     roleActions:globalState.roleActions,
   })
+  const [receiptPermission] = usePermission({
+    actions:associatedActions && associatedActions[PartyType[PartyType.purchaseReceipt]],
+    roleActions:globalState.roleActions,
+  })
   const { t,i18n} = useTranslation("common");
   const toolbar = useToolbar()
   const createPurchaseInvoice = useCreatePurchaseInvoice()
-
+  const createReceipt = useCreateReceipt()
   const r = routes
   const navigate = useNavigate()
 
   const setUpToolBar = ()=> {
     const actions:ActionToolbar[] = []
     if(paymentPermission?.create) {
-      actions.push({label:t("_payment.create"),onClick:()=>{
+      actions.push({label:t("_payment.base"),onClick:()=>{
         navigate(r.toPaymentCreate())
       },Icon:PlusIcon})
     }
     if(purchaseInvoicePermission?.create) {
-      actions.push({label:t("_invoice.create"),onClick:()=>{
+      actions.push({label:t("f.purchase",{o:t("_invoice.base")}),onClick:()=>{
         createPurchaseInvoice.setData({payload:{
             party_name:order?.party_name,
             party_uuid:order?.party_uuid,
             currency:order?.currency,
             order_uuid:order?.uuid,
-            lines:order?.order_lines.map((line)=>{
-              const d:z.infer<typeof orderLineSchema> =  {
-                amount:line.amount,
-                quantity:line.quantity.toString() as any,
-                item_price:{
-                  uuid:line.item_price_uuid,
-                  rate:line.item_price_rate,
-                  tax_value:line.tax_value,
-                  item_code:line.item_code,
-                  item_name:line.item_name,
-                  item_uuid:line.item_uuid,
-                  uom:line.uom,     
-                }
-              }
-              return d
-            }) || []
+            lines:order?.order_lines.map((line)=>mapToLineItem(line,ItemLineType.ITEM_LINE_INVOICE)) || []
         }
       })
         navigate(r.toPurchaseInvoiceCreate())
+      },Icon:PlusIcon})
+    }
+    if(receiptPermission?.create) {
+      actions.push({label:t("f.purchase",{o:t("_receipt.base")}),onClick:()=>{
+        createReceipt.setData({payload:{
+            party_name:order?.party_name,
+            party_uuid:order?.party_uuid,
+            party_type:PartyType[PartyType.supplier],
+            currency:order?.currency,
+            reference:order?.id,
+            lines:order?.order_lines.map((line)=>mapToLineItem(line,ItemLineType.ITEM_LINE_RECEIPT)) || []
+        }
+      })
+        navigate(r.toCreateReceipt(PartyType[PartyType.purchaseReceipt]))
       },Icon:PlusIcon})
     }
     toolbar.setToolbar({
@@ -93,7 +97,7 @@ export default function PurchaseOrderClient() {
   return (
     <div>
       <div className="info-grid">
-        {/* {JSON.stringify(order)} */}
+        {JSON.stringify(order?.currency)}
         <Typography fontSize={subtitle} className=" col-span-full">
           {t("info")}
         </Typography>
@@ -117,7 +121,7 @@ export default function PurchaseOrderClient() {
           />
           {(order && order?.order_lines.length > 0) &&
           <OrderSumary
-          orderTotal={sumTotal(order?.order_lines.map(t=>t.amount))}
+          orderTotal={sumTotal(order?.order_lines.map(t=>t.rate * t.quantity))}
           orderTax={order.order_lines.reduce((prev,curr)=>{
             const taxPrice = curr.item_price_rate * ((Number(curr.tax_value))/100)
             return prev + taxPrice

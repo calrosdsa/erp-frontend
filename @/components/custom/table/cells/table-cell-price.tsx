@@ -17,17 +17,20 @@ interface TableCellProps<TData> {
     table:Table<TData>
     i18n:i18n
     currency:string
-    price?:string
+    price?:number
 }
 
 export default function TableCellPrice<TData>({ getValue, row, column, table ,i18n,currency,price}:TableCellProps<TData>) {
   const initialValue = getValue();
   return (
     <div>
-        {typeof initialValue == "number" &&(
-          price ? price :
-            formatCurrency(initialValue,currency,i18n.language)
+      {price != undefined ?
+        formatCurrency(price,currency,i18n.language)
+      :
+        typeof initialValue == "number" &&(
+          formatCurrency(initialValue,currency,i18n.language)
         )
+
 
         }
     </div>

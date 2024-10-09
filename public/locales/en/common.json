@@ -175,7 +175,8 @@
     "enable": "Check the box to enable this {{o}}",
     "accepted":"Accepted {{o}}",
     "rejected":"Rejected {{o}}",
-    "and":"{{o}} and {{p}}"
+    "and":"{{o}} and {{p}}",
+    "purchase":"Purchase {{o}}"
   },
   "info-item": "Info {{item}}",
 

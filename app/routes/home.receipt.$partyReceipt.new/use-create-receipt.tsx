@@ -7,18 +7,19 @@ import { lineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
 interface Payload {
     party_name?:string
     party_uuid?:string
+    party_type?:string
     currency?:string
-    order_uuid?:string
+    reference?:number
     lines:z.infer<typeof lineItemSchema>[]
 }
-interface CreatePurchaseInvoiceStore {
+interface CreateReceipt {
     payload?:Payload
     setData:(opts:{
         payload?:Payload,
     })=>void
     
 }
-export const useCreatePurchaseInvoice = create<CreatePurchaseInvoiceStore>((set)=>({
+export const useCreateReceipt = create<CreateReceipt>((set)=>({
     payload:undefined,
     setData:(opts)=>set((state)=>({
         payload:opts.payload
