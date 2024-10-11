@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronsUpDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { EventState, State } from "~/gen/common";
+import { EventState, State, stateToJSON } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 export default function ToolBar({ title }: { title: string }) {
@@ -33,8 +33,8 @@ export default function ToolBar({ title }: { title: string }) {
           )}
         </div>
 
-        <div className="">
-          {toolbarState.actions.length > 0 && (
+        <div className=" flex space-x-3">
+          {(toolbarState.actions.length > 0 && toolbarState?.status != State.DRAFT) && (
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Button
@@ -70,75 +70,76 @@ export default function ToolBar({ title }: { title: string }) {
             </DropdownMenu>
           )}
 
-          {toolbarState.status && (
-            <>
-              {toolbarState.status == State.DRAFT &&
-                toolbarState.onChangeState && (
-                  <Button
-                    size={"sm"}
-                    onClick={() =>
-                      toolbarState.onChangeState &&
-                      toolbarState.onChangeState(EventState.SUBMIT_EVENT)
-                    }
-                    className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
-                    disabled={toolbarState.loading}
-                  >
-                    {toolbarState.loading ? (
-                      <Icons.spinner className="h-5 w-5 animate-spin" />
-                    ) : (
-                      t("form.submit")
-                    )}
-                  </Button>
-                )}
+            {toolbarState.status && (
+              <>
+                {toolbarState.status == State.DRAFT &&
+                  toolbarState.onChangeState && (
+                    <Button
+                      size={"sm"}
+                      onClick={() =>
+                        toolbarState.onChangeState &&
+                        toolbarState.onChangeState(EventState.SUBMIT_EVENT)
+                      }
+                      className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
+                      disabled={toolbarState.loading}
+                    >
+                      {toolbarState.loading ? (
+                        <Icons.spinner className="h-5 w-5 animate-spin" />
+                      ) : (
+                        t("form.submit")
+                      )}
+                    </Button>
+                  )}
 
-              {(toolbarState.status != State.CANCELLED && toolbarState.status != State.DRAFT) &&
-                toolbarState.onChangeState && (
-                  <Button
-                    size={"sm"}
-                    onClick={() =>
-                      toolbarState.onChangeState &&
-                      toolbarState.onChangeState(EventState.CANCEL_EVENT)
-                    }
-                    className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
-                    disabled={toolbarState.loading}
-                    variant={"outline"}
-                  >
-                    {toolbarState.loading ? (
-                      <Icons.spinner className="h-5 w-5 animate-spin" />
-                    ) : (
-                      t("form.cancel")
-                    )}
-                  </Button>
+                {toolbarState.status != State.CANCELLED &&
+                  toolbarState.status != State.DRAFT &&
+                  toolbarState.onChangeState && (
+                    <Button
+                      size={"sm"}
+                      onClick={() =>
+                        toolbarState.onChangeState &&
+                        toolbarState.onChangeState(EventState.CANCEL_EVENT)
+                      }
+                      className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
+                      disabled={toolbarState.loading}
+                      variant={"outline"}
+                    >
+                      {toolbarState.loading ? (
+                        <Icons.spinner className="h-5 w-5 animate-spin" />
+                      ) : (
+                        t("form.cancel")
+                      )}
+                    </Button>
+                  )}
+              </>
+            )}
+            {toolbarState.onSave && (
+              <Button
+                size={"sm"}
+                onClick={() => {
+                  if (toolbarState.onSave) {
+                    toolbarState.onSave();
+                  } else {
+                    alert("NO ON SAVE");
+                  }
+                }}
+                className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
+                disabled={toolbarState.loading}
+                variant={"outline"}
+              >
+                {toolbarState.loading ? (
+                  <Icons.spinner className="h-5 w-5 animate-spin" />
+                ) : (
+                  t("form.save")
                 )}
-            </>
-          )}
-          {toolbarState.onSave && (
-             <Button
-             size={"sm"}
-             onClick={() =>{
-              if(toolbarState.onSave){
-                toolbarState.onSave()
-              }else{
-                alert("NO ON SAVE")
-              }
-             }
-             }
-             className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
-             disabled={toolbarState.loading}
-             variant={"outline"}
-           >
-             {toolbarState.loading ? (
-               <Icons.spinner className="h-5 w-5 animate-spin" />
-             ) : (
-               t("form.save")
-             )}
-           </Button>
-          )}
+              </Button>
+            )}
         </div>
+        {toolbarState.status == State.DRAFT && (
+          <MessageAlert message="Submit to confirm" />
+        )}
       </div>
-      {toolbarState.status == State.DRAFT && (
-        <MessageAlert message="Submit to confirm" />
-      )}
+
     </div>
   );
 }

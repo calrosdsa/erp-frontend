@@ -26,13 +26,14 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
             const res = await client.POST("/invoice",{
                 body:{
-                    party_uuid:d.supplier.uuid,
-                    party_type:PartyType[PartyType.supplier],
+                    party_uuid:d.partyUuid,
+                    party_type:d.partyType,
                     invoice_party_type:PartyType[PartyType.purchaseInvoice],
                     due_date:d.due_date?.toString(),
                     date:d.date.toString(),
                     lines:lines,
-                    currency:currencySchemaToCurrencyDto(d.currency)
+                    currency:currencySchemaToCurrencyDto(d.currency),
+                    reference:d.referenceID,
                 }
             })
             error = res.error?.detail

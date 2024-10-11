@@ -12,6 +12,10 @@ import { useEffect } from "react";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import { ItemLineType } from "~/gen/common";
+import useActionRow from "~/util/hooks/useActionRow";
+import useTableRowActions from "~/util/hooks/useTableRowActions";
+import { lineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
+import { z } from "zod";
 
 export default function ItemLineForm({
   form,
@@ -26,15 +30,25 @@ export default function ItemLineForm({
     isGroup: false,
   });
   const addLineOrder = useAddLineOrder();
+
+  const [rowMetaOptions] = useActionRow({})
+
   const { t, i18n } = useTranslation("common");
   const revalidator = useRevalidator();
-  const [metaOptions] = useEditTable({
-    form: form,
-    name: "lines",
+  const [metaOptions] = useTableRowActions({
     onAddRow: () => {
       addLineOrder.openDialog({ currency: form.getValues().currency.code,itemLineType:itemLineType });
       console.log("ON ADD ROW");
     },
+    onDelete:(rowIndex)=>{
+      const orderLines:z.infer<typeof lineItemSchema>[] = form.getValues().lines;
+      const f = orderLines.filter((_,idx)=>idx != rowIndex)
+      form.setValue("lines", f);
+      revalidator.revalidate();
+    },
+    onEdit:(rowIndex)=>{
+      
+    }
   });
   useEffect(() => {
     if (addLineOrder.orderLine) {
@@ -95,7 +109,7 @@ export default function ItemLineForm({
           meta: {
             ...metaOptions,
             tooltipMessage: t("tooltip.selectCurrency"),
-            enableTooltipMessage: form.getValues().currency == undefined,
+            enableTooltipMessage: form.getValues().currency?.code == undefined,
           },
         }}
       />

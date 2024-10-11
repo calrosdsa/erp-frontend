@@ -22,8 +22,6 @@ export const createReceiptSchema = z.object({
     currency: currencySchema,
     lines: z.array(lineItemSchema),
   })
-  // .superRefine((data,ctx)=>{
-    
-  // })
+  // E
   ;
 

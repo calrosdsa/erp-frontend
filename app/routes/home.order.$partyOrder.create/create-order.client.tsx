@@ -92,7 +92,7 @@ export default function CreatePurchaseOrdersClient() {
             onSubmit={form.handleSubmit(onSubmit)}
             className={cn("", "gap-y-3 grid p-3")}
           >
-            {JSON.stringify(form.formState.errors)}
+
             <div className="create-grid">
               <FormAutocomplete
                 data={supplierDebounceFetcher.data?.suppliers || []}

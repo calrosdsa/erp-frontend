@@ -17,6 +17,7 @@ export default function InvoiceDetailClient(){
     const {t} = useTranslation("common")
     const fetcher = useFetcher<typeof action>()
     const params = useParams()
+
     const r = routes
     const {toast } = useToast()
     const setUpToolBar = () =>{
@@ -27,7 +28,7 @@ export default function InvoiceDetailClient(){
                 const body:z.infer<typeof updateStateWithEventSchema> = {
                     current_state:invoiceDetail?.invoice.state || "", 
                     party_type:params.partyInvoice || "",
-                    party_uuid:invoiceDetail?.invoice.uuid || "",
+                    party_id:invoiceDetail?.invoice.code || "",
                     events:[e],
                 }
                 fetcher.submit({

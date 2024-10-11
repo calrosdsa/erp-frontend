@@ -42,7 +42,7 @@ enum State {
     PENDING = 2;        // Awaiting approval from relevant authority
     APPROVED = 3;                 // The purchase order has been approved
     BILLED_AWAITING_PAYMENT = 4;  // Invoice has been issued, awaiting payment
-    INVOICED_UNPAID = 5;         // Invoice exists but payment is pending
+    UNPAID = 5;         // Invoice exists but payment is pending
     PARTIALLY_PAID = 6;          // Part of the purchase order amount has been paid
     SHIPPED = 7;                  // Goods/services have been shipped
     RECEIVED = 8;                 // Goods/services have been received
@@ -52,6 +52,9 @@ enum State {
     RETURNED = 12;                // Items have been returned to the vendor
     CLOSED = 13;                  // The purchase order is closed
     OVERDUE = 14;
+    TO_BILL = 15;
+    TO_RECEIVE = 16;
+    TO_RECEIVE_AND_BILL = 17;
 }
 
 

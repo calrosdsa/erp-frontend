@@ -1,15 +1,17 @@
-import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
+import { useLoaderData, useNavigate, useOutletContext, useParams } from "@remix-run/react";
 import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { orderColumns } from "@/components/custom/table/columns/order/order-columns";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { routes } from "~/util/route";
+import ProgressBarWithTooltip from "@/components/custom-ui/progress-bar-with-tooltip";
 
 export default function OrdersClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const r = routes;
+  const params = useParams()
   const navigate = useNavigate();
   const [permission] = usePermission({
     actions: actions,
@@ -17,9 +19,15 @@ export default function OrdersClient() {
   });
   return (
     <div>
+      {/* {JSON.stringify(paginationResult?.results)} */}
+      <div>
+      
+      </div>
       <DataTable
         data={paginationResult?.results || []}
-        columns={orderColumns({})}
+        columns={orderColumns({
+          orderPartyType:params.partyOrder || ""
+        })}
         metaActions={{
           meta: {
             ...(permission?.create && {

@@ -14,9 +14,10 @@ export default function DetailLayout({
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   return (
-    <div className={`h-full   ${!isDesktop ? "flex flex-col" : "flex"}`}>
+    // <div className={`h-full   ${!isDesktop ? "flex flex-col" : "flex"}`}>
+    <div className={`h-full flex flex-col border rounded-xl p-2`}>
       <ResponsiveSidebar navItems={navItems} />
-      <Separator orientation="vertical" className="h-auto" />
+      <Separator/>
 
       <div className="px-2 py-2 w-full">{children}</div>
     </div>

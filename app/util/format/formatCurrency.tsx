@@ -1,5 +1,9 @@
 import { components } from "~/sdk";
 
+export const fomatAmounFromInt =  (v?:number):number=>{
+  if(!v){ return 0 }
+  return Number(v /100)
+}
 
 export const formatCurrency=(input: number | undefined,currency:string| undefined,language:string): string =>{
     if (input == undefined) {

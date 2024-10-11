@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useMediaQuery } from 'usehooks-ts'
+import { Separator } from "@/components/ui/separator"
  
 export function DrawerLayout({open,onOpenChange,children,title,description,className}:{
   children:React.ReactNode
@@ -40,9 +41,12 @@ export function DrawerLayout({open,onOpenChange,children,title,description,class
         {/* <DialogTrigger asChild>
           <Button variant="outline">Edit Profile</Button>
         </DialogTrigger> */}
-        <DialogContent className={cn("sm:max-w-[425px]",className)}>
+        <DialogContent className={cn("",className)}>
           <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
+            <DialogTitle>
+              {title}
+              </DialogTitle>
+              <Separator/>
             <DialogDescription>
              {description}
             </DialogDescription>

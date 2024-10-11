@@ -1,27 +1,27 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
+import PurchaseOrderClient from "./order.client"
 import apiClient from "~/apiclient"
 import { PartyType } from "~/gen/common"
-import { handleError } from "~/util/api/handle-status-code"
-import PurchaseInvoiceDetailClient from "./invoice.client"
-import { z } from "zod"
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema"
+import { z } from "zod"
+
 type ActionData = {
     action:string
-    updateStateWithEvent:z.infer<typeof updateStateWithEventSchema>
+    updateStatusWithEvent:z.infer<typeof updateStateWithEventSchema>
 }
-
 export const action = async({request}:ActionFunctionArgs)=>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
     let message:string | undefined= undefined
     let error:string | undefined = undefined
     switch(data.action){
-        case "update-state-with-event":{
-            const res=  await client.PUT("/invoice/update-state",{
-                body:data.updateStateWithEvent
+        case "update-status-with-event":{
+            const res=  await client.PUT("/order/update-status",{
+                body:data.updateStatusWithEvent
             })
             message = res.data?.message
             error = res.error?.detail
+            console.log("ORDER ",res.error)
             break;
         }
     }
@@ -30,31 +30,30 @@ export const action = async({request}:ActionFunctionArgs)=>{
     })
 }
 
-export const loader =  async({request}:LoaderFunctionArgs)=>{
-    const  client = apiClient({request})
+export const loader = async ({request,params}:LoaderFunctionArgs)=>{
+    const client = apiClient({request})
     const url = new URL(request.url)
+    console.log(request.url)
     const searchParams = url.searchParams
-    const res = await client.GET("/invoice/purchase/{id}",{
+    const res = await client.GET("/order/detail/{id}",{
         params:{
             path:{
-                id:searchParams.get("id") || ""
+                id:params.code ||  ""
             },
             query:{
-                party:PartyType[PartyType.purchaseInvoice],
+                party:PartyType[PartyType.purchaseOrder]
             }
         }
-
     })
-    handleError(res.error)
+    // res.data?.related_actions
+    console.log("PARTY",res.data?.associated_actions[PartyType[PartyType.payment]])
     return json({
-        invoiceDetail:res.data?.result.entity,
         actions:res.data?.actions,
+        order:res.data?.result.entity,
+        associatedActions:res.data?.associated_actions
     })
 }
-export default function InvoiceDetail(){
-    return (
-        <div>
-            <PurchaseInvoiceDetailClient/>
-        </div>
-    )
+
+export default function PurchaseOrder(){
+    return <PurchaseOrderClient/>
 }

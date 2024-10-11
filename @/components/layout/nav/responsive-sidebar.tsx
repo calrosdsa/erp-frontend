@@ -32,8 +32,9 @@ export default function ResponsiveSidebar({
   }, [isOpen]);
   return (
     <div className={cn(
-        `${!isDesktop && "flex"}`,
-        "min-w-44 flex-grow h-full "
+        "flex space-x-2",
+        // `${!isDesktop && "flex"}`,
+        // "min-w-44 flex-grow h-full "
         )}>
       {navItems.map((item) => {
         return (
@@ -44,9 +45,8 @@ export default function ResponsiveSidebar({
               if (setOpen) setOpen(false);
             }}
             className={cn(
-              buttonVariants({ variant: "ghost" }),
-              "group relative flex h-12 justify-start",
-              item.href.includes(path) && "bg-muted font-bold hover:bg-muted"
+              "p-2 font-medium ",
+              path.includes(item.href) && " border-b-2 border-primary hover:border-primary"
             )}
           >
             {item.icon != undefined && (

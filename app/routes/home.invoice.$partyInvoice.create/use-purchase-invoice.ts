@@ -7,8 +7,9 @@ import { lineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
 interface Payload {
     party_name?:string
     party_uuid?:string
+    party_type?:string
     currency?:string
-    order_uuid?:string
+    referenceID?:number
     lines:z.infer<typeof lineItemSchema>[]
 }
 interface CreatePurchaseInvoiceStore {

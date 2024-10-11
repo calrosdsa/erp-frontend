@@ -31,6 +31,11 @@ export type ItemGlobalState = {
     globalState:GlobalState
 }
 
+export type OrderGlobalState = {
+    order?:components["schemas"]["OrderDto"]
+    globalState:GlobalState
+}
+
 export type WarehouseGlobalState = {
     warehouse:components["schemas"]["WareHouseDto"]
     globalState:GlobalState

@@ -10,7 +10,7 @@ import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDeb
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { routes } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,8 @@ import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { action } from "./route";
 import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
-import { ItemLineType } from "~/gen/common";
+import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>()
@@ -37,21 +38,20 @@ export default function CreatePurchaseInvoiceClient() {
   const createSupplier = useCreateSupplier()
 
   const createPurchaseInvoice = useCreatePurchaseInvoice()
-
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const { t,i18n } = useTranslation("common");
   const { toast } = useToast();
   const revalidator = useRevalidator();
+  const toolbar = useToolbar();
   const navigate = useNavigate();
   const r = routes;
   const form = useForm<z.infer<typeof createPurchaseInvoiceSchema>>({
     resolver: zodResolver(createPurchaseInvoiceSchema),
     defaultValues: {
-      order_uuid:createPurchaseInvoice.payload?.order_uuid,
-      supplierName:createPurchaseInvoice.payload?.party_name || "",
-      supplier:{
-        name:createPurchaseInvoice.payload?.party_name || "",
-        uuid:createPurchaseInvoice.payload?.party_uuid || "",
-      },
+      referenceID:createPurchaseInvoice.payload?.referenceID,
+      partyName:createPurchaseInvoice.payload?.party_name || "",
+      partyUuid:createPurchaseInvoice.payload?.party_uuid || "",
+      partyType:createPurchaseInvoice.payload?.party_type || "",
       currency:{
         code:createPurchaseInvoice.payload?.currency || "",
       },
@@ -72,6 +72,20 @@ export default function CreatePurchaseInvoiceClient() {
       action:r.toPurchaseInvoiceCreate(),
   })
   };
+
+  const setUpToolbar = () => {
+    toolbar.setToolbar({
+      title: t("f.add-new", { o: t("_invoice.base").toLocaleLowerCase() }),
+      onSave: () => {
+        inputRef.current?.click();
+      },
+    });
+  };
+
+  useEffect(() => {
+    setUpToolbar();
+  }, []);
+
 
   useEffect(()=>{
     form.setValue("supplierName",createPurchaseInvoice.payload?.party_name || "")
@@ -115,12 +129,13 @@ export default function CreatePurchaseInvoiceClient() {
               <FormAutocomplete
                 data={supplierDebounceFetcher.data?.suppliers || []}
                 form={form}
-                name="supplierName"
+                name="partyName"
                 nameK={"name"}
                 onValueChange={onSupplierChange}
                 label={t("_supplier.base")}
                 onSelect={(v) => {
-                  form.setValue("supplier", v);
+                  form.setValue("partyUuid", v.uuid);
+                  form.setValue("partyType", partyTypeToJSON(PartyType.supplier));
                 }}
                 {...(supplierPermission?.create && {
                   addNew:()=>{
@@ -160,9 +175,7 @@ export default function CreatePurchaseInvoiceClient() {
          itemLineType={ItemLineType.ITEM_LINE_INVOICE}
          form={form}
          />
-              <Button className=" max-w-40" loading={fetcher.state == "submitting"} type="submit">
-                {t("form.submit")}
-              </Button>
+              <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>
         </Form>
       </FormLayout>

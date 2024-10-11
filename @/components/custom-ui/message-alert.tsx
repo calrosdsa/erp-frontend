@@ -27,7 +27,7 @@ export default function MessageAlert({
 
   return (
     <Alert
-      className={`${variantStyles[variant]} rounded-lg my-4 relative`}
+      className={`${variantStyles[variant]} rounded-lg my-1 relative`}
     >
       {title && (
         <AlertTitle className="text-lg font-semibold mb-2 pr-6">

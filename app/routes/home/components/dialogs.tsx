@@ -1,4 +1,5 @@
 import { AddLineOrder, useAddLineOrder } from "@/components/custom/shared/item/add-item-line"
+import ItemLine, { useItemLine } from "@/components/custom/shared/item/item-line"
 import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax"
 import { CreateSupplier, useCreateSupplier } from "~/routes/home.buying.suppliers_/components/create-supplier"
 import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
@@ -33,8 +34,16 @@ export default function GlobalDialogs({globalState}:{
 
     const createUser = useCreateUser()
     const addLineOrder = useAddLineOrder()
+
+    const itemLine = useItemLine()
     return (
         <>
+        {itemLine.open && 
+        <ItemLine
+        open={itemLine.open}
+        onOpenChange={itemLine.onOpenChange}
+        />
+        }
         {createCustomer.open &&
         <CreateCustomer
         open={createCustomer.open}

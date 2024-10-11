@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 interface IconButtonProps extends Omit<ButtonProps, 'size'> {
   icon: LucideIcon;
   size?: 'sm' | 'md' | 'lg';
-  label: string;
+  label?: string;
 }
 
 export default function IconButton({
@@ -33,6 +33,7 @@ export default function IconButton({
     <Button
       type="button"
       variant={variant}
+      size={"sm"}
       className={cn(
         "rounded-full",
         sizeClasses[size],

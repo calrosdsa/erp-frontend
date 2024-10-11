@@ -18,7 +18,21 @@ export const itemPriceDtoSchema = z.object({
     tax_uuid:z.string().optional(),
     tax_value:z.number().optional(),
   });
-  
+
+
+export const itemLineDtoSchema = z.object({
+  id:z.number(),
+  rate:z.number(),
+  quantity:z.number(),
+  line_type:z.string(),
+  //ITEM
+  item_name:z.string(),
+  item_code:z.string(),
+  item_uuid:z.string(),
+  //UOM 
+  uom:z.string()
+})
+
   
 
 export const lineItemReceipt = z.object({
@@ -74,9 +88,7 @@ export const mapToLineItem = (line:components["schemas"]["ItemLineDto"],to:ItemL
     quantity:line.quantity,
     itemLineReference:line.id,
     item_price:{
-      uuid:line.item_price_uuid,
-      rate:line.item_price_rate,
-      tax_value:line.tax_value,
+      rate:line.rate,
       item_code:line.item_code,
       item_name:line.item_name,
       item_uuid:line.item_uuid,
@@ -91,3 +103,17 @@ export const mapToLineItem = (line:components["schemas"]["ItemLineDto"],to:ItemL
   }
   return lineItem
 }
+
+export const editLineItemSchema = z.object({
+  itemLineID:z.number(),
+  quantity:z.coerce.number(),
+  rate:z.coerce.number(),
+
+  uom:z.string(),
+
+  item_name:z.string(),
+  item_code:z.string(),
+
+  item_price_uuid:z.string(),
+  party_type:z.string(),
+})

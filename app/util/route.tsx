@@ -3,6 +3,7 @@ import { PartyType } from "~/gen/common";
 class Routes {
   api = "/api";
   apiData = this.api + "/data";
+  apiItemLine = this.api + "/itemline"
   base = "/home";
   party = this.base + "/party";
 
@@ -13,10 +14,9 @@ class Routes {
   groups = this.base + "/groups";
   companies = this.base + "/companies";
 
-  invoice = this.base + "/invoice"
-  order = this.base + "/order"
-  receipt = this.base + "/receipt"
-
+  invoice = this.base + "/invoice";
+  order = this.base + "/order";
+  receipt = this.base + "/receipt";
 
   buying = this.base + "/buying";
   supplierGroups = this.buying + "/supplier-groups";
@@ -116,16 +116,16 @@ class Routes {
   toPaymentCreate() {
     return `${this.payment}/create`;
   }
-  toPaymentDetail(code?:string){
-    return `${this.payment}/${encodeURIComponent(code || "")}`
+  toPaymentDetail(code?: string) {
+    return `${this.payment}/${encodeURIComponent(code || "")}`;
   }
 
   taxDetailRoute(name?: string, id?: string): string {
     if (!name) return "N/A";
     return `${this.accounting}/taxes/${encodeURIComponent(name)}?id=${id}`;
   }
-  toCreateAccountLedger():string{
-    return `${this.chartOfAccount}/new`
+  toCreateAccountLedger(): string {
+    return `${this.chartOfAccount}/new`;
   }
 
   createItemAttributeRoute = `${this.itemAttributes}/create`;
@@ -169,8 +169,8 @@ class Routes {
   toTaxDetail(name: string, id: string): string {
     return `${this.taxes}/${encodeURIComponent(name)}?id=${id}`;
   }
-  toAccountLedgerDetail(name?:string,id?:string):string {
-     return `${this.chartOfAccount}/${encodeURIComponent(name || "")}?id=${id}`
+  toAccountLedgerDetail(name?: string, id?: string): string {
+    return `${this.chartOfAccount}/${encodeURIComponent(name || "")}?id=${id}`;
   }
   //Buyinh
   toSupplierGroup(name?: string, id?: string): string {
@@ -184,6 +184,13 @@ class Routes {
   toPurchaseOrderDetail(name: string, id: string): string {
     return `${this.purchaseOrders}/${encodeURIComponent(name)}?id=${id}`;
   }
+  toOrderDetail(partyType: string, code: string): string {
+    return `${this.order}/${encodeURIComponent(partyType)}/${encodeURIComponent(code)}`;
+  }
+  toOrderDetailInfo(partyType: string, code: string): string {
+    return `${this.order}/${encodeURIComponent(partyType)}/${encodeURIComponent(code)}/info`;
+  }
+  
   toPurchaseOrderCreate(): string {
     return `${this.purchaseOrders}/create`;
   }
@@ -194,14 +201,16 @@ class Routes {
     return `${this.purchaseInvoices}/create`;
   }
 
-  toReceipt(partyType:string):string {
-    return `${this.receipt}/${encodeURIComponent(partyType)}`
+  toReceipt(partyType: string): string {
+    return `${this.receipt}/${encodeURIComponent(partyType)}`;
   }
-  toReceiptDetail(partyType:string,code:string):string {
-    return `${this.receipt}/${encodeURIComponent(partyType)}/${encodeURIComponent(code)}`
+  toReceiptDetail(partyType: string, code: string): string {
+    return `${this.receipt}/${encodeURIComponent(
+      partyType
+    )}/${encodeURIComponent(code)}`;
   }
-  toCreateReceipt(partyType?:string):string {
-    return `${this.receipt}/${encodeURIComponent(partyType||"nan")}/new`
+  toCreateReceipt(partyType?: string): string {
+    return `${this.receipt}/${encodeURIComponent(partyType || "nan")}/new`;
   }
 
   //Manage
@@ -212,18 +221,16 @@ class Routes {
     return `${this.roles}/${encodeURIComponent(name)}?v=${id}`;
   }
 
-
-  toPartyDetailPage(name: string, id: string,partyType:string): string {
-    switch(partyType){
+  toPartyDetailPage(name: string, id: string, partyType: string): string {
+    switch (partyType) {
       case PartyType[PartyType.customer]:
         return `${this.customers}/${encodeURIComponent(name)}?id=${id}`;
       case PartyType[PartyType.supplier]:
         return `${this.suppliers}/${encodeURIComponent(name)}?id=${id}`;
       default:
-        return this.base
+        return this.base;
     }
   }
-
 }
 
 export const routes = new Routes();

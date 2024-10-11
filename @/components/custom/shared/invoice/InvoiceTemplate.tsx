@@ -53,11 +53,8 @@ export default function InvoiceTemplate({invoiceDetail}:{
 
        {(invoiceDetail && invoiceDetail?.item_lines.length > 0) &&
           <OrderSumary
-          orderTotal={sumTotal(invoiceDetail?.item_lines.map(t=>t.amount))}
-          orderTax={invoiceDetail.item_lines.reduce((prev,curr)=>{
-            const taxPrice = curr.item_price_rate * ((Number(curr.tax_value))/100)
-            return prev + taxPrice
-          },0)}
+          orderTotal={sumTotal(invoiceDetail?.item_lines.map(t=>t.rate * t.quantity))}
+          orderTax={0}
           i18n={i18n}
           currency={invoice?.currency || DEFAULT_CURRENCY}
           />

@@ -58,10 +58,10 @@ export default function HomeLayout({
 
   React.useEffect(() => {
     getRoutes();
-    if(toolbar.isMounted){
-      console.log("RESET TOOLBAR")
-      toolbar.resetState()
-    }
+    // if(toolbar.isMounted){
+    //   console.log("RESET TOOLBAR")
+    //   toolbar.resetState()
+    // }
   }, [location.pathname]);
   React.useEffect(() => {
     setOpenSessionDefaults(false);

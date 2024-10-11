@@ -53,14 +53,6 @@ export default function ItemDetailClient() {
           />
         </div>
       </div>
-
-      {/* <Separator/>
-      <ItemPrices item={data.result.entity}/>
-      <Separator/>
-      
-      <ItemVariants
-      item={data.result.entity}
-      /> */}
     </div>
   );
 }

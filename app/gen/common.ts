@@ -192,8 +192,8 @@ export enum State {
   APPROVED = 3,
   /** BILLED_AWAITING_PAYMENT - Invoice has been issued, awaiting payment */
   BILLED_AWAITING_PAYMENT = 4,
-  /** INVOICED_UNPAID - Invoice exists but payment is pending */
-  INVOICED_UNPAID = 5,
+  /** UNPAID - Invoice exists but payment is pending */
+  UNPAID = 5,
   /** PARTIALLY_PAID - Part of the purchase order amount has been paid */
   PARTIALLY_PAID = 6,
   /** SHIPPED - Goods/services have been shipped */
@@ -211,6 +211,9 @@ export enum State {
   /** CLOSED - The purchase order is closed */
   CLOSED = 13,
   OVERDUE = 14,
+  TO_BILL = 15,
+  TO_RECEIVE = 16,
+  TO_RECEIVE_AND_BILL = 17,
   UNRECOGNIZED = -1,
 }
 
@@ -232,8 +235,8 @@ export function stateFromJSON(object: any): State {
     case "BILLED_AWAITING_PAYMENT":
       return State.BILLED_AWAITING_PAYMENT;
     case 5:
-    case "INVOICED_UNPAID":
-      return State.INVOICED_UNPAID;
+    case "UNPAID":
+      return State.UNPAID;
     case 6:
     case "PARTIALLY_PAID":
       return State.PARTIALLY_PAID;
@@ -261,6 +264,15 @@ export function stateFromJSON(object: any): State {
     case 14:
     case "OVERDUE":
       return State.OVERDUE;
+    case 15:
+    case "TO_BILL":
+      return State.TO_BILL;
+    case 16:
+    case "TO_RECEIVE":
+      return State.TO_RECEIVE;
+    case 17:
+    case "TO_RECEIVE_AND_BILL":
+      return State.TO_RECEIVE_AND_BILL;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -280,8 +292,8 @@ export function stateToJSON(object: State): string {
       return "APPROVED";
     case State.BILLED_AWAITING_PAYMENT:
       return "BILLED_AWAITING_PAYMENT";
-    case State.INVOICED_UNPAID:
-      return "INVOICED_UNPAID";
+    case State.UNPAID:
+      return "UNPAID";
     case State.PARTIALLY_PAID:
       return "PARTIALLY_PAID";
     case State.SHIPPED:
@@ -300,6 +312,12 @@ export function stateToJSON(object: State): string {
       return "CLOSED";
     case State.OVERDUE:
       return "OVERDUE";
+    case State.TO_BILL:
+      return "TO_BILL";
+    case State.TO_RECEIVE:
+      return "TO_RECEIVE";
+    case State.TO_RECEIVE_AND_BILL:
+      return "TO_RECEIVE_AND_BILL";
     case State.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

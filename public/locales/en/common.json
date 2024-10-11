@@ -39,6 +39,7 @@
   },
   "create": "Create",
   "info": "Info",
+  "connections":"Connections",
   "_auth": {
     "signin": "Sign In",
     "signout":"Sign Out"
@@ -176,7 +177,8 @@
     "accepted":"Accepted {{o}}",
     "rejected":"Rejected {{o}}",
     "and":"{{o}} and {{p}}",
-    "purchase":"Purchase {{o}}"
+    "purchase":"Purchase {{o}}",
+    "editRow":"Edit Row {{o}}"
   },
   "info-item": "Info {{item}}",
 
@@ -284,6 +286,8 @@
   },
   "table": {
     "new": "New",
+    "received":"Received",
+    "billed":"Billed",
     "createdAt": "Creation Date",
     "updatedAt": "Last Modified",
     "deliverdDate": "Deliverd Date",

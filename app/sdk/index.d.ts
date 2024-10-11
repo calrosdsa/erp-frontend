@@ -437,6 +437,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/item-line": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** EditItemLine */
+        put: operations["update-item-line"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/ledger": {
         parameters: {
             query?: never;
@@ -499,6 +516,23 @@ export interface paths {
         /** Retrieve order */
         get: operations["get order"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/order/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Order Status */
+        put: operations["update-order-status"];
         post?: never;
         delete?: never;
         options?: never;
@@ -817,6 +851,23 @@ export interface paths {
         /** Get Receipt Detail */
         get: operations["get-receipt-detail"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/receipt/update-state": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Receipt State */
+        put: operations["update-receipt-state"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1594,11 +1645,11 @@ export interface components {
             due_date?: string | null;
             invoice_party_type: string;
             lines: components["schemas"]["LineItemDto"][];
-            /** Format: uuid */
-            order_uuid?: string;
             party_type: string;
             /** Format: uuid */
             party_uuid: string;
+            /** Format: int64 */
+            reference?: number | null;
         };
         CreateItemAttributeRequestBody: {
             /**
@@ -2442,8 +2493,6 @@ export interface components {
             id: number;
             item_code: string;
             item_name: string;
-            /** Format: int64 */
-            item_price_rate: number;
             item_price_uuid: string;
             item_uuid: string;
             line_type: string;
@@ -2451,8 +2500,6 @@ export interface components {
             quantity: number;
             /** Format: int32 */
             rate: number;
-            /** Format: double */
-            tax_value: number;
             uom: string;
         };
         ItemPrice: {
@@ -2569,6 +2616,8 @@ export interface components {
             rejected_warehouse?: string;
         };
         OrderDto: {
+            /** Format: int32 */
+            billed_amount: number;
             code: string;
             /** Format: date-time */
             created_at: string;
@@ -2581,8 +2630,15 @@ export interface components {
             id: number;
             order_lines: components["schemas"]["ItemLineDto"][];
             party_name: string;
+            party_type: string;
             party_uuid: string;
+            /** Format: int32 */
+            received_items: number;
             status: string;
+            /** Format: int32 */
+            total_amount: number;
+            /** Format: int32 */
+            total_items: number;
             uuid: string;
         };
         PaginationResponsePaginationResultListAddressDtoBody: {
@@ -3069,11 +3125,14 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             currency: string;
+            /** Format: int64 */
+            id: number;
             party_name: string;
             party_type: string;
             party_uuid: string;
             /** Format: date-time */
             posting_date: string;
+            status: string;
         };
         RequestAddPartyReferenceBody: {
             /**
@@ -3407,6 +3466,21 @@ export interface components {
             readonly $schema?: string;
             credentials: string;
         };
+        UpdateItemLineBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int32 */
+            item_line: number;
+            item_price_uuid: string;
+            party_type: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: int32 */
+            rate: number;
+        };
         UpdateItemRequestBody: {
             /**
              * Format: uri
@@ -3441,9 +3515,8 @@ export interface components {
             readonly $schema?: string;
             current_state: string;
             events: number[];
+            party_id: string;
             party_type: string;
-            /** Format: uuid */
-            party_uuid: string;
         };
         UpsertItemAttributeValueRequestBody: {
             /**
@@ -4724,6 +4797,49 @@ export interface operations {
             };
         };
     };
+    "update-item-line": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateItemLineBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-acconts": {
         parameters: {
             query: {
@@ -4915,6 +5031,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityOrderDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-order-status": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -5890,6 +6049,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityReceiptDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-receipt-state": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

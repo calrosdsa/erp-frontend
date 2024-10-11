@@ -10,6 +10,7 @@ import TableCellIndex from "../../cells/table-cell-index";
 import { formatTax, getTaxPorcent } from "~/util/format/formatCurrency";
 import { lineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
 import { ItemLineType } from "~/gen/common";
+import { DataTableRowActions } from "../../data-table-row-actions";
 
 export const  orderLineColumns = ({
   currency,
@@ -80,6 +81,11 @@ export const  orderLineColumns = ({
       );
     },
   });
+
+  columns.push({
+      id: "actions",
+      cell: DataTableRowActions,
+  })
 
   // columns.push({
   //   accessorKey: "amount",
@@ -176,9 +182,9 @@ export const displayItemLineColumns = ({
   // });
 
 
-  // columns.push({
-  //     id: "actions-row",
-  //     cell: DataTableRowActions,
-  //   })
+  columns.push({
+      id: "actions-row",
+      cell: DataTableRowActions,
+    })
   return [...columns];
 };

@@ -103,7 +103,11 @@ export default function NewReceiptClient() {
       toast({
         title: fetcher.data.message,
       });
+      if(fetcher.data.receipt){
+        navigate(r.toReceiptDetail(params.partyReceipt || "n/a",fetcher.data.receipt.code))
+      }
     }
+    
   }, [fetcher.data]);
   return (
     <div>
