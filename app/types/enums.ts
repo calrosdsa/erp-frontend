@@ -38,7 +38,8 @@ export enum Entity {
     PAYMENT_ENTITY_ID = 19,
     LEDGER_ENTITY_ID = 20,
     PURCHASE_RECEIPT_ENTITY_ID = 21,
-    COURT_ENTITY_ID = 22 // Regate
+    COURT_ENTITY_ID = 22, // Regate
+    BOOKING_ENTITY_ID = 23, // Regate
 }
 
 export enum PartyType {

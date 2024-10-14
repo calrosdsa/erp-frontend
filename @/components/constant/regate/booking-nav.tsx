@@ -1,4 +1,4 @@
-import { CreditCardIcon, DollarSign, StoreIcon } from "lucide-react";
+import { CalendarIcon, CreditCardIcon, DollarSign, StoreIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { PartyType } from "~/gen/common";
 import { NavItem } from "~/types";
@@ -6,7 +6,7 @@ import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
 import { routes } from "~/util/route";
 
-export const CourtNav = ({ entities }: { 
+export const BookingNav = ({ entities }: { 
     entities: number[] | undefined
 }): NavItem => {
   const { t } = useTranslation("common");
@@ -37,13 +37,13 @@ export const CourtNav = ({ entities }: {
 //       href: r.priceList,
 //     });
 //   }
-const court: NavItem = {
-    title: t("regate._court.base"),
-    icon: StoreIcon,
-    href: r.court,
+const booking: NavItem = {
+    title: t("regate._booking.base"),
+    icon: CalendarIcon,
+    href: r.booking,
     // isChildren: true,
     // children: accountingChildrens,
   };
 
-  return court
+  return booking
 }

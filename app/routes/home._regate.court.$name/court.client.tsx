@@ -10,6 +10,7 @@ import { CourtState, GlobalState } from "~/types/app";
 import CourtInfoTab from "./tabs/court-info";
 import CourtSchedule from "./tabs/court-schedule";
 import { ActionToolbar } from "~/types/actions";
+import { UpdateCourtRate, useUpdateCourtRate } from "./use-update-court-rate";
 
 export default function CourtDetailClient() {
   const { court } = useLoaderData<typeof loader>();
@@ -21,6 +22,7 @@ export default function CourtDetailClient() {
   const [searchParams] = useSearchParams()
   const tab = searchParams.get("tab")
   const toolbar = useToolbar();
+  const updateCourtRate = useUpdateCourtRate()
   const navTabs: NavItem[] = [
     { title: t("info"), href: r.toCourtDetail(court?.name || "", court?.uuid || "","info") },
     { title: t("regate.schedule"), href: r.toCourtDetail(court?.name || "", court?.uuid || "","schedule") },    
@@ -30,6 +32,9 @@ export default function CourtDetailClient() {
     actions.push({
       label: t("regate._court.base"),
       onClick: () => {
+        updateCourtRate.onOpenDialog({
+          court:court
+        })
       },
     });
     toolbar.setToolbar({
@@ -42,6 +47,10 @@ export default function CourtDetailClient() {
   }, []);
   return (
     <DetailLayout navItems={navTabs}>
+      {updateCourtRate.open &&
+      <UpdateCourtRate/>
+      }
+
       {tab == "info" && 
       <CourtInfoTab/>
       }

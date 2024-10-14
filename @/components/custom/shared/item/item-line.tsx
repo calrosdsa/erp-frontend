@@ -170,10 +170,6 @@ export default function ItemLine({
                 return <AmountInput
                 currency={itemLine.currency}
                 field={field}
-                initialAmount={form.getValues().rate}
-                onAmountChange={(e)=>{
-                    field.onChange(e)
-                }}
                 />;
               }}
               name={"rate"}

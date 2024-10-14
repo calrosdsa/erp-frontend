@@ -38,6 +38,7 @@ interface Props<T extends object, K extends keyof T> {
   onSelect?: (v: T) => void;
   className?: string;
   addNew?: () => void;
+  required?:boolean
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
 }
 
@@ -54,6 +55,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   onCustomDisplay,
   className,
   addNew,
+  required,
 }: Props<T, K>) {
   return (
     <FormField
@@ -61,7 +63,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col w-full ">
-          {label && <FormLabel>{label}</FormLabel>}
+          {label && <FormLabel>{label} {required && "*"}</FormLabel>}
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>

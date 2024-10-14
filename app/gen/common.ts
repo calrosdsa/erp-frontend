@@ -9,6 +9,39 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "erp.api_v1";
 
+export enum RegatePartyType {
+  court = 0,
+  booking = 1,
+  UNRECOGNIZED = -1,
+}
+
+export function regatePartyTypeFromJSON(object: any): RegatePartyType {
+  switch (object) {
+    case 0:
+    case "court":
+      return RegatePartyType.court;
+    case 1:
+    case "booking":
+      return RegatePartyType.booking;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return RegatePartyType.UNRECOGNIZED;
+  }
+}
+
+export function regatePartyTypeToJSON(object: RegatePartyType): string {
+  switch (object) {
+    case RegatePartyType.court:
+      return "court";
+    case RegatePartyType.booking:
+      return "booking";
+    case RegatePartyType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export enum PartyType {
   /** supplierGroup - 1 - 1 */
   supplierGroup = 0,

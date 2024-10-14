@@ -153,7 +153,8 @@
     "logo": "Logo",
     "isShippingAddress":"Is Shipping Address",
     "isBillingAddress":"Is Shipping Address",
-    "paidAmount":"Paid Amount ({{o}})"
+    "paidAmount":"Paid Amount ({{o}})",
+    "daysWeek":"Days Weeks"
   },
   "accounts":"Accounts",
   "_selling": {
@@ -337,6 +338,9 @@
     "schedule":"Schedule",
     "_court":{
       "base":"Court"
+    },
+    "_booking":{
+      "base":"Booking"
     }
   }
 }

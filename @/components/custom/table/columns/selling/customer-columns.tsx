@@ -23,7 +23,7 @@ export const customerColumns = ({}): ColumnDef<
         return (
           <TableCellNameNavigation
             {...props}
-            navigate={(name) => r.customerDetail(name, rowData.uuid)}
+            navigate={(name) => r.toCustomerDetail(name, rowData.uuid)}
           />
         );
       },

@@ -21,7 +21,7 @@ export default function AmountInput({
   className,
   ...props
 }: AmountInputProps) {
-  const [inputValue, setInputValue] = useState(initialAmount?.toString())
+  const [inputValue, setInputValue] = useState(field.value)
   const [formattedValue, setFormattedValue] = useState("")
 
   const formatAmount = (value: string) => {
@@ -37,6 +37,7 @@ export default function AmountInput({
     const numericValue = parseFloat(value.replace(/[^0-9.]/g, ""))
     if (!isNaN(numericValue)) {
       onAmountChange?.(numericValue)
+      field.onChange(numericValue)
     }
   }
 

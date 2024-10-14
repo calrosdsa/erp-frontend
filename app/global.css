@@ -17,6 +17,9 @@
   .route-display-grid {
     @apply grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4   
   }
+  .drawer-close {
+    @apply col-span-full mt-2 mx-4
+  }
 }
 
 @layer base {

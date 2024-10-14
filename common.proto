@@ -11,6 +11,12 @@ message Result {
     string message = 1;
 }
 
+enum RegatePartyType {
+    court = 0;
+    booking = 1;
+}
+
+
 enum PartyType {
     supplierGroup = 0;      // 1 - 1
     itemGroup = 1;          // 2 - 1

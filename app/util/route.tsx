@@ -58,7 +58,7 @@ class Routes {
   toReferenceDetail(partyType: string, name: string, id: string): string {
     switch (partyType) {
       case PartyType[PartyType.customer]:
-        return this.customerDetail(name, id);
+        return this.toCustomerDetail(name, id);
       case PartyType[PartyType.supplier]:
         return this.toSupplierDetail(name, id);
       case PartyType[PartyType.warehouse]:
@@ -104,7 +104,7 @@ class Routes {
   }
 
   //Selling
-  customerDetail(name?: string, id?: string): string {
+  toCustomerDetail(name?: string, id?: string): string {
     if (!name) return "N/A";
     return `${this.customers}/${encodeURIComponent(name)}?id=${id}`;
   }
@@ -238,6 +238,14 @@ class Routes {
 
   //Regate
   court = this.base + "/court";
+  booking = this.base + "/booking";
+
+  toCreateBooking():string {
+    return `${this.booking}/new`
+  }
+  toBookingDetail(code:string):string {
+    return `${this.booking}/${encodeURIComponent(code)}`
+  }
 
   toCreateCourt():string {
     return `${this.court}/new`

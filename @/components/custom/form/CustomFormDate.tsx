@@ -25,12 +25,14 @@ export default function CustomFormDate({
   name,
   description,
   isDatetime,
+  required
 }: {
   form: any;
   name: string;
   label: string;
   description?: string;
   isDatetime?:boolean
+  required?:boolean
 }) {
   const { t } = useTranslation("common");
   return (
@@ -39,7 +41,7 @@ export default function CustomFormDate({
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col">
-          <FormLabel className="text-left">{label}</FormLabel>
+          <FormLabel className="text-left">{label} {required && "*"}</FormLabel>
           <Popover>
             <FormControl>
               <PopoverTrigger asChild>

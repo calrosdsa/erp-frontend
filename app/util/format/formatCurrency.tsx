@@ -21,6 +21,23 @@ export const formatCurrency=(input: number | undefined,currency:string| undefine
       }).format(Number(number.toFixed(2)))
     return formatted;
 }
+//For formattiong rate that provide from amount input 
+export const formatCurrencyAmount=(input: number | undefined,currency:string| undefined,language:string): string =>{
+  if (input == undefined) {
+    return "";
+  }
+  if (currency == undefined) {
+    return "";
+  }
+  // Convert the input string to a number and divide by 100
+  // Format the number to 2 decimal places
+  const formatted = new Intl.NumberFormat(language, {
+      style: "currency",
+      currency: currency,
+    }).format(Number(input.toFixed(2)))
+  return formatted;
+}
+
 
 export const sumTotal = (values:number[])=>{
   if(values.length == 0) return 0

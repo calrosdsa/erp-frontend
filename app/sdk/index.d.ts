@@ -229,6 +229,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/court-rate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Update Court Rates */
+        post: operations["update-court-rates"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/court-rate/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Court Rates */
+        get: operations["get-court-rates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/court/detail/{id}": {
         parameters: {
             query?: never;
@@ -927,6 +961,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/regate/booking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Bookings */
+        get: operations["get-bookings"];
+        put?: never;
+        /** Create Booking */
+        post: operations["create booking"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/regate/booking/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Create User */
+        get: operations["get court"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/regate/booking/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validate Booking */
+        post: operations["validate-booking"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/role": {
         parameters: {
             query?: never;
@@ -1549,6 +1635,35 @@ export interface components {
             street_line_2: string;
             title: string;
         };
+        BookingData: {
+            /** Format: int64 */
+            court_id: number;
+            /** Format: int32 */
+            day_week: number;
+            /** Format: date-time */
+            end_date: string;
+            is_valid: boolean;
+            /** Format: date-time */
+            start_date: string;
+            times: string[];
+        };
+        BookingDto: {
+            code: string;
+            /** Format: int64 */
+            court_name: number;
+            court_uuid: string;
+            /** Format: date-time */
+            end_date: string;
+            /** Format: int32 */
+            paid: number;
+            party_name: string;
+            party_uuid: string;
+            /** Format: date-time */
+            start_date: string;
+            status: string;
+            /** Format: int32 */
+            total_price: number;
+        };
         Client: {
             ClientKeyValueData: components["schemas"]["ClientKeyValueData"][];
             Code: string;
@@ -1644,10 +1759,49 @@ export interface components {
         };
         CourtDto: {
             /** Format: date-time */
-            craeted_at: string;
+            created_at: string;
             enabled: boolean;
+            /** Format: int64 */
+            id: number;
             name: string;
             uuid: string;
+        };
+        CourtRateData: {
+            /** Format: int32 */
+            day_week: number;
+            enabled: boolean;
+            /** Format: double */
+            rate: number;
+            time: string;
+        };
+        CourtRateDto: {
+            currency: string;
+            /** Format: int32 */
+            day_week: number;
+            enabled: boolean;
+            /** Format: double */
+            rate: number;
+            time: string;
+        };
+        CreateBookingBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            court_id: number;
+            /** Format: date-time */
+            end_datetime: string;
+            /** Format: int32 */
+            paid: number;
+            /** Format: int64 */
+            party_id: number;
+            reserva_type: string;
+            /** Format: date-time */
+            start_datetime: string;
+            /** Format: int32 */
+            total_price: number;
         };
         CreateCompanyRequestBody: {
             /**
@@ -1968,6 +2122,8 @@ export interface components {
             customer_type: string;
             group_name?: string;
             group_uuid?: string;
+            /** Format: int64 */
+            id: number;
             name: string;
             uuid: string;
         };
@@ -2106,6 +2262,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityAddressDto"];
         };
+        EntityResponseResultEntityBookingDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityBookingDto"];
+        };
         EntityResponseResultEntityCourtDtoBody: {
             /**
              * Format: uri
@@ -2209,6 +2378,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityLedgerDetailDto"];
+        };
+        EntityResponseResultEntityListCourtRateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityListCourtRateDto"];
         };
         EntityResponseResultEntityListCustomerTypeBody: {
             /**
@@ -2731,6 +2913,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListAddressDto"];
         };
+        PaginationResponsePaginationResultListBookingDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListBookingDto"];
+        };
         PaginationResponsePaginationResultListCompanyDtoBody: {
             /**
              * Format: uri
@@ -2949,6 +3140,11 @@ export interface components {
         };
         PaginationResultListAddressDto: {
             results: components["schemas"]["AddressDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListBookingDto: {
+            results: components["schemas"]["BookingDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -3240,6 +3436,16 @@ export interface components {
             /** Format: int64 */
             reference_id: number;
         };
+        ResponseDataBookingDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["BookingDto"];
+        };
         ResponseDataContactDtoBody: {
             /**
              * Format: uri
@@ -3279,6 +3485,16 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             message: string;
             result: components["schemas"]["LedgerDto"];
+        };
+        ResponseDataListBookingDataBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["BookingData"][];
         };
         ResponseDataListPartyTypeDtoBody: {
             /**
@@ -3326,6 +3542,11 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["AddressDto"];
         };
+        ResultEntityBookingDto: {
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["BookingDto"];
+        };
         ResultEntityCourtDto: {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
@@ -3365,6 +3586,11 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["LedgerDetailDto"];
+        };
+        ResultEntityListCourtRateDto: {
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["CourtRateDto"][];
         };
         ResultEntityListCustomerType: {
             addresses: components["schemas"]["AddressDto"][];
@@ -3568,6 +3794,15 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
         };
+        UpdateCourtRatesBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            court_rate: components["schemas"]["CourtRateData"][];
+            court_uuid: string;
+        };
         UpdateCredentialsPluginRequestBody: {
             /**
              * Format: uri
@@ -3671,6 +3906,14 @@ export interface components {
             profile: components["schemas"]["ProfileDto"];
             role: components["schemas"]["RoleDto"];
             uuid: string;
+        };
+        ValidateBookingBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            bookings: components["schemas"]["BookingData"][];
         };
         WareHouseDto: {
             /** Format: date-time */
@@ -4320,8 +4563,8 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Created */
-            201: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4373,6 +4616,90 @@ export interface operations {
             };
         };
     };
+    "update-court-rates": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCourtRatesBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataCourtDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-court-rates": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityListCourtRateDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get court": {
         parameters: {
             query?: {
@@ -4394,8 +4721,8 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Created */
-            201: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6365,6 +6692,156 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListReceiptDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-bookings": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListBookingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create booking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBookingBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataBookingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get court": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityBookingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "validate-booking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ValidateBookingBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListBookingDataBody"];
                 };
             };
             /** @description Error */
