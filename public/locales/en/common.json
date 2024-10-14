@@ -332,5 +332,11 @@
   "ASSET":"Asset",
   "LIABILITIES":"Liabilities",
   "EXPENSE":"Expense",
-  "REVENUE":"Revenue"
+  "REVENUE":"Revenue",
+  "regate":{
+    "schedule":"Schedule",
+    "_court":{
+      "base":"Court"
+    }
+  }
 }

@@ -19,7 +19,7 @@ export default function DetailLayout({
       <ResponsiveSidebar navItems={navItems} />
       <Separator/>
 
-      <div className="px-2 py-2 w-full">{children}</div>
+      <div className="px-1 sm:px-2 py-2 w-full">{children}</div>
     </div>
   );
 }

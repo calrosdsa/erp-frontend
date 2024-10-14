@@ -19,6 +19,7 @@ import { useMemo } from "react";
 import { BuyingNav } from "./buying-nav";
 import { SellingNav } from "./selling-nav";
 import { AccountingNav } from "./accounting-nav";
+import { CourtNav } from "./regate/court-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -37,6 +38,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     entities:entities,
   })
   const accountingNav = AccountingNav({
+    entities:entities
+  })
+
+  const courtNav = CourtNav({
     entities:entities
   })
 
@@ -64,6 +69,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   
 
  
+
 
  
 
@@ -174,6 +180,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   }
   if (accountingNav.children && accountingNav.children.length > 0) {
     navItems.push(accountingNav);
+  }
+
+  if(entities?.includes(Entity.COURT_ENTITY_ID)){
+    navItems.push(courtNav)
   }
 
   if(buyingNav.children && buyingNav.children.length > 0) {

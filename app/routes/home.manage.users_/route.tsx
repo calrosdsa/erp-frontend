@@ -20,7 +20,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
     switch(data.action){
         case "create-user":{
             const d = data.createUser
-            const res = await client.POST("/user/profile",{
+            const res = await client.POST("/user",{
                 body:{
                     role_uuid:d.roleUuid,
                     email:d.email,

@@ -211,6 +211,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/court": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** get courts */
+        get: operations["get courts"];
+        put?: never;
+        /** Create Court */
+        post: operations["create court"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/court/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Create User */
+        get: operations["get court"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/cuatropf/subscription/{companyUuid}": {
         parameters: {
             query?: never;
@@ -1342,6 +1377,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create User */
+        post: operations["create user"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/user/profile": {
         parameters: {
             query?: never;
@@ -1590,6 +1642,13 @@ export interface components {
             label?: string;
             phone?: string;
         };
+        CourtDto: {
+            /** Format: date-time */
+            craeted_at: string;
+            enabled: boolean;
+            name: string;
+            uuid: string;
+        };
         CreateCompanyRequestBody: {
             /**
              * Format: uri
@@ -1609,6 +1668,15 @@ export interface components {
             contact: components["schemas"]["ContactData"];
             /** Format: int64 */
             party_reference?: number | null;
+        };
+        CreateCourtBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            enabled: boolean;
+            name: string;
         };
         CreateCustomerRequestBody: {
             /**
@@ -2037,6 +2105,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityAddressDto"];
+        };
+        EntityResponseResultEntityCourtDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityCourtDto"];
         };
         EntityResponseResultEntityCustomerDtoBody: {
             /**
@@ -2668,6 +2749,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListContactDto"];
         };
+        PaginationResponsePaginationResultListCourtDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListCourtDto"];
+        };
         PaginationResponsePaginationResultListCurrencyDtoBody: {
             /**
              * Format: uri
@@ -2869,6 +2959,11 @@ export interface components {
         };
         PaginationResultListContactDto: {
             results: components["schemas"]["ContactDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListCourtDto: {
+            results: components["schemas"]["CourtDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -3155,6 +3250,16 @@ export interface components {
             message: string;
             result: components["schemas"]["ContactDto"];
         };
+        ResponseDataCourtDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["CourtDto"];
+        };
         ResponseDataInvoiceDtoBody: {
             /**
              * Format: uri
@@ -3220,6 +3325,11 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["AddressDto"];
+        };
+        ResultEntityCourtDto: {
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["CourtDto"];
         };
         ResultEntityCustomerDto: {
             addresses: components["schemas"]["AddressDto"][];
@@ -3474,11 +3584,12 @@ export interface components {
             readonly $schema?: string;
             /** Format: int32 */
             item_line: number;
+            /** Format: uuid */
             item_price_uuid: string;
             party_type: string;
             /** Format: int32 */
             quantity: number;
-            /** Format: int32 */
+            /** Format: double */
             rate: number;
         };
         UpdateItemRequestBody: {
@@ -4173,6 +4284,123 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseCompanyBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get courts": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCourtDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create court": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCourtBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataCourtDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get court": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityCourtDtoBody"];
                 };
             };
             /** @description Error */
@@ -7751,6 +7979,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UOMsResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create user": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateUserRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

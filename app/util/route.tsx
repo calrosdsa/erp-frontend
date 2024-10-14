@@ -3,7 +3,7 @@ import { PartyType } from "~/gen/common";
 class Routes {
   api = "/api";
   apiData = this.api + "/data";
-  apiItemLine = this.api + "/itemline"
+  apiItemLine = this.api + "/itemline";
   base = "/home";
   party = this.base + "/party";
 
@@ -185,12 +185,16 @@ class Routes {
     return `${this.purchaseOrders}/${encodeURIComponent(name)}?id=${id}`;
   }
   toOrderDetail(partyType: string, code: string): string {
-    return `${this.order}/${encodeURIComponent(partyType)}/${encodeURIComponent(code)}`;
+    return `${this.order}/${encodeURIComponent(partyType)}/${encodeURIComponent(
+      code
+    )}`;
   }
   toOrderDetailInfo(partyType: string, code: string): string {
-    return `${this.order}/${encodeURIComponent(partyType)}/${encodeURIComponent(code)}/info`;
+    return `${this.order}/${encodeURIComponent(partyType)}/${encodeURIComponent(
+      code
+    )}/info`;
   }
-  
+
   toPurchaseOrderCreate(): string {
     return `${this.purchaseOrders}/create`;
   }
@@ -230,6 +234,23 @@ class Routes {
       default:
         return this.base;
     }
+  }
+
+  //Regate
+  court = this.base + "/court";
+
+  toCreateCourt():string {
+    return `${this.court}/new`
+  }
+  toCourtDetail(name:string,id:string,tab?:string):string{
+    let url = this.court + `/${encodeURIComponent(name)}?id=${id}`
+    if(tab){
+      url += `&tab=${tab}`
+    }else { url += `&tab=info`}
+    return url 
+  }
+  toCourtSchedule(name:string,id:string):string{
+    return this.court + `/${encodeURIComponent(name)}/schedule?id=${id}`
   }
 }
 

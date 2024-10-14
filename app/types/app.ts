@@ -41,6 +41,11 @@ export type WarehouseGlobalState = {
     globalState:GlobalState
 }
 
+export type CourtState =  {
+    globalState:GlobalState
+    court:components["schemas"]["CourtDto"]
+}
+
 export type UserData = {
     FirstName:string
     LastName:string
