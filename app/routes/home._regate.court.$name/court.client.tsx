@@ -17,7 +17,6 @@ export default function CourtDetailClient() {
   const params = useParams();
   const { t } = useTranslation("common");
   const r = routes;
-  const globalState = useOutletContext<GlobalState>()
   const navigate = useNavigate();
   const [searchParams] = useSearchParams()
   const tab = searchParams.get("tab")

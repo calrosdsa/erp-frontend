@@ -3,6 +3,7 @@ import { PartyType } from "~/gen/common";
 class Routes {
   api = "/api";
   apiData = this.api + "/data";
+  apiCore = this.api + "/core";
   apiItemLine = this.api + "/itemline";
   base = "/home";
   party = this.base + "/party";
@@ -243,8 +244,12 @@ class Routes {
   toCreateBooking():string {
     return `${this.booking}/new`
   }
-  toBookingDetail(code:string):string {
-    return `${this.booking}/${encodeURIComponent(code)}`
+  toBookingDetail(code:string,tab?:string):string {
+    let url = this.booking + `/${encodeURIComponent(code)}`
+    if(tab){
+      url += `?tab=${tab}`
+    }else { url += `?tab=info`}
+    return url 
   }
 
   toCreateCourt():string {

@@ -1,17 +1,20 @@
-import { ActionFunctionArgs, json } from "@remix-run/node"
+import { ActionFunctionArgs, json, redirect } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import NewBookingClient from "./new-booking.client"
 import { components } from "~/sdk"
+import { routes } from "~/util/route"
 
 
 type ActionData = {
     action:string
     validateBookingData:components["schemas"]["ValidateBookingBody"]
+    createBookingData:components["schemas"]["CreateBookingBody"]
 }
 
 export const action = async({request}:ActionFunctionArgs)=>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
+    const r =routes
     let message:string | undefined = undefined
     let error:string | undefined = undefined
     let bookingData:components["schemas"]["BookingData"][] = []
@@ -22,8 +25,18 @@ export const action = async({request}:ActionFunctionArgs)=>{
             })
             error = res.error?.detail
             bookingData =  res.data?.result || []
-            console.log(res.error,res.data)
             break;
+        }
+        case "create-bookings":{
+            console.log("CREATE BOOKINGS")
+            const res = await client.POST("/regate/booking",{
+                body:data.createBookingData
+            })
+            error = res.error?.detail
+            message = res.data?.message
+            if(res.response.ok){
+                return redirect(r.booking)
+            }
         }
     }
     return json({

@@ -90,6 +90,7 @@
     "gender":"Gender",
     "name": "Name",
     "date":"Date",
+    "advancePayment":"Advance Payment",
     "postingDate":"Posting Date",
     "dueDate":"Due Date",
     "deliveryDate": "Delivery Date",
@@ -137,6 +138,7 @@
     "rate": "Rate",
     "itemQuantity": "Item Quantity",
     "totalQuantity": "Total Quantity",
+    
     "quantity":"Quantity",
     "pay": "Pay",
     "orderTotal": "Order Total",
@@ -154,7 +156,8 @@
     "isShippingAddress":"Is Shipping Address",
     "isBillingAddress":"Is Shipping Address",
     "paidAmount":"Paid Amount ({{o}})",
-    "daysWeek":"Days Weeks"
+    "daysWeek":"Days Weeks",
+    "comment":"Comment"
   },
   "accounts":"Accounts",
   "_selling": {

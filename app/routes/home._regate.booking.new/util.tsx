@@ -3,17 +3,17 @@
 import { parse, set } from 'date-fns'
 import { z } from 'zod'
 import { components } from '~/sdk'
-import { createBookingSchema } from '~/util/data/schemas/regate/booking-schema'
+import { validateBookingSchema } from '~/util/data/schemas/regate/booking-schema'
 import { generateTimeIntervals } from '../home._regate.court.$name/util/generate-court-rate-interval'
 
-export const mapToBookingData = (values:z.infer<typeof createBookingSchema>
+export const mapToBookingData = (values:z.infer<typeof validateBookingSchema>
 ):components["schemas"]["BookingData"][] =>{
     let res:components["schemas"]["BookingData"][] = []
     const d:components["schemas"]["BookingData"] = {
         court_id:values.courtID,
         day_week:values.date.getDay(),
-        start_date:toISOLocal(combineDateTime(values.date,values.startTime)),
-        end_date:toISOLocal(combineDateTime(values.date,values.endTime)),
+        start_date:combineDateTime(values.date,values.startTime).toISOString(),
+        end_date:combineDateTime(values.date,values.endTime).toISOString(),
         times:generateTimeIntervals(values.startTime,values.endTime),
         is_valid:true
     }
@@ -21,22 +21,6 @@ export const mapToBookingData = (values:z.infer<typeof createBookingSchema>
     return res
 }
 
-function toISOLocal(d:Date) {
-  var z  = (n:number) =>  ('0' + n).slice(-2);
-  var zz = (n:number) => ('00' + n).slice(-3);
-  var off = d.getTimezoneOffset();
-  var sign = off > 0? '-' : '+';
-  off = Math.abs(off);
-
-  return d.getFullYear() + '-'
-         + z(d.getMonth()+1) + '-' +
-         z(d.getDate()) + 'T' +
-         z(d.getHours()) + ':'  + 
-         z(d.getMinutes()) + ':' +
-         z(d.getSeconds()) + '.' +
-         zz(d.getMilliseconds()) +
-         sign + z(off/60|0) + ':' + z(off%60); 
-}
 
 export const combineDateTime = (dateObj: Date, timeString: string):Date =>{
   try {

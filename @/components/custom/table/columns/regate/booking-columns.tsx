@@ -11,6 +11,7 @@ import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
+import TableCellProgress from "../../cells/table-cell-progressbar";
 
 export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>[] => {
   const { t, i18n } = useTranslation("common");
@@ -34,7 +35,7 @@ export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>
       },
     {
         accessorKey: "party_name",
-        header: t("form.party"),
+        header: t("_customer.base"),
         cell: ({ ...props }) => {
           const rowData = props.row.original;
           return (
@@ -51,6 +52,20 @@ export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>
         accessorKey:"status",
         header:t("form.status"),
         cell:TableCellStatus
+      },
+      {
+        id: "received",
+        header: t("table.received"),
+        cell: ({ ...props }) => {
+          const rowData = props.row.original;
+          return (
+            <TableCellProgress
+              {...props}
+              current={rowData.paid}
+              total={rowData.total_price}
+            />
+          );
+        },
       },
     {
         accessorKey: "created_at",

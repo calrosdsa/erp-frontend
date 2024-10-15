@@ -107,6 +107,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Edit Comment Activity */
+        put: operations["edit-activity-comment"];
+        post?: never;
+        /** Delete Comment Activity */
+        delete: operations["delete-activity-comment"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/activity/comment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Comment Activity */
+        post: operations["activity-comment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/client": {
         parameters: {
             query?: never;
@@ -986,8 +1021,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Create User */
-        get: operations["get court"];
+        /** Get Booking */
+        get: operations["get-booking"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1573,6 +1608,18 @@ export interface components {
             actionName: string;
             selected: boolean;
         };
+        ActivityDto: {
+            action: string;
+            comment: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int32 */
+            id: number;
+            profile_avatar: string | null;
+            profile_family_name: string;
+            profile_given_name: string;
+            type: string;
+        };
         AddPluginRequestBody: {
             /**
              * Format: uri
@@ -1646,14 +1693,19 @@ export interface components {
             /** Format: date-time */
             start_date: string;
             times: string[];
+            /** Format: int32 */
+            total_price?: number;
         };
         BookingDto: {
             code: string;
-            /** Format: int64 */
-            court_name: number;
+            court_name: string;
             court_uuid: string;
             /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
             end_date: string;
+            /** Format: int64 */
+            id: number;
             /** Format: int32 */
             paid: number;
             party_name: string;
@@ -1783,25 +1835,27 @@ export interface components {
             rate: number;
             time: string;
         };
+        CreateActivityCommnetBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            comment: string;
+            /** Format: int64 */
+            party_id: number;
+        };
         CreateBookingBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            /** Format: double */
+            advance_payment: number;
+            bookings: components["schemas"]["BookingData"][];
             /** Format: int64 */
-            court_id: number;
-            /** Format: date-time */
-            end_datetime: string;
-            /** Format: int32 */
-            paid: number;
-            /** Format: int64 */
-            party_id: number;
-            reserva_type: string;
-            /** Format: date-time */
-            start_datetime: string;
-            /** Format: int32 */
-            total_price: number;
+            customer_id: number;
         };
         CreateCompanyRequestBody: {
             /**
@@ -2135,6 +2189,16 @@ export interface components {
             /** Format: date-time */
             Time: string;
             Valid: boolean;
+        };
+        EditActivityCommnetBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            comment: string;
+            /** Format: int32 */
+            id: number;
         };
         EditClientRequestBody: {
             /**
@@ -3436,16 +3500,6 @@ export interface components {
             /** Format: int64 */
             reference_id: number;
         };
-        ResponseDataBookingDtoBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            message: string;
-            result: components["schemas"]["BookingDto"];
-        };
         ResponseDataContactDtoBody: {
             /**
              * Format: uri
@@ -3538,131 +3592,157 @@ export interface components {
             message: string;
         };
         ResultEntityAddressDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["AddressDto"];
         };
         ResultEntityBookingDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["BookingDto"];
         };
         ResultEntityCourtDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CourtDto"];
         };
         ResultEntityCustomerDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CustomerDto"];
         };
         ResultEntityGroupDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["GroupDto"];
         };
         ResultEntityInvoiceDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["InvoiceDetailDto"];
         };
         ResultEntityItemAttributeDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemAttributeDto"];
         };
         ResultEntityItemDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemDetailDto"];
         };
         ResultEntityItemPriceDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemPriceDto"];
         };
         ResultEntityLedgerDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["LedgerDetailDto"];
         };
         ResultEntityListCourtRateDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CourtRateDto"][];
         };
         ResultEntityListCustomerType: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CustomerType"][];
         };
         ResultEntityListEntityActions: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["EntityActions"][];
         };
         ResultEntityListGroupHierarchyDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["GroupHierarchyDto"][];
         };
         ResultEntityListItemPriceDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemPriceDto"][];
         };
         ResultEntityListPartyDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PartyDto"][];
         };
         ResultEntityListPartyTypeDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PartyTypeDto"][];
         };
         ResultEntityOrderDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["OrderDto"];
         };
         ResultEntityPaymentDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PaymentDetailDto"];
         };
         ResultEntityPriceListDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PriceListDto"];
         };
         ResultEntityProfileDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ProfileDto"];
         };
         ResultEntityReceiptDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ReceiptDetailDto"];
         };
         ResultEntityRoleDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["RoleDto"];
         };
         ResultEntitySupplierDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["SupplierDto"];
         };
         ResultEntityTaxDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["TaxDto"];
         };
         ResultEntityWareHouseDto: {
+            activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["WareHouseDto"];
@@ -4199,6 +4279,103 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityTaxDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-activity-comment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditActivityCommnetBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-activity-comment": {
+        parameters: {
+            query?: {
+                id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "activity-comment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateActivityCommnetBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -6767,7 +6944,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseDataBookingDtoBody"];
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -6781,7 +6958,7 @@ export interface operations {
             };
         };
     };
-    "get court": {
+    "get-booking": {
         parameters: {
             query?: {
                 query?: string;
