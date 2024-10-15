@@ -14,13 +14,14 @@ import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import TimeSelectInput from "@/components/custom/select/time-select-input";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-import Typography, { subtitle } from "@/components/typography/Typography";
+import Typography, { subtitle, title } from "@/components/typography/Typography";
 import SelectForm from "@/components/custom/select/SelectForm";
 import { daysWeek } from "~/util/data/day-weeks";
 import { MultiSelect } from "@/components/custom/select/MultiSelect";
 import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
 import { components } from "~/sdk";
 import { mapToBookingData } from "./util";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function NewBookingClient() {
   const fetcher = useFetcher<typeof action>();
@@ -33,6 +34,7 @@ export default function NewBookingClient() {
   });
   const [customerFetcher, onNameCustomerChange] = useCustomerDebounceFetcher();
   const [courtFetcher,onCourtNameChange] = useCourtDebounceFetcher();
+  const {toast} = useToast()
   const { t } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null)
   const setUpToolbar = () => {
@@ -47,12 +49,28 @@ export default function NewBookingClient() {
   };
 
   const onSubmit = (values:z.infer<typeof createBookingSchema>) =>{
-    console.log("VALUES",values)
+    console.log("BODY",values)
     const body:components["schemas"]["ValidateBookingBody"] = {
-        bookings:mapToBookingData(values)
+      bookings:mapToBookingData(values)
     }
     console.log("BODY",body)
+    
+    fetcher.submit({
+      action:"validate-booking-data",
+      validateBookingData:body,
+    },{
+      method:"POST",
+      encType:"application/json"
+    })
   }
+
+  useEffect(()=>{
+    if(fetcher.data?.error){
+      toast({
+        title:fetcher.data.error
+      })
+    }
+  },[fetcher.data?.error])
 
   useEffect(() => {
     setUpToolbar();

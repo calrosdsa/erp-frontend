@@ -14,17 +14,20 @@ export const action = async({request}:ActionFunctionArgs)=>{
     const data = await request.json() as ActionData
     let message:string | undefined = undefined
     let error:string | undefined = undefined
+    let bookingData:components["schemas"]["BookingData"][] = []
     switch(data.action){
         case "validate-booking-data":{
             const res =await client.POST("/regate/booking/validate",{
                 body:data.validateBookingData,
             })
             error = res.error?.detail
+            bookingData =  res.data?.result || []
+            console.log(res.error,res.data)
             break;
         }
     }
     return json({
-        message,error
+        message,error,bookingData
     })
 }
 

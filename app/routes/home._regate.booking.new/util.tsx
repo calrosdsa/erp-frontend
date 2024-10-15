@@ -12,13 +12,30 @@ export const mapToBookingData = (values:z.infer<typeof createBookingSchema>
     const d:components["schemas"]["BookingData"] = {
         court_id:values.courtID,
         day_week:values.date.getDay(),
-        start_date:combineDateTime(values.date,values.startTime).toString(),
-        end_date:combineDateTime(values.date,values.endTime).toString(),
+        start_date:toISOLocal(combineDateTime(values.date,values.startTime)),
+        end_date:toISOLocal(combineDateTime(values.date,values.endTime)),
         times:generateTimeIntervals(values.startTime,values.endTime),
         is_valid:true
     }
     res.push(d)
     return res
+}
+
+function toISOLocal(d:Date) {
+  var z  = (n:number) =>  ('0' + n).slice(-2);
+  var zz = (n:number) => ('00' + n).slice(-3);
+  var off = d.getTimezoneOffset();
+  var sign = off > 0? '-' : '+';
+  off = Math.abs(off);
+
+  return d.getFullYear() + '-'
+         + z(d.getMonth()+1) + '-' +
+         z(d.getDate()) + 'T' +
+         z(d.getHours()) + ':'  + 
+         z(d.getMinutes()) + ':' +
+         z(d.getSeconds()) + '.' +
+         zz(d.getMilliseconds()) +
+         sign + z(off/60|0) + ':' + z(off%60); 
 }
 
 export const combineDateTime = (dateObj: Date, timeString: string):Date =>{

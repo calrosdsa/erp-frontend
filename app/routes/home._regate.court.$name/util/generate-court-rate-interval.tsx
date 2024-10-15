@@ -24,11 +24,14 @@ export const mapToCourtRateData = (d:z.infer<typeof updateCourtRateSchema>):comp
 
 export const generateTimeIntervals =(startTime: string, endTime: string): string[] => {
     const parseTime = (time: string): Date => {
+      // const parsedTime = parse(time, 'hh:mm a', new Date());
       const parsedTime = parse(time, 'hh:mm a', new Date());
+
       return setSeconds(setMilliseconds(parsedTime, 0), 0);
     };
     const formatTime = (date: Date): string => {
-      return format(date, 'hh:mm a');
+      return format(date, 'HH:mm:ss');
+      // return format(date, 'hh:mm a');
     };
     let start = parseTime(startTime);
     let end = parseTime(endTime);
