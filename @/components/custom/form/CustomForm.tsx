@@ -169,8 +169,8 @@ export default function CustomForm<T extends FieldValues>({
         <div className="col-span-full"></div>
 
         <div className={cn(buttonClassName, "")}>
-        <Button type="submit" className=" w-min ">
-          {fetcher.state == "submitting" ? <Icons.spinner /> : t("form.submit")}
+        <Button type="submit" className=" w-min " loading={fetcher.state== "submitting"}>
+         {t("form.submit")}
         </Button>
         </div>
       </fetcher.Form>
