@@ -240,6 +240,15 @@ class Routes {
   //Regate
   court = this.base + "/court";
   booking = this.base + "/booking";
+  event = this.base + "/event";
+
+  toEventDetail(name:string,id:string,tab?:string):string{
+    let url = this.event + `/${encodeURIComponent(name)}?id=${id}`
+    if(tab){
+      url += `&tab=${tab}`
+    }else { url += `&tab=info`}
+    return url 
+  }
 
   toCreateBooking():string {
     return `${this.booking}/new`

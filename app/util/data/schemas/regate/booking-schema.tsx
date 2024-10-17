@@ -4,6 +4,10 @@ import { z } from "zod";
 export const createBookingsSchema = z.object({
     customerID:z.number(),
     customerName:z.string(),
+
+    eventID:z.number().optional(),
+    eventName:z.string().optional(),
+
     advancePayment:z.coerce.number(),
 })
 

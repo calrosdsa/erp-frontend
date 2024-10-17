@@ -14,6 +14,7 @@ message Result {
 enum RegatePartyType {
     court = 0;
     booking = 1;
+    eventBooking = 2;
 }
 
 
@@ -91,4 +92,29 @@ enum ItemLineType {
     ITEM_LINE_ORDER = 0;
     ITEM_LINE_INVOICE = 1;
     ITEM_LINE_RECEIPT = 2;
+}
+
+enum BookingType {
+    LOCAL_BOOKING = 0;
+    EVENT_BOOKING = 1;
+}
+
+enum ActityType {
+    CREATE = 0;
+    EDIT = 1;
+    DELETE = 2;
+    COMMENT = 3;
+}
+
+enum TimeUnit {
+    hour = 0;
+    day = 1;
+    week = 2;
+    month = 3;
+    year = 4;
+}
+
+enum ChartType {
+    INCOME = 0;
+    INCOME_AVG = 1;
 }

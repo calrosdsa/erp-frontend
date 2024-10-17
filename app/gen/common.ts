@@ -12,6 +12,7 @@ export const protobufPackage = "erp.api_v1";
 export enum RegatePartyType {
   court = 0,
   booking = 1,
+  eventBooking = 2,
   UNRECOGNIZED = -1,
 }
 
@@ -23,6 +24,9 @@ export function regatePartyTypeFromJSON(object: any): RegatePartyType {
     case 1:
     case "booking":
       return RegatePartyType.booking;
+    case 2:
+    case "eventBooking":
+      return RegatePartyType.eventBooking;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -36,6 +40,8 @@ export function regatePartyTypeToJSON(object: RegatePartyType): string {
       return "court";
     case RegatePartyType.booking:
       return "booking";
+    case RegatePartyType.eventBooking:
+      return "eventBooking";
     case RegatePartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -523,6 +529,168 @@ export function itemLineTypeToJSON(object: ItemLineType): string {
     case ItemLineType.ITEM_LINE_RECEIPT:
       return "ITEM_LINE_RECEIPT";
     case ItemLineType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum BookingType {
+  LOCAL_BOOKING = 0,
+  EVENT_BOOKING = 1,
+  UNRECOGNIZED = -1,
+}
+
+export function bookingTypeFromJSON(object: any): BookingType {
+  switch (object) {
+    case 0:
+    case "LOCAL_BOOKING":
+      return BookingType.LOCAL_BOOKING;
+    case 1:
+    case "EVENT_BOOKING":
+      return BookingType.EVENT_BOOKING;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return BookingType.UNRECOGNIZED;
+  }
+}
+
+export function bookingTypeToJSON(object: BookingType): string {
+  switch (object) {
+    case BookingType.LOCAL_BOOKING:
+      return "LOCAL_BOOKING";
+    case BookingType.EVENT_BOOKING:
+      return "EVENT_BOOKING";
+    case BookingType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum ActityType {
+  CREATE = 0,
+  EDIT = 1,
+  DELETE = 2,
+  COMMENT = 3,
+  UNRECOGNIZED = -1,
+}
+
+export function actityTypeFromJSON(object: any): ActityType {
+  switch (object) {
+    case 0:
+    case "CREATE":
+      return ActityType.CREATE;
+    case 1:
+    case "EDIT":
+      return ActityType.EDIT;
+    case 2:
+    case "DELETE":
+      return ActityType.DELETE;
+    case 3:
+    case "COMMENT":
+      return ActityType.COMMENT;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ActityType.UNRECOGNIZED;
+  }
+}
+
+export function actityTypeToJSON(object: ActityType): string {
+  switch (object) {
+    case ActityType.CREATE:
+      return "CREATE";
+    case ActityType.EDIT:
+      return "EDIT";
+    case ActityType.DELETE:
+      return "DELETE";
+    case ActityType.COMMENT:
+      return "COMMENT";
+    case ActityType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum TimeUnit {
+  hour = 0,
+  day = 1,
+  week = 2,
+  month = 3,
+  year = 4,
+  UNRECOGNIZED = -1,
+}
+
+export function timeUnitFromJSON(object: any): TimeUnit {
+  switch (object) {
+    case 0:
+    case "hour":
+      return TimeUnit.hour;
+    case 1:
+    case "day":
+      return TimeUnit.day;
+    case 2:
+    case "week":
+      return TimeUnit.week;
+    case 3:
+    case "month":
+      return TimeUnit.month;
+    case 4:
+    case "year":
+      return TimeUnit.year;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return TimeUnit.UNRECOGNIZED;
+  }
+}
+
+export function timeUnitToJSON(object: TimeUnit): string {
+  switch (object) {
+    case TimeUnit.hour:
+      return "hour";
+    case TimeUnit.day:
+      return "day";
+    case TimeUnit.week:
+      return "week";
+    case TimeUnit.month:
+      return "month";
+    case TimeUnit.year:
+      return "year";
+    case TimeUnit.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum ChartType {
+  INCOME = 0,
+  INCOME_AVG = 1,
+  UNRECOGNIZED = -1,
+}
+
+export function chartTypeFromJSON(object: any): ChartType {
+  switch (object) {
+    case 0:
+    case "INCOME":
+      return ChartType.INCOME;
+    case 1:
+    case "INCOME_AVG":
+      return ChartType.INCOME_AVG;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ChartType.UNRECOGNIZED;
+  }
+}
+
+export function chartTypeToJSON(object: ChartType): string {
+  switch (object) {
+    case ChartType.INCOME:
+      return "INCOME";
+    case ChartType.INCOME_AVG:
+      return "INCOME_AVG";
+    case ChartType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

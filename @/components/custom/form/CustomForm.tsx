@@ -168,8 +168,8 @@ export default function CustomForm<T extends FieldValues>({
         {renderCustomInputs != undefined && renderCustomInputs(form)}
         <div className="col-span-full"></div>
 
-        <div className={cn(buttonClassName, "")}>
-        <Button type="submit" className=" w-min " loading={fetcher.state== "submitting"}>
+        <div className={cn(buttonClassName)}>
+        <Button type="submit" className="w-full" loading={fetcher.state== "submitting"}>
          {t("form.submit")}
         </Button>
         </div>

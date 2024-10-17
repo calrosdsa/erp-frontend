@@ -6,17 +6,15 @@ import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { CalendarDays, Clock, DollarSign } from "lucide-react"
 import { components } from '~/sdk'
+import { useTranslation } from 'react-i18next'
+import { formatCurrency } from '~/util/format/formatCurrency'
+import { DEFAULT_CURRENCY } from '~/constant'
 
 interface BookingDisplayProps {
   bookings?: components["schemas"]["BookingData"][]
 }
 
 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-const formatCurrency = (amount: number | undefined) => {
-  if (amount === undefined) return 'N/A';
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
-};
 
 export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
   if (!bookings || bookings.length === 0) {
@@ -38,6 +36,7 @@ export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
   }, {} as Record<string, components["schemas"]["BookingData"][]>);
 
   const sortedDates = Object.keys(groupedBookings).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  const {i18n} = useTranslation("common")
 
   return (
     <Tabs defaultValue={sortedDates[0]} className="w-full">
@@ -85,7 +84,7 @@ export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
                             <div className="text-sm font-medium">Total Price</div>
                           </div>
                           <Badge variant="outline" className="flex items-center w-min">
-                            {formatCurrency(booking.total_price)}
+                            {formatCurrency(booking.total_price,DEFAULT_CURRENCY,i18n.language)}
                           </Badge>
                         </div>
 

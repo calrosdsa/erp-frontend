@@ -40,6 +40,7 @@ export enum Entity {
     PURCHASE_RECEIPT_ENTITY_ID = 21,
     COURT_ENTITY_ID = 22, // Regate
     BOOKING_ENTITY_ID = 23, // Regate
+    EVENTBOOKING_ENTITY_ID = 24, // Regate
 }
 
 export enum PartyType {

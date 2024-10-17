@@ -344,6 +344,9 @@
     },
     "_booking":{
       "base":"Booking"
+    },
+    "_event":{
+      "base":"Event"
     }
   }
 }

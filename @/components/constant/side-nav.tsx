@@ -21,6 +21,7 @@ import { SellingNav } from "./selling-nav";
 import { AccountingNav } from "./accounting-nav";
 import { CourtNav } from "./regate/court-nav";
 import { BookingNav } from "./regate/booking-nav";
+import { EventNav } from "./regate/event-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -47,6 +48,9 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     entities:entities
   })
   const bookingNav = BookingNav({
+    entities:entities
+  })
+  const eventNav = EventNav({
     entities:entities
   })
 
@@ -186,6 +190,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (accountingNav.children && accountingNav.children.length > 0) {
     navItems.push(accountingNav);
   }
+  
 
   //Regate
   if(entities?.includes(Entity.COURT_ENTITY_ID)){
@@ -193,6 +198,9 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   }
   if(entities?.includes(Entity.BOOKING_ENTITY_ID)){
     navItems.push(bookingNav)
+  }
+  if(entities?.includes(Entity.EVENTBOOKING_ENTITY_ID)){
+    navItems.push(eventNav)
   }
 
 

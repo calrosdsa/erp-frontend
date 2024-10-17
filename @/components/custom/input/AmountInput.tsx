@@ -21,46 +21,38 @@ export default function AmountInput({
   className,
   ...props
 }: AmountInputProps) {
-  const [inputValue, setInputValue] = useState(field.value)
-  const [formattedValue, setFormattedValue] = useState("")
+  // const [inputValue, setInputValue] = useState("")
+  // const [formattedValue, setFormattedValue] = useState("")
 
-  const formatAmount = (value: string) => {
-    const numericValue = value.replace(/[^0-9.]/g, "")
-    const parts = numericValue.split(".")
-    parts[0] = parts[0]?.replace(/\B(?=(\d{3})+(?!\d))/g, ",") || ""
-    return parts.join(".")
-  }
+  // const formatAmount = (value: string) => {
+  //   const numericValue = value.replace(/[^0-9.]/g, "")
+  //   const parts = numericValue.split(".")
+  //   parts[0] = parts[0]!.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  //   return parts.join(".")
+  // }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setInputValue(value)
-    const numericValue = parseFloat(value.replace(/[^0-9.]/g, ""))
-    if (!isNaN(numericValue)) {
-      onAmountChange?.(numericValue)
-      field.onChange(numericValue)
-    }
-  }
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = e.target.value
+  //   setInputValue(value)
+  //   const numericValue = parseFloat(value.replace(/[^0-9.]/g, ""))
+  //   if (!isNaN(numericValue)) {
+  //     onAmountChange?.(numericValue)
+  //   }
+  // }
 
-  useEffect(() => {
-    if(inputValue){
-        setFormattedValue(formatAmount(inputValue))
-    }
-  }, [inputValue])
-
+  // useEffect(() => {
+  //   setFormattedValue(formatAmount(inputValue))
+  // }, [inputValue])  
   return (
 
     <div className="relative">
-        <span className="absolute left-3 top-1/2 mt-[1px] -translate-y-1/2 text-gray-500 text-sm">
-          {currency}
-        </span>
         <Input
         //   type="text"
           {...field}
           inputMode="decimal"
-          value={formattedValue}
-          onChange={handleInputChange}
-          className="pl-12 pr-4"
-          placeholder="0.00"
+          // value={formattedValue}
+          // onChange={handleInputChange}
+          placeholder={`${currency} 0.00`}
           {...props}
           />
           </div>

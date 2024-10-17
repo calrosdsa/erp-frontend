@@ -1048,6 +1048,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/regate/chart/{chart}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Chart Data */
+        post: operations["get-chart-data"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/regate/event": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Event Booking */
+        get: operations["get-event-bookings"];
+        put?: never;
+        /** Create Event */
+        post: operations["create-event-booking"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/regate/event/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Event Booking */
+        get: operations["get-event-booking"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/role": {
         parameters: {
             query?: never;
@@ -1716,6 +1768,25 @@ export interface components {
             /** Format: int32 */
             total_price: number;
         };
+        ChartDataBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            end_date: string;
+            /** Format: date-time */
+            start_date: string;
+            time_unit?: string;
+        };
+        ChartDataDto: {
+            name: string;
+            /** Format: double */
+            value: number;
+            /** Format: double */
+            value2: number | null;
+        };
         Client: {
             ClientKeyValueData: components["schemas"]["ClientKeyValueData"][];
             Code: string;
@@ -1856,6 +1927,8 @@ export interface components {
             bookings: components["schemas"]["BookingData"][];
             /** Format: int64 */
             customer_id: number;
+            /** Format: int64 */
+            event_id?: number;
         };
         CreateCompanyRequestBody: {
             /**
@@ -1894,6 +1967,15 @@ export interface components {
             readonly $schema?: string;
             customer_type: string;
             group_uuid: string;
+            name: string;
+        };
+        CreateEventBookingBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            description?: string | null;
             name: string;
         };
         CreateGroupRequestBody: {
@@ -2365,6 +2447,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityCustomerDto"];
         };
+        EntityResponseResultEntityEventBookingDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityEventBookingDto"];
+        };
         EntityResponseResultEntityGroupDtoBody: {
             /**
              * Format: uri
@@ -2687,6 +2782,16 @@ export interface components {
              * @default about:blank
              */
             type: string;
+        };
+        EventBookingDto: {
+            /** Format: date-time */
+            created_at: string;
+            description: string | null;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            status: string;
+            uuid: string;
         };
         GreetingOutputBody: {
             /**
@@ -3031,6 +3136,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListCustomerDto"];
         };
+        PaginationResponsePaginationResultListEventBookingDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListEventBookingDto"];
+        };
         PaginationResponsePaginationResultListGroupDtoBody: {
             /**
              * Format: uri
@@ -3234,6 +3348,11 @@ export interface components {
         };
         PaginationResultListCustomerDto: {
             results: components["schemas"]["CustomerDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListEventBookingDto: {
+            results: components["schemas"]["EventBookingDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -3520,6 +3639,16 @@ export interface components {
             message: string;
             result: components["schemas"]["CourtDto"];
         };
+        ResponseDataEventBookingDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["EventBookingDto"];
+        };
         ResponseDataInvoiceDtoBody: {
             /**
              * Format: uri
@@ -3549,6 +3678,16 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             message: string;
             result: components["schemas"]["BookingData"][];
+        };
+        ResponseDataListChartDataDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ChartDataDto"][];
         };
         ResponseDataListPartyTypeDtoBody: {
             /**
@@ -3614,6 +3753,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CustomerDto"];
+        };
+        ResultEntityEventBookingDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["EventBookingDto"];
         };
         ResultEntityGroupDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -7019,6 +7164,158 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataListBookingDataBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-chart-data": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chart: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChartDataBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListChartDataDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-event-bookings": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListEventBookingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-event-booking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateEventBookingBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataEventBookingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-event-booking": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityEventBookingDtoBody"];
                 };
             };
             /** @description Error */
