@@ -8,10 +8,12 @@ import {
   ChartType,
   chartTypeFromJSON,
   chartTypeToJSON,
+  TimeUnit,
   timeUnitFromJSON,
+  timeUnitToJSON,
 } from "~/gen/common";
 import { chartColumns } from "@/components/custom/table/columns/regate/chart-column";
-import { getChartName } from "./util";
+import { formatterValue, getChartName } from "./util";
 import {
   Card,
   CardContent,
@@ -25,7 +27,7 @@ export default function ChartDataClient() {
   const { i18n } = useTranslation("common");
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const timeUnit = timeUnitFromJSON(searchParams.get("time_unit"));
+  const timeUnit = timeUnitFromJSON(searchParams.get("time_unit") || timeUnitToJSON(TimeUnit.day)) ;
   const chart = chartTypeFromJSON(params.chart);
   const chartConfig = {
     value: {
@@ -37,6 +39,7 @@ export default function ChartDataClient() {
       color: "hsl(var(--chart-2))",
     },
   } satisfies ChartConfig;
+ 
   return (
     <div className="">
       <Card className="">
@@ -56,6 +59,7 @@ export default function ChartDataClient() {
             labelFormatter={(value) =>
               getChartName(chart, timeUnit, value, i18n.language)
             }
+            formatter={(value)=>formatterValue(chart,value.toString(),i18n.language)}
           />
         </CardContent>
 

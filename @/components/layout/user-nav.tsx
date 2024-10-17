@@ -33,7 +33,7 @@ export function UserNav({ user,openSessionDefaults }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                    <Link  className="flex items-center justify-start gap-4 p-2 cursor-pointer" to={r.profile}>
+                        <Link  className="flex items-center justify-start gap-4 p-2 cursor-pointer" to={r.profile}>
 
                     <div className="flex flex-col space-y-1 leading-none">
                         {user.given_name && <p className="font-medium">{user.given_name}</p>}

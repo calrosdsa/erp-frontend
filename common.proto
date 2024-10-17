@@ -70,6 +70,8 @@ enum EventState {
     SUBMIT_EVENT = 1;  //used to transition state from DRAFT to other state
     CANCEL_EVENT = 2;  //used to transition from any state to  CANCELLED
     APPROVED_EVENT = 3; //used to transition from any state to APPROVED
+    COMPLETED_EVENT = 4; //used to transition from any state to APPROVED
+    
 }
 
 
@@ -117,4 +119,6 @@ enum TimeUnit {
 enum ChartType {
     INCOME = 0;
     INCOME_AVG = 1;
+    BOOKING_HOUR = 2;
+    BOOKING_HOUR_AVG = 3;
 }

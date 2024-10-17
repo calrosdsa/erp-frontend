@@ -21,6 +21,8 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
     return json({
         income:res.data?.result.income,
         incomeAvg:res.data?.result.income_avg,
+        bookingHors:res.data?.result.booking_hours,
+        bookingHorsAvg:res.data?.result.booking_hours_avg,
     })
 }
 export default function Dashboard(){

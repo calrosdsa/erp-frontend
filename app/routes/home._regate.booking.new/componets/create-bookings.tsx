@@ -71,12 +71,14 @@ export default function CreateBookings({
     }
   };
 
-  setUpToolbar({
-    onSave: () => {
-      console.log("ONCLICK");
-      inputRef.current?.click();
-    },
-  });
+  setUpToolbar(()=>{
+    return {
+      onSave: () => {
+        console.log("ONCLICK");
+        inputRef.current?.click();
+      },
+    }
+  },[]);
 
   useEffect(() => {
     if (fetcher.data?.error) {

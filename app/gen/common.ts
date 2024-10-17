@@ -371,6 +371,8 @@ export enum EventState {
   CANCEL_EVENT = 2,
   /** APPROVED_EVENT - used to transition from any state to APPROVED */
   APPROVED_EVENT = 3,
+  /** COMPLETED_EVENT - used to transition from any state to APPROVED */
+  COMPLETED_EVENT = 4,
   UNRECOGNIZED = -1,
 }
 
@@ -388,6 +390,9 @@ export function eventStateFromJSON(object: any): EventState {
     case 3:
     case "APPROVED_EVENT":
       return EventState.APPROVED_EVENT;
+    case 4:
+    case "COMPLETED_EVENT":
+      return EventState.COMPLETED_EVENT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -405,6 +410,8 @@ export function eventStateToJSON(object: EventState): string {
       return "CANCEL_EVENT";
     case EventState.APPROVED_EVENT:
       return "APPROVED_EVENT";
+    case EventState.COMPLETED_EVENT:
+      return "COMPLETED_EVENT";
     case EventState.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -666,6 +673,8 @@ export function timeUnitToJSON(object: TimeUnit): string {
 export enum ChartType {
   INCOME = 0,
   INCOME_AVG = 1,
+  BOOKING_HOUR = 2,
+  BOOKING_HOUR_AVG = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -677,6 +686,12 @@ export function chartTypeFromJSON(object: any): ChartType {
     case 1:
     case "INCOME_AVG":
       return ChartType.INCOME_AVG;
+    case 2:
+    case "BOOKING_HOUR":
+      return ChartType.BOOKING_HOUR;
+    case 3:
+    case "BOOKING_HOUR_AVG":
+      return ChartType.BOOKING_HOUR_AVG;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -690,6 +705,10 @@ export function chartTypeToJSON(object: ChartType): string {
       return "INCOME";
     case ChartType.INCOME_AVG:
       return "INCOME_AVG";
+    case ChartType.BOOKING_HOUR:
+      return "BOOKING_HOUR";
+    case ChartType.BOOKING_HOUR_AVG:
+      return "BOOKING_HOUR_AVG";
     case ChartType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

@@ -1031,6 +1031,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/regate/booking/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Booking Status */
+        put: operations["update-booking-status"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/regate/booking/validate": {
         parameters: {
             query?: never;
@@ -1773,6 +1790,8 @@ export interface components {
             created_at: string;
             /** Format: date-time */
             end_date: string;
+            evento_name: string;
+            evento_uuid: string;
             /** Format: int64 */
             id: number;
             /** Format: int32 */
@@ -1786,6 +1805,8 @@ export interface components {
             total_price: number;
         };
         ChartDashboardData: {
+            booking_hours: components["schemas"]["ChartDataDto"][];
+            booking_hours_avg: components["schemas"]["ChartDataDto"][];
             income: components["schemas"]["ChartDataDto"][];
             income_avg: components["schemas"]["ChartDataDto"][];
         };
@@ -7160,6 +7181,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityBookingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-booking-status": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

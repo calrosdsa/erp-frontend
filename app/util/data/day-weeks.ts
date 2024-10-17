@@ -13,5 +13,4 @@ export const daysWeek:DayWeek[] = [
     {day:4,dayName:"Jueves"},
     {day:5,dayName:"Viernes"},
     {day:6,dayName:"Sabado"},
-
 ]

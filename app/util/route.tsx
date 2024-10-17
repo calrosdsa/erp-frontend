@@ -1,4 +1,4 @@
-import { PartyType } from "~/gen/common";
+import { ChartType, chartTypeToJSON, PartyType } from "~/gen/common";
 
 class Routes {
   api = "/api";
@@ -241,6 +241,11 @@ class Routes {
   court = this.base + "/court";
   booking = this.base + "/booking";
   event = this.base + "/event";
+  rDashboard = this.base + "/rdashboard";
+  
+  torChart(chartType:ChartType){
+    return `${this.rDashboard}/${encodeURIComponent(chartTypeToJSON(chartType))}`
+  }
 
   toEventDetail(name:string,id:string,tab?:string):string{
     let url = this.event + `/${encodeURIComponent(name)}?id=${id}`

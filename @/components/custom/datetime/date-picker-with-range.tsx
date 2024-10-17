@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  addDays,
   endOfDay,
   endOfMonth,
   endOfQuarter,
@@ -12,7 +11,6 @@ import {
   startOfQuarter,
   startOfWeek,
   startOfYear,
-  subDays,
 } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
@@ -79,37 +77,37 @@ export function DatePickerWithRange({
                 let from = new Date();
                 switch (value) {
                   case "0": {
-                    to = startOfDay(new Date());
-                    from = endOfDay(new Date());
+                    from = startOfDay(new Date());
+                    to = endOfDay(new Date());
                     break;
                   }
                   case "1": {
-                    to = startOfWeek(new Date());
-                    from = endOfWeek(new Date());
+                    from = startOfWeek(new Date());
+                    to = endOfWeek(new Date());
                     break;
                   }
                   case "2": {
-                    to = startOfMonth(new Date());
-                    from = endOfMonth(new Date());
+                    from = startOfMonth(new Date());
+                    to = endOfMonth(new Date());
                     break;
                   }
                   case "3": {
-                    to = startOfQuarter(new Date());
-                    from = endOfQuarter(new Date());
+                    from = startOfQuarter(new Date());
+                    to = endOfQuarter(new Date());
                     break;
                   }
                   case "4": {
-                    to = startOfYear(new Date());
-                    from = endOfYear(new Date());
+                    from = startOfYear(new Date());
+                    to = endOfYear(new Date());
                     break;
                   }
                 }
                 setDate({
-                  to: to,
                   from: from,
+                  to: to,
                 });
                 if (onChange) {
-                  onChange(to, from);
+                  onChange(from, to);
                 }
                 // setDate(addDays(new Date(), parseInt(value)))
               }}

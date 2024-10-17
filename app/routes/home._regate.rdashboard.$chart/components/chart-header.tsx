@@ -8,6 +8,7 @@ import ChartSetting, { useChartSetting } from "./chart-setting-dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Typography, { labelF } from "@/components/typography/Typography";
 import { ChartType, TimeUnit, timeUnitToJSON } from "~/gen/common";
+import { getTimeUnitOptions } from "../util";
 
 export default function ChartHeader({timeUnit,chartType}: {
   timeUnit:TimeUnit
@@ -61,7 +62,18 @@ export default function ChartHeader({timeUnit,chartType}: {
                     Unidad de tiempo
                     </Typography>
                     <div className=" flex space-x-2 py-2">
-                        <Button size={"xs"}
+                      {getTimeUnitOptions(chartType).map((t,idx)=>{
+                          return (
+                            <Button size={"xs"} key={idx}
+                           variant={timeUnit == t ? "default" : "outline"}
+                           onClick={()=>{
+                             changeTimeUnit(t)
+                          }}>
+                              {TimeUnit[t]}
+                          </Button>
+                          )
+                      })}
+                        {/* <Button size={"xs"}
                          variant={timeUnit == TimeUnit.hour ? "default" : "outline"}
                          onClick={()=>{
                            changeTimeUnit(TimeUnit.hour)
@@ -92,7 +104,7 @@ export default function ChartHeader({timeUnit,chartType}: {
                            changeTimeUnit(TimeUnit.year)
                         }}>
                             Year
-                        </Button>
+                        </Button> */}
                     </div>
 
                 </div>
