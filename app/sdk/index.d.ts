@@ -1048,6 +1048,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/regate/chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Chart Dashboard Data */
+        post: operations["get-chart-dashboard-data"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/regate/chart/{chart}": {
         parameters: {
             query?: never;
@@ -1768,15 +1785,17 @@ export interface components {
             /** Format: int32 */
             total_price: number;
         };
+        ChartDashboardData: {
+            income: components["schemas"]["ChartDataDto"][];
+            income_avg: components["schemas"]["ChartDataDto"][];
+        };
         ChartDataBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: date-time */
             end_date: string;
-            /** Format: date-time */
             start_date: string;
             time_unit?: string;
         };
@@ -3618,6 +3637,16 @@ export interface components {
             party_id: number;
             /** Format: int64 */
             reference_id: number;
+        };
+        ResponseDataChartDashboardDataBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["ChartDashboardData"];
         };
         ResponseDataContactDtoBody: {
             /**
@@ -7164,6 +7193,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataListBookingDataBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-chart-dashboard-data": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChartDataBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataChartDashboardDataBody"];
                 };
             };
             /** @description Error */

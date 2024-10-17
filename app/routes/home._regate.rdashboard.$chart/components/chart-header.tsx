@@ -7,11 +7,20 @@ import { Filter, Settings } from "lucide-react";
 import ChartSetting, { useChartSetting } from "./chart-setting-dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Typography, { labelF } from "@/components/typography/Typography";
-import { TimeUnit, timeUnitToJSON } from "~/gen/common";
+import { ChartType, TimeUnit, timeUnitToJSON } from "~/gen/common";
 
-export default function ChartHeader({}: {}) {
+export default function ChartHeader({timeUnit,chartType}: {
+  timeUnit:TimeUnit
+  chartType:ChartType
+}) {
   const [searchParams, setSearchParams] = useSearchParams();
   const chartSetting = useChartSetting();
+  const changeTimeUnit = (timeUnit:TimeUnit)=>{
+    searchParams.set("time_unit",timeUnitToJSON(timeUnit))
+    setSearchParams(searchParams, {
+       preventScrollReset: true,
+     });
+  }
   return (
     <>
       {chartSetting.open && (
@@ -52,24 +61,37 @@ export default function ChartHeader({}: {}) {
                     Unidad de tiempo
                     </Typography>
                     <div className=" flex space-x-2 py-2">
-                        <Button size={"xs"} variant={"outline"} onClick={()=>{
-                            searchParams.set("time_unit",timeUnitToJSON(TimeUnit.hour))
-                             setSearchParams(searchParams, {
-                                preventScrollReset: true,
-                              });
+                        <Button size={"xs"}
+                         variant={timeUnit == TimeUnit.hour ? "default" : "outline"}
+                         onClick={()=>{
+                           changeTimeUnit(TimeUnit.hour)
                         }}>
                             Hora
                         </Button>
-                        <Button size={"xs"} variant={"outline"} onClick={()=>{
-                            searchParams.set("time_unit",timeUnitToJSON(TimeUnit.day))
-                            setSearchParams(searchParams, {
-                               preventScrollReset: true,
-                             });
+                        <Button size={"xs"} variant={timeUnit == TimeUnit.day ? "default" : "outline"}
+                        onClick={()=>{
+                           changeTimeUnit(TimeUnit.day)
                         }}>
                             Dia
                         </Button>
-                        <Button size={"xs"} variant={"outline"}>
+                        <Button size={"xs"}  variant={timeUnit == TimeUnit.week ? "default" : "outline"}
+                         onClick={()=>{
+                           changeTimeUnit(TimeUnit.week)
+                        }}>
+                            Semana
+                        </Button>
+                        <Button size={"xs"}  variant={timeUnit == TimeUnit.month ? "default" : "outline"}
+                         onClick={()=>{
+                           changeTimeUnit(TimeUnit.month)
+                        }}>
                             Mes
+                        </Button>
+                        
+                        <Button size={"xs"}  variant={timeUnit == TimeUnit.year ? "default" : "outline"}
+                        onClick={()=>{
+                           changeTimeUnit(TimeUnit.year)
+                        }}>
+                            Year
                         </Button>
                     </div>
 

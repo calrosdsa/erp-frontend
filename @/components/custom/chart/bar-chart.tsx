@@ -45,24 +45,21 @@ export default function BarChartComponent({
     chartData,chartConfig,className,
     tickFormatter,
     labelFormatter,
+    height=300,
 }:{
-    chartData:any[],
+    chartData:any,
     chartConfig:any 
+    height?:number
     className?:string
-    tickFormatter: ((value: any, index: number) => string) | undefined
+    tickFormatter?: ((value: any, index: number) => string) | undefined
     labelFormatter?: ((label: any, payload: Payload<ValueType, NameType>[]) => ReactNode) | undefined
 }){
     const {i18n} = useTranslation()
     return (
         <div className={cn(className,"")}>
 
-        <Card className="">
-      {/* <CardHeader>
-        <CardTitle>Bar Chart - Stacked + Legend</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
-      </CardHeader> */}
-      <CardContent>
-            <ResponsiveContainer  height={350} width="100%" >
+    
+            <ResponsiveContainer  height={height} width="100%" >
         <ChartContainer config={chartConfig satisfies ChartConfig}>
 
           <BarChart accessibilityLayer data={chartData}>
@@ -93,16 +90,7 @@ export default function BarChartComponent({
           </BarChart>
         </ChartContainer>
       </ResponsiveContainer>
-      </CardContent>
-      {/* <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter> */}
-    </Card>
+   
               </div>
     )
 }

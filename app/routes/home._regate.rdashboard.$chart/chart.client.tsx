@@ -41,7 +41,10 @@ export default function ChartDataClient() {
     <div className="">
       <Card className="">
         <CardHeader>
-            <ChartHeader/>
+            <ChartHeader
+            timeUnit={timeUnit}
+            chartType={chart}
+            />
         </CardHeader>
         <CardContent>
           <BarChartComponent

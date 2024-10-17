@@ -1,88 +1,50 @@
 
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import {
   ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart"
-export const description = "A stacked bar chart with a legend"
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
+import { useLoaderData } from "@remix-run/react"
+import { loader } from "./route"
+import BarChartComponent from "@/components/custom/chart/bar-chart"
+import ChartDisplay from "@/components/custom/chart/chart-display"
+import { getChartName } from "../home._regate.rdashboard.$chart/util"
+import { ChartType, TimeUnit } from "~/gen/common"
+import { useTranslation } from "react-i18next"
+import { endOfMonth, format, startOfMonth } from "date-fns"
+
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  value: {
+    label: "Local",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  value2: {
+    label: "Eventos",
     color: "hsl(var(--chart-2))",
   },
-} satisfies ChartConfig
-
+} satisfies ChartConfig;
 export default function DashboardClient(){
+  const {income,incomeAvg} =  useLoaderData<typeof loader>()
+  const {t,i18n} = useTranslation("common")
+  const start = format(startOfMonth(new Date()),"MMM d")
+  const end = format(endOfMonth(new Date()).toLocaleDateString(),"MMM d")
     return (
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-2 gap-3">
+          <ChartDisplay title="Ingresos por mes"
+          description={`Ingresos recibidos (${start} - ${end})`}>
+            <BarChartComponent
+            chartData={income}
+            chartConfig={chartConfig}
+            tickFormatter={(value)=>getChartName(ChartType.INCOME, TimeUnit.day, value, i18n.language)}
+            />
+          </ChartDisplay>
 
-        <Card>
-      <CardHeader>
-        <CardTitle>Bar Chart - Stacked + Legend</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+          <ChartDisplay title="Ingresos por día" 
+          description={`Ingresos por día (${start} - ${end})`}>
+            <BarChartComponent
+            chartData={incomeAvg}
+            chartConfig={chartConfig}
+            tickFormatter={(value)=>getChartName(ChartType.INCOME_AVG, TimeUnit.day, value, i18n.language)}
             />
-            <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar
-              dataKey="desktop"
-              stackId="a"
-              fill="var(--color-desktop)"
-              radius={[0, 0, 4, 4]}
-              />
-            <Bar
-              dataKey="mobile"
-              stackId="a"
-              fill="var(--color-mobile)"
-              radius={[4, 4, 0, 0]}
-            />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          </ChartDisplay>
         </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
-    </Card>
-              </div>
     )
 }
