@@ -48,7 +48,7 @@ export default function CustomFormDate({
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-[280px] justify-start text-left font-normal",
+                    "justify-start text-left font-normal",
                     !field.value && "text-muted-foreground"
                   )}
                 >

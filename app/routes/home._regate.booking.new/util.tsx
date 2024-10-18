@@ -15,7 +15,8 @@ export const mapToBookingData = (values:z.infer<typeof validateBookingSchema>
         start_date:combineDateTime(values.date,values.startTime).toISOString(),
         end_date:combineDateTime(values.date,values.endTime).toISOString(),
         times:generateTimeIntervals(values.startTime,values.endTime),
-        is_valid:true
+        is_valid:true,
+        court_name:values.courtName,
     }
     res.push(d)
     return res

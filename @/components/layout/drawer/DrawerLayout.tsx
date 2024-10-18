@@ -50,7 +50,9 @@ export function DrawerLayout({open,onOpenChange,children,title,description,class
              {description}
             </DialogDescription>
           </DialogHeader>
+          <div className="overflow-auto max-h-[80vh]">
           {children}
+          </div>
         </DialogContent>
       </Dialog>
     )

@@ -142,6 +142,9 @@ export default function CreateBookings({
             <div className="col-span-full">
               <BookingDisplay bookings={bookings} />
             </div>
+
+           
+
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

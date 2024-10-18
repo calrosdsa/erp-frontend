@@ -19,7 +19,7 @@ export default function CourtSchedule(){
                 return (
                     <div>
                         <TimeSchedule
-                        courtRates={result.entity}
+                        courtRates={result.entity || []}
                             />
                     </div>
                 );

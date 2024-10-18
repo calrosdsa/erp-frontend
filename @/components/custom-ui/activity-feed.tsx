@@ -89,7 +89,7 @@ export default function ActivityFeed({
           activity={activity}
         />
       )}
-      <FormLayout>
+      <FormLayout className="px-0">
         <Card className="w-full mx-auto">
           <CardHeader>
             <CardTitle>Comments</CardTitle>

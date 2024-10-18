@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { ControllerRenderProps, FieldValues } from 'react-hook-form'
+import { DEFAULT_CURRENCY } from '~/constant'
 
 interface AmountInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   currency?: string
@@ -14,7 +15,7 @@ interface AmountInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export default function AmountInput({
-  currency = "USD",
+  currency = DEFAULT_CURRENCY,
   initialAmount,
   onAmountChange,
   field,

@@ -25,6 +25,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
             })
             error = res.error?.detail
             bookingData =  res.data?.result || []
+            console.log(res.error)
             break;
         }
         case "create-bookings":{

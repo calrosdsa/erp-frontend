@@ -1031,6 +1031,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/regate/booking/paid-amount": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Paid Amount */
+        put: operations["update-paid-amount"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/regate/booking/reschedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Booking reschedule */
+        put: operations["booking-reschedule"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/regate/booking/update-status": {
         parameters: {
             query?: never;
@@ -1769,8 +1803,10 @@ export interface components {
             title: string;
         };
         BookingData: {
+            available_courts?: components["schemas"]["CourtDto"][];
             /** Format: int64 */
             court_id: number;
+            court_name: string;
             /** Format: int32 */
             day_week: number;
             /** Format: date-time */
@@ -1784,6 +1820,8 @@ export interface components {
         };
         BookingDto: {
             code: string;
+            /** Format: int64 */
+            court_id: number;
             court_name: string;
             court_uuid: string;
             /** Format: date-time */
@@ -1803,6 +1841,27 @@ export interface components {
             status: string;
             /** Format: int32 */
             total_price: number;
+        };
+        BookingPaymentBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            booking_id: number;
+            /** Format: double */
+            paid_amount: number;
+        };
+        BookingRescheduleBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            booking: components["schemas"]["BookingData"];
+            /** Format: int64 */
+            booking_id: number;
         };
         ChartDashboardData: {
             booking_hours: components["schemas"]["ChartDataDto"][];
@@ -4188,6 +4247,8 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            /** Format: int64 */
+            booking_id?: number;
             bookings: components["schemas"]["BookingData"][];
         };
         WareHouseDto: {
@@ -7181,6 +7242,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityBookingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-paid-amount": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BookingPaymentBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "booking-reschedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BookingRescheduleBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

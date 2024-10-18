@@ -15,6 +15,8 @@ import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema
 import { z } from "zod";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { EditPaidAmount, useEditPaidAmount } from "./components/edit-paid-amount";
+import { RescheduleBooking, useRescheduleBooking } from "./components/reschedule-booking";
 
 export const BookingDetailClient = () => {
   const fetcher = useFetcher<typeof action>()
@@ -26,6 +28,8 @@ export const BookingDetailClient = () => {
   const {t} = useTranslation("common")
   const params = useParams()
   const {toast} = useToast()
+  const editPaidAmount = useEditPaidAmount()
+  const rescheduleBooking = useRescheduleBooking()
   const [permission] = usePermission({
     roleActions:globalState.roleActions,
     actions:actions
@@ -71,6 +75,9 @@ export const BookingDetailClient = () => {
       actions.push({
         label:"Agregar pago",
         onClick:()=>{
+          editPaidAmount.onOpenDialog({
+            booking:booking,
+          })
         }
       })
     }
@@ -78,6 +85,9 @@ export const BookingDetailClient = () => {
       actions.push({
         label:"Reprogramar la Reserva",
         onClick:()=>{
+          rescheduleBooking.openDialog({
+            booking:booking
+          })
         }
       })
     }
@@ -113,6 +123,22 @@ export const BookingDetailClient = () => {
   },[fetcher.data])
   return (
     <DetailLayout navItems={navTabs} activities={activities} partyID={booking?.id}>
+
+      {editPaidAmount.open &&
+      <EditPaidAmount
+      open={editPaidAmount.open}
+      onOpenChange={editPaidAmount.onOpenChange}
+      />
+      }
+
+      {rescheduleBooking.open && 
+      <RescheduleBooking
+      open={rescheduleBooking.open}
+      onOpenChange={rescheduleBooking.onOpenChange}
+      booking={rescheduleBooking.booking}
+      />
+      }
+
     {tab == "info" && 
     <BookingInfo/>
     }

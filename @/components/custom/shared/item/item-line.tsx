@@ -17,7 +17,7 @@ import { editLineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
 import { useItemPriceForOrders } from "~/util/hooks/fetchers/useItemPriceForOrder";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import {
-  fomatAmounFromInt,
+  formatAmounFromInt,
   formatCurrency,
 } from "~/util/format/formatCurrency";
 import CustomFormField from "../../form/CustomFormField";
@@ -44,7 +44,7 @@ export default function ItemLine({
     resolver: zodResolver(editLineItemSchema),
     defaultValues: {
       quantity: line?.quantity,
-      rate: fomatAmounFromInt(line?.rate),
+      rate: formatAmounFromInt(line?.rate),
       item_code: line?.item_code,
       item_name: line?.item_name,
       uom: line?.uom,
