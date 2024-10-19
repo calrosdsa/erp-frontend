@@ -24,7 +24,6 @@ export default function EventDetailClient(){
         }
     }
 
-    setUpToolbar({})
 
     useEffect(()=>{
         setUpNavItems()

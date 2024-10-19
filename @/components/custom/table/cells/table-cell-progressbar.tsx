@@ -15,14 +15,16 @@ interface TableCellProps<TData> {
     table:Table<TData>
     total?:number
     current:number
+    label?:string
 }
 
-export default function TableCellProgress<TData>({ getValue, row, column, table,total,current}:TableCellProps<TData>) {
+export default function TableCellProgress<TData>({ getValue, row, column, table,total,current,label}:TableCellProps<TData>) {
   return (
     <div className=" max-w-20">
        <ProgressBarWithTooltip
         current={current}
         total={total}
+        label={label}
         />
     </div>
   );

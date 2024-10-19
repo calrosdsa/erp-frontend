@@ -13,6 +13,10 @@ export default function EventInfoTab(){
             title={t("form.name")}
             value={event?.name}
             />
+             <DisplayTextValue
+            title={t("form.description")}
+            value={event?.description}
+            />
         </div>
     )
 }

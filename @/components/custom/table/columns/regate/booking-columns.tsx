@@ -12,6 +12,9 @@ import TableCellDate from "../../cells/table-cell-date";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
 import TableCellProgress from "../../cells/table-cell-progressbar";
+import { format, parseISO } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import TableCellPrice from "../../cells/table-cell-price";
 
 export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>[] => {
   const { t, i18n } = useTranslation("common");
@@ -54,6 +57,16 @@ export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>
         cell:TableCellStatus
       },
       {
+        accessorKey:"total_price",
+        header:t("form.amount"),
+        cell:({...props})=>{
+          return <TableCellPrice
+          i18n={i18n}
+          {...props}
+          />
+        }
+      },
+      {
         id: "received",
         header: t("table.received"),
         cell: ({ ...props }) => {
@@ -63,10 +76,43 @@ export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>
               {...props}
               current={rowData.paid}
               total={rowData.total_price}
+              label="% Pagado:"
             />
           );
         },
       },
+      {
+        accessorKey: "start_date",
+        header: "Fecha de la reserva",
+        cell: ({ ...props }) => <TableCellDate
+        {...props}
+        i18n={i18n}
+        formatDate="medium"
+        />
+    },
+    {
+      id:"booking_hours",
+      header: "Horas Reservadas",
+      cell: ({ ...props }) => {
+        const rowData = props.row.original
+        return (
+          <div className="flex flex-wrap gap-2">
+                            <Badge
+                              variant="outline"
+                              className="flex items-center"
+                            >
+                              {format(parseISO(rowData.start_date), "p")}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className="flex items-center"
+                            >
+                              {format(parseISO(rowData.end_date), "p")}
+                            </Badge>
+                          </div>
+        )
+      }
+  },
     {
         accessorKey: "created_at",
         header: t("table.createdAt"),

@@ -37,6 +37,9 @@ export default function BookingsClient(){
             <DataTable
             data={paginationResult?.results || []}
             columns={bookingColumns()}
+            hiddenColumns={{
+                "created_at":false
+            }}
             metaActions={{
                 meta:{
                     ...(permission?.create && {

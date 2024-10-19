@@ -10,9 +10,10 @@ import {
 interface Props {
   current?: number;
   total?: number;
+  label?:string
 }
 
-export default function ProgressBarWithTooltip({ current = 0, total = 100 }: Props) {
+export default function ProgressBarWithTooltip({ current = 0, total = 100,label }: Props) {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false)
   const safeTotal = total > 0 ? total : 100
   const safeCurrent = Math.max(0, Math.min(current, safeTotal))
@@ -36,7 +37,12 @@ export default function ProgressBarWithTooltip({ current = 0, total = 100 }: Pro
             </div>
           </TooltipTrigger>
           <TooltipContent>
+            <div className='flex'>
+              {label &&
+              <span>{label}</span>
+              }
             <p>{percentage.toFixed(1)}%</p>
+            </div>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

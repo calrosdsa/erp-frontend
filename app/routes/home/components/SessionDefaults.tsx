@@ -1,3 +1,4 @@
+import FormLayout from "@/components/custom/form/FormLayout";
 import SelectForm from "@/components/custom/select/SelectForm";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,13 @@ import {
   Form,
   FormMessage,
 } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFetcher, useLocation, useRevalidator } from "@remix-run/react";
 import { FormEvent, useEffect } from "react";
@@ -35,22 +42,22 @@ export const SessionDefault = ({
 }) => {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
-  const location = useLocation()
-  const r= routes 
+  const location = useLocation();
+  const r = routes;
   const form = useForm<z.infer<typeof sessionDefaultsFormSchema>>({
     resolver: zodResolver(sessionDefaultsFormSchema),
-    defaultValues:{
-      sessionUuid:session.sessionUuid,
-      locale:session.locale
-    }
+    defaultValues: {
+      sessionUuid: session.sessionUuid,
+      locale: session.locale,
+    },
   });
-  function onSubmit(values: z.infer<typeof sessionDefaultsFormSchema>){
-    console.log(values)
+  function onSubmit(values: z.infer<typeof sessionDefaultsFormSchema>) {
+    console.log(values);
     // console.log(form.getValues())
     fetcher.submit(
       {
         action: "update-session-defaults",
-        pathName:location.pathname,
+        pathName: location.pathname,
         sessionDefault: values,
       },
       {
@@ -59,80 +66,84 @@ export const SessionDefault = ({
         encType: "application/json",
       }
     );
-  };
+  }
 
-  useEffect(()=>{
-    fetcher.submit({
-      action:"get-sessions"
-    },{
-      encType:"application/json",
-      method:"post",
-      action:r.api
-    })
-  },[])
+  useEffect(() => {
+    fetcher.submit(
+      {
+        action: "get-sessions",
+      },
+      {
+        encType: "application/json",
+        method: "post",
+        action: r.api,
+      }
+    );
+  }, []);
 
   return (
-    <Form {...form}>
-      <fetcher.Form
-        method="post"
-        action="/api"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="grid gap-y-3"
-        // onSubmit={onSubmit}
-      >
-        {/* {JSON.stringify(fetcher.data?.sessions)} */}
-        <FormField
-      control={form.control}
-      name={"sessionUuid"}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{t("_company.base")}</FormLabel>
-          <Select
-            onValueChange={(e) => {
-              //   const object = JSON.parse(e)
-             
-              // const item =  data.find(t =>  t[keyValue] == e)
-              // if (onValueChange != undefined && item) {
-              //   onValueChange(item);
-              // }
-              // console.log(e);
-              field.onChange(e);
-            }}
-            defaultValue={field.value}
-          >
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a option" />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              {fetcher.data?.sessions.map((option, idx) => {
-                return (
-                  <SelectItem value={option.uuid} key={idx}>
-                    {option.company.name}
-                  </SelectItem>
-                );
-              })}
-            
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <FormLayout>
+      <Form {...form}>
+        <fetcher.Form
+          method="post"
+          action="/api"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid gap-y-3"
+          // onSubmit={onSubmit}
+        >
+          {/* {JSON.stringify(fetcher.data?.sessions)} */}
+          <FormField
+            control={form.control}
+            name={"sessionUuid"}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("_company.base")}</FormLabel>
+                <Select
+                  onValueChange={(e) => {
+                    //   const object = JSON.parse(e)
 
-        <SelectForm
-          name="locale"
-          form={form}
-          label={t("language")}
-          keyName="Name"
-          keyValue="Code"
-          data={languages}
-        />
-     
-        <Button type="submit">{t("form.submit")}</Button>
-      </fetcher.Form>
-    </Form>
+                    // const item =  data.find(t =>  t[keyValue] == e)
+                    // if (onValueChange != undefined && item) {
+                    //   onValueChange(item);
+                    // }
+                    // console.log(e);
+                    field.onChange(e);
+                  }}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {fetcher.data?.sessions.map((option, idx) => {
+                      return (
+                        <SelectItem value={option.uuid} key={idx}>
+                          {option.company.name}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <SelectForm
+            name="locale"
+            form={form}
+            label={t("language")}
+            keyName="Name"
+            keyValue="Code"
+            data={languages}
+          />
+
+          <Button type="submit">{t("form.submit")}</Button>
+        </fetcher.Form>
+      </Form>
+    </FormLayout>
   );
 };
 
@@ -149,7 +160,7 @@ export const SessionDefaultDrawer = ({
   return (
     <DrawerLayout
       open={open}
-      onOpenChange={(e)=>close()}
+      onOpenChange={(e) => close()}
       title={t("sidebar.sessionDefaults")}
     >
       <SessionDefault session={session} close={close} />
