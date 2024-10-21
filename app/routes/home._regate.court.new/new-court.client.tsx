@@ -72,7 +72,6 @@ export default function NewCourtClient() {
   return (
     <FormLayout>
       <Form {...form}>
-        {JSON.stringify(form.formState.errors)}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className=" create-grid">
             <CustomFormField

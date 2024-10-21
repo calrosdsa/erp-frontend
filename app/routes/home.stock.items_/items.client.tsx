@@ -50,19 +50,19 @@ const ItemsClient = () => {
           columns={itemColumns()}
           paginationOptions={{
             rowCount: paginationResult?.total || 0,
-            onPaginationChange: (e) => {
-              const fD = new FormData();
-              fD.append("page", e.pageIndex.toString());
-              fD.append("size", e.pageSize.toString());
-              submit(fD, {
-                method: "GET",
-                encType: "application/x-www-form-urlencoded",
-                unstable_flushSync: true,
-                preventScrollReset: true,
-              });
-              setPaginationState(e);
-            },
-            paginationState: paginationState,
+            // onPaginationChange: (e) => {
+            //   const fD = new FormData();
+            //   fD.append("page", e.pageIndex.toString());
+            //   fD.append("size", e.pageSize.toString());
+            //   submit(fD, {
+            //     method: "GET",
+            //     encType: "application/x-www-form-urlencoded",
+            //     unstable_flushSync: true,
+            //     preventScrollReset: true,
+            //   });
+            //   setPaginationState(e);
+            // },
+            // paginationState: paginationState,
           }}
         />
       </div>

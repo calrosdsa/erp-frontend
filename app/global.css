@@ -20,6 +20,9 @@
   .drawer-close {
     @apply col-span-full mt-2
   }
+  .link {
+    @apply hover:underline
+  }
 }
 
 @layer base {

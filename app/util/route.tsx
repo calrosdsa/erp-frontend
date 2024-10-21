@@ -242,6 +242,25 @@ class Routes {
   booking = this.base + "/booking";
   event = this.base + "/event";
   rDashboard = this.base + "/rdashboard";
+
+  toBookings(q?:{
+    [x:string]:string | undefined;
+  }
+  ):string{
+    let url = this.booking
+    if(q){
+      url += "?";
+        const queryParams = Object.entries(q)
+            .filter(([_, value]) => value !== undefined) // Filter out undefined values
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value || "")}`) // Encode each key-value pair
+            .join("&"); // Join them with '&'
+
+        if (queryParams) {
+            url += queryParams;
+        }
+    }
+    return url
+  }
   
   torChart(chartType:ChartType){
     return `${this.rDashboard}/${encodeURIComponent(chartTypeToJSON(chartType))}`

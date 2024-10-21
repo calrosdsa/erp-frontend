@@ -76,7 +76,7 @@ export default function TimeSchedule({ courtRates }: { courtRates: CourtRateDto[
   }, [courtRates])
 
   const getSlotRate = (day: Date, slot: Date): CourtRateDto | undefined => {
-    const dayOfWeek = day.getDay() || 7 // Convert Sunday (0) to 7
+    const dayOfWeek = day.getDay() || 6 // Convert Sunday (0) to 7
     const slotTime = format(slot, "HH:mm:ss")
     return ratesByDayAndTime.get(dayOfWeek)?.get(slotTime)
   }

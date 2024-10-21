@@ -6,7 +6,7 @@ import EventInfoTab from "./tab/event-info"
 import { useEffect, useState } from "react"
 import { NavItem } from "~/types"
 import { routes } from "~/util/route"
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
+import EventConnectionsTab from "./tab/event-connections"
 
 export default function EventDetailClient(){
     const [searchParams] = useSearchParams()
@@ -18,7 +18,8 @@ export default function EventDetailClient(){
     const setUpNavItems = () =>{
         if(event){
             let tabs:NavItem[] = [
-                {title:t("info"),href:r.toEventDetail(event.name,event.uuid)}
+                {title:t("info"),href:r.toEventDetail(event.name,event.uuid)},
+                {title:t("connections"),href:r.toEventDetail(event.name,event.uuid,"connections")}
             ]
             setNavItems(tabs)
         }
@@ -37,6 +38,9 @@ export default function EventDetailClient(){
         >
             {tab == "info" && 
             <EventInfoTab/>
+            }
+             {tab == "connections" && 
+            <EventConnectionsTab/>
             }
         </DetailLayout>
     )

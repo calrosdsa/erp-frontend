@@ -162,6 +162,7 @@ export const UpdateCourtRate = ({}: {
               keyName="dayName"
               keyValue={"day"}
               onSelect={(e) => {
+                console.log("DAYWEEKS",e)
                 form.setValue(
                   "dayWeeks",
                   e.map((t) => t.day)

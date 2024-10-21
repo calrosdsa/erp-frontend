@@ -157,7 +157,8 @@
     "isBillingAddress":"Is Shipping Address",
     "paidAmount":"Paid Amount ({{o}})",
     "daysWeek":"Days Weeks",
-    "comment":"Comment"
+    "comment":"Comment",
+    "addNew":"Add New"
   },
   "accounts":"Accounts",
   "_selling": {

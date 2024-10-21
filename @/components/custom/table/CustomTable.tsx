@@ -31,15 +31,16 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DataTablePagination } from "./DataTablePagination";
-import { DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { useTranslation } from "react-i18next";
 import DataTableEditFooter from "./data-table-edit-footer";
+import { useSearchParams } from "@remix-run/react";
 
 export interface PaginationOptions {
-  onPaginationChange: (d: PaginationState) => void;
-  rowCount: number;
-  paginationState: PaginationState;
+  // onPaginationChange: (d: PaginationState) => void;
+  rowCount?: number;
+  // paginationState: PaginationState;
 }
 
 export interface ExpandedRowOptions<T> {
@@ -73,16 +74,26 @@ export function DataTable<TData, TValue>({
   metaOptions,
   metaActions,
 }: DataTableProps<TData, TValue>) {
+  const [searchParams,setSearchParams] = useSearchParams()
+  const [paginationState, setPaginationState] = useState<PaginationState>({
+    pageIndex: Number(searchParams.get("page") || DEFAULT_PAGE),
+    pageSize: Number(searchParams.get("size") || DEFAULT_SIZE),
+  });
   const onPaginationChange: OnChangeFn<PaginationState> = (updaterOrValue) => {
     let newState: PaginationState | undefined = undefined;
     if (paginationOptions == undefined) return;
     if (typeof updaterOrValue === "function") {
-      newState = updaterOrValue(paginationOptions.paginationState);
+      newState = updaterOrValue(paginationState);
     } else {
       newState = updaterOrValue;
     }
     if (newState != undefined) {
-      paginationOptions.onPaginationChange(newState);
+      setPaginationState(newState);
+      searchParams.set("page",newState.pageIndex.toString())
+      searchParams.set("size",newState.pageSize.toString())
+      setSearchParams(searchParams,{
+        preventScrollReset:true
+      })
     }
   };
 
@@ -98,7 +109,7 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     state: {
-      pagination: paginationOptions?.paginationState,
+      pagination: paginationState,
       columnVisibility,
       expanded,
       rowSelection,
@@ -120,7 +131,7 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    rowCount: paginationOptions?.rowCount,
+    rowCount: Number(paginationOptions?.rowCount),
     autoResetPageIndex: false,
     manualPagination: true,
     meta: {
@@ -131,7 +142,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className=" py-3 space-y-4 w-full">
-      {metaActions != undefined && <DataTableToolbar table={table} />}
+      {metaActions != undefined ? <DataTableToolbar table={table} />
+      :<DataTableToolbar table={table} />}
 
       <div className="rounded-md border h-full relative">
         <Table className="">

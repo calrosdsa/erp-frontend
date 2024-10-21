@@ -11,8 +11,8 @@
     "base": "Grupo"
   },
   "_company": {
-    "base": "Compañía",
-    "companies": "Compañías"
+    "base": "Establecimiento",
+    "companies": "Establecimiento"
   },
   "purchase-orders": "Órdenes de Compra",
   "supplier-groups": "Grupos de Proveedores",
@@ -20,8 +20,26 @@
   "_supplier": {
     "base": "Proveedor"
   },
+  "_purchase": {
+    "base": "Compra"
+  },
+  "_invoice": {
+    "base": "Factura",
+    "create": "Crear Factura"
+  },
+  "_receipt": {
+    "base": "Recibo",
+    "f": "Recibo {{o}}"
+  },
+  "_payment": {
+    "base": "Pago",
+    "create": "Crear Pago",
+    "type": "Tipo de Pago",
+    "paymentFromTo": "Pago Desde / Hasta"
+  },
   "create": "Crear",
   "info": "Información",
+  "connections": "Conexiones",
   "_auth": {
     "signin": "Iniciar Sesión",
     "signout": "Cerrar Sesión"
@@ -29,21 +47,52 @@
 
   "reset-password": "Restablecer Contraseña",
   "_account": {
-    "lastLogin": "Último Inicio de Sesión",
+    "lastLogin": "Último Acceso",
     "updatePassword": "Actualizar Contraseña",
     "siginIYouA": "Inicia sesión en tu cuenta",
     "siginIYouADesc": "Ingresa tu correo electrónico y contraseña a continuación para iniciar sesión en tu cuenta",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "resetPassowordMsg": "Ingresa la dirección de correo electrónico verificada de tu cuenta y te enviaremos un enlace para restablecer la contraseña."
   },
+  "_ledger": {
+    "base": "Cuenta",
+    "type": "Tipo de Cuenta",
+    "no": "Número de Cuenta",
+    "chartOfAccounts": "Plan de Cuentas",
+    "paidFrom": "Cuenta Pagada Desde",
+    "paidTo": "Cuenta Pagada A",
+    "currency": "Moneda de la Cuenta ({{o}})"
+  },
   "address": "Dirección",
-  "manage": "Administrar",
+  "_address": {
+    "references": "Referencias de Dirección",
+    "info": "Información de Dirección",
+    "list": "Direcciones",
+    "addAnother": "Agregar Otra Dirección",
+    "add": "Agregar Dirección",
+    "empty": "No hay direcciones aún"
+  },
+  "contact": "Contacto",
+  "_contact": {
+    "list": "Contactos",
+    "addAnother": "Agregar Otro Contacto",
+    "add": "Agregar Contacto",
+    "empty": "No hay contactos aún"
+  },
+  "manage": "Gestionar",
   "users": "Usuarios",
   "_user": {
     "base": "Usuario"
   },
   "form": {
+    "from": "De",
+    "to": "A",
+    "gender": "Género",
     "name": "Nombre",
+    "date": "Fecha",
+    "advancePayment": "Pago Anticipado",
+    "postingDate": "Fecha de Publicación",
+    "dueDate": "Fecha de Vencimiento",
     "deliveryDate": "Fecha de Entrega",
     "pickADate": "Seleccionar una Fecha",
     "description": "Descripción",
@@ -52,56 +101,68 @@
     "code": "Código",
     "fullName": "Nombre Completo",
     "familyName": "Apellido",
-    "givenName": "Nombre",
+    "givenName": "Nombre de Pila",
     "phoneNumber": "Número de Teléfono",
-    "amount": "Monto",
+    "amount": "Cantidad",
     "type": "Tipo",
     "password": "Contraseña",
     "newPassword": "Nueva Contraseña",
     "confirmNewPassword": "Confirmar Nueva Contraseña",
     "email": "Correo Electrónico",
-    "companyName": "Nombre de la Compañía",
-    "clientDetails": "Completa tu Información Personal",
+    "companyName": "Nombre de la Empresa",
+    "clientDetails": "Completa Tu Información Personal",
     "enabled": "Habilitar",
     "country": "País",
     "countryCode": "Código de País",
     "item-group": "Grupo de Artículos",
     "submit": "Enviar",
+    "cancel": "Cancelar",
+    "party": "Parte",
+    "partyType": "Tipo de Parte",
     "save": "Guardar",
     "uom": "Unidad de Medida",
     "city": "Ciudad",
-    "company": "Compañía",
+    "company": "Empresa",
     "province": "Provincia",
     "postalCode": "Código Postal",
     "identificationNumber": "Número de Identificación",
+    "currencyAndPriceList": "Moneda y Lista de Precios",
     "streetLine1": "Línea de Calle 1",
     "streetLine2": "Línea de Calle 2",
     "optional": "Opcional",
     "price-list": "Lista de Precios",
     "currency": "Moneda",
     "buying": "Compra",
+    "paymentType": "Tipo de Pago",
     "selling": "Venta",
     "rate": "Tasa",
-    "itemQuantity": "Cantidad de Artículos",
+    "itemQuantity": "Cantidad de Artículo",
     "totalQuantity": "Cantidad Total",
+
     "quantity": "Cantidad",
     "pay": "Pagar",
-    "orderTotal": "Total de la Orden",
+    "orderTotal": "Total del Pedido",
     "total": "Total",
     "tax": "Impuesto",
-    "totalTax": "Impuestos Totales",
+    "totalTax": "Total de Impuestos",
     "status": "Estado",
     "startDate": "Fecha de Inicio",
-    "outOfStockThreshold": "Umbral de Agotamiento de Stock",
+    "outOfStockThreshold": "Umbral de Sin Stock",
     "isGroup": "Es Grupo",
-    "isGroupDescription": "Marca esta casilla para organizarlo como un grupo o carpeta.",
-    "orderConfirmation": "Confirmación de Pedido",
+    "isGroupDescription": "Marca esta casilla para organizarlo como un grupo.",
+    "orderConfirmation": "Confirmación del Pedido",
     "siteUrl": "URL del Sitio",
-    "logo": "Logo"
+    "logo": "Logo",
+    "isShippingAddress": "¿Es Dirección de Envío?",
+    "isBillingAddress": "¿Es Dirección de Facturación?",
+    "paidAmount": "Monto Pagado ({{o}})",
+    "daysWeek": "Días de la Semana",
+    "comment": "Comentario"
   },
+  "accounts": "Cuentas",
   "_selling": {
-    "isBuying": "Está Comprando",
-    "isSelling": "Está Vendiendo",
+    "isBuying": "Es Compra",
+    "isSelling": "Es Venta",
     "isSellingDesc": "Esta lista de precios se utilizará para vender productos.",
     "isBuyingDesc": "Esta lista de precios se utilizará para comprar productos."
   },
@@ -113,9 +174,15 @@
     "info": "Información del Cliente"
   },
   "f": {
+    "parent": "Padre {{o}}",
     "add-new": "Crear nuevo {{o}}",
     "edit": "Editar {{o}}",
-    "enable": "Marca la casilla para habilitar este {{o}}"
+    "enable": "Marca la casilla para habilitar este {{o}}",
+    "accepted": "Aceptado {{o}}",
+    "rejected": "Rechazado {{o}}",
+    "and": "{{o}} y {{p}}",
+    "purchase": "Compra {{o}}",
+    "editRow": "Editar Fila {{o}}"
   },
   "info-item": "Información {{item}}",
 
@@ -136,7 +203,7 @@
   "action": "Acción",
 
   "sidebar": {
-    "sessionDefaults": "Predeterminados de Sesión"
+    "sessionDefaults": "Configuraciones de Sesión"
   },
   "language": "Idioma",
 
@@ -144,7 +211,7 @@
   "applicationId": "ID de Aplicación",
   "accessToken": "Token de Acceso",
   "locationId": "ID de Ubicación",
-  "apiVersion": "Versión de la API",
+  "apiVersion": "Versión de API",
 
   "stock": "Inventario",
   "_stock": {
@@ -155,7 +222,7 @@
     "itemAttribute": "Atributo de Artículo",
     "addItemAttributeValue": "Agregar Valor de Atributo de Artículo",
     "addItemPrice": "Agregar Precio de Artículo",
-    "addItemStockLevel": "Agregar nivel de stock de artículo"
+    "addItemStockLevel": "Agregar Nivel de Stock de Artículo"
   },
   "items": "Artículos",
 
@@ -166,7 +233,7 @@
     "base": "Almacén"
   },
   "home": "Inicio",
-  "companies": "Compañías",
+  "companies": "Empresas",
   "plugins": "Plugins",
 
   "create_item": "Agregar Artículo",
@@ -175,7 +242,7 @@
   "email": "Correo Electrónico",
   "square": "Cuadrado",
   "_object": {
-    "objectId": "ID de Objeto",
+    "objectId": "ID del Objeto",
     "objectType": "Tipo de Objeto",
     "presentAtAllLocations": "Presente en Todas las Ubicaciones",
     "subscriptionPlanVariation": "ID de Variación del Plan de Suscripción",
@@ -200,7 +267,7 @@
     "base": "Artículo",
     "type": "Tipo de Artículo",
     "variants": "Variantes de Artículo",
-    "addVariant": "Agregar variante de artículo",
+    "addVariant": "Agregar Variante de Artículo",
     "enableForVariants": "Habilitar artículo para variantes"
   },
 
@@ -217,11 +284,13 @@
   "orders": "Órdenes",
   "orderInfo": "Información del Pedido",
   "_order": {
-    "base": "pedido",
+    "base": "Pedido",
     "orderItems": "Artículos del Pedido"
   },
   "table": {
     "new": "Nuevo",
+    "received": "Recibido",
+    "billed": "Facturado",
     "createdAt": "Fecha de Creación",
     "updatedAt": "Última Modificación",
     "deliverdDate": "Fecha de Entrega",
@@ -234,20 +303,49 @@
     "ordinal": "Ordinal",
     "cadence": "Cadencia",
     "periods": "Períodos",
-    "addRow": "Agregar Fila"
+    "addRow": "Agregar Fila",
+    "reference": "Referencia",
+    "referenceName": "Nombre de Referencia"
   },
   "dialog": {
-    "title": "¿Estás seguro de que deseas continuar con esta acción?",
-    "description": "Por favor confirma si deseas proceder con esta acción."
+    "title": "¿Está seguro de que desea proceder con esta acción?",
+    "description": "Por favor confirme si desea proceder con esta acción."
   },
   "continue": "Continuar",
   "cancel": "Cancelar",
 
-
   "actions": {
+    "base": "acciones",
     "edit": "Editar"
   },
   "tooltip": {
-    "selectCurrency": "Por favor selecciona tu moneda."
+    "selectCurrency": "Por favor, selecciona tu moneda."
+  },
+  "gender": {
+    "male": "Masculino",
+    "female": "Femenino",
+    "noBinary": "No Binario"
+  },
+  "alert": {
+    "submit": "Por favor, envía este documento para confirmación."
+  },
+  "RECEIVE": "Recibir",
+  "PAY": "Pagar",
+  "INTERNAL_TRANSFER": "Transferencia Interna",
+  "ASSET": "Activo",
+  "LIABILITIES": "Pasivos",
+  "EXPENSE": "Gasto",
+  "REVENUE": "Ingresos",
+  "regate": {
+    "schedule": "Programa",
+    "_court": {
+      "base": "Corte"
+    },
+    "_booking": {
+      "base": "Reserva"
+    },
+    "_event": {
+      "base": "Evento"
+    }
   }
 }

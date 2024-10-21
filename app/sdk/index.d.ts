@@ -713,6 +713,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/party/connections/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Party connections */
+        get: operations["get party connections"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/party/contact": {
         parameters: {
             query?: never;
@@ -3561,6 +3578,11 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
         };
+        PartyConnections: {
+            /** Format: int32 */
+            connections: number;
+            party_type: string;
+        };
         PartyDto: {
             /** Format: int64 */
             id: number;
@@ -3797,6 +3819,16 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             message: string;
             result: components["schemas"]["ChartDataDto"][];
+        };
+        ResponseDataListPartyConnectionsBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            message: string;
+            result: components["schemas"]["PartyConnections"][];
         };
         ResponseDataListPartyTypeDtoBody: {
             /**
@@ -6286,6 +6318,48 @@ export interface operations {
             };
         };
     };
+    "get party connections": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                party: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListPartyConnectionsBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get contacts": {
         parameters: {
             query: {
@@ -7141,6 +7215,9 @@ export interface operations {
     "get-bookings": {
         parameters: {
             query: {
+                event_id?: string;
+                customer_id?: string;
+                court_id?: string;
                 page: string;
                 size: string;
                 enabled?: string;

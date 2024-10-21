@@ -3,6 +3,7 @@ import Typography, { subtitle } from "../typography/Typography";
 import { Badge } from "../ui/badge";
 import IconButton from "../custom-ui/icon-button";
 import { PlusIcon } from "lucide-react";
+import { Link } from "@remix-run/react";
 
 export default function Connections({connections}:{
     connections:ConnectionModule[]
@@ -22,11 +23,13 @@ export default function Connections({connections}:{
                           {t.count &&
                           <Badge variant={"outline"} className=" rounded-full h-7 w-7">{t.count}</Badge>
                           }
-                          <span>
+                          <Link to={t.href} className="link">
                           {t.entity}
-                          </span>
+                          </Link>
                           </Badge>
-                      {t.add && <IconButton icon={PlusIcon} size="md" />}
+                      {t.add && 
+                        <IconButton icon={PlusIcon} size="md" />
+                      }
                     </div>
                   );
                 })}

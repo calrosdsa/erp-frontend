@@ -7,6 +7,7 @@ export interface SetupToolbarOpts {
   title?: string;
   onChangeState?: (event: EventState) => void;
   onSave?: () => void;
+  addNew?: () => void;
 }
 
 interface ToolbarStore {
@@ -17,6 +18,7 @@ interface ToolbarStore {
   status?: State;
   onChangeState?: (event: EventState) => void;
   onSave?: () => void;
+  addNew?:()=>void
   resetState: () => void;
   setLoading: (loading: boolean) => void;
   setToolbar: (opts: SetupToolbarOpts) => void;
@@ -41,6 +43,7 @@ export const useToolbar = create<ToolbarStore>((set) => ({
       title: opts.title,
       status: opts.status,
       onSave: opts.onSave,
+      addNew:opts.addNew,
       onChangeState: opts.onChangeState,
     })),
 }));
