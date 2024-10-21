@@ -16,6 +16,7 @@ import { HomeIcon } from "lucide-react";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 type RouteItem = {
   name: string;
@@ -53,8 +54,9 @@ export default function HomeLayout({
   const getRouteName = () => {
     const path = location.pathname.split("/");
     const route = path.slice(-1)[0]
-    return t(decodeURIComponent(route||""));
+    return t(decodeURIComponent(route||""));  
   };
+
 
   React.useEffect(() => {
     getRoutes();
@@ -101,8 +103,8 @@ export default function HomeLayout({
           >
             <div className="flex align-center">
               <Breadcrumb aria-label="breadcrumbs">
-                <BreadcrumbList>
-                  <BreadcrumbItem>
+                <BreadcrumbList key={"breadcrum"}>
+                  <BreadcrumbItem key={-1}>
                     <Link
                       color="neutral"
                       to="/home"
@@ -118,9 +120,8 @@ export default function HomeLayout({
                     .map((item, idx) => {
                       return (
                         <>
-                          <BreadcrumbItem key={item}>
+                          <BreadcrumbItem key={idx}>
                             <Link
-                              key={item}
                               color="neutral"
                               to={getRoute(idx)}
                               aria-label={item}

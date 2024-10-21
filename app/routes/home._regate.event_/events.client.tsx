@@ -6,6 +6,7 @@ import { DataTable } from "@/components/custom/table/CustomTable"
 import { eventBookingsColumns } from "@/components/custom/table/columns/regate/event-columns"
 import { routes } from "~/util/route"
 import { useCreateEvent } from "./components/use-create-event"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 export default function EventsClient(){
     const {paginationResult,actions} = useLoaderData<typeof loader>()
@@ -15,20 +16,24 @@ export default function EventsClient(){
         actions:actions,
         roleActions:globalState.roleActions,
     })
+    setUpToolbar(()=>{
+        return {
+            title:"Eventos",
+            ...(permission?.create && {
+                addNew:()=>{
+                    createEvent.onOpenChange(true)
+                }
+            })
+        }
+    },[permission])
     return (
         <div>
             <DataTable
             data={paginationResult?.results || []}
             columns={eventBookingsColumns()}
-            metaActions={{
-                meta:{
-                    ...(permission?.create && {
-                        addNew:()=>{
-                            createEvent.onOpenChange(true)
-                        }
-                    })
-                }
-            }}            
+            paginationOptions={{
+                rowCount:paginationResult?.total,
+            }}
             />
         </div>
     )

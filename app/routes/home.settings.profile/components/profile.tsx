@@ -14,14 +14,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { updateClientSchema } from "~/util/data/schemas/client/client-schema";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useEditFields from "~/util/hooks/useEditFields";
 import { toast, useToast } from "@/components/ui/use-toast";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 export default function ProfileInfo() {
   const { profile } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
+  const toolbar = useToolbar()
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const defaultValues = {
     givenName: profile?.given_name,
     familyName: profile?.family_name,
@@ -43,20 +48,17 @@ export default function ProfileInfo() {
       }
     );
   }
-  const { toast } = useToast();
+  setUpToolbar(()=>{
+    return {
+      onSave:()=> inputRef.current?.click(),
+      disabledSave:!hasChanged  
+    }
+},[hasChanged])
+  useDisplayMessage({
+    error:fetcher.data?.error,
+    success:fetcher.data?.message
+  },[fetcher.data])
 
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-    }
-  }, [fetcher.data]);
   return (
     <Form {...form}>
       <fetcher.Form
@@ -65,12 +67,13 @@ export default function ProfileInfo() {
       >
         {profile && (
           <>
-            <div className=" col-span-full flex justify-between w-full items-center">
+           <input className="hidden" type="submit" ref={inputRef}/>
+            {/* <div className=" col-span-full flex justify-between w-full items-center">
               <Typography fontSize={title}>{t("info")}</Typography>
               <Button disabled={!hasChanged} onClick={() => {}}>
                 {t("form.save")}
               </Button>
-            </div>
+            </div> */}
 
             <CustomFormField
               form={form}

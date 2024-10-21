@@ -125,7 +125,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             {fetcher.state == "submitting" && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}{" "}
-            Sign In
+            Iniciar sesión
           </Button>
         </fetcher.Form>
       </Form>

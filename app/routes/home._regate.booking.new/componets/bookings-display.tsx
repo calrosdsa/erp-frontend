@@ -15,6 +15,7 @@ import { Link, useNavigate, useRevalidator } from "@remix-run/react";
 import { routes } from "~/util/route";
 import IconButton from "@/components/custom-ui/icon-button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { formatMediumDate } from "~/util/format/formatDate";
 
 interface BookingDisplayProps {
   bookings?: components["schemas"]["BookingData"][];
@@ -22,13 +23,13 @@ interface BookingDisplayProps {
 }
 
 const dayNames = [
-  "Sunday",
-  "Monday",
+  "Domingo",
+  "Lunes",
   "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
+  "Miercoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
 ];
 
 export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
@@ -67,11 +68,7 @@ export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
 
   if (!bookings || bookings.length === 0) {
     return (
-      <Card>
-        <CardContent className="p-4">
-          <p>No bookings available.</p>
-        </CardContent>
-      </Card>
+      <></>
     );
   }
 
@@ -91,7 +88,10 @@ export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
           <Card>
             <CardHeader>
               <CardTitle>
-                Bookings for {format(parseISO(date), "MMMM d, yyyy")}
+                Reservar para 
+                {" "}
+                {/* {format(parseISO(date), "MMMM d, yyyy",{locale:})}   */}
+                {formatMediumDate(date,i18n.language)}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -125,7 +125,7 @@ export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
                           <div className="flex items-center mb-2">
                             <CalendarDays className="mr-2 h-4 w-4" />
                             <div className="text-sm font-medium">
-                              Day of Week
+                            Día de la semana
                             </div>
                           </div>
                           <Badge
@@ -140,7 +140,7 @@ export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
                           <div className="flex items-center mb-2">
                             <DollarSign className="mr-2 h-4 w-4" />
                             <div className="text-sm font-medium">
-                              Total Price
+                              Precio Total
                             </div>
                           </div>
                           <Badge
@@ -159,7 +159,7 @@ export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
                           <div className="flex items-center mb-2">
                             <Clock className="mr-2 h-4 w-4" />
                             <div className="text-sm font-medium">
-                              Booked Times
+                            Horarios reservados
                             </div>
                           </div>
                           <div className="flex flex-wrap gap-2">
@@ -179,6 +179,7 @@ export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
                         </div>
                       </div>
 
+                      {(booking.available_courts && booking.available_courts.length > 0) &&
                       <div className="mt-4">
                         <div className="flex items-center mb-2">
                           <Typography fontSize={subtitle}>
@@ -230,6 +231,9 @@ export default function BookingDisplay({ bookings = [] }: BookingDisplayProps) {
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
                       </div>
+                      }
+
+
                     </CardContent>
                   </Card>
                 ))}

@@ -15,7 +15,7 @@ import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import { useCreateGroup } from "~/routes/home.groups.$party_/components/create-group"
-import { PartyType } from "~/gen/common"
+import { PartyType, partyTypeToJSON } from "~/gen/common"
 
 
 export const CreateCustomer = ({open,onOpenChange,globalState}:{
@@ -106,10 +106,12 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
                     data={groupDebounceFetcher.data?.groups || []}
                     name="groupName"
                     nameK={"name"}
-                    label={t("group")}
+                    label={t("_group.base")}
                     {...(groupPermission?.create && {
                         addNew:()=>{
-                            createGroup.openDialog({partyType:PartyType[PartyType.customerGroup]})
+                            createGroup.openDialog({
+                                partyType:partyTypeToJSON(PartyType.customerGroup)
+                            })
                         }
                     })}
                     onSelect={(e)=>{

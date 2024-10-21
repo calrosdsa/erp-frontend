@@ -53,12 +53,12 @@ const AuthClient = ({ children }: { children: ReactNode }) => {
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <div className="absolute inset-0 bg-zinc-900" />
           <div className="relative z-20 flex items-center text-lg font-medium">
-            {company && company.Logo != "" ? (
-              <img src={company.Logo} alt={company.Name}  className="h-24 w-24 object-contain"/>
+            {company && company.logo != "" ? (
+              <img src={company.logo || ""} alt={company.name}  className="h-24 w-24 object-contain"/>
             ) : (
               <Boxes className="h-6 w-6" />
             )}
-            {company ? company.Name : DEFAULT_COMPANY_NAME}
+            {company ? company.name : DEFAULT_COMPANY_NAME}
           </div>
           <div className="relative z-20 mt-auto">
             {/* <blockquote className="space-y-2">
@@ -84,7 +84,7 @@ const AuthClient = ({ children }: { children: ReactNode }) => {
           </div> */}
 
             {children}
-            <p className="px-8 text-center text-sm text-muted-foreground">
+            {/* <p className="px-8 text-center text-sm text-muted-foreground">
               By clicking continue, you agree to our{" "}
               <Link
                 to="/terms"
@@ -100,12 +100,12 @@ const AuthClient = ({ children }: { children: ReactNode }) => {
                 Privacy Policy
               </Link>
               .
-            </p>
+            </p> */}
           </div>
 
           <div className="py-3 absolute bottom-3 ">
             <p className="text-xs text-center ">
-              © {company ? company.Name:DEFAULT_COMPANY_NAME} {new Date().getFullYear()}
+              © {company ? company.name:DEFAULT_COMPANY_NAME} {new Date().getFullYear()}
             </p>
           </div>
         </div>

@@ -11,8 +11,8 @@
     "base": "Grupo"
   },
   "_company": {
-    "base": "Establecimiento",
-    "companies": "Establecimiento"
+    "base": "Empresa",
+    "companies": "Empresas"
   },
   "purchase-orders": "Órdenes de Compra",
   "supplier-groups": "Grupos de Proveedores",
@@ -29,7 +29,7 @@
   },
   "_receipt": {
     "base": "Recibo",
-    "f": "Recibo {{o}}"
+    "f": "{{o}} Recibo"
   },
   "_payment": {
     "base": "Pago",
@@ -47,7 +47,7 @@
 
   "reset-password": "Restablecer Contraseña",
   "_account": {
-    "lastLogin": "Último Acceso",
+    "lastLogin": "Último Inicio de Sesión",
     "updatePassword": "Actualizar Contraseña",
     "siginIYouA": "Inicia sesión en tu cuenta",
     "siginIYouADesc": "Ingresa tu correo electrónico y contraseña a continuación para iniciar sesión en tu cuenta",
@@ -70,16 +70,16 @@
     "list": "Direcciones",
     "addAnother": "Agregar Otra Dirección",
     "add": "Agregar Dirección",
-    "empty": "No hay direcciones aún"
+    "empty": "Aún no hay direcciones"
   },
   "contact": "Contacto",
   "_contact": {
     "list": "Contactos",
     "addAnother": "Agregar Otro Contacto",
     "add": "Agregar Contacto",
-    "empty": "No hay contactos aún"
+    "empty": "Aún no hay contactos"
   },
-  "manage": "Gestionar",
+  "manage": "Administrar",
   "users": "Usuarios",
   "_user": {
     "base": "Usuario"
@@ -90,7 +90,7 @@
     "gender": "Género",
     "name": "Nombre",
     "date": "Fecha",
-    "advancePayment": "Pago Anticipado",
+    "advancePayment": "Pago por Adelantado",
     "postingDate": "Fecha de Publicación",
     "dueDate": "Fecha de Vencimiento",
     "deliveryDate": "Fecha de Entrega",
@@ -103,14 +103,14 @@
     "familyName": "Apellido",
     "givenName": "Nombre de Pila",
     "phoneNumber": "Número de Teléfono",
-    "amount": "Cantidad",
+    "amount": "Monto",
     "type": "Tipo",
     "password": "Contraseña",
     "newPassword": "Nueva Contraseña",
     "confirmNewPassword": "Confirmar Nueva Contraseña",
     "email": "Correo Electrónico",
     "companyName": "Nombre de la Empresa",
-    "clientDetails": "Completa Tu Información Personal",
+    "clientDetails": "Completa tu Información Personal",
     "enabled": "Habilitar",
     "country": "País",
     "countryCode": "Código de País",
@@ -120,7 +120,7 @@
     "party": "Parte",
     "partyType": "Tipo de Parte",
     "save": "Guardar",
-    "uom": "Unidad de Medida",
+    "uom": "UOM",
     "city": "Ciudad",
     "company": "Empresa",
     "province": "Provincia",
@@ -136,28 +136,29 @@
     "paymentType": "Tipo de Pago",
     "selling": "Venta",
     "rate": "Tasa",
-    "itemQuantity": "Cantidad de Artículo",
+    "itemQuantity": "Cantidad de Artículos",
     "totalQuantity": "Cantidad Total",
 
     "quantity": "Cantidad",
     "pay": "Pagar",
-    "orderTotal": "Total del Pedido",
+    "orderTotal": "Total de la Orden",
     "total": "Total",
     "tax": "Impuesto",
     "totalTax": "Total de Impuestos",
     "status": "Estado",
     "startDate": "Fecha de Inicio",
-    "outOfStockThreshold": "Umbral de Sin Stock",
+    "outOfStockThreshold": "Umbral de Agotamiento de Stock",
     "isGroup": "Es Grupo",
     "isGroupDescription": "Marca esta casilla para organizarlo como un grupo.",
-    "orderConfirmation": "Confirmación del Pedido",
+    "orderConfirmation": "Confirmación de Orden",
     "siteUrl": "URL del Sitio",
     "logo": "Logo",
-    "isShippingAddress": "¿Es Dirección de Envío?",
-    "isBillingAddress": "¿Es Dirección de Facturación?",
+    "isShippingAddress": "Es Dirección de Envío",
+    "isBillingAddress": "Es Dirección de Facturación",
     "paidAmount": "Monto Pagado ({{o}})",
     "daysWeek": "Días de la Semana",
-    "comment": "Comentario"
+    "comment": "Comentario",
+    "addNew": "Nuevo"
   },
   "accounts": "Cuentas",
   "_selling": {
@@ -203,7 +204,7 @@
   "action": "Acción",
 
   "sidebar": {
-    "sessionDefaults": "Configuraciones de Sesión"
+    "sessionDefaults": "Valores Predeterminados de Sesión"
   },
   "language": "Idioma",
 
@@ -222,7 +223,7 @@
     "itemAttribute": "Atributo de Artículo",
     "addItemAttributeValue": "Agregar Valor de Atributo de Artículo",
     "addItemPrice": "Agregar Precio de Artículo",
-    "addItemStockLevel": "Agregar Nivel de Stock de Artículo"
+    "addItemStockLevel": "Agregar nivel de stock de artículo"
   },
   "items": "Artículos",
 
@@ -240,9 +241,9 @@
   "itemInfo": "Información del Artículo",
 
   "email": "Correo Electrónico",
-  "square": "Cuadrado",
+  "square": "Square",
   "_object": {
-    "objectId": "ID del Objeto",
+    "objectId": "ID de Objeto",
     "objectType": "Tipo de Objeto",
     "presentAtAllLocations": "Presente en Todas las Ubicaciones",
     "subscriptionPlanVariation": "ID de Variación del Plan de Suscripción",
@@ -261,13 +262,13 @@
 
   "_item": {
     "info": "Información del Artículo",
-    "code": "Código del Artículo",
-    "prices": "Precios del Artículo",
+    "code": "Código de Artículo",
+    "prices": "Precios de Artículo",
     "quantity": "Cantidad de Artículo",
     "base": "Artículo",
     "type": "Tipo de Artículo",
     "variants": "Variantes de Artículo",
-    "addVariant": "Agregar Variante de Artículo",
+    "addVariant": "Agregar variante de artículo",
     "enableForVariants": "Habilitar artículo para variantes"
   },
 
@@ -282,10 +283,10 @@
   },
 
   "orders": "Órdenes",
-  "orderInfo": "Información del Pedido",
+  "orderInfo": "Información de Orden",
   "_order": {
-    "base": "Pedido",
-    "orderItems": "Artículos del Pedido"
+    "base": "Orden",
+    "orderItems": "Artículos de la Orden"
   },
   "table": {
     "new": "Nuevo",
@@ -308,14 +309,14 @@
     "referenceName": "Nombre de Referencia"
   },
   "dialog": {
-    "title": "¿Está seguro de que desea proceder con esta acción?",
-    "description": "Por favor confirme si desea proceder con esta acción."
+    "title": "¿Estás seguro de que deseas continuar con esta acción?",
+    "description": "Por favor, confirma si deseas proceder con esta acción."
   },
   "continue": "Continuar",
   "cancel": "Cancelar",
 
   "actions": {
-    "base": "acciones",
+    "base": "Acciones",
     "edit": "Editar"
   },
   "tooltip": {
@@ -337,9 +338,9 @@
   "EXPENSE": "Gasto",
   "REVENUE": "Ingresos",
   "regate": {
-    "schedule": "Programa",
+    "schedule": "Programar",
     "_court": {
-      "base": "Corte"
+      "base": "Cancha"
     },
     "_booking": {
       "base": "Reserva"
@@ -347,5 +348,6 @@
     "_event": {
       "base": "Evento"
     }
-  }
+  },
+  "booking":"Reserva"
 }

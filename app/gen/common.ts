@@ -574,46 +574,52 @@ export function bookingTypeToJSON(object: BookingType): string {
   }
 }
 
-export enum ActityType {
+export enum ActivityType {
   CREATE = 0,
   EDIT = 1,
   DELETE = 2,
   COMMENT = 3,
+  EDIT_PAID_AMOUT = 4,
   UNRECOGNIZED = -1,
 }
 
-export function actityTypeFromJSON(object: any): ActityType {
+export function activityTypeFromJSON(object: any): ActivityType {
   switch (object) {
     case 0:
     case "CREATE":
-      return ActityType.CREATE;
+      return ActivityType.CREATE;
     case 1:
     case "EDIT":
-      return ActityType.EDIT;
+      return ActivityType.EDIT;
     case 2:
     case "DELETE":
-      return ActityType.DELETE;
+      return ActivityType.DELETE;
     case 3:
     case "COMMENT":
-      return ActityType.COMMENT;
+      return ActivityType.COMMENT;
+    case 4:
+    case "EDIT_PAID_AMOUT":
+      return ActivityType.EDIT_PAID_AMOUT;
     case -1:
     case "UNRECOGNIZED":
     default:
-      return ActityType.UNRECOGNIZED;
+      return ActivityType.UNRECOGNIZED;
   }
 }
 
-export function actityTypeToJSON(object: ActityType): string {
+export function activityTypeToJSON(object: ActivityType): string {
   switch (object) {
-    case ActityType.CREATE:
+    case ActivityType.CREATE:
       return "CREATE";
-    case ActityType.EDIT:
+    case ActivityType.EDIT:
       return "EDIT";
-    case ActityType.DELETE:
+    case ActivityType.DELETE:
       return "DELETE";
-    case ActityType.COMMENT:
+    case ActivityType.COMMENT:
       return "COMMENT";
-    case ActityType.UNRECOGNIZED:
+    case ActivityType.EDIT_PAID_AMOUT:
+      return "EDIT_PAID_AMOUT";
+    case ActivityType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

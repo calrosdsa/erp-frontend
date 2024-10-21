@@ -47,21 +47,34 @@ const eventConnections = ({data,event}:{
   let connections:Connection[] = []
   const r = routes
   const navigate = useNavigate()
-  data.map((t)=>{
-    if(t.party_type == regatePartyTypeToJSON(RegatePartyType.booking)){
-      connections.push({
-        entity: regatePartyTypeToJSON(RegatePartyType.booking),
-        count:t.connections,
-        href: r.toBookings({
-          "event":event?.id.toString(),
-          "eventName":event?.name.toString()
-        }),
-        add: () => {
-          navigate(r.toCreateBooking())
-        },
-      })
-    }
+  connections.push({
+    entity: regatePartyTypeToJSON(RegatePartyType.booking),
+    href: r.toBookings({
+      "event":event?.id.toString(),
+      "eventName":event?.name.toString()
+    }),
+    count:data.find(t=>t.party_type == regatePartyTypeToJSON(RegatePartyType.booking))?.connections,
+    add: () => {
+      console.log("NAVIGATE")
+      navigate(r.toCreateBooking())
+    },
   })
+  // data.map((t)=>{
+  //   if(t.party_type == regatePartyTypeToJSON(RegatePartyType.booking)){
+  //     connections.push({
+  //       entity: regatePartyTypeToJSON(RegatePartyType.booking),
+  //       count:t.connections,
+  //       href: r.toBookings({
+  //         "event":event?.id.toString(),
+  //         "eventName":event?.name.toString()
+  //       }),
+  //       add: () => {
+  //         console.log("NAVIGATE")
+  //         navigate(r.toCreateBooking())
+  //       },
+  //     })
+  //   }
+  // })
 
   res.push({
     title:"Relacionados",

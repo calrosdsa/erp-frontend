@@ -21,6 +21,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import ChartHeader from "./components/chart-header";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function ChartDataClient() {
   const { chartData } = useLoaderData<typeof loader>();
@@ -39,7 +40,13 @@ export default function ChartDataClient() {
       color: "hsl(var(--chart-2))",
     },
   } satisfies ChartConfig;
- 
+
+  setUpToolbar(()=>{
+    return {
+      title:"Panel"
+    }
+  },[])
+
   return (
     <div className="">
       <Card className="">

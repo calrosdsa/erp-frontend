@@ -22,6 +22,8 @@ import { AccountingNav } from "./accounting-nav";
 import { CourtNav } from "./regate/court-nav";
 import { BookingNav } from "./regate/booking-nav";
 import { EventNav } from "./regate/event-nav";
+import { DashboarNav } from "./regate/dashboard";
+import { CustomerNav } from "./regate/customer-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -44,6 +46,9 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   })
 
   // Regate
+  const dashboardNav = DashboarNav({
+    entities:entities
+  })
   const courtNav = CourtNav({
     entities:entities
   })
@@ -53,6 +58,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const eventNav = EventNav({
     entities:entities
   })
+  const customerNav = CustomerNav({
+    entities:entities
+  })
+  
 
   const companies = {
     title: t("_company.companies"),
@@ -184,6 +193,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
 
   // switch (session.role) {
   // case Role.ROLE_ADMIN: {
+    
   if (entities?.includes(Entity.COMPANY_ENTITY_ID)) {
     navItems.push(companies);
   }
@@ -191,8 +201,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     navItems.push(accountingNav);
   }
   
-
+  
   //Regate
+  navItems.push(dashboardNav)
+
   if(entities?.includes(Entity.COURT_ENTITY_ID)){
     navItems.push(courtNav)
   }
@@ -202,17 +214,22 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if(entities?.includes(Entity.EVENTBOOKING_ENTITY_ID)){
     navItems.push(eventNav)
   }
+  if(customerNav.children && customerNav.children.length > 0) {
+    navItems.push(customerNav)
+  }
+  
 
 
   if(buyingNav.children && buyingNav.children.length > 0) {
     navItems.push(buyingNav)
   }
-  if(sellingNav.children && sellingNav.children.length > 0) {
-    navItems.push(sellingNav)
-  }
+  // if(sellingNav.children && sellingNav.children.length > 0) {
+  //   navItems.push(sellingNav)
+  // }
 
-
-
+  
+  
+  
   if (stockChildrens.length > 0) {
     navItems.push(stock);
   }

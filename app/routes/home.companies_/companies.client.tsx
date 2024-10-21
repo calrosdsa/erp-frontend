@@ -6,9 +6,10 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { columns } from "./components/table/columns";
 import { useCreateCompany } from "./components/create-company";
 import { usePermission } from "~/util/hooks/useActions";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function CompaniesClient() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const { paginationResult } = useLoaderData<typeof loader>();
   const state = useOutletContext<GlobalState>();
   const createCompany = useCreateCompany();
@@ -17,20 +18,22 @@ export default function CompaniesClient() {
     actions: paginationResult?.actions,
   });
 
+  setUpToolbar(()=>{
+    return {
+      title:t("companies"),
+      ...(permission?.create && {
+        addNew: () => {
+          createCompany.openDialog({});
+        },
+      }),
+    }
+  },[permission])
+
   return (
     <>
       <DataTable
         columns={columns()}
         data={paginationResult?.pagination_result.results || []}
-        metaActions={{
-          meta: {
-            ...(permission?.create && {
-              addNew: () => {
-                createCompany.openDialog({});
-              },
-            }),
-          },
-        }}
         hiddenColumns={{
           code: false,
         }}

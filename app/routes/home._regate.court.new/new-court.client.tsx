@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import CheckForm from "@/components/custom/input/CheckForm";
 import { useEffect, useRef } from "react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 export default function NewCourtClient() {
   const { t } = useTranslation("common");
@@ -41,34 +43,26 @@ export default function NewCourtClient() {
     );
   };
 
-  const setUpToolbar = () => {
-    toolbar.setToolbar({
+  setUpToolbar(()=>{
+    return {
       onSave: () => {
         inputRef.current?.click();
       },
-    });
-  };
-
-  useEffect(()=>{
-    setUpToolbar()
+      title:"Nueva Cancha"
+    }
   },[])
-
-  useEffect(() => {
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-      if (fetcher.data.court) {
+  useDisplayMessage({
+    error:fetcher.data?.message,
+    success:fetcher.data?.message,
+    onSuccessMessage:()=>{
+      if(fetcher.data?.court){
         const court = fetcher.data.court;
         navigate(r.toCourtDetail(court.name, court.uuid));
       }
     }
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-  }, [fetcher.data]);
+  },[fetcher.data])
+
+  
   return (
     <FormLayout>
       <Form {...form}>

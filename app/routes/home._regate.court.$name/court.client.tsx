@@ -1,4 +1,11 @@
-import { Outlet, useLoaderData, useNavigate, useOutletContext, useParams, useSearchParams } from "@remix-run/react";
+import {
+  Outlet,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+  useParams,
+  useSearchParams,
+} from "@remix-run/react";
 import { loader } from "./route";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useEffect } from "react";
@@ -11,6 +18,7 @@ import CourtInfoTab from "./tabs/court-info";
 import CourtSchedule from "./tabs/court-schedule";
 import { ActionToolbar } from "~/types/actions";
 import { UpdateCourtRate, useUpdateCourtRate } from "./use-update-court-rate";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function CourtDetailClient() {
   const { court } = useLoaderData<typeof loader>();
@@ -18,44 +26,44 @@ export default function CourtDetailClient() {
   const { t } = useTranslation("common");
   const r = routes;
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams()
-  const tab = searchParams.get("tab")
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get("tab");
   const toolbar = useToolbar();
-  const updateCourtRate = useUpdateCourtRate()
+  const updateCourtRate = useUpdateCourtRate();
   const navTabs: NavItem[] = [
-    { title: t("info"), href: r.toCourtDetail(court?.name || "", court?.uuid || "","info") },
-    { title: t("regate.schedule"), href: r.toCourtDetail(court?.name || "", court?.uuid || "","schedule") },    
+    {
+      title: t("info"),
+      href: r.toCourtDetail(court?.name || "", court?.uuid || "", "info"),
+    },
+    {
+      title: t("regate.schedule"),
+      href: r.toCourtDetail(court?.name || "", court?.uuid || "", "schedule"),
+    },
   ];
-  const setUpToolbar = () => {
+
+  setUpToolbar(() => {
     const actions: ActionToolbar[] = [];
     actions.push({
-      label: t("regate._court.base"),
+      label: "Editar precio por hora",
       onClick: () => {
         updateCourtRate.onOpenDialog({
-          court:court
-        })
+          court: court,
+          title: "Editar precio por hora",
+        });
       },
     });
-    toolbar.setToolbar({
+    return {
       title: params.name,
-      actions:actions
-    });
-  };
-  useEffect(() => {
-    setUpToolbar();
+      actions: actions,
+    };
   }, []);
+
   return (
     <DetailLayout navItems={navTabs}>
-      {updateCourtRate.open &&
-      <UpdateCourtRate/>
-      }
+      {updateCourtRate.open && <UpdateCourtRate />}
 
-      {tab == "info" && 
-      <CourtInfoTab/>
-      }
-        {tab == "schedule" && 
-      <CourtSchedule/>
-      }
+      {tab == "info" && <CourtInfoTab />}
+      {tab == "schedule" && <CourtSchedule />}
     </DetailLayout>
   );
 }

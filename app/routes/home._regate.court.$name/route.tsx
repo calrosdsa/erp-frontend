@@ -25,6 +25,8 @@ export const action  =  async({request}:ActionFunctionArgs)=>{
             })
             error = res.error?.detail
             message = res.data?.message
+            console.log(res.data?.message,res.error)
+
         }
     }
     return json({

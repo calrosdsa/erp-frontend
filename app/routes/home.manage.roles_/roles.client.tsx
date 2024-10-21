@@ -5,16 +5,30 @@ import { roleColumns } from "@/components/custom/table/columns/user/role-columns
 import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
 import { CreateRole, useCreateRole } from "./components/create-rol"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
+import { useToolbar } from "~/util/hooks/ui/useToolbar"
+import { useTranslation } from "react-i18next"
 
 
 export default function RolesClient(){
     const {paginationResult,actions} = useLoaderData<typeof loader>()
     const createRole = useCreateRole()
+    const {t} = useTranslation("common")
     const globalState = useOutletContext<GlobalState>()
     const [permission] = usePermission({
         actions:actions,
         roleActions:globalState.roleActions
     })
+    setUpToolbar(()=>{
+        return {
+            title:t("roles"),
+            ...(permission?.create && {
+                addNew:()=>{
+                    createRole.openDialog({})
+                },
+            })
+        }
+    },[permission])
     return (
         <>
         {createRole.open &&
@@ -26,11 +40,6 @@ export default function RolesClient(){
             <DataTable
             metaActions={{
                 meta:{
-                    ...(permission?.create && {
-                        addNew:()=>{
-                            createRole.openDialog({})
-                        },
-                    })
                 }
             }}
             data={paginationResult?.results || []}

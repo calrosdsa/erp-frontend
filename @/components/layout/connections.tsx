@@ -5,38 +5,53 @@ import IconButton from "../custom-ui/icon-button";
 import { PlusIcon } from "lucide-react";
 import { Link } from "@remix-run/react";
 
-export default function Connections({connections}:{
-    connections:ConnectionModule[]
-}){
-    return (
-        <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {connections.map((item, idx) => {
-          return (
-            <div>
-              <Typography fontSize={subtitle}>{item.title}</Typography>
-  
-              <div className=" flex flex-col space-y-2 py-2 px-0">
-                {item.connections.map((t, idx) => {
-                  return (
-                    <div key={idx} className="flex space-x-2">
-                      <Badge variant={"outline"} className="flex space-x-2 h-9">
-                          {t.count &&
-                          <Badge variant={"outline"} className=" rounded-full h-7 w-7">{t.count}</Badge>
+export default function Connections({
+  connections,
+}: {
+  connections: ConnectionModule[];
+}) {
+  return (
+    <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      {connections.map((item, idx) => {
+        return (
+          <div>
+            <Typography fontSize={subtitle}>{item.title}</Typography>
+
+            <div className=" flex flex-col space-y-2 py-2 px-0">
+              {item.connections.map((t, idx) => {
+                return (
+                  <div key={idx} className="flex space-x-2">
+                    <Badge variant={"outline"} className="flex space-x-2 h-9">
+                      {t.count && (
+                        <Badge
+                          variant={"outline"}
+                          className=" rounded-full h-7 w-7"
+                        >
+                          {t.count}
+                        </Badge>
+                      )}
+                      <Link to={t.href} className="link">
+                        {t.entity}
+                      </Link>
+                    </Badge>
+                    {t.add && (
+                      <IconButton
+                        onClick={() => {
+                          if (t.add) {
+                            t.add();
                           }
-                          <Link to={t.href} className="link">
-                          {t.entity}
-                          </Link>
-                          </Badge>
-                      {t.add && 
-                        <IconButton icon={PlusIcon} size="md" />
-                      }
-                    </div>
-                  );
-                })}
-              </div>
+                        }}
+                        icon={PlusIcon}
+                        size="md"
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-      </div>
-    )
+          </div>
+        );
+      })}
+    </div>
+  );
 }

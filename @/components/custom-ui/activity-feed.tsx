@@ -26,6 +26,7 @@ import { Textarea } from "../ui/textarea";
 import CustomerPurchases from "~/routes/home._customer.purchases/route";
 import CustomForm from "../custom/form/CustomForm";
 import { useToast } from "../ui/use-toast";
+import { ActivityType, activityTypeToJSON } from "~/gen/common";
 
 interface ActivityFeedProps {
   activities: components["schemas"]["ActivityDto"][] | undefined;
@@ -127,8 +128,10 @@ export default function ActivityFeed({
               {activities.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex space-x-4 border p-2 rounded-md"
                 >
+                  {activityTypeToJSON(ActivityType.COMMENT) == activity.type ?
+                  <div  className="flex space-x-4 border p-2 rounded-md">
+
                   <Avatar>
                     <AvatarImage src={activity.profile_avatar || undefined} />
                     <AvatarFallback>
@@ -139,17 +142,17 @@ export default function ActivityFeed({
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="font-semibold">
+                        <span className="font-semibold text-sm">
                           {activity.profile_given_name}{" "}
                           {activity.profile_family_name}
                         </span>
-                        <span className="text-muted-foreground">
+                        {/* <span className="text-muted-foreground">
                           {" "}
-                          {activity.action}
-                        </span>
-                        <span className="text-muted-foreground">
+                          {activity.action} 
+                        </span> */}
+                        <span className="text-muted-foreground text-xs">
                           {" "}
-                          ·{format(parseISO(activity.created_at), "PPp")}
+                          · {format(parseISO(activity.created_at), "PPp")}
                           {/* {formatDistance(activity.created_at,new Date, { 
                         addSuffix: true,
                         })} */}
@@ -161,7 +164,7 @@ export default function ActivityFeed({
                           size="sm"
                           onClick={() => setActivity(activity)}
                         >
-                          Edit
+                          Editar
                         </Button>
                         <Button variant="ghost" size="icon">
                           <MoreHorizontal className="h-4 w-4" />
@@ -170,6 +173,17 @@ export default function ActivityFeed({
                     </div>
                     <p className="mt-1">{activity.comment}</p>
                   </div>
+                  </div>
+                  :
+                  
+                  <div className="flex space-x-4 border p-2 rounded-md"> 
+                   <div className="flex-1">
+                    <p className="mt-1 text-sm">{activity.comment} · 
+                     <span className="text-xs text-muted-foreground"> {format(parseISO(activity.created_at), "PPp")}</span>
+                      </p>
+                  </div>
+                  </div>
+                  }
                 </div>
               ))}
               {/* {activities.some((a) => a.type === "attachment") && (

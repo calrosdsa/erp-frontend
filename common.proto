@@ -101,11 +101,12 @@ enum BookingType {
     EVENT_BOOKING = 1;
 }
 
-enum ActityType {
+enum ActivityType {
     CREATE = 0;
     EDIT = 1;
     DELETE = 2;
     COMMENT = 3;
+    EDIT_PAID_AMOUT = 4;
 }
 
 enum TimeUnit {

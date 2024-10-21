@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChartNoAxesColumn, MoreVertical } from "lucide-react";
 import IconButton from "@/components/custom-ui/icon-button";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 const chartConfig = {
   value: {
@@ -51,6 +52,11 @@ export default function DashboardClient() {
   const r = routes;
   const start = format(startOfMonth(new Date()), "MMM d");
   const end = format(endOfMonth(new Date()).toLocaleDateString(), "MMM d");
+  setUpToolbar(()=>{
+    return {
+      title:"Panel"
+    }
+  },[])
   return (
     <div className="grid xl:grid-cols-5 gap-3">
       <BarChartComponent

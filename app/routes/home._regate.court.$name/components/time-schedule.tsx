@@ -19,7 +19,9 @@ export default function TimeSchedule({ courtRates }: { courtRates: CourtRateDto[
   }, [])
 
   const generateWeekDays = () => {
-    const weekStart = setDay(startOfWeek(currentTime), 1) // Set to Monday
+    const weekStart = setDay(startOfWeek(currentTime), 1) // Set to Sunday
+    const f = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
+    console.log(f)
     return Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
   }
 
@@ -65,6 +67,7 @@ export default function TimeSchedule({ courtRates }: { courtRates: CourtRateDto[
   }
 
   const ratesByDayAndTime = useMemo(() => {
+    console.log(courtRates)
     const rateMap = new Map<number, Map<string, CourtRateDto>>()
     courtRates.forEach(rate => {
       if (!rateMap.has(rate.day_week)) {
@@ -76,7 +79,7 @@ export default function TimeSchedule({ courtRates }: { courtRates: CourtRateDto[
   }, [courtRates])
 
   const getSlotRate = (day: Date, slot: Date): CourtRateDto | undefined => {
-    const dayOfWeek = day.getDay() || 6 // Convert Sunday (0) to 7
+    const dayOfWeek = day.getDay() // Convert Sunday (0) to 7
     const slotTime = format(slot, "HH:mm:ss")
     return ratesByDayAndTime.get(dayOfWeek)?.get(slotTime)
   }
@@ -94,7 +97,7 @@ export default function TimeSchedule({ courtRates }: { courtRates: CourtRateDto[
             ))}
           </div>
 
-          <div className="grid grid-cols-7 min-w-[850px] w-full">
+          <div className="grid grid-cols-7 min-w-[1000px] w-full">
           {weekDays.map((day, dayIndex) => (
               <div key={dayIndex} className="flex-none">
               <div className="h-10 border-b sticky top-0 z-10 bg-background flex items-center justify-center font-semibold">
@@ -125,12 +128,14 @@ export default function TimeSchedule({ courtRates }: { courtRates: CourtRateDto[
                         `}
                         >
                           {slotRate && (
-                            <div className="text-xs p-1 truncate flex items-center space-x-2">
-                              <span>
+                            <div className="font-semibold text-[11px] p-1 truncate flex items-center space-x-2">
+                              <span className=" ">
                                 {formatCurrency(slotRate.rate,slotRate.currency,i18n.language)}
                               </span>
-                              <Badge variant={"outline"}>
+                              <Badge variant={"outline"} >
+                                <span className="font-semibold text-[11px]">
                                 {slotRate.enabled ? "Habilitado": "Deshabilidato"}
+                                </span>
                               </Badge>
                               
                             </div>
@@ -149,7 +154,7 @@ export default function TimeSchedule({ courtRates }: { courtRates: CourtRateDto[
   }
 
   return (
-    <div className="container mx-auto py-10 px-4">
+    <div className="container mx-auto py-3 px-4">
         <AllDaysSchedule />
     </div>
   )

@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next"
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue"
 import { formatLongDate } from "~/util/format/formatDate"
 import { routes } from "~/util/route"
-import { PartyType } from "~/types/enums"
 import { PartyAddresses } from "../home.party/components/party-addresses"
+import { PartyType } from "~/gen/common"
 
 
 export default function CustomerClient(){
@@ -14,6 +14,7 @@ export default function CustomerClient(){
     const { t,i18n } = useTranslation("common")
     const navigate = useNavigate()
     const r = routes
+
     return (
         <div>
             <div className="info-grid">
@@ -36,7 +37,7 @@ export default function CustomerClient(){
                 <DisplayTextValue
                 value={customer?.group_name}
                 title={t("_group.base")}
-                to={r.toGroupsByParty(PartyType.PARTY_CUSTOMER_GROUP)}
+                to={r.toGroupsByParty(PartyType.customerGroup)}
                 />
 
 

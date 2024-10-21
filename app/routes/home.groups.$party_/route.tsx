@@ -38,7 +38,6 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
             })
             groups = res.data?.pagination_result.results || []
             actions = res.data?.actions || []
-            // console.log(res.error)
             break
         }
         case "create-group":{
@@ -71,6 +70,7 @@ export const loader = async({request,params}:LoaderFunctionArgs) => {
             }
         }   
     })
+    console.log(res.error,res.data)
     return json({
         paginationResult:res.data?.pagination_result,
         actions:res.data?.actions,

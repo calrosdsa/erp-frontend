@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import FormLayout from "@/components/custom/form/FormLayout";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { Form } from "@/components/ui/form";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
@@ -21,28 +21,29 @@ import SelectForm from "@/components/custom/select/SelectForm";
 import { MultiSelect } from "@/components/custom/select/MultiSelect";
 import { daysWeek } from "~/util/data/day-weeks";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { usePermission } from "~/util/hooks/useActions";
+import { GlobalState } from "~/types/app";
+import { routes } from "~/util/route";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export const ValidateBooking = () => {
   const fetcher = useFetcher<typeof action>({ key: "booking-data" });
-  const toolbar = useToolbar();
+  
   const form = useForm<z.infer<typeof validateBookingSchema>>({
     resolver: zodResolver(validateBookingSchema),
     defaultValues: {},
   });
+  const globalState = useOutletContext<GlobalState>();
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
+  const [courtPermission] = usePermission({
+    actions:courtFetcher.data?.actions,
+    roleActions:globalState.roleActions,
+  });
+  const r = routes
+  const navigate = useNavigate()
   const { t } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const setUpToolbar = () => {
-    toolbar.setToolbar({
-      title: t("f.add-new", {
-        o: t("regate._booking.base").toLocaleLowerCase(),
-      }),
-      onSave: () => {
-        inputRef.current?.click();
-      },
-    });
-  };
-
+ 
   const onSubmit = (values: z.infer<typeof validateBookingSchema>) => {
     console.log("BODY", values);
     const body: components["schemas"]["ValidateBookingBody"] = {
@@ -70,13 +71,19 @@ export const ValidateBooking = () => {
     [fetcher.data]
   );
 
-  useEffect(() => {
-    setUpToolbar();
-  }, []);
+  setUpToolbar(()=>{
+    console.log("SETUP TOOLBAR")
+    return {
+      title: "Crear Nueva Reserva",
+      onSave: () => {
+        inputRef.current?.click();
+      },
+    }
+  },[])
+  
   return (
     <FormLayout>
       <Form {...form}>
-        {JSON.stringify(form.formState.errors)}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className=" create-grid">
             <FormAutocomplete
@@ -87,6 +94,11 @@ export const ValidateBooking = () => {
               name="courtName"
               required={true}
               form={form}
+              {...(courtPermission?.create && {
+                addNew:()=>{
+                  navigate(r.toCreateCourt())
+                }
+              })}
               onSelect={(e) => {
                 form.setValue("courtID", e.id);
               }}

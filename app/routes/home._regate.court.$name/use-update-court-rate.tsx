@@ -148,7 +148,8 @@ export const UpdateCourtRate = ({}: {
             })}
             <Button
               type="button"
-              variant={"ghost"}
+              className="w-min"
+              variant={"outline"}
               onClick={() => setOpenAddRateDialog(true)}
             >
               Agregar intervalo +
@@ -196,7 +197,8 @@ const AddCourtRate = ({
   const form = useForm<z.infer<typeof courtRateInterval>>({
     resolver: zodResolver(courtRateInterval),
     defaultValues: {
-        enabled:false
+        enabled:true,
+
     },
   });
   const { t } = useTranslation("common");
@@ -251,16 +253,19 @@ const AddCourtRate = ({
 
 interface UseUpdateCourtRateStore {
   open: boolean;
+  title?:string
   court: components["schemas"]["CourtDto"] | undefined;
   onOpenChange: (e: boolean) => void;
   onOpenDialog: (opts: {
     court: components["schemas"]["CourtDto"] | undefined;
+    title:string
   }) => void;
 }
 
 export const useUpdateCourtRate = create<UseUpdateCourtRateStore>((set) => ({
   open: false,
   court: undefined,
+  title:undefined,
   onOpenChange: (e) =>
     set((state) => ({
       open: e,

@@ -1724,14 +1724,6 @@ export interface components {
             role_actions: components["schemas"]["RoleActionDto"][];
             user: components["schemas"]["UserDto"];
         };
-        Action: {
-            entity: components["schemas"]["Entity"];
-            /** Format: int64 */
-            entity_id: number;
-            /** Format: int64 */
-            id: number;
-            name: string;
-        };
         ActionDto: {
             /** Format: int64 */
             entity_id: number;
@@ -2424,14 +2416,14 @@ export interface components {
             given_name: string;
             phone_number?: string | null;
         };
-        Entity: {
+        EntityActionsDto: {
+            actions: components["schemas"]["ActionDto"][];
+            entity: components["schemas"]["EntityDto"];
+        };
+        EntityDto: {
             /** Format: int64 */
             id: number;
             name: string;
-        };
-        EntityActions: {
-            actions: components["schemas"]["Action"][];
-            entity: components["schemas"]["Entity"];
         };
         EntityResponseClientBody: {
             /**
@@ -2680,7 +2672,7 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityListCustomerType"];
         };
-        EntityResponseResultEntityListEntityActionsBody: {
+        EntityResponseResultEntityListEntityActionsDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -2691,7 +2683,7 @@ export interface components {
                 [key: string]: components["schemas"]["ActionDto"][] | undefined;
             };
             message: string;
-            result: components["schemas"]["ResultEntityListEntityActions"];
+            result: components["schemas"]["ResultEntityListEntityActionsDto"];
         };
         EntityResponseResultEntityListGroupHierarchyDtoBody: {
             /**
@@ -3949,11 +3941,11 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CustomerType"][];
         };
-        ResultEntityListEntityActions: {
+        ResultEntityListEntityActionsDto: {
             activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
-            entity: components["schemas"]["EntityActions"][];
+            entity: components["schemas"]["EntityActionsDto"][];
         };
         ResultEntityListGroupHierarchyDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -7811,7 +7803,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityListEntityActionsBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityListEntityActionsDtoBody"];
                 };
             };
             /** @description Error */

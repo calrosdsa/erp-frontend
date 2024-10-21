@@ -54,7 +54,7 @@ export default function CustomForm<T extends FieldValues>({
         className={cn(className, "gap-y-3 grid p-3")}
       >
         
-        <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div>
+        {/* <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div> */}
 
         {/* <div className=" col-span-full">{JSON.stringify(form.getValues())}</div> */}
         {/* <div className=" col-span-full">{JSON.stringify(form.formState.errors)}</div>

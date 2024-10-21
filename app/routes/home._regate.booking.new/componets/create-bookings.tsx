@@ -25,6 +25,10 @@ import AccordationLayout from "@/components/layout/accordation-layout";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCreateEvent } from "~/routes/home._regate.event_/components/use-create-event";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useCreateCustomer } from "~/routes/home.selling.customers_/components/create-customer";
 
 export default function CreateBookings({
   bookings,
@@ -32,7 +36,7 @@ export default function CreateBookings({
   bookings: components["schemas"]["BookingData"][];
 }) {
   const fetcher = useFetcher<typeof action>();
-  const { toast } = useToast();
+  const fetcherBookings = useFetcher<typeof action>({key:"booking-data"});
   const form = useForm<z.infer<typeof createBookingsSchema>>({
     defaultValues: {},
     resolver: zodResolver(createBookingsSchema),
@@ -40,6 +44,11 @@ export default function CreateBookings({
   const { t } = useTranslation("common");
   const globalState = useOutletContext<GlobalState>()
   const [customerFetcher, onCustomerNameChange] = useCustomerDebounceFetcher();
+  const [customerPermission] = usePermission({
+    actions:customerFetcher.data?.actions,
+    roleActions:globalState.roleActions,
+  })
+  const createCustomer = useCreateCustomer()
   const [eventFetcher, onEventNameChange] = useEventDebounceFetcher();
   const [eventPermission] = usePermission({
     actions:eventFetcher.data?.actions,
@@ -73,26 +82,37 @@ export default function CreateBookings({
 
   setUpToolbar(()=>{
     return {
+      title: "Crear Nueva Reserva",
       onSave: () => {
-        console.log("ONCLICK");
         inputRef.current?.click();
       },
     }
-  },[]);
+  },[])
 
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-  }, [fetcher.data]);
+  
+  useDisplayMessage({
+      error:fetcher.data?.error,
+  },[fetcher.data])
 
   return (
     <FormLayout>
+            <div className="pt-2 pb-4">
+              <Button variant={"outline"} className=" flex space-x-2 items-center"
+              onClick={()=>{
+                fetcherBookings.submit({},{
+                  method:"POST",
+                  encType: "application/json",
+                })
+              }}>
+                <ArrowLeft size={15} />
+                <span>
+                  Seleccionar hora y Fecha
+                </span>
+              </Button>
+            </div>
       <Form {...form}>
-        {JSON.stringify(form.formState.errors)}
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
+          <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
+            
           <div className="create-grid">
             <FormAutocomplete
               label={t("_customer.base")}
@@ -104,6 +124,9 @@ export default function CreateBookings({
               form={form}
               onSelect={(e) => {
                 form.setValue("customerID", e.id);
+              }}
+              {...(customerPermission?.create) && {
+                addNew:()=>{ createCustomer.openDialog({})}
               }}
             />
             <CustomFormField

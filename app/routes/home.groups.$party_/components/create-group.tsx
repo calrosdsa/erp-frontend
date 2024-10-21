@@ -11,12 +11,12 @@ import { z } from "zod"
 import { routes } from "~/util/route"
 import { useEffect } from "react"
 
-export const CreateGroup = ({open,onOpenChange,partyType}:{
+export const CreateGroup = ({open,onOpenChange}:{
     open:boolean
     onOpenChange:(e:boolean)=>void
-    partyType?:string
 }) =>{
     const fetcher = useFetcher<typeof action>()
+    const createGroup = useCreateGroup()
     const {t} = useTranslation("common")
     const {toast} = useToast()
     const r = routes
@@ -46,7 +46,7 @@ export const CreateGroup = ({open,onOpenChange,partyType}:{
             schema={createGroupSchema}
             fetcher={fetcher}
             defaultValues={{
-                party_type_code:partyType?.toString(),
+                party_type_code:createGroup.partyType?.toString(),
                 enabled:true,
             } as z.infer<typeof createGroupSchema>}
             onSubmit={(values:z.infer<typeof createGroupSchema>)=>{
@@ -56,7 +56,7 @@ export const CreateGroup = ({open,onOpenChange,partyType}:{
                 },{
                     method:"POST",
                     encType:"application/json",
-                    action:r.groups
+                    action:r.toGroupByParty(createGroup.partyType || "")
                 })
             }}
             formItemsData={[
@@ -78,7 +78,7 @@ export const CreateGroup = ({open,onOpenChange,partyType}:{
                     label:t("form.enabled"),
                     type:"boolean",
                     typeForm:"check",
-                    description:t("f.enable",{o:t("_supplier.base")})
+                    // description:t("f.enable",{o:t("_supplier.base")})
                 }
             ]}
             />

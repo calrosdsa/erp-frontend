@@ -42,6 +42,7 @@ export const SessionDefault = ({
 }) => {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
+  const fetcherSessions = useFetcher<typeof action>();
   const location = useLocation();
   const r = routes;
   const form = useForm<z.infer<typeof sessionDefaultsFormSchema>>({
@@ -52,12 +53,10 @@ export const SessionDefault = ({
     },
   });
   function onSubmit(values: z.infer<typeof sessionDefaultsFormSchema>) {
-    console.log(values);
-    // console.log(form.getValues())
     fetcher.submit(
       {
         action: "update-session-defaults",
-        pathName: location.pathname,
+        pathName: location.pathname + location.search+location.hash,
         sessionDefault: values,
       },
       {
@@ -68,8 +67,8 @@ export const SessionDefault = ({
     );
   }
 
-  useEffect(() => {
-    fetcher.submit(
+  const getSessions = ()=>{
+    fetcherSessions.submit(
       {
         action: "get-sessions",
       },
@@ -79,6 +78,10 @@ export const SessionDefault = ({
         action: r.api,
       }
     );
+  }
+
+  useEffect(() => {
+    getSessions()
   }, []);
 
   return (
@@ -117,7 +120,7 @@ export const SessionDefault = ({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {fetcher.data?.sessions.map((option, idx) => {
+                    {fetcherSessions.data?.sessions.map((option, idx) => {
                       return (
                         <SelectItem value={option.uuid} key={idx}>
                           {option.company.name}

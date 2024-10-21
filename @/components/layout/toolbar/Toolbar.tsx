@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, PlusCircle, PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { EventState, State, stateToJSON } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
@@ -125,7 +125,7 @@ export default function ToolBar({ title }: { title: string }) {
                 }
               }}
               className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
-              disabled={toolbarState.loading}
+              disabled={toolbarState.disabledSave || toolbarState.loading}
               variant={"outline"}
             >
               {toolbarState.loading ? (
@@ -148,6 +148,7 @@ export default function ToolBar({ title }: { title: string }) {
               // disabled={toolbarState.loading}
               // variant={"outline"}
             >
+              <PlusIcon/>
               {toolbarState.loading ? (
                 <Icons.spinner className="h-5 w-5 animate-spin" />
               ) : (

@@ -7,6 +7,7 @@ import { courtColumns } from "@/components/custom/table/columns/regate/court-col
 import { routes } from "~/util/route"
 import { useEffect } from "react"
 import { useToolbar } from "~/util/hooks/ui/useToolbar"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 
 export default function CourtClient(){
@@ -14,28 +15,29 @@ export default function CourtClient(){
     const {paginationResult,actions} = useLoaderData<typeof loader>()
     const r = routes
     const navigate = useNavigate()
-    const toolbar =  useToolbar()
     const [permission] = usePermission({
         actions:actions,
         roleActions:globalState.roleActions
     })
-    useEffect(()=>{
-        toolbar.resetState()
-    },[])
+
+    setUpToolbar(()=>{
+        return {
+            title:"Canchas",
+            ...(permission?.create && {
+                addNew:()=>{
+                    navigate(r.toCreateCourt())
+                }
+            })
+        }
+    },[permission])
     return (
         <div>
             <DataTable
-            metaActions={{
-                meta:{
-                    ...(permission?.create && {
-                        addNew:()=>{
-                            navigate(r.toCreateCourt())
-                        }
-                    })
-                }
-            }}
             data={paginationResult?.results || []}
             columns={courtColumns()}
+            paginationOptions={{
+                rowCount:paginationResult?.total
+            }}
             />
         </div>
     )

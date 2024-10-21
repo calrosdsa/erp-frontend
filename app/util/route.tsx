@@ -56,6 +56,10 @@ class Routes {
   profile = this.settings + "/profile";
   account = this.settings + "/account";
 
+  toGroupByParty(partyType:string):string{
+    return `${this.groups}/${partyType}`
+  }
+
   toReferenceDetail(partyType: string, name: string, id: string): string {
     switch (partyType) {
       case PartyType[PartyType.customer]:

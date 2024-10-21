@@ -75,7 +75,6 @@ export default function GlobalDialogs({globalState}:{
         <CreateGroup
         open={createGroup.open}
         onOpenChange={createGroup.onOpenChange}
-        partyType={createGroup.partyType}
         />
         }
         {createUser.open && 

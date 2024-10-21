@@ -1,6 +1,6 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
-import { DEFAULT_CURRENCY, DEFAULT_ORDER, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
+import { DEFAULT_COLUMN, DEFAULT_CURRENCY, DEFAULT_ORDER, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
 import { handleError } from "~/util/api/handle-status-code"
 import BookingsClient from "./bookings.client"
 
@@ -19,7 +19,7 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
                 court_id:searchParams.get("court") || "",
                 customer_id:searchParams.get("customer") || "",
                 order:searchParams.get("order") || DEFAULT_ORDER,
-                column:searchParams.get("column") || "",
+                column:searchParams.get("column") || DEFAULT_COLUMN,
             }
         }
     })

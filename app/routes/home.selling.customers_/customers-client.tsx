@@ -5,6 +5,8 @@ import { usePermission } from "~/util/hooks/useActions";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { customerColumns } from "@/components/custom/table/columns/selling/customer-columns";
 import { useCreateCustomer } from "./components/create-customer";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useTranslation } from "react-i18next";
 
 export default function CustomersClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -13,7 +15,13 @@ export default function CustomersClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
+  const {t} = useTranslation("common")
   const createCustomer = useCreateCustomer()
+  setUpToolbar(()=>{
+    return {
+      title:t("_customer.base")
+    }
+  },[])
   return (
     <div>
       <DataTable

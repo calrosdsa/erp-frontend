@@ -17,9 +17,9 @@ export const roleEntitiesActionColumns = ({
   roleActions,
 }: {
   roleActions: components["schemas"]["RoleActionDto"][];
-}): ColumnDef<components["schemas"]["EntityActions"]>[] => {
+}): ColumnDef<components["schemas"]["EntityActionsDto"]>[] => {
   let roleActionsIds = roleActions.map((item) => item.action_id);
-  let columns: ColumnDef<components["schemas"]["EntityActions"]>[] = [];
+  let columns: ColumnDef<components["schemas"]["EntityActionsDto"]>[] = [];
   const r = routes;
   const { t } = useTranslation("common");
   columns.push({
