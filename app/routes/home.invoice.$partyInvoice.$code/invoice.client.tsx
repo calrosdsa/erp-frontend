@@ -1,6 +1,5 @@
-import { useFetcher, useLoaderData, useParams } from "@remix-run/react"
+import { useFetcher, useLoaderData, useParams, useSearchParams } from "@remix-run/react"
 import { action, loader } from "./route"
-import InvoiceTemplate from "@/components/custom/shared/invoice/InvoiceTemplate"
 import { useToolbar } from "~/util/hooks/ui/useToolbar"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
@@ -9,26 +8,42 @@ import { z } from "zod"
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema"
 import { routes } from "~/util/route"
 import { toast, useToast } from "@/components/ui/use-toast"
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage"
+import DetailLayout from "@/components/layout/detail-layout"
+import InvoiceInfoTab from "./components/tab/invoice-info"
+import InvoiceConnectionsTab from "./components/tab/invoice-connections"
 
 
 export default function InvoiceDetailClient(){
-    const {actions,invoiceDetail} = useLoaderData<typeof loader>()
+    const {actions,invoice,activities} = useLoaderData<typeof loader>()
     const toolbarState = useToolbar()
     const {t} = useTranslation("common")
     const fetcher = useFetcher<typeof action>()
     const params = useParams()
-
+    const [searchParams] = useSearchParams()
+    const tab = searchParams.get("tab")
     const r = routes
-    const {toast } = useToast()
+
+    const navItems = [
+        {
+          title: t("info"),
+          href: r.toInvoiceDetail(params.partyInvoice || "",invoice?.code || ""),
+        },
+        {
+          title: t("connections"),
+          href: r.toInvoiceDetail(params.partyInvoice || "",invoice?.code || "","connections"),
+        },
+      ];
+
     const setUpToolBar = () =>{
         toolbarState.setToolbar({
-            title:`${t("_invoice.base")}(${invoiceDetail?.invoice.code})`,
-            status:stateFromJSON(invoiceDetail?.invoice.state),
+            title:`${t("_invoice.base")}(${invoice?.code})`,
+            status:stateFromJSON(invoice?.status),
             onChangeState:(e)=>{
                 const body:z.infer<typeof updateStateWithEventSchema> = {
-                    current_state:invoiceDetail?.invoice.state || "", 
+                    current_state:invoice?.status || "", 
                     party_type:params.partyInvoice || "",
-                    party_id:invoiceDetail?.invoice.code || "",
+                    party_id:invoice?.code || "",
                     events:[e],
                 }
                 fetcher.submit({
@@ -42,6 +57,10 @@ export default function InvoiceDetailClient(){
             
         })
     }
+
+    
+
+
     useEffect(()=>{
         if(fetcher.state =="submitting"){
             toolbarState.setLoading(true)
@@ -49,27 +68,27 @@ export default function InvoiceDetailClient(){
             toolbarState.setLoading(false)
         }
     },[fetcher.state])
-    useEffect(()=>{
-        if(fetcher.data?.error){
-            toast({
-                title:fetcher.data.error,
-            })
-        }
-        if(fetcher.data?.message){
-            toast({
-                title:fetcher.data.message
-            })
-        }
+
+    useDisplayMessage({
+        error:fetcher.data?.error,
+        success:fetcher.data?.message,
     },[fetcher.data])
 
     useEffect(()=>{
         setUpToolBar()
-    },[invoiceDetail])
+    },[])
     return (
-        <div>
-            <InvoiceTemplate
-            invoiceDetail={invoiceDetail}
-            />
-        </div>
+        <DetailLayout
+        navItems={navItems}
+        partyID={invoice?.id}
+        activities={activities}
+        >
+           {tab == "info" &&
+           <InvoiceInfoTab/>
+           }
+           {tab == "connections" &&
+           <InvoiceConnectionsTab/>
+           }
+        </DetailLayout>
     )
 }

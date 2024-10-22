@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
-import CreatePurchaseInvoiceClient from "./create-purchase-invoice.client"
+import CreatePurchaseInvoiceClient from "./create-invoice.client"
 import { z } from "zod"
 import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema"
 import { orderLineSchemaToOrderLineDto } from "~/util/data/schemas/buying/purchase-schema"
@@ -22,7 +22,6 @@ export const action = async({request}:ActionFunctionArgs)=>{
     switch(data.action){
         case "create-purchase-invoice":{
             const d = data.createPurchaseInvoice
-            console.log('DATA',d)
             const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
             const res = await client.POST("/invoice",{
                 body:{
@@ -31,7 +30,9 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     invoice_party_type:PartyType[PartyType.purchaseInvoice],
                     due_date:d.due_date?.toString(),
                     date:d.date.toString(),
-                    lines:lines,
+                    items:{
+                        lines:lines,
+                    },
                     currency:currencySchemaToCurrencyDto(d.currency),
                     reference:d.referenceID,
                 }

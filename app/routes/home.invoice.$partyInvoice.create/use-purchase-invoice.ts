@@ -2,7 +2,7 @@ import { z } from "zod";
 import { create } from "zustand";
 import { supplierDtoSchema } from "~/util/data/schemas/buying/supplier-schema";
 import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
-import { lineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
+import { editLineItemSchema, lineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
 
 interface Payload {
     party_name?:string
@@ -10,7 +10,7 @@ interface Payload {
     party_type?:string
     currency?:string
     referenceID?:number
-    lines:z.infer<typeof lineItemSchema>[]
+    lines:z.infer<typeof editLineItemSchema>[]
 }
 interface CreatePurchaseInvoiceStore {
     payload?:Payload

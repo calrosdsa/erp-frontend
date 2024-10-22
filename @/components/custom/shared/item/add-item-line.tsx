@@ -68,7 +68,6 @@ export const AddLineOrder = ({
     >
       <FormLayout>
         <Form {...form}>
-          {JSON.stringify(form.formState.errors)}
           {/* {JSON.stringify(form.getValues())} */}
 
           <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -83,6 +82,7 @@ export const AddLineOrder = ({
                 onSelect={(e) => {
                   revalidator.revalidate();
                   form.setValue("item_price", e);
+                  form.setValue("rate", e.rate);
                 }}
                 onCustomDisplay={(item, idx) => {
                   return (

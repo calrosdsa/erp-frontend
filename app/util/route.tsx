@@ -1,4 +1,4 @@
-import { ChartType, chartTypeToJSON, PartyType } from "~/gen/common";
+import { ChartType, chartTypeToJSON, PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 
 class Routes {
   api = "/api";
@@ -189,15 +189,64 @@ class Routes {
   toPurchaseOrderDetail(name: string, id: string): string {
     return `${this.purchaseOrders}/${encodeURIComponent(name)}?id=${id}`;
   }
-  toOrderDetail(partyType: string, code: string): string {
-    return `${this.order}/${encodeURIComponent(partyType)}/${encodeURIComponent(
-      code
-    )}`;
+  toOrderDetail(partyType:string,id:string,tab?:string):string{
+    let url = this.order + `/${encodeURIComponent(partyType)}/${encodeURIComponent(id)}`
+    if(tab){
+      url += `?tab=${tab}`
+    }else { url += `?tab=info`}
+    return url 
   }
-  toOrderDetailInfo(partyType: string, code: string): string {
-    return `${this.order}/${encodeURIComponent(partyType)}/${encodeURIComponent(
-      code
-    )}/info`;
+  toCreateOrder(partyType:PartyType): string {
+    return `${this.order}/${encodeURIComponent(partyTypeToJSON(partyType))}/create`;
+  }
+  toOrders(partyType:PartyType,q?:{
+    [x:string]:string | undefined;
+  }
+  ):string{
+    let url = `${this.order}/${encodeURIComponent(partyTypeToJSON(partyType))}`
+    if(q){
+      url += "?";
+        const queryParams = Object.entries(q)
+            .filter(([_, value]) => value !==  undefined) // Filter out undefined values
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value || "")}`) // Encode each key-value pair
+            .join("&"); // Join them with '&'
+
+        if (queryParams) {
+            url += queryParams;
+        }
+    }
+    return url
+  }
+
+  toInvoices(partyType:PartyType,q?:{
+    [x:string]:string | undefined;
+  }
+  ):string{
+    let url = `${this.invoice}/${encodeURIComponent(partyTypeToJSON(partyType))}`
+    if(q){
+      url += "?";
+        const queryParams = Object.entries(q)
+            .filter(([_, value]) => value !== undefined) // Filter out undefined values
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value || "")}`) // Encode each key-value pair
+            .join("&"); // Join them with '&'
+
+        if (queryParams) {
+            url += queryParams;
+        }
+    }
+    return url
+  }
+  
+  
+  toInvoiceDetail(partyType:string,id:string,tab?:string):string{
+    let url = this.invoice + `/${encodeURIComponent(partyType)}/${encodeURIComponent(id)}`
+    if(tab){
+      url += `?tab=${tab}`
+    }else { url += `?tab=info`}
+    return url 
+  }
+  toCreateInvoice(partyType:PartyType): string {
+    return `${this.invoice}/${encodeURIComponent(partyTypeToJSON(partyType))}/create`;
   }
 
   toPurchaseOrderCreate(): string {
@@ -210,17 +259,38 @@ class Routes {
     return `${this.purchaseInvoices}/create`;
   }
 
-  toReceipt(partyType: string): string {
-    return `${this.receipt}/${encodeURIComponent(partyType)}`;
+  toReceiptDetail(partyType:string,code:string,tab?:string):string{
+    let url = this.receipt + `/${encodeURIComponent(partyType)}/${encodeURIComponent(code)}`
+    if(tab){
+      url += `?tab=${tab}`
+    }else { url += `?tab=info`}
+    return url 
   }
-  toReceiptDetail(partyType: string, code: string): string {
-    return `${this.receipt}/${encodeURIComponent(
-      partyType
-    )}/${encodeURIComponent(code)}`;
+  toCreateReceipt(partyType:PartyType): string {
+    return `${this.receipt}/${encodeURIComponent(partyTypeToJSON(partyType))}/create`;
   }
-  toCreateReceipt(partyType?: string): string {
-    return `${this.receipt}/${encodeURIComponent(partyType || "nan")}/new`;
+  toReceipts(partyType:PartyType,q?:{
+    [x:string]:string | undefined;
   }
+  ):string{
+    let url = `${this.receipt}/${encodeURIComponent(partyTypeToJSON(partyType))}`
+    if(q){
+      url += "?";
+        const queryParams = Object.entries(q)
+            .filter(([_, value]) => value !==  undefined) // Filter out undefined values
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value || "")}`) // Encode each key-value pair
+            .join("&"); // Join them with '&'
+
+        if (queryParams) {
+            url += queryParams;
+        }
+    }
+    return url
+  }
+
+
+ 
+ 
 
   //Manage
   toUserProfileDetail(name: string, id: string): string {

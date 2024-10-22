@@ -15,17 +15,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (data.action) {
     case "edit-line-item": {
       const d = data.editLineItem;
+      console.log(d)
       const res = await client.PUT("/item-line", {
         body: {
           rate: d.rate,
           quantity: d.quantity,
-          item_line: d.itemLineID,
+          item_line: d.itemLineID || 0,
           item_price_uuid: d.item_price_uuid,
-          party_type: d.party_type,
+          party_type: d.party_type || "",
         },
       });
       message = res.data?.message;
       error = res.error?.detail;
+      console.log(res.data,res.error)
       break;
     }
   }

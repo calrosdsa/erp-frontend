@@ -6,6 +6,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { routes } from "~/util/route";
 import ProgressBarWithTooltip from "@/components/custom-ui/progress-bar-with-tooltip";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function OrdersClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -17,6 +18,15 @@ export default function OrdersClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
+
+  
+
+  setUpToolbar(()=>{
+    return {
+      title:undefined
+    }
+  },[])
+
   return (
     <div>
       {/* {JSON.stringify(paginationResult?.results)} */}

@@ -12,7 +12,11 @@ import { PartyType } from "~/gen/common";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
 
-export const invoiceColumns = (): ColumnDef<
+export const invoiceColumns = ({
+  partyType
+}:{
+  partyType:string
+}): ColumnDef<
   components["schemas"]["InvoiceDto"]
 >[] => {
   const { t, i18n } = useTranslation("common");
@@ -30,7 +34,7 @@ export const invoiceColumns = (): ColumnDef<
         return (
           <TableCellNameNavigation
             {...props}
-            navigate={(name) => r.toPurchaseInvoiceDetail(name,rowData.uuid)}
+            navigate={(name) => r.toInvoiceDetail(partyType,name)}
           />
         );
       },
@@ -53,7 +57,7 @@ export const invoiceColumns = (): ColumnDef<
       },
     },
     {
-      accessorKey:"state",
+      accessorKey:"status",
       header:t("form.status"),
       cell:TableCellStatus
     },

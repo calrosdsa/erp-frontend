@@ -1,6 +1,5 @@
-import { useOutletContext, useParams } from "@remix-run/react";
+import { useLoaderData, useOutletContext, useParams } from "@remix-run/react";
 import { OrderGlobalState } from "~/types/app";
-import { OrderInfo } from "./components/order-info";
 import { useTranslation } from "react-i18next";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
 import Typography, { subtitle } from "@/components/typography/Typography";
@@ -12,26 +11,28 @@ import OrderSumary from "@/components/custom/display/order-sumary";
 import { sumTotal } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { useItemLine } from "@/components/custom/shared/item/item-line";
-import { State, stateToJSON } from "~/gen/common";
+import { ItemLineType, State, stateFromJSON, stateToJSON } from "~/gen/common";
+import { loader } from "../../route";
 
-export default function OrderInfoClient() {
-  const orderState = useOutletContext<OrderGlobalState>();
-  const { order } = orderState;
+export default function OrderInfoTab() {
+  const { order } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
   const itemLine = useItemLine();
   const params = useParams();
+
   const [metaOptions] = useTableRowActions({
-    onEdit: (rowIndex) => {
-      const line = order?.order_lines[rowIndex];
-      console.log("ITEM LINE EDIT", line);
-      itemLine.onOpenDialog({
-        title: t("f.editRow", { o: `#${rowIndex}` }),
-        allowEdit: order?.status == stateToJSON(State.DRAFT),
-        line: line,
-        currency: order?.currency,
-        partyType: params.partyOrder || "",
-      });
-    },
+        onEdit: (rowIndex) => {
+            const line = order?.order_lines[rowIndex];
+            console.log("ITEM LINE EDIT", line);
+            itemLine.onOpenDialog({
+                title: t("f.editRow", { o: `#${rowIndex}` }),
+                allowEdit: order?.status == stateToJSON(State.DRAFT),
+                line: line,
+                currency: order?.currency,
+                partyType: params.partyOrder || "",
+                itemLineType:ItemLineType.ITEM_LINE_ORDER
+            });
+        },
   });
   return (
     <div>

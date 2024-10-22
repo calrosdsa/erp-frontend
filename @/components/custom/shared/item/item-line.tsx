@@ -26,6 +26,8 @@ import { action } from "~/routes/api.itemline/route";
 import { routes } from "~/util/route";
 import { useEffect } from "react";
 import AmountInput from "../../input/AmountInput";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { ItemLineType } from "~/gen/common";
 
 export default function ItemLine({
   open,
@@ -39,18 +41,22 @@ export default function ItemLine({
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const r = routes;
-  const { toast } = useToast();
   const form = useForm<z.infer<typeof editLineItemSchema>>({
     resolver: zodResolver(editLineItemSchema),
     defaultValues: {
+      itemLineID: line?.id,
       quantity: line?.quantity,
-      rate: formatAmounFromInt(line?.rate),
+      rate:formatAmounFromInt(line?.rate),
+      lineType:itemLine.itemLineType,
+
       item_code: line?.item_code,
       item_name: line?.item_name,
+      item_uuid:line?.item_uuid,
+
       uom: line?.uom,
       party_type: itemLine.partyType,
       item_price_uuid: line?.item_price_uuid,
-      itemLineID: line?.id,
+      // itemLineReference:line.refe
     },
   });
   const [itemPriceDebounceFetcher, onItemPriceChange] = useItemPriceForOrders({
@@ -58,43 +64,49 @@ export default function ItemLine({
     currency: itemLine.currency || DEFAULT_CURRENCY,
   });
   const onSubmit = (values: z.infer<typeof editLineItemSchema>) => {
-    fetcher.submit(
-      {
-        action: "edit-line-item",
-        editLineItem: values,
-      },
-      {
-        method: "POST",
-        action: r.apiItemLine,
-        encType: "application/json",
-      }
-    );
+    if (values.itemLineID) {
+      fetcher.submit(
+        {
+          action: "edit-line-item",
+          editLineItem: values,
+        },
+        {
+          method: "POST",
+          action: r.apiItemLine,
+          encType: "application/json",
+        }
+      );
+    } else {
+        if(itemLine.onEditItemForm){
+          itemLine.onEditItemForm(values)
+        }
+      onOpenChange(false);
+      console.log("VALUES",values)
+    }
   };
 
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data?.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-      onOpenChange(false);
-    }
-  }, [fetcher.data]);
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        onOpenChange(false);
+      },
+    },
+    [fetcher.data]
+  );
 
   return (
     <DrawerLayout
       open={open}
       onOpenChange={onOpenChange}
       title={itemLine.title}
-      className=" max-w-2xl"
+      className=" max-w-2xl "
     >
+      {JSON.stringify(form.formState.errors)}
       <Form {...form}>
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex flex-col -mt-2">
+        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)} className="px-2">
+          <div className="flex flex-col ">
             {itemLine.allowEdit && (
               <div className=" flex flex-wrap gap-x-3 ">
                 <Button size={"xs"}>
@@ -122,6 +134,7 @@ export default function ItemLine({
               onSelect={(e) => {
                 //   revalidator.revalidate();
                 form.setValue("item_code", e.item_code);
+                form.setValue("item_uuid", e.item_uuid);
                 form.setValue("uom", e.uom);
                 form.setValue("item_price_uuid", e.uuid);
                 form.setValue("rate", e.rate);
@@ -167,10 +180,9 @@ export default function ItemLine({
               form={form}
               required={true}
               children={(field) => {
-                return <AmountInput
-                currency={itemLine.currency}
-                field={field}
-                />;
+                return (
+                  <AmountInput currency={itemLine.currency} field={field} />
+                );
               }}
               name={"rate"}
             />
@@ -197,6 +209,9 @@ interface ItemLineEditStore {
   allowEdit?: boolean;
   currency?: string;
   partyType?: string;
+  itemLineType?:ItemLineType;
+  lineReference?:number
+  onEditItemForm?:(e:z.infer<typeof editLineItemSchema>)=>void
   onOpenChange: (e: boolean) => void;
   onOpenDialog: (opts: {
     title?: string;
@@ -204,6 +219,9 @@ interface ItemLineEditStore {
     line?: components["schemas"]["ItemLineDto"];
     currency?: string;
     partyType: string;
+    itemLineType:ItemLineType;
+    lineReference?:number
+    onEditItemForm?:(e:z.infer<typeof editLineItemSchema>)=>void
   }) => void;
   line?: components["schemas"]["ItemLineDto"];
 }
@@ -214,10 +232,13 @@ export const useItemLine = create<ItemLineEditStore>((set) => ({
     set((state) => ({
       open: true,
       title: opts.title,
-      allowEdit: true,
+      allowEdit: opts.allowEdit,
       line: opts.line,
       currency: opts.currency,
       partyType: opts.partyType,
+      itemLineType:opts.itemLineType,
+      lineReference:opts.lineReference,
+      onEditItemForm:opts.onEditItemForm
     })),
   onOpenChange: (e) =>
     set((state) => ({

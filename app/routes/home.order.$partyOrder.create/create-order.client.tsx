@@ -1,4 +1,4 @@
-import { useFetcher, useNavigate, useOutletContext, useRevalidator } from "@remix-run/react";
+import { useFetcher, useNavigate, useOutletContext, useParams, useRevalidator } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { createPurchaseSchema } from "~/util/data/schemas/buying/purchase-schema";
@@ -34,6 +34,7 @@ export default function CreatePurchaseOrdersClient() {
     roleActions:globalState.roleActions,
   })
   const createSupplier = useCreateSupplier()
+  const params = useParams()
 
   const { t,i18n } = useTranslation("common");
   const { toast } = useToast();
@@ -140,6 +141,7 @@ export default function CreatePurchaseOrdersClient() {
             </div>
          <ItemLineForm
          form={form}
+         partyType={params.partyOrder || ""}
          itemLineType={ItemLineType.ITEM_LINE_ORDER}
          />
               <Button className=" max-w-40" loading={fetcher.state == "submitting"} type="submit">

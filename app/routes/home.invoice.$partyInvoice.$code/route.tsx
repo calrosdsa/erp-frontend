@@ -1,10 +1,11 @@
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
+import { ActionFunctionArgs, defer, json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import { PartyType } from "~/gen/common"
 import { handleError } from "~/util/api/handle-status-code"
 import PurchaseInvoiceDetailClient from "./invoice.client"
 import { z } from "zod"
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema"
+import { FetchResponse } from "openapi-fetch"
 type ActionData = {
     action:string
     updateStateWithEvent:z.infer<typeof updateStateWithEventSchema>
@@ -30,25 +31,49 @@ export const action = async({request}:ActionFunctionArgs)=>{
     })
 }
 
-export const loader =  async({request}:LoaderFunctionArgs)=>{
+export const loader =  async({request,params}:LoaderFunctionArgs)=>{
     const  client = apiClient({request})
     const url = new URL(request.url)
     const searchParams = url.searchParams
+    const tab = searchParams.get("tab")
+    let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
+    undefined;
     const res = await client.GET("/invoice/purchase/{id}",{
         params:{
             path:{
-                id:searchParams.get("id") || ""
+                id:params.code || ""
             },
             query:{
-                party:PartyType[PartyType.purchaseInvoice],
+                party:params.partyInvoice || "",
             }
         }
 
     })
     handleError(res.error)
-    return json({
-        invoiceDetail:res.data?.result.entity,
+    if (res.data) {
+        switch (tab) {
+          case "connections": {
+            resConnections  = client.GET("/party/connections/{id}", {
+              params: {
+                path: {
+                  id: res.data.result.entity.invoice.id.toString(),
+                },
+                query: {
+                  party: params.partyInvoice || "",
+                },
+              },
+            });
+            // console.log(resConnection.data,resConnection.error)
+            break
+          }
+        }
+      }
+    return defer({
+        invoice:res.data?.result.entity.invoice,
+        itemLines:res.data?.result.entity.item_lines,
         actions:res.data?.actions,
+        connections:resConnections,
+        activities:res.data?.result.activities
     })
 }
 export default function InvoiceDetail(){

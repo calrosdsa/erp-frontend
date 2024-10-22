@@ -4,6 +4,7 @@ import { handleError } from "~/util/api/handle-status-code"
 import ReceiptDetailClient from "./receipt.client"
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema"
 import { z } from "zod"
+import { FetchResponse } from "openapi-fetch"
 
 
 type ActionData = {
@@ -35,6 +36,9 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
     const client = apiClient({request})
      const url = new URL(request.url)
      const searchParams = url.searchParams
+     const tab = searchParams.get("tab")
+     let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
+     undefined;
      const res = await client.GET("/receipt/detail/{id}",{
         params:{
             path:{
@@ -46,10 +50,31 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
         }
      })
      handleError(res.error)
-
+     if (res.data) {
+        switch (tab) {
+          case "connections": {
+            resConnections  = client.GET("/party/connections/{id}", {
+              params: {
+                path: {
+                  id: res.data.result.entity.receipt.id.toString(),
+                },
+                query: {
+                  party: params.partyReceipt || "",
+                },
+              },
+            });
+            // console.log(resConnection.data,resConnection.error)
+            break
+          }
+        }
+      }
     return json({
         receiptDetail:res.data?.result.entity,
-        actions:res.data?.actions
+        receipt:res.data?.result.entity.receipt,
+        actions:res.data?.actions,
+        connections:resConnections,
+        itemLines:res.data?.result.entity.item_lines || [],
+        activities:res.data?.result.activities,
     })
 }
 

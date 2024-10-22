@@ -29,7 +29,7 @@ export const orderColumns = ({
       return (
         <TableCellNameNavigation
           {...props}
-          navigate={(name) => r.toOrderDetailInfo(orderPartyType, name)}
+          navigate={(name) => r.toOrderDetail(orderPartyType, name)}
         />
       );
     },

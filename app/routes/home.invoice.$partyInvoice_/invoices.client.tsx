@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react"
+import { useLoaderData, useNavigate, useOutletContext, useParams } from "@remix-run/react"
 import { loader } from "./route"
 import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
@@ -10,6 +10,7 @@ import { routes } from "~/util/route"
 export default function InvoicesClient(){
     const {paginationResult,actions} = useLoaderData<typeof loader>()
     const globalState = useOutletContext<GlobalState>()
+    const params = useParams()
     const [permission] = usePermission({
         actions:actions,
         roleActions:globalState.roleActions
@@ -20,7 +21,9 @@ export default function InvoicesClient(){
         <div>
             <DataTable
             data={paginationResult?.results || []}
-            columns={invoiceColumns()}
+            columns={invoiceColumns({
+                partyType:params.partyInvoice || ""
+            })}
             metaActions={{
                 meta:{
                     ...(permission?.create && {

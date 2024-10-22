@@ -1,4 +1,4 @@
-import { useFetcher, useNavigate, useOutletContext, useRevalidator } from "@remix-run/react";
+import { useFetcher, useNavigate, useOutletContext, useParams, useRevalidator } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { z } from "zod";
@@ -60,6 +60,8 @@ export default function CreatePurchaseInvoiceClient() {
       date:new Date(),
     },
   });
+
+  const params = useParams()
   
   const onSubmit = (values: z.infer<typeof createPurchaseInvoiceSchema>) => {
     console.log(values);
@@ -174,6 +176,7 @@ export default function CreatePurchaseInvoiceClient() {
          <ItemLineForm
          itemLineType={ItemLineType.ITEM_LINE_INVOICE}
          form={form}
+         partyType={params.partyInvoice || ""}
          />
               <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>

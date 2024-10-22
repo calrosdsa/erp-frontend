@@ -1,23 +1,14 @@
 import {
-  Outlet,
   useFetcher,
   useLoaderData,
   useLocation,
-  useMatches,
   useNavigate,
   useOutletContext,
   useParams,
-  useRevalidator,
+  useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
-import Typography, { subtitle } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { DataTable } from "@/components/custom/table/CustomTable";
-import {
-  displayItemLineColumns,
-  orderLineColumns,
-} from "@/components/custom/table/columns/order/order-line-column";
 import OrderSumary from "@/components/custom/display/order-sumary";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { sumTotal } from "~/util/format/formatCurrency";
@@ -47,15 +38,19 @@ import {
 import { useCreateReceipt } from "../home.receipt.$partyReceipt.new/use-create-receipt";
 import { useToast } from "@/components/ui/use-toast";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
-import { partyTypeFromJSON } from "common";
-import HorizontalNavTabs from "@/components/layout/nav/horizontal-nav-tabs";
 import DetailLayout from "@/components/layout/detail-layout";
+import OrderInfoTab from "./components/tab/order-info";
+import OrderConnectionsTab from "./components/tab/order-connections";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 export default function PurchaseOrderClient() {
-  const { order, actions, associatedActions } = useLoaderData<typeof loader>();
+  const { order, actions, associatedActions,activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>()
   const {toast} = useToast()
   const globalState = useOutletContext<GlobalState>();
+  const [searchParams] = useSearchParams()
+  const tab = searchParams.get("tab")
   const [purchaseOrderPermission] = usePermission({
     actions: actions,
     roleActions: globalState.roleActions,
@@ -86,14 +81,14 @@ export default function PurchaseOrderClient() {
   const params = useParams()
   const location = useLocation();
 
-  const tabNavItems = [
+  const navItems = [
     {
       title: t("info"),
-      href: r.toOrderDetailInfo(params.partyOrder || "",order?.code || ""),
+      href: r.toOrderDetail(params.partyOrder || "",order?.code || ""),
     },
     {
       title: t("connections"),
-      href: r.toOrderDetail(params.partyOrder || "",order?.code || "")+"/connections",
+      href: r.toOrderDetail(params.partyOrder || "",order?.code || "","connections"),
     },
   ];
 
@@ -104,8 +99,7 @@ export default function PurchaseOrderClient() {
     }
     return partyTypeToJSON(PartyType.UNRECOGNIZED)
   }
-
-  const setUpToolBar = () => {
+  setUpToolbar(()=>{
     const actions: ActionToolbar[] = [];
     if (paymentPermission?.create) {
       actions.push({
@@ -156,13 +150,14 @@ export default function PurchaseOrderClient() {
                   ) || [],
               },
             });
-            navigate(r.toCreateReceipt(PartyType[PartyType.purchaseReceipt]));
+            navigate(r.toCreateReceipt(PartyType.purchaseReceipt));
           },
           Icon: PlusIcon,
         });
       }
     }
-    toolbar.setToolbar({
+
+    return {
       actions: actions,
       title: `${t("_order.base")}(${order?.code})`,
       status: stateFromJSON(order?.status),
@@ -184,8 +179,9 @@ export default function PurchaseOrderClient() {
           }
         );
       },
-    });
-  };
+    }
+  },[purchaseInvoicePermission,location.pathname])
+
 
   useEffect(() => {
     if (fetcher.state == "submitting") {
@@ -194,36 +190,25 @@ export default function PurchaseOrderClient() {
       toolbar.setLoading(false);
     }
   }, [fetcher.state]);
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-    }
-  }, [fetcher.data]);
 
-  useEffect(() => {
-    console.log("TOOLBAR...")
-    setUpToolBar();
-  }, [purchaseInvoicePermission,location.pathname]);
 
+  useDisplayMessage({
+    error:fetcher.data?.error,
+    success:fetcher.data?.message,
+  },[fetcher.data])
+  
   return (
     <DetailLayout
-    navItems={tabNavItems}>
-        <Outlet
-          context={
-            {
-              order: order,
-              globalState: globalState,
-            } as OrderGlobalState
-          }
-        />
-    </DetailLayout>
-      
+        partyID={order?.id}
+        activities={activities}
+        navItems={navItems}
+        >
+            {tab == "info" && 
+            <OrderInfoTab/>
+            }
+             {tab == "connections" && 
+            <OrderConnectionsTab/>
+            }
+        </DetailLayout>
   );
 }

@@ -3,27 +3,27 @@ import {
   useLoaderData,
   useOutletContext,
   useParams,
+  useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import ReceiptInfo from "./components/receipt-info";
-import Typography, { subtitle } from "@/components/typography/Typography";
+import ReceiptInfoTab from "./components/tab/receipt-info";
 import { useTranslation } from "react-i18next";
-import { DataTable } from "@/components/custom/table/CustomTable";
-import { displayItemLineColumns } from "@/components/custom/table/columns/order/order-line-column";
-import { DEFAULT_CURRENCY } from "~/constant";
-import OrderSumary from "@/components/custom/display/order-sumary";
-import { sumTotal } from "~/util/format/formatCurrency";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { stateFromJSON } from "~/gen/common";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
+import DetailLayout from "@/components/layout/detail-layout";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { routes } from "~/util/route";
+import ReceiptConnectionsTab from "./components/tab/receipt-connections";
 
 export default function ReceiptDetailClient() {
-  const { receiptDetail, actions } = useLoaderData<typeof loader>();
+  const { receipt,itemLines, actions,activities} = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const { t, i18n } = useTranslation("common");
   const { toast } = useToast();
@@ -31,18 +31,34 @@ export default function ReceiptDetailClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
+  const [searchParams] = useSearchParams()
+  const tab = searchParams.get("tab")
   const toolbar = useToolbar();
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
-  const setUpToolBar = () => {
-    toolbar.setToolbar({
-      title: `${t("_receipt.base")}(${receiptDetail?.receipt.code})`,
-      status: stateFromJSON(receiptDetail?.receipt.status),
+  const r = routes
+
+  const navItems = [
+    {
+      title: t("info"),
+      href: r.toReceiptDetail(params.partyReceipt || "",receipt?.code || ""),
+    },
+    {
+      title: t("connections"),
+      href: r.toReceiptDetail(params.partyReceipt || "",receipt?.code || "","connections"),
+    },
+  ];
+ 
+
+  setUpToolbar(()=>{
+    return {
+      title: `${t("_receipt.base")}(${receipt?.code})`,
+      status: stateFromJSON(receipt?.status),
       onChangeState: (e) => {
         const body: z.infer<typeof updateStateWithEventSchema> = {
-          current_state: receiptDetail?.receipt.status || "",
+          current_state: receipt?.status || "",
           party_type: params.partyReceipt || "",
-          party_id: receiptDetail?.receipt.code || "",
+          party_id: receipt?.code || "",
           events: [e],
         };
         fetcher.submit(
@@ -56,8 +72,8 @@ export default function ReceiptDetailClient() {
           }
         );
       },
-    });
-  };
+    }
+  },[receipt])
 
   useEffect(() => {
     if (fetcher.state == "submitting") {
@@ -66,46 +82,29 @@ export default function ReceiptDetailClient() {
       toolbar.setLoading(false);
     }
   }, [fetcher.state]);
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-    }
-  }, [fetcher.data]);
 
-  useEffect(() => {
-    setUpToolBar();
-  }, [receiptDetail]);
+  useDisplayMessage({
+    error:fetcher.data?.error,
+    success:fetcher.data?.message,
+  },[fetcher.data])
+
+
+  // useEffect(() => {
+  //   setUpToolBar();
+  // }, [receipt]);
 
   return (
-    <div>
-      <ReceiptInfo receipt={receiptDetail?.receipt} />
-      <div className=" col-span-full pt-3">
-        <Typography fontSize={subtitle}>{t("items")}</Typography>
-        <DataTable
-          data={receiptDetail?.item_lines || []}
-          columns={displayItemLineColumns({
-            currency: receiptDetail?.receipt?.currency || DEFAULT_CURRENCY,
-          })}
-        />
-
-        {receiptDetail && receiptDetail?.item_lines.length > 0 && (
-          <OrderSumary
-            orderTotal={sumTotal(
-              receiptDetail?.item_lines.map((t) => t.rate * t.quantity)
-            )}
-            orderTax={100}
-            i18n={i18n}
-            currency={receiptDetail.receipt?.currency || DEFAULT_CURRENCY}
-          />
-        )}
-      </div>
-    </div>
+    <DetailLayout
+    activities={activities}
+    partyID={receipt?.id}
+    navItems={navItems}
+    >
+      {tab == "info" && 
+      <ReceiptInfoTab/>
+      }
+      {tab == "connections" && 
+      <ReceiptConnectionsTab/>
+      }
+    </DetailLayout>
   );
 }

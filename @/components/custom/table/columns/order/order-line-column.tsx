@@ -8,7 +8,7 @@ import { z } from "zod";
 import TableCellPrice from "../../cells/table-cell-price";
 import TableCellIndex from "../../cells/table-cell-index";
 import { formatTax, getTaxPorcent } from "~/util/format/formatCurrency";
-import { lineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
+import { editLineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
 import { ItemLineType } from "~/gen/common";
 import { DataTableRowActions } from "../../data-table-row-actions";
 
@@ -18,8 +18,8 @@ export const  orderLineColumns = ({
 }: {
   currency?: string;
   itemLineType:ItemLineType
-}): ColumnDef<z.infer<typeof lineItemSchema>>[] => {
-  let columns: ColumnDef<z.infer<typeof lineItemSchema>>[] = [];
+}): ColumnDef<z.infer<typeof editLineItemSchema>>[] => {
+  let columns: ColumnDef<z.infer<typeof editLineItemSchema>>[] = [];
   const r = routes;
   const { t, i18n } = useTranslation("common");
   columns.push({
@@ -27,11 +27,11 @@ export const  orderLineColumns = ({
     cell:TableCellIndex
   })
   columns.push({
-    accessorKey: "item_price.item_code",
+    accessorKey: "item_code",
     header: t("_item.code"),
   });
   columns.push({
-    accessorKey: "item_price.item_name",
+    accessorKey: "item_name",
     header: t("form.name"),
   });
   // columns.push({
@@ -39,12 +39,12 @@ export const  orderLineColumns = ({
   //   header: t("form.uom"),
   // });
 
-  if(itemLineType == ItemLineType.ITEM_LINE_ORDER) {
+  // if(itemLineType == ItemLineType.ITEM_LINE_ORDER) {
     columns.push({
       accessorKey: "quantity",
       header: t("_item.quantity"),
     });
-  }
+  // }
 
 
   if(itemLineType == ItemLineType.ITEM_LINE_RECEIPT) {
@@ -59,7 +59,7 @@ export const  orderLineColumns = ({
   }
 
   columns.push({
-    accessorKey: "item_price.rate",
+    accessorKey: "rate",
     header: t("form.rate"),
     cell: ({...props})=>{
       return currency ? (

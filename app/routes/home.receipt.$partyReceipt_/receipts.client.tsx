@@ -5,7 +5,7 @@ import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { receiptColumns } from "@/components/custom/table/columns/receipt/receipt-columns";
 import { routes } from "~/util/route";
-import { PartyType } from "~/gen/common";
+import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 
 
 export default function ReceiptsClient(){
@@ -26,7 +26,7 @@ export default function ReceiptsClient(){
                 meta:{
                     ...(permission?.create && {
                         addNew:()=>{
-                            navigate(r.toCreateReceipt(params.partyReceipt || ""))
+                            navigate(r.toCreateReceipt(partyTypeFromJSON(params.partyReceipt)))
                         }
                     }) 
                 }

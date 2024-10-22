@@ -30,13 +30,17 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     order_party_type:PartyType[PartyType.purchaseOrder],
                     currency:currencySchemaToCurrencyDto(d.currency),
                     delivery_date:d.delivery_date?.toString(),
-                    lines:lines,
-                    date:d.date.toString()
+                    // lines:lines,
+                    date:d.date.toString(),
+                    items:{
+                        lines:lines,
+                    }
                 }
             })
             message = res.data?.message
             error = res.error?.detail
             order = res.data?.result.entity
+            console.log(res.data,res.error)
             break;
         }
     }

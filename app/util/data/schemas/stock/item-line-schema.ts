@@ -1,13 +1,14 @@
 import { z } from "zod";
 import { DEFAULT_MIN_LENGTH } from "~/constant";
-import { ItemLineType, itemLineTypeFromJSON } from "~/gen/common";
+import { ItemLineType, itemLineTypeFromJSON, itemLineTypeToJSON } from "~/gen/common";
 import { validateNumber, validateStringNumber } from "../base/base-schema";
 import { components } from "~/sdk";
+import { formatAmountToInt } from "~/util/format/formatCurrency";
 
 
 export const itemPriceDtoSchema = z.object({
     code: z.string().optional(),
-    uuid: z.string().optional(),
+    uuid: z.string(),
     rate: z.number(),
     item_quantity: z.number().optional(),
     item_name: z.string().optional(),
@@ -38,8 +39,8 @@ export const itemLineDtoSchema = z.object({
 export const lineItemReceipt = z.object({
     acceptedQuantity:  z.coerce.number().gt(0),
     rejectedQuantity:  z.coerce.number(),
-    acceptedWarehouse:z.string().optional(),
-    rejectedWarehouse:z.string().optional()
+    acceptedWarehouse:z.number().optional(),
+    rejectedWarehouse:z.number().optional()
 })
 // transform: (arg: string, ctx: z.RefinementCtx) => number | Promise<number>): z.ZodEffects<z.ZodString, number, string>
 
@@ -47,6 +48,7 @@ export const lineItemSchema = z.object({
     item_price: itemPriceDtoSchema,
     // quantity: z.string().transform(validateStringNumber).optional(),
     quantity:z.coerce.number().gt(0),
+    rate:z.coerce.number().gt(0),
     lineType:z.number(),
     itemLineReference:z.number().optional(),
     //FOR RECEIPT
@@ -81,19 +83,21 @@ export const lineItemSchema = z.object({
 )
 
 
-export const mapToLineItem = (line:components["schemas"]["ItemLineDto"],to:ItemLineType):z.infer<typeof lineItemSchema>=>{
-  const lineItem:z.infer<typeof lineItemSchema> = {
-    amount:line.quantity * line.rate,
-    lineType:to,
-    quantity:line.quantity,
-    itemLineReference:line.id,
-    item_price:{
-      rate:line.rate,
-      item_code:line.item_code,
-      item_name:line.item_name,
-      item_uuid:line.item_uuid,
-      uom:line.uom,    
-    }
+export const mapToLineItem = (line:components["schemas"]["ItemLineDto"],to:ItemLineType):z.infer<typeof editLineItemSchema>=>{
+  const lineItem:z.infer<typeof editLineItemSchema> = {
+    amount: line.quantity * line.rate,
+    lineType: to,
+    rate: line.rate,
+    quantity: line.quantity,
+    itemLineReference: line.id,
+
+    item_price_uuid: line.item_price_uuid,
+    item_price_rate: line.rate,
+
+    item_name: line.item_name,
+    item_code: line.item_code,
+    uom: line.uom,
+    item_uuid: line.item_uuid
   }
   if(to == ItemLineType.ITEM_LINE_RECEIPT){
     lineItem.lineItemReceipt = {
@@ -104,16 +108,84 @@ export const mapToLineItem = (line:components["schemas"]["ItemLineDto"],to:ItemL
   return lineItem
 }
 
+export const mapToItemLineDto = (line:z.infer<typeof editLineItemSchema>):components["schemas"]["ItemLineDto"]=>{
+  const itemLineDto:components["schemas"]["ItemLineDto"] = {
+    id: 0,
+    item_code: line.item_code,
+    item_name: line.item_name,
+    item_price_uuid: line.item_price_uuid,
+    item_uuid: line.item_uuid,
+    line_type: itemLineTypeToJSON(Number(line.lineType)),
+    quantity: line.quantity,
+    rate: formatAmountToInt(line.rate),
+    uom: line.uom,
+  }
+  // if(to == ItemLineType.ITEM_LINE_RECEIPT){
+    // itemLineDto.lineItemReceipt = {
+      // acceptedQuantity:line.quantity,
+      // rejectedQuantity:0,
+    // }
+  // }
+  return itemLineDto
+}
+
+
+
+
+// item_price: itemPriceDtoSchema,
+// quantity:z.coerce.number().gt(0),
+// rate:z.coerce.number().gt(0),
+// lineType:z.number(),
+// itemLineReference:z.number().optional(),
+
+// lineItemReceipt:lineItemReceipt.optional(),
+// amount:z.number().optional(),
+
 export const editLineItemSchema = z.object({
-  itemLineID:z.number(),
+  itemLineID:z.number().optional(),
   quantity:z.coerce.number(),
   rate:z.coerce.number(),
+
+  lineType:z.number().optional(),
+  itemLineReference:z.number().optional(),
+  lineItemReceipt:lineItemReceipt.optional(),
+  amount:z.number().optional(),
 
   uom:z.string(),
 
   item_name:z.string(),
+  item_uuid:z.string(),
   item_code:z.string(),
 
   item_price_uuid:z.string(),
-  party_type:z.string(),
+  item_price_rate:z.number().optional(),
+
+  party_type:z.string().optional(),
 })
+.superRefine((data,ctx)=>{
+  data.rate = data.rate
+  data.amount = data.quantity * data.rate
+  switch(data.lineType){
+    case ItemLineType.ITEM_LINE_ORDER:{
+      if (data.quantity == undefined && data.quantity == "") {
+          ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              params:{
+                  i18n:{key:"custom.required"}
+              },
+              path:["quantity"]
+            });
+        }else {
+          data.amount = Number(data.quantity) * data.rate
+        }
+      break;
+    }
+    case ItemLineType.ITEM_LINE_RECEIPT:{
+      if(data.lineItemReceipt != undefined) {
+        data.quantity = data.lineItemReceipt.acceptedQuantity+data.lineItemReceipt.rejectedQuantity
+      }
+      break;
+    }
+  }
+}
+)

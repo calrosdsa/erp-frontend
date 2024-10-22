@@ -40,7 +40,7 @@ export const BuyingNav = ({ entities }: {
   if(entities?.includes(Entity.PURCHASE_RECEIPT_ENTITY_ID)){
     buyingChildrens.push({
       title: t("_receipt.f",{o:t("_purchase.base")}),
-      href:r.toReceipt(PartyType[PartyType.purchaseReceipt])
+      href:r.toReceipts(PartyType.purchaseReceipt)
     })
   }
 

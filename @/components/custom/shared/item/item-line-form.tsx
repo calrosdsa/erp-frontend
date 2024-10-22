@@ -11,56 +11,101 @@ import { useRevalidator } from "@remix-run/react";
 import { useEffect } from "react";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import FormAutocomplete from "../../select/FormAutocomplete";
-import { ItemLineType } from "~/gen/common";
+import { ItemLineType, PartyType } from "~/gen/common";
 import useActionRow from "~/util/hooks/useActionRow";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
-import { lineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
+import {
+  editLineItemSchema,
+  lineItemSchema,
+  mapToItemLineDto,
+} from "~/util/data/schemas/stock/item-line-schema";
 import { z } from "zod";
+import { useItemLine } from "./item-line";
 
 export default function ItemLineForm({
   form,
   configuteWarehouse = false,
   itemLineType,
+  partyType,
 }: {
   form: any;
   configuteWarehouse?: boolean;
-  itemLineType:ItemLineType
+  itemLineType: ItemLineType;
+  partyType: string;
 }) {
   const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
     isGroup: false,
   });
   const addLineOrder = useAddLineOrder();
-
-  const [rowMetaOptions] = useActionRow({})
+  const itemLine = useItemLine();
 
   const { t, i18n } = useTranslation("common");
   const revalidator = useRevalidator();
   const [metaOptions] = useTableRowActions({
     onAddRow: () => {
-      addLineOrder.openDialog({ currency: form.getValues().currency.code,itemLineType:itemLineType });
+      itemLine.onOpenDialog({
+        allowEdit: true,
+        partyType: partyType,
+        currency: form.getValues().currency.code,
+        itemLineType: itemLineType,
+        onEditItemForm: (e) => {
+          const orderLines = form.getValues().lines;
+          const n = [...orderLines, e];
+          // console.log("LINES",orderLines,addLineOrder.orderLine)
+          form.setValue("lines", n);
+          revalidator.revalidate();
+        },
+      });
+      // addLineOrder.openDialog({ currency: form.getValues().currency.code,itemLineType:itemLineType });
       console.log("ON ADD ROW");
     },
-    onDelete:(rowIndex)=>{
-      const orderLines:z.infer<typeof lineItemSchema>[] = form.getValues().lines;
-      const f = orderLines.filter((_,idx)=>idx != rowIndex)
+    onDelete: (rowIndex) => {
+      const orderLines: z.infer<typeof editLineItemSchema>[] =
+        form.getValues().lines;
+      const f = orderLines.filter((_, idx) => idx != rowIndex);
       form.setValue("lines", f);
       revalidator.revalidate();
     },
-    onEdit:(rowIndex)=>{
-      
-    }
+    onEdit: (rowIndex) => {
+      const orderLines: z.infer<typeof editLineItemSchema>[] =
+        form.getValues().lines;
+      const f = orderLines.find((_, idx) => idx == rowIndex);
+      if (f) {
+        const line = mapToItemLineDto(f);
+        itemLine.onOpenDialog({
+          allowEdit: true,
+          partyType: partyType,
+          currency: form.getValues().currency.code,
+          itemLineType: itemLineType,
+          lineReference:f.itemLineReference,
+          line: line,
+          onEditItemForm: (e) => {
+            const orderLines: z.infer<typeof editLineItemSchema>[] =
+              form.getValues().lines;
+            const n = orderLines.map((t, idx) => {
+              if (idx == rowIndex) {
+                t = e;
+              }
+              return t;
+            });
+            form.setValue("lines", n);
+          },
+        });
+      }
+    },
   });
-  useEffect(() => {
-    if (addLineOrder.orderLine) {
-      const orderLines = form.getValues().lines;
-      const n = [...orderLines, addLineOrder.orderLine];
-      // console.log("LINES",orderLines,addLineOrder.orderLine)
-      form.setValue("lines", n);
-      addLineOrder.clearOrderLine();
-      addLineOrder.onOpenChange(false);
-      revalidator.revalidate();
-    }
-  }, [addLineOrder.orderLine]);
+  // useEffect(() => {
+  //   if (itemLine.newItemLine) {
+  //     const orderLines = form.getValues().lines;
+  //     const n = [...orderLines, addLineOrder.orderLine];
+  //     // console.log("LINES",orderLines,addLineOrder.orderLine)
+  //     form.setValue("lines", n);
+  //     itemLine.setNewItemLine(undefined);
+  //     addLineOrder.onOpenChange(false);
+
+  //     revalidator.revalidate();
+  //   }
+  // }, [itemLine.newItemLine]);
   return (
     <div>
       {configuteWarehouse && (
@@ -92,8 +137,6 @@ export default function ItemLineForm({
               }}
               label={t("f.rejected", { o: t("_warehouse.base") })}
             />
-
-
           </div>
         </>
       )}
@@ -103,7 +146,7 @@ export default function ItemLineForm({
         data={form.getValues().lines || []}
         columns={orderLineColumns({
           currency: form.getValues().currency?.code || DEFAULT_CURRENCY,
-          itemLineType:itemLineType
+          itemLineType: itemLineType,
         })}
         metaOptions={{
           meta: {
@@ -120,11 +163,7 @@ export default function ItemLineForm({
               .getValues()
               .lines?.map((item: any) => (item.amount ? item.amount : 0))
           )}
-          orderTax={form.getValues().lines.reduce((prev: any, curr: any) => {
-            const taxPrice =
-              curr.item_price.rate * (Number(curr.item_price.tax_value) / 100);
-            return prev + taxPrice;
-          }, 0)}
+          orderTax={0}
           i18n={i18n}
           currency={addLineOrder.currency || DEFAULT_CURRENCY}
         />
