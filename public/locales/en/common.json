@@ -176,7 +176,7 @@
   },
   "f": {
     "parent":"Parent {{o}}",
-    "add-new": "Create new {{o}}",
+    "add-new": "Create {{o}}",
     "edit":"Edit {{o}}",
     "enable": "Check the box to enable this {{o}}",
     "accepted":"Accepted {{o}}",
@@ -338,6 +338,13 @@
   "LIABILITIES":"Liabilities",
   "EXPENSE":"Expense",
   "REVENUE":"Revenue",
+
+  "purchaseInvoice":"Purchase Invoice",
+  "purchaseOrder":"Purchase Order",
+  "purchaseReceipt":"Purchase Receipt",
+  "payment":"Payment",  
+
+
   "regate":{
     "schedule":"Schedule",
     "_court":{

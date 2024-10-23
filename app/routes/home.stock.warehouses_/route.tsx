@@ -4,7 +4,7 @@ import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
 import { addWareHouseSchema } from "~/util/data/schemas/stock/warehouse-schema";
-import { components } from "index";
+import { components } from "~/sdk";
 
 type ActionData = {
     action:string
@@ -16,7 +16,8 @@ export const action = async({request}:ActionFunctionArgs)=>{
     const data = await request.json() as ActionData
     let error:string | undefined= undefined
     let message:string | undefined = undefined
-    let warehouses:components["schemas"]["WareHouse"][] = []
+    let warehouses:components["schemas"]["WareHouseDto"][] = []
+    let actions:components["schemas"]["ActionDto"][] = []
     switch(data.action){
         case "add-warehouse":{
             const res = await client.POST("/stock/warehouse",{
@@ -35,13 +36,13 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     }
                 }
             })
-            console.log("WAREHOUSES",warehouses)
             warehouses = res.data?.pagination_result.results || []
+            actions = res.data?.actions || []
             break;
         }
     }
     return json({
-        error,message,warehouses
+        error,message,warehouses,actions
     })
 }
 

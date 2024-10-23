@@ -46,6 +46,7 @@ export default function GlobalDialogs({globalState}:{
         <ItemLine
         open={itemLine.open}
         onOpenChange={itemLine.onOpenChange}
+        globalState={globalState}
         />
         }
         {createCustomer.open &&

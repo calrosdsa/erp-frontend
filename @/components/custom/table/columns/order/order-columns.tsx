@@ -6,13 +6,13 @@ import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellProgress from "../../cells/table-cell-progressbar";
 import TableCellStatus from "../../cells/table-cell-status";
-import { PartyType } from "~/gen/common";
+import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 import TableCellIndex from "../../cells/table-cell-index";
 
 export const orderColumns = ({
   orderPartyType,
 }: {
-  orderPartyType: string;
+  orderPartyType: PartyType;
 }): ColumnDef<components["schemas"]["OrderDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["OrderDto"]>[] = [];
   const r = routes;
@@ -29,7 +29,7 @@ export const orderColumns = ({
       return (
         <TableCellNameNavigation
           {...props}
-          navigate={(name) => r.toOrderDetail(orderPartyType, name)}
+          navigate={(name) => r.toOrderDetail(partyTypeToJSON(orderPartyType), name)}
         />
       );
     },

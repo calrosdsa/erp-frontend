@@ -23,6 +23,7 @@ import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
 import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>()
@@ -45,6 +46,8 @@ export default function CreatePurchaseInvoiceClient() {
   const toolbar = useToolbar();
   const navigate = useNavigate();
   const r = routes;
+  const params = useParams()
+  const {partyInvoice} = params
   const form = useForm<z.infer<typeof createPurchaseInvoiceSchema>>({
     resolver: zodResolver(createPurchaseInvoiceSchema),
     defaultValues: {
@@ -61,7 +64,6 @@ export default function CreatePurchaseInvoiceClient() {
     },
   });
 
-  const params = useParams()
   
   const onSubmit = (values: z.infer<typeof createPurchaseInvoiceSchema>) => {
     console.log(values);
@@ -95,26 +97,21 @@ export default function CreatePurchaseInvoiceClient() {
     console.log("REVALIDATIONS...")
   },[createPurchaseInvoice])
 
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-      if (fetcher.data?.invoice) {
+  
+  useDisplayMessage({
+    error:fetcher.data?.error,
+    success:fetcher.data?.message,
+    onSuccessMessage:()=>{
+      if(fetcher.data?.invoice){
         navigate(
-          r.toPurchaseInvoiceDetail(
+          r.toInvoiceDetail(
+            partyInvoice || "",
             fetcher.data.invoice.code,
-            fetcher.data.invoice.uuid,
           )
         );
       }
     }
-  }, [fetcher.data]);
+  },[fetcher.data])
 
 
 

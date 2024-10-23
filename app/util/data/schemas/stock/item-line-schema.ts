@@ -39,8 +39,10 @@ export const itemLineDtoSchema = z.object({
 export const lineItemReceipt = z.object({
     acceptedQuantity:  z.coerce.number().gt(0),
     rejectedQuantity:  z.coerce.number(),
-    acceptedWarehouse:z.number().optional(),
-    rejectedWarehouse:z.number().optional()
+    acceptedWarehouse:z.number(),
+    acceptedWarehouseName:z.string(),
+    rejectedWarehouse:z.number().optional(),
+    rejectedWarehouseName:z.string().optional(),
 })
 // transform: (arg: string, ctx: z.RefinementCtx) => number | Promise<number>): z.ZodEffects<z.ZodString, number, string>
 
@@ -103,6 +105,8 @@ export const mapToLineItem = (line:components["schemas"]["ItemLineDto"],to:ItemL
     lineItem.lineItemReceipt = {
       acceptedQuantity:line.quantity,
       rejectedQuantity:0,
+      acceptedWarehouse:0,
+      acceptedWarehouseName:"",
     }
   }
   return lineItem
@@ -116,7 +120,7 @@ export const mapToItemLineDto = (line:z.infer<typeof editLineItemSchema>):compon
     item_price_uuid: line.item_price_uuid,
     item_uuid: line.item_uuid,
     line_type: itemLineTypeToJSON(Number(line.lineType)),
-    quantity: line.quantity,
+    quantity: Number(line.quantity),
     rate: formatAmountToInt(line.rate),
     uom: line.uom,
   }
@@ -132,18 +136,9 @@ export const mapToItemLineDto = (line:z.infer<typeof editLineItemSchema>):compon
 
 
 
-// item_price: itemPriceDtoSchema,
-// quantity:z.coerce.number().gt(0),
-// rate:z.coerce.number().gt(0),
-// lineType:z.number(),
-// itemLineReference:z.number().optional(),
-
-// lineItemReceipt:lineItemReceipt.optional(),
-// amount:z.number().optional(),
-
 export const editLineItemSchema = z.object({
   itemLineID:z.number().optional(),
-  quantity:z.coerce.number(),
+  quantity:z.coerce.number().optional(),
   rate:z.coerce.number(),
 
   lineType:z.number().optional(),
@@ -163,13 +158,13 @@ export const editLineItemSchema = z.object({
   party_type:z.string().optional(),
 })
 .superRefine((data,ctx)=>{
+
   data.rate = data.rate
-  data.amount = data.quantity * data.rate
   switch(data.lineType){
     case ItemLineType.ITEM_LINE_ORDER:{
       if (data.quantity == undefined && data.quantity == "") {
           ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+            code: z.ZodIssueCode.custom,
               params:{
                   i18n:{key:"custom.required"}
               },
@@ -187,5 +182,6 @@ export const editLineItemSchema = z.object({
       break;
     }
   }
+  data.amount = Number(data.quantity) * data.rate
 }
 )

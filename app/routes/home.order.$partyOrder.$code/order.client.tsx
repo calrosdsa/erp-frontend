@@ -18,6 +18,7 @@ import {
   ItemLineType,
   itemLineTypeFromJSON,
   PartyType,
+  partyTypeFromJSON,
   partyTypeToJSON,
   State,
   stateFromJSON,
@@ -43,11 +44,11 @@ import OrderInfoTab from "./components/tab/order-info";
 import OrderConnectionsTab from "./components/tab/order-connections";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { useStatus } from "~/util/hooks/data/useStatus";
 
 export default function PurchaseOrderClient() {
   const { order, actions, associatedActions,activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>()
-  const {toast} = useToast()
   const globalState = useOutletContext<GlobalState>();
   const [searchParams] = useSearchParams()
   const tab = searchParams.get("tab")
@@ -79,7 +80,9 @@ export default function PurchaseOrderClient() {
   const r = routes;
   const navigate = useNavigate();
   const params = useParams()
-  const location = useLocation();
+  const { enabledOrder,toBill } = useStatus({
+    status:stateFromJSON(order?.status)
+  })
 
   const navItems = [
     {
@@ -101,6 +104,7 @@ export default function PurchaseOrderClient() {
   }
   setUpToolbar(()=>{
     const actions: ActionToolbar[] = [];
+  
     if (paymentPermission?.create) {
       actions.push({
         label: t("_payment.base"),
@@ -110,7 +114,7 @@ export default function PurchaseOrderClient() {
         Icon: PlusIcon,
       });
     }
-    if (purchaseInvoicePermission?.create ) {
+    if (purchaseInvoicePermission?.create && enabledOrder) {
       actions.push({
         label: t("f.purchase", { o: t("_invoice.base") }),
         onClick: () => {
@@ -132,8 +136,7 @@ export default function PurchaseOrderClient() {
         Icon: PlusIcon,
       });
     }
-    if (receiptPermission?.create) {
-      if (order?.status != stateToJSON(State.TO_BILL)) {
+    if ((receiptPermission?.create && enabledOrder) && !toBill) {
         actions.push({
           label: t("f.purchase", { o: t("_receipt.base") }),
           onClick: () => {
@@ -154,7 +157,6 @@ export default function PurchaseOrderClient() {
           },
           Icon: PlusIcon,
         });
-      }
     }
 
     return {
@@ -180,7 +182,7 @@ export default function PurchaseOrderClient() {
         );
       },
     }
-  },[purchaseInvoicePermission,location.pathname])
+  },[purchaseInvoicePermission,receiptPermission])
 
 
   useEffect(() => {

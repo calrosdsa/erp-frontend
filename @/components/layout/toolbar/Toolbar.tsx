@@ -144,7 +144,7 @@ export default function ToolBar({ title }: { title: string }) {
                   toolbarState.addNew();
                 } 
               }}
-              className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
+              className=" flex space-x-1 h-8 rounded-lg px-3 w-24 justify-center"
               // disabled={toolbarState.loading}
               // variant={"outline"}
             >
@@ -152,7 +152,7 @@ export default function ToolBar({ title }: { title: string }) {
               {toolbarState.loading ? (
                 <Icons.spinner className="h-5 w-5 animate-spin" />
               ) : (
-                t("form.addNew")
+                t("form.addNew") 
               )}
             </Button>
           )}

@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { Connection, ConnectionModule } from "~/types/connections";
 import { components } from "~/sdk";
-import { PartyType, partyTypeFromJSON, partyTypeToJSON, RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
+import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 import { routes } from "~/util/route";
 import { loader } from "../../route";
 
@@ -25,7 +25,6 @@ export default function OrderConnectionsTab() {
                 });
                 return (
                   <div>
-                    {JSON.stringify(relateds)}
                     <Connections
                     connections={relateds}
                     />
@@ -50,8 +49,8 @@ const orderConnections = ({data,order}:{
   const r = routes
   const navigate = useNavigate()
   connections.push({
-    entity: partyTypeToJSON(PartyType.purchaseInvoice),
-    href: r.toInvoices(partyType,{
+    entity: t(partyTypeToJSON(PartyType.purchaseInvoice)),
+    href: r.toInvoices(PartyType.purchaseInvoice,{
         "orderCode":order?.code,
         "order":order?.id.toString(),
     }),
@@ -62,8 +61,8 @@ const orderConnections = ({data,order}:{
   })
 
   connections.push({
-    entity: partyTypeToJSON(PartyType.purchaseReceipt),
-    href: r.toInvoices(partyType,{
+    entity: t(partyTypeToJSON(PartyType.purchaseReceipt)),
+    href: r.toReceipts(PartyType.purchaseReceipt,{
         "orderCode":order?.code,
         "order":order?.id.toString(),
     }),
@@ -74,7 +73,7 @@ const orderConnections = ({data,order}:{
   })
 
   connections.push({
-    entity: partyTypeToJSON(PartyType.payment),
+    entity: t(partyTypeToJSON(PartyType.payment)),
     href: r.toInvoices(partyType,{
         "orderCode":order?.code,
         "order":order?.id.toString(),

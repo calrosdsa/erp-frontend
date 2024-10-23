@@ -7,25 +7,32 @@ import { GlobalState } from "~/types/app";
 import { routes } from "~/util/route";
 import ProgressBarWithTooltip from "@/components/custom-ui/progress-bar-with-tooltip";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { partyTypeFromJSON } from "~/gen/common";
 
 export default function OrdersClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const r = routes;
   const params = useParams()
+  const partyOrder = partyTypeFromJSON(params.partyOrder)
   const navigate = useNavigate();
   const [permission] = usePermission({
     actions: actions,
     roleActions: globalState.roleActions,
   });
 
-  
+
 
   setUpToolbar(()=>{
     return {
-      title:undefined
+      title:undefined,
+      ...(permission?.create && {
+        addNew: () => {
+          navigate(r.toCreateOrder(partyOrder));
+        },
+      }),
     }
-  },[])
+  },[permission])
 
   return (
     <div>
@@ -36,17 +43,8 @@ export default function OrdersClient() {
       <DataTable
         data={paginationResult?.results || []}
         columns={orderColumns({
-          orderPartyType:params.partyOrder || ""
+          orderPartyType:partyOrder
         })}
-        metaActions={{
-          meta: {
-            ...(permission?.create && {
-              addNew: () => {
-                navigate(r.toPurchaseOrderCreate());
-              },
-            }),
-          },
-        }}
       />
     </div>
   );

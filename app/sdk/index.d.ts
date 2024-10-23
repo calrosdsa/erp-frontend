@@ -4283,6 +4283,8 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             enabled: boolean;
+            /** Format: int64 */
+            id: number;
             name: string;
             uuid: string;
         };

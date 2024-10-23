@@ -267,7 +267,7 @@ class Routes {
     return url 
   }
   toCreateReceipt(partyType:PartyType): string {
-    return `${this.receipt}/${encodeURIComponent(partyTypeToJSON(partyType))}/create`;
+    return `${this.receipt}/${encodeURIComponent(partyTypeToJSON(partyType))}/new`;
   }
   toReceipts(partyType:PartyType,q?:{
     [x:string]:string | undefined;
@@ -287,10 +287,6 @@ class Routes {
     }
     return url
   }
-
-
- 
- 
 
   //Manage
   toUserProfileDetail(name: string, id: string): string {

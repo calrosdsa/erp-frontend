@@ -73,6 +73,7 @@ export const loader =  async({request,params}:LoaderFunctionArgs)=>{
         itemLines:res.data?.result.entity.item_lines,
         actions:res.data?.actions,
         connections:resConnections,
+        associatedActions:res.data?.associated_actions,
         activities:res.data?.result.activities
     })
 }

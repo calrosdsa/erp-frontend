@@ -16,18 +16,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { useEffect, useRef } from "react";
-import { ItemLineType, PartyType } from "~/gen/common";
+import { ItemLineType, PartyType, partyTypeFromJSON } from "~/gen/common";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { useCreateSupplier } from "../home.buying.suppliers_/components/create-supplier";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
-import Typography, { subtitle } from "@/components/typography/Typography";
+import Typography, { subtitle, title } from "@/components/typography/Typography";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { useCreateReceipt } from "./use-create-receipt";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function NewReceiptClient() {
   const fetcher = useFetcher<typeof action>();
@@ -63,7 +65,6 @@ export default function NewReceiptClient() {
     },
   });
   const revalidator = useRevalidator();
-  const toolbar = useToolbar();
   const params = useParams();
   const { partyReceipt } = params;
   const onSubmit = (values: z.infer<typeof createReceiptSchema>) => {
@@ -75,40 +76,30 @@ export default function NewReceiptClient() {
       {
         method: "POST",
         encType: "application/json",
-        action: r.toCreateReceipt(partyReceipt),
+        action: r.toCreateReceipt(partyTypeFromJSON(partyReceipt)),
       }
     );
   };
 
-  const setUpToolbar = () => {
-    toolbar.setToolbar({
+  
+  setUpToolbar(()=>{
+    return{
       title: t("f.add-new", { o: t("_receipt.base").toLocaleLowerCase() }),
       onSave: () => {
         inputRef.current?.click();
       },
-    });
-  };
-
-  useEffect(() => {
-    setUpToolbar();
-  }, []);
-
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
     }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-      if(fetcher.data.receipt){
+  },[])
+
+  useDisplayMessage({
+    error:fetcher.data?.error,
+    success:fetcher.data?.message,
+    onSuccessMessage:()=>{
+      if(fetcher.data?.receipt){
         navigate(r.toReceiptDetail(params.partyReceipt || "n/a",fetcher.data.receipt.code))
       }
     }
-    
-  }, [fetcher.data]);
+  },[fetcher.data])
   return (
     <div>
       <FormLayout>
@@ -162,6 +153,7 @@ export default function NewReceiptClient() {
                   form={form}
                   configuteWarehouse={true}
                   itemLineType={ItemLineType.ITEM_LINE_RECEIPT}
+                  partyType={partyReceipt || ""}
                 />
               </div>
             </div>

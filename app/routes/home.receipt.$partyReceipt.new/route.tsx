@@ -34,12 +34,10 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
                     },
                     items:{
                         lines: lines,
-                        accepted_warehouse: d.acceptedWarehouse,
-                        rejected_warehouse: d.rejectedWarehouse,
                     }
                 }
             })
-            console.log(res.error)
+            console.log(res.error,res.data)
             message = res.data?.message
             error=res.error?.detail
             receipt = res.data?.result

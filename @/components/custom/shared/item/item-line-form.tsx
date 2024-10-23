@@ -7,7 +7,7 @@ import OrderSumary from "../../display/order-sumary";
 import { useTranslation } from "react-i18next";
 import { DataTable } from "../../table/CustomTable";
 import { DEFAULT_CURRENCY } from "~/constant";
-import { useRevalidator } from "@remix-run/react";
+import { useOutletContext, useRevalidator } from "@remix-run/react";
 import { useEffect } from "react";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import FormAutocomplete from "../../select/FormAutocomplete";
@@ -16,11 +16,13 @@ import useActionRow from "~/util/hooks/useActionRow";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
 import {
   editLineItemSchema,
-  lineItemSchema,
   mapToItemLineDto,
 } from "~/util/data/schemas/stock/item-line-schema";
 import { z } from "zod";
 import { useItemLine } from "./item-line";
+import { GlobalState } from "~/types/app";
+import { usePermission } from "~/util/hooks/useActions";
+import { useCreateWareHouse } from "~/routes/home.stock.warehouses_/components/add-warehouse";
 
 export default function ItemLineForm({
   form,
@@ -33,9 +35,16 @@ export default function ItemLineForm({
   itemLineType: ItemLineType;
   partyType: string;
 }) {
+  const globalState = useOutletContext<GlobalState>()
   const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
     isGroup: false,
   });
+  const [permissionWarehouse] =  usePermission({
+    actions:warehouseFetcher.data?.actions,
+    roleActions:globalState.roleActions,
+  })
+  const createWareHouse = useCreateWareHouse()
+
   const addLineOrder = useAddLineOrder();
   const itemLine = useItemLine();
 
@@ -48,6 +57,16 @@ export default function ItemLineForm({
         partyType: partyType,
         currency: form.getValues().currency.code,
         itemLineType: itemLineType,
+        ...(itemLineType == ItemLineType.ITEM_LINE_RECEIPT && {
+          lineItemReceipt:{
+            acceptedWarehouse:form.getValues().acceptedWarehouse,
+            acceptedWarehouseName:form.getValues().acceptedWarehouseName,
+            rejectedWarehouse:form.getValues().rejectedWarehouse,
+            rejectedWarehouseName:form.getValues().rejectedWarehouseName,
+            acceptedQuantity:0,
+            rejectedQuantity:0,
+          },
+        }),
         onEditItemForm: (e) => {
           const orderLines = form.getValues().lines;
           const n = [...orderLines, e];
@@ -94,18 +113,7 @@ export default function ItemLineForm({
       }
     },
   });
-  // useEffect(() => {
-  //   if (itemLine.newItemLine) {
-  //     const orderLines = form.getValues().lines;
-  //     const n = [...orderLines, addLineOrder.orderLine];
-  //     // console.log("LINES",orderLines,addLineOrder.orderLine)
-  //     form.setValue("lines", n);
-  //     itemLine.setNewItemLine(undefined);
-  //     addLineOrder.onOpenChange(false);
-
-  //     revalidator.revalidate();
-  //   }
-  // }, [itemLine.newItemLine]);
+  
   return (
     <div>
       {configuteWarehouse && (
@@ -121,9 +129,14 @@ export default function ItemLineForm({
               nameK={"name"}
               onValueChange={onWarehouseChange}
               onSelect={(v) => {
-                form.setValue("acceptedWarehouse", v.uuid);
+                form.setValue("acceptedWarehouse", v.id);
               }}
               label={t("f.accepted", { o: t("_warehouse.base") })}
+              {...(permissionWarehouse?.create && {
+                addNew:()=>{
+                  createWareHouse.openDialog({})
+                }
+              })}
             />
 
             <FormAutocomplete
@@ -133,9 +146,14 @@ export default function ItemLineForm({
               nameK={"name"}
               onValueChange={onWarehouseChange}
               onSelect={(v) => {
-                form.setValue("rejectedWarehouse", v.uuid);
+                form.setValue("rejectedWarehouse", v.id);
               }}
               label={t("f.rejected", { o: t("_warehouse.base") })}
+              {...(permissionWarehouse?.create && {
+                addNew:()=>{
+                  createWareHouse.openDialog({})
+                }
+              })}
             />
           </div>
         </>

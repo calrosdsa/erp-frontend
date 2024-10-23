@@ -5,6 +5,8 @@ import { usePermission } from "~/util/hooks/useActions"
 import { DataTable } from "@/components/custom/table/CustomTable"
 import { invoiceColumns } from "@/components/custom/table/columns/invoice/invoice-columns"
 import { routes } from "~/util/route"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
+import { useTranslation } from "react-i18next"
 
 
 export default function InvoicesClient(){
@@ -16,7 +18,18 @@ export default function InvoicesClient(){
         roleActions:globalState.roleActions
     })
     const navigate = useNavigate()
+    const {t} = useTranslation("common")
     const r = routes
+    setUpToolbar(()=>{
+        return {
+            title:t(params.partyInvoice || ""),
+            ...(permission?.create && {
+                addNew:()=>{
+                    navigate(r.toPurchaseInvoiceCreate())
+                }
+            })
+        }
+    },[permission])
     return (
         <div>
             <DataTable
@@ -24,14 +37,8 @@ export default function InvoicesClient(){
             columns={invoiceColumns({
                 partyType:params.partyInvoice || ""
             })}
-            metaActions={{
-                meta:{
-                    ...(permission?.create && {
-                        addNew:()=>{
-                            navigate(r.toPurchaseInvoiceCreate())
-                        }
-                    })
-                }
+            paginationOptions={{
+                rowCount:paginationResult?.total,   
             }}
             />
         </div>
