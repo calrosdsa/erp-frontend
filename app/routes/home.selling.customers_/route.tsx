@@ -6,6 +6,7 @@ import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
 import { createCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
 import { components } from "~/sdk";
+import { mapToContactData } from "~/util/data/schemas/contact/contact-schema";
 
 type ActionData = {
   action: string;
@@ -44,9 +45,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const d = data.createCustomer;
       const res = await client.POST("/customer", {
         body: {
-          name: d.name,
-          customer_type: d.customerType,
-          group_uuid: d.groupUuid,
+          customer:{
+            name: d.name,
+            customer_type: d.customerType,
+            group_uuid: d.groupUuid,
+          },
+          contact:mapToContactData(d.contactData)
         },
       });
       message = res.data?.message;

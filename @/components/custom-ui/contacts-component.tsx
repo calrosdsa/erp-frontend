@@ -24,7 +24,7 @@ export default function ContactList({ contacts = [], onAddContact }: ContactList
 
   if (contacts == null || contacts.length === 0) {
     return (
-      <Card className="w-full flex justify-center items-center  ">
+      <Card className="w-full flex justify-center items-center">
         <CardContent className="text-center py-6">
           <h2 className="mb-4">{t("_contact.empty")}</h2>
           <Button onClick={onAddContact} className="group">

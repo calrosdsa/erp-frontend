@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
+import { createContactSchema } from "../contact/contact-schema";
 
 
 export const createCustomerSchema = z.object({
@@ -8,4 +9,9 @@ export const createCustomerSchema = z.object({
     groupUuid:z.string(),
     groupName:z.string(),
 
+    contactData:createContactSchema.optional(),
+}).superRefine((data,ctx)=>{
+    if(data.contactData && (data.contactData.email || data.contactData.phoneNumber)){
+        data.contactData.givenName = data.name
+    }
 })

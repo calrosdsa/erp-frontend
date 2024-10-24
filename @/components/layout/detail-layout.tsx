@@ -6,7 +6,7 @@
   import { components } from "~/sdk";
   import ActivityFeed from "../custom-ui/activity-feed";
 
-  export default function DetailLayout({
+  export default function  DetailLayout({
     children,
     navItems,
     activities,

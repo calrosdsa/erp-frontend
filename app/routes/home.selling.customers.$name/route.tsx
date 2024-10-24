@@ -17,7 +17,10 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
     console.log(res.error,res.data)
     return json({
         customer:res.data?.result.entity,
-        actions:res.data?.actions
+        actions:res.data?.actions,
+        addresses:res.data?.result.addresses || [],
+        contacts:res.data?.result.contacts || [],
+        activities:res.data?.result.activities || [],
     })
 }
 

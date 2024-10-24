@@ -25,7 +25,7 @@ export function DataTableToolbar<TData>({
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
-        {tableMeta.addNew != undefined &&
+        {tableMeta?.addNew != undefined &&
         <Button className="mr-auto space-x-2  h-8 flex" variant={"outline"}
         onClick={()=>{
           tableMeta.addNew()  

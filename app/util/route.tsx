@@ -109,9 +109,12 @@ class Routes {
   }
 
   //Selling
-  toCustomerDetail(name?: string, id?: string): string {
-    if (!name) return "N/A";
-    return `${this.customers}/${encodeURIComponent(name)}?id=${id}`;
+  toCustomerDetail(name: string, id: string,tab?:string): string {
+    let url = this.customers + `/${encodeURIComponent(name)}`
+    if(tab){
+      url += `?tab=${tab}`
+    }else { url += `?tab=info`}
+    return url + `&id=${id}`
   }
   priceListDetail(name?: string, id?: string): string {
     if (!name) return "N/A";

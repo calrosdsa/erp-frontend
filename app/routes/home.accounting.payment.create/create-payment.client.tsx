@@ -22,6 +22,8 @@ import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccoun
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { routes } from "~/util/route";
 import { action } from "./route";
+import { useCreatePayment } from "./use-create-payment";
+import { formatAmounFromInt } from "~/util/format/formatCurrency";
 
 export default function PaymentCreateClient() {
   const fetcherPaymentPartiesType = useFetcher<typeof action>();
@@ -29,9 +31,16 @@ export default function PaymentCreateClient() {
   const { t } = useTranslation("common");
   const { toast } = useToast();
   const [paymentTypes, setPaymentTypes] = useState<SelectItem[]>([]);
+  const createPayment = useCreatePayment()
   const form = useForm<z.infer<typeof createPaymentSchema>>({
     resolver: zodResolver(createPaymentSchema),
-    defaultValues: {},
+    defaultValues: {
+      amount:formatAmounFromInt(createPayment.payload?.amount),
+      partyName:createPayment.payload?.partyName,
+      partyUuid:createPayment.payload?.partyUuid,
+      partyType:createPayment.payload?.partyType,
+      partyReference:createPayment.payload?.partyReference,
+    },
   });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const toolbar = useToolbar();
@@ -122,6 +131,7 @@ export default function PaymentCreateClient() {
   }, [fetcher.data]);
   return (
     <FormLayout>
+      {JSON.stringify(form.getValues())}
       <Form {...form}>
         <fetcher.Form
           method="post"

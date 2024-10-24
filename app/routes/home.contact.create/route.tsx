@@ -23,7 +23,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const res = await client.POST("/party/contact", {
         body: {
           contact: {
-            given_name: d.givenName,
+            given_name: d.givenName || "",
             family_name: d.familyName,
             email: d.email,
             phone_number: d.phoneNumber,
@@ -32,6 +32,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           party_reference: d.partyReferenceId,
         },
       });
+      console.log(res.data,res.error)
       if (res.data) {
         const contact = res.data.result;
         return redirect(

@@ -13,18 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CountrySelectItem } from "~/types/app";
-
-interface Props<T extends object, K extends keyof T> {
+interface Props<T extends object, K extends keyof T,V extends keyof T> {
   data: T[];
   keyName?: K;
-  keyValue?: K;
+  keyValue?: V;
   name: string;
   label?: string;
   form: any;
   onValueChange?: (e: T) => void;
 }
-export default function SelectForm<T extends object, K extends keyof T>({
+export default function SelectForm<T extends object, K extends keyof T,V extends keyof T>({
   label,
   form,
   keyName,
@@ -32,7 +30,7 @@ export default function SelectForm<T extends object, K extends keyof T>({
   data,
   name,
   onValueChange,
-}: Props<T, K>) {
+}: Props<T, K,V>) {
   return (
     <FormField
       control={form.control}

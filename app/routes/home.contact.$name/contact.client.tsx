@@ -41,7 +41,7 @@ export default function ContactClient(){
               />
             
               <Typography fontSize={subtitle} className=" col-span-full">
-                {t("_address.references")}
+                {t("_contact.list")}
               </Typography>
 
             <div className=" mx-2 col-span-full">

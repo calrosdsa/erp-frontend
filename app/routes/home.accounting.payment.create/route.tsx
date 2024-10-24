@@ -38,6 +38,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
                         party_type:d.partyType,
                         party_bank_account:d.partyBankAccount,
                         company_bank_account:d.companyBankAccount,
+                        party_reference:d.partyReference
                     },
                     payment_accounts:{
                         paid_from:d.accountPaidFrom,

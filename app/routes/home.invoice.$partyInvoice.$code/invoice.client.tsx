@@ -24,23 +24,27 @@ import { ActionToolbar } from "~/types/actions";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { PlusIcon } from "lucide-react";
+import { useCreatePayment } from "../home.accounting.payment.create/use-create-payment";
+import { sumTotal } from "~/util/format/formatCurrency";
 
 export default function InvoiceDetailClient() {
-  const { actions, invoice, activities,associatedActions } = useLoaderData<typeof loader>();
+  const { actions, invoice, activities, associatedActions, itemLines } =
+    useLoaderData<typeof loader>();
   const toolbarState = useToolbar();
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
   const [searchParams] = useSearchParams();
-  const globalState = useOutletContext<GlobalState>()
+  const globalState = useOutletContext<GlobalState>();
   const tab = searchParams.get("tab");
   const r = routes;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [paymentPermission] = usePermission({
     actions:
       associatedActions && associatedActions[PartyType[PartyType.payment]],
     roleActions: globalState.roleActions,
   });
+  const createPayment = useCreatePayment();
 
   const navItems = [
     {
@@ -58,20 +62,27 @@ export default function InvoiceDetailClient() {
   ];
 
   setUpToolbar(() => {
-    let actions:ActionToolbar[] = []
+    let actions: ActionToolbar[] = [];
     if (paymentPermission?.create) {
-        actions.push({
-          label: t("_payment.base"),
-          onClick: () => {
-            navigate(r.toPaymentCreate());
-          },
-          Icon: PlusIcon,
-        });
-      }
+      actions.push({
+        label: t("_payment.base"),
+        onClick: () => {
+          createPayment.setData({
+            amount: sumTotal((itemLines || []).map((t) => t.rate * t.quantity)),
+            partyUuid:invoice?.party_uuid,
+            partyType:invoice?.party_type,
+            partyName:invoice?.party_name,
+            partyReference:invoice?.id,
+          });
+          navigate(r.toPaymentCreate());
+        },
+        Icon: PlusIcon,
+      });
+    }
     return {
       title: `${t("_invoice.base")}(${invoice?.code})`,
       status: stateFromJSON(invoice?.status),
-      actions:actions,
+      actions: actions,
       onChangeState: (e) => {
         const body: z.infer<typeof updateStateWithEventSchema> = {
           current_state: invoice?.status || "",

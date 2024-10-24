@@ -13,9 +13,13 @@ import {
 } from "@/components/ui/popover";
 import { TimePicker } from "./time-picker";
  
-export function DateTimePicker() {
-  const [date, setDate] = React.useState<Date>();
- 
+export function DateTimePicker({initialDate,onChange,isDatetime=false,placeholder}:{
+  initialDate?:Date
+  onChange?:(e:Date)=>void
+  isDatetime?:boolean
+  placeholder?:string
+}) {
+  const [date, setDate] = React.useState<Date | undefined>(initialDate);
   /**
    * carry over the current time when a user clicks a new day
    * instead of resetting to 00:00
@@ -30,6 +34,9 @@ export function DateTimePicker() {
     const diffInDays = diff / (1000 * 60 * 60 * 24);
     const newDateFull = add(date, { days: Math.ceil(diffInDays) });
     setDate(newDateFull);
+    if(onChange){
+      onChange(newDateFull);
+    }
   };
  
   return (
@@ -38,12 +45,17 @@ export function DateTimePicker() {
         <Button
           variant={"outline"}
           className={cn(
-            "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            " justify-start text-left font-normal",
+            !date && "text-muted-foreground",
+            isDatetime ? "w-[270px]" :"w-[200px]"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP HH:mm:ss") : <span>Pick a date</span>}
+          
+          {date ? isDatetime ? format(date, "PPP HH:mm:ss"):format(date, "PPP")
+          :
+          <span>{placeholder || ""}</span>
+          }
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
@@ -53,9 +65,11 @@ export function DateTimePicker() {
           onSelect={(d) => handleSelect(d)}
           initialFocus
         />
+        {isDatetime &&
         <div className="p-3 border-t border-border">
           <TimePicker setDate={setDate} date={date} />
         </div>
+        }
       </PopoverContent>
     </Popover>
   );

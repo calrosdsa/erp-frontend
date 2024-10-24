@@ -593,6 +593,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/ledger/general": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get General Ledger */
+        get: operations["get-general-ledger"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order": {
         parameters: {
             query?: never;
@@ -1965,7 +1982,7 @@ export interface components {
         };
         ContactData: {
             /** Format: email */
-            email: string;
+            email?: string | null;
             family_name?: string | null;
             gender?: string | null;
             given_name: string;
@@ -1974,7 +1991,7 @@ export interface components {
         ContactDto: {
             /** Format: date-time */
             created_at: string;
-            email: string;
+            email: string | null;
             family_name: string | null;
             gender: string | null;
             given_name: string;
@@ -2067,12 +2084,16 @@ export interface components {
             enabled: boolean;
             name: string;
         };
-        CreateCustomerRequestBody: {
+        CreateCustomerBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            contact?: components["schemas"]["ContactData"];
+            customer: components["schemas"]["CreateCustomerData"];
+        };
+        CreateCustomerData: {
             customer_type: string;
             group_uuid: string;
             name: string;
@@ -2127,9 +2148,7 @@ export interface components {
             values: components["schemas"]["ItemAttributeValueDto"][];
         };
         CreateItemLines: {
-            accepted_warehouse?: string;
             lines: components["schemas"]["LineItemDto"][];
-            rejected_warehouse?: string | null;
         };
         CreateItemPriceRequestBody: {
             /**
@@ -2235,6 +2254,8 @@ export interface components {
         CreatePaymentParty: {
             company_bank_account?: string | null;
             party_bank_account?: string | null;
+            /** Format: int64 */
+            party_reference?: number;
             party_type: string;
             party_uuid: string;
         };
@@ -2489,6 +2510,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ItemDto"];
+        };
+        EntityResponseListGeneralLedgerEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["GeneralLedgerEntryDto"][];
         };
         EntityResponseListUserRelationDtoBody: {
             /**
@@ -2901,6 +2935,26 @@ export interface components {
             status: string;
             uuid: string;
         };
+        GeneralLedgerEntryDto: {
+            account: string;
+            against_account: string;
+            against_voucher: string;
+            against_voucher_type: string;
+            /** Format: int64 */
+            balance: number;
+            /** Format: int64 */
+            credit: number;
+            currency: string;
+            /** Format: int64 */
+            debit: number;
+            party_name: string;
+            party_type: string;
+            /** Format: date-time */
+            posting_date: string;
+            voucher_no: string;
+            voucher_subtype: string;
+            voucher_type: string;
+        };
         GreetingOutputBody: {
             /**
              * Format: uri
@@ -3121,6 +3175,8 @@ export interface components {
             created_at: string;
             description: string;
             enabled: boolean;
+            /** Format: int64 */
+            id: number;
             is_group: boolean;
             ledger_no: string | null;
             name: string;
@@ -3134,6 +3190,8 @@ export interface components {
             created_at: string;
             description: string;
             enabled: boolean;
+            /** Format: int64 */
+            id: number;
             is_group: boolean;
             ledger_no: string | null;
             name: string;
@@ -5344,7 +5402,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateCustomerRequestBody"];
+                "application/json": components["schemas"]["CreateCustomerBody"];
             };
         };
         responses: {
@@ -5964,6 +6022,53 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityLedgerDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-general-ledger": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                account?: string;
+                voucher_no?: string;
+                agains_voucher_no?: string;
+                party_type?: string;
+                party?: number;
+                currency?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListGeneralLedgerEntryDtoBody"];
                 };
             };
             /** @description Error */

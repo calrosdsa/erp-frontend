@@ -28,7 +28,7 @@ export const contactColumns = (): ColumnDef<components["schemas"]["ContactDto"]>
         return(
           <TableCellNameNavigation
           {...props}
-          navigate={(name)=>r.toAddressDetail(name,rowData.uuid)}
+          navigate={(name)=>r.toContactDetail(name,rowData.uuid)}
           />
         )
       }

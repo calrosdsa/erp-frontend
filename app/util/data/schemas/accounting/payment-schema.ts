@@ -3,13 +3,15 @@ import { z } from "zod";
 
 export const createPaymentSchema = z.object({
     postingDate:z.date(),
-    amount:z.preprocess((a)=>parseFloat(z.string().parse(a)),z.number()),
+    amount:z.coerce.number(),   
     paymentType:z.string(),
     
     partyType:z.string(),
     partyUuid:z.string(),
+    partyName:z.string(),
     partyBankAccount:z.string().optional(),
     companyBankAccount:z.string().optional(),
+    partyReference:z.number().optional(),
 
     //UUID
     accountPaidFrom:z.string(),

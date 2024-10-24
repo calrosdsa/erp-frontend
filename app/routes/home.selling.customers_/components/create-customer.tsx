@@ -16,6 +16,12 @@ import { usePermission } from "~/util/hooks/useActions"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import { useCreateGroup } from "~/routes/home.groups.$party_/components/create-group"
 import { PartyType, partyTypeToJSON } from "~/gen/common"
+import Typography from "@/components/typography/Typography"
+import AccordationLayout from "@/components/layout/accordation-layout"
+import CustomFormField from "@/components/custom/form/CustomFormField"
+import { Input } from "@/components/ui/input"
+import SelectForm from "@/components/custom/select/SelectForm"
+import { getGenders } from "~/util/data/gender"
 
 
 export const CreateCustomer = ({open,onOpenChange,globalState}:{
@@ -65,6 +71,7 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
         <DrawerLayout
         open={open}
         onOpenChange={onOpenChange}
+        className=""
         title={t("_customer.create")}
         >
             <CustomForm
@@ -84,12 +91,14 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
                 {
                     name:"name",
                     type:"string",
+                    required:true,
                     typeForm:"input",
                     label:t("form.name"),
                 },
                 {
                     name:"customerType",
                     type:"string",
+                    required:true,
                     typeForm:"select",
                     data:customerTypeFetcher.data?.customerTypes || [],
                     keyName:"name",
@@ -118,6 +127,30 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
                         form.setValue("groupUuid",e.uuid)
                     }}
                     />
+
+            <AccordationLayout
+              title={t("contact")}
+              className="grid gap-3"
+            >
+                <CustomFormField
+                label={t("form.phoneNumber")}
+                name="contactData.phoneNumber"
+                form={form}
+                children={(field)=>{
+                    return <Input {...field} type="tel"/>
+                }}
+                />
+                <CustomFormField
+                label={t("form.email")}
+                name="contactData.email"
+                form={form}
+                children={(field)=>{
+                    return <Input {...field} type="email"/>
+                }}
+                />
+
+              
+            </AccordationLayout>
                     </>
                 )
             }}

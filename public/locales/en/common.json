@@ -158,7 +158,9 @@
     "paidAmount":"Paid Amount ({{o}})",
     "daysWeek":"Days Weeks",
     "comment":"Comment",
-    "addNew":"Add New"
+    "addNew":"Add New",
+    "fromDate":"From Date",
+    "toDate":"To Date"
   },
   "accounts":"Accounts",
   "_selling": {

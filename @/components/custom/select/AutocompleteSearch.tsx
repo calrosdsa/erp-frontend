@@ -30,11 +30,11 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_PAGE } from "~/constant";
 
-interface Props<T extends object, K extends keyof T> {
+interface Props<T extends object, K extends keyof T, V extends keyof T> {
   placelholder?: string;
   data: T[];
   nameK: K;
-  valueK: K;
+  valueK: V;
   label?: string;
   onValueChange: (e: string) => void;
   onSelect?: (v: T) => void;
@@ -48,7 +48,8 @@ interface Props<T extends object, K extends keyof T> {
 
 export default function AutocompleteSearch<
   T extends object,
-  K extends keyof T
+  K extends keyof T,
+  V extends keyof T,
 >({
   data,
   nameK,
@@ -61,7 +62,7 @@ export default function AutocompleteSearch<
   className,
   addNew,
   placelholder,
-}: Props<T, K>) {
+}: Props<T, K,V>) {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = useState<string | undefined>(
