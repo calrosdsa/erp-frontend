@@ -34,7 +34,7 @@ export default function NewBookingClient() {
        /> */}
        {(fetcher.data?.bookingData && fetcher.data.bookingData.length > 0)?
        <CreateBookings
-       bookings={fetcher.data.bookingData}
+       data={fetcher.data.bookingData}
        />
        :
        <ValidateBooking/>

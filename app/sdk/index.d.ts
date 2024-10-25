@@ -1756,6 +1756,7 @@ export interface components {
         };
         ActivityDto: {
             action: string;
+            arg1: string | null;
             comment: string;
             /** Format: date-time */
             created_at: string;
@@ -1828,20 +1829,33 @@ export interface components {
             street_line_2: string;
             title: string;
         };
+        AvailableCourtDto: {
+            /** Format: date-time */
+            created_at: string;
+            enabled: boolean;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            /** Format: int64 */
+            total_price: number;
+            uuid: string;
+        };
         BookingData: {
-            available_courts?: components["schemas"]["CourtDto"][];
+            available_courts?: components["schemas"]["AvailableCourtDto"][];
             /** Format: int64 */
             court_id: number;
             court_name: string;
             /** Format: int32 */
             day_week: number;
+            /** Format: double */
+            discount?: number;
             /** Format: date-time */
             end_date: string;
-            is_valid: boolean;
+            is_reserved: boolean;
             /** Format: date-time */
             start_date: string;
             times: string[];
-            /** Format: int32 */
+            /** Format: double */
             total_price?: number;
         };
         BookingDto: {
@@ -1852,6 +1866,8 @@ export interface components {
             court_uuid: string;
             /** Format: date-time */
             created_at: string;
+            /** Format: int32 */
+            discount: number;
             /** Format: date-time */
             end_date: string;
             evento_name: string;
@@ -2048,7 +2064,7 @@ export interface components {
              */
             readonly $schema?: string;
             /** Format: double */
-            advance_payment: number;
+            advance_payment?: number;
             bookings: components["schemas"]["BookingData"][];
             /** Format: int64 */
             customer_id: number;
@@ -2175,8 +2191,12 @@ export interface components {
              */
             readonly $schema?: string;
             group: components["schemas"]["GroupDto"];
+            /** Format: int64 */
+            group_id: number;
             name: string;
             uom: components["schemas"]["UOMDto"];
+            /** Format: int64 */
+            uom_id: number;
         };
         CreateItemVariantRequestBody: {
             /**
@@ -2989,6 +3009,8 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             enabled: boolean;
+            /** Format: int64 */
+            id: number;
             is_group: boolean;
             name: string;
             /** Format: int64 */
@@ -3070,16 +3092,21 @@ export interface components {
             code: string;
             /** Format: date-time */
             created_at: string;
-            group: components["schemas"]["GroupDto"];
+            group_name: string;
+            group_uuid: string;
             item_type: string;
             name: string;
             uom: components["schemas"]["UOMDto"];
+            uom_code: string;
+            uom_name: string;
             uuid: string;
         };
         ItemDto: {
             code: string;
             /** Format: date-time */
             created_at: string;
+            /** Format: int64 */
+            id: number;
             item_type: string;
             name: string;
             uuid: string;
@@ -4177,6 +4204,8 @@ export interface components {
         };
         UOMDto: {
             code: string;
+            /** Format: int64 */
+            id: number;
             name: string;
         };
         UOMsResponseBody: {

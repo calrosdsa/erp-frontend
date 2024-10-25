@@ -21,7 +21,7 @@ import { UpdateCourtRate, useUpdateCourtRate } from "./use-update-court-rate";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function CourtDetailClient() {
-  const { court } = useLoaderData<typeof loader>();
+  const { court,activities } = useLoaderData<typeof loader>();
   const params = useParams();
   const { t } = useTranslation("common");
   const r = routes;
@@ -59,7 +59,9 @@ export default function CourtDetailClient() {
   }, []);
 
   return (
-    <DetailLayout navItems={navTabs}>
+    <DetailLayout navItems={navTabs}
+    activities={activities}
+    partyID={court?.id}>
       {updateCourtRate.open && <UpdateCourtRate />}
 
       {tab == "info" && <CourtInfoTab />}

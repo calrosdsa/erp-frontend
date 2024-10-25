@@ -20,6 +20,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       },
     },
   });
+  handleError(res.error);
   if (res.data) {
     switch (tab) {
       case "connections": {
@@ -38,7 +39,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       }
     }
   }
-  handleError(res.error);
   return defer({
     event: res.data?.result.entity,
     actions: res.data?.actions,

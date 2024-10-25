@@ -56,8 +56,8 @@ export default function BookingsClient() {
           valueK={"id"}
           onValueChange={onCustomerNameChange}
           placelholder="Cliente"
-          queryName="customerName"
-          queryValue="customer"
+          queryName="partyName"
+          queryValue="party"
         />
 
         <AutocompleteSearch

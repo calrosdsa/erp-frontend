@@ -149,8 +149,12 @@ class Routes {
   toItem(id: string): string {
     return `${this.items}/${encodeURIComponent(id)}`;
   }
-  toItemDetail(name: string, id: string): string {
-    return `${this.items}/${encodeURIComponent(name)}?id=${id}`;
+  toItemDetail(name:string,id:string,tab?:string):string{
+    let url = this.items + `/${encodeURIComponent(name)}?id=${id}`
+    if(tab){
+      url += `&tab=${tab}`
+    }else { url += `&tab=info`}
+    return url 
   }
   toItemDetailPrices(name: string, id: string): string {
     return `${this.items}/${encodeURIComponent(name)}/item-prices?id=${id}`;

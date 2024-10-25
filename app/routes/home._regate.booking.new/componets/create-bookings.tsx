@@ -16,7 +16,7 @@ import BookingDisplay from "./bookings-display";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import AmountInput from "@/components/custom/input/AmountInput";
 import { DEFAULT_CURRENCY } from "~/constant";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 import Typography, { subtitle } from "@/components/typography/Typography";
@@ -31,30 +31,32 @@ import { ArrowLeft } from "lucide-react";
 import { useCreateCustomer } from "~/routes/home.selling.customers_/components/create-customer";
 
 export default function CreateBookings({
-  bookings,
+  data,
 }: {
-  bookings: components["schemas"]["BookingData"][];
+  data: components["schemas"]["BookingData"][];
 }) {
+  const [bookings, setBookings] =
+    useState<components["schemas"]["BookingData"][]>(data);
   const fetcher = useFetcher<typeof action>();
-  const fetcherBookings = useFetcher<typeof action>({key:"booking-data"});
+  const fetcherBookings = useFetcher<typeof action>({ key: "booking-data" });
   const form = useForm<z.infer<typeof createBookingsSchema>>({
     defaultValues: {},
     resolver: zodResolver(createBookingsSchema),
   });
   const { t } = useTranslation("common");
-  const globalState = useOutletContext<GlobalState>()
+  const globalState = useOutletContext<GlobalState>();
   const [customerFetcher, onCustomerNameChange] = useCustomerDebounceFetcher();
   const [customerPermission] = usePermission({
-    actions:customerFetcher.data?.actions,
-    roleActions:globalState.roleActions,
-  })
-  const createCustomer = useCreateCustomer()
+    actions: customerFetcher.data?.actions,
+    roleActions: globalState.roleActions,
+  });
+  const createCustomer = useCreateCustomer();
   const [eventFetcher, onEventNameChange] = useEventDebounceFetcher();
   const [eventPermission] = usePermission({
-    actions:eventFetcher.data?.actions,
-    roleActions:globalState.roleActions
-  })
-  const createEvent = useCreateEvent()
+    actions: eventFetcher.data?.actions,
+    roleActions: globalState.roleActions,
+  });
+  const createEvent = useCreateEvent();
   const r = routes;
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -62,11 +64,12 @@ export default function CreateBookings({
     console.log("OINSUBMIT", values);
     if (bookings.length > 0) {
       const body: components["schemas"]["CreateBookingBody"] = {
-        advance_payment: values.advancePayment,
+        advance_payment: Number(values.advancePayment),
         customer_id: values.customerID,
         bookings: bookings,
-        event_id:values.eventID,
+        event_id: values.eventID,
       };
+      console.log("BOOKING BODY",body)
       fetcher.submit(
         {
           action: "create-bookings",
@@ -80,39 +83,44 @@ export default function CreateBookings({
     }
   };
 
-  setUpToolbar(()=>{
+  setUpToolbar(() => {
     return {
       title: "Crear Nueva Reserva",
       onSave: () => {
         inputRef.current?.click();
       },
-    }
-  },[])
+    };
+  }, []);
 
-  
-  useDisplayMessage({
-      error:fetcher.data?.error,
-  },[fetcher.data])
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+    },
+    [fetcher.data]
+  );
 
   return (
     <FormLayout>
-            <div className="pt-2 pb-4">
-              <Button variant={"outline"} className=" flex space-x-2 items-center"
-              onClick={()=>{
-                fetcherBookings.submit({},{
-                  method:"POST",
-                  encType: "application/json",
-                })
-              }}>
-                <ArrowLeft size={15} />
-                <span>
-                  Seleccionar hora y Fecha
-                </span>
-              </Button>
-            </div>
+      <div className="pt-2 pb-4">
+        <Button
+          variant={"outline"}
+          className=" flex space-x-2 items-center"
+          onClick={() => {
+            fetcherBookings.submit(
+              {},
+              {
+                method: "POST",
+                encType: "application/json",
+              }
+            );
+          }}
+        >
+          <ArrowLeft size={15} />
+          <span>Seleccionar hora y Fecha</span>
+        </Button>
+      </div>
       <Form {...form}>
-          <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-            
+        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
             <FormAutocomplete
               label={t("_customer.base")}
@@ -125,13 +133,20 @@ export default function CreateBookings({
               onSelect={(e) => {
                 form.setValue("customerID", e.id);
               }}
-              {...(customerPermission?.create) && {
-                addNew:()=>{ createCustomer.openDialog({})}
-              }}
+              {...(customerPermission?.create && {
+                addNew: () => {
+                  createCustomer.openDialog({});
+                },
+              })}
             />
             <CustomFormField
               label={t("form.advancePayment")}
               name="advancePayment"
+              description={
+                bookings.length > 1
+                  ? "El pago anticipado se distribuirá entre las reservas más recientes"
+                  : ""
+              }
               form={form}
               children={(field) => {
                 return (
@@ -139,35 +154,50 @@ export default function CreateBookings({
                 );
               }}
             />
+
+           
             <AccordationLayout
-              className="col-span-full"
+              containerClassName="col-span-full"
               title={t("regate._event.base")}
             >
               <div className="create-grid">
-              <FormAutocomplete
-                label={t("regate._event.base")}
-                data={eventFetcher.data?.events || []}
-                onValueChange={onEventNameChange}
-                nameK={"name"}
-                name="eventName"
-                form={form}
-                onSelect={(e) => {
-                  form.setValue("eventID", e.id);
-                }}
-                {...(eventPermission?.create) && {
-                  addNew:()=>{ createEvent.onOpenChange(true)}
-                }}
-                
+                <FormAutocomplete
+                  label={t("regate._event.base")}
+                  data={eventFetcher.data?.events || []}
+                  onValueChange={onEventNameChange}
+                  nameK={"name"}
+                  name="eventName"
+                  form={form}
+                  onSelect={(e) => {
+                    form.setValue("eventID", e.id);
+                  }}
+                  {...(eventPermission?.create && {
+                    addNew: () => {
+                      createEvent.onOpenChange(true);
+                    },
+                  })}
                 />
-                </div>
+              </div>
             </AccordationLayout>
 
+            <Typography fontSize={subtitle} className="col-span-full">
+              Detalles de la Reserva
+            </Typography>
             <div className="col-span-full">
-              <BookingDisplay bookings={bookings} />
+              <BookingDisplay
+                bookings={bookings}
+                removeBooking={(idx) => {
+                  const f = bookings.filter((t, i) => i != idx);
+                  setBookings(f);
+                }}
+                // onEditBooking={(newBooking, index) => {
+                //   const updatedBookings = bookings.map((booking, i) => {
+                //     return i === index ? newBooking : booking;
+                //   });
+                //   setBookings(updatedBookings);
+                // }}
+              />
             </div>
-
-           
-
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

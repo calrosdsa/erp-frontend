@@ -5,6 +5,8 @@ import { profileColumms } from "@/components/custom/table/columns/manage/profile
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCreateUser } from "./components/create-user";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useTranslation } from "react-i18next";
 
 export default function UsersClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -14,18 +16,21 @@ export default function UsersClient() {
     roleActions: state.roleActions,
   });
   const createUser = useCreateUser()
+  const {t} = useTranslation("common")
+
+  setUpToolbar(()=>{
+    return {
+      ...(permission?.create && {
+        title:t("users"),
+        addNew: () => {
+          createUser.openDialog({permission:permission})
+        },
+      }),
+    }
+  },[permission])
   return (
     <>
       <DataTable
-        metaActions={{
-          meta: {
-            ...(permission?.create && {
-              addNew: () => {
-                createUser.openDialog({permission:permission})
-              },
-            }),
-          },
-        }}
         data={paginationResult?.results || []}
         columns={profileColumms({})}
         hiddenColumns={{

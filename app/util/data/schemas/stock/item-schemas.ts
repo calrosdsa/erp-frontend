@@ -7,10 +7,11 @@ export const createItemSchema = z.object({
   name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
   // rate: z.number().min(0).optional(),
   // itemQuantity: z.number().min(0).optional(),
+  
   uomName: z.string(),
-  uom:uomSchema,
   groupName:z.string(),
-  group:groupSchema,
+  groupID:z.number(),
+  uomID:z.number()
   // priceListName:z.string().optional(),
   // pluginList:z.array(z.string()).optional(),
 });

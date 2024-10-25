@@ -60,7 +60,8 @@ export const loader = async({request,params}:LoaderFunctionArgs)=>{
     return defer({
         court:res.data?.result.entity,
         actions:res.data?.actions,
-        courtRates:courtRates
+        courtRates:courtRates,
+        activities:res.data?.result.activities,
     })
 }
 

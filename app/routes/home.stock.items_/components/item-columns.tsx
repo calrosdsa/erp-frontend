@@ -22,7 +22,7 @@ export const itemColumns = (): ColumnDef<components["schemas"]["ItemDto"]>[] => 
         return (
         <TableCellNameNavigation
           {...props}
-          navigate={(name) => r.toItemDetailPrices(name,rowData.uuid)}
+          navigate={(name) => r.toItemDetail(name,rowData.uuid)}
         />
         )
       }

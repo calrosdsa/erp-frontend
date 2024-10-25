@@ -27,10 +27,11 @@ import CustomerPurchases from "~/routes/home._customer.purchases/route";
 import CustomForm from "../custom/form/CustomForm";
 import { useToast } from "../ui/use-toast";
 import { ActivityType, activityTypeToJSON } from "~/gen/common";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 interface ActivityFeedProps {
   activities: components["schemas"]["ActivityDto"][] | undefined;
-  partyID?: number;
+  partyID: number;
 }
 
 export default function ActivityFeed({
@@ -65,18 +66,11 @@ export default function ActivityFeed({
     );
   };
 
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-    }
-  }, [fetcher.data]);
+  
+  useDisplayMessage({
+    error:fetcher.data?.error,
+    success:fetcher.data?.message,
+  },[fetcher.data])
   return (
     <>
       {activity && (
@@ -100,6 +94,7 @@ export default function ActivityFeed({
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="flex items-center space-x-2 mt-2"
                 >
+                  {/* {JSON.stringify(form.formState.errors)} */}
                   <CustomFormField
                     name="comment"
                     label=""

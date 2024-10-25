@@ -1,14 +1,21 @@
-import { useLoaderData } from "@remix-run/react"
+import { useLoaderData, useParams } from "@remix-run/react"
 import { loader } from "./route"
 import Typography, { subtitle } from "@/components/typography/Typography"
 import { useTranslation } from "react-i18next"
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 
 
 export default function UserClient(){
     const {profile,actions} = useLoaderData<typeof loader>()
     const {t} = useTranslation("common")
+    const params = useParams()
+    setUpToolbar(()=>{
+        return {
+            title:params.path
+        }
+    },[])
     return (
         <>
         <div className="info-grid">

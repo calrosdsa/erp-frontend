@@ -17,7 +17,7 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
                 query:searchParams.get("query") || "",
                 event_id:searchParams.get("event") || "",
                 court_id:searchParams.get("court") || "",
-                customer_id:searchParams.get("customer") || "",
+                customer_id:searchParams.get("party") || "",
                 order:searchParams.get("order") || DEFAULT_ORDER,
                 column:searchParams.get("column") || DEFAULT_COLUMN,
             }

@@ -47,6 +47,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
     case "create-comment": {
       const d = data.createComment;
+      console.log("COMMENT",d)
       const res = await client.POST("/activity/comment", {
         body: {
           comment: d.comment,

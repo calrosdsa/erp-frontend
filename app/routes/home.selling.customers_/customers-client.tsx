@@ -17,23 +17,20 @@ export default function CustomersClient() {
   });
   const {t} = useTranslation("common")
   const createCustomer = useCreateCustomer()
+  
   setUpToolbar(()=>{
     return {
-      title:t("_customer.base")
+      title:t("_customer.base"),
+      ...(permission?.create && {
+        addNew: () => {
+          createCustomer.openDialog({})
+        },
+      }),
     }
-  },[])
+  },[permission])
   return (
     <div>
       <DataTable
-        metaActions={{
-          meta: {
-            ...(permission?.create && {
-              addNew: () => {
-                createCustomer.openDialog({})
-              },
-            }),
-          },
-        }}
         data={paginationResult?.results || []}
         columns={customerColumns({})}
       />

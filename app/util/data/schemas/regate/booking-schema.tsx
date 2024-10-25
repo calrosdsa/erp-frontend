@@ -8,7 +8,7 @@ export const createBookingsSchema = z.object({
     eventID:z.number().optional(),
     eventName:z.string().optional(),
 
-    advancePayment:z.coerce.number(),
+    advancePayment:z.coerce.number().optional(),
 })
 
 export const validateBookingSchema = z.object({
@@ -16,19 +16,17 @@ export const validateBookingSchema = z.object({
     startTime:z.string(),
     endTime:z.string(),
 
-    // partyName:z.string(),
-    // partyID:z.number(),
-
-    // totalPrice:z.coerce.number(),
-    // paid:z.coerce.number(),
     courtID:z.number(),
     courtName:z.string(),
 
     repeat:z.enum(["DAYLY","WEEKLY","MONTHLY"]).optional(),
     repeatUntilDate:z.date().optional(),
+    repeatOnDay:z.coerce.number().min(0).max(31).optional(),
     daysWeek:z.array(z.number()).optional(),
 
     bookingID:z.number().optional(),
+
+    discount:z.coerce.number().optional(),
     // total:z
 })
 

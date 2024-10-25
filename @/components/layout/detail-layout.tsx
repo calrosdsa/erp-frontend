@@ -29,9 +29,11 @@
           <div className="px-1 sm:px-2 py-2 w-full">{children}</div>
         </div>
 
+        {partyID && 
         <div className="pt-4">
           <ActivityFeed activities={activities} partyID={partyID}/>
         </div>
+        }
 
       </div>
     );

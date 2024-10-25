@@ -25,10 +25,15 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { routes } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import CustomFormField from "@/components/custom/form/CustomFormField";
+import { Input } from "@/components/ui/input";
+import AccordationLayout from "@/components/layout/accordation-layout";
+import AmountInput from "@/components/custom/input/AmountInput";
+import { DEFAULT_CURRENCY } from "~/constant";
 
 export const ValidateBooking = () => {
   const fetcher = useFetcher<typeof action>({ key: "booking-data" });
-  
+
   const form = useForm<z.infer<typeof validateBookingSchema>>({
     resolver: zodResolver(validateBookingSchema),
     defaultValues: {},
@@ -36,21 +41,20 @@ export const ValidateBooking = () => {
   const globalState = useOutletContext<GlobalState>();
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
   const [courtPermission] = usePermission({
-    actions:courtFetcher.data?.actions,
-    roleActions:globalState.roleActions,
+    actions: courtFetcher.data?.actions,
+    roleActions: globalState.roleActions,
   });
-  const r = routes
-  const navigate = useNavigate()
+  const r = routes;
+  const navigate = useNavigate();
   const { t } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
- 
+
   const onSubmit = (values: z.infer<typeof validateBookingSchema>) => {
     console.log("BODY", values);
     const body: components["schemas"]["ValidateBookingBody"] = {
       bookings: mapToBookingData(values),
     };
     console.log("BODY", body);
-
     fetcher.submit(
       {
         action: "validate-booking-data",
@@ -71,16 +75,15 @@ export const ValidateBooking = () => {
     [fetcher.data]
   );
 
-  setUpToolbar(()=>{
-    console.log("SETUP TOOLBAR")
+  setUpToolbar(() => {
     return {
       title: "Crear Nueva Reserva",
       onSave: () => {
         inputRef.current?.click();
       },
-    }
-  },[])
-  
+    };
+  }, []);
+
   return (
     <FormLayout>
       <Form {...form}>
@@ -95,14 +98,18 @@ export const ValidateBooking = () => {
               required={true}
               form={form}
               {...(courtPermission?.create && {
-                addNew:()=>{
-                  navigate(r.toCreateCourt())
-                }
+                addNew: () => {
+                  navigate(r.toCreateCourt());
+                },
               })}
               onSelect={(e) => {
                 form.setValue("courtID", e.id);
               }}
             />
+
+            <Typography fontSize={subtitle} className="col-span-full">
+              Fecha y Hora
+            </Typography>
 
             <CustomFormDate
               form={form}
@@ -122,48 +129,78 @@ export const ValidateBooking = () => {
                 form.setValue("endTime", e);
               }}
             />
-
-            <Typography fontSize={subtitle} className=" col-span-full">
-              Repetir Reserva
-            </Typography>
-
-            <SelectForm
-              data={
-                [
-                  { name: "Diariamente", value: "DAYLY" },
-                  { name: "Semanalmente", value: "WEEKLY" },
-                ] as SelectItem[]
-              }
-              name="repeat"
+            <AccordationLayout title="Descuento"
+            containerClassName="col-span-full">
+              <div className="create-grid">
+              <CustomFormField
+              label={t("form.discount")}
+              name="discount"
               form={form}
-              onValueChange={(e) => {
-                form.trigger("repeat");
+              children={(field) => {
+                return (
+                  <AmountInput field={field} currency={DEFAULT_CURRENCY} />
+                );
               }}
-              keyName="name"
-              keyValue="value"
-              label="Repetir"
             />
-            <CustomFormDate
-              form={form}
-              name="repeatUntilDate"
-              label={"Repetir Hasta la Fecha"}
-            />
-            {form.getValues().repeat == "WEEKLY" && (
-              <MultiSelect
-                label={t("form.daysWeek")}
-                data={daysWeek}
+              </div>
+            </AccordationLayout>
+            <AccordationLayout 
+            title="Repetir Reserva"
+            containerClassName=" col-span-full"
+            >
+              <div className=" create-grid">
+              <SelectForm
+                data={
+                  [
+                    { name: "Diariamente", value: "DAYLY" },
+                    { name: "Semanalmente", value: "WEEKLY" },
+                    { name: "Mensualmente", value: "MONTHLY" },
+                  ] as SelectItem[]
+                }
+                name="repeat"
                 form={form}
-                name="daySWeek"
-                keyName="dayName"
-                keyValue={"day"}
-                onSelect={(e) => {
-                  form.setValue(
-                    "daysWeek",
-                    e.map((t) => t.day)
-                  );
+                onValueChange={(e) => {
+                  form.trigger("repeat");
                 }}
+                keyName="name"
+                keyValue="value"
+                label="Repetir"
+                />
+              <CustomFormDate
+                form={form}
+                name="repeatUntilDate"
+                label={"Repetir Hasta la Fecha"}
               />
-            )}
+              {form.getValues().repeat == "WEEKLY" && (
+                <MultiSelect
+                  label={t("form.daysWeek")}
+                  data={daysWeek}
+                  form={form}
+                  name="daySWeek"
+                  keyName="dayName"
+                  keyValue={"day"}
+                  onSelect={(e) => {
+                    form.setValue(
+                      "daysWeek",
+                      e.map((t) => t.day)
+                    );
+                  }}
+                />
+              )}
+
+              {form.getValues().repeat == "MONTHLY" && (
+                <CustomFormField
+                label="Día"
+                name="repeatOnDay"
+                  form={form}
+                  children={(field) => {
+                    return <Input {...field} type="number" />;
+                  }}
+                />
+              )}
+                </div>
+            </AccordationLayout>
+
             <input ref={inputRef} type="submit" className="hidden" />
           </div>
         </fetcher.Form>

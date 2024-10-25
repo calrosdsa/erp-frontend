@@ -60,8 +60,10 @@ export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>
         accessorKey:"total_price",
         header:t("form.amount"),
         cell:({...props})=>{
+          const rowData = props.row.original;
           return <TableCellPrice
           i18n={i18n}
+          price={rowData.total_price - rowData.discount}
           {...props}
           />
         }
@@ -75,7 +77,7 @@ export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>
             <TableCellProgress
               {...props}
               current={rowData.paid}
-              total={rowData.total_price}
+              total={rowData.total_price-rowData.discount}
               label="% Pagado:"
             />
           );

@@ -24,6 +24,7 @@ import { BookingNav } from "./regate/booking-nav";
 import { EventNav } from "./regate/event-nav";
 import { DashboarNav } from "./regate/dashboard";
 import { CustomerNav } from "./regate/customer-nav";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -107,7 +108,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (entities?.includes(Entity.ITEM_ENTITY_ID)) {
     stockChildrens.push({
       title: t("item-groups"),
-      href: "/home/stock/item-groups",
+      href: r.toGroupByParty(partyTypeToJSON(PartyType.itemGroup)),
     });
   }
   if (entities?.includes(Entity.ITEM_ATTRIBUTES_ENTITY_ID)) {

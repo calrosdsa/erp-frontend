@@ -1,8 +1,12 @@
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
+import CustomFormField from "@/components/custom/form/CustomFormField";
 import FormLayout from "@/components/custom/form/FormLayout";
+import AmountInput from "@/components/custom/input/AmountInput";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import TimeSelectInput from "@/components/custom/select/time-select-input";
+import AccordationLayout from "@/components/layout/accordation-layout";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
+import Typography, { subtitle } from "@/components/typography/Typography";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,11 +16,13 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { create } from "zustand";
+import { DEFAULT_CURRENCY } from "~/constant";
 import BookingDisplay from "~/routes/home._regate.booking.new/componets/bookings-display";
 import { action } from "~/routes/home._regate.booking.new/route";
 import { mapToBookingData } from "~/routes/home._regate.booking.new/util";
 import { components } from "~/sdk";
 import { validateBookingSchema } from "~/util/data/schemas/regate/booking-schema";
+import { formatAmounFromInt } from "~/util/format/formatCurrency";
 import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { routes } from "~/util/route";
@@ -41,6 +47,7 @@ export const RescheduleBooking = ({
       startTime: format(toDate(booking?.start_date || new Date()), "hh:mm a"),
       endTime: format(toDate(booking?.end_date || new Date()), "hh:mm a"),
       bookingID: booking?.id,
+      discount:formatAmounFromInt(booking?.discount),
     },
   });
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
@@ -80,7 +87,7 @@ export const RescheduleBooking = ({
     {
       error: rescheduleFetcher.data?.error,
       success: rescheduleFetcher.data?.message,
-      onShowMessage:()=>onOpenChange(false)
+      onShowMessage: () => onOpenChange(false),
     },
     [rescheduleFetcher.data]
   );
@@ -96,10 +103,10 @@ export const RescheduleBooking = ({
         {fetcher.data?.bookingData ? (
           <div className=" col-span-full">
             <rescheduleFetcher.Form
-            className="grid"
+              className="grid"
               onSubmit={(e) => {
-                e.preventDefault()
-                console.log("ONSUBMIT")
+                e.preventDefault();
+                console.log("ONSUBMIT");
                 if (!booking?.id) return;
                 if (!fetcher.data?.bookingData) return;
                 const b = fetcher.data?.bookingData[0];
@@ -108,7 +115,7 @@ export const RescheduleBooking = ({
                   booking_id: booking?.id,
                   booking: b,
                 };
-                console.log("BODY",body)
+                console.log("BODY", body);
                 rescheduleFetcher.submit(
                   {
                     action: "reschedule-booking",
@@ -146,13 +153,16 @@ export const RescheduleBooking = ({
                     form.setValue("courtID", e.id);
                   }}
                 />
-
+                <Typography fontSize={subtitle} className="col-span-full">
+                  Fecha y Hora
+                </Typography>
                 <CustomFormDate
                   form={form}
                   name="date"
                   label={t("form.date")}
                   required={true}
                 />
+                <div className=" col-span-full" />
                 <TimeSelectInput
                   label="Inicio"
                   defaultValue={form.getValues().startTime}
@@ -167,6 +177,27 @@ export const RescheduleBooking = ({
                     form.setValue("endTime", e);
                   }}
                 />
+
+                <AccordationLayout
+                  title="Descuento"
+                  containerClassName="col-span-full"
+                >
+                  <div className="create-grid">
+                    <CustomFormField
+                      label={t("form.discount")}
+                      name="discount"
+                      form={form}
+                      children={(field) => {
+                        return (
+                          <AmountInput
+                            field={field}
+                            currency={DEFAULT_CURRENCY}
+                          />
+                        );
+                      }}
+                    />
+                  </div>
+                </AccordationLayout>
 
                 <Button className="col-span-full">Validar Reserva</Button>
               </div>

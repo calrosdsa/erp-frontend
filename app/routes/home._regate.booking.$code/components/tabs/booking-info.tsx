@@ -22,7 +22,7 @@ export const BookingInfo = () =>{
             <DisplayTextValue
             title={t("_customer.base")}
             value={booking?.party_name}
-            to={r.toCustomerDetail(booking?.party_name,booking?.party_uuid)}
+            to={r.toCustomerDetail(booking?.party_name ||"",booking?.party_uuid || "")}
             />
             <DisplayTextValue
             title={t("regate._court.base")}
@@ -31,17 +31,63 @@ export const BookingInfo = () =>{
             />
 
             <div className="col-span-full">
-            <div className="flex flex-col sm:flex-row items-start sm:items-stretch border-t pt-4">
+            <div className="grid sm:grid-cols-2 xl:grid-cols-3  gap-3 xl:gap-5">
 
                         <div className="flex-1 px-4 sm:border-r mt-4 sm:mt-0">
                           <div className="flex items-center mb-2">
                             <DollarSign className="mr-2 h-4 w-4" />
                             <div className="text-sm font-medium">Precio de la Reserva</div>
                           </div>
+                          <div className=" flex space-x-2">
+                          {Number(booking?.discount) > 0 ? (
+                            <>
+                                <Badge
+                                  variant="outline"
+                                  className="flex items-center w-min line-through"
+                                >
+                                  {formatCurrency(
+                                    booking?.total_price,
+                                    DEFAULT_CURRENCY,
+                                    i18n.language
+                                  )}
+                                </Badge>
+                                <Badge
+                                  variant="outline"
+                                  className="flex items-center w-min"
+                                >
+                                  {formatCurrency(
+                                    Number(booking?.total_price) - Number(booking?.discount),
+                                    DEFAULT_CURRENCY,
+                                    i18n.language
+                                  )}
+                                </Badge>
+                              </>
+                            ) : (
+                              <Badge
+                                variant="outline"
+                                className="flex items-center w-min"
+                              >
+                                {formatCurrency(
+                                  booking?.total_price,
+                                  DEFAULT_CURRENCY,
+                                  i18n.language
+                                )}
+                              </Badge>
+                            )}
+                        </div>
+                        </div>
+
+                        {booking?.discount != null &&
+                        <div className="flex-1 px-4 sm:border-r mt-4 sm:mt-0">
+                          <div className="flex items-center mb-2">
+                            <DollarSign className="mr-2 h-4 w-4" />
+                            <div className="text-sm font-medium">Descuento</div>
+                          </div>
                           <Badge variant="outline" className="flex items-center w-min">
-                            {formatCurrency(booking?.total_price,DEFAULT_CURRENCY,i18n.language)}
+                            {formatCurrency(booking?.discount,DEFAULT_CURRENCY,i18n.language)}
                           </Badge>
                         </div>
+                        }
 
                         <div className="flex-1 px-4 sm:border-r mt-4 sm:mt-0">
                           <div className="flex items-center mb-2">
@@ -64,6 +110,8 @@ export const BookingInfo = () =>{
                         </div>
 
 
+                     
+
                         <div className="flex-1 pl-4 mt-4 sm:mt-0">
                           <div className="flex items-center mb-2">
                             <Clock className="mr-2 h-4 w-4" />
@@ -78,6 +126,8 @@ export const BookingInfo = () =>{
                             </Badge>
                           </div>
                         </div>
+
+                        
                       </div>
             </div>
         </div>
