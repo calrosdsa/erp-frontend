@@ -65,8 +65,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       },
     },
   });
+  console.log(res.data,res.error)
   return json({
     item: res.data?.result.entity,
+    activities:res.data?.result.activities,
   });
 };
 

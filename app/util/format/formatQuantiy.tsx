@@ -1,8 +1,8 @@
-import { components } from "index";
 
-export const formatQuantity = (quantity:number |undefined,uom:components["schemas"]["UnitOfMeasure"]) =>{
+export const formatQuantity = (quantity:number |undefined,uom?:string) =>{
     if (quantity == undefined) return ""
-    return `${quantity} ${uom.Code}`
+    if (uom == undefined) return ""
+    return `${quantity} ${uom}`
 }
 
 export const formatPercentage = (value:number | undefined) =>{

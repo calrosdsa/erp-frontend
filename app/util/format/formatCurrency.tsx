@@ -22,7 +22,7 @@ export const formatCurrency = (
   if (input == undefined) {
     return "";
   }
-  if (currency == undefined) {
+  if (currency == undefined || currency == "") {
     return "";
   }
   // Convert the input string to a number and divide by 100
@@ -62,7 +62,7 @@ export const sumTotal = (values: number[]) => {
 };
 
 export const formatTax = (
-  tax: components["schemas"]["Tax"],
+  tax: components["schemas"]["TaxDto"],
   itemPrice: number,
   currency: string,
   language: string
@@ -71,7 +71,7 @@ export const formatTax = (
 };
 
 export const formatTotalTax = (
-  tax: components["schemas"]["Tax"],
+  tax: components["schemas"]["TaxDto"],
   itemPrice: number
 ): number => {
   return itemPrice * (tax.value / 100);

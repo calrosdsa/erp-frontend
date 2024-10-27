@@ -41,6 +41,7 @@ enum PartyType {
     payment = 19;           
     ledger = 20;
     purchaseReceipt = 21;
+    priceList = 22;
 }
 
 enum State {
@@ -107,6 +108,7 @@ enum ActivityType {
     DELETE = 2;
     COMMENT = 3;
     EDIT_PAID_AMOUT = 4;
+    UPDATE_STATUS = 5;
 }
 
 enum TimeUnit {

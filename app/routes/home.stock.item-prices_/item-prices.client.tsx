@@ -1,49 +1,41 @@
-import { useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
+import { useLoaderData, useNavigate, useOutletContext, useSearchParams, useSubmit } from "@remix-run/react";
 import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemPriceColumns } from "@/components/custom/table/columns/stock/itemPriceColumns";
-import { useState } from "react";
-import { PaginationState } from "@tanstack/react-table";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { useAddItemPrice } from "./components/add-item-price";
+  import { useAddItemPrice } from "./components/add-item-price";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { GlobalState } from "~/types/app";
+import { usePermission } from "~/util/hooks/useActions";
+import { routes } from "~/util/route";
 
 export default function ItemPricesClient() {
-  const { paginationResult,actions } = useLoaderData<typeof loader>();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const addItemPrice = useAddItemPrice();
-  const submit = useSubmit();
-  const [paginationState, setPaginationState] = useState<PaginationState>({
-    pageIndex: Number(searchParams.get("page") || DEFAULT_PAGE),
-    pageSize: Number(searchParams.get("size") || DEFAULT_SIZE),
-  });
 
+  const { paginationResult,actions } = useLoaderData<typeof loader>();
+  const addItemPrice = useAddItemPrice();
+  const globalState = useOutletContext<GlobalState>()
+  const [permission] = usePermission({
+    roleActions:globalState.roleActions,
+    actions:actions,
+  })
+  const r = routes
+  const navigate = useNavigate()
+
+  setUpToolbar(()=>{
+    return {
+      ...(permission?.create && {
+        addNew:()=>{
+          navigate(r.toCreateItemPrice())
+        }
+      })
+    }
+  },[permission])
   return (
     <div>
-      {/* {JSON.stringify(data)} */}
-
-      <DataTable
-        metaActions={{
-          meta: {
-            addNew: () => {
-              addItemPrice.onOpenDialog({});
-            },
-          },
-        }}
+      <DataTable    
         data={paginationResult?.results || []}
         columns={itemPriceColumns({ includeItem: true })}
         paginationOptions={{
-          paginationState: paginationState,
-          rowCount: paginationResult?.total || 0,
-          onPaginationChange: (e) => {
-            const fD = new FormData();
-            fD.append("page", e.pageIndex.toString());
-            fD.append("size", e.pageSize.toString());
-            submit(fD, {
-              method: "GET",
-              encType: "application/x-www-form-urlencoded",
-            });
-            setPaginationState(e);
-          },
+          rowCount: paginationResult?.total || 0
         }}
         hiddenColumns={{
           Currency: false,

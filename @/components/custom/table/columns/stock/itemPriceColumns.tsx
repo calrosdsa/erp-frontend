@@ -5,6 +5,8 @@ import { components } from "~/sdk";
   import { formatCurrency } from "~/util/format/formatCurrency";
   import { formatLongDate } from "~/util/format/formatDate";
 import TableCellDate from "../../cells/table-cell-date";
+import { DEFAULT_CURRENCY } from "~/constant";
+import { routes } from "~/util/route";
 
   export const itemPriceColumns = ({
     includeItem,
@@ -13,7 +15,7 @@ import TableCellDate from "../../cells/table-cell-date";
   } ): ColumnDef<components["schemas"]["ItemPriceDto"]>[] => {
     const { t, i18n } = useTranslation("common");
     let columns: ColumnDef<components["schemas"]["ItemPriceDto"]>[] = [];
-
+    const r = routes
     columns.push({
       id: "index",
       cell: ({ row }) => {
@@ -28,7 +30,7 @@ import TableCellDate from "../../cells/table-cell-date";
         const code = row.getValue("uuid") as string;
         return (
           <Link
-            to={`/home/stock/item-prices/${encodeURIComponent(code)}`}
+            to={r.toItemPrice(code)}
             className="underline font-semibold"
           >
             {code.toString()}
@@ -44,16 +46,16 @@ import TableCellDate from "../../cells/table-cell-date";
         const currency = rowData.price_list_currency;
         return (
           <div className="">
-            {formatCurrency(Number(rowData.rate), currency, i18n.language)}
+            {formatCurrency(Number(rowData.rate), currency || DEFAULT_CURRENCY, i18n.language)}
           </div>
         );
       },
     })
-    columns.push({ 
-      accessorKey: "price_list_currency",
-      header:t("form.currency"),
+    // columns.push({ 
+    //   accessorKey: "price_list_currency",
+    //   header:t("form.currency"),
       
-    });
+    // });
     columns.push({
       accessorKey: "item_quantity",
       header: t("form.itemQuantity"),

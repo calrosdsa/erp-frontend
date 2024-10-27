@@ -1385,6 +1385,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/item-price/associated-actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Associated Actions */
+        get: operations["associated-actions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/item-price/detail/{id}": {
         parameters: {
             query?: never;
@@ -2166,7 +2183,7 @@ export interface components {
         CreateItemLines: {
             lines: components["schemas"]["LineItemDto"][];
         };
-        CreateItemPriceRequestBody: {
+        CreateItemPriceBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -2174,11 +2191,17 @@ export interface components {
             readonly $schema?: string;
             /** Format: int32 */
             itemQuantity: number;
+            /** Format: int64 */
+            item_id: number;
             item_uuid: string;
-            price_list_uuid: string;
+            /** Format: int64 */
+            price_list_id?: number | null;
+            price_list_uuid?: string | null;
             /** Format: double */
             rate: number;
-            tax_uuid: string;
+            /** Format: int64 */
+            tax_id?: number | null;
+            tax_uuid?: string | null;
             /** Format: date-time */
             validFrom?: string | null;
             /** Format: date-time */
@@ -2190,11 +2213,9 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            group: components["schemas"]["GroupDto"];
             /** Format: int64 */
             group_id: number;
             name: string;
-            uom: components["schemas"]["UOMDto"];
             /** Format: int64 */
             uom_id: number;
         };
@@ -2984,27 +3005,6 @@ export interface components {
             /** @description Greeting message */
             message: string;
         };
-        Group: {
-            company: components["schemas"]["Company"];
-            /** Format: int64 */
-            company_id: number;
-            /** Format: date-time */
-            created_at: string;
-            deleted_at: components["schemas"]["DeletedAt"];
-            enabled: boolean;
-            /** Format: int64 */
-            id: number;
-            is_group: boolean;
-            name: string;
-            /** Format: int32 */
-            ordinal: number;
-            /** Format: int64 */
-            parent_id: number | null;
-            party: components["schemas"]["Party"];
-            /** Format: date-time */
-            updated_at: string | null;
-            uuid: string;
-        };
         GroupDto: {
             /** Format: date-time */
             created_at: string;
@@ -3046,29 +3046,6 @@ export interface components {
             status: string;
             uuid: string;
         };
-        Item: {
-            code: string;
-            /** Format: int64 */
-            company_id: number;
-            /** Format: date-time */
-            created_at: string;
-            deleted_at: components["schemas"]["DeletedAt"];
-            group: components["schemas"]["Group"];
-            /** Format: int64 */
-            group_id: number;
-            /** Format: int64 */
-            id: number;
-            item_type: string;
-            name: string;
-            /** Format: int64 */
-            parent_id: number | null;
-            unit_of_measure: components["schemas"]["UnitOfMeasure"];
-            /** Format: int64 */
-            unit_of_measure_id: number;
-            /** Format: date-time */
-            updated_at: string | null;
-            uuid: string;
-        };
         ItemAttributeDto: {
             /** Format: date-time */
             created_at: string;
@@ -3094,9 +3071,10 @@ export interface components {
             created_at: string;
             group_name: string;
             group_uuid: string;
+            /** Format: int64 */
+            id: number;
             item_type: string;
             name: string;
-            uom: components["schemas"]["UOMDto"];
             uom_code: string;
             uom_name: string;
             uuid: string;
@@ -3126,7 +3104,6 @@ export interface components {
             uom: string;
         };
         ItemPrice: {
-            company: components["schemas"]["Company"];
             /** Format: int64 */
             company_id: number;
             /** Format: date-time */
@@ -3134,20 +3111,16 @@ export interface components {
             deleted_at: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             id: number;
-            item: components["schemas"]["Item"];
             /** Format: int64 */
             item_id: number;
             /** Format: int32 */
             item_quantity: number;
-            price_list: components["schemas"]["PriceList"];
             /** Format: int64 */
-            price_list_id: number;
+            price_list_id: number | null;
             /** Format: int32 */
             rate: number;
-            tax: components["schemas"]["Tax"];
             /** Format: int64 */
-            tax_id: number;
-            unit_of_measure: components["schemas"]["UnitOfMeasure"];
+            tax_id: number | null;
             /** Format: int64 */
             unit_of_measure_id: number;
             /** Format: date-time */
@@ -3162,6 +3135,8 @@ export interface components {
             code: string;
             /** Format: date-time */
             created_at: string;
+            /** Format: int64 */
+            id: number;
             item_code: string;
             item_name: string;
             /** Format: int32 */
@@ -3648,17 +3623,6 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        Party: {
-            /** Format: date-time */
-            created_at: string;
-            deleted_at: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            id: number;
-            party_type: components["schemas"]["PartyType"];
-            party_type_code: string;
-            /** Format: date-time */
-            updated_at: string | null;
-        };
         PartyConnections: {
             /** Format: int32 */
             connections: number;
@@ -3675,10 +3639,6 @@ export interface components {
             name: string;
             reference: string;
             uuid: string;
-        };
-        PartyType: {
-            code: string;
-            name: string;
         };
         PartyTypeDto: {
             code: string;
@@ -3765,6 +3725,8 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             currency: string;
+            /** Format: int64 */
+            id: number;
             is_buying: boolean;
             is_selling: boolean;
             name: string;
@@ -3828,6 +3790,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ChartDashboardData"];
         };
@@ -3838,6 +3803,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ContactDto"];
         };
@@ -3848,6 +3816,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["CourtDto"];
         };
@@ -3858,8 +3829,24 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["EventBookingDto"];
+        };
+        "ResponseDataInterface {}Body": {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: unknown;
         };
         ResponseDataInvoiceDtoBody: {
             /**
@@ -3868,8 +3855,24 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["InvoiceDto"];
+        };
+        ResponseDataItemPriceDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ItemPriceDto"];
         };
         ResponseDataLedgerDtoBody: {
             /**
@@ -3878,6 +3881,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["LedgerDto"];
         };
@@ -3888,6 +3894,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["BookingData"][];
         };
@@ -3898,6 +3907,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ChartDataDto"][];
         };
@@ -3908,6 +3920,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["PartyConnections"][];
         };
@@ -3918,6 +3933,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["PartyTypeDto"][];
         };
@@ -3928,6 +3946,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["PaymentDto"];
         };
@@ -3938,6 +3959,9 @@ export interface components {
              */
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
             message: string;
             result: components["schemas"]["ReceiptDto"];
         };
@@ -4176,27 +4200,12 @@ export interface components {
             name: string;
             uuid: string;
         };
-        Tax: {
-            company: components["schemas"]["Company"];
-            /** Format: int64 */
-            company_id: number;
-            /** Format: date-time */
-            created_at: string;
-            deleted_at: components["schemas"]["DeletedAt"];
-            enabled: boolean;
-            /** Format: int64 */
-            id: number;
-            name: string;
-            /** Format: date-time */
-            updated_at: string | null;
-            uuid: string;
-            /** Format: double */
-            value: number;
-        };
         TaxDto: {
             /** Format: date-time */
             created_at: string;
             enabled: boolean;
+            /** Format: int64 */
+            id: number;
             name: string;
             uuid: string;
             /** Format: double */
@@ -4215,33 +4224,6 @@ export interface components {
              */
             readonly $schema?: string;
             results: components["schemas"]["UOMDto"][];
-        };
-        UnitOfMeasure: {
-            code: string;
-            /** Format: int64 */
-            company_id: number | null;
-            /** Format: date-time */
-            created_at: string | null;
-            deleted_at: components["schemas"]["DeletedAt"];
-            enabled: boolean | null;
-            /** Format: int64 */
-            id: number;
-            unit_of_measure_translation: components["schemas"]["UnitOfMeasureTranslation"];
-            /** Format: date-time */
-            updated_at: string | null;
-        };
-        UnitOfMeasureTranslation: {
-            /** Format: int64 */
-            base_id: number;
-            /** Format: date-time */
-            created_at: string | null;
-            deleted_at: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            id: number;
-            language_code: string;
-            name: string;
-            /** Format: date-time */
-            updated_at: string | null;
         };
         UpdateCourtRatesBody: {
             /**
@@ -8490,7 +8472,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateItemPriceRequestBody"];
+                "application/json": components["schemas"]["CreateItemPriceBody"];
             };
         };
         responses: {
@@ -8500,7 +8482,36 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
+                    "application/json": components["schemas"]["ResponseDataItemPriceDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "associated-actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataInterface {}Body"];
                 };
             };
             /** @description Error */
@@ -8617,7 +8628,7 @@ export interface operations {
                 Role?: string;
             };
             path: {
-                itemCode: string;
+                item_id: string;
             };
             cookie?: never;
         };

@@ -156,6 +156,16 @@ class Routes {
     }else { url += `&tab=info`}
     return url 
   }
+  toItemPrice(id:string,tab?:string):string{
+    let url = this.itemPrices + `/${encodeURIComponent(id)}`
+    if(tab){
+      url += `?tab=${tab}`
+    }else { url += `?tab=info`}
+    return url 
+  }
+  toCreateItemPrice():string {
+    return `${this.itemPrices}/new`
+  }
   toItemDetailPrices(name: string, id: string): string {
     return `${this.items}/${encodeURIComponent(name)}/item-prices?id=${id}`;
   }

@@ -5,6 +5,7 @@ import { DEFAULT_ENABLED, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { createItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { z } from "zod";
 import { components } from "~/sdk";
+import { handleError } from "~/util/api/handle-status-code";
 
 type ActionData = {
   action: string;
@@ -59,8 +60,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             itemQuantity: d.itemQuantity,
             rate: d.rate,
             item_uuid:d.itemUuid,
+            item_id:d.itemID,
             tax_uuid:d.taxUuid,
-            price_list_uuid:d.priceListUuid
+            tax_id:d.taxID,
+            price_list_uuid:d.priceListUuid,
+            price_list_id:d.priceListID,
+
         },
       });
       message = res.data?.message
@@ -88,7 +93,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       },
     },
   });
-  console.log(res.data);
+  handleError(res.error)
+  // console.log(res.data,res.error)
   return json({
     paginationResult: res.data?.pagination_result,
     actions:res.data?.actions

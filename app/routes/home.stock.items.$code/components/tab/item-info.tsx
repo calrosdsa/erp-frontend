@@ -21,13 +21,13 @@ export default function ItemInfoTab() {
 
         <DisplayTextValue
           title={t("form.item-group")}
-          value={item?.group?.name}
+          value={item?.group_name}
           to=""
         />
 
         <DisplayTextValue
           title={t("form.uom")}
-          value={item?.uom.name}
+          value={item?.uom_name}
         />
       </div>
     </div>

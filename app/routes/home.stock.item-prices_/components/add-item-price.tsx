@@ -32,7 +32,7 @@ export default function AddItemPrice({
   itemUuid,
 }: {
   open: boolean;
-  onOpenChange: (e: boolean) => void;
+  onOpenChange: (e: boolean) => void; 
   itemUuid: string | undefined;
 }) {
   const { t } = useTranslation("common");

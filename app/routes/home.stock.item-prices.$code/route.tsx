@@ -14,9 +14,12 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
         }
     })
     handleError(res.error)
+    console.log(res.data,res.error)
     return json({
         itemPrice:res.data?.result.entity,
         actions:res.data?.actions,
+        activities:res.data?.result.activities || [],
+        associatedActions:res.data?.associated_actions,
     })
 }
 

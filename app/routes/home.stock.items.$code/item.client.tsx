@@ -11,11 +11,12 @@ import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import DetailLayout from "@/components/layout/detail-layout";
 import ItemInfoTab from "./components/tab/item-info";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function ItemDetailClient() {
   const r = routes;
   const params = useParams();
-  const { item } = useLoaderData<typeof loader>();
+  const { item,activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const globalState = useOutletContext<GlobalState>();
   const [searchParams] = useSearchParams()
@@ -35,31 +36,22 @@ export default function ItemDetailClient() {
     // },
   ];
 
+  setUpToolbar(()=>{
+    return {
+      
+    }
+  },[])
+
   return (
     <DetailLayout
-    navItems={tabNavItems}>
+    navItems={tabNavItems}
+    activities={activities}
+    partyID={item?.id}
+    >
       {tab == "info" && 
       <ItemInfoTab/>
       }
       
     </DetailLayout>
-    // <div className="grid gap-y-5">
-    //   {item != undefined && <ItemInfo data={item} />}
-
-    //   <div className="py-2">
-    //     <HorizontalNavTabs navItems={tabNavItems} />
-
-    //     <div className="py-3">
-    //       <Outlet
-    //         context={
-    //           {
-    //             item: item,
-    //             globalState: globalState,
-    //           } as ItemGlobalState
-    //         }
-    //       />
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
