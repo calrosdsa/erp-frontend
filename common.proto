@@ -42,6 +42,12 @@ enum PartyType {
     ledger = 20;
     purchaseReceipt = 21;
     priceList = 22;
+    saleOrder = 23;
+    saleInvoice = 24;
+}
+
+enum PianoPartyType {
+    pianoForms = 0;
 }
 
 enum State {

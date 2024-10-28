@@ -1,4 +1,10 @@
-import { useFetcher, useNavigate, useOutletContext, useParams, useRevalidator } from "@remix-run/react";
+import {
+  useFetcher,
+  useNavigate,
+  useOutletContext,
+  useParams,
+  useRevalidator,
+} from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { z } from "zod";
@@ -21,60 +27,69 @@ import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { action } from "./route";
 import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
-import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
+import {
+  ItemLineType,
+  PartyType,
+  partyTypeFromJSON,
+  partyTypeToJSON,
+} from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import PartyAutocomplete from "../home.order.$partyOrder.create/components/party-autocomplete";
+import Typography, { subtitle } from "@/components/typography/Typography";
 
 export default function CreatePurchaseInvoiceClient() {
-  const fetcher = useFetcher<typeof action>()
+  const fetcher = useFetcher<typeof action>();
   const [supplierDebounceFetcher, onSupplierChange] =
     useSupplierDebounceFetcher();
   const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
-  const globalState = useOutletContext<GlobalState>()
+  const globalState = useOutletContext<GlobalState>();
   const [supplierPermission] = usePermission({
-    actions:supplierDebounceFetcher.data?.actions,
-    roleActions:globalState.roleActions,
-  })
-  const createSupplier = useCreateSupplier()
+    actions: supplierDebounceFetcher.data?.actions,
+    roleActions: globalState.roleActions,
+  });
+  const createSupplier = useCreateSupplier();
 
-  const createPurchaseInvoice = useCreatePurchaseInvoice()
+  const createPurchaseInvoice = useCreatePurchaseInvoice();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { t,i18n } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const { toast } = useToast();
   const revalidator = useRevalidator();
   const toolbar = useToolbar();
   const navigate = useNavigate();
   const r = routes;
-  const params = useParams()
-  const {partyInvoice} = params
+  const params = useParams();
+  const partyInvoice = partyTypeFromJSON(params.partyInvoice);
   const form = useForm<z.infer<typeof createPurchaseInvoiceSchema>>({
     resolver: zodResolver(createPurchaseInvoiceSchema),
     defaultValues: {
-      referenceID:createPurchaseInvoice.payload?.referenceID,
-      partyName:createPurchaseInvoice.payload?.party_name || "",
-      partyUuid:createPurchaseInvoice.payload?.party_uuid || "",
-      partyType:createPurchaseInvoice.payload?.party_type || "",
-      currency:{
-        code:createPurchaseInvoice.payload?.currency || "",
+      referenceID: createPurchaseInvoice.payload?.referenceID,
+      partyName: createPurchaseInvoice.payload?.party_name || "",
+      partyUuid: createPurchaseInvoice.payload?.party_uuid || "",
+      partyType: createPurchaseInvoice.payload?.party_type || "",
+      currency: {
+        code: createPurchaseInvoice.payload?.currency || "",
       },
-      currencyName:createPurchaseInvoice.payload?.currency,
-      lines:createPurchaseInvoice.payload?.lines || [],
-      date:new Date(),
+      currencyName: createPurchaseInvoice.payload?.currency,
+      lines: createPurchaseInvoice.payload?.lines || [],
+      date: new Date(),
     },
   });
 
-  
   const onSubmit = (values: z.infer<typeof createPurchaseInvoiceSchema>) => {
     console.log(values);
-    fetcher.submit({
-      action:"create-purchase-invoice",
-      createPurchaseInvoice:values
-  } as any,{
-      method:"POST",
-      encType:"application/json",
-      action:r.toPurchaseInvoiceCreate(),
-  })
+    fetcher.submit(
+      {
+        action: "create-invoice",
+        createPurchaseInvoice: values,
+      } as any,
+      {
+        method: "POST",
+        encType: "application/json",
+        action: r.toCreateInvoice(partyInvoice),
+      }
+    );
   };
 
   const setUpToolbar = () => {
@@ -90,30 +105,27 @@ export default function CreatePurchaseInvoiceClient() {
     setUpToolbar();
   }, []);
 
+  // useEffect(() => {
+  //   form.setValue(
+  //     "supplierName",
+  //     createPurchaseInvoice.payload?.party_name || ""
+  //   );
+  //   revalidator.revalidate();
+  //   console.log("REVALIDATIONS...");
+  // }, [createPurchaseInvoice]);
 
-  useEffect(()=>{
-    form.setValue("supplierName",createPurchaseInvoice.payload?.party_name || "")
-    revalidator.revalidate()
-    console.log("REVALIDATIONS...")
-  },[createPurchaseInvoice])
-
-  
-  useDisplayMessage({
-    error:fetcher.data?.error,
-    success:fetcher.data?.message,
-    onSuccessMessage:()=>{
-      if(fetcher.data?.invoice){
-        navigate(
-          r.toInvoiceDetail(
-            partyInvoice || "",
-            fetcher.data.invoice.code,
-          )
-        );
-      }
-    }
-  },[fetcher.data])
-
-
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        if (fetcher.data?.invoice) {
+          navigate(r.toInvoiceDetail(partyInvoice, fetcher.data.invoice.code));
+        }
+      },
+    },
+    [fetcher.data]
+  );
 
   return (
     <div>
@@ -125,42 +137,13 @@ export default function CreatePurchaseInvoiceClient() {
             className={cn("", "gap-y-3 grid p-3")}
           >
             <div className="create-grid">
-              <FormAutocomplete
-                data={supplierDebounceFetcher.data?.suppliers || []}
+              <PartyAutocomplete
+                party={partyInvoice}
+                globalState={globalState}
                 form={form}
-                name="partyName"
-                nameK={"name"}
-                onValueChange={onSupplierChange}
-                label={t("_supplier.base")}
-                onSelect={(v) => {
-                  form.setValue("partyUuid", v.uuid);
-                  form.setValue("partyType", partyTypeToJSON(PartyType.supplier));
-                }}
-                {...(supplierPermission?.create && {
-                  addNew:()=>{
-                    createSupplier.openDialog({})
-                  }
-                })}
               />
 
-              <FormAutocomplete
-                data={currencyDebounceFetcher.data?.currencies || []}
-                form={form}
-                name="currencyName"
-                nameK={"code"}
-                onValueChange={onCurrencyChange}
-                label={t("form.currency")}
-                onSelect={(v) => {
-                  form.setValue("currency", v);
-                  revalidator.revalidate();
-                }}
-              />
-
-              <CustomFormDate
-                form={form}
-                name="date"
-                label={t("form.date")}
-              />
+              <CustomFormDate form={form} name="date" label={t("form.date")} />
 
               <CustomFormDate
                 form={form}
@@ -169,13 +152,29 @@ export default function CreatePurchaseInvoiceClient() {
                 label={t("form.dueDate")}
               />
 
+              <Typography className=" col-span-full" fontSize={subtitle}>
+                {t("form.currencyAndPriceList")}
+              </Typography>
+              <FormAutocomplete
+                data={currencyDebounceFetcher.data?.currencies || []}
+                form={form}
+                name="currencyName"
+                required={true}
+                nameK={"code"}
+                onValueChange={onCurrencyChange}
+                label={t("form.currency")}
+                onSelect={(v) => {
+                  form.setValue("currency", v);
+                  form.trigger("currency");
+                }}
+              />
             </div>
-         <ItemLineForm
-         itemLineType={ItemLineType.ITEM_LINE_INVOICE}
-         form={form}
-         partyType={params.partyInvoice || ""}
-         />
-              <input ref={inputRef} type="submit" className="hidden" />
+            <ItemLineForm
+              itemLineType={ItemLineType.ITEM_LINE_INVOICE}
+              form={form}
+              partyType={params.partyInvoice || ""}
+            />
+            <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>
         </Form>
       </FormLayout>

@@ -5,7 +5,7 @@ import apiClient from "~/apiclient";
 import { PartyType } from "~/types/enums";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 
-export const loader = async ({request}:LoaderFunctionArgs)=>{
+export const loader = async ({request,params}:LoaderFunctionArgs)=>{
     const client = apiClient({request})
     const url = new URL(request.url)
     const searchParams = url.searchParams
@@ -17,7 +17,7 @@ export const loader = async ({request}:LoaderFunctionArgs)=>{
                 query:searchParams.get("query") || "",
             },
             path:{
-                party:PartyType.PARTY_PURCHASE_ORDER,
+                party:params.partyOrder || "",
             }
         }
     })

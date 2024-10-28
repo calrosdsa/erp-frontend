@@ -7,8 +7,9 @@ import { editLineItemSchema, lineItemSchema } from "../stock/item-line-schema";
 import { ItemLineType } from "~/gen/common";
 
 export const createPurchaseSchema = z.object({
-  supplier: supplierDtoSchema,
-  supplierName: z.string(),
+  partyType:z.string(),
+  partyUuid:z.string(),
+  partyName:z.string(),
   // name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
   delivery_date: z.date().optional(),
   date: z.date(),

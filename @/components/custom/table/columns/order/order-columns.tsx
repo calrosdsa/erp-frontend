@@ -29,7 +29,7 @@ export const orderColumns = ({
       return (
         <TableCellNameNavigation
           {...props}
-          navigate={(name) => r.toOrderDetail(partyTypeToJSON(orderPartyType), name)}
+          navigate={(name) => r.toOrderDetail(orderPartyType, name)}
         />
       );
     },
@@ -41,12 +41,13 @@ export const orderColumns = ({
       const rowData = props.row.original;
       return (
         <>
-          {rowData.party_type == PartyType[PartyType.supplier] && (
             <TableCellNameNavigation
               {...props}
-              navigate={(name) => r.toSupplierDetail(name, rowData.party_uuid)}
+              navigate={(name) => r.toPartyDetail(rowData.party_type,name,{
+                id:rowData.uuid,
+                tab:"info"
+              })}
             />
-          )}
         </>
       );
     },

@@ -21,7 +21,6 @@ export default function TableCellNameNavigation<TData>({ getValue, row, column, 
   const nameR = getValue();
   return (
     <div>
-        {typeof nameR != "undefined" &&(
           <div className=" uppercase">
           <Link to={navigate(nameR)}>
             <Typography className=" text-primary underline cursor-pointer">
@@ -30,8 +29,6 @@ export default function TableCellNameNavigation<TData>({ getValue, row, column, 
             </Typography>
           </Link>
         </div>
-        )
-        }
     </div>
   );
 };

@@ -25,6 +25,7 @@ import { EventNav } from "./regate/event-nav";
 import { DashboarNav } from "./regate/dashboard";
 import { CustomerNav } from "./regate/customer-nav";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
+import { PianoFormsNav } from "./piano/piano-forms-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -59,9 +60,13 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const eventNav = EventNav({
     entities:entities
   })
-  const customerNav = CustomerNav({
+
+  const pianoFormsNav = PianoFormsNav({
     entities:entities
   })
+  // const customerNav = CustomerNav({
+  //   entities:entities
+  // })
   
 
   const companies = {
@@ -201,6 +206,12 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (accountingNav.children && accountingNav.children.length > 0) {
     navItems.push(accountingNav);
   }
+
+  //Piano 
+
+  if(pianoFormsNav.children && pianoFormsNav.children.length > 0) {
+    navItems.push(pianoFormsNav)
+  }
   
   
   //Regate
@@ -215,18 +226,19 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if(entities?.includes(Entity.EVENTBOOKING_ENTITY_ID)){
     navItems.push(eventNav)
   }
-  if(customerNav.children && customerNav.children.length > 0) {
-    navItems.push(customerNav)
-  }
+  // if(customerNav.children && customerNav.children.length > 0) {
+  //   navItems.push(customerNav)
+  // }
   
 
 
   if(buyingNav.children && buyingNav.children.length > 0) {
     navItems.push(buyingNav)
   }
-  // if(sellingNav.children && sellingNav.children.length > 0) {
-  //   navItems.push(sellingNav)
-  // }
+  if(sellingNav.children && sellingNav.children.length > 0) {
+    navItems.push(sellingNav)
+  }
+
 
   
   

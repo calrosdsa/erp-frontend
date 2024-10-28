@@ -27,7 +27,7 @@ import { routes } from "~/util/route";
 import { useEffect } from "react";
 import AmountInput from "../../input/AmountInput";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { ItemLineType } from "~/gen/common";
+import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
@@ -68,7 +68,8 @@ export default function ItemLine({
     },
   });
   const [itemPriceDebounceFetcher, onItemPriceChange] = useItemPriceForOrders({
-    isBuying: true,
+    isBuying: itemLine.partyType == partyTypeToJSON(PartyType.purchaseOrder),
+    isSelling: itemLine.partyType == partyTypeToJSON(PartyType.saleOrder),
     currency: itemLine.currency || DEFAULT_CURRENCY,
   });
 
@@ -122,9 +123,8 @@ export default function ItemLine({
       title={itemLine.title}
       className=" max-w-2xl "
     >
-      {JSON.stringify(form.formState.errors)}
       <Form {...form}>
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)} className="px-2">
+        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)} className="px-2 pb-2">
           <div className="flex flex-col ">
             {itemLine.allowEdit && (
               <div className=" flex flex-wrap gap-x-3 ">
@@ -185,7 +185,7 @@ export default function ItemLine({
               {t("f.and", { o: t("form.quantity"), p: t("form.rate") })}
             </Typography>
 
-            {itemLine.itemLineType == ItemLineType.ITEM_LINE_ORDER && (
+            {/* {itemLine.itemLineType == ItemLineType.ITEM_LINE_ORDER && ( */}
               <CustomFormField
                 label={t("form.quantity")}
                 form={form}
@@ -195,7 +195,7 @@ export default function ItemLine({
                 }}
                 name={"quantity"}
               />
-            )}
+            {/* )} */}
 
             {itemLine.itemLineType == ItemLineType.ITEM_LINE_RECEIPT && (
               <>

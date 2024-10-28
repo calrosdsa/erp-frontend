@@ -23,6 +23,7 @@ import { useItemLine } from "./item-line";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouses_/components/add-warehouse";
+import { FontRomanIcon } from "@radix-ui/react-icons";
 
 export default function ItemLineForm({
   form,
@@ -170,7 +171,7 @@ export default function ItemLineForm({
           meta: {
             ...metaOptions,
             tooltipMessage: t("tooltip.selectCurrency"),
-            enableTooltipMessage: form.getValues().currency?.code == undefined,
+            enableTooltipMessage: form.getValues().currency?.code == undefined || form.getValues().currency.code == "",
           },
         }}
       />

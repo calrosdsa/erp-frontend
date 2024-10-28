@@ -1,12 +1,5 @@
-import CustomForm from "@/components/custom/form/CustomForm";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { MultiSelect } from "@/components/custom/select/MultiSelect";
-import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
-import Typography, {
-  subtitle,
-  title,
-} from "@/components/typography/Typography";
-import { useToast } from "@/components/ui/use-toast";
 import { useFetcher, useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
 import { SquareCheckIcon, SquareIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -103,7 +96,6 @@ export default function NewItemPriceClient({}: {}) {
   return (
     <FormLayout>
       <Form {...form}>
-        {JSON.stringify(form.formState.errors)}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input type="submit" className="hidden" ref={inputRef} />
           <div className="create-grid">
@@ -178,7 +170,7 @@ export default function NewItemPriceClient({}: {}) {
               />
             )}
 
-            {selectedPriceList != undefined && (
+            {/* {selectedPriceList != undefined && (
               <div className="col-span-full">
                 <div className="flex flex-wrap gap-3">
                   <h3 className="font-semibold">
@@ -202,7 +194,7 @@ export default function NewItemPriceClient({}: {}) {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </fetcher.Form>
       </Form>

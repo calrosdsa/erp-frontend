@@ -47,11 +47,12 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { useStatus } from "~/util/hooks/data/useStatus";
 
 export default function PurchaseOrderClient() {
-  const { order, actions, associatedActions,activities } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher<typeof action>()
+  const { order, actions, associatedActions, activities } =
+    useLoaderData<typeof loader>();
+  const fetcher = useFetcher<typeof action>();
   const globalState = useOutletContext<GlobalState>();
-  const [searchParams] = useSearchParams()
-  const tab = searchParams.get("tab")
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get("tab");
   const [purchaseOrderPermission] = usePermission({
     actions: actions,
     roleActions: globalState.roleActions,
@@ -79,32 +80,45 @@ export default function PurchaseOrderClient() {
   const createReceipt = useCreateReceipt();
   const r = routes;
   const navigate = useNavigate();
-  const params = useParams()
-  const { enabledOrder,toBill } = useStatus({
-    status:stateFromJSON(order?.status)
-  })
+  const params = useParams();
+  const partyOrder = partyTypeFromJSON(params.partyOrder);
+  const { enabledOrder, toBill } = useStatus({
+    status: stateFromJSON(order?.status),
+  });
 
   const navItems = [
     {
       title: t("info"),
-      href: r.toOrderDetail(params.partyOrder || "",order?.code || ""),
+      href: r.toOrderDetail(partyOrder, order?.code || ""),
     },
     {
       title: t("connections"),
-      href: r.toOrderDetail(params.partyOrder || "",order?.code || "","connections"),
+      href: r.toOrderDetail(partyOrder, order?.code || "", "connections"),
     },
   ];
 
-  const getPartyType = (partyType:any)=>{
-    switch(partyType){
-      case partyTypeToJSON(PartyType.purchaseOrder):
-        return partyTypeToJSON(PartyType.supplier)
+  const getPartyType = (partyType: PartyType) => {
+    switch (partyType) {
+      case PartyType.purchaseOrder:
+        return partyTypeToJSON(PartyType.supplier);
+      case PartyType.saleOrder:
+        return partyTypeToJSON(PartyType.customer);
     }
-    return partyTypeToJSON(PartyType.UNRECOGNIZED)
-  }
-  setUpToolbar(()=>{
+    return partyTypeToJSON(PartyType.UNRECOGNIZED);
+  };
+  const getInvoicePartyType = (partyOrder: PartyType) => {
+    switch (partyOrder) {
+      case PartyType.purchaseOrder:
+        return PartyType.purchaseOrder;
+      case PartyType.saleOrder:
+        return PartyType.saleInvoice;
+      default:
+        return PartyType.UNRECOGNIZED;
+    }
+  };
+  setUpToolbar(() => {
     const actions: ActionToolbar[] = [];
-  
+
     if (paymentPermission?.create) {
       actions.push({
         label: t("_payment.base"),
@@ -122,7 +136,7 @@ export default function PurchaseOrderClient() {
             payload: {
               party_name: order?.party_name,
               party_uuid: order?.party_uuid,
-              party_type: getPartyType(params.partyOrder),
+              party_type: getPartyType(partyOrder),
               currency: order?.currency,
               referenceID: order?.id,
               lines:
@@ -131,32 +145,32 @@ export default function PurchaseOrderClient() {
                 ) || [],
             },
           });
-          navigate(r.toPurchaseInvoiceCreate());
+          navigate(r.toCreateInvoice(getInvoicePartyType(partyOrder)));
         },
         Icon: PlusIcon,
       });
     }
-    if ((receiptPermission?.create && enabledOrder) && !toBill) {
-        actions.push({
-          label: t("f.purchase", { o: t("_receipt.base") }),
-          onClick: () => {
-            createReceipt.setData({
-              payload: {
-                party_name: order?.party_name,
-                party_uuid: order?.party_uuid,
-                party_type: PartyType[PartyType.supplier],
-                currency: order?.currency,
-                reference: order?.id,
-                lines:
-                  order?.order_lines.map((line) =>
-                    mapToLineItem(line, ItemLineType.ITEM_LINE_RECEIPT)
-                  ) || [],
-              },
-            });
-            navigate(r.toCreateReceipt(PartyType.purchaseReceipt));
-          },
-          Icon: PlusIcon,
-        });
+    if (receiptPermission?.create && enabledOrder && !toBill) {
+      actions.push({
+        label: t("f.purchase", { o: t("_receipt.base") }),
+        onClick: () => {
+          createReceipt.setData({
+            payload: {
+              party_name: order?.party_name,
+              party_uuid: order?.party_uuid,
+              party_type: PartyType[PartyType.supplier],
+              currency: order?.currency,
+              reference: order?.id,
+              lines:
+                order?.order_lines.map((line) =>
+                  mapToLineItem(line, ItemLineType.ITEM_LINE_RECEIPT)
+                ) || [],
+            },
+          });
+          navigate(r.toCreateReceipt(PartyType.purchaseReceipt));
+        },
+        Icon: PlusIcon,
+      });
     }
 
     return {
@@ -181,9 +195,8 @@ export default function PurchaseOrderClient() {
           }
         );
       },
-    }
-  },[purchaseInvoicePermission,receiptPermission])
-
+    };
+  }, [purchaseInvoicePermission, receiptPermission]);
 
   useEffect(() => {
     if (fetcher.state == "submitting") {
@@ -193,24 +206,22 @@ export default function PurchaseOrderClient() {
     }
   }, [fetcher.state]);
 
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+    },
+    [fetcher.data]
+  );
 
-  useDisplayMessage({
-    error:fetcher.data?.error,
-    success:fetcher.data?.message,
-  },[fetcher.data])
-  
   return (
     <DetailLayout
-        partyID={order?.id}
-        activities={activities}
-        navItems={navItems}
-        >
-            {tab == "info" && 
-            <OrderInfoTab/>
-            }
-             {tab == "connections" && 
-            <OrderConnectionsTab/>
-            }
-        </DetailLayout>
+      partyID={order?.id}
+      activities={activities}
+      navItems={navItems}
+    >
+      {tab == "info" && <OrderInfoTab />}
+      {tab == "connections" && <OrderConnectionsTab />}
+    </DetailLayout>
   );
 }

@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { Connection, ConnectionModule } from "~/types/connections";
 import { components } from "~/sdk";
-import { RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
+import { PartyType, partyTypeToJSON, RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
 import { routes } from "~/util/route";
 import { loader } from "../../route";
 
@@ -26,6 +26,7 @@ export default function CustomerConnections() {
                 });
                 return (
                   <div>
+                    {JSON.stringify(connections)}
                     <Connections
                     connections={relateds}
                     />
@@ -57,6 +58,18 @@ const customerConnections = ({data,customer}:{
     add: () => {
       console.log("NAVIGATE")
       navigate(r.toCreateBooking())
+    },
+  })
+
+  connections.push({
+    entity: partyTypeToJSON(PartyType.saleOrder),
+    href: r.toOrders(PartyType.saleOrder,{
+        "party":customer?.id.toString(),
+        "partyName":customer?.name,
+    }),
+    count:data.find(t=>t.party_type == partyTypeToJSON(PartyType.saleOrder))?.connections,
+    add: () => {
+      navigate(r.toCreateOrder(PartyType.saleOrder))
     },
   })
 

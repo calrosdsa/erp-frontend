@@ -16,7 +16,7 @@ export default function PaginationLayout({
   children,filterOptions,orderOptions
 }: {
     children: ReactNode;
-    filterOptions:()=>JSX.Element;
+    filterOptions?:()=>JSX.Element;
     orderOptions:SelectItem[]
     }) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -26,7 +26,9 @@ export default function PaginationLayout({
     // <div className={`h-full   ${!isDesktop ? "flex flex-col" : "flex"}`}>
     <div className={`h-full flex flex-col`}>
         <div className="grid gap-3 xl:flex xl:justify-between">
-        {filterOptions()}
+            <div>
+        {filterOptions && filterOptions()}
+            </div>
         <DropdownMenu>
                 <div className="flex items-center">
                 <Button variant={"outline"} className=" rounded-r-none" size={"sm"}

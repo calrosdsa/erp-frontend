@@ -2,16 +2,16 @@ import { AddLineOrder, useAddLineOrder } from "@/components/custom/shared/item/a
 import ItemLine, { useItemLine } from "@/components/custom/shared/item/item-line"
 import { CreateEvent, useCreateEvent } from "~/routes/home._regate.event_/components/use-create-event"
 import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax"
-import { CreateSupplier, useCreateSupplier } from "~/routes/home.buying.suppliers_/components/create-supplier"
 import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
+import { CreateCustomer, useCreateCustomer } from "~/routes/home.customer_/components/create-customer"
 import { CreateGroup, useCreateGroup } from "~/routes/home.groups.$party_/components/create-group"
 import { CreateUser, useCreateUser } from "~/routes/home.manage.users_/components/create-user"
-import { CreateCustomer, useCreateCustomer } from "~/routes/home.selling.customers_/components/create-customer"
 import { AddPriceList, useCreatePriceList } from "~/routes/home.selling.stock.price-list_/components/add-price-list"
 import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.item-prices_/components/add-item-price"
 import { UpsertItemStockLevel, useUpsertItemStockLevel } from "~/routes/home.stock.items.$code.stock_/components/upsert-item-stock-level"
 import CreateItemVariant, { useCreateItemVariant } from "~/routes/home.stock.items.$code.variants_/components/create-item-variant"
 import { CreateWareHouse, useCreateWareHouse } from "~/routes/home.stock.warehouses_/components/add-warehouse"
+import { CreateSupplier, useCreateSupplier } from "~/routes/home.supplier_/components/create-supplier"
 import { GlobalState } from "~/types/app"
 
 

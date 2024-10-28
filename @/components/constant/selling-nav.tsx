@@ -1,6 +1,6 @@
 import { CreditCardIcon, DollarSign } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { PartyType } from "~/gen/common";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { NavItem } from "~/types";
 import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
@@ -15,7 +15,7 @@ export const SellingNav = ({ entities }: {
   if(entities?.includes(Entity.CUSTOMER)){
     sellingChildrens.push({
       title: t("customers"),
-      href: r.customers,
+      href: r.toParty("relocationAndMoving"),
     });
   }
   if(entities?.includes(Entity.CUSTOMER)){
@@ -29,6 +29,19 @@ export const SellingNav = ({ entities }: {
     sellingChildrens.push({
       title: t("price-list"),
       href: r.priceList,
+    });
+  }
+  if(entities?.includes(Entity.SALE_ORDER_ENTITY_ID)){
+    sellingChildrens.push({
+      title: t("saleOrder"),
+      href: r.toOrders(PartyType.saleOrder),
+    });
+  }
+
+  if(entities?.includes(Entity.SALE_INVOICE_ENTITY_ID)){
+    sellingChildrens.push({
+      title: t("saleInvoice"),
+      href: r.toInvoices(PartyType.saleInvoice),
     });
   }
   

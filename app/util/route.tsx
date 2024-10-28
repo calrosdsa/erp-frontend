@@ -21,14 +21,14 @@ class Routes {
 
   buying = this.base + "/buying";
   supplierGroups = this.buying + "/supplier-groups";
-  suppliers = this.buying + "/suppliers";
+  suppliers = this.base + "/supplier";
   purchaseOrders = this.order + `/${PartyType[PartyType.purchaseOrder]}`;
   purchaseInvoices = this.invoice + `/${PartyType[PartyType.purchaseInvoice]}`;
 
   selling = this.base + "/selling";
   sellingStock = this.selling + "/stock";
   customerGroups = this.selling + "/customer-groups";
-  customers = this.selling + "/customers";
+  customers = this.base + "/customer";
 
   priceList = this.sellingStock + "/price-list";
 
@@ -55,6 +55,41 @@ class Routes {
   uom = this.settings + "/uom";
   profile = this.settings + "/profile";
   account = this.settings + "/account";
+
+  toParty(partyType:string,q?:{
+    [x:string]:string | undefined;
+  }):string{
+    let url =  `${this.base}/${encodeURIComponent(partyType)}`
+    if(q){
+      url += "?";
+        const queryParams = Object.entries(q)
+            .filter(([_, value]) => value !==  undefined) // Filter out undefined values
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value || "")}`) // Encode each key-value pair
+            .join("&"); // Join them with '&'
+
+        if (queryParams) {
+            url += queryParams;
+        }
+    }
+    return url
+  }
+  toPartyDetail(partyType:string,name:string,q?:{
+    [x:string]:string | undefined;
+  }):string{
+    let url= `${this.base}/${encodeURIComponent(partyType)}/${encodeURIComponent(name)}`
+    if(q){
+      url += "?";
+        const queryParams = Object.entries(q)
+            .filter(([_, value]) => value !==  undefined) // Filter out undefined values
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value || "")}`) // Encode each key-value pair
+            .join("&"); // Join them with '&'
+
+        if (queryParams) {
+            url += queryParams;
+        }
+    }
+    return url
+  }
 
   toGroupByParty(partyType:string):string{
     return `${this.groups}/${partyType}`
@@ -206,8 +241,8 @@ class Routes {
   toPurchaseOrderDetail(name: string, id: string): string {
     return `${this.purchaseOrders}/${encodeURIComponent(name)}?id=${id}`;
   }
-  toOrderDetail(partyType:string,id:string,tab?:string):string{
-    let url = this.order + `/${encodeURIComponent(partyType)}/${encodeURIComponent(id)}`
+  toOrderDetail(party:PartyType,id:string,tab?:string):string{
+    let url = this.order + `/${encodeURIComponent(partyTypeToJSON(party))}/${encodeURIComponent(id)}`
     if(tab){
       url += `?tab=${tab}`
     }else { url += `?tab=info`}
@@ -255,8 +290,8 @@ class Routes {
   }
   
   
-  toInvoiceDetail(partyType:string,id:string,tab?:string):string{
-    let url = this.invoice + `/${encodeURIComponent(partyType)}/${encodeURIComponent(id)}`
+  toInvoiceDetail(partyType:PartyType,id:string,tab?:string):string{
+    let url = this.invoice + `/${encodeURIComponent(partyTypeToJSON(partyType))}/${encodeURIComponent(id)}`
     if(tab){
       url += `?tab=${tab}`
     }else { url += `?tab=info`}
@@ -266,15 +301,7 @@ class Routes {
     return `${this.invoice}/${encodeURIComponent(partyTypeToJSON(partyType))}/create`;
   }
 
-  toPurchaseOrderCreate(): string {
-    return `${this.purchaseOrders}/create`;
-  }
-  toPurchaseInvoiceDetail(code: string, id: string): string {
-    return `${this.purchaseInvoices}/${code}?id=${id}`;
-  }
-  toPurchaseInvoiceCreate(): string {
-    return `${this.purchaseInvoices}/create`;
-  }
+  
 
   toReceiptDetail(partyType:string,code:string,tab?:string):string{
     let url = this.receipt + `/${encodeURIComponent(partyType)}/${encodeURIComponent(code)}`

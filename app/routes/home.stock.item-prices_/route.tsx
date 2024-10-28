@@ -25,6 +25,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let itemPriceForOrders:components["schemas"]["ItemPriceDto"][] = [];
   switch (data.action) {
     case "item-price-for-orders":{
+      console.log(data)
       const res = await client.GET("/stock/item/item-price/order",{
         params:{
           query:{

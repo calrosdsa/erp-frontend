@@ -10,7 +10,12 @@ import { action, loader } from "./route";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { EventState, PartyType, stateFromJSON } from "~/gen/common";
+import {
+  EventState,
+  PartyType,
+  partyTypeFromJSON,
+  stateFromJSON,
+} from "~/gen/common";
 import { z } from "zod";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { routes } from "~/util/route";
@@ -34,6 +39,7 @@ export default function InvoiceDetailClient() {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
+  const partyInvoice = partyTypeFromJSON(params.partyInvoice);
   const [searchParams] = useSearchParams();
   const globalState = useOutletContext<GlobalState>();
   const tab = searchParams.get("tab");
@@ -49,15 +55,15 @@ export default function InvoiceDetailClient() {
   const navItems = [
     {
       title: t("info"),
-      href: r.toInvoiceDetail(params.partyInvoice || "", invoice?.code || ""),
+      href: r.toPartyDetail(params.partyInvoice || "", invoice?.code || "", {
+        tab: "info",
+      }),
     },
     {
       title: t("connections"),
-      href: r.toInvoiceDetail(
-        params.partyInvoice || "",
-        invoice?.code || "",
-        "connections"
-      ),
+      href: r.toPartyDetail(params.partyInvoice || "", invoice?.code || "", {
+        tab: "connections",
+      }),
     },
   ];
 
@@ -69,10 +75,10 @@ export default function InvoiceDetailClient() {
         onClick: () => {
           createPayment.setData({
             amount: sumTotal((itemLines || []).map((t) => t.rate * t.quantity)),
-            partyUuid:invoice?.party_uuid,
-            partyType:invoice?.party_type,
-            partyName:invoice?.party_name,
-            partyReference:invoice?.id,
+            partyUuid: invoice?.party_uuid,
+            partyType: invoice?.party_type,
+            partyName: invoice?.party_name,
+            partyReference: invoice?.id,
           });
           navigate(r.toPaymentCreate());
         },

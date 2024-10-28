@@ -5,7 +5,6 @@ import { createPurchaseSchema, orderLineSchemaToOrderLineDto } from "~/util/data
 import apiClient from "~/apiclient";
 import { currencySchemaToCurrencyDto } from "~/util/data/schemas/app/currency-schema";
 import { components } from "~/sdk";
-import { PartyType } from "~/gen/common";
 
 
 type ActionData = {
@@ -13,7 +12,7 @@ type ActionData = {
     createPurchaseOrder:z.infer<typeof createPurchaseSchema>
 }
 
-export const action = async({request}:ActionFunctionArgs)=>{
+export const action = async({request,params}:ActionFunctionArgs)=>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
     let message:string | undefined = undefined
@@ -25,13 +24,14 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
             const res = await client.POST("/order",{
                 body:{
-                    party_uuid:d.supplier.uuid,
-                    party_type:PartyType[PartyType.supplier],
-                    order_party_type:PartyType[PartyType.purchaseOrder],
-                    currency:currencySchemaToCurrencyDto(d.currency),
-                    delivery_date:d.delivery_date?.toString(),
-                    // lines:lines,
-                    date:d.date.toString(),
+                    order:{
+                        party_uuid:d.partyUuid,
+                        party_type:d.partyType,
+                        order_party_type:params.partyOrder || "",
+                        currency:d.currency.code,
+                        delivery_date:d.delivery_date?.toString(),
+                        date:d.date.toString(),
+                    },
                     items:{
                         lines:lines,
                     }

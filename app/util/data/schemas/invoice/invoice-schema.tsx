@@ -7,7 +7,7 @@ export const createPurchaseInvoiceSchema = z.object({
   partyType: z.string(),
   partyUuid: z.string(),
   partyName: z.string(),
-  supplierName: z.string(),
+  
   referenceID: z.number().optional(),
   // name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
   due_date: z.date().optional(),

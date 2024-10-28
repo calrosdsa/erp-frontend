@@ -6,7 +6,6 @@ import {
   useRevalidator,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { useToast } from "@/components/ui/use-toast";
 import { createPurchaseSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
@@ -17,49 +16,40 @@ import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDeb
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import { useEffect, useRef } from "react";
 import { routes } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
-import { Button } from "@/components/ui/button";
 import { action } from "./route";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCreateSupplier } from "../home.buying.suppliers_/components/create-supplier";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
-import { ItemLineType } from "~/gen/common";
+import { ItemLineType, PartyType, partyTypeFromJSON } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useRef } from "react";
+import PartyAutocomplete from "./components/party-autocomplete";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
-  const [supplierDebounceFetcher, onSupplierChange] =
-    useSupplierDebounceFetcher();
   const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
   const globalState = useOutletContext<GlobalState>();
-  const [supplierPermission] = usePermission({
-    actions: supplierDebounceFetcher.data?.actions,
-    roleActions: globalState.roleActions,
-  });
-  const createSupplier = useCreateSupplier();
   const params = useParams();
-  const { partyOrder } = params;
+  const partyOrder = partyTypeFromJSON(params.partyOrder)
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const revalidator = useRevalidator();
   const navigate = useNavigate();
   const r = routes;
   const form = useForm<z.infer<typeof createPurchaseSchema>>({
     resolver: zodResolver(createPurchaseSchema),
     defaultValues: {
       lines: [],
-      date: new Date(),
+      date: new Date(), 
     },
   });
 
   const onSubmit = (values: z.infer<typeof createPurchaseSchema>) => {
-    console.log(values);
     fetcher.submit(
       {
         action: "create-purchase-order",
@@ -68,7 +58,7 @@ export default function CreatePurchaseOrdersClient() {
       {
         method: "POST",
         encType: "application/json",
-        action: r.toPurchaseOrderCreate(),
+        action: r.toCreateOrder(partyOrder),
       }
     );
   };
@@ -88,7 +78,7 @@ export default function CreatePurchaseOrdersClient() {
       success: fetcher.data?.message,
       onSuccessMessage: () => {
         navigate(
-          r.toOrderDetail(partyOrder || "", fetcher.data?.order?.code || "")
+          r.toOrderDetail(partyOrder, fetcher.data?.order?.code || "")
         );
       },
     },
@@ -98,7 +88,6 @@ export default function CreatePurchaseOrdersClient() {
   return (
     <div>
       <FormLayout>
-        {JSON.stringify(form.formState.errors)}
         <Form {...form}>
           <fetcher.Form
             method="post"
@@ -106,24 +95,15 @@ export default function CreatePurchaseOrdersClient() {
             className={cn("", "gap-y-3 grid p-3")}
           >
             <div className="create-grid">
-              <FormAutocomplete
-                data={supplierDebounceFetcher.data?.suppliers || []}
-                form={form}
-                name="supplierName"
-                nameK={"name"}
-                onValueChange={onSupplierChange}
-                label={t("_supplier.base")}
-                onSelect={(v) => {
-                  form.setValue("supplier", v);
-                }}
-                {...(supplierPermission?.create && {
-                  addNew: () => {
-                    createSupplier.openDialog({});
-                  },
-                })}
+              <PartyAutocomplete
+              party={partyOrder}
+              globalState={globalState}
+              form={form}
               />
 
-              <CustomFormDate form={form} name="date" label={t("form.date")} />
+              <CustomFormDate form={form} name="date" label={t("form.date")} 
+              required={true}
+              />
 
               <CustomFormDate
                 form={form}
@@ -138,12 +118,13 @@ export default function CreatePurchaseOrdersClient() {
                 data={currencyDebounceFetcher.data?.currencies || []}
                 form={form}
                 name="currencyName"
+                required={true}
                 nameK={"code"}
                 onValueChange={onCurrencyChange}
                 label={t("form.currency")}
                 onSelect={(v) => {
                   form.setValue("currency", v);
-                  revalidator.revalidate();
+                  form.trigger("currency")
                 }}
               />
             </div>

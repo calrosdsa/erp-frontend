@@ -20,21 +20,23 @@ export const action = async({request}:ActionFunctionArgs)=>{
     let message:string | undefined = undefined
     let invoice:components["schemas"]["InvoiceDto"]| undefined = undefined
     switch(data.action){
-        case "create-purchase-invoice":{
+        case "create-invoice":{
             const d = data.createPurchaseInvoice
             const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
             const res = await client.POST("/invoice",{
                 body:{
-                    party_uuid:d.partyUuid,
-                    party_type:d.partyType,
-                    invoice_party_type:PartyType[PartyType.purchaseInvoice],
-                    due_date:d.due_date?.toString(),
-                    date:d.date.toString(),
+                    invoice:{
+                        party_uuid:d.partyUuid,
+                        party_type:d.partyType,
+                        invoice_party_type:PartyType[PartyType.purchaseInvoice],
+                        due_date:d.due_date?.toString(),
+                        date:d.date.toString(),
+                        currency:d.currency.code,
+                        reference:d.referenceID,
+                    },
                     items:{
                         lines:lines,
                     },
-                    currency:currencySchemaToCurrencyDto(d.currency),
-                    reference:d.referenceID,
                 }
             })
             error = res.error?.detail

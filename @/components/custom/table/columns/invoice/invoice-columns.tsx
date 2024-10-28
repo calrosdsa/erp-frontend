@@ -8,14 +8,14 @@ import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
-import { PartyType } from "~/gen/common";
+import { PartyType, partyTypeFromJSON } from "~/gen/common";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
 
 export const invoiceColumns = ({
   partyType
 }:{
-  partyType:string
+  partyType:PartyType
 }): ColumnDef<
   components["schemas"]["InvoiceDto"]
 >[] => {
@@ -46,12 +46,13 @@ export const invoiceColumns = ({
         const rowData = props.row.original;
         return (
           <>
-            {rowData.party_type == PartyType[PartyType.supplier] && (
-              <TableCellNameNavigation
-                {...props}
-                navigate={(name) => r.toSupplierDetail(name,rowData.party_uuid)}
-              />
-            )}
+             <TableCellNameNavigation
+              {...props}
+              navigate={(name) => r.toPartyDetail(rowData.party_type,name,{
+                id:rowData.party_uuid,
+                tab:"info",
+              })}
+            />
           </>
         );
       },

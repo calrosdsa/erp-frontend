@@ -7,6 +7,7 @@ import { invoiceColumns } from "@/components/custom/table/columns/invoice/invoic
 import { routes } from "~/util/route"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 import { useTranslation } from "react-i18next"
+import { partyTypeFromJSON } from "~/gen/common"
 
 
 export default function InvoicesClient(){
@@ -17,6 +18,7 @@ export default function InvoicesClient(){
         actions:actions,
         roleActions:globalState.roleActions
     })
+    const partyInvoice = partyTypeFromJSON(params.partyInvoice)
     const navigate = useNavigate()
     const {t} = useTranslation("common")
     const r = routes
@@ -25,17 +27,18 @@ export default function InvoicesClient(){
             title:t(params.partyInvoice || ""),
             ...(permission?.create && {
                 addNew:()=>{
-                    navigate(r.toPurchaseInvoiceCreate())
+                    navigate(r.toCreateInvoice(partyInvoice))
                 }
             })
         }
     },[permission])
     return (
         <div>
+            {JSON.stringify(paginationResult?.results)}
             <DataTable
             data={paginationResult?.results || []}
             columns={invoiceColumns({
-                partyType:params.partyInvoice || ""
+                partyType:partyInvoice,
             })}
             paginationOptions={{
                 rowCount:paginationResult?.total,   

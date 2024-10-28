@@ -36,7 +36,6 @@ export default function OrdersClient() {
 
   return (
     <div>
-      {/* {JSON.stringify(paginationResult?.results)} */}
       <div>
       
       </div>

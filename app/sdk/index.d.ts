@@ -493,11 +493,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Purchase Invoice */
-        get: operations["get purchase invoices"];
+        get?: never;
         put?: never;
-        /** Create Purchase Invoice */
-        post: operations["create purchase invoice"];
+        /** Create Invoice */
+        post: operations["create invoice"];
         delete?: never;
         options?: never;
         head?: never;
@@ -512,10 +511,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Purchase Invoice
-         * @description Get Detail purchase invoice
+         * Get Invoice
+         * @description Get invoice
          */
-        get: operations["get purchase invoice"];
+        get: operations["get invoice"];
         put?: never;
         post?: never;
         delete?: never;
@@ -534,6 +533,23 @@ export interface paths {
         get?: never;
         /** Update Invoice State */
         put: operations["update invoice state"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/invoice/{party}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Invoices */
+        get: operations["get invoices"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -901,6 +917,41 @@ export interface paths {
         };
         /** Get Parties Type */
         get: operations["get-parties-type"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/piano/form": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Piano Forms */
+        get: operations["get piano forms"];
+        put?: never;
+        /** Create Piano Form */
+        post: operations["create piano form"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/piano/form/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Piano Form */
+        get: operations["get piano form"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2152,24 +2203,27 @@ export interface components {
             parent?: components["schemas"]["GroupDto"];
             party_type_code: string;
         };
+        CreateInvoice: {
+            currency: string;
+            /** Format: date-time */
+            date: string;
+            /** Format: date-time */
+            due_date?: string | null;
+            invoice_party_type: string;
+            party_type: string;
+            /** Format: uuid */
+            party_uuid: string;
+            /** Format: int64 */
+            reference?: number | null;
+        };
         CreateInvoiceBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            currency: components["schemas"]["CurrencyDto"];
-            /** Format: date-time */
-            date: string;
-            /** Format: date-time */
-            due_date?: string | null;
-            invoice_party_type: string;
+            invoice: components["schemas"]["CreateInvoice"];
             items: components["schemas"]["CreateItemLines"];
-            party_type: string;
-            /** Format: uuid */
-            party_uuid: string;
-            /** Format: int64 */
-            reference?: number | null;
         };
         CreateItemAttributeRequestBody: {
             /**
@@ -2245,21 +2299,24 @@ export interface components {
             name: string;
             parent_uuid?: string | null;
         };
+        CreateOrder: {
+            currency: string;
+            /** Format: date-time */
+            date: string;
+            /** Format: date-time */
+            delivery_date?: string | null;
+            order_party_type: string;
+            party_type: string;
+            party_uuid: string;
+        };
         CreateOrderBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            currency: components["schemas"]["CurrencyDto"];
-            /** Format: date-time */
-            date: string;
-            /** Format: date-time */
-            delivery_date?: string | null;
             items: components["schemas"]["CreateItemLines"];
-            order_party_type: string;
-            party_type: string;
-            party_uuid: string;
+            order: components["schemas"]["CreateOrder"];
         };
         CreatePartyAddressRequestBody: {
             /**
@@ -2299,6 +2356,33 @@ export interface components {
             party_reference?: number;
             party_type: string;
             party_uuid: string;
+        };
+        CreatePianoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            "dropoff-city": string;
+            "dropoff-flights": string;
+            "dropoff-state": string;
+            "dropoff-street": string;
+            "dropoff-zip": string;
+            email: string;
+            "first-name": string;
+            "last-name": string;
+            /** Format: date-time */
+            "moving-date": string;
+            phone: string;
+            "piano-type": string;
+            "pickup-city": string;
+            "pickup-flights": string;
+            "pickup-state": string;
+            "pickup-street": string;
+            "pickup-zip": string;
+            "rent-piano": string;
+            "stairs-dropoff": string;
+            "stairs-pickup": string;
         };
         CreatePriceListRequestBody: {
             /**
@@ -2837,6 +2921,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityPaymentDetailDto"];
+        };
+        EntityResponseResultEntityPianoFormBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityPianoForm"];
         };
         EntityResponseResultEntityPriceListDtoBody: {
             /**
@@ -3407,6 +3504,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListPaymentDto"];
         };
+        PaginationResponsePaginationResultListPianoFormBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListPianoForm"];
+        };
         PaginationResponsePaginationResultListPriceListDtoBody: {
             /**
              * Format: uri
@@ -3578,6 +3684,11 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListPianoForm: {
+            results: components["schemas"]["PianoForm"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListPriceListDto: {
             results: components["schemas"]["PriceListDto"][];
             /** Format: int64 */
@@ -3685,6 +3796,37 @@ export interface components {
         PhoneNumber: {
             countryCode: string;
             number: string;
+        };
+        PianoForm: {
+            /** Format: int64 */
+            company_id: number;
+            /** Format: date-time */
+            created_at: string;
+            deleted_at: components["schemas"]["DeletedAt"];
+            dropoff_city: string;
+            dropoff_flights: string;
+            dropoff_state: string;
+            dropoff_street: string;
+            dropoff_zip: string;
+            email: string;
+            first_name: string;
+            /** Format: int64 */
+            id: number;
+            last_name: string;
+            /** Format: date-time */
+            moving_date: string;
+            phone_number: string;
+            piano_type: string;
+            pickup_city: string;
+            pickup_flights: string;
+            pickup_state: string;
+            pickup_street: string;
+            pickup_zip: string;
+            rent_piano: string;
+            stairs_dropoff: string;
+            stairs_pickup: string;
+            /** Format: date-time */
+            updated_at: string | null;
         };
         PluginApp: {
             Name: string;
@@ -4095,6 +4237,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PaymentDetailDto"];
+        };
+        ResultEntityPianoForm: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["PianoForm"];
         };
         ResultEntityPriceListDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -5723,50 +5871,7 @@ export interface operations {
             };
         };
     };
-    "get purchase invoices": {
-        parameters: {
-            query: {
-                page: string;
-                size: string;
-                enabled?: string;
-                is_group?: string;
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListInvoiceDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "create purchase invoice": {
+    "create invoice": {
         parameters: {
             query?: never;
             header?: never;
@@ -5799,7 +5904,7 @@ export interface operations {
             };
         };
     };
-    "get purchase invoice": {
+    "get invoice": {
         parameters: {
             query: {
                 query?: string;
@@ -5871,6 +5976,51 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get invoices": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                party: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListInvoiceDtoBody"];
                 };
             };
             /** @description Error */
@@ -6939,6 +7089,125 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataListPartyTypeDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get piano forms": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListPianoFormBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create piano form": {
+        parameters: {
+            query?: never;
+            header?: {
+                "Accept-Language"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePianoBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get piano form": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityPianoFormBody"];
                 };
             };
             /** @description Error */

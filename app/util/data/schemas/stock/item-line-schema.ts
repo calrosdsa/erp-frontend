@@ -161,6 +161,7 @@ export const editLineItemSchema = z.object({
 
   data.rate = data.rate
   switch(data.lineType){
+    case ItemLineType.ITEM_LINE_INVOICE:
     case ItemLineType.ITEM_LINE_ORDER:{
       if (data.quantity == undefined && data.quantity == "") {
           ctx.addIssue({
