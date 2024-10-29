@@ -30,7 +30,6 @@ export const action = async({request}:ActionFunctionArgs) =>{
                 error = res.error.detail
             }
             break;
-            
         }
     }
     return json({

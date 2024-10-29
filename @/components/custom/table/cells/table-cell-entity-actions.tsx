@@ -33,7 +33,7 @@ export default function TableCellEntityActions<TData>({ getValue, row, column, t
   return (
     <div className=" flex-wrap gap-x-3 space-x-2">
         {typeof initialValue != "undefined" &&
-        (initialValue as components["schemas"]["Action"][]).map((item,idx)=>{
+        (initialValue as components["schemas"]["ActionDto"][] || []).map((item,idx)=>{
             return (
                 <Badge
                 key={idx}

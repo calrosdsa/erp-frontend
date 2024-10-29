@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/account/change/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change Password */
+        post: operations["change-password"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/account/password": {
         parameters: {
             query?: never;
@@ -32,6 +49,23 @@ export interface paths {
         /** Update password */
         put: operations["update-password"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/reset/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reset Password */
+        post: operations["reset-password"];
         delete?: never;
         options?: never;
         head?: never;
@@ -925,7 +959,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/piano/form": {
+    "/pianoForms": {
         parameters: {
             query?: never;
             header?: never;
@@ -943,7 +977,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/piano/form/{id}": {
+    "/pianoForms/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** export data */
+        post: operations["export data"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/pianoForms/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1973,6 +2024,15 @@ export interface components {
             /** Format: int64 */
             booking_id: number;
         };
+        ChangePasswordRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            password: string;
+            token: string;
+        };
         ChartDashboardData: {
             booking_hours: components["schemas"]["ChartDataDto"][];
             booking_hours_avg: components["schemas"]["ChartDataDto"][];
@@ -2380,9 +2440,9 @@ export interface components {
             "pickup-state": string;
             "pickup-street": string;
             "pickup-zip": string;
-            "rent-piano": string;
-            "stairs-dropoff": string;
-            "stairs-pickup": string;
+            "rent-piano": boolean;
+            "stairs-dropoff": boolean;
+            "stairs-pickup": boolean;
         };
         CreatePriceListRequestBody: {
             /**
@@ -3797,6 +3857,17 @@ export interface components {
             countryCode: string;
             number: string;
         };
+        PianoExportRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            from_date: string;
+            /** Format: date-time */
+            to_date: string;
+        };
         PianoForm: {
             /** Format: int64 */
             company_id: number;
@@ -3822,9 +3893,9 @@ export interface components {
             pickup_state: string;
             pickup_street: string;
             pickup_zip: string;
-            rent_piano: string;
-            stairs_dropoff: string;
-            stairs_pickup: string;
+            rent_piano: boolean;
+            stairs_dropoff: boolean;
+            stairs_pickup: boolean;
             /** Format: date-time */
             updated_at: string | null;
         };
@@ -3924,6 +3995,14 @@ export interface components {
             party_id: number;
             /** Format: int64 */
             reference_id: number;
+        };
+        ResetPasswordRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            email: string;
         };
         ResponseDataChartDashboardDataBody: {
             /**
@@ -4553,6 +4632,41 @@ export interface operations {
             };
         };
     };
+    "change-password": {
+        parameters: {
+            query?: never;
+            header?: {
+                "Accept-Language"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePasswordRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "update-password": {
         parameters: {
             query?: {
@@ -4573,6 +4687,41 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UpdatePasswordRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "reset-password": {
+        parameters: {
+            query?: never;
+            header?: {
+                "Accept-Language"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordRequestBody"];
             };
         };
         responses: {
@@ -7168,6 +7317,47 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
                 };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "export data": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PianoExportRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Error */
             default: {

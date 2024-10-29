@@ -38,7 +38,7 @@
     "paymentFromTo": "Pago Desde / Hasta"
   },
   "create": "Crear",
-  "info": "Información",
+  "info": "Info",
   "connections": "Conexiones",
   "_auth": {
     "signin": "Iniciar Sesión",
@@ -46,18 +46,19 @@
   },
 
   "reset-password": "Restablecer Contraseña",
+  "change-password": "Cambiar Contraseña",
   "_account": {
-    "lastLogin": "Último Inicio de Sesión",
+    "lastLogin": "Último Acceso",
     "updatePassword": "Actualizar Contraseña",
-    "siginIYouA": "Inicia sesión en tu cuenta",
-    "siginIYouADesc": "Ingresa tu correo electrónico y contraseña a continuación para iniciar sesión en tu cuenta",
-    "forgotPassword": "¿Olvidaste tu contraseña?",
-    "resetPassowordMsg": "Ingresa la dirección de correo electrónico verificada de tu cuenta y te enviaremos un enlace para restablecer la contraseña."
+    "siginIYouA": "Inicie sesión en su cuenta",
+    "siginIYouADesc": "Ingrese su correo electrónico y contraseña a continuación para iniciar sesión en su cuenta",
+    "forgotPassword": "¿Olvidó su contraseña?",
+    "resetPassowordMsg": "Ingrese la dirección de correo electrónico verificada de su cuenta y le enviaremos un enlace para restablecer su contraseña."
   },
   "_ledger": {
     "base": "Cuenta",
     "type": "Tipo de Cuenta",
-    "no": "Número de Cuenta",
+    "no": "No. de Cuenta",
     "chartOfAccounts": "Plan de Cuentas",
     "paidFrom": "Cuenta Pagada Desde",
     "paidTo": "Cuenta Pagada A",
@@ -79,22 +80,22 @@
     "add": "Agregar Contacto",
     "empty": "Aún no hay contactos"
   },
-  "manage": "Administrar",
+  "manage": "Gestionar",
   "users": "Usuarios",
   "_user": {
     "base": "Usuario"
   },
   "form": {
-    "from": "De",
-    "to": "A",
+    "from": "Desde",
+    "to": "Hasta",
     "gender": "Género",
     "name": "Nombre",
     "date": "Fecha",
-    "advancePayment": "Pago por Adelantado",
+    "advancePayment": "Pago Anticipado",
     "postingDate": "Fecha de Publicación",
     "dueDate": "Fecha de Vencimiento",
     "deliveryDate": "Fecha de Entrega",
-    "pickADate": "Seleccionar una Fecha",
+    "pickADate": "Elegir una Fecha",
     "description": "Descripción",
     "value": "Valor",
     "abbreviation": "Abreviatura",
@@ -109,8 +110,9 @@
     "newPassword": "Nueva Contraseña",
     "confirmNewPassword": "Confirmar Nueva Contraseña",
     "email": "Correo Electrónico",
+    "discount": "Descuento",
     "companyName": "Nombre de la Empresa",
-    "clientDetails": "Completa tu Información Personal",
+    "clientDetails": "Completa Tu Información Personal",
     "enabled": "Habilitar",
     "country": "País",
     "countryCode": "Código de País",
@@ -132,25 +134,25 @@
     "optional": "Opcional",
     "price-list": "Lista de Precios",
     "currency": "Moneda",
-    "buying": "Compra",
+    "buying": "Comprando",
     "paymentType": "Tipo de Pago",
-    "selling": "Venta",
+    "selling": "Vendiendo",
     "rate": "Tasa",
-    "itemQuantity": "Cantidad de Artículos",
+    "itemQuantity": "Cantidad de Artículo",
     "totalQuantity": "Cantidad Total",
-
+    
     "quantity": "Cantidad",
     "pay": "Pagar",
-    "orderTotal": "Total de la Orden",
+    "orderTotal": "Total del Pedido",
     "total": "Total",
     "tax": "Impuesto",
     "totalTax": "Total de Impuestos",
     "status": "Estado",
     "startDate": "Fecha de Inicio",
-    "outOfStockThreshold": "Umbral de Agotamiento de Stock",
+    "outOfStockThreshold": "Umbral de Agotado",
     "isGroup": "Es Grupo",
-    "isGroupDescription": "Marca esta casilla para organizarlo como un grupo.",
-    "orderConfirmation": "Confirmación de Orden",
+    "isGroupDescription": "Marque esta casilla para organizarlo como un grupo.",
+    "orderConfirmation": "Confirmación del Pedido",
     "siteUrl": "URL del Sitio",
     "logo": "Logo",
     "isShippingAddress": "Es Dirección de Envío",
@@ -158,12 +160,14 @@
     "paidAmount": "Monto Pagado ({{o}})",
     "daysWeek": "Días de la Semana",
     "comment": "Comentario",
-    "addNew": "Nuevo"
+    "addNew": "Agregar Nuevo",
+    "fromDate": "Desde la Fecha",
+    "toDate": "Hasta la Fecha"
   },
   "accounts": "Cuentas",
   "_selling": {
-    "isBuying": "Es Compra",
-    "isSelling": "Es Venta",
+    "isBuying": "Está Comprando",
+    "isSelling": "Está Vendiendo",
     "isSellingDesc": "Esta lista de precios se utilizará para vender productos.",
     "isBuyingDesc": "Esta lista de precios se utilizará para comprar productos."
   },
@@ -176,16 +180,16 @@
   },
   "f": {
     "parent": "Padre {{o}}",
-    "add-new": "Crear nuevo {{o}}",
+    "add-new": "Crear {{o}}",
     "edit": "Editar {{o}}",
-    "enable": "Marca la casilla para habilitar este {{o}}",
+    "enable": "Marque la casilla para habilitar este {{o}}",
     "accepted": "Aceptado {{o}}",
     "rejected": "Rechazado {{o}}",
     "and": "{{o}} y {{p}}",
     "purchase": "Compra {{o}}",
     "editRow": "Editar Fila {{o}}"
   },
-  "info-item": "Información {{item}}",
+  "info-item": "Info {{item}}",
 
   "accounting": "Contabilidad",
   "taxes": "Impuestos",
@@ -194,7 +198,7 @@
   "_tax": {
     "base": "Impuesto"
   },
-
+  
   "roles": "Roles",
   "_role": {
     "permissions": "Permisos del Rol",
@@ -203,8 +207,9 @@
   "entity": "Entidad",
   "action": "Acción",
 
+
   "sidebar": {
-    "sessionDefaults": "Valores Predeterminados de Sesión"
+    "sessionDefaults": "Predeterminados de Sesión"
   },
   "language": "Idioma",
 
@@ -212,7 +217,7 @@
   "applicationId": "ID de Aplicación",
   "accessToken": "Token de Acceso",
   "locationId": "ID de Ubicación",
-  "apiVersion": "Versión de API",
+  "apiVersion": "Versión de la API",
 
   "stock": "Inventario",
   "_stock": {
@@ -241,7 +246,7 @@
   "itemInfo": "Información del Artículo",
 
   "email": "Correo Electrónico",
-  "square": "Square",
+  "square": "Cuadrado",
   "_object": {
     "objectId": "ID de Objeto",
     "objectType": "Tipo de Objeto",
@@ -259,11 +264,11 @@
     "actions": "Acciones de Suscripción",
     "cancel": "Cancelar Suscripción"
   },
-
+ 
   "_item": {
     "info": "Información del Artículo",
-    "code": "Código de Artículo",
-    "prices": "Precios de Artículo",
+    "code": "Código del Artículo",
+    "prices": "Precios del Artículo",
     "quantity": "Cantidad de Artículo",
     "base": "Artículo",
     "type": "Tipo de Artículo",
@@ -274,19 +279,19 @@
 
   "item-prices": "Precios de Artículo",
   "itemPrice": {
-    "s": "Precio de Artículo",
+    "s": "Precio del Artículo",
     "p": "Precios de Artículo",
-    "info": "Información del Precio de Artículo"
+    "info": "Información del Precio del Artículo"
   },
   "priceList": {
     "info": "Información de la lista de precios"
   },
 
   "orders": "Órdenes",
-  "orderInfo": "Información de Orden",
+  "orderInfo": "Información del Pedido",
   "_order": {
-    "base": "Orden",
-    "orderItems": "Artículos de la Orden"
+    "base": "Pedido",
+    "orderItems": "Artículos del Pedido"
   },
   "table": {
     "new": "Nuevo",
@@ -309,18 +314,18 @@
     "referenceName": "Nombre de Referencia"
   },
   "dialog": {
-    "title": "¿Estás seguro de que deseas continuar con esta acción?",
-    "description": "Por favor, confirma si deseas proceder con esta acción."
+    "title": "¿Está seguro de que desea continuar con esta acción?",
+    "description": "Por favor confirme si desea continuar con esta acción."
   },
   "continue": "Continuar",
   "cancel": "Cancelar",
 
   "actions": {
-    "base": "Acciones",
+    "base": "acciones",
     "edit": "Editar"
   },
   "tooltip": {
-    "selectCurrency": "Por favor, selecciona tu moneda."
+    "selectCurrency": "Por favor seleccione su moneda."
   },
   "gender": {
     "male": "Masculino",
@@ -328,7 +333,7 @@
     "noBinary": "No Binario"
   },
   "alert": {
-    "submit": "Por favor, envía este documento para confirmación."
+    "submit": "Por favor envíe este documento para confirmación."
   },
   "RECEIVE": "Recibir",
   "PAY": "Pagar",
@@ -337,10 +342,20 @@
   "LIABILITIES": "Pasivos",
   "EXPENSE": "Gasto",
   "REVENUE": "Ingresos",
+
+  "purchaseInvoice": "Factura de Compra",
+  "purchaseOrder": "Orden de Compra",
+  "purchaseReceipt": "Recibo de Compra",
+  "payment": "Pago", 
+  "pianoForms": "Formularios de Piano",
+
+  "relocationAndMoving": "Reubicación y Mudanza",
+
+
   "regate": {
-    "schedule": "Programar",
+    "schedule": "Horario",
     "_court": {
-      "base": "Cancha"
+      "base": "Corte"
     },
     "_booking": {
       "base": "Reserva"
@@ -348,6 +363,5 @@
     "_event": {
       "base": "Evento"
     }
-  },
-  "booking":"Reserva"
+  }
 }

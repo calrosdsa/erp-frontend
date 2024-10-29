@@ -139,6 +139,7 @@ export const Icons = {
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
+      className="mr-2 h-5 w-5 animate-spin text-primary"
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}

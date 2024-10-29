@@ -17,6 +17,7 @@ import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useUnmount } from "usehooks-ts";
 
 type RouteItem = {
   name: string;
@@ -56,6 +57,10 @@ export default function HomeLayout({
     const route = path.slice(-1)[0]
     return t(decodeURIComponent(route||""));  
   };
+
+  useUnmount(()=>{
+    toolbar.setToolbar({})
+  })
 
 
   React.useEffect(() => {

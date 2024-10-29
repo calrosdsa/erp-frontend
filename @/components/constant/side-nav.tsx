@@ -31,43 +31,42 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
   let navItems: NavItem[] = [];
   const r = routes;
-  const { user, role,roleActions } = data;
-  const entities = roleActions.filter(
-    (item) => item.action.name == "view"
-  ).map((item) => item.action.entity_id);
+  const { user, role, roleActions } = data;
+  const entities = roleActions
+    .filter((item) => item.action.name == "view")
+    .map((item) => item.action.entity_id);
 
   const buyingNav = BuyingNav({
-    entities:entities
-  })
+    entities: entities,
+  });
 
   const sellingNav = SellingNav({
-    entities:entities,
-  })
+    entities: entities,
+  });
   const accountingNav = AccountingNav({
-    entities:entities
-  })
+    entities: entities,
+  });
 
   // Regate
   const dashboardNav = DashboarNav({
-    entities:entities
-  })
+    entities: entities,
+  });
   const courtNav = CourtNav({
-    entities:entities
-  })
+    entities: entities,
+  });
   const bookingNav = BookingNav({
-    entities:entities
-  })
+    entities: entities,
+  });
   const eventNav = EventNav({
-    entities:entities
-  })
+    entities: entities,
+  });
 
   const pianoFormsNav = PianoFormsNav({
-    entities:entities
-  })
+    entities: entities,
+  });
   // const customerNav = CustomerNav({
   //   entities:entities
   // })
-  
 
   const companies = {
     title: t("_company.companies"),
@@ -89,13 +88,6 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     href: r.contact,
     // color: "text-sky-500",
   };
-
-  
-
- 
-
-
- 
 
   let stockChildrens: NavItem[] = [];
   if (entities?.includes(Entity.ITEM_ENTITY_ID)) {
@@ -199,7 +191,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
 
   // switch (session.role) {
   // case Role.ROLE_ADMIN: {
-    
+
   if (entities?.includes(Entity.COMPANY_ENTITY_ID)) {
     navItems.push(companies);
   }
@@ -207,42 +199,37 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     navItems.push(accountingNav);
   }
 
-  //Piano 
+  //Piano
 
-  if(pianoFormsNav.children && pianoFormsNav.children.length > 0) {
-    navItems.push(pianoFormsNav)
+  if (pianoFormsNav.children && pianoFormsNav.children.length > 0) {
+    navItems.push(pianoFormsNav);
   }
-  
-  
+
   //Regate
-  navItems.push(dashboardNav)
+  if (entities.includes(Entity.REGATE_CHART_ENTITY_ID)) {
+    navItems.push(dashboardNav);
+  }
 
-  if(entities?.includes(Entity.COURT_ENTITY_ID)){
-    navItems.push(courtNav)
+  if (entities?.includes(Entity.COURT_ENTITY_ID)) {
+    navItems.push(courtNav);
   }
-  if(entities?.includes(Entity.BOOKING_ENTITY_ID)){
-    navItems.push(bookingNav)
+  if (entities?.includes(Entity.BOOKING_ENTITY_ID)) {
+    navItems.push(bookingNav);
   }
-  if(entities?.includes(Entity.EVENTBOOKING_ENTITY_ID)){
-    navItems.push(eventNav)
+  if (entities?.includes(Entity.EVENTBOOKING_ENTITY_ID)) {
+    navItems.push(eventNav);
   }
   // if(customerNav.children && customerNav.children.length > 0) {
   //   navItems.push(customerNav)
   // }
-  
 
-
-  if(buyingNav.children && buyingNav.children.length > 0) {
-    navItems.push(buyingNav)
+  if (buyingNav.children && buyingNav.children.length > 0) {
+    navItems.push(buyingNav);
   }
-  if(sellingNav.children && sellingNav.children.length > 0) {
-    navItems.push(sellingNav)
+  if (sellingNav.children && sellingNav.children.length > 0) {
+    navItems.push(sellingNav);
   }
 
-
-  
-  
-  
   if (stockChildrens.length > 0) {
     navItems.push(stock);
   }

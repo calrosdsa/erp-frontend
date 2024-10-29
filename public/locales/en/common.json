@@ -46,6 +46,7 @@
   },
 
   "reset-password": "Reset Password",
+  "change-password":"Change Password",
   "_account": {
     "lastLogin": "Last Login",
     "updatePassword": "Update Password",
@@ -186,7 +187,9 @@
     "rejected":"Rejected {{o}}",
     "and":"{{o}} and {{p}}",
     "purchase":"Purchase {{o}}",
-    "editRow":"Edit Row {{o}}"
+    "editRow":"Edit Row {{o}}",
+    "of":"of",
+    "selected":"Selected {{o}}(s) "
   },
   "info-item": "Info {{item}}",
 
@@ -316,6 +319,11 @@
     "title": "Are you sure you want to proceed with this action?",
     "description": "Please confirm if you wish to proceed with this action."
   },
+  "_page":{
+    "base":"Page",
+    "rowPerPage":"Rows per page",
+    "row":"Row"
+  },
   "continue": "Continue",
   "cancel": "Cancel",
 
@@ -344,8 +352,11 @@
 
   "purchaseInvoice":"Purchase Invoice",
   "purchaseOrder":"Purchase Order",
+  "saleInvoice":"Sale Invoice",
+  "saleOrder":"Sale Order",
   "purchaseReceipt":"Purchase Receipt",
-  "payment":"Payment",  
+  "payment":"Payment", 
+  "pianoForms":"Piano Forms",
 
   "relocationAndMoving":"Relocation & Moving",
 

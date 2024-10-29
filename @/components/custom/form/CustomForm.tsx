@@ -28,10 +28,12 @@ interface Props {
   renderCustomInputs?: (form: any) => ReactNode;
   fetcher: FetcherWithComponents<unknown>;
   buttonClassName?:string
+  buttonText?:string
 }
 export default function CustomForm<T extends FieldValues>({
   formItemsData,
   buttonClassName,
+  buttonText,
   schema,
   onSubmit,
   className,
@@ -170,7 +172,7 @@ export default function CustomForm<T extends FieldValues>({
 
         <div className={cn(buttonClassName)}>
         <Button type="submit" className="w-full" loading={fetcher.state== "submitting"}>
-         {t("form.submit")}
+         {buttonText ? buttonText:t("form.submit")}
         </Button>
         </div>
       </fetcher.Form>

@@ -44,6 +44,7 @@ export enum Entity {
     SALE_ORDER_ENTITY_ID = 25, 
     SALE_INVOICE_ENTITY_ID = 26,
     PIANO_FORMS_ENTITY_ID = 27,
+    REGATE_CHART_ENTITY_ID = 28,
 }
 
 export enum PartyType {

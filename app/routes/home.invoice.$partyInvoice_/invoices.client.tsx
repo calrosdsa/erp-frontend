@@ -34,7 +34,6 @@ export default function InvoicesClient(){
     },[permission])
     return (
         <div>
-            {JSON.stringify(paginationResult?.results)}
             <DataTable
             data={paginationResult?.results || []}
             columns={invoiceColumns({

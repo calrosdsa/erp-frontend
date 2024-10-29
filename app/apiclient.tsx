@@ -9,11 +9,7 @@ const UNPROTECTED_ROUTES = ["/auth/signin"];
 const authMiddl = (appRequest: Request) => {
   const authMiddleware: Middleware = {
     async onRequest({ schemaPath, request }) {
-      if (
-        UNPROTECTED_ROUTES.some((pathname) => schemaPath.startsWith(pathname))
-      ) {
-        return undefined;
-      }
+     
 
       const session = await getSession(appRequest.headers.get("Cookie"));
       const bearerToken = session.get("access_token") as string;

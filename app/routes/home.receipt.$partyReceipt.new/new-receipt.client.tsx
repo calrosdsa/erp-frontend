@@ -21,7 +21,6 @@ import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import { useCreateSupplier } from "../home.buying.suppliers_/components/create-supplier";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import Typography, { subtitle, title } from "@/components/typography/Typography";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
@@ -30,6 +29,7 @@ import { useCreateReceipt } from "./use-create-receipt";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useCreateSupplier } from "../home.supplier_/components/create-supplier";
 
 export default function NewReceiptClient() {
   const fetcher = useFetcher<typeof action>();

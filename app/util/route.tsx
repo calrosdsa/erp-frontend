@@ -1,13 +1,16 @@
 import { ChartType, chartTypeToJSON, PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 
 class Routes {
+  signin = "/signin"
   api = "/api";
   apiData = this.api + "/data";
   apiCore = this.api + "/core";
+  apiExporter = this.api + "/exporter";
   apiItemLine = this.api + "/itemline";
   base = "/home";
   party = this.base + "/party";
 
+  
   address = this.base + "/address";
   contact = this.base + "/contact";
   createAddress = this.address + "/create";

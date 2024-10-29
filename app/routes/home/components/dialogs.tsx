@@ -1,5 +1,6 @@
 import { AddLineOrder, useAddLineOrder } from "@/components/custom/shared/item/add-item-line"
 import ItemLine, { useItemLine } from "@/components/custom/shared/item/item-line"
+import { ExporterData, useExporterData } from "~/routes/api.exporter/components/use-exporter-data"
 import { CreateEvent, useCreateEvent } from "~/routes/home._regate.event_/components/use-create-event"
 import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax"
 import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
@@ -38,10 +39,19 @@ export default function GlobalDialogs({globalState}:{
 
     const itemLine = useItemLine()
 
+    const exporterData = useExporterData()
+
     //Regate
     const createEvent = useCreateEvent()
     return (
         <>
+        {exporterData.open && 
+        <ExporterData
+        open={exporterData.open}
+        onOpenChange={exporterData.onOpenChange}
+        />
+        }
+
         {itemLine.open && 
         <ItemLine
         open={itemLine.open}

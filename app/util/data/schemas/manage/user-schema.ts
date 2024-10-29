@@ -10,7 +10,7 @@ export const createUserSchema = z.object({
     roleUuid:z.string(),
     roleName:z.string(),
     partyCode:z.string(),
-    companyIds:z.array(z.number()),
+    // companyIds:z.array(z.number()),
     givenName:z.string().min(3).max(50),
     familyName:z.string().min(3).max(50),
     phoneNumber:z.string().max(50).optional(),

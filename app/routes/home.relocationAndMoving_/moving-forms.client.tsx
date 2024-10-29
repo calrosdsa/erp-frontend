@@ -5,13 +5,36 @@ import { movingFormColumns } from "@/components/custom/table/columns/piano/movin
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import PaginationLayout from "@/components/layout/pagination-layout";
 import { useTranslation } from "react-i18next";
+import { useToast } from "@/components/ui/use-toast";
+import { Icons } from "@/components/icons";
+import { Check } from "lucide-react";
+import { useExporter } from "~/util/hooks/ui/useExporter";
+import { ActionToolbar } from "~/types/actions";
+import { routes } from "~/util/route";
+import { useExporterData } from "../api.exporter/components/use-exporter-data";
 
 export default function MovingForms() {
   const { paginationResult } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
+  const {exportExcel} = useExporter()
+  const r = routes
+  const exporterData = useExporterData()
+ 
   setUpToolbar(() => {
-    return {};
+    let actions:ActionToolbar[] = []
+    actions.push({
+      label:"Export Data",
+      onClick:()=>{
+        exporterData.openExporter({
+          path:"/pianoForms/export",
+        })
+      }
+    })
+    return {
+      actions,
+    };
   }, []);
+
   return (
     <PaginationLayout
       orderOptions={[

@@ -97,12 +97,14 @@ export const CreateUser = ({open,onOpenChange,permission,globalState}:{
             formItemsData={[
                 {
                     name:"givenName",
+                    required:true,
                     type:"string",
                     typeForm:"input",
                     label:t("form.givenName"),
                 },
                 {
                     name:"familyName",
+                    required:true,
                     type:"string",
                     typeForm:"input",
                     label:t("form.familyName"),
@@ -110,11 +112,13 @@ export const CreateUser = ({open,onOpenChange,permission,globalState}:{
                 {
                     name:"email",
                     type:"email",
+                    required:true,
                     typeForm:"input",
                     label:t("form.email")
                 },
                 {
                     name:"phoneNumber",
+                    required:false,
                     type:"tel",
                     typeForm:"input",
                     label:t("form.phoneNumber")
@@ -128,14 +132,14 @@ export const CreateUser = ({open,onOpenChange,permission,globalState}:{
                     keyName:"name",
                     keyValue:"code"
                 },
-                {
-                    name:"companyIds",
-                    typeForm:"multiselect",
-                    label:t("companies"),
-                    data:companiesFetcher.data?.companies || [],
-                    keyName:"name",
-                    keyValue:"id",
-                }
+                // {
+                //     name:"companyIds",
+                //     typeForm:"multiselect",
+                //     label:t("companies"),
+                //     data:companiesFetcher.data?.companies || [],
+                //     keyName:"name",
+                //     keyValue:"id",
+                // }
             ]}
             renderCustomInputs={(form)=>{
                 return (

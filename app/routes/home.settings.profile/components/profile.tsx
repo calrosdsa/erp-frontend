@@ -68,13 +68,7 @@ export default function ProfileInfo() {
         {profile && (
           <>
            <input className="hidden" type="submit" ref={inputRef}/>
-            {/* <div className=" col-span-full flex justify-between w-full items-center">
-              <Typography fontSize={title}>{t("info")}</Typography>
-              <Button disabled={!hasChanged} onClick={() => {}}>
-                {t("form.save")}
-              </Button>
-            </div> */}
-
+          
             <CustomFormField
               form={form}
               name="givenName"
@@ -82,7 +76,6 @@ export default function ProfileInfo() {
                 return (
                   <DisplayTextValue
                     title={t("form.givenName")}
-                    //   onChange={(e)=>updateField("GivenName",e)}
                     onChange={(e) => field.onChange(e)}
                     value={field.value}
                     readOnly={false}
@@ -98,7 +91,6 @@ export default function ProfileInfo() {
                 return (
                   <DisplayTextValue
                     title={t("form.familyName")}
-                    //   onChange={(e)=>updateField("GivenName",e)}
                     onChange={(e) => field.onChange(e)}
                     value={field.value}
                     readOnly={false}
@@ -119,7 +111,6 @@ export default function ProfileInfo() {
                 return (
                   <DisplayTextValue
                     title={t("form.phoneNumber")}
-                    //   onChange={(e)=>updateField("GivenName",e)}
                     onChange={(e) => field.onChange(e)}
                     value={field.value}
                     readOnly={false}
@@ -127,65 +118,6 @@ export default function ProfileInfo() {
                 );
               }}
             />
-
-            {/* <CustomFormField
-              form={form}
-              name="organizationName"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    title={t("form.companyName")}
-                    //   onChange={(e)=>updateField("GivenName",e)}
-                    onChange={(e) => field.onChange(e)}
-                    value={field.value}
-                    readOnly={false}
-                  />
-                );
-              }}
-            />
-
-            <CustomFormField
-              form={form}
-              name="countryCode"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    title={t("form.countryCode")}
-                    //   onChange={(e)=>updateField("GivenName",e)}
-                    onChange={(e) => field.onChange(e)}
-                    value={field.value}
-                    readOnly={false}
-                  />
-                );
-              }}
-            /> */}
-
-            {/* {profile.ClientKeyValueData?.map((item, idx) => {
-              return (
-                <div key={idx}>
-                  <DisplayTextValue title={item.key} value={item.value} />
-                </div>
-              );
-            })} */}
-
-            {/* <CustomForm
-            fetcher={fetcher}
-            updateClientSchema={updateClientFormSchema}
-            defaultValues={{
-                givenName:client.GivenName
-                }}
-                formItemsData={[
-                    {
-                        name:"givenName",
-                        label:t("form.name"),
-                        type:"string",
-                    typeForm:"input",
-                    }
-            ]}
-            onSubmit={(e:z.infer<typeof updateClientFormSchema>)=>{
-                console.log("VALUES",e)
-                }}
-                /> */}
           </>
         )}
       </fetcher.Form>

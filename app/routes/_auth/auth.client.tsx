@@ -103,11 +103,11 @@ const AuthClient = ({ children }: { children: ReactNode }) => {
             </p> */}
           </div>
 
-          <div className="py-3 absolute bottom-3 ">
+          {/* <div className="py-3 absolute bottom-3 ">
             <p className="text-xs text-center ">
               © {company ? company.name:DEFAULT_COMPANY_NAME} {new Date().getFullYear()}
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

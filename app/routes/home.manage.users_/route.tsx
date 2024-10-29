@@ -27,7 +27,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     given_name:d.givenName,
                     family_name:d.familyName,
                     phone_number:d.phoneNumber,
-                    company_ids:d.companyIds,
+                    // company_ids:d.companyIds,
                     party_code:d.partyCode,
                     key_value_data:d.keyValue
                 }

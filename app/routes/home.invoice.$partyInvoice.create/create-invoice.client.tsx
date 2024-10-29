@@ -22,7 +22,6 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { Button } from "@/components/ui/button";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { useCreateSupplier } from "../home.buying.suppliers_/components/create-supplier";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { action } from "./route";
 import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
@@ -37,6 +36,7 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import PartyAutocomplete from "../home.order.$partyOrder.create/components/party-autocomplete";
 import Typography, { subtitle } from "@/components/typography/Typography";
+import { useCreateSupplier } from "../home.supplier_/components/create-supplier";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();

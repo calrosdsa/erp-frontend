@@ -1,9 +1,10 @@
-import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { commitSession, getSession } from "~/sessions";
 import { sessionDefaultsFormSchema } from "../home/components/SessionDefaults";
 import { z } from "zod";
 import apiClient from "~/apiclient";
 import { components } from "~/sdk";
+import { endOfMonth, formatRFC3339, startOfMonth } from "date-fns";
 
 type ApiAction = {
   action:string
@@ -38,6 +39,58 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({
     sessions
   });
+};
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const client = apiClient({ request });
+  const url = new URL(request.url)
+  const searchParams = url.searchParams
+  console.log(searchParams.get("type"))
+  try {
+    const response = await client.POST("/pianoForms/export", {
+      parseAs: "stream",
+      body: {
+        from_date: formatRFC3339(startOfMonth(new Date())),
+        to_date: formatRFC3339(endOfMonth(new Date())),
+      },
+    });
+
+    // Check for errors in the response
+    if (response.error) {
+      console.error('API error:', response.error);
+      throw new Error('Error in response from API');
+    }
+
+    // Check if the response is ok
+    if (!response.response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const reader = response.response.body?.getReader();
+    const chunks: Uint8Array[] = [];
+
+    const readStream = async () => {
+      while (true) {
+        const { done, value } = await reader!.read();
+        if (done) {
+          break; // Stream is finished
+        }
+        chunks.push(value); // Collect chunks
+      }
+
+      // Create a Blob from the collected chunks
+      const blob = new Blob(chunks);
+      
+      return blob; // Return the Blob directly
+    };
+
+    const blob = await readStream(); // Await the result of the readStream function
+    return new Response(blob, { status: 200 }); // Return the Blob as a Response
+
+  } catch (error) {
+    console.error('Error:', error);
+    // Handle error response appropriately
+    return new Response('Internal Server Error', { status: 500 });
+  }
 };
 
 // export const action = async({request}:ActionFunctionArgs) =>{

@@ -21,7 +21,7 @@ export const PianoFormsNav = ({ entities }: {
  
 
   const pianoForms: NavItem = {
-    title: "pianoForms",
+    title: t("pianoForms"),
     icon: NotepadText,
     href:r.customers,
     isChildren: true,

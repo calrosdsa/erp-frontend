@@ -52,19 +52,11 @@ export default function RoleClient() {
           {t("_role.permissions")}
         </Typography>
 
-        {/* {JSON.stringify(roleActions)} */}
+        {/* {JSON.stringify(entityActions?.entity)} */}
 
         <div className=" col-span-full">
           <DataTable
-            metaActions={{
-              meta: {
-                ...(permission?.edit && {
-                  addNew: () => {
-                    
-                  },
-                }),
-              },
-            }}
+           
             metaOptions={{
                 meta:meta
             }}
