@@ -19,7 +19,6 @@ import {
 import { z } from "zod";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { routes } from "~/util/route";
-import { toast, useToast } from "@/components/ui/use-toast";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import DetailLayout from "@/components/layout/detail-layout";
 import InvoiceInfoTab from "./components/tab/invoice-info";
@@ -29,8 +28,9 @@ import { ActionToolbar } from "~/types/actions";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { PlusIcon } from "lucide-react";
-import { useCreatePayment } from "../home.accounting.payment.create/use-create-payment";
 import { sumTotal } from "~/util/format/formatCurrency";
+import { useCreatePayment } from "../home.accounting.payment.create/use-create-payment";
+import { useStatus } from "~/util/hooks/data/useStatus";
 
 export default function InvoiceDetailClient() {
   const { actions, invoice, activities, associatedActions, itemLines } =
@@ -39,7 +39,7 @@ export default function InvoiceDetailClient() {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
-  const partyInvoice = partyTypeFromJSON(params.partyInvoice);
+  const partyInvoice = params.partyInvoice || ""
   const [searchParams] = useSearchParams();
   const globalState = useOutletContext<GlobalState>();
   const tab = searchParams.get("tab");
@@ -51,25 +51,38 @@ export default function InvoiceDetailClient() {
     roleActions: globalState.roleActions,
   });
   const createPayment = useCreatePayment();
+  const { enabledOrder, toBill,isCompleted } = useStatus({
+    status: stateFromJSON(invoice?.status),
+  });
 
   const navItems = [
     {
       title: t("info"),
-      href: r.toPartyDetail(params.partyInvoice || "", invoice?.code || "", {
-        tab: "info",
-      }),
+      href: r.toRoute({
+        main: partyInvoice,
+        routePrefix:["invoice"],
+        routeSufix: [invoice?.code || ""],
+        q: {
+          tab: "info",
+        },
+      })
     },
     {
       title: t("connections"),
-      href: r.toPartyDetail(params.partyInvoice || "", invoice?.code || "", {
-        tab: "connections",
-      }),
+      href: r.toRoute({
+        main: partyInvoice,
+        routePrefix:["invoice"],
+        routeSufix: [invoice?.code || ""],
+        q: {
+          tab: "connections",
+        },
+      })
     },
   ];
 
   setUpToolbar(() => {
     let actions: ActionToolbar[] = [];
-    if (paymentPermission?.create) {
+    if (paymentPermission?.create && !isCompleted) {
       actions.push({
         label: t("_payment.base"),
         onClick: () => {
@@ -108,7 +121,7 @@ export default function InvoiceDetailClient() {
         );
       },
     };
-  }, [paymentPermission]);
+  }, [paymentPermission,invoice]);
 
   useEffect(() => {
     if (fetcher.state == "submitting") {

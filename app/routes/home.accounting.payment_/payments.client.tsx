@@ -5,6 +5,7 @@ import { paymentColumns } from "@/components/custom/table/columns/accounting/pay
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { routes } from "~/util/route";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 
 export default function PaymentsClient(){
@@ -16,20 +17,20 @@ export default function PaymentsClient(){
         actions:actions,
         roleActions:globalState.roleActions
     })
+    setUpToolbar(()=>{
+        return {
+            ...(permission?.create && {
+                addNew:()=>{
+                    navigate(r.toPaymentCreate())
+                }
+            })
+        }
+    },[permission])
     return (
         <div>
             <DataTable
             columns={paymentColumns()}
             data={paginationResult?.results ||  []}
-            metaActions={{
-                meta:{
-                    ...(permission?.create && {
-                        addNew:()=>{
-                            navigate(r.toPaymentCreate())
-                        }
-                    })
-                }
-            }}
             />
         </div>
     )

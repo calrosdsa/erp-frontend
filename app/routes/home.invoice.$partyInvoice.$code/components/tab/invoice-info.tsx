@@ -1,7 +1,6 @@
 import { components } from "~/sdk";
 import { useTranslation } from "react-i18next";
-import Typography, { subtitle } from "@/components/typography/Typography";
-import { sumTotal } from "~/util/format/formatCurrency";
+import { formatCurrency, sumTotal } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { formatMediumDate } from "~/util/format/formatDate";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
@@ -13,17 +12,17 @@ import { useLoaderData, useParams } from "@remix-run/react";
 import { loader } from "../../route";
 import { ItemLineType, State, stateToJSON } from "~/gen/common";
 import { displayItemLineColumns } from "@/components/custom/table/columns/order/order-line-column";
+import { Typography } from "@/components/typography";
 
 export default function InvoiceInfoTab() {
   const { t, i18n } = useTranslation("common");
-  const { invoice,itemLines } = useLoaderData<typeof loader>();
+  const { invoice,itemLines,totals } = useLoaderData<typeof loader>();
   const itemLine = useItemLine();
   const params = useParams()
   const [metaOptions] = useTableRowActions({
     onEdit: (rowIndex) => {
         if(itemLines && itemLines.length >0){
             const line = itemLines[rowIndex];
-            console.log("ITEM LINE EDIT", line);
             itemLine.onOpenDialog({
                 title: t("f.editRow", { o: `#${rowIndex}` }),
                 allowEdit: invoice?.status == stateToJSON(State.DRAFT),
@@ -53,10 +52,9 @@ export default function InvoiceInfoTab() {
           title={t("form.currency")}
           value={invoice?.currency}
         />
-      </div>
 
       <div className=" col-span-full pt-3">
-        <Typography fontSize={subtitle}>{t("items")}</Typography>
+        <Typography variant="title1">{t("items")}</Typography>
         <DataTable
           data={itemLines || []}
           columns={displayItemLineColumns({
@@ -67,17 +65,29 @@ export default function InvoiceInfoTab() {
           }}
         />
 
-        {(invoice && itemLines && itemLines.length > 0) && (
-          <OrderSumary
-            orderTotal={sumTotal(
-              itemLines.map((t) => t.rate * t.quantity)
-            )}
-            orderTax={0}
-            i18n={i18n}
-            currency={invoice?.currency || DEFAULT_CURRENCY}
-          />
-        )}
       </div>
+       {totals && (
+        <>
+       <Typography variant="title1" className=" col-span-full">{t("form.totals")}</Typography>
+
+       <DisplayTextValue
+       title={t("form.total")}
+       value={formatCurrency(totals.total,invoice?.currency,i18n.language)}
+       />
+       <DisplayTextValue
+       title={t("form.paidAmount")}
+       value={formatCurrency(totals.paid,invoice?.currency,i18n.language)}
+       />
+       <DisplayTextValue
+       title={t("form.outstandingAmount")}
+       value={formatCurrency(totals.total-totals.paid,invoice?.currency,i18n.language)}
+       />
+            </>
+        )}
+
+      </div>
+
+
     </div>
   );
 }

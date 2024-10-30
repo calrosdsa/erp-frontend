@@ -49,6 +49,7 @@ export const loader =  async({request,params}:LoaderFunctionArgs)=>{
         }
 
     })
+    console.log("FETCHIN-HERE",res.error,res.data)
     handleError(res.error)
     if (res.data) {
         switch (tab) {
@@ -74,7 +75,8 @@ export const loader =  async({request,params}:LoaderFunctionArgs)=>{
         actions:res.data?.actions,
         connections:resConnections,
         associatedActions:res.data?.associated_actions,
-        activities:res.data?.result.activities
+        activities:res.data?.result.activities,
+        totals:res.data?.result.entity.totals,
     })
 }
 export default function InvoiceDetail(){

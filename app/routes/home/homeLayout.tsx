@@ -8,16 +8,18 @@ import Header from "@/components/layout/header";
 import {
   Breadcrumb,
   BreadcrumbItem,
+  BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Typography, { headline, sm, title, xs } from "@/components/typography/Typography";
 import { HomeIcon } from "lucide-react";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useUnmount } from "usehooks-ts";
+import { Typography } from "@/components/typography";
 
 type RouteItem = {
   name: string;
@@ -37,7 +39,7 @@ export default function HomeLayout({
 
   const [routesName, setRoutesName] = React.useState<string[]>([]);
 
-  const toolbar = useToolbar()
+  const toolbar = useToolbar();
 
   const getRoutes = () => {
     const routesName = location.pathname.split("/").map((word) => t(word));
@@ -54,14 +56,13 @@ export default function HomeLayout({
 
   const getRouteName = () => {
     const path = location.pathname.split("/");
-    const route = path.slice(-1)[0]
-    return t(decodeURIComponent(route||""));  
+    const route = path.slice(-1)[0];
+    return t(decodeURIComponent(route || ""));
   };
 
-  useUnmount(()=>{
-    toolbar.setToolbar({})
-  })
-
+  useUnmount(() => {
+    toolbar.setToolbar({});
+  });
 
   React.useEffect(() => {
     getRoutes();
@@ -75,7 +76,7 @@ export default function HomeLayout({
   }, [location]);
   return (
     <>
-      <GlobalDialogs  globalState={globalState}/>
+      <GlobalDialogs globalState={globalState} />
       {openSessionDefaults && (
         <SessionDefaultDrawer
           open={openSessionDefaults}
@@ -108,51 +109,55 @@ export default function HomeLayout({
           >
             <div className="flex align-center">
               <Breadcrumb aria-label="breadcrumbs">
-                <BreadcrumbList key={"breadcrum"}>
-                  <BreadcrumbItem key={-1}>
-                    <Link
-                      color="neutral"
-                      to="/home"
-                      className="hover:underline"
-                      aria-label="Home"
-                    >
-                      <HomeIcon size={15} />
-                    </Link>
+                <BreadcrumbList>
+                  <BreadcrumbItem key="home">
+                    <BreadcrumbLink asChild>
+                      <Link
+                        to="/home"
+                        className="hover:underline"
+                        aria-label="Home"
+                      >
+                        <HomeIcon size={15} />
+                      </Link>
+                    </BreadcrumbLink>
                   </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  {routesName
-                    .slice(0, routesName.length - 1)
-                    .map((item, idx) => {
-                      return (
-                        <>
-                          <BreadcrumbItem key={idx}>
-                            <Link
-                              color="neutral"
-                              to={getRoute(idx)}
-                              aria-label={item}
-                              className="hover:underline"
-                            >
-                              <Typography fontSize={xs}>{item}</Typography>
-                            </Link>
-                          </BreadcrumbItem>
-                          <BreadcrumbSeparator />
-                        </>
-                      );
-                    })}
-
-                  <Typography fontSize={xs}>
-                    {decodeURIComponent(routesName[routesName.length - 1]||"")}
-                  </Typography>
+                  {routesName.slice(0, -1).map((item, idx) => (
+                    <React.Fragment key={`breadcrumb-${idx}`}>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <BreadcrumbLink asChild>
+                          <Link
+                            to={getRoute(idx)}
+                            aria-label={item}
+                            className="hover:underline"
+                          >
+                            <Typography variant="caption" >{item}</Typography>
+                          </Link>
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
+                    </React.Fragment>
+                  ))}
+                  {routesName.length > 0 && (
+                    <>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <BreadcrumbPage>
+                          <Typography variant="caption" >
+                            {decodeURIComponent(
+                              routesName[routesName.length - 1] || ""
+                            )}
+                          </Typography>
+                        </BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </>
+                  )}
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
 
-            <ToolBar
-            title={getRouteName()}/>
+            <ToolBar title={getRouteName()} />
 
-            <div className="h-full">
-            {children}
-            </div>
+            <div className="h-full">{children}</div>
           </div>
         </main>
       </div>
@@ -189,7 +194,7 @@ export default function HomeLayout({
 //   <Breadcrumbs
 //     size="sm"
 //     aria-label="breadcrumbs"
-//     separator={<ChevronRightRoundedIcon fontSize="small" />}
+//     separator={<ChevronRightRoundedIcon fontSize="caption"  />}
 //     sx={{ pl: 0 }}
 //   >
 //     <Link

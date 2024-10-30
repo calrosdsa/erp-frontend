@@ -1,4 +1,10 @@
-import { useFetcher, useNavigate, useRevalidator } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+  useRevalidator,
+} from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +16,7 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import SelectForm from "@/components/custom/select/SelectForm";
-import { PaymentType } from "~/gen/common";
+import { PartyType, partyTypeToJSON, PaymentType } from "~/gen/common";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { Separator } from "@/components/ui/separator";
@@ -21,29 +27,33 @@ import { Input } from "@/components/ui/input";
 import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { routes } from "~/util/route";
-import { action } from "./route";
+import { action, loader } from "./route";
 import { useCreatePayment } from "./use-create-payment";
 import { formatAmounFromInt } from "~/util/format/formatCurrency";
+import { usePermission } from "~/util/hooks/useActions";
+import { GlobalState } from "~/types/app";
 
 export default function PaymentCreateClient() {
+  const { associatedActions } = useLoaderData<typeof loader>();
   const fetcherPaymentPartiesType = useFetcher<typeof action>();
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
   const { toast } = useToast();
   const [paymentTypes, setPaymentTypes] = useState<SelectItem[]>([]);
-  const createPayment = useCreatePayment()
+  const createPayment = useCreatePayment();
   const form = useForm<z.infer<typeof createPaymentSchema>>({
     resolver: zodResolver(createPaymentSchema),
     defaultValues: {
-      amount:formatAmounFromInt(createPayment.payload?.amount),
-      partyName:createPayment.payload?.partyName,
-      partyUuid:createPayment.payload?.partyUuid,
-      partyType:createPayment.payload?.partyType,
-      partyReference:createPayment.payload?.partyReference,
+      amount: formatAmounFromInt(createPayment.payload?.amount),
+      partyName: createPayment.payload?.partyName,
+      partyUuid: createPayment.payload?.partyUuid,
+      partyType: createPayment.payload?.partyType,
+      partyReference: createPayment.payload?.partyReference,
     },
   });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const toolbar = useToolbar();
+  const globalState = useOutletContext<GlobalState>();
   const navigate = useNavigate();
   const r = routes;
   const [accountPaidFromFetcher, onAccountPaidFromChange] =
@@ -56,6 +66,11 @@ export default function PaymentCreateClient() {
     });
   const [partiesDebounceFetcher, onPartyNameChange] = usePartyDebounceFetcher({
     partyType: form.getValues().partyType,
+  });
+  const [ledgerPermission] = usePermission({
+    roleActions: globalState.roleActions,
+    actions:
+      associatedActions && associatedActions[partyTypeToJSON(PartyType.ledger)],
   });
   const revalidator = useRevalidator();
 
@@ -126,7 +141,7 @@ export default function PaymentCreateClient() {
       toast({
         title: fetcher.data.message,
       });
-      navigate(r.toPaymentDetail(fetcher.data.payment?.code))
+      navigate(r.toPaymentDetail(fetcher.data.payment?.code));
     }
   }, [fetcher.data]);
   return (
@@ -201,33 +216,36 @@ export default function PaymentCreateClient() {
               }}
             />
 
-            <Typography className=" col-span-full" fontSize={subtitle}>
-              {t("accounts")}
-            </Typography>
+            {ledgerPermission?.view && (
+              <>
+                <Typography className=" col-span-full" fontSize={subtitle}>
+                  {t("accounts")}
+                </Typography>
+                <FormAutocomplete
+                  data={accountPaidFromFetcher.data?.accounts || []}
+                  form={form}
+                  label={t("_ledger.paidFrom")}
+                  onValueChange={onAccountPaidFromChange}
+                  name="accountPaidFromName"
+                  onSelect={(e) => {
+                    form.setValue("accountPaidFrom", e.id);
+                  }}
+                  nameK={"name"}
+                />
 
-            <FormAutocomplete
-              data={accountPaidFromFetcher.data?.accounts || []}
-              form={form}
-              label={t("_ledger.paidFrom")}
-              onValueChange={onAccountPaidFromChange}
-              name="accountPaidFromName"
-              onSelect={(e) => {
-                form.setValue("accountPaidFrom", e.uuid);
-              }}
-              nameK={"name"}
-            />
-
-            <FormAutocomplete
-              data={accountPaidToFetcher.data?.accounts || []}
-              form={form}
-              label={t("_ledger.paidTo")}
-              onValueChange={onAccountPaidToChange}
-              name="accountPaidToName"
-              onSelect={(e) => {
-                form.setValue("accountPaidTo", e.uuid);
-              }}
-              nameK={"name"}
-            />
+                <FormAutocomplete
+                  data={accountPaidToFetcher.data?.accounts || []}
+                  form={form}
+                  label={t("_ledger.paidTo")}
+                  onValueChange={onAccountPaidToChange}
+                  name="accountPaidToName"
+                  onSelect={(e) => {
+                    form.setValue("accountPaidTo", e.id);
+                  }}
+                  nameK={"name"}
+                />
+              </>
+            )}
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

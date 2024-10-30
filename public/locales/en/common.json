@@ -157,12 +157,14 @@
     "logo": "Logo",
     "isShippingAddress":"Is Shipping Address",
     "isBillingAddress":"Is Shipping Address",
-    "paidAmount":"Paid Amount ({{o}})",
+    "paidAmount":"Paid Amount",
+    "outstandingAmount":"Outstanding Amount",
     "daysWeek":"Days Weeks",
     "comment":"Comment",
     "addNew":"Add New",
     "fromDate":"From Date",
-    "toDate":"To Date"
+    "toDate":"To Date",
+    "totals":"Totals"
   },
   "accounts":"Accounts",
   "_selling": {

@@ -14,7 +14,7 @@ export default function Connections({
     <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {connections.map((item, idx) => {
         return (
-          <div>
+          <div key={idx}>
             <Typography fontSize={subtitle}>{item.title}</Typography>
 
             <div className=" flex flex-col space-y-2 py-2 px-0">
@@ -34,16 +34,13 @@ export default function Connections({
                         {t.entity}
                       </Link>
                     </Badge>
-                    {t.add && (
+                    {t.newHref && (
+                      <Link to={t.newHref}>
                       <IconButton
-                        onClick={() => {
-                          if (t.add) {
-                            t.add();
-                          }
-                        }}
                         icon={PlusIcon}
                         size="md"
-                      />
+                        />
+                        </Link>
                     )}
                   </div>
                 );

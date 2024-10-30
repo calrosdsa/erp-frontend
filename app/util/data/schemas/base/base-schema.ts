@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const updateStateWithEventSchema = z.object({
     party_id:z.string(),
-    party_type:z.string(),
+    party_type:z.string().optional(),
     events:z.array(z.number()),
     current_state:z.string(),
 })

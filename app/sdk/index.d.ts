@@ -925,6 +925,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/payment/associated-actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Payment Actions */
+        get: operations["get payment actions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/payment/detail/{id}": {
         parameters: {
             query?: never;
@@ -952,6 +969,23 @@ export interface paths {
         /** Get Parties Type */
         get: operations["get-parties-type"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment/update-state": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Payment State */
+        put: operations["update payment state"];
         post?: never;
         delete?: never;
         options?: never;
@@ -2396,8 +2430,12 @@ export interface components {
             postuing_date: string;
         };
         CreatePaymentAccounts: {
-            paid_from: string;
-            paid_to: string;
+            paid_from?: string;
+            /** Format: int64 */
+            paid_from_id?: number | null;
+            paid_to?: string;
+            /** Format: int64 */
+            paid_to_id?: number | null;
         };
         CreatePaymentBody: {
             /**
@@ -2406,7 +2444,7 @@ export interface components {
              */
             readonly $schema?: string;
             payment: components["schemas"]["CreatePayment"];
-            payment_accounts: components["schemas"]["CreatePaymentAccounts"];
+            payment_accounts?: components["schemas"]["CreatePaymentAccounts"];
             payment_party: components["schemas"]["CreatePaymentParty"];
         };
         CreatePaymentParty: {
@@ -2431,7 +2469,6 @@ export interface components {
             email: string;
             "first-name": string;
             "last-name": string;
-            /** Format: date-time */
             "moving-date": string;
             phone: string;
             "piano-type": string;
@@ -2440,9 +2477,9 @@ export interface components {
             "pickup-state": string;
             "pickup-street": string;
             "pickup-zip": string;
-            "rent-piano": boolean;
-            "stairs-dropoff": boolean;
-            "stairs-pickup": boolean;
+            "rent-piano": string;
+            "stairs-dropoff": string;
+            "stairs-pickup": string;
         };
         CreatePriceListRequestBody: {
             /**
@@ -3185,6 +3222,7 @@ export interface components {
         InvoiceDetailDto: {
             invoice: components["schemas"]["InvoiceDto"];
             item_lines: components["schemas"]["ItemLineDto"][];
+            totals: components["schemas"]["TotalsDto"];
         };
         InvoiceDto: {
             code: string;
@@ -3823,6 +3861,8 @@ export interface components {
             company_bank_account: string | null;
             /** Format: date-time */
             created_at: string;
+            /** Format: int64 */
+            id: number;
             paid_from_currency: string;
             paid_from_name: string;
             paid_from_uuid: string;
@@ -3845,6 +3885,8 @@ export interface components {
             company_bank_account: string | null;
             /** Format: date-time */
             created_at: string;
+            /** Format: int64 */
+            id: number;
             party_name: string;
             party_type: string;
             party_uuid: string;
@@ -4438,6 +4480,12 @@ export interface components {
             /** Format: double */
             value: number;
         };
+        TotalsDto: {
+            /** Format: int32 */
+            paid: number;
+            /** Format: int32 */
+            total: number;
+        };
         UOMDto: {
             code: string;
             /** Format: int64 */
@@ -4520,7 +4568,7 @@ export interface components {
             current_state: string;
             events: number[];
             party_id: string;
-            party_type: string;
+            party_type?: string;
         };
         UpsertItemAttributeValueRequestBody: {
             /**
@@ -7171,6 +7219,35 @@ export interface operations {
             };
         };
     };
+    "get payment actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataInterface {}Body"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get payment detail": {
         parameters: {
             query?: {
@@ -7238,6 +7315,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataListPartyTypeDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update payment state": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

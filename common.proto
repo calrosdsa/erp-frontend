@@ -15,6 +15,7 @@ enum RegatePartyType {
     court = 0;
     booking = 1;
     eventBooking = 2;
+    regateChart = 3;
 }
 
 
@@ -69,6 +70,7 @@ enum State {
     TO_BILL = 15;
     TO_RECEIVE = 16;
     TO_RECEIVE_AND_BILL = 17;
+    SUBMITTED = 18;
 }
 
 
@@ -130,4 +132,11 @@ enum ChartType {
     INCOME_AVG = 1;
     BOOKING_HOUR = 2;
     BOOKING_HOUR_AVG = 3;
+}
+
+enum Module {
+    accounting = 0;
+    stock = 1;
+    selling = 2;
+    buying = 3;
 }

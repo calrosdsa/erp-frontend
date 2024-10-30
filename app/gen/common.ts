@@ -13,6 +13,7 @@ export enum RegatePartyType {
   court = 0,
   booking = 1,
   eventBooking = 2,
+  regateChart = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -27,6 +28,9 @@ export function regatePartyTypeFromJSON(object: any): RegatePartyType {
     case 2:
     case "eventBooking":
       return RegatePartyType.eventBooking;
+    case 3:
+    case "regateChart":
+      return RegatePartyType.regateChart;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -42,6 +46,8 @@ export function regatePartyTypeToJSON(object: RegatePartyType): string {
       return "booking";
     case RegatePartyType.eventBooking:
       return "eventBooking";
+    case RegatePartyType.regateChart:
+      return "regateChart";
     case RegatePartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -298,6 +304,7 @@ export enum State {
   TO_BILL = 15,
   TO_RECEIVE = 16,
   TO_RECEIVE_AND_BILL = 17,
+  SUBMITTED = 18,
   UNRECOGNIZED = -1,
 }
 
@@ -357,6 +364,9 @@ export function stateFromJSON(object: any): State {
     case 17:
     case "TO_RECEIVE_AND_BILL":
       return State.TO_RECEIVE_AND_BILL;
+    case 18:
+    case "SUBMITTED":
+      return State.SUBMITTED;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -402,6 +412,8 @@ export function stateToJSON(object: State): string {
       return "TO_RECEIVE";
     case State.TO_RECEIVE_AND_BILL:
       return "TO_RECEIVE_AND_BILL";
+    case State.SUBMITTED:
+      return "SUBMITTED";
     case State.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -767,6 +779,51 @@ export function chartTypeToJSON(object: ChartType): string {
     case ChartType.BOOKING_HOUR_AVG:
       return "BOOKING_HOUR_AVG";
     case ChartType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum Module {
+  accounting = 0,
+  stock = 1,
+  selling = 2,
+  buying = 3,
+  UNRECOGNIZED = -1,
+}
+
+export function moduleFromJSON(object: any): Module {
+  switch (object) {
+    case 0:
+    case "accounting":
+      return Module.accounting;
+    case 1:
+    case "stock":
+      return Module.stock;
+    case 2:
+    case "selling":
+      return Module.selling;
+    case 3:
+    case "buying":
+      return Module.buying;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return Module.UNRECOGNIZED;
+  }
+}
+
+export function moduleToJSON(object: Module): string {
+  switch (object) {
+    case Module.accounting:
+      return "accounting";
+    case Module.stock:
+      return "stock";
+    case Module.selling:
+      return "selling";
+    case Module.buying:
+      return "buying";
+    case Module.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

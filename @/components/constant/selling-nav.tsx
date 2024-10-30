@@ -1,6 +1,6 @@
 import { CreditCardIcon, DollarSign } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { PartyType, partyTypeToJSON } from "~/gen/common";
+import { PartyType, partyTypeToJSON, regatePartyTypeToJSON } from "~/gen/common";
 import { NavItem } from "~/types";
 import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
@@ -15,7 +15,7 @@ export const SellingNav = ({ entities }: {
   if(entities?.includes(Entity.CUSTOMER)){
     sellingChildrens.push({
       title: t("customers"),
-      href: r.toParty("relocationAndMoving"),
+      href: r.toParty(partyTypeToJSON(PartyType.customer)),
     });
   }
   if(entities?.includes(Entity.CUSTOMER)){
@@ -34,14 +34,18 @@ export const SellingNav = ({ entities }: {
   if(entities?.includes(Entity.SALE_ORDER_ENTITY_ID)){
     sellingChildrens.push({
       title: t("saleOrder"),
-      href: r.toOrders(PartyType.saleOrder),
+      href: r.toParty(partyTypeToJSON(PartyType.saleOrder)),
     });
   }
 
   if(entities?.includes(Entity.SALE_INVOICE_ENTITY_ID)){
     sellingChildrens.push({
       title: t("saleInvoice"),
-      href: r.toInvoices(PartyType.saleInvoice),
+      href: r.toRoute({
+        main:partyTypeToJSON(PartyType.saleInvoice),
+        routePrefix:["invoice"],
+        
+      }),
     });
   }
   

@@ -11,6 +11,7 @@ import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
+import { Module, moduleToJSON, PartyType, partyTypeToJSON } from "~/gen/common";
 
 export const paymentColumns = (): ColumnDef<components["schemas"]["PaymentDto"]>[] => {
   const { t, i18n } = useTranslation("common");
@@ -28,7 +29,10 @@ export const paymentColumns = (): ColumnDef<components["schemas"]["PaymentDto"]>
           return(
             <TableCellNameNavigation
             {...props}
-            navigate={(name)=>r.toPaymentDetail(name)}
+            navigate={(name)=>r.toModulePartyDetail(moduleToJSON(Module.accounting),
+              partyTypeToJSON(PartyType.payment),name,{
+                tab:"info"
+              })}
             />
           )
         }

@@ -18,16 +18,19 @@ export default function InvoicesClient(){
         actions:actions,
         roleActions:globalState.roleActions
     })
-    const partyInvoice = partyTypeFromJSON(params.partyInvoice)
+    const partyInvoice = params.partyInvoice || ""
     const navigate = useNavigate()
     const {t} = useTranslation("common")
     const r = routes
     setUpToolbar(()=>{
         return {
-            title:t(params.partyInvoice || ""),
+            title:t(partyInvoice),
             ...(permission?.create && {
                 addNew:()=>{
-                    navigate(r.toCreateInvoice(partyInvoice))
+                    navigate(r.toRoute({
+                        main:partyInvoice,
+                        routeSufix:[`new`]
+                    }))
                 }
             })
         }
@@ -37,7 +40,7 @@ export default function InvoicesClient(){
             <DataTable
             data={paginationResult?.results || []}
             columns={invoiceColumns({
-                partyType:partyInvoice,
+                partyType:params.partyInvoice || "",
             })}
             paginationOptions={{
                 rowCount:paginationResult?.total,   

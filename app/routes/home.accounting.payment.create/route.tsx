@@ -16,7 +16,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
     let error:string | undefined = undefined
     let message:string |  undefined = undefined
     let payment:components["schemas"]["PaymentDto"] | undefined = undefined
-    let partiesType:components["schemas"]["PartyType"][] = []
+    let partiesType:components["schemas"]["PartyTypeDto"][] = []
     switch(data.action){
         case "payment-parties":{
             const res = await client.GET("/payment/parties")
@@ -41,8 +41,8 @@ export const action = async({request}:ActionFunctionArgs)=>{
                         party_reference:d.partyReference
                     },
                     payment_accounts:{
-                        paid_from:d.accountPaidFrom,
-                        paid_to:d.accountPaidTo,
+                        paid_from_id:d.accountPaidFrom,
+                        paid_to_id:d.accountPaidTo,
                     }
                 }
             })
@@ -59,8 +59,10 @@ export const action = async({request}:ActionFunctionArgs)=>{
 }
 
 export const loader = async({request}:LoaderFunctionArgs)=>{
+    const client = apiClient({request})
+    const res =await client.GET("/payment/associated-actions")
     return json({
-        message:"DATA"
+        associatedActions:res.data?.associated_actions
     })
 }
 

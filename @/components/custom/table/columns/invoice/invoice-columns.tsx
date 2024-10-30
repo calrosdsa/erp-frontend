@@ -13,28 +13,35 @@ import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
 
 export const invoiceColumns = ({
-  partyType
-}:{
-  partyType:PartyType
-}): ColumnDef<
-  components["schemas"]["InvoiceDto"]
->[] => {
+  partyType,
+}: {
+  partyType: string;
+}): ColumnDef<components["schemas"]["InvoiceDto"]>[] => {
   const { t, i18n } = useTranslation("common");
   const r = routes;
   return [
     {
-        header:t("table.no"),
-        cell:TableCellIndex
+      header: t("table.no"),
+      cell: TableCellIndex,
     },
     {
       accessorKey: "code",
       header: t("form.code"),
       cell: ({ ...props }) => {
-        const rowData = props.row.original
+        const rowData = props.row.original;
         return (
           <TableCellNameNavigation
             {...props}
-            navigate={(name) => r.toInvoiceDetail(partyType,name)}
+            navigate={(name) =>
+              r.toRoute({
+                main: partyType,
+                routePrefix:["invoice"],
+                routeSufix: [name],
+                q: {
+                  tab: "info",
+                },
+              })
+            }
           />
         );
       },
@@ -46,21 +53,23 @@ export const invoiceColumns = ({
         const rowData = props.row.original;
         return (
           <>
-             <TableCellNameNavigation
+            <TableCellNameNavigation
               {...props}
-              navigate={(name) => r.toPartyDetail(rowData.party_type,name,{
-                id:rowData.party_uuid,
-                tab:"info",
-              })}
+              navigate={(name) =>
+                r.toPartyDetail(rowData.party_type, name, {
+                  id: rowData.party_uuid,
+                  tab: "info",
+                })
+              }
             />
           </>
         );
       },
     },
     {
-      accessorKey:"status",
-      header:t("form.status"),
-      cell:TableCellStatus
+      accessorKey: "status",
+      header: t("form.status"),
+      cell: TableCellStatus,
     },
     {
       accessorKey: "created_at",

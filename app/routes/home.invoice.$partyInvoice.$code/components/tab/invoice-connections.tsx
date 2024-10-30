@@ -1,111 +1,110 @@
-
-
 import Connections from "@/components/layout/connections";
 import FallBack from "@/components/layout/Fallback";
-import { Await, useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import { Suspense } from "react";
+import {
+  Await,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "@remix-run/react";
+import { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Connection, ConnectionModule } from "~/types/connections";
+import {
+  Connection,
+  ConnectionModule,
+  PartyTypeConnection,
+} from "~/types/connections";
 import { components } from "~/sdk";
-import { PartyType, partyTypeFromJSON, partyTypeToJSON, RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
+import {
+  Module,
+  moduleToJSON,
+  PartyType,
+  partyTypeFromJSON,
+  partyTypeToJSON,
+  RegatePartyType,
+  regatePartyTypeToJSON,
+} from "~/gen/common";
 import { routes } from "~/util/route";
 import { loader } from "../../route";
-
+import { useConnections } from "~/util/hooks/data/useConnections";
+import { usePermission } from "~/util/hooks/useActions";
+import { GlobalState } from "~/types/app";
 
 export default function InvoiceConnectionsTab() {
-  const {connections,invoice} = useLoaderData<typeof loader>()
+  const { connections, associatedActions } = useLoaderData<typeof loader>();
+  const globalState = useOutletContext<GlobalState>();
+  const [paymentPermission] = usePermission({
+    roleActions: globalState.roleActions,
+    actions:
+      associatedActions &&
+      associatedActions[partyTypeToJSON(PartyType.payment)],
+  });
+  const [saleOrderPermission] = usePermission({
+    roleActions: globalState.roleActions,
+    actions:
+      associatedActions &&
+      associatedActions[partyTypeToJSON(PartyType.saleOrder)],
+  });
+  const [purchaseOrderPermission] = usePermission({
+    roleActions: globalState.roleActions,
+    actions:
+      associatedActions &&
+      associatedActions[partyTypeToJSON(PartyType.purchaseOrder)],
+  });
+  const [purchaseReceiptPermission] = usePermission({
+    roleActions: globalState.roleActions,
+    actions:
+      associatedActions &&
+      associatedActions[partyTypeToJSON(PartyType.purchaseReceipt)],
+  });
+  const params = useParams();
+  
+ 
+
   return (
     <>
-        <Suspense fallback={<FallBack />}>
-            <Await resolve={connections}>
-              {(data: any) => {
-                const d =
-                data.data as components["schemas"]["ResponseDataListPartyConnectionsBody"];
-                const relateds = orderConnections({
-                  data:d.result  || [],
-                  invoice:invoice
-                });
-                return (
-                  <div>
-                    <Connections
-                    connections={relateds}
-                    />
-                  </div>
-                );
-              }}
-            </Await>
-          </Suspense>
-     </>
-    );
-  }
-
-const orderConnections = ({data,invoice}:{
-   data:components["schemas"]["PartyConnections"][]
-   invoice?:components["schemas"]["InvoiceDto"]
-}): ConnectionModule[] => {
-  const { t } = useTranslation("common");
-  const params= useParams()
-  const partyType = partyTypeFromJSON(params.partyOrder)
-  let res: ConnectionModule[] = [];
-  let connections:Connection[] = []
-  const r = routes
-  const navigate = useNavigate()
-  connections.push({
-    entity: partyTypeToJSON(PartyType.purchaseOrder),
-    href: r.toOrders(PartyType.purchaseOrder,{
-        "invoiceCode":invoice?.code,
-        "invoice":invoice?.id.toString(),
-    }),
-    count:data.find(t=>t.party_type == partyTypeToJSON(PartyType.purchaseOrder))?.connections,
-    add: () => {
-      navigate(r.toCreateOrder(PartyType.purchaseOrder))
-    },
-  })
-
-  connections.push({
-    entity: partyTypeToJSON(PartyType.purchaseReceipt),
-    href: r.toOrders(partyType,{
-        "invoiceCode":invoice?.code,
-        "invoice":invoice?.id.toString(),
-    }),
-    count:data.find(t=>t.party_type == partyTypeToJSON(PartyType.purchaseReceipt))?.connections,
-    add: () => {
-      navigate(r.toCreateOrder(partyType))
-    },
-  })
-
-  connections.push({
-    entity: partyTypeToJSON(PartyType.payment),
-    href: r.toInvoices(partyType,{
-        "orderCode":invoice?.code,
-        "invoice":invoice?.id.toString(),
-    }),
-    count:data.find(t=>t.party_type == partyTypeToJSON(PartyType.payment))?.connections,
-    add: () => {
-      navigate(r.toCreateInvoice(partyType))
-    },
-  })
-  // data.map((t)=>{
-  //   if(t.party_type == regatePartyTypeToJSON(RegatePartyType.booking)){
-  //     connections.push({
-  //       entity: regatePartyTypeToJSON(RegatePartyType.booking),
-  //       count:t.connections,
-  //       href: r.toBookings({
-  //         "order":order?.id.toString(),
-  //         "eventName":order?.name.toString()
-  //       }),
-  //       add: () => {
-  //         console.log("NAVIGATE")
-  //         navigate(r.toCreateBooking())
-  //       },
-  //     })
-  //   }
-  // })
-
-  res.push({
-    title:"Relacionados",
-    connections:connections,
-  });
-//   res.push(payment)
-  return res;
-};
+      <Suspense fallback={<FallBack />}>
+        <Await resolve={connections}>
+          {(data: any) => {
+            const d =
+              data.data as components["schemas"]["ResponseDataListPartyConnectionsBody"];
+            const accounting = useConnections({
+              data: d.result,
+              moduleName: moduleToJSON(Module.accounting),
+              references: [
+                {
+                  partyType: PartyType.payment,
+                  permission: paymentPermission,
+                },
+              ],
+            });
+            const related = useConnections({
+              data: d.result,
+              references:[
+                ...(params.partyInvoice === partyTypeToJSON(PartyType.saleInvoice) ? [{
+                  partyType: PartyType.saleOrder,
+                  permission: saleOrderPermission,
+                  routePrefix:["order"]
+                }] : []),
+                ...(params.partyInvoice === partyTypeToJSON(PartyType.purchaseInvoice) ? [{
+                  partyType: PartyType.purchaseOrder,
+                  permission: purchaseOrderPermission,
+                  routePrefix:["order"]
+                },
+                {
+                  partyType: PartyType.purchaseReceipt,
+                  permission: purchaseReceiptPermission,
+                }] : []),
+              ]
+            });
+            return (
+              <div>
+                <Connections connections={[related,accounting]} />
+              </div>
+            );
+          }}
+        </Await>
+      </Suspense>
+    </>
+  );
+}
