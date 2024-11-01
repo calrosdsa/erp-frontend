@@ -21,9 +21,11 @@ interface Item {
 
 export interface GroupedItem extends Item {
     children?: GroupedItem[];
+    
 }
-export const TreeDescendents = ({data}:{
+export const TreeDescendents = ({data,partyType}:{
     data:components["schemas"]["GroupHierarchyDto"][]   
+    partyType:string,
 }) =>{
 
     const transformDataToTree = (items: Item[]): GroupedItem[] => {
@@ -61,6 +63,7 @@ export const TreeDescendents = ({data}:{
           depth={node.depth}
           children={node.children}
           parent_uuid={node.parent_uuid}
+          partyType={partyType}
         />
       ))}
         </div>

@@ -158,8 +158,6 @@ export const editLineItemSchema = z.object({
   party_type:z.string().optional(),
 })
 .superRefine((data,ctx)=>{
-
-  data.rate = data.rate
   switch(data.lineType){
     case ItemLineType.ITEM_LINE_INVOICE:
     case ItemLineType.ITEM_LINE_ORDER:{
@@ -183,6 +181,5 @@ export const editLineItemSchema = z.object({
       break;
     }
   }
-  data.amount = Number(data.quantity) * data.rate
 }
 )

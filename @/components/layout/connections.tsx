@@ -13,6 +13,9 @@ export default function Connections({
   return (
     <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {connections.map((item, idx) => {
+        if (item.connections.length == 0) {
+          return;
+        }
         return (
           <div key={idx}>
             <Typography fontSize={subtitle}>{item.title}</Typography>
@@ -36,11 +39,8 @@ export default function Connections({
                     </Badge>
                     {t.newHref && (
                       <Link to={t.newHref}>
-                      <IconButton
-                        icon={PlusIcon}
-                        size="md"
-                        />
-                        </Link>
+                        <IconButton icon={PlusIcon} size="md" />
+                      </Link>
                     )}
                   </div>
                 );

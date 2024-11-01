@@ -8,12 +8,13 @@ import { CreateCustomer, useCreateCustomer } from "~/routes/home.customer_/compo
 import { CreateGroup, useCreateGroup } from "~/routes/home.groups.$party_/components/create-group"
 import { CreateUser, useCreateUser } from "~/routes/home.manage.users_/components/create-user"
 import { AddPriceList, useCreatePriceList } from "~/routes/home.selling.stock.price-list_/components/add-price-list"
-import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.item-prices_/components/add-item-price"
-import { UpsertItemStockLevel, useUpsertItemStockLevel } from "~/routes/home.stock.items.$code.stock_/components/upsert-item-stock-level"
-import CreateItemVariant, { useCreateItemVariant } from "~/routes/home.stock.items.$code.variants_/components/create-item-variant"
+import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.itemPrice_/components/add-item-price"
+import { UpsertItemStockLevel, useUpsertItemStockLevel } from "~/routes/home.stock.item.$code.stock_/components/upsert-item-stock-level"
+import CreateItemVariant, { useCreateItemVariant } from "~/routes/home.stock.item.$code.variants_/components/create-item-variant"
 import { CreateWareHouse, useCreateWareHouse } from "~/routes/home.stock.warehouses_/components/add-warehouse"
 import { CreateSupplier, useCreateSupplier } from "~/routes/home.supplier_/components/create-supplier"
 import { GlobalState } from "~/types/app"
+import { NewItemPriceDialog, useNewItemPrice } from "~/routes/home.stock.itemPrice.new/components/new-item-price-dialog"
 
 
 export default function GlobalDialogs({globalState}:{
@@ -26,6 +27,7 @@ export default function GlobalDialogs({globalState}:{
     const addItemStockLevel = useUpsertItemStockLevel()
     const createTax = useCreateTax()
     const createPriceList = useCreatePriceList()
+    const newItemPrice = useNewItemPrice()
     const addItemPrice = useAddItemPrice()
     const createItemVariant = useCreateItemVariant()
     const createWareHouse = useCreateWareHouse()
@@ -45,6 +47,14 @@ export default function GlobalDialogs({globalState}:{
     const createEvent = useCreateEvent()
     return (
         <>
+        {newItemPrice.open && 
+        <NewItemPriceDialog
+        open={newItemPrice.open}
+        onOpenChange={newItemPrice.onOpenChange}
+        globalState={globalState}
+        />
+        }
+
         {exporterData.open && 
         <ExporterData
         open={exporterData.open}

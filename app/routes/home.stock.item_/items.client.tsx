@@ -17,6 +17,7 @@ import { routes } from "~/util/route";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 
 const ItemsClient = () => {
   const { t } = useTranslation("common");
@@ -34,7 +35,11 @@ const ItemsClient = () => {
     return {
       ...(permission?.create && {
         addNew: () => {
-          navigate(r.toCreateItem());
+          navigate(r.toRoute({
+            main:partyTypeToJSON(PartyType.item),
+            routePrefix:[r.stockM],
+            routeSufix:["new"]
+          }));
         },
       }),
     };

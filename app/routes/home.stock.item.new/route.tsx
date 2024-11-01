@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
-import CreateItemClient from "./create-item.client";
+import CreateItemClient from "./new-item.client";
 import apiClient from "~/apiclient";
 import { routes } from "~/util/route";
 import { components } from "~/sdk";
@@ -18,26 +18,27 @@ export const action = async({request}:ActionFunctionArgs)=>{
     const data = await request.json() as ActionData
     let message:string | undefined = undefined
     let error:string | undefined = undefined 
+    let item:components["schemas"]["ItemDto"] | undefined =  undefined
     const r = routes
     switch(data.action) {
         case "create-item":{
             const d = data.createItem
+            console.log("DATA",d)
             const res = await client.POST("/stock/item",{
                 body:{
                     name:d.name,
-                    uom:uomDtoSchemaToUomDto(d.uom),
-                    group:groupSchemaToGroupDto(d.group)
+                    uom_id:d.uomID,
+                    group_id:d.groupID,
                 }
             })
-            if(res.data){
-                return redirect(r.toItemDetail(res.data.result.name,res.data.result.uuid))
-            }
+            message = res.data?.message
             error = res.error?.detail
+            item = res.data?.result
             break;
         }
     }
     return json({
-        error
+        error,message,item
     })
 }
 

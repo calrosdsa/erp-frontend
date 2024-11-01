@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
-import CreatePurchaseInvoiceClient from "./create-invoice.client"
+import CreatePurchaseInvoiceClient from "./new-invoice.client"
 import { z } from "zod"
 import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema"
 import { orderLineSchemaToOrderLineDto } from "~/util/data/schemas/buying/purchase-schema"
@@ -13,7 +13,7 @@ type ActionData ={
     createPurchaseInvoice:z.infer<typeof createPurchaseInvoiceSchema>
 }
 
-export const action = async({request}:ActionFunctionArgs)=>{
+export const action = async({request,params}:ActionFunctionArgs)=>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
     let error:string | undefined = undefined
@@ -28,7 +28,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     invoice:{
                         party_uuid:d.partyUuid,
                         party_type:d.partyType,
-                        invoice_party_type:PartyType[PartyType.purchaseInvoice],
+                        invoice_party_type:params.partyInvoice || "",
                         due_date:d.due_date?.toString(),
                         date:d.date.toString(),
                         currency:d.currency.code,

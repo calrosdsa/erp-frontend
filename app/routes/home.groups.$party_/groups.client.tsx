@@ -8,6 +8,7 @@ import { useCreateGroup } from "./components/create-group";
 import { loader } from "./route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
+import { partyTypeFromJSON, } from "~/gen/common";
 
 export default function GroupsClient() {
   const globalState = useOutletContext<GlobalState>();
@@ -25,7 +26,7 @@ export default function GroupsClient() {
         ...(permission?.create && {
             addNew: () => {
               if (params.party) {
-                createGroup.openDialog({ partyType: params.party });
+                createGroup.openDialog({ partyType:partyTypeFromJSON(params.party)});
               }
             },
           }),
@@ -36,11 +37,7 @@ export default function GroupsClient() {
       <DataTable
         data={paginationResult?.results || []}
         columns={groupColumns({ party: params.party || "" })}
-        metaActions={{
-          meta: {
-            
-          },
-        }}
+       
       />
     </div>
   );

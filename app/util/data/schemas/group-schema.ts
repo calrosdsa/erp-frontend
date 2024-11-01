@@ -14,7 +14,8 @@ export const groupSchema = z.object({
 export const createGroupSchema = z.object({
   name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
   is_group: z.boolean().default(false),
-  parent: groupSchema.optional(),
+  parentName:z.string().optional(),
+  parentID: z.number().optional(),
   party_type_code: z.string(),
   enabled: z.boolean(),
 });
@@ -23,6 +24,7 @@ export const groupSchemaToGroupDto = (
   d: z.infer<typeof groupSchema>
 ): components["schemas"]["GroupDto"] => {
   return {
+    id:0,
     name:d.name,
     uuid:d.uuid,
     ordinal:d.ordinal,

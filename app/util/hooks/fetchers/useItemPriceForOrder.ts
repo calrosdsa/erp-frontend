@@ -2,9 +2,9 @@ import { useEffect } from "react"
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
 import { components } from "~/sdk"
-import { PartyType } from "~/types/enums"
 import { routes } from "~/util/route"
 import { usePermission } from "../useActions"
+import { PartyType, partyTypeToJSON } from "~/gen/common"
 
 
 export const useItemPriceForOrders = ({isSelling,isBuying,currency}:{
@@ -29,7 +29,10 @@ export const useItemPriceForOrders = ({isSelling,isBuying,currency}:{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,
             encType:"application/json",
-            action:r.itemPrices
+            action:r.toRoute({
+                main:partyTypeToJSON(PartyType.itemPrice),
+                routePrefix:[r.stockM]
+            })
         })
     }
     

@@ -9,11 +9,6 @@ import {
 } from "@remix-run/react";
 import { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Connection,
-  ConnectionModule,
-  PartyTypeConnection,
-} from "~/types/connections";
 import { components } from "~/sdk";
 import {
   Module,
@@ -31,35 +26,27 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 
 export default function InvoiceConnectionsTab() {
-  const { connections, associatedActions } = useLoaderData<typeof loader>();
+  const { connections, associatedActions, invoice } =
+    useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
+  const { t } = useTranslation("common");
   const [paymentPermission] = usePermission({
     roleActions: globalState.roleActions,
-    actions:
-      associatedActions &&
-      associatedActions[partyTypeToJSON(PartyType.payment)],
+    actions: associatedActions && associatedActions[PartyType.payment],
   });
   const [saleOrderPermission] = usePermission({
     roleActions: globalState.roleActions,
-    actions:
-      associatedActions &&
-      associatedActions[partyTypeToJSON(PartyType.saleOrder)],
+    actions: associatedActions && associatedActions[PartyType.saleOrder],
   });
   const [purchaseOrderPermission] = usePermission({
     roleActions: globalState.roleActions,
-    actions:
-      associatedActions &&
-      associatedActions[partyTypeToJSON(PartyType.purchaseOrder)],
+    actions: associatedActions && associatedActions[PartyType.purchaseOrder],
   });
   const [purchaseReceiptPermission] = usePermission({
     roleActions: globalState.roleActions,
-    actions:
-      associatedActions &&
-      associatedActions[partyTypeToJSON(PartyType.purchaseReceipt)],
+    actions: associatedActions && associatedActions[PartyType.purchaseReceipt],
   });
   const params = useParams();
-  
- 
 
   return (
     <>
@@ -70,7 +57,11 @@ export default function InvoiceConnectionsTab() {
               data.data as components["schemas"]["ResponseDataListPartyConnectionsBody"];
             const accounting = useConnections({
               data: d.result,
-              moduleName: moduleToJSON(Module.accounting),
+              querySearch: {
+                invoice: invoice?.id.toString(),
+                invoiceName: invoice?.code,
+              },
+              moduleName: t(moduleToJSON(Module.accounting)),
               references: [
                 {
                   partyType: PartyType.payment,
@@ -80,26 +71,40 @@ export default function InvoiceConnectionsTab() {
             });
             const related = useConnections({
               data: d.result,
-              references:[
-                ...(params.partyInvoice === partyTypeToJSON(PartyType.saleInvoice) ? [{
-                  partyType: PartyType.saleOrder,
-                  permission: saleOrderPermission,
-                  routePrefix:["order"]
-                }] : []),
-                ...(params.partyInvoice === partyTypeToJSON(PartyType.purchaseInvoice) ? [{
-                  partyType: PartyType.purchaseOrder,
-                  permission: purchaseOrderPermission,
-                  routePrefix:["order"]
-                },
-                {
-                  partyType: PartyType.purchaseReceipt,
-                  permission: purchaseReceiptPermission,
-                }] : []),
-              ]
+              querySearch: {
+                invoice: invoice?.id.toString(),
+                invoiceName: invoice?.code,
+              },
+              references: [
+                ...(params.partyInvoice ===
+                partyTypeToJSON(PartyType.saleInvoice)
+                  ? [
+                      {
+                        partyType: PartyType.saleOrder,
+                        permission: saleOrderPermission,
+                        routePrefix: ["order"],
+                      },
+                    ]
+                  : []),
+                ...(params.partyInvoice ===
+                partyTypeToJSON(PartyType.purchaseInvoice)
+                  ? [
+                      {
+                        partyType: PartyType.purchaseOrder,
+                        permission: purchaseOrderPermission,
+                        routePrefix: ["order"],
+                      },
+                      {
+                        partyType: PartyType.purchaseReceipt,
+                        permission: purchaseReceiptPermission,
+                      },
+                    ]
+                  : []),
+              ],
             });
             return (
               <div>
-                <Connections connections={[related,accounting]} />
+                <Connections connections={[related, accounting]} />
               </div>
             );
           }}

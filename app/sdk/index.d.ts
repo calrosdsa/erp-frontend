@@ -2294,7 +2294,8 @@ export interface components {
             enabled: boolean;
             is_group: boolean;
             name: string;
-            parent?: components["schemas"]["GroupDto"];
+            /** Format: int64 */
+            parent_id?: number | null;
             party_type_code: string;
         };
         CreateInvoice: {
@@ -2350,6 +2351,8 @@ export interface components {
             /** Format: int64 */
             tax_id?: number | null;
             tax_uuid?: string | null;
+            /** Format: int64 */
+            uom_id?: number | null;
             /** Format: date-time */
             validFrom?: string | null;
             /** Format: date-time */
@@ -2425,6 +2428,7 @@ export interface components {
         CreatePayment: {
             /** Format: double */
             amount: number;
+            payment_references: components["schemas"]["CreatePaymentReference"][];
             payment_type: string;
             /** Format: date-time */
             postuing_date: string;
@@ -2454,6 +2458,18 @@ export interface components {
             party_reference?: number;
             party_type: string;
             party_uuid: string;
+        };
+        CreatePaymentReference: {
+            /** Format: double */
+            allocated: number;
+            /** Format: double */
+            outstanding: number;
+            party_code: string;
+            /** Format: int64 */
+            party_id: number;
+            party_type: string;
+            /** Format: double */
+            total: number;
         };
         CreatePianoBody: {
             /**
@@ -3872,6 +3888,7 @@ export interface components {
             party_name: string;
             party_type: string;
             party_uuid: string;
+            payment_references: components["schemas"]["PaymentReferenceDto"][];
             payment_type: string;
             /** Format: date-time */
             posting_date: string;
@@ -3894,6 +3911,18 @@ export interface components {
             /** Format: date-time */
             posting_date: string;
             status: string;
+        };
+        PaymentReferenceDto: {
+            /** Format: int32 */
+            allocated: number;
+            /** Format: int32 */
+            outstanding: number;
+            party_code: string;
+            /** Format: int64 */
+            party_id: number;
+            party_type: string;
+            /** Format: int32 */
+            total: number;
         };
         PhoneNumber: {
             countryCode: string;
@@ -5942,11 +5971,12 @@ export interface operations {
     };
     "get group descendents": {
         parameters: {
-            query?: {
+            query: {
                 query?: string;
                 order?: string;
                 column?: string;
                 parentId?: string;
+                party: string;
             };
             header?: {
                 Authorization?: string;
@@ -7146,6 +7176,7 @@ export interface operations {
     "get-payments": {
         parameters: {
             query: {
+                invoice_id?: string;
                 page: string;
                 size: string;
                 enabled?: string;

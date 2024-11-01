@@ -4,8 +4,9 @@ import { TreeDescendents } from "./TreeDescendents";
 import { components } from "~/sdk";
 
 
-export const TreeGroupLayout = ({children,data}:{
+export const TreeGroupLayout = ({children,data,partyType}:{
     data:components["schemas"]["GroupHierarchyDto"][]
+    partyType:string
     children:ReactNode
 })=>{
   const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -14,6 +15,7 @@ export const TreeGroupLayout = ({children,data}:{
         <div className={`h-full   ${!isDesktop ? "flex flex-col" : "flex items-center"}`}>
             <TreeDescendents
             data={data || []}
+            partyType={partyType}
             />
             {children}
         </div>

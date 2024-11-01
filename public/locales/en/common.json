@@ -158,7 +158,8 @@
     "isShippingAddress":"Is Shipping Address",
     "isBillingAddress":"Is Shipping Address",
     "paidAmount":"Paid Amount",
-    "outstandingAmount":"Outstanding Amount",
+    "outstandingAmount":"Outstanding",
+    "allocated":"Allocated",
     "daysWeek":"Days Weeks",
     "comment":"Comment",
     "addNew":"Add New",
@@ -281,16 +282,6 @@
     "enableForVariants": "Enable item for variants"
   },
 
-  "item-prices": "Item Prices",
-  "itemPrice": {
-    "s": "Item Price",
-    "p": "Item Prices",
-    "info": "Item Price Info"
-  },
-  "priceList": {
-    "info": "Price list info"
-  },
-
   "orders": "Orders",
   "orderInfo": "Order Info",
   "_order":{
@@ -352,6 +343,9 @@
   "EXPENSE":"Expense",
   "REVENUE":"Revenue",
 
+  "item":"Item",
+  "itemPrice":"Item Price",
+  "priceList":"Price List",
   "purchaseInvoice":"Purchase Invoice",
   "purchaseOrder":"Purchase Order",
   "saleInvoice":"Sale Invoice",
@@ -359,6 +353,7 @@
   "purchaseReceipt":"Purchase Receipt",
   "payment":"Payment", 
   "pianoForms":"Piano Forms",
+  "customer":"Customer",
 
   "relocationAndMoving":"Relocation & Moving",
 

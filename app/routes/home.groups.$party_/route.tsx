@@ -12,6 +12,7 @@ type ActionData = {
     createGroup:z.infer<typeof createGroupSchema>
     query:string
     partyType:string
+    isGroup:boolean
 }
 
 export const action = async({request,params}:ActionFunctionArgs)=>{
@@ -32,7 +33,8 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
                         page:DEFAULT_PAGE,
                         size:DEFAULT_SIZE,
                         query:data.query,
-                        enabled:DEFAULT_ENABLED
+                        enabled:DEFAULT_ENABLED,
+                        is_group:data.isGroup.toString(),
                     }
                 }
             })
@@ -41,8 +43,15 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
             break
         }
         case "create-group":{
+            const d= data.createGroup
             const res = await client.POST("/group",{
-                body:data.createGroup
+                body:{
+                    name:d.name,
+                    is_group:d.is_group,
+                    party_type_code:d.party_type_code,
+                    enabled:d.enabled,
+                    parent_id:d.parentID,
+                }
             })
             message = res.data?.message
             error = res.error?.detail

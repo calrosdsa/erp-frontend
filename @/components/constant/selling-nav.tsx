@@ -34,7 +34,10 @@ export const SellingNav = ({ entities }: {
   if(entities?.includes(Entity.SALE_ORDER_ENTITY_ID)){
     sellingChildrens.push({
       title: t("saleOrder"),
-      href: r.toParty(partyTypeToJSON(PartyType.saleOrder)),
+      href: r.toRoute({
+        main:partyTypeToJSON(PartyType.saleOrder),
+        routePrefix:["order"],
+      }),
     });
   }
 
@@ -44,7 +47,6 @@ export const SellingNav = ({ entities }: {
       href: r.toRoute({
         main:partyTypeToJSON(PartyType.saleInvoice),
         routePrefix:["invoice"],
-        
       }),
     });
   }

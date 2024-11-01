@@ -2,7 +2,7 @@ import useEditTable from "~/util/hooks/useEditTable";
 import { useAddLineOrder } from "./add-item-line";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { orderLineColumns } from "../../table/columns/order/order-line-column";
-import { sumTotal } from "~/util/format/formatCurrency";
+import { formatAmountToInt, sumTotal } from "~/util/format/formatCurrency";
 import OrderSumary from "../../display/order-sumary";
 import { useTranslation } from "react-i18next";
 import { DataTable } from "../../table/CustomTable";
@@ -36,15 +36,15 @@ export default function ItemLineForm({
   itemLineType: ItemLineType;
   partyType: string;
 }) {
-  const globalState = useOutletContext<GlobalState>()
+  const globalState = useOutletContext<GlobalState>();
   const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
     isGroup: false,
   });
-  const [permissionWarehouse] =  usePermission({
-    actions:warehouseFetcher.data?.actions,
-    roleActions:globalState.roleActions,
-  })
-  const createWareHouse = useCreateWareHouse()
+  const [permissionWarehouse] = usePermission({
+    actions: warehouseFetcher.data?.actions,
+    roleActions: globalState.roleActions,
+  });
+  const createWareHouse = useCreateWareHouse();
 
   const addLineOrder = useAddLineOrder();
   const itemLine = useItemLine();
@@ -59,17 +59,18 @@ export default function ItemLineForm({
         currency: form.getValues().currency.code,
         itemLineType: itemLineType,
         ...(itemLineType == ItemLineType.ITEM_LINE_RECEIPT && {
-          lineItemReceipt:{
-            acceptedWarehouse:form.getValues().acceptedWarehouse,
-            acceptedWarehouseName:form.getValues().acceptedWarehouseName,
-            rejectedWarehouse:form.getValues().rejectedWarehouse,
-            rejectedWarehouseName:form.getValues().rejectedWarehouseName,
-            acceptedQuantity:0,
-            rejectedQuantity:0,
+          lineItemReceipt: {
+            acceptedWarehouse: form.getValues().acceptedWarehouse,
+            acceptedWarehouseName: form.getValues().acceptedWarehouseName,
+            rejectedWarehouse: form.getValues().rejectedWarehouse,
+            rejectedWarehouseName: form.getValues().rejectedWarehouseName,
+            acceptedQuantity: 0,
+            rejectedQuantity: 0,
           },
         }),
         onEditItemForm: (e) => {
           const orderLines = form.getValues().lines;
+          e.rate = formatAmountToInt(e.rate);
           const n = [...orderLines, e];
           // console.log("LINES",orderLines,addLineOrder.orderLine)
           form.setValue("lines", n);
@@ -77,7 +78,6 @@ export default function ItemLineForm({
         },
       });
       // addLineOrder.openDialog({ currency: form.getValues().currency.code,itemLineType:itemLineType });
-      console.log("ON ADD ROW");
     },
     onDelete: (rowIndex) => {
       const orderLines: z.infer<typeof editLineItemSchema>[] =
@@ -97,7 +97,7 @@ export default function ItemLineForm({
           partyType: partyType,
           currency: form.getValues().currency.code,
           itemLineType: itemLineType,
-          lineReference:f.itemLineReference,
+          lineReference: f.itemLineReference,
           line: line,
           onEditItemForm: (e) => {
             const orderLines: z.infer<typeof editLineItemSchema>[] =
@@ -114,7 +114,7 @@ export default function ItemLineForm({
       }
     },
   });
-  
+
   return (
     <div>
       {configuteWarehouse && (
@@ -134,9 +134,9 @@ export default function ItemLineForm({
               }}
               label={t("f.accepted", { o: t("_warehouse.base") })}
               {...(permissionWarehouse?.create && {
-                addNew:()=>{
-                  createWareHouse.openDialog({})
-                }
+                addNew: () => {
+                  createWareHouse.openDialog({});
+                },
               })}
             />
 
@@ -151,9 +151,9 @@ export default function ItemLineForm({
               }}
               label={t("f.rejected", { o: t("_warehouse.base") })}
               {...(permissionWarehouse?.create && {
-                addNew:()=>{
-                  createWareHouse.openDialog({})
-                }
+                addNew: () => {
+                  createWareHouse.openDialog({});
+                },
               })}
             />
           </div>
@@ -171,7 +171,9 @@ export default function ItemLineForm({
           meta: {
             ...metaOptions,
             tooltipMessage: t("tooltip.selectCurrency"),
-            enableTooltipMessage: form.getValues().currency?.code == undefined || form.getValues().currency.code == "",
+            enableTooltipMessage:
+              form.getValues().currency?.code == undefined ||
+              form.getValues().currency.code == "",
           },
         }}
       />
@@ -180,7 +182,10 @@ export default function ItemLineForm({
           orderTotal={sumTotal(
             form
               .getValues()
-              .lines?.map((item: any) => (item.amount ? item.amount : 0))
+              .lines?.map(
+                (item: z.infer<typeof editLineItemSchema>) =>
+                  item.rate * Number(item.quantity)
+              )
           )}
           orderTax={0}
           i18n={i18n}

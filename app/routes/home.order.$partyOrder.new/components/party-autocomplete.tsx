@@ -20,7 +20,7 @@ export default function PartyAutocomplete({
   form: UseFormReturn<any>;
   globalState: GlobalState;
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const [supplierDebounceFetcher, onSupplierChange] =
     useSupplierDebounceFetcher();
   const [customerFetcher, onCustomerChange] = useCustomerDebounceFetcher();

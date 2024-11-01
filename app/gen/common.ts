@@ -305,6 +305,8 @@ export enum State {
   TO_RECEIVE = 16,
   TO_RECEIVE_AND_BILL = 17,
   SUBMITTED = 18,
+  /** PAID - Invoice exists but payment is pending */
+  PAID = 19,
   UNRECOGNIZED = -1,
 }
 
@@ -367,6 +369,9 @@ export function stateFromJSON(object: any): State {
     case 18:
     case "SUBMITTED":
       return State.SUBMITTED;
+    case 19:
+    case "PAID":
+      return State.PAID;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -414,6 +419,8 @@ export function stateToJSON(object: State): string {
       return "TO_RECEIVE_AND_BILL";
     case State.SUBMITTED:
       return "SUBMITTED";
+    case State.PAID:
+      return "PAID";
     case State.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

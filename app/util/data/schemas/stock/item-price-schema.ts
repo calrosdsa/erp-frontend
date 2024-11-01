@@ -17,7 +17,10 @@ export const createItemPriceSchema = z.object({
 
     taxName:z.string().optional(),
     taxUuid:z.string().optional(),
-    taxID:z.number().optional()
+    taxID:z.number().optional(),
+
+    uomName:z.string().optional(),
+    uomID:z.number().optional()
     // plugins:z.array(pluginObjectSchema).optional()
 })
 

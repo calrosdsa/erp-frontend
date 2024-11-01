@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react"
+import { useLoaderData, useParams, useSearchParams } from "@remix-run/react"
 import { loader } from "./route"
 import Typography, { subtitle } from "@/components/typography/Typography"
 import { useTranslation } from "react-i18next"
@@ -6,37 +6,48 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue"
 import { formatLongDate } from "~/util/format/formatDate"
 import { TreeDescendents } from "@/components/layout/tree/TreeDescendents"
 import { TreeGroupLayout } from "@/components/layout/tree/TreeLayout"
+import DetailLayout from "@/components/layout/detail-layout"
+import GroupInfoTab from "./tab/group.info"
+import { routes } from "~/util/route"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 
 
 export default function GroupClient(){
-    const {group,actions,groupDescendents} = useLoaderData<typeof loader>()
+    const {group,actions,groupDescendents,activities} = useLoaderData<typeof loader>()
     const {t,i18n} = useTranslation("common")
-    return (
-        <TreeGroupLayout data={groupDescendents || []}>
-            {/* {JSON.stringify(groupDescendents)} */}
-            
-            <div className="info-grid">
-                <Typography fontSize={subtitle} className=" col-span-full">
-                    {t("info")}
-                </Typography>
+    const [searchParams] = useSearchParams()
+    const r = routes
+    const params =  useParams()
+    const groupParty = params.party || ""
 
-                <DisplayTextValue
-                title={t("form.name")}
-                value={group?.name}
-                />
-                <DisplayTextValue
-                title={t("form.isGroup")}
-                value={group?.is_group}
-                />
-                {group &&
-                  <DisplayTextValue
-                  title={t("table.createdAt")}
-                  value={formatLongDate(group.created_at,i18n.language)}
-                  />
-                }
-            </div>
-            {/* {JSON.stringify(group)} */}
-        </TreeGroupLayout>
+    const tab = searchParams.get("tab")
+    const navs = [
+        {
+            title: t("info"),
+            href: r.toRoute({
+              main: groupParty,
+              routePrefix:[r.group],
+              routeSufix: [group?.name || ""],
+              q: {
+                tab: "info",
+                id:group?.uuid
+              },
+            })
+          },
+    ]
+    setUpToolbar(()=>{
+        return {}
+    },[])
+    return (
+       <DetailLayout
+       navItems={navs}
+       activities={activities}
+       partyID={group?.id}
+       >
+        {tab == "info" && 
+        <GroupInfoTab/>
+        }
+       </DetailLayout>
     )
 }

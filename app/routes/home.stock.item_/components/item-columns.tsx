@@ -6,6 +6,7 @@ import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
+import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
@@ -22,7 +23,16 @@ export const itemColumns = (): ColumnDef<components["schemas"]["ItemDto"]>[] => 
         return (
         <TableCellNameNavigation
           {...props}
-          navigate={(name) => r.toItemDetail(name,rowData.uuid)}
+          // navigate={(name) => r.toItemDetail(name,rowData.uuid}
+          navigate={(name)=>r.toRoute({
+            main:partyTypeToJSON(PartyType.item),
+            routePrefix:[r.stockM],
+            routeSufix:[name],
+            q:{
+              id:rowData.uuid,
+              tab:"info",
+            }
+          })}
         />
         )
       }

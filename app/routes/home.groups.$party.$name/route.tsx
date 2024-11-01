@@ -4,7 +4,7 @@ import { PartyType } from "~/types/enums";
 import GroupClient from "./group.client";
 
 
-export const loader = async({request}:LoaderFunctionArgs)=>{
+export const loader = async({request,params}:LoaderFunctionArgs)=>{
     const client = apiClient({request})
     const url = new URL(request.url)
     const searchParams = url.searchParams
@@ -22,13 +22,17 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
         params:{
             path:{
                 id:searchParams.get("id") || "",
+            },
+            query:{
+                party:params.party || ""
             }
         }
     })
     return json({
         group:res.data?.result.entity,
         groupDescendents:resDescendents.data?.result.entity,
-        actions:res.data?.actions
+        actions:res.data?.actions,
+        activities:res.data?.result.activities,
     })
 }
 

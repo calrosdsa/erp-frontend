@@ -28,6 +28,7 @@ export default function InvoicesClient(){
             ...(permission?.create && {
                 addNew:()=>{
                     navigate(r.toRoute({
+                        routePrefix:["invoice"],
                         main:partyInvoice,
                         routeSufix:[`new`]
                     }))

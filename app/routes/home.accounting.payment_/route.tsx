@@ -13,6 +13,7 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
             query:{
                 page:searchParams.get("page") || DEFAULT_PAGE,
                 size:searchParams.get("size") || DEFAULT_SIZE,
+                invoice_id:searchParams.get("invoice") || "",
             }
         }
     })

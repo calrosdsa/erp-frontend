@@ -19,7 +19,7 @@ class Routes {
   address = this.base + "/address";
   contact = this.base + "/contact";
   createAddress = this.address + "/create";
-
+  group = "groups"
   groups = this.base + "/groups";
   companies = this.base + "/companies";
 
@@ -41,12 +41,16 @@ class Routes {
   priceList = this.sellingStock + "/price-list";
 
   accounting = this.base + "/accounting";
+  accountingM = "accounting";
   taxes = this.accounting + "/taxes";
   chartOfAccount = this.accounting + "/account";
   payment = this.accounting + "/payment";
 
+  stockM = "stock"
+  itemN = "items"
+
   stock = this.base + "/stock";
-  items = this.stock + "/items";
+  items = this.stock + "/item";
   itemPrices = this.stock + "/item-prices";
   itemGroups = this.stock + "/item-groups";
   itemAttributes = this.stock + "/item-attributes";
@@ -119,9 +123,9 @@ class Routes {
     if (opts.routePrefix) {
       url += opts.routePrefix.join("/") + "/";
     }
-    url += opts.main + "/";
+    url += opts.main;
     if (opts.routeSufix) {
-      url += opts.routeSufix.join("/") + "/";
+      url +=  "/" + opts.routeSufix.join("/");
     }
     return this.baseRoute(url,opts.q);
   }
@@ -401,7 +405,7 @@ class Routes {
   toCreateInvoice(partyType: PartyType): string {
     return `${this.invoice}/${encodeURIComponent(
       partyTypeToJSON(partyType)
-    )}/create`;
+    )}/new`;
   }
 
   toReceiptDetail(partyType: string, code: string, tab?: string): string {

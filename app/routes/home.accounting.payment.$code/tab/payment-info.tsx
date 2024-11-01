@@ -3,30 +3,51 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { routes } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { formatMediumDate } from "~/util/format/formatDate";
-import Typography, { subtitle } from "@/components/typography/Typography";
 import { Separator } from "@/components/ui/separator";
-import { formatCurrency } from "~/util/format/formatCurrency";
+import {
+  formatAmounFromInt,
+  formatCurrency,
+} from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { loader } from "../route";
+import { Typography } from "@/components/typography";
+import { DataTable } from "@/components/custom/table/CustomTable";
+import { paymentReferencesColumns } from "@/components/custom/table/columns/accounting/payment-columns";
+import { components } from "~/sdk";
+import { z } from "zod";
+import { paymentReferceSchema } from "~/util/data/schemas/accounting/payment-schema";
 
-export default function PaymentInfoTab(){
-    const { paymentData, actions,associatedActions } = useLoaderData<typeof loader>();
-  const globalState = useOutletContext<GlobalState>()
+export default function PaymentInfoTab() {
+  const { paymentData, actions, associatedActions } =
+    useLoaderData<typeof loader>();
+  const globalState = useOutletContext<GlobalState>();
   const [ledgerPermission] = usePermission({
-    roleActions:globalState.roleActions,
-    actions:associatedActions && associatedActions[partyTypeToJSON(PartyType.ledger)]
-  })
+    roleActions: globalState.roleActions,
+    actions:
+      associatedActions && associatedActions[partyTypeToJSON(PartyType.ledger)],
+  });
   const { t, i18n } = useTranslation("common");
-    return (
-<div>
+  const mapToPaymentReferenceSchema = (
+    d: components["schemas"]["PaymentReferenceDto"]
+  ): z.infer<typeof paymentReferceSchema> => {
+    return {
+      partyID: d.party_id,
+      partyType: d.party_type,
+      partyName: d.party_code,
+      grandTotal: formatAmounFromInt(d.total),
+      outstanding: formatAmounFromInt(d.outstanding),
+      allocated: formatAmounFromInt(d.allocated),
+    };
+  };
+  return (
+    <div>
       <div className=" info-grid">
-        <Typography className=" col-span-full" fontSize={subtitle}>
+        <Typography className=" col-span-full" variant="title2">
           {t("_payment.type")}
         </Typography>
-    
 
         <DisplayTextValue
           title={t("form.paymentType")}
@@ -39,7 +60,7 @@ export default function PaymentInfoTab(){
         />
 
         <Separator className=" col-span-full" />
-        <Typography className=" col-span-full" fontSize={subtitle}>
+        <Typography className=" col-span-full" variant="title2">
           {t("_payment.paymentFromTo")}
         </Typography>
 
@@ -50,7 +71,7 @@ export default function PaymentInfoTab(){
 
         <Separator className=" col-span-full" />
 
-        <Typography className=" col-span-full" fontSize={subtitle}>
+        <Typography className=" col-span-full" variant="title2">
           {t("form.amount")}
         </Typography>
 
@@ -63,37 +84,53 @@ export default function PaymentInfoTab(){
           )}
         />
 
-        {ledgerPermission?.view &&
-        <>
+        {ledgerPermission?.view && (
+          <>
+            <Separator className=" col-span-full" />
+
+            <Typography className=" col-span-full">{t("accounts")}</Typography>
+            <div className="grid gap-y-3">
+              <DisplayTextValue
+                title={t("_ledger.paidFrom")}
+                value={paymentData?.paid_from_name}
+              />
+              <DisplayTextValue
+                title={t("_ledger.currency", { o: t("form.from") })}
+                value={paymentData?.paid_from_currency}
+              />
+            </div>
+            <div className="grid gap-y-3">
+              <DisplayTextValue
+                title={t("_ledger.paidTo")}
+                value={paymentData?.paid_to_name}
+              />
+
+              <DisplayTextValue
+                title={t("_ledger.currency", { o: t("form.to") })}
+                value={paymentData?.paid_to_currency}
+              />
+            </div>
+          </>
+        )}
+
         <Separator className=" col-span-full" />
 
-        <Typography className=" col-span-full" fontSize={subtitle}>
-          {t("accounts")}
+        <Typography className=" col-span-full" variant="title2">
+          {t("table.reference")}
         </Typography>
-        <div className="grid gap-y-3">
-          <DisplayTextValue
-            title={t("_ledger.paidFrom")}
-            value={paymentData?.paid_from_name}
-          />
-          <DisplayTextValue
-            title={t("_ledger.currency",{o:t("form.from")})}
-            value={paymentData?.paid_from_currency}
+        <div className=" col-span-full">
+          <DataTable
+            columns={paymentReferencesColumns()}
+            data={
+              paymentData?.payment_references
+                ? paymentData.payment_references.map((t) =>
+                    mapToPaymentReferenceSchema(t)
+                  )
+                : []
+            }
           />
         </div>
-        <div className="grid gap-y-3">
-          <DisplayTextValue
-            title={t("_ledger.paidTo")}
-            value={paymentData?.paid_to_name}
-            />
-
-          <DisplayTextValue
-            title={t("_ledger.currency",{o:t("form.to")})}
-            value={paymentData?.paid_to_currency}
-            />
-        </div>
-            </>
-          }
       </div>
     </div>
-    )
+  );
 }

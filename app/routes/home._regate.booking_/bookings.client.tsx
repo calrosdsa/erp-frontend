@@ -28,7 +28,6 @@ export default function BookingsClient() {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
   const r = routes;
-  const toolbar = useToolbar();
 
   setUpToolbar(() => {
     return {

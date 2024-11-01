@@ -1,8 +1,8 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
-import PaymentCreateClient from "./create-payment.client";
+import PaymentCreateClient from "./new-payment.client";
 import apiClient from "~/apiclient";
 import { z } from "zod";
-import { createPaymentSchema } from "~/util/data/schemas/accounting/payment-schema";
+import { createPaymentSchema, partyReferencesToDto } from "~/util/data/schemas/accounting/payment-schema";
 import { components } from "~/sdk";
 
 type ActionData = {
@@ -26,12 +26,14 @@ export const action = async({request}:ActionFunctionArgs)=>{
         }
         case "create-payment":{
             const d = data.createPayment
+            const paymentReferences = d.partyReferences.map((t)=>partyReferencesToDto(t))
             const res = await client.POST("/payment",{
                 body:{
                     payment:{
                         amount:d.amount,
                         payment_type:d.paymentType,
                         postuing_date:d.postingDate.toString(),
+                        payment_references:paymentReferences,
                     },
                     payment_party:{
                         party_uuid:d.partyUuid,

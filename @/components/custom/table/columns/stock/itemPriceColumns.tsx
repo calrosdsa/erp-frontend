@@ -7,6 +7,7 @@ import { components } from "~/sdk";
 import TableCellDate from "../../cells/table-cell-date";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { routes } from "~/util/route";
+import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 
   export const itemPriceColumns = ({
     includeItem,
@@ -30,7 +31,14 @@ import { routes } from "~/util/route";
         const code = row.getValue("uuid") as string;
         return (
           <Link
-            to={r.toItemPrice(code)}
+            to={r.toRoute({
+              main:partyTypeToJSON(PartyType.itemPrice),
+              routePrefix:[r.stockM],
+              routeSufix:[code],
+              q:{
+                tab:"info"
+              }
+            })}
             className="underline font-semibold"
           >
             {code.toString()}

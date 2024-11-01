@@ -9,8 +9,6 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
-import OrderSumary from "@/components/custom/display/order-sumary";
-import { DEFAULT_CURRENCY } from "~/constant";
 import { sumTotal } from "~/util/format/formatCurrency";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState, OrderGlobalState } from "~/types/app";
@@ -29,7 +27,6 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { ActionToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
-import { useCreatePurchaseInvoice } from "../home.invoice.$partyInvoice.create/use-purchase-invoice";
 import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
 import { z } from "zod";
 import {
@@ -45,6 +42,7 @@ import OrderConnectionsTab from "./components/tab/order-connections";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { useStatus } from "~/util/hooks/data/useStatus";
+import { useCreatePurchaseInvoice } from "../home.invoice.$partyInvoice.new/use-purchase-invoice";
 
 export default function PurchaseOrderClient() {
   const { order, actions, associatedActions, activities } =

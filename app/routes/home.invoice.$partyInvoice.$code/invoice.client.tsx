@@ -14,6 +14,7 @@ import {
   EventState,
   PartyType,
   partyTypeFromJSON,
+  partyTypeToJSON,
   stateFromJSON,
 } from "~/gen/common";
 import { z } from "zod";
@@ -29,11 +30,11 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { PlusIcon } from "lucide-react";
 import { sumTotal } from "~/util/format/formatCurrency";
-import { useCreatePayment } from "../home.accounting.payment.create/use-create-payment";
+import { useCreatePayment } from "../home.accounting.payment.new/use-create-payment";
 import { useStatus } from "~/util/hooks/data/useStatus";
 
 export default function InvoiceDetailClient() {
-  const { actions, invoice, activities, associatedActions, itemLines } =
+  const { actions, invoice, activities, associatedActions, itemLines,totals } =
     useLoaderData<typeof loader>();
   const toolbarState = useToolbar();
   const { t } = useTranslation("common");
@@ -47,11 +48,11 @@ export default function InvoiceDetailClient() {
   const navigate = useNavigate();
   const [paymentPermission] = usePermission({
     actions:
-      associatedActions && associatedActions[PartyType[PartyType.payment]],
+      associatedActions && associatedActions[PartyType.payment],
     roleActions: globalState.roleActions,
   });
   const createPayment = useCreatePayment();
-  const { enabledOrder, toBill,isCompleted } = useStatus({
+  const {isCompleted,isCancelled} = useStatus({
     status: stateFromJSON(invoice?.status),
   });
 
@@ -82,18 +83,31 @@ export default function InvoiceDetailClient() {
 
   setUpToolbar(() => {
     let actions: ActionToolbar[] = [];
-    if (paymentPermission?.create && !isCompleted) {
+    if (paymentPermission?.create && !isCompleted && !isCancelled) {
       actions.push({
         label: t("_payment.base"),
         onClick: () => {
+          const outstanding = Number(totals?.total)-Number(totals?.paid)
           createPayment.setData({
-            amount: sumTotal((itemLines || []).map((t) => t.rate * t.quantity)),
+            amount: outstanding,
             partyUuid: invoice?.party_uuid,
             partyType: invoice?.party_type,
             partyName: invoice?.party_name,
             partyReference: invoice?.id,
+            partyReferences:[{
+              partyType:partyInvoice,
+              partyName:invoice?.code || "",
+              partyID:Number(invoice?.id),
+              grandTotal:Number(totals?.total),
+              outstanding:outstanding,
+              allocated:Number(totals?.total) - Number(totals?.paid)
+            }]
           });
-          navigate(r.toPaymentCreate());
+          navigate(r.toRoute({
+            main:partyTypeToJSON(PartyType.payment),
+            routePrefix:[r.accountingM],
+            routeSufix:["new"]
+          }));
         },
         Icon: PlusIcon,
       });

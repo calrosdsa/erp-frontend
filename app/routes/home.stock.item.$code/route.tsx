@@ -7,7 +7,7 @@ import {
 import ItemDetailClient from "./item.client";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { Await, useLoaderData } from "@remix-run/react";
+import { Await, Outlet, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
 import FallBack from "@/components/layout/Fallback";
 import { z } from "zod";
@@ -69,6 +69,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json({
     item: res.data?.result.entity,
     activities:res.data?.result.activities,
+    associatedActions:res.data?.associated_actions,
   });
 };
 

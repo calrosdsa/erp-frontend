@@ -4,11 +4,12 @@ import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
 import { components } from "~/sdk"
 import { routes } from "~/util/route"
 import { usePermission } from "../useActions"
-import { PartyType } from "~/gen/common"
+import { PartyType, partyTypeToJSON } from "~/gen/common"
 
 
-export const useGroupDebounceFetcher = ({partyType}:{
+export const useGroupDebounceFetcher = ({partyType,isGroup}:{
     partyType:PartyType
+    isGroup?:boolean
 }) =>{
     const r = routes
     const debounceFetcher = useDebounceFetcher<{
@@ -20,7 +21,8 @@ export const useGroupDebounceFetcher = ({partyType}:{
         debounceFetcher.submit({
             action:"get",
             query:e,
-            partyType:partyType.toString(),
+            partyType:partyTypeToJSON(partyType),
+            isGroup:isGroup ? isGroup : false, 
         },{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,

@@ -18,7 +18,6 @@ import { cn } from "@/lib/utils";
 import SelectForm from "@/components/custom/select/SelectForm";
 import { PartyType, partyTypeToJSON, PaymentType } from "~/gen/common";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import Typography, { subtitle } from "@/components/typography/Typography";
 import { Separator } from "@/components/ui/separator";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
@@ -29,9 +28,12 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { routes } from "~/util/route";
 import { action, loader } from "./route";
 import { useCreatePayment } from "./use-create-payment";
-import { formatAmounFromInt } from "~/util/format/formatCurrency";
+import { formatAmounFromInt, formatAmountToInt } from "~/util/format/formatCurrency";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
+import { Typography } from "@/components/typography";
+import { DataTable } from "@/components/custom/table/CustomTable";
+import { paymentReferencesColumns } from "@/components/custom/table/columns/accounting/payment-columns";
 
 export default function PaymentCreateClient() {
   const { associatedActions } = useLoaderData<typeof loader>();
@@ -49,6 +51,7 @@ export default function PaymentCreateClient() {
       partyUuid: createPayment.payload?.partyUuid,
       partyType: createPayment.payload?.partyType,
       partyReference: createPayment.payload?.partyReference,
+      partyReferences: createPayment.payload?.partyReferences || [],
     },
   });
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -141,12 +144,18 @@ export default function PaymentCreateClient() {
       toast({
         title: fetcher.data.message,
       });
-      navigate(r.toPaymentDetail(fetcher.data.payment?.code));
+      navigate(r.toRoute({
+        main:partyTypeToJSON(PartyType.payment),
+        routePrefix:[r.accountingM],
+        routeSufix:[fetcher.data.payment?.code || ""],
+        q:{
+          tab:"info"
+        }
+      }));
     }
   }, [fetcher.data]);
   return (
     <FormLayout>
-      {JSON.stringify(form.getValues())}
       <Form {...form}>
         <fetcher.Form
           method="post"
@@ -154,7 +163,7 @@ export default function PaymentCreateClient() {
           className={cn("", "gap-y-3 grid p-3")}
         >
           <div className="create-grid">
-            <Typography className=" col-span-full" fontSize={subtitle}>
+            <Typography className=" col-span-full" variant="title2">
               {t("_payment.type")}
             </Typography>
             <CustomFormDate
@@ -172,7 +181,7 @@ export default function PaymentCreateClient() {
             />
             <Separator className=" col-span-full" />
 
-            <Typography className=" col-span-full" fontSize={subtitle}>
+            <Typography className=" col-span-full" variant="title2">
               {t("_payment.paymentFromTo")}
             </Typography>
 
@@ -203,7 +212,8 @@ export default function PaymentCreateClient() {
                 />
               </div>
             )}
-            <Typography className=" col-span-full" fontSize={subtitle}>
+            <Separator className=" col-span-full" />
+            <Typography className=" col-span-full" variant="title2">
               {t("form.amount")}
             </Typography>
 
@@ -212,13 +222,43 @@ export default function PaymentCreateClient() {
               label={t("form.paidAmount", { o: "BOB" })}
               name="amount"
               children={(field) => {
-                return <Input {...field} type="number" />;
+                return (
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    onBlur={() => {
+                      //Distribute among the references
+                      const values = form.getValues();
+                      let total =formatAmountToInt(values.amount);
+                      if (values.partyReferences.length > 0) {
+                        const n = values.partyReferences.map((t) => {
+                          if (total >= t.outstanding) {
+                            t.allocated =  Number(t.outstanding)
+                            total = total - t.outstanding
+                          } else {
+                            t.allocated = Number(total)
+                            total = 0
+                          }
+                          return t
+                        });
+                        console.log("ALLOCATED",n)
+                        form.setValue("partyReferences",n)
+                        form.trigger("partyReferences")
+
+                      }
+                    }}
+                  />
+                );
               }}
             />
 
-            {ledgerPermission?.view && (
               <>
-                <Typography className=" col-span-full" fontSize={subtitle}>
+                <Separator className=" col-span-full" />
+
+                <Typography className=" col-span-full" variant="title2">
                   {t("accounts")}
                 </Typography>
                 <FormAutocomplete
@@ -245,7 +285,16 @@ export default function PaymentCreateClient() {
                   nameK={"name"}
                 />
               </>
-            )}
+            <Separator className=" col-span-full" />
+            <Typography className=" col-span-full" variant="title2">
+              {t("table.reference")}
+            </Typography>
+            <div className=" col-span-full">
+              <DataTable
+                data={form.getValues().partyReferences}
+                columns={paymentReferencesColumns()}
+              />
+            </div>
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

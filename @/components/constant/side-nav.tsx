@@ -93,13 +93,21 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (entities?.includes(Entity.ITEM_ENTITY_ID)) {
     stockChildrens.push({
       title: t("items"),
-      href: "/home/stock/items",
+      href: r.toRoute({
+        main:partyTypeToJSON(PartyType.item),
+        routePrefix:[r.stockM],
+      }),
     });
   }
   if (entities?.includes(Entity.ITEM_PRICE_ENTITY_ID)) {
     stockChildrens.push({
-      title: t("itemPrice.p"),
-      href: "/home/stock/item-prices",
+      title: t("itemPrice"),
+      href:r.toRoute({
+        main:partyTypeToJSON(PartyType.itemPrice),
+        routePrefix:[r.stockM],
+
+      })
+      // href: "/home/stock/item-prices",
     });
   }
   if (entities?.includes(Entity.ITEM_ENTITY_ID)) {

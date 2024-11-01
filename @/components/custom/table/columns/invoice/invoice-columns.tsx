@@ -8,7 +8,6 @@ import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
-import { PartyType, partyTypeFromJSON } from "~/gen/common";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
 

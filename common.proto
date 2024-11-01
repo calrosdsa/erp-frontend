@@ -71,6 +71,7 @@ enum State {
     TO_RECEIVE = 16;
     TO_RECEIVE_AND_BILL = 17;
     SUBMITTED = 18;
+    PAID = 19;         // Invoice exists but payment is pending
 }
 
 

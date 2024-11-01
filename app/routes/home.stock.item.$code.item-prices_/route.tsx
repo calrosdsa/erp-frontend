@@ -56,7 +56,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         page: DEFAULT_PAGE,
       },
       path: {
-        itemCode: searchParams.get("id") || "",
+        item_id: searchParams.get("id") || "",
       },
     },
   });

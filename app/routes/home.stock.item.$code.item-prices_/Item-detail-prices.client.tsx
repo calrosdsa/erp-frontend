@@ -4,10 +4,10 @@ import { useTranslation } from "react-i18next";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemPriceColumns } from "@/components/custom/table/columns/stock/itemPriceColumns";
 import useActionRow from "~/util/hooks/useActionRow";
-import AddItemPrice, { useAddItemPrice } from "../home.stock.item-prices_/components/add-item-price";
 import { ItemGlobalState } from "~/types/app";
 import { loader } from "./route";
 import { usePermission } from "~/util/hooks/useActions";
+import { useAddItemPrice } from "../home.stock.itemPrice_/components/add-item-price";
 
 export default function ItemDetailPricesClient() {
   const {item,globalState} = useOutletContext<ItemGlobalState>()

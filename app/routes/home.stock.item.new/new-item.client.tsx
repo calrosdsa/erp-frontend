@@ -1,12 +1,11 @@
-import { useFetcher, useOutletContext } from "@remix-run/react";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { Input } from "@/components/ui/input";
@@ -15,10 +14,11 @@ import { createItemSchema } from "~/util/data/schemas/stock/item-schemas";
 import { useUomDebounceFetcher } from "~/util/hooks/fetchers/useUomDebounceFetcher";
 import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
-import { PartyType } from "~/gen/common";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useCreateGroup } from "../home.groups.$party_/components/create-group";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { routes } from "~/util/route";
 
 export default function CreateItemClient() {
   const fetcher = useFetcher<typeof action>();
@@ -34,6 +34,8 @@ export default function CreateItemClient() {
     roleActions: globalState.roleActions,
   });
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const r = routes
+  const navigate = useNavigate()
   const form = useForm<z.infer<typeof createItemSchema>>({
     resolver: zodResolver(createItemSchema),
     defaultValues: {
@@ -46,7 +48,11 @@ export default function CreateItemClient() {
       action:"create-item",
       createItem:values,
     }, {
-      action: "/home/stock/items/create_item",
+      action:r.toRoute({
+        main:partyTypeToJSON(PartyType.item),
+        routePrefix:[r.stockM],
+        routeSufix:["new"]
+      }),
       method: "POST",
       encType: "application/json",
 
@@ -62,18 +68,32 @@ export default function CreateItemClient() {
   },[])
 
   useDisplayMessage({
-    error:fetcher.data?.error
+    error:fetcher.data?.error,
+    success:fetcher.data?.message,
+    onSuccessMessage:()=>{
+      if(fetcher.data?.item){
+        const newItem = fetcher.data.item
+        navigate(r.toRoute({
+          main:partyTypeToJSON(PartyType.item),
+          routePrefix:[r.stockM],
+          routeSufix:[newItem.name],
+          q:{
+            tab:"info",
+            id:newItem.uuid,
+          }
+        }))
+      }
+    }
   },[fetcher.data])
 
   return (
     <div>
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-6 gap-2 ">
+          <div className="create-grid">
             {/* <div className="col-span-6">
               <Typography fontSize={subtitle}>{t("itemInfo")}</Typography>
             </div> */}
-            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
               <CustomFormField
                 form={form}
                 name="name"
@@ -82,9 +102,7 @@ export default function CreateItemClient() {
                   return <Input {...field} name="name" />;
                 }}
               />
-            </div>
 
-            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
               <FormAutocomplete
                 form={form}
                 data={uomsDebounceFetcher.data?.uoms || []}
@@ -96,12 +114,10 @@ export default function CreateItemClient() {
                 }}
                 name="uomName"
               />
-            </div>
 
-            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
             <FormAutocomplete
                 form={form}
-                label={t("group")}
+                label={t("_group.base")}
                 data={groupDebounceFetcher.data?.groups || []}
                 onOpen={() => onChangeGroupName("")}
                 onValueChange={(e) => onChangeGroupName(e)}
@@ -113,12 +129,11 @@ export default function CreateItemClient() {
                 {...(groupPermission?.create && {
                   addNew: () =>
                     createGroup.openDialog({
-                      partyType: PartyType[PartyType.itemGroup],
+                      partyType: PartyType.itemGroup,
                     }),
                 })}
               />
              
-            </div>
           <input ref={inputRef} type="submit" className="hidden" />
           </div>
         </fetcher.Form>

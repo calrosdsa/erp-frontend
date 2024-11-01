@@ -36,7 +36,7 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { useCreateSupplier } from "../home.supplier_/components/create-supplier";
-import PartyAutocomplete from "../home.$partyOrder.create/components/party-autocomplete";
+import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
@@ -58,7 +58,7 @@ export default function CreatePurchaseInvoiceClient() {
   const navigate = useNavigate();
   const r = routes;
   const params = useParams();
-  const partyInvoice = partyTypeFromJSON(params.partyInvoice);
+  const partyInvoice = params.partyInvoice || "";
   const form = useForm<z.infer<typeof createPurchaseInvoiceSchema>>({
     resolver: zodResolver(createPurchaseInvoiceSchema),
     defaultValues: {
@@ -85,7 +85,11 @@ export default function CreatePurchaseInvoiceClient() {
       {
         method: "POST",
         encType: "application/json",
-        action: r.toCreateInvoice(partyInvoice),
+        action: r.toRoute({
+          routePrefix: ["invoice"],
+          main: partyInvoice,
+          routeSufix: [`new`],
+        }),
       }
     );
   };
@@ -103,22 +107,20 @@ export default function CreatePurchaseInvoiceClient() {
     setUpToolbar();
   }, []);
 
-  // useEffect(() => {
-  //   form.setValue(
-  //     "supplierName",
-  //     createPurchaseInvoice.payload?.party_name || ""
-  //   );
-  //   revalidator.revalidate();
-  //   console.log("REVALIDATIONS...");
-  // }, [createPurchaseInvoice]);
-
   useDisplayMessage(
     {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
       onSuccessMessage: () => {
         if (fetcher.data?.invoice) {
-          navigate(r.toInvoiceDetail(partyInvoice, fetcher.data.invoice.code));
+          navigate(r.toRoute({
+            main:partyInvoice,
+            routeSufix:[fetcher.data.invoice.code],
+            routePrefix:["invoice"],
+            q:{
+              tab:"info"
+            }
+          }));
         }
       },
     },
@@ -136,19 +138,19 @@ export default function CreatePurchaseInvoiceClient() {
           >
             <div className="create-grid">
               <PartyAutocomplete
-                party={partyInvoice}
+                party={partyTypeFromJSON(partyInvoice)}
                 globalState={globalState}
                 form={form}
               />
 
               <CustomFormDate form={form} name="date" label={t("form.date")} />
 
-              <CustomFormDate
+              {/* <CustomFormDate
                 form={form}
                 name="due_date"
                 isDatetime={true}
                 label={t("form.dueDate")}
-              />
+              /> */}
 
               <Typography className=" col-span-full" fontSize={subtitle}>
                 {t("form.currencyAndPriceList")}

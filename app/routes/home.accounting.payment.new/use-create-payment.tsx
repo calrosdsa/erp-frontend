@@ -1,4 +1,6 @@
+import { z } from "zod";
 import { create } from "zustand";
+import { paymentReferceSchema } from "~/util/data/schemas/accounting/payment-schema";
 
 interface Payload {
     amount:number
@@ -7,6 +9,7 @@ interface Payload {
     partyName?:string
     partyUuid?:string
     partyReference?:number
+    partyReferences:z.infer<typeof paymentReferceSchema>[]
 }
 
 interface CreatePaymentStore {

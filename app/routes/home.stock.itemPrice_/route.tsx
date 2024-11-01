@@ -6,6 +6,7 @@ import { createItemPriceSchema } from "~/util/data/schemas/stock/item-price-sche
 import { z } from "zod";
 import { components } from "~/sdk";
 import { handleError } from "~/util/api/handle-status-code";
+import { Outlet } from "@remix-run/react";
 
 type ActionData = {
   action: string;
@@ -105,6 +106,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function ItemPrices() {
   return (
     <div>
+      {/* <Outlet/> */}
       <ItemPricesClient />
     </div>
   );

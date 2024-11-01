@@ -74,8 +74,11 @@ export const  orderLineColumns = ({
     accessorKey: "amount",
     header: t("form.amount"),
     cell: ({ ...props }) => {
+      const rowData = props.row.original
       return currency ? (
-        <TableCellPrice {...props} currency={currency} i18n={i18n} />
+        <TableCellPrice {...props} currency={currency} i18n={i18n}
+        price={rowData.rate * Number(rowData.quantity)}
+         />
       ) : (
         "-"
       );

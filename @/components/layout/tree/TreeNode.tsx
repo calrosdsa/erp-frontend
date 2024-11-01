@@ -5,15 +5,17 @@ import Typography, { labelF, subtitle } from "@/components/typography/Typography
 import { Link } from "@remix-run/react";
 import { routes } from "~/util/route";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 
-interface TreeNodeProps extends GroupedItem {}
+interface TreeNodeProps extends GroupedItem {
+  partyType:string
+}
 
 const TreeNode: React.FC<TreeNodeProps> = ({
   uuid,
   name,
   is_group,
   depth,
+  partyType,
   children,
 }) => {
     const r = routes
@@ -28,7 +30,16 @@ const TreeNode: React.FC<TreeNodeProps> = ({
       )}
       >
         {is_group ? <FolderIcon size={17} /> : <CornerDownRight size={17} />}       
-            <Link to={r.toSupplierGroup(name,uuid)} className=" underline">
+            <Link to={r.toRoute({
+              main:partyType,
+              routeSufix:[name],
+              routePrefix:[r.group],
+              q:{
+                tab:"info",
+                id:uuid
+              }
+
+            })} className=" underline">
           <Typography fontSize={labelF}>{name}</Typography>
             </Link>
       </div>
@@ -42,6 +53,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
               is_group={child.is_group}
               depth={child.depth}
               children={child.children}
+              partyType={partyType}
               parent_uuid={child.parent_uuid}
             />
           ))}

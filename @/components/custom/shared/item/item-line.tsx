@@ -156,7 +156,7 @@ export default function ItemLine({
                 form.setValue("item_uuid", e.item_uuid);
                 form.setValue("uom", e.uom);
                 form.setValue("item_price_uuid", e.uuid);
-                form.setValue("rate", e.rate);
+                form.setValue("rate", formatAmounFromInt(e.rate));
               }}
               onCustomDisplay={(item, idx) => {
                 return (
