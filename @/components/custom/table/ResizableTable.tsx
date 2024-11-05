@@ -93,7 +93,7 @@ export default function ResizableTable<TData, TValue>({
                       style={{
                         width: cell.column.getSize(),
                       }}
-                      className="border-r last:border-r-0"
+                      className="border-r last:border-r-0 whitespace-nowrap"
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>

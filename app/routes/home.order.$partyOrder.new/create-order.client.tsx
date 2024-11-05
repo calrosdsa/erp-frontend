@@ -35,7 +35,7 @@ export default function CreatePurchaseOrdersClient() {
     useCurrencyDebounceFetcher();
   const globalState = useOutletContext<GlobalState>();
   const params = useParams();
-  const partyOrder = partyTypeFromJSON(params.partyOrder)
+  const partyOrder = params.partyOrder || ""
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null)
   const navigate = useNavigate();
@@ -51,13 +51,12 @@ export default function CreatePurchaseOrdersClient() {
   const onSubmit = (values: z.infer<typeof createPurchaseSchema>) => {
     fetcher.submit(
       {
-        action: "create-purchase-order",
+        action: "create-order",
         createPurchaseOrder: values,
       } as any,
       {
         method: "POST",
         encType: "application/json",
-        action: r.toCreateOrder(partyOrder),
       }
     );
   };
@@ -77,7 +76,14 @@ export default function CreatePurchaseOrdersClient() {
       success: fetcher.data?.message,
       onSuccessMessage: () => {
         navigate(
-          r.toOrderDetail(partyOrder, fetcher.data?.order?.code || "")
+          r.toRoute({
+            main:partyOrder,
+            routePrefix:[r.orderM],
+            routeSufix:[fetcher.data?.order?.code || ""],
+            q:{
+              tab:"info"
+            }
+          })
         );
       },
     },
@@ -88,6 +94,7 @@ export default function CreatePurchaseOrdersClient() {
     <div>
       <FormLayout>
         <Form {...form}>
+          {JSON.stringify(form.formState.errors)}
           <fetcher.Form
             method="post"
             onSubmit={form.handleSubmit(onSubmit)}
@@ -95,7 +102,7 @@ export default function CreatePurchaseOrdersClient() {
           >
             <div className="create-grid">
               <PartyAutocomplete
-              party={partyOrder}
+              party={partyTypeFromJSON(partyOrder)}
               globalState={globalState}
               form={form}
               />

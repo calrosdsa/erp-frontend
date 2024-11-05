@@ -12,7 +12,7 @@ import TableCellIndex from "../../cells/table-cell-index";
 export const orderColumns = ({
   orderPartyType,
 }: {
-  orderPartyType: PartyType;
+  orderPartyType: string;
 }): ColumnDef<components["schemas"]["OrderDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["OrderDto"]>[] = [];
   const r = routes;
@@ -29,7 +29,14 @@ export const orderColumns = ({
       return (
         <TableCellNameNavigation
           {...props}
-          navigate={(name) => r.toOrderDetail(orderPartyType, name)}
+          navigate={(name) => r.toRoute({
+            main:orderPartyType,
+            routePrefix:["order"],
+            routeSufix:[name],
+            q:{
+              tab:"info"
+            }
+          })}                 
         />
       );
     },

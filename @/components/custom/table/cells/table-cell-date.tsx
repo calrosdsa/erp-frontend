@@ -9,7 +9,7 @@ type Option = {
   label: string;
   value: string;
 };
-interface TableCellProps<TData> {
+interface TableCellProps<TData>  {
   getValue: Getter<any>;
   row: Row<TData>;
   column: Column<TData, unknown>;
@@ -30,7 +30,7 @@ export default function TableCellDate<TData>({
   return (
     <>
     {typeof initialValue == "string" && 
-    <div>
+    <div className=" whitespace-nowrap">
         {formatDate == "long" && (
           formatLongDate(initialValue, i18n.language)
         )}

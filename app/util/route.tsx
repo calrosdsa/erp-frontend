@@ -24,8 +24,11 @@ class Routes {
   companies = this.base + "/companies";
 
   invoice = this.base + "/invoice";
+  invoiceM = "invoice";
   order = this.base + "/order";
+  orderM =  "order";
   receipt = this.base + "/receipt";
+  receiptM = "receipt";
 
   buying = this.base + "/buying";
   supplierGroups = this.buying + "/supplier-groups";

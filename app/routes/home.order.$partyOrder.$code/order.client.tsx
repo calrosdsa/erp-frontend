@@ -56,20 +56,15 @@ export default function PurchaseOrderClient() {
     roleActions: globalState.roleActions,
   });
   const [purchaseInvoicePermission] = usePermission({
-    actions:
-      associatedActions &&
-      associatedActions[PartyType[PartyType.purchaseInvoice]],
+    actions: associatedActions && associatedActions[PartyType.purchaseInvoice],
     roleActions: globalState.roleActions,
   });
   const [paymentPermission] = usePermission({
-    actions:
-      associatedActions && associatedActions[PartyType[PartyType.payment]],
+    actions: associatedActions && associatedActions[PartyType.payment],
     roleActions: globalState.roleActions,
   });
   const [receiptPermission] = usePermission({
-    actions:
-      associatedActions &&
-      associatedActions[PartyType[PartyType.purchaseReceipt]],
+    actions: associatedActions && associatedActions[PartyType.purchaseReceipt],
     roleActions: globalState.roleActions,
   });
   const { t, i18n } = useTranslation("common");
@@ -79,7 +74,7 @@ export default function PurchaseOrderClient() {
   const r = routes;
   const navigate = useNavigate();
   const params = useParams();
-  const partyOrder = partyTypeFromJSON(params.partyOrder);
+  const partyOrder = params.partyOrder || "";
   const { enabledOrder, toBill } = useStatus({
     status: stateFromJSON(order?.status),
   });
@@ -87,16 +82,30 @@ export default function PurchaseOrderClient() {
   const navItems = [
     {
       title: t("info"),
-      href: r.toOrderDetail(partyOrder, order?.code || ""),
+      href: r.toRoute({
+        main: partyOrder,
+        routePrefix: [r.orderM],
+        routeSufix: [order?.code || ""],
+        q: {
+          tab: "info",
+        },
+      }),
     },
     {
       title: t("connections"),
-      href: r.toOrderDetail(partyOrder, order?.code || "", "connections"),
+      href: r.toRoute({
+        main: partyOrder,
+        routePrefix: [r.orderM],
+        routeSufix: [order?.code || ""],
+        q: {
+          tab: "connections",
+        },
+      }),
     },
   ];
 
-  const getPartyType = (partyType: PartyType) => {
-    switch (partyType) {
+  const getPartyType = (partyType: string) => {
+    switch (partyTypeFromJSON(partyType)) {
       case PartyType.purchaseOrder:
         return partyTypeToJSON(PartyType.supplier);
       case PartyType.saleOrder:
@@ -104,14 +113,14 @@ export default function PurchaseOrderClient() {
     }
     return partyTypeToJSON(PartyType.UNRECOGNIZED);
   };
-  const getInvoicePartyType = (partyOrder: PartyType) => {
-    switch (partyOrder) {
+  const getInvoicePartyType = (partyOrder: string) => {
+    switch (partyTypeFromJSON(partyOrder)) {
       case PartyType.purchaseOrder:
-        return PartyType.purchaseOrder;
+        return partyTypeToJSON(PartyType.purchaseInvoice);
       case PartyType.saleOrder:
-        return PartyType.saleInvoice;
+        return partyTypeToJSON(PartyType.saleInvoice);
       default:
-        return PartyType.UNRECOGNIZED;
+        return "";
     }
   };
   setUpToolbar(() => {
@@ -143,7 +152,13 @@ export default function PurchaseOrderClient() {
                 ) || [],
             },
           });
-          navigate(r.toCreateInvoice(getInvoicePartyType(partyOrder)));
+          navigate(
+            r.toRoute({
+              main: getInvoicePartyType(partyOrder),
+              routePrefix: [r.invoiceM],
+              routeSufix: ["new"],
+            })
+          );
         },
         Icon: PlusIcon,
       });
@@ -165,7 +180,13 @@ export default function PurchaseOrderClient() {
                 ) || [],
             },
           });
-          navigate(r.toCreateReceipt(PartyType.purchaseReceipt));
+          navigate(
+            r.toRoute({
+              main: partyTypeToJSON(PartyType.purchaseReceipt),
+              routePrefix: [r.receiptM],
+              routeSufix: ["new"],
+            })
+          );
         },
         Icon: PlusIcon,
       });
@@ -194,7 +215,7 @@ export default function PurchaseOrderClient() {
         );
       },
     };
-  }, [purchaseInvoicePermission, receiptPermission]);
+  }, [purchaseInvoicePermission, receiptPermission, order]);
 
   useEffect(() => {
     if (fetcher.state == "submitting") {

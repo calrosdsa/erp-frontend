@@ -32,6 +32,7 @@ import { PlusIcon } from "lucide-react";
 import { sumTotal } from "~/util/format/formatCurrency";
 import { useCreatePayment } from "../home.accounting.payment.new/use-create-payment";
 import { useStatus } from "~/util/hooks/data/useStatus";
+import { format } from "date-fns";
 
 export default function InvoiceDetailClient() {
   const { actions, invoice, activities, associatedActions, itemLines,totals } =
@@ -83,6 +84,20 @@ export default function InvoiceDetailClient() {
 
   setUpToolbar(() => {
     let actions: ActionToolbar[] = [];
+    actions.push({
+      label:t("accountingLedger"),
+      onClick:()=>{
+        navigate(r.toRoute({
+          main:"generalLedger",
+          routePrefix:[r.accountingM],
+          q:{
+            fromDate:format(invoice?.created_at || "","yyyy-MM-dd"),
+            toDate:format(invoice?.created_at || "","yyyy-MM-dd"),
+            voucherNo:invoice?.code,
+          }
+        }))
+      }
+    })
     if (paymentPermission?.create && !isCompleted && !isCancelled) {
       actions.push({
         label: t("_payment.base"),

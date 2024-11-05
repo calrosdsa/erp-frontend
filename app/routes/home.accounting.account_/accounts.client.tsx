@@ -5,6 +5,7 @@ import { accountColumns } from "@/components/custom/table/columns/accounting/acc
 import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
 import { routes } from "~/util/route"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 
 export default function AccountsClient(){
@@ -16,20 +17,23 @@ export default function AccountsClient(){
     })
     const r = routes
     const navigate = useNavigate()
+    setUpToolbar(()=>{
+        return {
+            ...(permission?.create && {
+                addNew:()=>{
+                    navigate(r.toCreateAccountLedger())
+                }
+            })
+        }
+    },[permission])
     return (
         <div>
             <DataTable
-            metaActions={{
-                meta:{
-                    ...(permission?.create && {
-                        addNew:()=>{
-                            navigate(r.toCreateAccountLedger())
-                        }
-                    })
-                }
-            }}
             data={paginationResult?.results || []}
             columns={accountColumns()}
+            paginationOptions={{
+                rowCount:paginationResult?.total
+            }}
             />
         </div>
     )

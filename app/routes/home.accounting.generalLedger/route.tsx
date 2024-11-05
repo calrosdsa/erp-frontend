@@ -10,11 +10,14 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
     const searchParams = url.searchParams
     const fromDate = searchParams.get("fromDate") || format(startOfMonth(new Date()),"yyyy-MM-dd")
     const toDate = searchParams.get("toDate") || format(endOfMonth(new Date()).toLocaleDateString(),"yyyy-MM-dd")
+    const voucherNo = searchParams.get("voucherNo") 
+    console.log(fromDate,toDate)
     const res = await client.GET("/ledger/general",{
         params:{
             query:{
                 from_date:fromDate,
                 to_date:toDate,
+                voucher_no:voucherNo || "",
             }
         }
     })

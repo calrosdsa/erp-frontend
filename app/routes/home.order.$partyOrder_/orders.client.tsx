@@ -14,7 +14,7 @@ export default function OrdersClient() {
   const globalState = useOutletContext<GlobalState>();
   const r = routes;
   const params = useParams()
-  const partyOrder = partyTypeFromJSON(params.partyOrder)
+  const partyOrder = params.partyOrder || ""
   const navigate = useNavigate();
   const [permission] = usePermission({
     actions: actions,
@@ -28,7 +28,11 @@ export default function OrdersClient() {
       title:undefined,
       ...(permission?.create && {
         addNew: () => {
-          navigate(r.toCreateOrder(partyOrder));
+          navigate(r.toRoute({
+            main:partyOrder,
+            routePrefix:["order"],
+            routeSufix:["new"]
+          }));
         },
       }),
     }
@@ -36,9 +40,6 @@ export default function OrdersClient() {
 
   return (
     <div>
-      <div>
-      
-      </div>
       <DataTable
         data={paginationResult?.results || []}
         columns={orderColumns({

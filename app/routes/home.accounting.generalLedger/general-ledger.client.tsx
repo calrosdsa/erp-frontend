@@ -6,6 +6,10 @@ import { loader } from "./route";
 import { generalLedgerColumns } from "@/components/custom/table/columns/accounting/general-ledger-columns";
 import GeneralLedgerHeader from "./components/general-ledger-header";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { DataTable } from "@/components/custom/table/CustomTable";
+import { components } from "~/sdk";
+import { DEFAULT_CURRENCY } from "~/constant";
+import { useMemo } from "react";
 
 interface LedgerData {
   Name: string;
@@ -13,6 +17,19 @@ interface LedgerData {
 
 export default function GeneralLedgerClient() {
   const { generalLedger } = useLoaderData<typeof loader>();
+
+  const total =  useMemo(()=>{
+    const totalDebit = generalLedger?.reduce((prev,acc)=>prev + acc.debit,0)
+    const totalCredit = generalLedger?.reduce((prev,acc)=>prev + acc.credit,0)
+    const totalBalance = Number(totalCredit)-Number(totalDebit)
+    return {
+      totalDebit,
+      totalCredit,
+      totalBalance,
+    }
+  },[generalLedger])
+  
+
   return (
     <div>
       <Card>
@@ -20,22 +37,20 @@ export default function GeneralLedgerClient() {
           <GeneralLedgerHeader />
         </CardHeader>
         <CardContent className="px-2 py-3">
-          <ResizableTable
-            data={
-              generalLedger ||
-              ([
-                {
-                  posting_date: "2024-05-09",
-                  account: "Creditors-GH",
-                  debit: "230.21 BOB",
-                },
-                {
-                  posting_date: "2024-05-09",
-                  account: "Creditors-GH",
-                  debit: "230.21 BOB",
-                },
-              ] as any)
-            }
+          <DataTable
+            data={[
+              ...(generalLedger || []),
+              {
+                account: "Total",
+                credit: total.totalCredit,
+                debit: total.totalDebit,
+                currency:
+                  (generalLedger != undefined && generalLedger.length > 0) 
+                    ? generalLedger[0]?.currency
+                    : DEFAULT_CURRENCY,
+                balance: total.totalBalance,
+              } as components["schemas"]["GeneralLedgerEntryDto"],
+            ]}
             columns={generalLedgerColumns({})}
           />
         </CardContent>

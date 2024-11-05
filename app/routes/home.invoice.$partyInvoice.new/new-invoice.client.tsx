@@ -85,11 +85,6 @@ export default function CreatePurchaseInvoiceClient() {
       {
         method: "POST",
         encType: "application/json",
-        action: r.toRoute({
-          routePrefix: ["invoice"],
-          main: partyInvoice,
-          routeSufix: [`new`],
-        }),
       }
     );
   };

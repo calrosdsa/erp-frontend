@@ -19,7 +19,8 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
     let error:string | undefined = undefined
     let order:components["schemas"]["OrderDto"] | undefined = undefined
     switch(data.action) {
-        case "create-purchase-order":{
+        case "create-order":{
+            console.log(data)
             const d = data.createPurchaseOrder
             const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
             const res = await client.POST("/order",{
