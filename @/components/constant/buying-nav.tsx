@@ -1,6 +1,6 @@
 import { CreditCardIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { PartyType } from "~/gen/common";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { NavItem } from "~/types";
 import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
@@ -21,7 +21,10 @@ export const BuyingNav = ({ entities }: {
   if(entities?.includes(Entity.SUPPLIER_ENTITY_ID)){
     buyingChildrens.push({
       title: t("suppliers"),
-      href: r.suppliers,
+      href: r.toRoute({
+        main:partyTypeToJSON(PartyType.supplier),
+        routePrefix:[r.buyingM],
+      }),
     });
   }
   if(entities?.includes(Entity.PURCHASE_ORDER_ENTITY_ID)){

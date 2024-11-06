@@ -5,6 +5,7 @@ import { supplierColumns } from "@/components/custom/table/columns/buying/suppli
 import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
 import { useCreateSupplier } from "./components/create-supplier"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 
 export default function SuppliersClient (){
@@ -15,6 +16,12 @@ export default function SuppliersClient (){
         actions:actions,
         roleActions:globalState.roleActions
     })
+
+
+    setUpToolbar(()=>{    
+        return {
+        }
+    },[])
     return (
         <div>
             <DataTable

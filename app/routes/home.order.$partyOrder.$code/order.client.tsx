@@ -1,7 +1,6 @@
 import {
   useFetcher,
   useLoaderData,
-  useLocation,
   useNavigate,
   useOutletContext,
   useParams,
@@ -9,18 +8,14 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
-import { sumTotal } from "~/util/format/formatCurrency";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState, OrderGlobalState } from "~/types/app";
 import {
   ItemLineType,
-  itemLineTypeFromJSON,
   PartyType,
   partyTypeFromJSON,
   partyTypeToJSON,
-  State,
   stateFromJSON,
-  stateToJSON,
 } from "~/gen/common";
 import { useEffect } from "react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
@@ -51,10 +46,6 @@ export default function PurchaseOrderClient() {
   const globalState = useOutletContext<GlobalState>();
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
-  const [purchaseOrderPermission] = usePermission({
-    actions: actions,
-    roleActions: globalState.roleActions,
-  });
   const [purchaseInvoicePermission] = usePermission({
     actions: associatedActions && associatedActions[PartyType.purchaseInvoice],
     roleActions: globalState.roleActions,

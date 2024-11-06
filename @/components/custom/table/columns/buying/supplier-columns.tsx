@@ -5,6 +5,7 @@ import TableCellDate from "../../cells/table-cell-date";
 import { routes } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 
 export const supplierColumns = ({}:{
 }):ColumnDef<components["schemas"]["SupplierDto"]>[] =>{
@@ -21,7 +22,15 @@ export const supplierColumns = ({}:{
                 <TableCellNameNavigation
                 {...props}
                 navigate={(name)=>{
-                    return r.toSupplierDetail(name,rowD.uuid)
+                    return r.toRoute({
+                        main:partyTypeToJSON(PartyType.supplier),
+                        routePrefix:[r.buyingM],
+                        routeSufix:[name],
+                        q:{
+                            tab:"info",
+                            id:rowD.uuid,
+                        }
+                    })
                 }}
                 />
             )

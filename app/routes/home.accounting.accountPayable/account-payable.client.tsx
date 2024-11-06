@@ -1,0 +1,59 @@
+import TableCellIndex from "@/components/custom/table/cells/table-cell-index";
+import ResizableTable from "@/components/custom/table/ResizableTable";
+import { useLoaderData } from "@remix-run/react";
+import { ColumnDef } from "@tanstack/react-table";
+import { loader } from "./route";
+import { generalLedgerColumns } from "@/components/custom/table/columns/accounting/general-ledger-columns";
+import GeneralLedgerHeader from "./components/account-payable-header";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { DataTable } from "@/components/custom/table/CustomTable";
+import { components } from "~/sdk";
+import { DEFAULT_CURRENCY } from "~/constant";
+import { useMemo } from "react";
+import AccountPayableHeader from "./components/account-payable-header";
+import { accountPayableColumns } from "@/components/custom/table/columns/accounting/account-payable";
+
+interface LedgerData {
+  Name: string;
+}
+
+export default function AccountPayableClient() {
+  const { accountPayable } = useLoaderData<typeof loader>();
+
+  const total =  useMemo(()=>{
+    const totalInvoiceAmount = accountPayable?.reduce((prev,acc)=>prev + acc.invoiced_amount,0)
+    const totalPaidAmount = accountPayable?.reduce((prev,acc)=>prev + acc.paid_amount,0)
+    const totalOutstanding = Number(totalPaidAmount)-Number(totalInvoiceAmount)
+    return {
+      totalInvoiceAmount,
+      totalPaidAmount,
+      totalOutstanding,
+    }
+  },[accountPayable])
+  
+
+  return (
+    <div>
+      <Card>
+        <CardHeader>
+          <AccountPayableHeader />
+        </CardHeader>
+        <CardContent className="px-2 py-3">
+          <DataTable
+            data={[
+              ...(accountPayable || []),
+              {
+                paid_amount: total.totalPaidAmount,
+                invoiced_amount: total.totalInvoiceAmount,
+                currency: (accountPayable != undefined && accountPayable.length > 0)
+                  ? accountPayable[0]?.currency
+                  : DEFAULT_CURRENCY,
+              } as components["schemas"]["AccountPayableEntryDto"],
+            ]}
+            columns={accountPayableColumns({})}
+          />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

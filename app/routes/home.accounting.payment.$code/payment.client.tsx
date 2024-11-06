@@ -16,6 +16,8 @@ import PaymentInfoTab from "./tab/payment-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
+import { ActionToolbar } from "~/types/actions";
+import { format } from "date-fns";
 
 export default function PaymentDetailClient() {
   const { paymentData, actions,associatedActions,activities } = useLoaderData<typeof loader>();
@@ -37,7 +39,23 @@ export default function PaymentDetailClient() {
   ]
 
   setUpToolbar(()=>{
+    let actions: ActionToolbar[] = [];
+    actions.push({
+      label:t("accountingLedger"),
+      onClick:()=>{
+        navigate(r.toRoute({
+          main:"generalLedger",
+          routePrefix:[r.accountingM],
+          q:{
+            fromDate:format(paymentData?.created_at || "","yyyy-MM-dd"),
+            toDate:format(paymentData?.created_at || "","yyyy-MM-dd"),
+            voucherNo:paymentData?.code,
+          }
+        }))
+      }
+    })
     return {
+      actions:actions,
       status:stateFromJSON(paymentData?.status),
       onChangeState: (e) => {
         const body: z.infer<typeof updateStateWithEventSchema> = {

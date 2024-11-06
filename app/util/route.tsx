@@ -31,6 +31,7 @@ class Routes {
   receiptM = "receipt";
 
   buying = this.base + "/buying";
+  buyingM = "buying";
   supplierGroups = this.buying + "/supplier-groups";
   suppliers = this.base + "/supplier";
   purchaseOrders = this.order + `/${PartyType[PartyType.purchaseOrder]}`;

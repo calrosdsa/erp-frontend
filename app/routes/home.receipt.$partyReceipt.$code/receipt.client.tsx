@@ -1,6 +1,7 @@
 import {
   useFetcher,
   useLoaderData,
+  useNavigate,
   useOutletContext,
   useParams,
   useSearchParams,
@@ -21,9 +22,12 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
 import ReceiptConnectionsTab from "./components/tab/receipt-connections";
+import { format } from "date-fns";
+import { ActionToolbar } from "~/types/actions";
 
 export default function ReceiptDetailClient() {
-  const { receipt,itemLines, actions,activities} = useLoaderData<typeof loader>();
+  const { receipt, itemLines, actions, activities } =
+    useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const { t, i18n } = useTranslation("common");
   const { toast } = useToast();
@@ -31,29 +35,52 @@ export default function ReceiptDetailClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
-  const [searchParams] = useSearchParams()
-  const tab = searchParams.get("tab")
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get("tab");
   const toolbar = useToolbar();
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
-  const r = routes
+  const navigate = useNavigate();
+  const r = routes;
 
   const navItems = [
     {
       title: t("info"),
-      href: r.toReceiptDetail(params.partyReceipt || "",receipt?.code || ""),
+      href: r.toReceiptDetail(params.partyReceipt || "", receipt?.code || ""),
     },
     {
       title: t("connections"),
-      href: r.toReceiptDetail(params.partyReceipt || "",receipt?.code || "","connections"),
+      href: r.toReceiptDetail(
+        params.partyReceipt || "",
+        receipt?.code || "",
+        "connections"
+      ),
     },
   ];
- 
 
-  setUpToolbar(()=>{
+  setUpToolbar(() => {
+    let actions: ActionToolbar[] = [];
+    actions.push({
+      label: t("accountingLedger"),
+      onClick: () => {
+        navigate(
+          r.toRoute({
+            main: "generalLedger",
+            routePrefix: [r.accountingM],
+            q: {
+              fromDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
+              toDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
+              voucherNo: receipt?.code,
+            },
+          })
+        );
+      },
+    });
+
     return {
       title: `${t("_receipt.base")}(${receipt?.code})`,
       status: stateFromJSON(receipt?.status),
+      actions: actions,
       onChangeState: (e) => {
         const body: z.infer<typeof updateStateWithEventSchema> = {
           current_state: receipt?.status || "",
@@ -72,8 +99,8 @@ export default function ReceiptDetailClient() {
           }
         );
       },
-    }
-  },[receipt])
+    };
+  }, [receipt]);
 
   useEffect(() => {
     if (fetcher.state == "submitting") {
@@ -83,11 +110,13 @@ export default function ReceiptDetailClient() {
     }
   }, [fetcher.state]);
 
-  useDisplayMessage({
-    error:fetcher.data?.error,
-    success:fetcher.data?.message,
-  },[fetcher.data])
-
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+    },
+    [fetcher.data]
+  );
 
   // useEffect(() => {
   //   setUpToolBar();
@@ -95,16 +124,12 @@ export default function ReceiptDetailClient() {
 
   return (
     <DetailLayout
-    activities={activities}
-    partyID={receipt?.id}
-    navItems={navItems}
+      activities={activities}
+      partyID={receipt?.id}
+      navItems={navItems}
     >
-      {tab == "info" && 
-      <ReceiptInfoTab/>
-      }
-      {tab == "connections" && 
-      <ReceiptConnectionsTab/>
-      }
+      {tab == "info" && <ReceiptInfoTab />}
+      {tab == "connections" && <ReceiptConnectionsTab />}
     </DetailLayout>
   );
 }

@@ -106,6 +106,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/accounting/report/account-payable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Account Payable */
+        get: operations["get-account-payable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounting/report/general": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get General Ledger */
+        get: operations["get-general-ledger"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/accounting/tax": {
         parameters: {
             query?: never;
@@ -1882,6 +1916,25 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AccountPayableEntryDto: {
+            currency: string;
+            due_date: string;
+            /** Format: int64 */
+            invoiced_amount: number;
+            /** Format: int64 */
+            outstanding_amount: number;
+            /** Format: int64 */
+            paid_amount: number;
+            party_name: string;
+            party_type: string;
+            party_uuid: string;
+            /** Format: date-time */
+            posting_date: string;
+            receivable_account: string;
+            receivable_account_uuid: string;
+            voucher_no: string;
+            voucher_type: string;
+        };
         AccountResponseBody: {
             /**
              * Format: uri
@@ -2749,6 +2802,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ItemDto"];
         };
+        EntityResponseListAccountPayableEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["AccountPayableEntryDto"][];
+        };
         EntityResponseListGeneralLedgerEntryDtoBody: {
             /**
              * Format: uri
@@ -3189,8 +3255,6 @@ export interface components {
         GeneralLedgerEntryDto: {
             account: string;
             against_account: string;
-            against_voucher: string;
-            against_voucher_type: string;
             /** Format: int64 */
             balance: number;
             /** Format: int64 */
@@ -4894,6 +4958,95 @@ export interface operations {
             };
         };
     };
+    "get-account-payable": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                parties?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListAccountPayableEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-general-ledger": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                account?: string;
+                voucher_no?: string;
+                agains_voucher_no?: string;
+                party_type?: string;
+                party?: string;
+                currency?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListGeneralLedgerEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-taxes": {
         parameters: {
             query: {
@@ -6436,7 +6589,7 @@ export interface operations {
                 voucher_no?: string;
                 agains_voucher_no?: string;
                 party_type?: string;
-                party?: number;
+                party?: string;
                 currency?: string;
             };
             header?: {
@@ -7176,7 +7329,6 @@ export interface operations {
     "get-payments": {
         parameters: {
             query: {
-                invoice_id?: string;
                 page: string;
                 size: string;
                 enabled?: string;
@@ -7185,6 +7337,8 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                invoice_id?: string;
+                status?: string;
             };
             header?: {
                 Authorization?: string;
