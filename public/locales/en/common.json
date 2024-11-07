@@ -165,7 +165,8 @@
     "addNew": "Add New",
     "fromDate": "From Date",
     "toDate": "To Date",
-    "totals": "Totals"
+    "totals": "Totals",
+    "voucherNo":"Voucher No."
   },
   "accounts": "Accounts",
   "_selling": {
@@ -357,9 +358,13 @@
   
   "generalLedger": "General Ledger",
   "accountingLedger": "Accounting Ledger",
-  "accountsPayable": "Accounts Payable",
+  "accountPayable": "Account Payable",
+  "stockLedger":"Stock Ledger",
 
   "relocationAndMoving": "Relocation & Moving",
+
+  "accountPayableSumary":"Account Payable Sumary",
+
 
   "regate": {
     "schedule": "Schedule",

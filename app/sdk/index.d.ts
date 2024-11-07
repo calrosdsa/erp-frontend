@@ -123,6 +123,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/accounting/report/account-payable/sumary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Account Payable Sumary */
+        get: operations["get-account-payable-sumary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/accounting/report/general": {
         parameters: {
             query?: never;
@@ -1458,6 +1475,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock-ledger/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Stock Ledger Report */
+        get: operations["get-stock_ledger-report"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item": {
         parameters: {
             query?: never;
@@ -1921,8 +1955,6 @@ export interface components {
             due_date: string;
             /** Format: int64 */
             invoiced_amount: number;
-            /** Format: int64 */
-            outstanding_amount: number;
             /** Format: int64 */
             paid_amount: number;
             party_name: string;
@@ -2827,6 +2859,32 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["GeneralLedgerEntryDto"][];
+        };
+        EntityResponseListStockLedgerEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["StockLedgerEntryDto"][];
+        };
+        EntityResponseListSumaryEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["SumaryEntryDto"][];
         };
         EntityResponseListUserRelationDtoBody: {
             /**
@@ -4538,6 +4596,32 @@ export interface components {
             user: components["schemas"]["UserDto"];
             user_relation: components["schemas"]["UserRelationDto"];
         };
+        StockLedgerEntryDto: {
+            /** Format: int32 */
+            balance_qty: number;
+            /** Format: int32 */
+            balance_value: number;
+            currency: string;
+            /** Format: date-time */
+            date: string;
+            /** Format: int32 */
+            in_qty: number;
+            /** Format: int32 */
+            incoming_rate: number;
+            item_group_name: string;
+            item_group_uuid: string;
+            item_name: string;
+            item_uuid: string;
+            /** Format: int32 */
+            out_qty: number;
+            stock_uom: string;
+            /** Format: int32 */
+            valuation_rate: number;
+            voucher_no: string;
+            voucher_type: string;
+            warehouse_name: string;
+            warehouse_uuid: string;
+        };
         StockLevelDto: {
             /** Format: date-time */
             created_at: string;
@@ -4551,6 +4635,18 @@ export interface components {
             uuid: string;
             warehouse_name: string;
             warehouse_uuid: string;
+        };
+        SumaryEntryDto: {
+            currency: string;
+            party_name: string;
+            party_type: string;
+            party_uuid: string;
+            receivable_account: string;
+            receivable_account_uuid: string;
+            /** Format: int64 */
+            total_invoiced_amount: number;
+            /** Format: int64 */
+            total_paid_amount: number;
         };
         SupplierDto: {
             /** Format: date-time */
@@ -4987,6 +5083,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseListAccountPayableEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-account-payable-sumary": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                parties?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListSumaryEntryDtoBody"];
                 };
             };
             /** @description Error */
@@ -8776,6 +8914,50 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleActionDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-stock_ledger-report": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                voucher_no?: string;
+                item?: string;
+                warehouse?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListStockLedgerEntryDtoBody"];
                 };
             };
             /** @description Error */

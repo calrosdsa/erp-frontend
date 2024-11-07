@@ -77,6 +77,24 @@ export default function ReceiptDetailClient() {
       },
     });
 
+    actions.push({
+      label: t("stockLedger"),
+      onClick: () => {
+        navigate(
+          r.toRoute({
+            main: "stockLedger",
+            routePrefix: [r.stockM],
+            q: {
+              fromDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
+              toDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
+              voucherNo: receipt?.code,
+            },
+          })
+        );
+      },
+    });
+
+
     return {
       title: `${t("_receipt.base")}(${receipt?.code})`,
       status: stateFromJSON(receipt?.status),

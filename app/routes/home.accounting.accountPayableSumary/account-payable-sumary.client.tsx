@@ -1,51 +1,51 @@
-import TableCellIndex from "@/components/custom/table/cells/table-cell-index";
-import ResizableTable from "@/components/custom/table/ResizableTable";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { ColumnDef } from "@tanstack/react-table";
 import { loader } from "./route";
-import { generalLedgerColumns } from "@/components/custom/table/columns/accounting/general-ledger-columns";
-import GeneralLedgerHeader from "./components/account-payable-header";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { components } from "~/sdk";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { useMemo } from "react";
 import AccountPayableHeader from "./components/account-payable-header";
-import { accountPayableColumns } from "@/components/custom/table/columns/accounting/account-payable";
+import { accountPayableSumaryColumns } from "@/components/custom/table/columns/accounting/account-payable-sumary-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { routes } from "~/util/route";
 import { ActionToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
+import { endOfMonth, format, startOfMonth } from "date-fns";
+import { routes } from "~/util/route";
 
 interface LedgerData {
   Name: string;
 }
 
-export default function AccountPayableClient() {
-  const { accountPayable } = useLoaderData<typeof loader>();
-  const r = routes
+export default function AccountPayableSumaryClient() {
+  const { accountPayableSumary } = useLoaderData<typeof loader>();
   const {t} = useTranslation("common")
+  const r = routes
   const navigate = useNavigate()
   const total =  useMemo(()=>{
-    const totalInvoiceAmount = accountPayable?.reduce((prev,acc)=>prev + acc.invoiced_amount,0)
-    const totalPaidAmount = accountPayable?.reduce((prev,acc)=>prev + acc.paid_amount,0)
+    const totalInvoiceAmount = accountPayableSumary?.reduce((prev,acc)=>prev + acc.total_invoiced_amount,0)
+    const totalPaidAmount = accountPayableSumary?.reduce((prev,acc)=>prev + acc.total_paid_amount,0)
     const totalOutstanding = Number(totalPaidAmount)-Number(totalInvoiceAmount)
     return {
       totalInvoiceAmount,
       totalPaidAmount,
       totalOutstanding,
     }
-  },[accountPayable])
+  },[accountPayableSumary])
 
   setUpToolbar(()=>{
     let actions: ActionToolbar[] = [];
     actions.push({
-      label: t("accountPayableSumary"),
+      label: t("accountPayable"),
       onClick: () => {
         navigate(
           r.toRoute({
-            main: r.accountPayableSumary,
+            main: r.accountPayable,
             routePrefix: [r.accountingM],
+            q: {
+              fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
+              toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
+            },
           })
         );
       },
@@ -54,6 +54,7 @@ export default function AccountPayableClient() {
       actions:actions,
     }
   },[])
+  
 
   return (
     <div>
@@ -64,16 +65,16 @@ export default function AccountPayableClient() {
         <CardContent className="px-2 py-3">
           <DataTable
             data={[
-              ...(accountPayable || []),
+              ...(accountPayableSumary || []),
               {
-                paid_amount: total.totalPaidAmount,
-                invoiced_amount: total.totalInvoiceAmount,
-                currency: (accountPayable != undefined && accountPayable.length > 0)
-                  ? accountPayable[0]?.currency
+                total_paid_amount: total.totalPaidAmount,
+                total_invoiced_amount: total.totalInvoiceAmount,
+                currency: (accountPayableSumary != undefined && accountPayableSumary.length > 0)
+                  ? accountPayableSumary[0]?.currency
                   : DEFAULT_CURRENCY,
-              } as components["schemas"]["AccountPayableEntryDto"],
+              } as components["schemas"]["SumaryEntryDto"],
             ]}
-            columns={accountPayableColumns({})}
+            columns={accountPayableSumaryColumns({})}
           />
         </CardContent>
       </Card>

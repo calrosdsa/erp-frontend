@@ -6,21 +6,14 @@ import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellPrice from "../../cells/table-cell-price";
 
-export const accountPayableColumns = ({}: {}): ColumnDef<
-  components["schemas"]["AccountPayableEntryDto"]
+export const accountPayableSumaryColumns = ({}: {}): ColumnDef<
+  components["schemas"]["SumaryEntryDto"]
 >[] => {
-  let columns: ColumnDef<components["schemas"]["AccountPayableEntryDto"]>[] =
+  let columns: ColumnDef<components["schemas"]["SumaryEntryDto"]>[] =
     [];
   const r = routes;
   const { t, i18n } = useTranslation("common");
-  columns.push({
-    accessorKey: "posting_date",
-    header: t("form.postingDate"),
-    size: 300,
-    cell: ({ ...props }) => {
-      return <TableCellDate i18n={i18n} formatDate="medium" {...props} />;
-    },
-  });
+  
   columns.push({
     accessorKey: "party_type",
     cell:({...props})=>{
@@ -59,14 +52,9 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
       );
     },
   });
+  
   columns.push({
-    accessorKey: "voucher_type",
-  });
-  columns.push({
-    accessorKey: "voucher_no",
-  });
-  columns.push({
-    accessorKey: "invoiced_amount",
+    accessorKey: "total_invoiced_amount",
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -75,7 +63,7 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
     },
   });
   columns.push({
-    accessorKey: "paid_amount",
+    accessorKey: "total_paid_amount",
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -92,7 +80,7 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
         <TableCellPrice
           i18n={i18n}
           currency={rowData.currency}
-          price={rowData.invoiced_amount - rowData.paid_amount}
+          price={rowData.total_invoiced_amount - rowData.total_paid_amount}
           {...props}
         />
       );

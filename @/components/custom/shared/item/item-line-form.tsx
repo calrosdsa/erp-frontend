@@ -104,6 +104,7 @@ export default function ItemLineForm({
               form.getValues().lines;
             const n = orderLines.map((t, idx) => {
               if (idx == rowIndex) {
+                e.rate = formatAmountToInt(e.rate)
                 t = e;
               }
               return t;

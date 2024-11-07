@@ -5,6 +5,7 @@ import { usePermission } from "~/util/hooks/useActions"
 import { DataTable } from "@/components/custom/table/CustomTable"
 import { addressColumns } from "@/components/custom/table/columns/address/address-columms"
 import { routes } from "~/util/route"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 
 
@@ -17,6 +18,9 @@ export default function AddressesClient(){
     })
     const r = routes
     const navigate = useNavigate()
+    setUpToolbar(()=>{
+        return {}
+    },[])
     return (
         <div>
             <DataTable

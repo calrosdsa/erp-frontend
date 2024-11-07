@@ -29,14 +29,16 @@ export const orderColumns = ({
       return (
         <TableCellNameNavigation
           {...props}
-          navigate={(name) => r.toRoute({
-            main:orderPartyType,
-            routePrefix:["order"],
-            routeSufix:[name],
-            q:{
-              tab:"info"
-            }
-          })}                 
+          navigate={(name) =>
+            r.toRoute({
+              main: orderPartyType,
+              routePrefix: ["order"],
+              routeSufix: [name],
+              q: {
+                tab: "info",
+              },
+            })
+          }
         />
       );
     },
@@ -46,15 +48,25 @@ export const orderColumns = ({
     header: t("form.party"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
+
       return (
         <>
+          {rowData.party_type == partyTypeToJSON(PartyType.supplier) && (
             <TableCellNameNavigation
               {...props}
-              navigate={(name) => r.toPartyDetail(rowData.party_type,name,{
-                id:rowData.uuid,
-                tab:"info"
-              })}
+              navigate={(name) =>
+                r.toRoute({
+                  main: rowData.party_type,
+                  routePrefix: [r.buyingM],
+                  routeSufix: [name],
+                  q: {
+                    tab: "info",
+                    id: rowData.party_uuid,
+                  },
+                })
+              }
             />
+          )}
         </>
       );
     },

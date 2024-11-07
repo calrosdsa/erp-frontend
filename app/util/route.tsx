@@ -74,6 +74,7 @@ class Routes {
 
   generalLedger = "generalLedger"
   accountPayable = "accountPayable"
+  accountPayableSumary = "accountPayableSumary"
 
   defaultTab = {
     tab: "info",

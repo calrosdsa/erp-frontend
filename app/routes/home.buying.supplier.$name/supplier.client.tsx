@@ -55,7 +55,7 @@ export default function SupplierClient() {
       },
     });
     actions.push({
-      label: t("accountsPayable"),
+      label: t("accountPayable"),
       onClick: () => {
         navigate(
           r.toRoute({
