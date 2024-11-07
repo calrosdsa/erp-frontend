@@ -14,7 +14,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useCreateGroup } from "~/routes/home.groups.$party_/components/create-group";
-import { PartyType } from "~/gen/common";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 
 export const CreateSupplier = ({
   open,
@@ -73,7 +73,10 @@ export const CreateSupplier = ({
             },
             {
               encType: "application/json",
-              action: r.suppliers,
+              action: r.toRoute({
+                main:partyTypeToJSON(PartyType.supplier),
+                routePrefix:[r.buyingM]
+              }),
               method: "POST",
             }
           );
@@ -109,7 +112,7 @@ export const CreateSupplier = ({
                 {...(groupPermission?.create && {
                   addNew: () =>
                     createGroup.openDialog({
-                      partyType: PartyType[PartyType.supplierGroup],
+                      partyType: PartyType.supplierGroup,
                     }),
                 })}
               />

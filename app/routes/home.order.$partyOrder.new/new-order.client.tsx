@@ -3,7 +3,6 @@ import {
   useNavigate,
   useOutletContext,
   useParams,
-  useRevalidator,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { createPurchaseSchema } from "~/util/data/schemas/buying/purchase-schema";
@@ -12,7 +11,6 @@ import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
@@ -134,6 +132,7 @@ export default function CreatePurchaseOrdersClient() {
                 }}
               />
             </div>
+            {JSON.stringify(form.getValues().lines)}
             <ItemLineForm
               form={form}
               partyType={params.partyOrder || ""}

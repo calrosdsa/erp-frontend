@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData } from "@remix-run/react";
+  import { Outlet, useLoaderData } from "@remix-run/react";
 import HomeLayout from "./homeLayout";
 import {
   ActionFunctionArgs,

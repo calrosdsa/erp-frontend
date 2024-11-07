@@ -72,6 +72,9 @@ class Routes {
   profile = this.settings + "/profile";
   account = this.settings + "/account";
 
+  generalLedger = "generalLedger"
+  accountPayable = "accountPayable"
+
   defaultTab = {
     tab: "info",
   };

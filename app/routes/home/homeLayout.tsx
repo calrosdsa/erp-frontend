@@ -143,9 +143,9 @@ export default function HomeLayout({
                       <BreadcrumbItem>
                         <BreadcrumbPage>
                           <Typography variant="caption" >
-                            {decodeURIComponent(
+                            {t(decodeURIComponent(
                               routesName[routesName.length - 1] || ""
-                            )}
+                            ))}
                           </Typography>
                         </BreadcrumbPage>
                       </BreadcrumbItem>

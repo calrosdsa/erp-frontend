@@ -10,25 +10,33 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { components } from "~/sdk";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { useMemo } from "react";
-
-interface LedgerData {
-  Name: string;
-}
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useTranslation } from "react-i18next";
 
 export default function GeneralLedgerClient() {
   const { generalLedger } = useLoaderData<typeof loader>();
-
-  const total =  useMemo(()=>{
-    const totalDebit = generalLedger?.reduce((prev,acc)=>prev + acc.debit,0)
-    const totalCredit = generalLedger?.reduce((prev,acc)=>prev + acc.credit,0)
-    const totalBalance = Number(totalCredit)-Number(totalDebit)
+  const { t } = useTranslation("common");
+  const total = useMemo(() => {
+    const totalDebit = generalLedger?.reduce(
+      (prev, acc) => prev + acc.debit,
+      0
+    );
+    const totalCredit = generalLedger?.reduce(
+      (prev, acc) => prev + acc.credit,
+      0
+    );
+    const totalBalance = Number(totalCredit) - Number(totalDebit);
     return {
       totalDebit,
       totalCredit,
       totalBalance,
-    }
-  },[generalLedger])
-  
+    };
+  }, [generalLedger]);
+
+  setUpToolbar(() => {
+    return {
+    };
+  }, []);
 
   return (
     <div>
@@ -45,7 +53,7 @@ export default function GeneralLedgerClient() {
                 credit: total.totalCredit,
                 debit: total.totalDebit,
                 currency:
-                  (generalLedger != undefined && generalLedger.length > 0) 
+                  generalLedger != undefined && generalLedger.length > 0
                     ? generalLedger[0]?.currency
                     : DEFAULT_CURRENCY,
                 balance: total.totalBalance,

@@ -7,46 +7,46 @@
 
   "show": "Show",
   "hide": "Hide",
-  "_group":{
-    "base":"Group"
+  "_group": {
+    "base": "Group"
   },
   "_company": {
     "base": "Company",
     "companies": "Companies"
   },
-  "purchase-orders":"Purchase Orders",
-  "supplier-groups":"Supplier Groups",
-  "suppliers":"Suppliers",
-  "_supplier":{
-    "base":"Supplier"
+  "purchase-orders": "Purchase Orders",
+  "supplier-groups": "Supplier Groups",
+  "suppliers": "Suppliers",
+  "_supplier": {
+    "base": "Supplier"
   },
-  "_purchase":{
-    "base":"Purchase"
+  "_purchase": {
+    "base": "Purchase"
   },
-  "_invoice":{
-      "base":"Invoice",
-      "create":"Create Invoice"
+  "_invoice": {
+    "base": "Invoice",
+    "create": "Create Invoice"
   },
-  "_receipt":{
-    "base":"Receipt",
-    "f":"{{o}} Receipt"
+  "_receipt": {
+    "base": "Receipt",
+    "f": "{{o}} Receipt"
   },
-  "_payment":{
-    "base":"Payment",
-    "create":"Create Payment",
-    "type":"Type of Payment",
-    "paymentFromTo":"Payment From / To"
+  "_payment": {
+    "base": "Payment",
+    "create": "Create Payment",
+    "type": "Type of Payment",
+    "paymentFromTo": "Payment From / To"
   },
   "create": "Create",
   "info": "Info",
-  "connections":"Connections",
+  "connections": "Connections",
   "_auth": {
     "signin": "Sign In",
-    "signout":"Sign Out"
+    "signout": "Sign Out"
   },
 
   "reset-password": "Reset Password",
-  "change-password":"Change Password",
+  "change-password": "Change Password",
   "_account": {
     "lastLogin": "Last Login",
     "updatePassword": "Update Password",
@@ -55,62 +55,62 @@
     "forgotPassword": "Forgot your password?",
     "resetPassowordMsg": "Enter your user account's verified email address and we will send you a password reset link."
   },
-  "_ledger":{
-    "base":"Account",
-    "type":"Account Type",
-    "no":"Account No.",
-    "chartOfAccounts":"Chart of Accounts",
-    "paidFrom":"Account Paid From",
-    "paidTo":"Account Paid To",
-    "currency":"Account Currency ({{o}})"
+  "_ledger": {
+    "base": "Account",
+    "type": "Account Type",
+    "no": "Account No.",
+    "chartOfAccounts": "Chart of Accounts",
+    "paidFrom": "Account Paid From",
+    "paidTo": "Account Paid To",
+    "currency": "Account Currency ({{o}})"
   },
-  "address":"Address",
-  "_address":{
-    "references":"Address References",
-    "info":"Address Info",
-    "list":"Addresses",
-    "addAnother":"Add Another Address",
-    "add":"Add Address",
-    "empty":"No addresses yet"
+  "address": "Address",
+  "_address": {
+    "references": "Address References",
+    "info": "Address Info",
+    "list": "Addresses",
+    "addAnother": "Add Another Address",
+    "add": "Add Address",
+    "empty": "No addresses yet"
   },
-  "contact":"Contact",
-  "_contact":{
-    "list":"Contacts",
-    "addAnother":"Add Another Contact",
-    "add":"Add Contact",
-    "empty":"No contacts yet"
+  "contact": "Contact",
+  "_contact": {
+    "list": "Contacts",
+    "addAnother": "Add Another Contact",
+    "add": "Add Contact",
+    "empty": "No contacts yet"
   },
-  "manage":"Manage",
-  "users":"Users",
-  "_user":{
-    "base":"User"
+  "manage": "Manage",
+  "users": "Users",
+  "_user": {
+    "base": "User"
   },
   "form": {
-    "from":"From",
-    "to":"To",
-    "gender":"Gender",
+    "from": "From",
+    "to": "To",
+    "gender": "Gender",
     "name": "Name",
-    "date":"Date",
-    "advancePayment":"Advance Payment",
-    "postingDate":"Posting Date",
-    "dueDate":"Due Date",
+    "date": "Date",
+    "advancePayment": "Advance Payment",
+    "postingDate": "Posting Date",
+    "dueDate": "Due Date",
     "deliveryDate": "Delivery Date",
-    "pickADate":"Pick a Date",
+    "pickADate": "Pick a Date",
     "description": "Description",
     "value": "Value",
     "abbreviation": "Abbreviation",
     "code": "Code",
-    "fullName":"Full Name",
+    "fullName": "Full Name",
     "familyName": "Last Name",
     "givenName": "First  Name",
     "phoneNumber": "Phone Number",
-    "amount":"Amount",
+    "amount": "Amount",
     "type": "Type",
     "password": "Password",
     "newPassword": "New Password",
     "confirmNewPassword": "Confirm New Password",
     "email": "Email",
-    "discount":"Discount",
+    "discount": "Discount",
     "companyName": "Company Name",
     "clientDetails": "Complete Your Personal Information",
     "enabled": "Enable",
@@ -118,30 +118,30 @@
     "countryCode": "Country Code",
     "item-group": "Item Group",
     "submit": "Submit",
-    "cancel":"Cancel",
-    "party":"Party",
-    "partyType":"Party Type",
+    "cancel": "Cancel",
+    "party": "Party",
+    "partyType": "Party Type",
     "save": "Save",
     "uom": "UOM",
     "city": "City",
-    "company":"Company",
-    "province":"Province",
-    "postalCode":"Postal Code",
-    "identificationNumber":"Identification Number",
-    "currencyAndPriceList":"Currency and Price List",
+    "company": "Company",
+    "province": "Province",
+    "postalCode": "Postal Code",
+    "identificationNumber": "Identification Number",
+    "currencyAndPriceList": "Currency and Price List",
     "streetLine1": "Street Line 1",
     "streetLine2": "Street Line 2",
     "optional": "Optional",
     "price-list": "Price List",
     "currency": "Currency",
     "buying": "Buying",
-    "paymentType":"Payment Type",
+    "paymentType": "Payment Type",
     "selling": "Selling",
     "rate": "Rate",
     "itemQuantity": "Item Quantity",
     "totalQuantity": "Total Quantity",
-    
-    "quantity":"Quantity",
+
+    "quantity": "Quantity",
     "pay": "Pay",
     "orderTotal": "Order Total",
     "total": "Total",
@@ -150,49 +150,49 @@
     "status": "Status",
     "startDate": "Start Date",
     "outOfStockThreshold": "Out of Stock Threshold",
-    "isGroup":"Is Group",
-    "isGroupDescription":"Check this box to organize it as a group.",
+    "isGroup": "Is Group",
+    "isGroupDescription": "Check this box to organize it as a group.",
     "orderConfirmation": "Order Confirmation",
     "siteUrl": "Site Url",
     "logo": "Logo",
-    "isShippingAddress":"Is Shipping Address",
-    "isBillingAddress":"Is Shipping Address",
-    "paidAmount":"Paid Amount",
-    "outstandingAmount":"Outstanding",
-    "allocated":"Allocated",
-    "daysWeek":"Days Weeks",
-    "comment":"Comment",
-    "addNew":"Add New",
-    "fromDate":"From Date",
-    "toDate":"To Date",
-    "totals":"Totals"
+    "isShippingAddress": "Is Shipping Address",
+    "isBillingAddress": "Is Shipping Address",
+    "paidAmount": "Paid Amount",
+    "outstandingAmount": "Outstanding",
+    "allocated": "Allocated",
+    "daysWeek": "Days Weeks",
+    "comment": "Comment",
+    "addNew": "Add New",
+    "fromDate": "From Date",
+    "toDate": "To Date",
+    "totals": "Totals"
   },
-  "accounts":"Accounts",
+  "accounts": "Accounts",
   "_selling": {
     "isBuying": "Is Buying",
     "isSelling": "Is Selling",
     "isSellingDesc": "This price list will be used for selling products.",
     "isBuyingDesc": "This price list will be used for buying products."
   },
-  "customers":"Customers",
-  "customerGroup":"Customer Groups",
-  "_customer":{
-    "base":"Customer",
-    "create":"Create New Customer",
-    "info":"Customer Info"
+  "customers": "Customers",
+  "customerGroup": "Customer Groups",
+  "_customer": {
+    "base": "Customer",
+    "create": "Create New Customer",
+    "info": "Customer Info"
   },
   "f": {
-    "parent":"Parent {{o}}",
+    "parent": "Parent {{o}}",
     "add-new": "Create {{o}}",
-    "edit":"Edit {{o}}",
+    "edit": "Edit {{o}}",
     "enable": "Check the box to enable this {{o}}",
-    "accepted":"Accepted {{o}}",
-    "rejected":"Rejected {{o}}",
-    "and":"{{o}} and {{p}}",
-    "purchase":"Purchase {{o}}",
-    "editRow":"Edit Row {{o}}",
-    "of":"of",
-    "selected":"Selected {{o}}(s) "
+    "accepted": "Accepted {{o}}",
+    "rejected": "Rejected {{o}}",
+    "and": "{{o}} and {{p}}",
+    "purchase": "Purchase {{o}}",
+    "editRow": "Edit Row {{o}}",
+    "of": "of",
+    "selected": "Selected {{o}}(s) "
   },
   "info-item": "Info {{item}}",
 
@@ -203,15 +203,14 @@
   "_tax": {
     "base": "Tax"
   },
-  
-  "roles":"Roles",
+
+  "roles": "Roles",
   "_role": {
     "permissions": "Role permissions",
     "base": "Role"
   },
-  "entity":"Entity",
-  "action":"Action",
-
+  "entity": "Entity",
+  "action": "Action",
 
   "sidebar": {
     "sessionDefaults": "Session Defaults"
@@ -269,14 +268,14 @@
     "actions": "Subscription Actions",
     "cancel": "Cancel Subscription"
   },
- 
+
   "_item": {
     "info": "Item Info",
     "code": "Item Code",
     "prices": "Item Prices",
-    "quantity":"Item Quantity",
+    "quantity": "Item Quantity",
     "base": "Item",
-    "type":"Item Type",
+    "type": "Item Type",
     "variants": "Item Variants",
     "addVariant": "Add  item variant",
     "enableForVariants": "Enable item for variants"
@@ -284,14 +283,14 @@
 
   "orders": "Orders",
   "orderInfo": "Order Info",
-  "_order":{
-    "base":"Order",
-    "orderItems":"Order Items"
+  "_order": {
+    "base": "Order",
+    "orderItems": "Order Items"
   },
   "table": {
     "new": "New",
-    "received":"Received",
-    "billed":"Billed",
+    "received": "Received",
+    "billed": "Billed",
     "createdAt": "Creation Date",
     "updatedAt": "Last Modified",
     "deliverdDate": "Deliverd Date",
@@ -305,73 +304,73 @@
     "cadence": "Cadence",
     "periods": "Periods",
     "addRow": "Add Row",
-    "reference":"Reference",
-    "referenceName":"Reference Name"
+    "reference": "Reference",
+    "referenceName": "Reference Name"
   },
   "dialog": {
     "title": "Are you sure you want to proceed with this action?",
     "description": "Please confirm if you wish to proceed with this action."
   },
-  "_page":{
-    "base":"Page",
-    "rowPerPage":"Rows per page",
-    "row":"Row"
+  "_page": {
+    "base": "Page",
+    "rowPerPage": "Rows per page",
+    "row": "Row"
   },
   "continue": "Continue",
   "cancel": "Cancel",
 
   "actions": {
-    "base":"actions",
+    "base": "actions",
     "edit": "Edit"
   },
-  "tooltip":{
-    "selectCurrency":"Please select your currency."
+  "tooltip": {
+    "selectCurrency": "Please select your currency."
   },
-  "gender":{
-    "male":"Male",
-    "female":"Female",
-    "noBinary":"No Binary"
+  "gender": {
+    "male": "Male",
+    "female": "Female",
+    "noBinary": "No Binary"
   },
-  "alert":{
-    "submit":"Please submit this document for confirmation."
+  "alert": {
+    "submit": "Please submit this document for confirmation."
   },
-  "RECEIVE":"Receive",
-  "PAY":"Pay",
-  "INTERNAL_TRANSFER":"Internal Transfer",
-  "ASSET":"Asset",
-  "LIABILITIES":"Liabilities",
-  "EXPENSE":"Expense",
-  "REVENUE":"Revenue",
+  "RECEIVE": "Receive",
+  "PAY": "Pay",
+  "INTERNAL_TRANSFER": "Internal Transfer",
+  "ASSET": "Asset",
+  "LIABILITIES": "Liabilities",
+  "EXPENSE": "Expense",
+  "REVENUE": "Revenue",
 
-  "item":"Item",
-  "itemPrice":"Item Price",
-  "priceList":"Price List",
-  "purchaseInvoice":"Purchase Invoice",
-  "purchaseOrder":"Purchase Order",
-  "saleInvoice":"Sale Invoice",
-  "saleOrder":"Sale Order",
-  "purchaseReceipt":"Purchase Receipt",
-  "payment":"Payment", 
-  "pianoForms":"Piano Forms",
-  "customer":"Customer",
-  "supplier":"Supplier",
+  "item": "Item",
+  "itemPrice": "Item Price",
+  "priceList": "Price List",
+  "purchaseInvoice": "Purchase Invoice",
+  "purchaseOrder": "Purchase Order",
+  "saleInvoice": "Sale Invoice",
+  "saleOrder": "Sale Order",
+  "purchaseReceipt": "Purchase Receipt",
+  "payment": "Payment",
+  "pianoForms": "Piano Forms",
+  "customer": "Customer",
+  "supplier": "Supplier",
+  
+  "generalLedger": "General Ledger",
+  "accountingLedger": "Accounting Ledger",
+  "accountsPayable": "Accounts Payable",
 
+  "relocationAndMoving": "Relocation & Moving",
 
-  "accountingLedger":"Accounting Ledger",
-
-  "relocationAndMoving":"Relocation & Moving",
-
-
-  "regate":{
-    "schedule":"Schedule",
-    "_court":{
-      "base":"Court"
+  "regate": {
+    "schedule": "Schedule",
+    "_court": {
+      "base": "Court"
     },
-    "_booking":{
-      "base":"Booking"
+    "_booking": {
+      "base": "Booking"
     },
-    "_event":{
-      "base":"Event"
+    "_event": {
+      "base": "Event"
     }
   }
 }

@@ -121,7 +121,7 @@ export const mapToItemLineDto = (line:z.infer<typeof editLineItemSchema>):compon
     item_uuid: line.item_uuid,
     line_type: itemLineTypeToJSON(Number(line.lineType)),
     quantity: Number(line.quantity),
-    rate: formatAmountToInt(line.rate),
+    rate: line.rate,
     uom: line.uom,
   }
   // if(to == ItemLineType.ITEM_LINE_RECEIPT){

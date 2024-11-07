@@ -37,23 +37,41 @@ export default function SupplierClient() {
   setUpToolbar(() => {
     let actions: ActionToolbar[] = [];
     actions.push({
-      label:t("accountingLedger"),
-      onClick:()=>{
-        navigate(r.toRoute({
-          main:"generalLedger",
-          routePrefix:[r.accountingM],
-          q:{
-            fromDate:format(startOfMonth(new Date()) || "","yyyy-MM-dd"),
-            toDate:format(endOfMonth(new Date()) || "","yyyy-MM-dd"),
-            partyName:supplier?.name,
-            party:supplier?.id.toString(),
-            partyType:partyTypeToJSON(PartyType.supplier)
-          }
-        }))
-      }
-    })
+      label: t("accountingLedger"),
+      onClick: () => {
+        navigate(
+          r.toRoute({
+            main: r.generalLedger,
+            routePrefix: [r.accountingM],
+            q: {
+              fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
+              toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
+              partyName: supplier?.name,
+              party: supplier?.id.toString(),
+              partyType: partyTypeToJSON(PartyType.supplier),
+            },
+          })
+        );
+      },
+    });
+    actions.push({
+      label: t("accountsPayable"),
+      onClick: () => {
+        navigate(
+          r.toRoute({
+            main: r.accountPayable,
+            routePrefix: [r.accountingM],
+            q: {
+              fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
+              toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
+              parties: encodeURIComponent(JSON.stringify([supplier?.id])),
+            },
+          })
+        );
+      },
+    });
     return {
-      actions:actions,
+      actions: actions,
     };
   }, []);
   return (

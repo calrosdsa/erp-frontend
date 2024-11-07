@@ -14,13 +14,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const toDate =
     searchParams.get("toDate") ||
     format(new Date().toLocaleDateString(), "yyyy-MM-dd");
-  console.log(fromDate, toDate);
   const res = await client.GET("/accounting/report/account-payable", {
     params: {
       query: {
         from_date: fromDate,
         to_date: toDate,        
-        parties: searchParams.get("parties") || "[14]",
+        parties: decodeURIComponent(searchParams.get("parties") || "") || "",
       },
     },
   });

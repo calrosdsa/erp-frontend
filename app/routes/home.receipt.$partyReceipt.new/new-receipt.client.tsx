@@ -29,7 +29,7 @@ import { useCreateReceipt } from "./use-create-receipt";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { useCreateSupplier } from "../home.supplier_/components/create-supplier";
+import { useCreateSupplier } from "../home.buying.supplier_/components/create-supplier";
 
 export default function NewReceiptClient() {
   const fetcher = useFetcher<typeof action>();
@@ -104,7 +104,6 @@ export default function NewReceiptClient() {
     <div>
       <FormLayout>
         <Form {...form}>
-          {JSON.stringify(form.formState.errors)}
           <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="create-grid">
               {partyReceipt == PartyType[PartyType.purchaseReceipt] && (

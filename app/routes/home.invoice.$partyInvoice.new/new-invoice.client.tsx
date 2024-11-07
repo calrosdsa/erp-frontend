@@ -35,21 +35,13 @@ import {
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import Typography, { subtitle } from "@/components/typography/Typography";
-import { useCreateSupplier } from "../home.supplier_/components/create-supplier";
 import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
-  const [supplierDebounceFetcher, onSupplierChange] =
-    useSupplierDebounceFetcher();
   const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
   const globalState = useOutletContext<GlobalState>();
-  const [supplierPermission] = usePermission({
-    actions: supplierDebounceFetcher.data?.actions,
-    roleActions: globalState.roleActions,
-  });
-  const createSupplier = useCreateSupplier();
 
   const createPurchaseInvoice = useCreatePurchaseInvoice();
   const inputRef = useRef<HTMLInputElement | null>(null);
