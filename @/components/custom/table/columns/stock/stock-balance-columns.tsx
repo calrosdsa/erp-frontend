@@ -5,16 +5,12 @@ import { routes } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellPrice from "../../cells/table-cell-price";
-import {
-  PartyType,
-  partyTypeToJSON,
-  regatePartyTypeToJSON,
-} from "~/gen/common";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 
-export const stockLedgerColumns = ({}: {}): ColumnDef<
-  components["schemas"]["StockLedgerEntryDto"]
+export const stockBalanceColumns = ({}: {}): ColumnDef<
+  components["schemas"]["StockBalanceEntryDto"]
 >[] => {
-  let columns: ColumnDef<components["schemas"]["StockLedgerEntryDto"]>[] = [];
+  let columns: ColumnDef<components["schemas"]["StockBalanceEntryDto"]>[] = [];
   const r = routes;
   const { t, i18n } = useTranslation("common");
 
@@ -64,6 +60,15 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
     accessorKey: "balance_qty",
   });
   columns.push({
+    accessorKey: "balance_value",
+    cell: ({ ...props }) => {
+      const rowData = props.row.original;
+      return (
+        <TableCellPrice i18n={i18n} currency={rowData.currency} {...props} />
+      );
+    },
+  });
+  columns.push({
     accessorKey: "warehouse_name",
     cell: ({ ...props }) => {
       const rowData = props.row.original;
@@ -85,15 +90,6 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
       );
     },
   });
-  columns.push({
-    accessorKey: "incoming_rate",
-    cell: ({ ...props }) => {
-      const rowData = props.row.original;
-      return (
-        <TableCellPrice i18n={i18n} currency={rowData.currency} {...props} />
-      );
-    },
-  });
 
   columns.push({
     accessorKey: "average_rate",
@@ -105,59 +101,5 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
     },
   });
 
-  columns.push({
-    accessorKey: "valuation_rate",
-    cell: ({ ...props }) => {
-      const rowData = props.row.original;
-      return (
-        <TableCellPrice i18n={i18n} currency={rowData.currency} {...props} />
-      );
-    },
-  });
-
-  columns.push({
-    accessorKey: "balance_value",
-    cell: ({ ...props }) => {
-      const rowData = props.row.original;
-      return (
-        <TableCellPrice i18n={i18n} currency={rowData.currency} {...props} />
-      );
-    },
-  });
-
-  columns.push({
-    accessorKey: "voucher_type",
-    cell: ({ row }) => {
-      const rowData = row.original;
-      return <div>{t(rowData.voucher_type)}</div>;
-    },
-  });
-  
-  columns.push({
-    accessorKey: "voucher_no",
-    cell: ({ ...props }) => {
-      const rowData = props.row.original;
-      return (
-        <>
-          {rowData.voucher_type ==
-            partyTypeToJSON(PartyType.purchaseReceipt) && (
-            <TableCellNameNavigation
-              navigate={(name) =>
-                r.toRoute({
-                  main: partyTypeToJSON(PartyType.purchaseReceipt),
-                  routePrefix: [r.receiptM],
-                  routeSufix: [name],
-                  q: {
-                    tab: "info",
-                  },
-                })
-              }
-              {...props}
-            />
-          )}
-        </>
-      );
-    },
-  });
   return [...columns];
 };

@@ -711,6 +711,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/ledger/view/tree": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Ledgers Tree View */
+        get: operations["get-ledgers-tree-view"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order": {
         parameters: {
             query?: never;
@@ -1475,6 +1492,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock-ledger/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Stock Balance Report */
+        get: operations["get-stock-balance-report"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock-ledger/report": {
         parameters: {
             query?: never;
@@ -1813,6 +1847,23 @@ export interface paths {
         };
         /** Get Warehouse Detail */
         get: operations["get-warehouse-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/warehouse/view/tree": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Warehouses Tree View */
+        get: operations["get-warehouses-tree-view"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2859,6 +2910,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["GeneralLedgerEntryDto"][];
+        };
+        EntityResponseListStockBalanceEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["StockBalanceEntryDto"][];
         };
         EntityResponseListStockLedgerEntryDtoBody: {
             /**
@@ -4353,6 +4417,19 @@ export interface components {
             message: string;
             result: components["schemas"]["PartyTypeDto"][];
         };
+        ResponseDataListTreeEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["TreeEntryDto"][];
+        };
         ResponseDataPaymentDtoBody: {
             /**
              * Format: uri
@@ -4596,7 +4673,31 @@ export interface components {
             user: components["schemas"]["UserDto"];
             user_relation: components["schemas"]["UserRelationDto"];
         };
+        StockBalanceEntryDto: {
+            /** Format: int32 */
+            average_rate: number;
+            /** Format: int32 */
+            balance_qty: number;
+            /** Format: int32 */
+            balance_value: number;
+            currency: string;
+            /** Format: date-time */
+            date: string;
+            /** Format: int32 */
+            in_qty: number;
+            item_group_name: string;
+            item_group_uuid: string;
+            item_name: string;
+            item_uuid: string;
+            /** Format: int32 */
+            out_qty: number;
+            stock_uom: string;
+            warehouse_name: string;
+            warehouse_uuid: string;
+        };
         StockLedgerEntryDto: {
+            /** Format: int32 */
+            average_rate: number;
             /** Format: int32 */
             balance_qty: number;
             /** Format: int32 */
@@ -4674,6 +4775,15 @@ export interface components {
             paid: number;
             /** Format: int32 */
             total: number;
+        };
+        TreeEntryDto: {
+            /** Format: int64 */
+            id: number;
+            is_group: boolean;
+            name: string;
+            /** Format: int64 */
+            parent: number;
+            uuid: string;
         };
         UOMDto: {
             code: string;
@@ -6748,6 +6858,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseListGeneralLedgerEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-ledgers-tree-view": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListTreeEntryDtoBody"];
                 };
             };
             /** @description Error */
@@ -8927,6 +9066,49 @@ export interface operations {
             };
         };
     };
+    "get-stock-balance-report": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                item?: string;
+                warehouse?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListStockBalanceEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-stock_ledger-report": {
         parameters: {
             query: {
@@ -10183,6 +10365,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityWareHouseDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-warehouses-tree-view": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListTreeEntryDtoBody"];
                 };
             };
             /** @description Error */

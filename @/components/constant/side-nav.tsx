@@ -125,7 +125,11 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (entities?.includes(Entity.ITEM_WAREHOUSE_ENTITY_ID)) {
     stockChildrens.push({
       title: t("warehouses"),
-      href: r.warehouses,
+      href: r.toRoute({
+        main:partyTypeToJSON(PartyType.warehouse),
+        routePrefix:[r.stockM],
+      }),
+
     });
   }
 

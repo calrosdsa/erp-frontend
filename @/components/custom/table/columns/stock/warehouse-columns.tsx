@@ -6,6 +6,7 @@ import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
 import TableCellDate from "../../cells/table-cell-date";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 
 
 export const warehouseColumns = (): ColumnDef<
@@ -16,13 +17,21 @@ export const warehouseColumns = (): ColumnDef<
   let columns: ColumnDef<components["schemas"]["WareHouseDto"]>[] = [];
   columns.push({
     accessorKey: "name",
-    header: t("table.code"),
+    header: t("warehouse"),
     cell:({...props})=>{
       const rowData = props.row.original
       return (
         <TableCellNameNavigation
         {...props}
-        navigate={(name)=>r.toWarehouseInfo(name,rowData.uuid)}
+        navigate={(name)=>r.toRoute({
+          main:partyTypeToJSON(PartyType.warehouse),
+          routePrefix:[r.stockM],
+          routeSufix:[name],
+          q:{
+            tab:"info",
+            id:rowData.uuid,
+          }
+        })}
         />
       )}
   });

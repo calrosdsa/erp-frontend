@@ -7,15 +7,15 @@ import { ActionToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { routes } from "~/util/route";
-import { stockLedgerColumns } from "@/components/custom/table/columns/stock/stock-ledger-columns";
-import StockLedgerHeader from "./components/stock-ledger-header";
+import StockLedgerHeader from "./components/stock-balance-header";
+import { stockBalanceColumns } from "@/components/custom/table/columns/stock/stock-balance-columns";
 
 interface LedgerData {
   Name: string;
 }
 
-export default function StockLedgerClient() {
-  const { stockLedger } = useLoaderData<typeof loader>();
+export default function StockBalanceClient() {
+  const { stockBalance } = useLoaderData<typeof loader>();
   const {t} = useTranslation("common")
   const r = routes
   const navigate = useNavigate()
@@ -33,8 +33,8 @@ export default function StockLedgerClient() {
         </CardHeader>
         <CardContent className="px-2 py-3">
           <DataTable
-            data={stockLedger || []}
-            columns={stockLedgerColumns({})}
+            data={stockBalance || []}
+            columns={stockBalanceColumns({})}
           />
         </CardContent>
       </Card>

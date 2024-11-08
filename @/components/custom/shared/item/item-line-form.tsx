@@ -24,6 +24,7 @@ import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouses_/components/add-warehouse";
 import { FontRomanIcon } from "@radix-ui/react-icons";
+import { UseFormReturn } from "react-hook-form";
 
 export default function ItemLineForm({
   form,
@@ -31,7 +32,7 @@ export default function ItemLineForm({
   itemLineType,
   partyType,
 }: {
-  form: any;
+  form:UseFormReturn<any>;
   configuteWarehouse?: boolean;
   itemLineType: ItemLineType;
   partyType: string;
@@ -50,7 +51,6 @@ export default function ItemLineForm({
   const itemLine = useItemLine();
 
   const { t, i18n } = useTranslation("common");
-  const revalidator = useRevalidator();
   const [metaOptions] = useTableRowActions({
     onAddRow: () => {
       itemLine.onOpenDialog({
@@ -74,7 +74,8 @@ export default function ItemLineForm({
           const n = [...orderLines, e];
           // console.log("LINES",orderLines,addLineOrder.orderLine)
           form.setValue("lines", n);
-          revalidator.revalidate();
+          form.trigger("lines");
+          
         },
       });
       // addLineOrder.openDialog({ currency: form.getValues().currency.code,itemLineType:itemLineType });
@@ -84,7 +85,7 @@ export default function ItemLineForm({
         form.getValues().lines;
       const f = orderLines.filter((_, idx) => idx != rowIndex);
       form.setValue("lines", f);
-      revalidator.revalidate();
+      form.trigger("lines");
     },
     onEdit: (rowIndex) => {
       const orderLines: z.infer<typeof editLineItemSchema>[] =
@@ -110,6 +111,8 @@ export default function ItemLineForm({
               return t;
             });
             form.setValue("lines", n);
+            form.trigger("lines");
+
           },
         });
       }

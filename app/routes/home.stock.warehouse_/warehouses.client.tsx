@@ -1,20 +1,21 @@
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react"
 import { loader } from "./route"
 import { DataTable } from "@/components/custom/table/CustomTable"
-import { accountColumns } from "@/components/custom/table/columns/accounting/account-columns"
-import { GlobalState } from "~/types/app"
+import { warehouseColumns } from "@/components/custom/table/columns/stock/warehouse-columns"
+import { useCreateWareHouse } from "./components/add-warehouse"
+import { ListTree } from "lucide-react"
 import { usePermission } from "~/util/hooks/useActions"
+import { GlobalState } from "~/types/app"
 import { routes } from "~/util/route"
+import { useTranslation } from "react-i18next"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 import { ButtonToolbar } from "~/types/actions"
-import { useTranslation } from "react-i18next"
-import { ListTree } from "lucide-react"
 import { PartyType, partyTypeToJSON } from "~/gen/common"
 
-
-export default function AccountsClient(){
-    const globalState = useOutletContext<GlobalState>()
+export default function WareHousesClient(){
     const {paginationResult,actions} = useLoaderData<typeof loader>()
+    const globalState = useOutletContext<GlobalState>()
+    const createWareHouse = useCreateWareHouse()
     const [permission] = usePermission({
         actions:actions,
         roleActions:globalState.roleActions
@@ -28,8 +29,8 @@ export default function AccountsClient(){
             label:t("treeView"),
             onClick:()=>{
                 navigate(r.toRoute({
-                    main:r.accountM,
-                    routePrefix:[r.accountingM],
+                    main:partyTypeToJSON(PartyType.warehouse),
+                    routePrefix:[r.stockM],
                     routeSufix:[r.treeView]
                 }))
             },
@@ -39,20 +40,20 @@ export default function AccountsClient(){
             buttons:buttons,
             ...(permission?.create && {
                 addNew:()=>{
-                    navigate(r.toCreateAccountLedger())
+                    createWareHouse.openDialog({})
                 }
             })
         }
     },[permission])
     return (
-        <div>
+        <>
             <DataTable
             data={paginationResult?.results || []}
-            columns={accountColumns()}
+            columns={warehouseColumns()}
             paginationOptions={{
                 rowCount:paginationResult?.total
             }}
             />
-        </div>
+        </>
     )
 }

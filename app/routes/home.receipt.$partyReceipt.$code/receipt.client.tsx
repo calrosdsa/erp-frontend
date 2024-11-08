@@ -82,7 +82,7 @@ export default function ReceiptDetailClient() {
       onClick: () => {
         navigate(
           r.toRoute({
-            main: "stockLedger",
+            main: r.stockLedger,
             routePrefix: [r.stockM],
             q: {
               fromDate: format(receipt?.created_at || "", "yyyy-MM-dd"),

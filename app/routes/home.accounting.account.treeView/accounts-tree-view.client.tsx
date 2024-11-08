@@ -6,37 +6,20 @@ import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
 import { routes } from "~/util/route"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
-import { ButtonToolbar } from "~/types/actions"
-import { useTranslation } from "react-i18next"
-import { ListTree } from "lucide-react"
-import { PartyType, partyTypeToJSON } from "~/gen/common"
+import { TreeView } from "@/components/layout/tree/tree-view"
 
 
-export default function AccountsClient(){
+export default function AccountsTreeViewClient(){
     const globalState = useOutletContext<GlobalState>()
-    const {paginationResult,actions} = useLoaderData<typeof loader>()
+    const {data,actions} = useLoaderData<typeof loader>()
     const [permission] = usePermission({
         actions:actions,
         roleActions:globalState.roleActions
     })
     const r = routes
-    const {t} = useTranslation("common")
     const navigate = useNavigate()
     setUpToolbar(()=>{
-        let buttons:ButtonToolbar[] = []
-        buttons.push({
-            label:t("treeView"),
-            onClick:()=>{
-                navigate(r.toRoute({
-                    main:r.accountM,
-                    routePrefix:[r.accountingM],
-                    routeSufix:[r.treeView]
-                }))
-            },
-            Icon:ListTree
-        })
         return {
-            buttons:buttons,
             ...(permission?.create && {
                 addNew:()=>{
                     navigate(r.toCreateAccountLedger())
@@ -46,13 +29,9 @@ export default function AccountsClient(){
     },[permission])
     return (
         <div>
-            <DataTable
-            data={paginationResult?.results || []}
-            columns={accountColumns()}
-            paginationOptions={{
-                rowCount:paginationResult?.total
-            }}
-            />
+            <TreeView
+            data={data||[]}
+            />    
         </div>
     )
 }

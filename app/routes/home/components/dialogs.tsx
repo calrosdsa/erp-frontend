@@ -11,10 +11,10 @@ import { AddPriceList, useCreatePriceList } from "~/routes/home.selling.stock.pr
 import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.itemPrice_/components/add-item-price"
 import { UpsertItemStockLevel, useUpsertItemStockLevel } from "~/routes/home.stock.item.$code.stock_/components/upsert-item-stock-level"
 import CreateItemVariant, { useCreateItemVariant } from "~/routes/home.stock.item.$code.variants_/components/create-item-variant"
-import { CreateWareHouse, useCreateWareHouse } from "~/routes/home.stock.warehouses_/components/add-warehouse"
 import { GlobalState } from "~/types/app"
 import { NewItemPriceDialog, useNewItemPrice } from "~/routes/home.stock.itemPrice.new/components/new-item-price-dialog"
 import { CreateSupplier, useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier"
+import { CreateWareHouse, useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse"
 
 
 export default function GlobalDialogs({globalState}:{

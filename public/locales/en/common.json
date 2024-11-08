@@ -360,6 +360,8 @@
   "accountingLedger": "Accounting Ledger",
   "accountPayable": "Account Payable",
   "stockLedger":"Stock Ledger",
+  "stockBalance":"Stock Balance",
+  "treeView":"Tree View",
 
   "relocationAndMoving": "Relocation & Moving",
 

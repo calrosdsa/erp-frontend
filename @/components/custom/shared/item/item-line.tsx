@@ -31,7 +31,7 @@ import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { useCreateWareHouse } from "~/routes/home.stock.warehouses_/components/add-warehouse";
+import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse";
 
 export default function ItemLine({
   open,

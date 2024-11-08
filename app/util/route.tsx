@@ -18,15 +18,15 @@ class Routes {
 
   address = this.base + "/address";
   contact = this.base + "/contact";
-  createAddress = this.address + "/create";
-  group = "groups"
+  createAddress = this.address + "/new";
+  group = "groups";
   groups = this.base + "/groups";
   companies = this.base + "/companies";
 
   invoice = this.base + "/invoice";
   invoiceM = "invoice";
   order = this.base + "/order";
-  orderM =  "order";
+  orderM = "order";
   receipt = this.base + "/receipt";
   receiptM = "receipt";
 
@@ -50,15 +50,15 @@ class Routes {
   chartOfAccount = this.accounting + "/account";
   payment = this.accounting + "/payment";
 
-  stockM = "stock"
-  itemN = "items"
+  stockM = "stock";
+  itemN = "items";
 
   stock = this.base + "/stock";
   items = this.stock + "/item";
   itemPrices = this.stock + "/item-prices";
   itemGroups = this.stock + "/item-groups";
   itemAttributes = this.stock + "/item-attributes";
-  warehouses = this.stock + "/warehouses";
+  warehouses = this.stock + "/warehouse";
 
   manage = this.base + "/manage";
   users = this.manage + "/users";
@@ -72,9 +72,15 @@ class Routes {
   profile = this.settings + "/profile";
   account = this.settings + "/account";
 
-  generalLedger = "generalLedger"
-  accountPayable = "accountPayable"
-  accountPayableSumary = "accountPayableSumary"
+  generalLedger = "generalLedger";
+  accountPayable = "accountPayable";
+  accountPayableSumary = "accountPayableSumary";
+
+  stockLedger = "stockLedger";
+  stockBalance = "stockBalance";
+
+  treeView = "treeView";
+  accountM = "account"
 
   defaultTab = {
     tab: "info",
@@ -133,9 +139,9 @@ class Routes {
     }
     url += opts.main;
     if (opts.routeSufix) {
-      url +=  "/" + opts.routeSufix.join("/");
+      url += "/" + opts.routeSufix.join("/");
     }
-    return this.baseRoute(url,opts.q);
+    return this.baseRoute(url, opts.q);
   }
   toPartyDetail(
     partyType: string,
@@ -206,9 +212,9 @@ class Routes {
 
   toCreateContact(id?: number) {
     if (id) {
-      return `${this.contact}/create?referenceId=${id}`;
+      return `${this.contact}/new?referenceId=${id}`;
     }
-    return `${this.contact}/create`;
+    return `${this.contact}/new`;
   }
 
   toCompanyDetail(name: string, id: string): string {

@@ -21,7 +21,7 @@ export default function ToolBar({ title }: { title: string }) {
   const { t } = useTranslation("common");
   return (
     <div>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
         <div className="flex flex-wrap space-x-2 ">
           <Typography fontSize={22}>
             {toolbarState.title != undefined ? toolbarState.title : title}
@@ -70,6 +70,21 @@ export default function ToolBar({ title }: { title: string }) {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+
+          {toolbarState.buttons.map((item, idx) => {
+            return (
+              <Button
+                key={idx}
+                onClick={item.onClick}
+                className=" flex space-x-1 h-8"
+                variant={"outline"}
+                size={"sm"}
+              >
+                {item.Icon && <item.Icon className="p-1" />}
+                <span>{item.label}</span>
+              </Button>
+            );
+          })}
 
           {toolbarState.status && (
             <>
@@ -142,17 +157,17 @@ export default function ToolBar({ title }: { title: string }) {
               onClick={() => {
                 if (toolbarState.addNew) {
                   toolbarState.addNew();
-                } 
+                }
               }}
               className=" flex space-x-1 h-8 rounded-lg px-3 w-24 justify-center"
               // disabled={toolbarState.loading}
               // variant={"outline"}
             >
-              <PlusIcon/>
+              <PlusIcon />
               {toolbarState.loading ? (
                 <Icons.spinner className="h-5 w-5 animate-spin" />
               ) : (
-                t("form.addNew") 
+                t("form.addNew")
               )}
             </Button>
           )}

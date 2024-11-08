@@ -7,3 +7,9 @@ export interface ActionToolbar {
     useSeparator?:boolean
     Icon?:LucideIcon
 }
+
+export interface ButtonToolbar {
+    label:string,
+    onClick:()=>void,
+    Icon?:LucideIcon
+}
