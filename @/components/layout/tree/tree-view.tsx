@@ -13,7 +13,7 @@ type TreeItem = {
 
 type TreeViewProps = {
   data: TreeItem[] | undefined
-  onAddChild?: (parentId: number) => void
+  onAddChild?: (data: TreeItem) => void
   onEdit?: (item: TreeItem) => void
   onViewLedger?: (item: TreeItem) => void
 }
@@ -97,7 +97,7 @@ export const TreeView: React.FC<TreeViewProps> = ({ data, onAddChild, onEdit, on
                   <Button
                     variant="outline"
                     size="xs"
-                    onClick={() => onAddChild && onAddChild(item.id)}
+                    onClick={() => onAddChild && onAddChild(item)}
                     className="flex items-center"
                   >
                     <Plus className="w-3 h-3 mr-1" />

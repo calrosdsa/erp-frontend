@@ -7,6 +7,7 @@ import { usePermission } from "~/util/hooks/useActions"
 import { routes } from "~/util/route"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 import { TreeView } from "@/components/layout/tree/tree-view"
+import { useNewAccount } from "../home.accounting.account.new/use-new-account"
 
 
 export default function AccountsTreeViewClient(){
@@ -18,6 +19,7 @@ export default function AccountsTreeViewClient(){
     })
     const r = routes
     const navigate = useNavigate()
+    const newAccount = useNewAccount()
     setUpToolbar(()=>{
         return {
             ...(permission?.create && {
@@ -31,6 +33,17 @@ export default function AccountsTreeViewClient(){
         <div>
             <TreeView
             data={data||[]}
+            onAddChild={(e)=>{
+                newAccount.setPayload({
+                    parentName:e.name,
+                    parentUUID:e.uuid
+                })
+                navigate(r.toRoute({
+                    main:r.accountM,
+                    routePrefix:[r.accountingM],
+                    routeSufix:["new"]
+                }))
+            }}
             />    
         </div>
     )

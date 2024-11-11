@@ -227,6 +227,75 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/company": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Admin Companies */
+        get: operations["a-companies"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/company/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Admin Company Detail */
+        get: operations["a-company-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/company/modules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Admin Company Modules */
+        get: operations["a-company-modules"];
+        put?: never;
+        /** Add Company Modules */
+        post: operations["a-add-company-modules"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth-admin/sign-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sign in user admin */
+        post: operations["sign-in-admin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/client": {
         parameters: {
             query?: never;
@@ -2056,6 +2125,14 @@ export interface components {
             profile_given_name: string;
             type: string;
         };
+        AddCompanyModulesBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            modules: components["schemas"]["CompanyEntityDto"][];
+        };
         AddPluginRequestBody: {
             /**
              * Format: uri
@@ -2287,6 +2364,13 @@ export interface components {
             ordinal: number;
             site_url: string | null;
             uuid: string;
+        };
+        CompanyEntityDto: {
+            /** Format: int64 */
+            company_id: number | null;
+            /** Format: int64 */
+            entity_id: number;
+            entity_name: string;
         };
         CompanyPlugins: {
             /** Format: int64 */
@@ -2898,6 +2982,19 @@ export interface components {
             message: string;
             result: components["schemas"]["AccountPayableEntryDto"][];
         };
+        EntityResponseListCompanyEntityDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["CompanyEntityDto"][];
+        };
         EntityResponseListGeneralLedgerEntryDtoBody: {
             /**
              * Format: uri
@@ -2988,6 +3085,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityBookingDto"];
+        };
+        EntityResponseResultEntityCompanyDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityCompanyDto"];
         };
         EntityResponseResultEntityCourtDtoBody: {
             /**
@@ -4479,6 +4589,12 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["BookingDto"];
         };
+        ResultEntityCompanyDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["CompanyDto"];
+        };
         ResultEntityCourtDto: {
             activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
@@ -5506,6 +5622,187 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "a-companies": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "a-company-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityCompanyDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "a-company-modules": {
+        parameters: {
+            query?: {
+                id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListCompanyEntityDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "a-add-company-modules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddCompanyModulesBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "sign-in-admin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignInRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignInResponseBody"];
                 };
             };
             /** @description Error */
@@ -9068,13 +9365,13 @@ export interface operations {
     };
     "get-stock-balance-report": {
         parameters: {
-            query: {
+            query?: {
                 query?: string;
                 order?: string;
                 column?: string;
                 parentId?: string;
-                from_date: string;
-                to_date: string;
+                from_date?: string;
+                to_date?: string;
                 item?: string;
                 warehouse?: string;
             };

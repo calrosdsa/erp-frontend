@@ -15,7 +15,10 @@ export const SellingNav = ({ entities }: {
   if(entities?.includes(Entity.CUSTOMER)){
     sellingChildrens.push({
       title: t("customers"),
-      href: r.toParty(partyTypeToJSON(PartyType.customer)),
+      href: r.toRoute({
+        main:partyTypeToJSON(PartyType.customer),
+        routePrefix:[r.sellingM]
+      }),
     });
   }
   if(entities?.includes(Entity.CUSTOMER)){

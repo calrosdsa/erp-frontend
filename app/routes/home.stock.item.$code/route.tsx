@@ -58,6 +58,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url)
   const searchParams = url.searchParams
+  const tab = searchParams.get("tab")
   const res = await client.GET("/stock/item/{id}", {
     params: {
       path: {
@@ -66,10 +67,24 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   console.log(res.data,res.error)
+  // let stockLevel:components["schemas"]["StockBalanceEntryDto"][] = []
+  // switch(tab){
+  //   case "dashboard":{
+  //     const response = await client.GET("/stock-ledger/balance", {
+  //       params:{
+  //         query:{
+  //             item:res.data?.result.entity.id.toString(),
+  //         }
+  //       }
+  //     })
+  //     stockLevel = response.data?.result || []
+  //   }
+  // }
   return json({
     item: res.data?.result.entity,
     activities:res.data?.result.activities,
     associatedActions:res.data?.associated_actions,
+    // stockLevel,
   });
 };
 

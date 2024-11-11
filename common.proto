@@ -45,6 +45,8 @@ enum PartyType {
     priceList = 22;
     saleOrder = 23;
     saleInvoice = 24;
+    deliveryNote = 25;
+    user = 26;
 }
 
 enum PianoPartyType {
@@ -72,6 +74,8 @@ enum State {
     TO_RECEIVE_AND_BILL = 17;
     SUBMITTED = 18;
     PAID = 19;         // Invoice exists but payment is pending
+    TO_DELIVER_AND_BILL = 20;
+    TO_DELIVER = 21;
 }
 
 
@@ -140,4 +144,11 @@ enum Module {
     stock = 1;
     selling = 2;
     buying = 3;
+}
+
+enum VoucherSubtype {
+    creditNote = 0;
+    debitNote = 1;
+    receive = 2;
+    pay = 3;
 }

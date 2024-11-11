@@ -58,6 +58,10 @@ export default function PurchaseOrderClient() {
     actions: associatedActions && associatedActions[PartyType.purchaseReceipt],
     roleActions: globalState.roleActions,
   });
+  const [saleInvoicePermission] = usePermission({
+    actions: associatedActions && associatedActions[PartyType.saleInvoice],
+    roleActions:globalState.roleActions,
+  })
   const { t, i18n } = useTranslation("common");
   const toolbar = useToolbar();
   const createPurchaseInvoice = useCreatePurchaseInvoice();
@@ -122,6 +126,34 @@ export default function PurchaseOrderClient() {
         label: t("_payment.base"),
         onClick: () => {
           navigate(r.toPaymentCreate());
+        },
+        Icon: PlusIcon,
+      });
+    }
+    if (saleInvoicePermission?.create && enabledOrder) {
+      actions.push({
+        label: t("f.sale", { o: t("_invoice.base") }),
+        onClick: () => {
+          createPurchaseInvoice.setData({
+            payload: {
+              party_name: order?.party_name,
+              party_uuid: order?.party_uuid,
+              party_type: getPartyType(partyOrder),
+              currency: order?.currency,
+              referenceID: order?.id,
+              lines:
+                order?.order_lines.map((line) =>
+                  mapToLineItem(line, ItemLineType.ITEM_LINE_INVOICE)
+                ) || [],
+            },
+          });
+          navigate(
+            r.toRoute({
+              main: getInvoicePartyType(partyOrder),
+              routePrefix: [r.invoiceM],
+              routeSufix: ["new"],
+            })
+          );
         },
         Icon: PlusIcon,
       });

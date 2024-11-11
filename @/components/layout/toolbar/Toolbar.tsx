@@ -7,13 +7,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronsUpDown, PlusCircle, PlusIcon } from "lucide-react";
+import { ChevronsUpDown, PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { EventState, State, stateToJSON } from "~/gen/common";
+import { EventState, State } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 export default function ToolBar({ title }: { title: string }) {
@@ -21,7 +19,7 @@ export default function ToolBar({ title }: { title: string }) {
   const { t } = useTranslation("common");
   return (
     <div>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
         <div className="flex flex-wrap space-x-2 ">
           <Typography fontSize={22}>
             {toolbarState.title != undefined ? toolbarState.title : title}
@@ -51,6 +49,44 @@ export default function ToolBar({ title }: { title: string }) {
             <DropdownMenuSeparator /> */}
 
                   {toolbarState.actions.map((item, idx) => {
+                    return (
+                      <DropdownMenuItem
+                        key={idx}
+                        onClick={() => item.onClick()}
+                        className="flex space-x-2 justify-between"
+                      >
+                        <span>{item.label}</span>
+                        {item.Icon && <item.Icon className="h-3 w-3" />}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                  {/* <DropdownMenuItem>Billing</DropdownMenuItem>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem>Team</DropdownMenuItem>
+            <DropdownMenuItem>Subscription</DropdownMenuItem> */}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+          {toolbarState.view.length > 0 &&
+            toolbarState?.status != State.DRAFT && (
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Button
+                    size={"sm"}
+                    variant={"outline"}
+                    className=" flex space-x-1 h-8 rounded-lg px-3"
+                  >
+                    <span>{t("actions.view")}</span>
+                    <ChevronsUpDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {/* <DropdownMenuLabel>{}</DropdownMenuLabel>
+            <DropdownMenuSeparator /> */}
+
+                  {toolbarState.view.map((item, idx) => {
                     return (
                       <DropdownMenuItem
                         key={idx}

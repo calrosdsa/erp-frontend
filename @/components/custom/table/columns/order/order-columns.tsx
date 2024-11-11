@@ -67,6 +67,23 @@ export const orderColumns = ({
               }
             />
           )}
+
+          {rowData.party_type == partyTypeToJSON(PartyType.customer) && (
+            <TableCellNameNavigation
+              {...props}
+              navigate={(name) =>
+                r.toRoute({
+                  main: rowData.party_type,
+                  routePrefix: [r.sellingM],
+                  routeSufix: [name],
+                  q: {
+                    tab: "info",
+                    id: rowData.party_uuid,
+                  },
+                })
+              }
+            />
+          )}
         </>
       );
     },

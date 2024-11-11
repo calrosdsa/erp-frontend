@@ -4,7 +4,6 @@ import { ExporterData, useExporterData } from "~/routes/api.exporter/components/
 import { CreateEvent, useCreateEvent } from "~/routes/home._regate.event_/components/use-create-event"
 import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax"
 import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
-import { CreateCustomer, useCreateCustomer } from "~/routes/home.customer_/components/create-customer"
 import { CreateGroup, useCreateGroup } from "~/routes/home.groups.$party_/components/create-group"
 import { CreateUser, useCreateUser } from "~/routes/home.manage.users_/components/create-user"
 import { AddPriceList, useCreatePriceList } from "~/routes/home.selling.stock.price-list_/components/add-price-list"
@@ -15,6 +14,7 @@ import { GlobalState } from "~/types/app"
 import { NewItemPriceDialog, useNewItemPrice } from "~/routes/home.stock.itemPrice.new/components/new-item-price-dialog"
 import { CreateSupplier, useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier"
 import { CreateWareHouse, useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse"
+import { CreateCustomer, useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer"
 
 
 export default function GlobalDialogs({globalState}:{

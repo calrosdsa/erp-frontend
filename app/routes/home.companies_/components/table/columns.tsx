@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { routes } from "~/util/route";
 
-export const columns = (): ColumnDef<components["schemas"]["CompanyDto"]>[] => {
+export const companyColumns = (): ColumnDef<components["schemas"]["CompanyDto"]>[] => {
   const { t,i18n } = useTranslation("common");
   const r = routes
   return [

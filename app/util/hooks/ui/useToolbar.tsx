@@ -4,6 +4,7 @@ import { ActionToolbar, ButtonToolbar } from "~/types/actions";
 export interface SetupToolbarOpts {
   actions?: ActionToolbar[];
   buttons?: ButtonToolbar[];
+  view?: ButtonToolbar[];
   status?: State;
   title?: string;
   onChangeState?: (event: EventState) => void;
@@ -15,6 +16,7 @@ export interface SetupToolbarOpts {
 interface ToolbarStore {
   actions: ActionToolbar[];
   buttons: ButtonToolbar[];
+  view: ButtonToolbar[];
   isMounted: boolean;
   title?: string;
   loading?: boolean;
@@ -30,6 +32,7 @@ interface ToolbarStore {
 export const useToolbar = create<ToolbarStore>((set) => ({
   actions: [],
   buttons: [],
+  view: [],
   isMounted: false,
   title: undefined,
   status: undefined,
@@ -46,6 +49,7 @@ export const useToolbar = create<ToolbarStore>((set) => ({
       isMounted: true,
       actions: opts.actions || [],
       buttons: opts.buttons || [],
+      view: opts.view || [],
       title: opts.title,
       status: opts.status,
       disabledSave: opts.disabledSave,

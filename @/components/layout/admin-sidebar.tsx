@@ -8,13 +8,13 @@ import { NavItems } from "../constant/side-nav";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import { Button } from "../ui/button";
+import { NavAdminItems } from "../constant/side-admin-nav";
 
 interface SidebarProps {
   className?: string;
-  data:GlobalState;
 }
 
-export default function Sidebar({ className,data }: SidebarProps) {
+export default function AdminSidebar({ className }: SidebarProps) {
   const { isOpen, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
   const handleToggle = () => {
@@ -37,7 +37,7 @@ export default function Sidebar({ className,data }: SidebarProps) {
             <SideNav
               className="text-background opacity-0 transition-all duration-300 group-hover:z-50 group-hover:ml-4 group-hover:rounded group-hover:bg-foreground group-hover:p-2
                group-hover:opacity-100 overflow-auto "
-              items={NavItems({data})}
+              items={NavAdminItems()}
             />
           </div>
         </div>

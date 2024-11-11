@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier";
-import { useCreateCustomer } from "~/routes/home.customer_/components/create-customer";
+import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
 import { GlobalState } from "~/types/app";
 import { createPurchaseSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";

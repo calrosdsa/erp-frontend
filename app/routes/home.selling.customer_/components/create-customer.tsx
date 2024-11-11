@@ -119,7 +119,7 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
                     {...(groupPermission?.create && {
                         addNew:()=>{
                             createGroup.openDialog({
-                                partyType:partyTypeToJSON(PartyType.customerGroup)
+                                partyType:PartyType.customerGroup
                             })
                         }
                     })}

@@ -38,6 +38,7 @@ class Routes {
   purchaseInvoices = this.invoice + `/${PartyType[PartyType.purchaseInvoice]}`;
 
   selling = this.base + "/selling";
+  sellingM = "selling";
   sellingStock = this.selling + "/stock";
   customerGroups = this.selling + "/customer-groups";
   customers = this.base + "/customer";

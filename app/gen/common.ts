@@ -99,6 +99,8 @@ export enum PartyType {
   priceList = 22,
   saleOrder = 23,
   saleInvoice = 24,
+  deliveryNote = 25,
+  user = 26,
   UNRECOGNIZED = -1,
 }
 
@@ -179,6 +181,12 @@ export function partyTypeFromJSON(object: any): PartyType {
     case 24:
     case "saleInvoice":
       return PartyType.saleInvoice;
+    case 25:
+    case "deliveryNote":
+      return PartyType.deliveryNote;
+    case 26:
+    case "user":
+      return PartyType.user;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -238,6 +246,10 @@ export function partyTypeToJSON(object: PartyType): string {
       return "saleOrder";
     case PartyType.saleInvoice:
       return "saleInvoice";
+    case PartyType.deliveryNote:
+      return "deliveryNote";
+    case PartyType.user:
+      return "user";
     case PartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -307,6 +319,8 @@ export enum State {
   SUBMITTED = 18,
   /** PAID - Invoice exists but payment is pending */
   PAID = 19,
+  TO_DELIVER_AND_BILL = 20,
+  TO_DELIVER = 21,
   UNRECOGNIZED = -1,
 }
 
@@ -372,6 +386,12 @@ export function stateFromJSON(object: any): State {
     case 19:
     case "PAID":
       return State.PAID;
+    case 20:
+    case "TO_DELIVER_AND_BILL":
+      return State.TO_DELIVER_AND_BILL;
+    case 21:
+    case "TO_DELIVER":
+      return State.TO_DELIVER;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -421,6 +441,10 @@ export function stateToJSON(object: State): string {
       return "SUBMITTED";
     case State.PAID:
       return "PAID";
+    case State.TO_DELIVER_AND_BILL:
+      return "TO_DELIVER_AND_BILL";
+    case State.TO_DELIVER:
+      return "TO_DELIVER";
     case State.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -831,6 +855,51 @@ export function moduleToJSON(object: Module): string {
     case Module.buying:
       return "buying";
     case Module.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum VoucherSubtype {
+  creditNote = 0,
+  debitNote = 1,
+  receive = 2,
+  pay = 3,
+  UNRECOGNIZED = -1,
+}
+
+export function voucherSubtypeFromJSON(object: any): VoucherSubtype {
+  switch (object) {
+    case 0:
+    case "creditNote":
+      return VoucherSubtype.creditNote;
+    case 1:
+    case "debitNote":
+      return VoucherSubtype.debitNote;
+    case 2:
+    case "receive":
+      return VoucherSubtype.receive;
+    case 3:
+    case "pay":
+      return VoucherSubtype.pay;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return VoucherSubtype.UNRECOGNIZED;
+  }
+}
+
+export function voucherSubtypeToJSON(object: VoucherSubtype): string {
+  switch (object) {
+    case VoucherSubtype.creditNote:
+      return "creditNote";
+    case VoucherSubtype.debitNote:
+      return "debitNote";
+    case VoucherSubtype.receive:
+      return "receive";
+    case VoucherSubtype.pay:
+      return "pay";
+    case VoucherSubtype.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

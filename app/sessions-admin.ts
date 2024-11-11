@@ -1,7 +1,7 @@
 // app/sessions.ts
 import { createCookieSessionStorage, redirect } from "@remix-run/node"; // or cloudflare/deno
 
-export type SessionData = {
+export type SessionAdminData = {
   access_token: string;
   locale:string
   companyUuid:string
@@ -18,11 +18,11 @@ type SessionFlashData = {
 
 
 const { getSession, commitSession, destroySession } =
-  createCookieSessionStorage<SessionData, SessionFlashData>(
+  createCookieSessionStorage<SessionAdminData, SessionFlashData>(
     {
       // a Cookie from `createCookie` or the CookieOptions to create one
       cookie: {
-        name: "__session",
+        name: "__session_admin",
         // all of these are optional
         // domain: "teclu",
         // Expires can also be set (although maxAge overrides it when used in combination).
@@ -33,7 +33,7 @@ const { getSession, commitSession, destroySession } =
         maxAge: 80000,
         path: "/",
         sameSite: "lax",
-        secrets: ["s3cret1"],
+        secrets: ["s3cret1-adm1n"],
         secure: false,
       },
     }

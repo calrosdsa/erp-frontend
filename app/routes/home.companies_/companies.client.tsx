@@ -3,7 +3,7 @@ import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { loader } from "./route";
 import { GlobalState } from "~/types/app";
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { columns } from "./components/table/columns";
+import { companyColumns } from "./components/table/columns";
 import { useCreateCompany } from "./components/create-company";
 import { usePermission } from "~/util/hooks/useActions";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -32,7 +32,7 @@ export default function CompaniesClient() {
   return (
     <>
       <DataTable
-        columns={columns()}
+        columns={companyColumns()}
         data={paginationResult?.pagination_result.results || []}
         hiddenColumns={{
           code: false,

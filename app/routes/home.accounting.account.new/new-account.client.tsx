@@ -23,15 +23,19 @@ import { routes } from "~/util/route";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import { useNewAccount } from "./use-new-account";
 
 export default function NewAccountClient() {
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
   const { toast } = useToast();
+  const newAccount = useNewAccount()
   const form = useForm<z.infer<typeof createAccountLedger>>({
     resolver: zodResolver(createAccountLedger),
     defaultValues: {
-      currency:""
+      currency:"",
+      parentName:newAccount.payload?.parentName,
+      parentUuid:newAccount.payload?.parentUUID,
     },
   });
   const toolbar = useToolbar();
