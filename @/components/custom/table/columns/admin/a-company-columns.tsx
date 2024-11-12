@@ -70,4 +70,29 @@ export const aCompanyModulesColumns = (): ColumnDef<components["schemas"]["Compa
       },
     ];
   };
+
+
+  export const aCompanyUserColumns = (): ColumnDef<components["schemas"]["UserDto"]>[] => {
+    const { t,i18n } = useTranslation("common");
+    const r = routes
+    return [
+      {
+        header:t("form.no"),
+        cell:TableCellIndex
+       },
+      {
+        header:t("form.email"),
+        accessorKey: "identifier",
+        cell:({...props})=>{
+          const rowData = props.row.original
+          return(
+            <div>
+              {rowData.identifier}
+            </div>
+          )
+        }
+      },
+    ];
+  };
+  
   

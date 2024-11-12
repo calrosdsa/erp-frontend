@@ -7,6 +7,7 @@ import { routes } from "~/util/route-admin";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import ACompanyInfo from "./tab/a-company-info";
 import ACompanyModules from "./tab/a-company-modules";
+import ACompanyUsers from "./tab/a-company-users";
 
 export default function ACompanyDetailClient() {
   const { company } = useLoaderData<typeof loader>();
@@ -37,11 +38,23 @@ export default function ACompanyDetailClient() {
         },
       }),
     },
+    {
+      title: "Users",
+      href: r.toRoute({
+        main: partyTypeToJSON(PartyType.company),
+        routeSufix: [company?.name || ""],
+        q: {
+          tab: "users",
+          id: company?.id.toString() || "",
+        },
+      }),
+    },
   ];
   return (
     <DetailLayout navItems={navItems}>
       {tab == "info" && <ACompanyInfo />}
       {tab == "modules" && <ACompanyModules />}
+      {tab == "users" && <ACompanyUsers />}
     </DetailLayout>
   );
 }

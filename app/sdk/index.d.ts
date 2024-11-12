@@ -279,6 +279,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/company/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Company Users */
+        get: operations["a-company-users"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth-admin/sign-in": {
         parameters: {
             query?: never;
@@ -2368,6 +2385,7 @@ export interface components {
         CompanyEntityDto: {
             /** Format: int64 */
             company_id: number | null;
+            enabled: boolean;
             /** Format: int64 */
             entity_id: number;
             entity_name: string;
@@ -3046,6 +3064,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["SumaryEntryDto"][];
+        };
+        EntityResponseListUserDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["UserDto"][];
         };
         EntityResponseListUserRelationDtoBody: {
             /**
@@ -5017,6 +5048,10 @@ export interface components {
             itemPriceList: components["schemas"]["PriceList"];
         };
         UserDto: {
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
+            id: number;
             identifier: string;
             /** Format: date-time */
             last_login: string | null;
@@ -5770,6 +5805,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "a-company-users": {
+        parameters: {
+            query?: {
+                id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListUserDtoBody"];
                 };
             };
             /** @description Error */

@@ -7,32 +7,18 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useState } from "react";
 import { components } from "~/sdk";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { Button } from "react-day-picker";
+import { Button } from "@/components/ui/button";
 
 export default function ACompanyModules() {
   const { companyEntities,company } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>()
-  const [selectedEntities, setSelectedEntities] = useState<
-    components["schemas"]["CompanyEntityDto"][]
-  >([]);
+  // const [selectedEntities, setSelectedEntities] = useState<
+  //   components["schemas"]["CompanyEntityDto"][]
+  // >([]);
 
   setUpToolbar(() => {
     return {
-      onSave: () => {
-        if(company == undefined) return
-        const n = selectedEntities.map((t)=>{
-            t.company_id = company.id
-            return t
-        })
-        fetcher.submit({
-            action:"update-modules",
-            updateModules:n
-        },{
-            method:"POST",
-            encType:"application/json",
-        })
-      },
-    };
+    }
   }, []);
   useDisplayMessage({
     success:fetcher.data?.message,
@@ -40,26 +26,26 @@ export default function ACompanyModules() {
   },[fetcher.data])
   return (
     <div>
-        <Button onClick={()=>{
-            if(company == undefined) return
-            const n = selectedEntities.map((t)=>{
-                t.company_id = company.id
-                return t
-            })
-            fetcher.submit({
-                action:"update-modules",
-                updateModules:n
-            },{
-                method:"POST",
-                encType:"application/json",
-            })
-        }}>
-            SAVE
-        </Button>
+
       <CompanyEntitySelector
         entities={companyEntities}
+        onEnableDisable={(e,enabled)=>{
+          if(company == undefined) return
+          const n = e.map((t)=>{
+              t.company_id = company.id
+              t.enabled = enabled
+              return t
+          })
+          fetcher.submit({
+              action:"update-modules",
+              updateModules:n
+          },{
+              method:"POST",
+              encType:"application/json",
+          })
+        }}
         onSelectionChange={(e) => {
-            setSelectedEntities(e)
+            // setSelectedEntities(e)
         }}
       />
     </div>
