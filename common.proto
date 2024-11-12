@@ -18,6 +18,9 @@ enum RegatePartyType {
     regateChart = 3;
 }
 
+enum PartyAdminType {
+    roleTemplate = 0;
+}
 
 enum PartyType {
     supplierGroup = 0;      // 1 - 1

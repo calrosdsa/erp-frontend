@@ -1,6 +1,7 @@
 
 class Routes {
   base = "/admin/home";
+  entity = "entity";
 
   toRoute(opts: {
     main: string;

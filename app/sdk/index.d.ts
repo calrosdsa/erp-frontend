@@ -237,7 +237,8 @@ export interface paths {
         /** Admin Companies */
         get: operations["a-companies"];
         put?: never;
-        post?: never;
+        /** Create Company Adm */
+        post: operations["a-create-company"];
         delete?: never;
         options?: never;
         head?: never;
@@ -279,7 +280,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/admin/company/users": {
+    "/admin/company/user": {
         parameters: {
             query?: never;
             header?: never;
@@ -288,6 +289,94 @@ export interface paths {
         };
         /** Get Company Users */
         get: operations["a-company-users"];
+        put?: never;
+        /** Add Company User */
+        post: operations["add-company-user"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/core/entity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Entities */
+        get: operations["entities"];
+        put?: never;
+        /** Create Entity */
+        post: operations["create-entity"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/core/entity/action": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Entity Action */
+        post: operations["add-entity-action"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/core/entity/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Entity */
+        get: operations["entity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/role-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Role Templates */
+        get: operations["role-templates"];
+        put?: never;
+        /** Create Role Template */
+        post: operations["create-role-template"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/role-template/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Role Template */
+        get: operations["role-template"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2150,6 +2239,16 @@ export interface components {
             readonly $schema?: string;
             modules: components["schemas"]["CompanyEntityDto"][];
         };
+        AddEntityActionRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            entity_id: number;
+            name: string;
+        };
         AddPluginRequestBody: {
             /**
              * Format: uri
@@ -2471,6 +2570,14 @@ export interface components {
             /** Format: int64 */
             event_id?: number;
         };
+        CreateCompanyAdminRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
+        };
         CreateCompanyRequestBody: {
             /**
              * Format: uri
@@ -2512,6 +2619,14 @@ export interface components {
         CreateCustomerData: {
             customer_type: string;
             group_uuid: string;
+            name: string;
+        };
+        CreateEntityRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
             name: string;
         };
         CreateEventBookingBody: {
@@ -2789,6 +2904,14 @@ export interface components {
             description: string;
             name: string;
         };
+        CreateRoleTemplateRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
+        };
         CreateSupplierRequestBody: {
             /**
              * Format: uri
@@ -2809,6 +2932,18 @@ export interface components {
             name: string;
             /** Format: double */
             value: number;
+        };
+        CreateUserAdminRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            company_id: number;
+            first_name: string;
+            identifier: string;
+            last_name?: string;
         };
         CreateUserRequestBody: {
             /**
@@ -2914,6 +3049,10 @@ export interface components {
             phone_number?: string | null;
         };
         EntityActionsDto: {
+            actions: components["schemas"]["ActionDto"][];
+            entity: components["schemas"]["EntityDto"];
+        };
+        EntityDetailDto: {
             actions: components["schemas"]["ActionDto"][];
             entity: components["schemas"]["EntityDto"];
         };
@@ -3155,6 +3294,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityCustomerDto"];
+        };
+        EntityResponseResultEntityEntityDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityEntityDetailDto"];
         };
         EntityResponseResultEntityEventBookingDtoBody: {
             /**
@@ -3428,6 +3580,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityRoleDto"];
+        };
+        EntityResponseResultEntityRoleTemplateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityRoleTemplateDto"];
         };
         EntityResponseResultEntitySupplierDtoBody: {
             /**
@@ -3846,6 +4011,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListCustomerDto"];
         };
+        PaginationResponsePaginationResultListEntityDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListEntityDto"];
+        };
         PaginationResponsePaginationResultListEventBookingDtoBody: {
             /**
              * Format: uri
@@ -3999,6 +4173,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListRoleDto"];
         };
+        PaginationResponsePaginationResultListRoleTemplateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListRoleTemplateDto"];
+        };
         PaginationResponsePaginationResultListStockLevelDtoBody: {
             /**
              * Format: uri
@@ -4067,6 +4250,11 @@ export interface components {
         };
         PaginationResultListCustomerDto: {
             results: components["schemas"]["CustomerDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListEntityDto: {
+            results: components["schemas"]["EntityDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -4152,6 +4340,11 @@ export interface components {
         };
         PaginationResultListRoleDto: {
             results: components["schemas"]["RoleDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListRoleTemplateDto: {
+            results: components["schemas"]["RoleTemplateDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -4638,6 +4831,12 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CustomerDto"];
         };
+        ResultEntityEntityDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["EntityDetailDto"];
+        };
         ResultEntityEventBookingDto: {
             activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
@@ -4764,6 +4963,12 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["RoleDto"];
         };
+        ResultEntityRoleTemplateDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["RoleTemplateDto"];
+        };
         ResultEntitySupplierDto: {
             activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
@@ -4797,6 +5002,13 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
             uuid: string;
+        };
+        RoleTemplateDto: {
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
         };
         SignInRequestBody: {
             /**
@@ -5713,6 +5925,39 @@ export interface operations {
             };
         };
     };
+    "a-create-company": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCompanyAdminRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "a-company-detail": {
         parameters: {
             query?: {
@@ -5836,6 +6081,306 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseListUserDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "add-company-user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateUserAdminRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    entities: {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListEntityDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-entity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateEntityRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "add-entity-action": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddEntityActionRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    entity: {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityEntityDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "role-templates": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleTemplateDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-role-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRoleTemplateRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "role-template": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityRoleTemplateDtoBody"];
                 };
             };
             /** @description Error */

@@ -54,6 +54,33 @@ export function regatePartyTypeToJSON(object: RegatePartyType): string {
   }
 }
 
+export enum PartyAdminType {
+  roleTemplate = 0,
+  UNRECOGNIZED = -1,
+}
+
+export function partyAdminTypeFromJSON(object: any): PartyAdminType {
+  switch (object) {
+    case 0:
+    case "roleTemplate":
+      return PartyAdminType.roleTemplate;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return PartyAdminType.UNRECOGNIZED;
+  }
+}
+
+export function partyAdminTypeToJSON(object: PartyAdminType): string {
+  switch (object) {
+    case PartyAdminType.roleTemplate:
+      return "roleTemplate";
+    case PartyAdminType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export enum PartyType {
   /** supplierGroup - 1 - 1 */
   supplierGroup = 0,

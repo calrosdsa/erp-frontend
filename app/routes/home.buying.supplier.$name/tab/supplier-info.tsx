@@ -39,7 +39,7 @@ export default function SupplierInfo(){
         <PartyAddresses
         addresses={addresses}
         onAddAddress={()=>{
-          navigate(r.toRoute(supplier?.id))
+          // navigate(r.toRoute(supplier?.id))
         }}
         />
 

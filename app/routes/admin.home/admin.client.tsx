@@ -36,7 +36,7 @@ export default function AdminClient({ children }: { children: ReactNode }) {
   const getRoute = (index: number) => {
     const route = location.pathname
       .split("/")
-      .slice(0, index + 3)
+      .slice(0, index + 4)
       .join("/");
     return route;
   };

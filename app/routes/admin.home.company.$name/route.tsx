@@ -2,9 +2,12 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClientAdmin from "~/apiclientAdmin"
 import ACompanyDetailClient from "./a-company-detail.client"
 import { components } from "~/sdk"
+import { z } from "zod"
+import { addCompanyUserSchema } from "./tab/a-company-users"
 type ActionData = {
     action:string
     updateModules:components["schemas"]["CompanyEntityDto"][]
+    addUser:z.infer<typeof addCompanyUserSchema>
 }
 export  const action = async({request}:ActionFunctionArgs) =>{
     const client = apiClientAdmin({request})
@@ -13,6 +16,20 @@ export  const action = async({request}:ActionFunctionArgs) =>{
     let error:string | undefined = undefined
     console.log(data)
     switch(data.action){
+        case "add-user":{
+            const d = data.addUser
+            const res = await client.POST("/admin/company/user",{
+                body:{
+                    first_name:d.givenName,
+                    last_name:d.familyName,
+                    identifier:d.email,
+                    company_id:d.companyID,
+                }
+            })
+            message = res.data?.message
+            error = res.error?.detail
+            break
+        }
         case "update-modules":{
             const res = await client.POST("/admin/company/modules",{
                 body:{
@@ -57,7 +74,7 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
             break;            
         }
         case "users":{
-            const response = await client.GET("/admin/company/users",{
+            const response = await client.GET("/admin/company/user",{
                 params:{
                     query:{
                         id:id

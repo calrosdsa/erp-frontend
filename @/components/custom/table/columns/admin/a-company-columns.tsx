@@ -53,7 +53,7 @@ export const aCompanyModulesColumns = (): ColumnDef<components["schemas"]["Compa
     const r = routes
     return [
       {
-        header:t("form.no"),
+        header:t("table.no"),
         cell:TableCellIndex
        },
       {
@@ -77,7 +77,7 @@ export const aCompanyModulesColumns = (): ColumnDef<components["schemas"]["Compa
     const r = routes
     return [
       {
-        header:t("form.no"),
+        header:t("table.no"),
         cell:TableCellIndex
        },
       {
