@@ -22,8 +22,7 @@ export const generalLedgerColumns = ({}:{
                 <TableCellDate
                 i18n={i18n}
                 formatDate="medium"
-                {...props}
-                
+                {...props}                
                 />
             )
         }

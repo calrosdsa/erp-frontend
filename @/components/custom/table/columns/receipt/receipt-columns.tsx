@@ -8,7 +8,7 @@ import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
-import { PartyType } from "~/gen/common";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
 
@@ -48,7 +48,31 @@ export const receiptColumns = ({
             {rowData.party_type == PartyType[PartyType.supplier] && (
               <TableCellNameNavigation
                 {...props}
-                navigate={(name) => r.toSupplierDetail(name,rowData.party_uuid)}
+                navigate={(name) => r.toRoute({
+                  main:partyTypeToJSON(PartyType.supplier),
+                  routePrefix:[r.buyingM],
+                  routeSufix:[name],
+                  q:{
+                    tab:"info",
+                    id:rowData.party_uuid
+                  }
+                })
+              }
+              />
+            )}
+            {rowData.party_type == PartyType[PartyType.customer] && (
+              <TableCellNameNavigation
+                {...props}
+                navigate={(name) => r.toRoute({
+                  main:partyTypeToJSON(PartyType.customer),
+                  routePrefix:[r.sellingM],
+                  routeSufix:[name],
+                  q:{
+                    tab:"info",
+                    id:rowData.party_uuid
+                  }
+                })
+              }
               />
             )}
           </>

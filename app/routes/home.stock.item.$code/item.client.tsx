@@ -42,8 +42,8 @@ export default function ItemDetailClient() {
         routePrefix: [r.stockM],
         routeSufix: [item?.name || ""],
         q: {
-          id: item?.uuid,
           tab: "info",
+          id: item?.uuid,
         },
       }),
     },
@@ -54,8 +54,8 @@ export default function ItemDetailClient() {
         routePrefix: [r.stockM],
         routeSufix: [item?.name || ""],
         q: {
-          id: item?.uuid,
           tab: "dashboard",
+          id: item?.uuid,
         },
       }),
     },

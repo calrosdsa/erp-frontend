@@ -29,7 +29,7 @@ export const EditRolePermission = ({
   open: boolean;
   onOpenChange: (e: boolean) => void;
   roleActions?: components["schemas"]["RoleActionDto"][];
-  entityActions?: components["schemas"]["EntityActions"];
+  entityActions?: components["schemas"]["EntityActionsDto"];
   role?: components["schemas"]["RoleDto"];
 }) => {
   const { t } = useTranslation("common");
@@ -57,13 +57,13 @@ export const EditRolePermission = ({
       entityName:entityActions.entity.name,
     };
     console.log(body)
-    fetcher.submit({
-      action:"update-role-actions",
-      updateRoleActions:body
-    },{
-      method:"POST",
-      encType:"application/json"
-    })
+    // fetcher.submit({
+    //   action:"update-role-actions",
+    //   updateRoleActions:body
+    // },{
+    //   method:"POST",
+    //   encType:"application/json"
+    // })
   };
 
   useEffect(()=>{
@@ -105,14 +105,14 @@ export const EditRolePermission = ({
 };
 
 interface EditRolePermissionStore {
-  entityActions?: components["schemas"]["EntityActions"] | undefined;
+  entityActions?: components["schemas"]["EntityActionsDto"] | undefined;
   roleActions: components["schemas"]["RoleActionDto"][];
   role: components["schemas"]["RoleDto"] | undefined;
   open: boolean;
   onOpenChange: (e: boolean) => void;
   openDialog: (opts: {
     roleActions: components["schemas"]["RoleActionDto"][];
-    entityActions?: components["schemas"]["EntityActions"];
+    entityActions?: components["schemas"]["EntityActionsDto"];
     role: components["schemas"]["RoleDto"] | undefined;
   }) => void;
 }

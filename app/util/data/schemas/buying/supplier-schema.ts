@@ -14,6 +14,6 @@ export const supplierDtoSchema=z.object({
 export const createSupplierSchema = z.object({
     name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
     groupName:z.string().optional(),
-    group:groupSchema,
+    groupID:z.number(),
     enabled:z.boolean(),
 })

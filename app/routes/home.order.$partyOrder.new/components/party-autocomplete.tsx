@@ -16,7 +16,7 @@ export default function PartyAutocomplete({
   form,
   globalState,
 }: {
-  party: PartyType;
+  party: string;
   form: UseFormReturn<any>;
   globalState: GlobalState;
 }) {
@@ -37,7 +37,9 @@ export default function PartyAutocomplete({
 
   return (
     <>
-      {(party == PartyType.purchaseOrder || party == PartyType.purchaseInvoice) && (
+      {(party == partyTypeToJSON(PartyType.purchaseOrder) ||
+        party == partyTypeToJSON(PartyType.purchaseInvoice) ||
+        party == partyTypeToJSON(PartyType.purchaseReceipt)) && (
         <FormAutocomplete
           required={true}
           data={supplierDebounceFetcher.data?.suppliers || []}
@@ -58,7 +60,9 @@ export default function PartyAutocomplete({
         />
       )}
 
-      {(party == PartyType.saleOrder || party == PartyType.saleInvoice) && (
+      {(party == partyTypeToJSON(PartyType.saleOrder) ||
+        party == partyTypeToJSON(PartyType.saleInvoice) || 
+        party == partyTypeToJSON(PartyType.deliveryNote)) && (
         <FormAutocomplete
           required={true}
           data={customerFetcher.data?.customers || []}

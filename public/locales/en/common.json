@@ -195,7 +195,9 @@
     "sale": "Sale {{o}}",
     "editRow": "Edit Row {{o}}",
     "of": "of",
-    "selected": "Selected {{o}}(s) "
+    "selected": "Selected {{o}}(s)",
+    "default":"Default {{o}} {{p}}",
+    "join":"{{o}} {{p}}"
   },
   "info-item": "Info {{item}}",
 
@@ -359,6 +361,7 @@
   "customer": "Customer",
   "supplier": "Supplier",
   "company": "Company",
+  "deliveryNote":"Delivery Note",
 
   "generalLedger": "General Ledger",
   "accountingLedger": "Accounting Ledger",
@@ -370,6 +373,14 @@
   "relocationAndMoving": "Relocation & Moving",
 
   "accountPayableSumary": "Account Payable Sumary",
+  "accountType":{
+    "cash":"Cash",
+    "bank":"Bank",
+    "payable":"Payable",
+    "receivable":"Receivable",
+    "income":"Income",
+    "costOfGoodSolds":"Cost Of Good Solds"
+  },
 
   "regate": {
     "schedule": "Schedule",

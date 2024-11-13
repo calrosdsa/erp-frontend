@@ -29,8 +29,8 @@ export const itemColumns = (): ColumnDef<components["schemas"]["ItemDto"]>[] => 
             routePrefix:[r.stockM],
             routeSufix:[name],
             q:{
-              id:rowData.uuid,
               tab:"info",
+              id:rowData.uuid,
             }
           })}
         />

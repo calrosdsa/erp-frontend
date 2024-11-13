@@ -1,5 +1,6 @@
 import ButtonExpandRow from "@/components/custom/button/ButtonExpandRow";
 import TableCellDate from "@/components/custom/table/cells/table-cell-date";
+import TableCellIndex from "@/components/custom/table/cells/table-cell-index";
 import TableCellNameNavigation from "@/components/custom/table/cells/table-cell-name_navigation";
 import TableCellNavigate from "@/components/custom/table/cells/table-cell-navigate";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,10 @@ export const companyColumns = (): ColumnDef<components["schemas"]["CompanyDto"]>
   const { t,i18n } = useTranslation("common");
   const r = routes
   return [
-   
+    {
+     header:t("table.no"),
+     cell:TableCellIndex,
+    },
     {
       header: "Name",
       accessorKey: "name",
@@ -23,7 +27,14 @@ export const companyColumns = (): ColumnDef<components["schemas"]["CompanyDto"]>
         return(
           <TableCellNameNavigation
           {...props}
-          navigate={(name)=> r.toCompanyDetail(name,rowData.uuid)}
+          navigate={(name)=> r.toRoute({
+            main:r.companiesM,
+            routeSufix:[name],
+            q:{
+              tab:"info",
+              id:rowData.uuid,
+            }
+          })}
           />
         )
       }

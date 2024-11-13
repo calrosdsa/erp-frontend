@@ -20,6 +20,7 @@ export const loader = async({request,params}:LoaderFunctionArgs)=>{
             }
         }
     })
+    console.log(res.error,res.data)
     handleError(res.error)
     return json({
         paginationResult:res.data?.pagination_result,

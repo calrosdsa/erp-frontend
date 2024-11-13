@@ -28,28 +28,37 @@ export const SellingNav = ({ entities }: {
     });
   }
 
-  if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
+  if (entities?.includes(Entity.PRICE_LIST)) {
     sellingChildrens.push({
       title: t("price-list"),
       href: r.priceList,
     });
   }
-  if(entities?.includes(Entity.SALE_ORDER_ENTITY_ID)){
+  if(entities?.includes(Entity.SALE_ORDER)){
     sellingChildrens.push({
       title: t("saleOrder"),
       href: r.toRoute({
         main:partyTypeToJSON(PartyType.saleOrder),
-        routePrefix:["order"],
+        routePrefix:[r.orderM],
       }),
     });
   }
 
-  if(entities?.includes(Entity.SALE_INVOICE_ENTITY_ID)){
+  if(entities?.includes(Entity.SALE_INVOICE)){
     sellingChildrens.push({
       title: t("saleInvoice"),
       href: r.toRoute({
         main:partyTypeToJSON(PartyType.saleInvoice),
-        routePrefix:["invoice"],
+        routePrefix:[r.invoiceM],
+      }),
+    });
+  }
+  if(entities?.includes(Entity.DELIVERY_NOTE)) {
+    sellingChildrens.push({
+      title: t("deliveryNote"),
+      href: r.toRoute({
+        main:partyTypeToJSON(PartyType.deliveryNote),
+        routePrefix:[r.receiptM],
       }),
     });
   }

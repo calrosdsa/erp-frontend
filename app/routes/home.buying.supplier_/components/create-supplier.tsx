@@ -107,7 +107,7 @@ export const CreateSupplier = ({
                 name="groupName"
                 nameK={"name"}
                 onSelect={(v) => {
-                  form.setValue("group", v);
+                  form.setValue("groupID", v.id);
                 }}
                 {...(groupPermission?.create && {
                   addNew: () =>

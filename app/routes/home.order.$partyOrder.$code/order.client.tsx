@@ -15,6 +15,7 @@ import {
   PartyType,
   partyTypeFromJSON,
   partyTypeToJSON,
+  State,
   stateFromJSON,
 } from "~/gen/common";
 import { useEffect } from "react";
@@ -22,14 +23,9 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { ActionToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
-import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
 import { z } from "zod";
-import {
-  lineItemSchema,
-  mapToLineItem,
-} from "~/util/data/schemas/stock/item-line-schema";
+import { mapToLineItem } from "~/util/data/schemas/stock/item-line-schema";
 import { useCreateReceipt } from "../home.receipt.$partyReceipt.new/use-create-receipt";
-import { useToast } from "@/components/ui/use-toast";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import DetailLayout from "@/components/layout/detail-layout";
 import OrderInfoTab from "./components/tab/order-info";
@@ -38,6 +34,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { useCreatePurchaseInvoice } from "../home.invoice.$partyInvoice.new/use-purchase-invoice";
+import { Entity } from "~/types/enums";
 
 export default function PurchaseOrderClient() {
   const { order, actions, associatedActions, activities } =
@@ -47,20 +44,24 @@ export default function PurchaseOrderClient() {
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
   const [purchaseInvoicePermission] = usePermission({
-    actions: associatedActions && associatedActions[PartyType.purchaseInvoice],
+    actions: associatedActions && associatedActions[Entity.PURCHASE_INVOICE],
     roleActions: globalState.roleActions,
   });
   const [paymentPermission] = usePermission({
-    actions: associatedActions && associatedActions[PartyType.payment],
+    actions: associatedActions && associatedActions[Entity.PAYMENT],
     roleActions: globalState.roleActions,
   });
   const [receiptPermission] = usePermission({
-    actions: associatedActions && associatedActions[PartyType.purchaseReceipt],
+    actions: associatedActions && associatedActions[Entity.PURCHASE_RECEIPT],
     roleActions: globalState.roleActions,
   });
   const [saleInvoicePermission] = usePermission({
-    actions: associatedActions && associatedActions[PartyType.saleInvoice],
-    roleActions:globalState.roleActions,
+    actions: associatedActions && associatedActions[Entity.SALE_INVOICE],
+    roleActions: globalState.roleActions,
+  });
+  const [deliveryNotePermission] = usePermission({
+    actions: associatedActions && associatedActions[Entity.DELIVERY_NOTE],
+    roleActions: globalState.roleActions,
   })
   const { t, i18n } = useTranslation("common");
   const toolbar = useToolbar();
@@ -120,7 +121,7 @@ export default function PurchaseOrderClient() {
   };
   setUpToolbar(() => {
     const actions: ActionToolbar[] = [];
-
+    const status = stateFromJSON(order?.status);
     if (paymentPermission?.create) {
       actions.push({
         label: t("_payment.base"),
@@ -158,7 +159,11 @@ export default function PurchaseOrderClient() {
         Icon: PlusIcon,
       });
     }
-    if (purchaseInvoicePermission?.create && enabledOrder) {
+    if (
+      purchaseInvoicePermission?.create &&
+      enabledOrder &&
+      status != State.TO_RECEIVE
+    ) {
       actions.push({
         label: t("f.purchase", { o: t("_invoice.base") }),
         onClick: () => {
@@ -215,6 +220,34 @@ export default function PurchaseOrderClient() {
       });
     }
 
+    if (deliveryNotePermission?.create && enabledOrder && !toBill) {
+      actions.push({
+        label: t("deliveryNote"),
+        onClick: () => {
+          createReceipt.setData({
+            payload: {
+              party_name: order?.party_name,
+              party_uuid: order?.party_uuid,
+              party_type: PartyType[PartyType.customer],
+              currency: order?.currency,
+              reference: order?.id,
+              lines:
+                order?.order_lines.map((line) =>
+                  mapToLineItem(line, ItemLineType.ITEM_LINE_RECEIPT)
+                ) || [],
+            },
+          });
+          navigate(
+            r.toRoute({
+              main: partyTypeToJSON(PartyType.deliveryNote),
+              routePrefix: [r.receiptM],
+              routeSufix: ["new"],
+            })
+          );
+        },
+        Icon: PlusIcon,
+      });
+    }
     return {
       actions: actions,
       title: `${t("_order.base")}(${order?.code})`,
@@ -238,7 +271,7 @@ export default function PurchaseOrderClient() {
         );
       },
     };
-  }, [purchaseInvoicePermission, receiptPermission, order]);
+  }, [purchaseInvoicePermission, receiptPermission, order,deliveryNotePermission]);
 
   useEffect(() => {
     if (fetcher.state == "submitting") {

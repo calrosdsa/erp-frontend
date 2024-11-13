@@ -7,6 +7,7 @@ interface Payload {
     
     partyType?:string
     partyName?:string
+    paymentType?:string
     partyUuid?:string
     partyReference?:number
     partyReferences:z.infer<typeof paymentReferceSchema>[]

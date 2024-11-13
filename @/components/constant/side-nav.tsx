@@ -90,7 +90,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   };
 
   let stockChildrens: NavItem[] = [];
-  if (entities?.includes(Entity.ITEM_ENTITY_ID)) {
+  if (entities?.includes(Entity.ITEM)) {
     stockChildrens.push({
       title: t("items"),
       href: r.toRoute({
@@ -99,7 +99,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
       }),
     });
   }
-  if (entities?.includes(Entity.ITEM_PRICE_ENTITY_ID)) {
+  if (entities?.includes(Entity.ITEM_PRICE)) {
     stockChildrens.push({
       title: t("itemPrice"),
       href:r.toRoute({
@@ -110,19 +110,19 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
       // href: "/home/stock/item-prices",
     });
   }
-  if (entities?.includes(Entity.ITEM_ENTITY_ID)) {
+  if (entities?.includes(Entity.ITEM)) {
     stockChildrens.push({
       title: t("item-groups"),
       href: r.toGroupByParty(partyTypeToJSON(PartyType.itemGroup)),
     });
   }
-  if (entities?.includes(Entity.ITEM_ATTRIBUTES_ENTITY_ID)) {
+  if (entities?.includes(Entity.ITEM_ATTRIBUTES)) {
     stockChildrens.push({
       title: t("item-attributes"),
       href: "/home/stock/item-attributes",
     });
   }
-  if (entities?.includes(Entity.ITEM_WAREHOUSE_ENTITY_ID)) {
+  if (entities?.includes(Entity.ITEM_WAREHOUSE)) {
     stockChildrens.push({
       title: t("warehouses"),
       href: r.toRoute({
@@ -142,13 +142,13 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   };
 
   let usersChildren: NavItem[] = [];
-  if (entities?.includes(Entity.ROLE_ENTITY_ID)) {
+  if (entities?.includes(Entity.ROLE)) {
     usersChildren.push({
       title: t("roles"),
       href: r.roles,
     });
   }
-  if (entities?.includes(Entity.USERS_ENTITY_ID)) {
+  if (entities?.includes(Entity.USERS)) {
     usersChildren.push({
       title: t("users"),
       href: r.users,
@@ -204,7 +204,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   // switch (session.role) {
   // case Role.ROLE_ADMIN: {
 
-  if (entities?.includes(Entity.COMPANY_ENTITY_ID)) {
+  if (entities?.includes(Entity.COMPANY)) {
     navItems.push(companies);
   }
   if (accountingNav.children && accountingNav.children.length > 0) {
@@ -218,17 +218,17 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   }
 
   //Regate
-  if (entities.includes(Entity.REGATE_CHART_ENTITY_ID)) {
+  if (entities.includes(Entity.REGATE_CHART)) {
     navItems.push(dashboardNav);
   }
 
-  if (entities?.includes(Entity.COURT_ENTITY_ID)) {
+  if (entities?.includes(Entity.COURT)) {
     navItems.push(courtNav);
   }
-  if (entities?.includes(Entity.BOOKING_ENTITY_ID)) {
+  if (entities?.includes(Entity.BOOKING)) {
     navItems.push(bookingNav);
   }
-  if (entities?.includes(Entity.EVENTBOOKING_ENTITY_ID)) {
+  if (entities?.includes(Entity.EVENTBOOKING)) {
     navItems.push(eventNav);
   }
   // if(customerNav.children && customerNav.children.length > 0) {

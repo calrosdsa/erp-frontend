@@ -12,13 +12,16 @@ export const BuyingNav = ({ entities }: {
   const { t } = useTranslation("common");
   const r = routes
   let buyingChildrens:NavItem[] = [];
-  if(entities?.includes(Entity.SUPPLIER_ENTITY_ID)){
+  if(entities?.includes(Entity.SUPPLIER)){
     buyingChildrens.push({
       title: t("supplier-groups"),
-      href: r.supplierGroups,
+      href: r.toRoute({
+        main:partyTypeToJSON(PartyType.supplierGroup),
+        routePrefix:[r.group],
+      }),
     });
   }
-  if(entities?.includes(Entity.SUPPLIER_ENTITY_ID)){
+  if(entities?.includes(Entity.SUPPLIER)){
     buyingChildrens.push({
       title: t("suppliers"),
       href: r.toRoute({
@@ -27,20 +30,20 @@ export const BuyingNav = ({ entities }: {
       }),
     });
   }
-  if(entities?.includes(Entity.PURCHASE_ORDER_ENTITY_ID)){
+  if(entities?.includes(Entity.PURCHASE_ORDER)){
     buyingChildrens.push({
       title: t("purchase-orders"),
       href: r.purchaseOrders,
     });
   }
-  if(entities?.includes(Entity.PURCHASE_INVOICE_ENTITY_ID)){
+  if(entities?.includes(Entity.PURCHASE_INVOICE)){
     buyingChildrens.push({
       title: t("purchase-invoice"),
       href: r.purchaseInvoices,
     });
   }
 
-  if(entities?.includes(Entity.PURCHASE_RECEIPT_ENTITY_ID)){
+  if(entities?.includes(Entity.PURCHASE_RECEIPT)){
     buyingChildrens.push({
       title: t("_receipt.f",{o:t("_purchase.base")}),
       href:r.toReceipts(PartyType.purchaseReceipt)

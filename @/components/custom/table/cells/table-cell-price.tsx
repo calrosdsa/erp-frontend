@@ -32,7 +32,7 @@ export default function TableCellPrice<TData>({
 }: TableCellProps<TData>) {
   const initialValue = getValue();
   return (
-    <div>
+    <div className=" whitespace-nowrap">
       {price != undefined
         ? formatCurrency(price, currency, i18n.language)
         : typeof initialValue == "number" &&

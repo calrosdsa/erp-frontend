@@ -12,19 +12,19 @@ export const AccountingNav = ({ entities }: {
   const { t } = useTranslation("common");
   const r = routes
   let accountingChildrens:NavItem[] = [];
-  if(entities?.includes(Entity.LEDGER_ENTITY_ID)){
+  if(entities?.includes(Entity.LEDGER)){
     accountingChildrens.push({
       title: t("_ledger.chartOfAccounts"),
       href: r.chartOfAccount,
     });
   }
-  if (entities?.includes(Entity.TAX_ENTITY_ID)) {
+  if (entities?.includes(Entity.TAX_ENTITY)) {
     accountingChildrens.push({
       title: t("taxes"),
       href: r.taxes,
     });
   }
-  if(entities?.includes(Entity.PAYMENT_ENTITY_ID)){
+  if(entities?.includes(Entity.PAYMENT)){
     accountingChildrens.push({
       title:t("_payment.base"),
       href:r.payment,

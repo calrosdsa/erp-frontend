@@ -5,6 +5,7 @@ import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
 import { createCompanySchema } from "~/util/data/schemas/company/company-schemas";
 import { components } from "~/sdk";
+import { handleError } from "~/util/api/handle-status-code";
 
 type CompaniesAction = {
   action: string;
@@ -35,7 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "get": {
-      const res = await client.GET("/company", {
+      const res = await client.GET("/company/user/companies", {
         params: {
           query: {
             query: data.query || "",
@@ -61,16 +62,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "get-valid-parent-companies": {
-      const res = await client.GET("/company/valid/parent/companies", {
-        params: {
-          query: {
-            query: data.query,
-            page: data.page || DEFAULT_PAGE,
-            size: data.size || DEFAULT_SIZE,
-          },
-        },
-      });
-        companies = res.data?.pagination_result.results || [];
+      // const res = await client.GET("/company/valid/parent/companies", {
+      //   params: {
+      //     query: {
+      //       query: data.query,
+      //       page: data.page || DEFAULT_PAGE,
+      //       size: data.size || DEFAULT_SIZE,
+      //     },
+      //   },
+      // });
+      //   companies = res.data?.pagination_result.results || [];
       break;
     }
   }
@@ -82,15 +83,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const res = await apiClient({ request }).GET("/company", {
+  const client = apiClient({request})
+  const url = new URL(request.url)
+  const searchParams = url.searchParams
+  const res = await client.GET("/company/user/companies", {
     params: {
       query: {
-        page: DEFAULT_PAGE,
-        size: DEFAULT_SIZE,
+        page: searchParams.get("page") || DEFAULT_PAGE,
+        size: searchParams.get("size") || DEFAULT_SIZE,
       },
     },
   });
-  console.log("data", res.error, res.data?.actions);
+  handleError(res.error)
   return json({
     paginationResult: res.data,
   });

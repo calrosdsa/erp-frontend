@@ -1,40 +1,54 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { loader } from "./route";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { formatLongDate } from "~/util/format/formatDate";
+import DetailLayout from "@/components/layout/detail-layout";
+import { routes } from "~/util/route";
+import { NavItem } from "~/types";
+import CompanyInfo from "./tab/company-info";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import CompanyAccounts from "./tab/company-accounts";
 
 export default function CompanyClient() {
   const { company } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
+  const r = routes;
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get("tab");
+
+  const navItems: NavItem[] = [
+    {
+      title: t("info"),
+      href: r.toRoute({
+        main: r.companiesM,
+        routeSufix: [company?.name || ""],
+        q: {
+          tab: "info",
+          id: company?.uuid || "",
+        },
+      }),
+    },
+    {
+      title: t("accounts"),
+      href: r.toRoute({
+        main: r.companiesM,
+        routeSufix: [company?.name || ""],
+        q: {
+          tab: "accounts",
+          id: company?.uuid || "",
+        },
+      }),
+    },
+  ];
+  setUpToolbar(() => {
+    return {};
+  }, []);
   return (
-    <div>
-      <div className=" info-grid">
-        <Typography fontSize={subtitle} className=" col-span-full">
-          {t("info")}
-        </Typography>
-
-        {company && (
-          <>
-            <DisplayTextValue value={company.name} title={t("form.name")} />
-            <DisplayTextValue
-              value={formatLongDate(company.created_at, i18n.language)}
-              title={t("table.createdAt")}
-            />
-
-            <DisplayTextValue
-              value={company.site_url}
-              title={t("form.siteUrl")}
-            />
-
-            <DisplayTextValue
-              value={company.logo}
-              title={t("form.logo")}
-            />
-          </>
-        )}
-      </div>
-    </div>
+    <DetailLayout navItems={navItems} partyID={company?.id}>
+      {tab == "info" && <CompanyInfo />}
+      {tab == "accounts" && <CompanyAccounts />}
+    </DetailLayout>
   );
 }

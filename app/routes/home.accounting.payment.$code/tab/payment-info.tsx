@@ -37,9 +37,9 @@ export default function PaymentInfoTab() {
       partyID: d.party_id,
       partyType: d.party_type,
       partyName: d.party_code,
-      grandTotal: formatAmounFromInt(d.total),
-      outstanding: formatAmounFromInt(d.outstanding),
-      allocated: formatAmounFromInt(d.allocated),
+      grandTotal: d.total,
+      outstanding: d.outstanding,
+      allocated: d.allocated,
     };
   };
   return (
@@ -119,6 +119,7 @@ export default function PaymentInfoTab() {
           {t("table.reference")}
         </Typography>
         <div className=" col-span-full">
+          {JSON.stringify(paymentData?.payment_references)}
           <DataTable
             columns={paymentReferencesColumns()}
             data={

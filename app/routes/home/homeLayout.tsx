@@ -157,7 +157,9 @@ export default function HomeLayout({
 
             <ToolBar title={getRouteName()} />
 
-            <div className="h-full">{children}</div>
+            <div className="h-full">
+              {children}
+              </div>
           </div>
         </main>
       </div>

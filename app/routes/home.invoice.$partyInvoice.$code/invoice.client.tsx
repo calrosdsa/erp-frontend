@@ -11,10 +11,12 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  EventState,
   PartyType,
   partyTypeFromJSON,
   partyTypeToJSON,
+  PaymentType,
+  paymentTypeToJSON,
+  State,
   stateFromJSON,
 } from "~/gen/common";
 import { z } from "zod";
@@ -35,25 +37,24 @@ import { useStatus } from "~/util/hooks/data/useStatus";
 import { format } from "date-fns";
 
 export default function InvoiceDetailClient() {
-  const { actions, invoice, activities, associatedActions, itemLines,totals } =
+  const { actions, invoice, activities, associatedActions, itemLines, totals } =
     useLoaderData<typeof loader>();
   const toolbarState = useToolbar();
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
-  const partyInvoice = params.partyInvoice || ""
+  const partyInvoice = params.partyInvoice || "";
   const [searchParams] = useSearchParams();
   const globalState = useOutletContext<GlobalState>();
   const tab = searchParams.get("tab");
   const r = routes;
   const navigate = useNavigate();
   const [paymentPermission] = usePermission({
-    actions:
-      associatedActions && associatedActions[PartyType.payment],
+    actions: associatedActions && associatedActions[PartyType.payment],
     roleActions: globalState.roleActions,
   });
   const createPayment = useCreatePayment();
-  const {isCompleted,isCancelled} = useStatus({
+  const { enabledOrder } = useStatus({
     status: stateFromJSON(invoice?.status),
   });
 
@@ -62,67 +63,86 @@ export default function InvoiceDetailClient() {
       title: t("info"),
       href: r.toRoute({
         main: partyInvoice,
-        routePrefix:["invoice"],
+        routePrefix: ["invoice"],
         routeSufix: [invoice?.code || ""],
         q: {
           tab: "info",
         },
-      })
+      }),
     },
     {
       title: t("connections"),
       href: r.toRoute({
         main: partyInvoice,
-        routePrefix:["invoice"],
+        routePrefix: ["invoice"],
         routeSufix: [invoice?.code || ""],
         q: {
           tab: "connections",
         },
-      })
+      }),
     },
   ];
 
+  const getPaymentType = (partyInvoice?: string): string => {
+    switch (partyTypeFromJSON(partyInvoice)) {
+      case PartyType.saleInvoice:
+        return paymentTypeToJSON(PaymentType.RECEIVE);
+      case PartyType.purchaseInvoice:
+        return paymentTypeToJSON(PaymentType.PAY);
+      default:
+        return "";
+    }
+  };
+
   setUpToolbar(() => {
     let actions: ActionToolbar[] = [];
+    const status = stateFromJSON(invoice?.status)
     actions.push({
-      label:t("accountingLedger"),
-      onClick:()=>{
-        navigate(r.toRoute({
-          main:"generalLedger",
-          routePrefix:[r.accountingM],
-          q:{
-            fromDate:format(invoice?.created_at || "","yyyy-MM-dd"),
-            toDate:format(invoice?.created_at || "","yyyy-MM-dd"),
-            voucherNo:invoice?.code,
-          }
-        }))
-      }
-    })
-    if (paymentPermission?.create && !isCompleted && !isCancelled) {
+      label: t("accountingLedger"),
+      onClick: () => {
+        navigate(
+          r.toRoute({
+            main: "generalLedger",
+            routePrefix: [r.accountingM],
+            q: {
+              fromDate: format(invoice?.created_at || "", "yyyy-MM-dd"),
+              toDate: format(invoice?.created_at || "", "yyyy-MM-dd"),
+              voucherNo: invoice?.code,
+            },
+          })
+        );
+      },
+    });
+    if (paymentPermission?.create && enabledOrder && status != State.PAID) {
       actions.push({
         label: t("_payment.base"),
         onClick: () => {
-          const outstanding = Number(totals?.total)-Number(totals?.paid)
+          const outstanding = Number(totals?.total) - Number(totals?.paid);
           createPayment.setData({
             amount: outstanding,
             partyUuid: invoice?.party_uuid,
             partyType: invoice?.party_type,
             partyName: invoice?.party_name,
             partyReference: invoice?.id,
-            partyReferences:[{
-              partyType:partyInvoice,
-              partyName:invoice?.code || "",
-              partyID:Number(invoice?.id),
-              grandTotal:Number(totals?.total),
-              outstanding:outstanding,
-              allocated:Number(totals?.total) - Number(totals?.paid)
-            }]
+            paymentType: getPaymentType(partyInvoice),
+            partyReferences: [
+              {
+                partyType: partyInvoice,
+                partyName: invoice?.code || "",
+                partyID: Number(invoice?.id),
+                grandTotal: Number(totals?.total),
+                outstanding: outstanding,
+                allocated: Number(totals?.total) - Number(totals?.paid),
+              },
+            ],
           });
-          navigate(r.toRoute({
-            main:partyTypeToJSON(PartyType.payment),
-            routePrefix:[r.accountingM],
-            routeSufix:["new"]
-          }));
+          navigate(
+            r.toRoute({
+              main: partyTypeToJSON(PartyType.payment),
+              routePrefix: [r.accountingM],
+              routeSufix: ["new"],
+            })
+          );
         },
         Icon: PlusIcon,
       });
@@ -150,7 +170,7 @@ export default function InvoiceDetailClient() {
         );
       },
     };
-  }, [paymentPermission,invoice]);
+  }, [paymentPermission, invoice]);
 
   useEffect(() => {
     if (fetcher.state == "submitting") {

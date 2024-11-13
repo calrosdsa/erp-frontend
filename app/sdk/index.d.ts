@@ -427,8 +427,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get User companies */
-        get: operations["companies"];
+        get?: never;
         put?: never;
         /** Create Company */
         post: operations["create-company"];
@@ -455,6 +454,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/company/setting/account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Company Account Setting */
+        get: operations["company-account-setting"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/company/user/companies": {
         parameters: {
             query?: never;
@@ -464,23 +480,6 @@ export interface paths {
         };
         /** Get user companies */
         get: operations["user-companies"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/company/valid/parent/companies": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Valid Parent Companies */
-        get: operations["valid-parent-companies"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2205,6 +2204,20 @@ export interface components {
             role_actions: components["schemas"]["RoleActionDto"][];
             user: components["schemas"]["UserDto"];
         };
+        AccountSettingsDto: {
+            bank_acct_name: string;
+            bank_acct_uuid: string;
+            cash_acct_name: string;
+            cash_acct_uuid: string;
+            cost_of_goods_sold_acct_name: string;
+            cost_of_goods_sold_acct_uuid: string;
+            income_acct_name: string;
+            income_acct_uuid: string;
+            payable_acct_name: string;
+            payable_acct_uuid: string;
+            receivable_acct_name: string;
+            receivable_acct_uuid: string;
+        };
         ActionDto: {
             /** Format: int64 */
             entity_id: number;
@@ -2919,7 +2932,8 @@ export interface components {
              */
             readonly $schema?: string;
             enabled: boolean;
-            group: components["schemas"]["GroupDto"];
+            /** Format: int64 */
+            group_id: number;
             name: string;
         };
         CreateTaxRequestBody: {
@@ -3061,6 +3075,19 @@ export interface components {
             id: number;
             name: string;
         };
+        EntityResponseAccountSettingsDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["AccountSettingsDto"];
+        };
         EntityResponseClientBody: {
             /**
              * Format: uri
@@ -3086,19 +3113,6 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["Company"];
-        };
-        EntityResponseCompanyDtoBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            associated_actions: {
-                [key: string]: components["schemas"]["ActionDto"][] | undefined;
-            };
-            message: string;
-            result: components["schemas"]["CompanyDto"];
         };
         EntityResponseItemAttributeDtoBody: {
             /**
@@ -6509,49 +6523,6 @@ export interface operations {
             };
         };
     };
-    companies: {
-        parameters: {
-            query: {
-                page: string;
-                size: string;
-                enabled?: string;
-                is_group?: string;
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
     "create-company": {
         parameters: {
             query?: {
@@ -6622,7 +6593,38 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseCompanyDtoBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityCompanyDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "company-account-setting": {
+        parameters: {
+            query?: {
+                id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseAccountSettingsDtoBody"];
                 };
             };
             /** @description Error */
@@ -6637,49 +6639,6 @@ export interface operations {
         };
     };
     "user-companies": {
-        parameters: {
-            query: {
-                page: string;
-                size: string;
-                enabled?: string;
-                is_group?: string;
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "valid-parent-companies": {
         parameters: {
             query: {
                 page: string;

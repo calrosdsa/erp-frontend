@@ -12,7 +12,7 @@ export const PianoFormsNav = ({ entities }: {
   const { t } = useTranslation("common");
   const r = routes
   let pianoFormsChildren:NavItem[] = [];
-  if(entities?.includes(Entity.PIANO_FORMS_ENTITY_ID)){
+  if(entities?.includes(Entity.PIANO_FORS)){
     pianoFormsChildren.push({
       title: t("Relocation & Moving"),
       href: r.toParty("relocationAndMoving"),

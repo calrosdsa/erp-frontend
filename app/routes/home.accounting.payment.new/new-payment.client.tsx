@@ -47,6 +47,7 @@ export default function PaymentCreateClient() {
     resolver: zodResolver(createPaymentSchema),
     defaultValues: {
       amount: formatAmounFromInt(createPayment.payload?.amount),
+      paymentType:createPayment.payload?.paymentType,
       partyName: createPayment.payload?.partyName,
       partyUuid: createPayment.payload?.partyUuid,
       partyType: createPayment.payload?.partyType,

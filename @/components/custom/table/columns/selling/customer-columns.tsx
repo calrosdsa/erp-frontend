@@ -8,6 +8,7 @@ import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 
 export const customerColumns = ({}): ColumnDef<
   components["schemas"]["CustomerDto"]
@@ -23,7 +24,17 @@ export const customerColumns = ({}): ColumnDef<
         return (
           <TableCellNameNavigation
             {...props}
-            navigate={(name) => r.toCustomerDetail(name, rowData.uuid)}
+            navigate={(name) =>
+              r.toRoute({
+                main: partyTypeToJSON(PartyType.customer),
+                routePrefix: [r.sellingM],
+                routeSufix: [name],
+                q: {
+                  tab: "info",
+                  id: rowData.uuid,
+                },
+              })
+            }
           />
         );
       },

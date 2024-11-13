@@ -92,7 +92,6 @@ export default function CreatePurchaseOrdersClient() {
     <div>
       <FormLayout>
         <Form {...form}>
-          {JSON.stringify(form.formState.errors)}
           <fetcher.Form
             method="post"
             onSubmit={form.handleSubmit(onSubmit)}
@@ -100,7 +99,7 @@ export default function CreatePurchaseOrdersClient() {
           >
             <div className="create-grid">
               <PartyAutocomplete
-              party={partyTypeFromJSON(partyOrder)}
+              party={partyOrder || ""}
               globalState={globalState}
               form={form}
               />

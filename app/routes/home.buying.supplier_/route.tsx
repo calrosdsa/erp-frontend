@@ -25,7 +25,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const d = data.createSupplier
             const res = await client.POST("/supplier",{
                 body:{
-                    group:d.group,
+                    group_id:d.groupID,
                     name:d.name,
                     enabled:d.enabled
                 }

@@ -1,4 +1,4 @@
-import Typography, { labelF, sm } from "@/components/typography/Typography";
+import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -28,12 +28,12 @@ export default function DisplayTextValue({
   z.setErrorMap(makeZodI18nMap({ t }));
   return (
     <div className="flex flex-col ">
-      <Typography fontSize={labelF}>{title}</Typography>
+      <Typography variant="label">{title}</Typography>
 
       <div className="bg-accent rounded-md p-[6px] shadow-sm flex justify-between">
         {to != undefined ? (
           <Link to={to} className="underline h-7 items-center flex">
-            <Typography fontWeight={500} fontSize={sm}>
+            <Typography  variant="body2">
               {value}
             </Typography>
           </Link>

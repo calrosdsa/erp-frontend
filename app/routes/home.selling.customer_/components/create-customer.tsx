@@ -48,7 +48,10 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
         },{
             encType:"application/json",
             method:"POST",
-            action:r.customers
+            action:r.toRoute({
+                main:partyTypeToJSON(PartyType.customer),
+                routePrefix:[r.sellingM],
+            })
         })
     }
     useEffect(()=>{
@@ -84,7 +87,10 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
                 },{
                     encType:"application/json",
                     method:"POST",
-                    action:r.customers
+                    action:r.toRoute({
+                        main:partyTypeToJSON(PartyType.customer),
+                        routePrefix:[r.sellingM],
+                    })
                 })
             }}
             formItemsData={[

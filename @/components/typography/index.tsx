@@ -1,7 +1,7 @@
 import React from 'react'
 import { cn } from "@/lib/utils"
 
-type VariantType = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'title1' | 'title2' | 'subtitle1' | 'subtitle2' | 'body1' | 'body2' | 'button' | 'caption' | 'overline'
+type VariantType = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'title1' | 'title2' | 'subtitle1' | 'subtitle2'| 'label' | 'body1' | 'body2' | 'button' | 'caption' | 'overline'
 type ColorType = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'
 type AlignType = 'left' | 'center' | 'right' | 'justify'
 
@@ -25,6 +25,7 @@ const variantClasses: Record<VariantType, string> = {
   title2: 'text-lg font-medium',
   subtitle1: 'text-lg font-medium',
   subtitle2: 'text-base font-medium',
+  label:"text-sm font-medium",
   body1: 'text-base',
   body2: 'text-sm',
   button: 'text-sm font-medium uppercase',
@@ -59,6 +60,7 @@ const variantElementMap: Record<VariantType, keyof JSX.IntrinsicElements> = {
   title2: 'h6',
   subtitle1: 'h6',
   subtitle2: 'h6',
+  label: 'label',
   body1: 'p',
   body2: 'p',
   button: 'span',

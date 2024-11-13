@@ -4,11 +4,17 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue"
 import { routes } from "~/util/route"
 import { useTranslation } from "react-i18next"
 import { formatLongDate } from "~/util/format/formatDate"
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 export default function AccountLedgerDetailClient(){
     const {actions,accountDetail} = useLoaderData<typeof loader>()
     const r = routes
     const {t,i18n} = useTranslation("common")
+    setUpToolbar(()=>{
+        return {
+            
+        }
+    },[])
     return (
         <div>
            <div className=" info-grid">

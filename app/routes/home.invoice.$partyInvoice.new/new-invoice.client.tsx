@@ -125,7 +125,7 @@ export default function CreatePurchaseInvoiceClient() {
           >
             <div className="create-grid">
               <PartyAutocomplete
-                party={partyTypeFromJSON(partyInvoice)}
+                party={partyInvoice}
                 globalState={globalState}
                 form={form}
               />
