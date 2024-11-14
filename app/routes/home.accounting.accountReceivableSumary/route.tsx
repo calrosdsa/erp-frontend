@@ -1,8 +1,9 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import GeneralLedgerClient from "./general-ledger.client";
+import GeneralLedgerClient from "./account-receivable-sumary.client";
 import apiClient from "~/apiclient";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { handleError } from "~/util/api/handle-status-code";
+import AccountReceivableSumaryClient from "./account-receivable-sumary.client";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
@@ -13,28 +14,21 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const toDate =
     searchParams.get("toDate") ||
     format(new Date().toLocaleDateString(), "yyyy-MM-dd");
-  const voucherNo = searchParams.get("voucherNo");
-  console.log(fromDate, toDate);
-  const res = await client.GET("/accounting/report/general", {
+  const res = await client.GET("/accounting/report/account-receivable/sumary", {
     params: {
       query: {
         from_date: fromDate,
-        to_date: toDate,
-        voucher_no: voucherNo || "",
-        party: searchParams.get("party") || "",
-        party_type: searchParams.get("partyType") || "",
-        account:searchParams.get("account") || "",
+        to_date: toDate,        
+        parties: decodeURIComponent(searchParams.get("parties") || "") || "",
       },
     },
   });
   handleError(res.error);
   return json({
-    generalLedger: res.data?.result.entries,
-    opening:res.data?.result.opening
-    
+    accountReceivableSumary: res.data?.result,
   });
 };
 
-export default function GeneralLedger() {
-  return <GeneralLedgerClient />;
+export default function AccountReceivableSumary() {
+  return <AccountReceivableSumaryClient />;
 }

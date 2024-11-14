@@ -77,6 +77,9 @@ class Routes {
   generalLedger = "generalLedger";
   accountPayable = "accountPayable";
   accountPayableSumary = "accountPayableSumary";
+  accountReceivable = "accountReceivable";
+  accountReceivableSumary = "accountReceivableSumary";
+
 
   stockLedger = "stockLedger";
   stockBalance = "stockBalance";

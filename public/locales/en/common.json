@@ -366,13 +366,15 @@
   "generalLedger": "General Ledger",
   "accountingLedger": "Accounting Ledger",
   "accountPayable": "Account Payable",
+  "accountPayableSumary": "Account Payable Sumary",
+  "accountReceivable": "Account Receivable",
+  "accountReceivableSumary": "Account Receivable Sumary",
   "stockLedger": "Stock Ledger",
   "stockBalance": "Stock Balance",
   "treeView": "Tree View",
 
   "relocationAndMoving": "Relocation & Moving",
 
-  "accountPayableSumary": "Account Payable Sumary",
   "accountType":{
     "cash":"Cash",
     "bank":"Bank",

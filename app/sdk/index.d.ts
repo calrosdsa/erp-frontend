@@ -140,6 +140,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/accounting/report/account-receivable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Account Receivable */
+        get: operations["account-receivable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounting/report/account-receivable/sumary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Receivable Sumary */
+        get: operations["receivable-sumary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/accounting/report/general": {
         parameters: {
             query?: never;
@@ -652,6 +686,23 @@ export interface paths {
         };
         /** Retrieve customer */
         get: operations["get customer"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/financial-statement/profit-and-loss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Profit and Loss Statement */
+        get: operations["profit-and-loss"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2192,6 +2243,23 @@ export interface components {
             voucher_no: string;
             voucher_type: string;
         };
+        AccountReceivableEntryDto: {
+            currency: string;
+            due_date: string;
+            /** Format: int64 */
+            invoiced_amount: number;
+            /** Format: int64 */
+            paid_amount: number;
+            party_name: string;
+            party_type: string;
+            party_uuid: string;
+            /** Format: date-time */
+            posting_date: string;
+            receivable_account: string;
+            receivable_account_uuid: string;
+            voucher_no: string;
+            voucher_type: string;
+        };
         AccountResponseBody: {
             /**
              * Format: uri
@@ -2470,7 +2538,7 @@ export interface components {
             deleted_at: components["schemas"]["DeletedAt"];
             /** Format: int64 */
             id: number;
-            is_parent: boolean;
+            is_group: boolean;
             logo: string | null;
             name: string;
             /** Format: int32 */
@@ -3114,6 +3182,19 @@ export interface components {
             message: string;
             result: components["schemas"]["Company"];
         };
+        EntityResponseGeneralLedgerDataBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["GeneralLedgerData"];
+        };
         EntityResponseItemAttributeDtoBody: {
             /**
              * Format: uri
@@ -3153,6 +3234,19 @@ export interface components {
             message: string;
             result: components["schemas"]["AccountPayableEntryDto"][];
         };
+        EntityResponseListAccountReceivableEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["AccountReceivableEntryDto"][];
+        };
         EntityResponseListCompanyEntityDtoBody: {
             /**
              * Format: uri
@@ -3178,6 +3272,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["GeneralLedgerEntryDto"][];
+        };
+        EntityResponseListProfitAndLossEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ProfitAndLossEntryDto"][];
         };
         EntityResponseListStockBalanceEntryDtoBody: {
             /**
@@ -3694,6 +3801,10 @@ export interface components {
             status: string;
             uuid: string;
         };
+        GeneralLedgerData: {
+            entries: components["schemas"]["GeneralLedgerEntryDto"][];
+            opening: components["schemas"]["GeneralLedgerOpening"];
+        };
         GeneralLedgerEntryDto: {
             account: string;
             against_account: string;
@@ -3711,6 +3822,14 @@ export interface components {
             voucher_no: string;
             voucher_subtype: string;
             voucher_type: string;
+        };
+        GeneralLedgerOpening: {
+            /** Format: int64 */
+            credit: number;
+            /** Format: int64 */
+            debit: number;
+            /** Format: int64 */
+            opening_balance: number;
         };
         GreetingOutputBody: {
             /**
@@ -4572,6 +4691,15 @@ export interface components {
             phoneNumber: string;
             uuid: string;
         };
+        ProfitAndLossEntryDto: {
+            account_name: string;
+            account_type: string;
+            /** Format: int64 */
+            credit: number;
+            date: string;
+            /** Format: int64 */
+            debit: number;
+        };
         ReceiptDetailDto: {
             item_lines: components["schemas"]["ItemLineDto"][];
             receipt: components["schemas"]["ReceiptDto"];
@@ -5115,8 +5243,6 @@ export interface components {
             party_name: string;
             party_type: string;
             party_uuid: string;
-            receivable_account: string;
-            receivable_account_uuid: string;
             /** Format: int64 */
             total_invoiced_amount: number;
             /** Format: int64 */
@@ -5625,6 +5751,90 @@ export interface operations {
             };
         };
     };
+    "account-receivable": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                parties?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListAccountReceivableEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "receivable-sumary": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                parties?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListSumaryEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-general-ledger": {
         parameters: {
             query: {
@@ -5658,7 +5868,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseListGeneralLedgerEntryDtoBody"];
+                    "application/json": components["schemas"]["EntityResponseGeneralLedgerDataBody"];
                 };
             };
             /** @description Error */
@@ -7146,6 +7356,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityCustomerDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "profit-and-loss": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                currency?: string;
+                time_unit: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListProfitAndLossEntryDtoBody"];
                 };
             };
             /** @description Error */

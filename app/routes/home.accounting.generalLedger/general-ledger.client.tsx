@@ -1,31 +1,61 @@
-import TableCellIndex from "@/components/custom/table/cells/table-cell-index";
-import ResizableTable from "@/components/custom/table/ResizableTable";
+import React, { useMemo } from "react";
 import { useLoaderData } from "@remix-run/react";
-import { ColumnDef } from "@tanstack/react-table";
-import { loader } from "./route";
-import { generalLedgerColumns } from "@/components/custom/table/columns/accounting/general-ledger-columns";
-import GeneralLedgerHeader from "./components/general-ledger-header";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { components } from "~/sdk";
-import { DEFAULT_CURRENCY } from "~/constant";
-import { useMemo } from "react";
+import GeneralLedgerHeader from "./components/general-ledger-header";
+import { generalLedgerColumns } from "@/components/custom/table/columns/accounting/general-ledger-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { useTranslation } from "react-i18next";
+import { DEFAULT_CURRENCY } from "~/constant";
+import { components } from "~/sdk";
+import type { loader } from "./route";
+
+type GeneralLedgerEntryDto = components["schemas"]["GeneralLedgerEntryDto"];
 
 export default function GeneralLedgerClient() {
-  const { generalLedger } = useLoaderData<typeof loader>();
+  const { generalLedger, opening } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
+
+  const transactions = useMemo(() => {
+    if (!generalLedger || generalLedger.length === 0) {
+      return [];
+    }
+
+    const openingBalance = Number(opening?.opening_balance) || 0;
+    let runningBalance = openingBalance;
+
+    const transactionsWithBalance = generalLedger.map((transaction) => {
+      const amount = runningBalance + (transaction.debit - transaction.credit);
+      runningBalance = amount;
+
+      return {
+        ...transaction,
+        balance: amount,
+      };
+    });
+
+    return [
+      {
+        currency:
+          transactionsWithBalance.length > 0
+            ? transactionsWithBalance[0]?.currency
+            : DEFAULT_CURRENCY,
+        account: "Opening",
+        balance: openingBalance,
+        debit: Number(opening?.debit),
+        credit: Number(opening?.credit),
+      } as GeneralLedgerEntryDto,
+      ...transactionsWithBalance,
+    ];
+  }, [generalLedger, opening]);
+
   const total = useMemo(() => {
-    const totalDebit = generalLedger?.reduce(
-      (prev, acc) => prev + acc.debit,
-      0
-    );
-    const totalCredit = generalLedger?.reduce(
-      (prev, acc) => prev + acc.credit,
-      0
-    );
-    const totalBalance = Number(totalCredit) - Number(totalDebit);
+    const totalDebit =
+      generalLedger?.reduce((prev, acc) => prev + acc.debit, 0) || 0;
+    const totalCredit =
+      generalLedger?.reduce((prev, acc) => prev + acc.credit, 0) || 0;
+    const totalBalance = totalCredit - totalDebit;
+
     return {
       totalDebit,
       totalCredit,
@@ -33,10 +63,34 @@ export default function GeneralLedgerClient() {
     };
   }, [generalLedger]);
 
-  setUpToolbar(() => {
-    return {
-    };
-  }, []);
+  const dataWithTotal = useMemo(() => {
+    const totalBalance = total.totalDebit - total.totalCredit
+    return [
+      ...transactions,
+      {
+        account: "Total",
+        credit: total.totalCredit,
+        debit: total.totalDebit,
+        currency:
+          transactions.length > 0
+            ? transactions[0]?.currency
+            : DEFAULT_CURRENCY,
+        balance: totalBalance,
+      } as GeneralLedgerEntryDto,
+      {
+        account: "Closing (Opening + Total)",
+        credit: total.totalCredit + Number(opening?.credit),
+        debit: total.totalDebit + Number(opening?.debit),
+        currency:
+          transactions.length > 0
+            ? transactions[0]?.currency
+            : DEFAULT_CURRENCY,
+        balance: Number(opening?.opening_balance) + totalBalance,
+      } as GeneralLedgerEntryDto,
+    ];
+  }, [transactions, total]);
+
+  setUpToolbar(() => ({}), []);
 
   return (
     <div>
@@ -45,22 +99,7 @@ export default function GeneralLedgerClient() {
           <GeneralLedgerHeader />
         </CardHeader>
         <CardContent className="px-2 py-3">
-          <DataTable
-            data={[
-              ...(generalLedger || []),
-              {
-                account: "Total",
-                credit: total.totalCredit,
-                debit: total.totalDebit,
-                currency:
-                  generalLedger != undefined && generalLedger.length > 0
-                    ? generalLedger[0]?.currency
-                    : DEFAULT_CURRENCY,
-                balance: total.totalBalance,
-              } as components["schemas"]["GeneralLedgerEntryDto"],
-            ]}
-            columns={generalLedgerColumns({})}
-          />
+          <DataTable data={dataWithTotal} columns={generalLedgerColumns({})} />
         </CardContent>
       </Card>
     </div>

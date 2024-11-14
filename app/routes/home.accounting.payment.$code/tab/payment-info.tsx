@@ -19,6 +19,7 @@ import { paymentReferencesColumns } from "@/components/custom/table/columns/acco
 import { components } from "~/sdk";
 import { z } from "zod";
 import { paymentReferceSchema } from "~/util/data/schemas/accounting/payment-schema";
+import { Entity } from "~/types/enums";
 
 export default function PaymentInfoTab() {
   const { paymentData, actions, associatedActions } =
@@ -27,7 +28,7 @@ export default function PaymentInfoTab() {
   const [ledgerPermission] = usePermission({
     roleActions: globalState.roleActions,
     actions:
-      associatedActions && associatedActions[partyTypeToJSON(PartyType.ledger)],
+      associatedActions && associatedActions[Entity.LEDGER],
   });
   const { t, i18n } = useTranslation("common");
   const mapToPaymentReferenceSchema = (

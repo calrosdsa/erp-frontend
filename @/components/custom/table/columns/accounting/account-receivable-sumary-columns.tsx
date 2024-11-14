@@ -6,7 +6,7 @@ import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellPrice from "../../cells/table-cell-price";
 
-export const accountPayableSumaryColumns = ({}: {}): ColumnDef<
+export const accountReceivableSumaryColumns = ({}: {}): ColumnDef<
   components["schemas"]["SumaryEntryDto"]
 >[] => {
   let columns: ColumnDef<components["schemas"]["SumaryEntryDto"]>[] =
@@ -40,7 +40,7 @@ export const accountPayableSumaryColumns = ({}: {}): ColumnDef<
       />
     }
   });
-  
+ 
   
   columns.push({
     accessorKey: "total_invoiced_amount",

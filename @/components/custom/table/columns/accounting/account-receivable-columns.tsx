@@ -6,14 +6,21 @@ import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellPrice from "../../cells/table-cell-price";
 
-export const accountPayableSumaryColumns = ({}: {}): ColumnDef<
-  components["schemas"]["SumaryEntryDto"]
+export const accountReceivableColumns = ({}: {}): ColumnDef<
+  components["schemas"]["AccountReceivableEntryDto"]
 >[] => {
-  let columns: ColumnDef<components["schemas"]["SumaryEntryDto"]>[] =
+  let columns: ColumnDef<components["schemas"]["AccountReceivableEntryDto"]>[] =
     [];
   const r = routes;
   const { t, i18n } = useTranslation("common");
-  
+  columns.push({
+    accessorKey: "posting_date",
+    header: t("form.postingDate"),
+    size: 300,
+    cell: ({ ...props }) => {
+      return <TableCellDate i18n={i18n} formatDate="medium" {...props} />;
+    },
+  });
   columns.push({
     accessorKey: "party_type",
     cell:({...props})=>{
@@ -40,10 +47,26 @@ export const accountPayableSumaryColumns = ({}: {}): ColumnDef<
       />
     }
   });
-  
-  
   columns.push({
-    accessorKey: "total_invoiced_amount",
+    accessorKey: "receivable_account",
+    header: t("payableAccount"),
+    cell: ({ ...props }) => {
+      const rowData = props.row.original;
+      return (
+        <>
+          <span className="truncate">{rowData.receivable_account}</span>
+        </>
+      );
+    },
+  });
+  columns.push({
+    accessorKey: "voucher_type",
+  });
+  columns.push({
+    accessorKey: "voucher_no",
+  });
+  columns.push({
+    accessorKey: "invoiced_amount",
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -52,7 +75,7 @@ export const accountPayableSumaryColumns = ({}: {}): ColumnDef<
     },
   });
   columns.push({
-    accessorKey: "total_paid_amount",
+    accessorKey: "paid_amount",
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -69,7 +92,7 @@ export const accountPayableSumaryColumns = ({}: {}): ColumnDef<
         <TableCellPrice
           i18n={i18n}
           currency={rowData.currency}
-          price={rowData.total_invoiced_amount - rowData.total_paid_amount}
+          price={rowData.invoiced_amount - rowData.paid_amount}
           {...props}
         />
       );
