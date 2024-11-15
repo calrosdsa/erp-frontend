@@ -128,6 +128,7 @@ export enum PartyType {
   saleInvoice = 24,
   deliveryNote = 25,
   user = 26,
+  role = 27,
   UNRECOGNIZED = -1,
 }
 
@@ -214,6 +215,9 @@ export function partyTypeFromJSON(object: any): PartyType {
     case 26:
     case "user":
       return PartyType.user;
+    case 27:
+    case "role":
+      return PartyType.role;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -277,6 +281,8 @@ export function partyTypeToJSON(object: PartyType): string {
       return "deliveryNote";
     case PartyType.user:
       return "user";
+    case PartyType.role:
+      return "role";
     case PartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -572,46 +578,254 @@ export function paymentTypeToJSON(object: PaymentType): string {
   }
 }
 
-export enum AccountRootType {
+/** Enum for different types of accounts */
+export enum AccountType {
+  /** ASSET - Asset Accounts */
   ASSET = 0,
-  LIABILITIES = 1,
-  REVENUE = 2,
-  EXPENSE = 3,
+  /** CASH - Cash or cash equivalents */
+  CASH = 1,
+  /** BANK - Bank accounts (Cash in banks) */
+  BANK = 2,
+  /** ACCOUNTS_RECEIVABLE - Amounts owed by customers */
+  ACCOUNTS_RECEIVABLE = 3,
+  /** INVENTORY - Goods held for resale */
+  INVENTORY = 4,
+  /** PREPAID_EXPENSES - Expenses paid in advance */
+  PREPAID_EXPENSES = 5,
+  /** PROPERTY_PLANT_EQUIPMENT - Physical fixed assets (PP&E) */
+  PROPERTY_PLANT_EQUIPMENT = 6,
+  /** LIABILITY - Liability Accounts */
+  LIABILITY = 7,
+  /** ACCOUNTS_PAYABLE - Amounts owed to suppliers */
+  ACCOUNTS_PAYABLE = 8,
+  /** UNEARNED_REVENUE - Income received but not yet earned */
+  UNEARNED_REVENUE = 9,
+  /** LOAN_PAYABLE - Loan obligations */
+  LOAN_PAYABLE = 10,
+  /** EQUITY - Equity Accounts */
+  EQUITY = 11,
+  /** COMMON_STOCK - Equity from common stock issued */
+  COMMON_STOCK = 12,
+  /** RETAINED_EARNINGS - Accumulated profits */
+  RETAINED_EARNINGS = 13,
+  /** DIVIDENDS_PAID - Dividends issued to shareholders */
+  DIVIDENDS_PAID = 14,
+  /** REVENUE - Revenue Accounts */
+  REVENUE = 15,
+  /** SALES_REVENUE - Revenue from product or service sales */
+  SALES_REVENUE = 16,
+  /** SERVICE_REVENUE - Revenue from services provided */
+  SERVICE_REVENUE = 17,
+  /** OTHER_REVENUE - Non-primary revenue (e.g., interest) */
+  OTHER_REVENUE = 18,
+  /** EXPENSE - Expense Accounts */
+  EXPENSE = 19,
+  /** COST_OF_GOODS_SOLD - Direct costs of goods or services sold */
+  COST_OF_GOODS_SOLD = 20,
+  /** STOCK_ADJUSTMENT - Stock adjustment (inventory corrections, etc.) */
+  STOCK_ADJUSTMENT = 21,
+  /** OPERATING_EXPENSES - Operating costs (rent, salaries, etc.) */
+  OPERATING_EXPENSES = 22,
+  /** DEPRECIATION_EXPENSE - Depreciation of assets */
+  DEPRECIATION_EXPENSE = 23,
+  /** INTEREST_EXPENSE - Interest payments */
+  INTEREST_EXPENSE = 24,
+  /** TAX_EXPENSE - Taxes paid */
+  TAX_EXPENSE = 25,
+  /** ACCUMULATED_DEPRECIATION - Contra Accounts */
+  ACCUMULATED_DEPRECIATION = 26,
+  /** ALLOWANCE_FOR_DOUBTFUL_ACCOUNTS - Estimate of uncollectible receivables */
+  ALLOWANCE_FOR_DOUBTFUL_ACCOUNTS = 27,
+  /** SALES_DISCOUNTS - Discounts offered on sales */
+  SALES_DISCOUNTS = 28,
+  /** SALES_RETURNS_AND_ALLOWANCES - Returns and allowances granted to customers */
+  SALES_RETURNS_AND_ALLOWANCES = 29,
+  /** ASSET_RECEIVED_BUT_NOT_BILLED - Other specific types */
+  ASSET_RECEIVED_BUT_NOT_BILLED = 30,
+  /** OTHER_ASSET - Miscellaneous or intangible assets */
+  OTHER_ASSET = 31,
+  /** OTHER_LIABILITY - Miscellaneous liabilities */
+  OTHER_LIABILITY = 32,
   UNRECOGNIZED = -1,
 }
 
-export function accountRootTypeFromJSON(object: any): AccountRootType {
+export function accountTypeFromJSON(object: any): AccountType {
   switch (object) {
     case 0:
     case "ASSET":
-      return AccountRootType.ASSET;
+      return AccountType.ASSET;
     case 1:
-    case "LIABILITIES":
-      return AccountRootType.LIABILITIES;
+    case "CASH":
+      return AccountType.CASH;
     case 2:
-    case "REVENUE":
-      return AccountRootType.REVENUE;
+    case "BANK":
+      return AccountType.BANK;
     case 3:
+    case "ACCOUNTS_RECEIVABLE":
+      return AccountType.ACCOUNTS_RECEIVABLE;
+    case 4:
+    case "INVENTORY":
+      return AccountType.INVENTORY;
+    case 5:
+    case "PREPAID_EXPENSES":
+      return AccountType.PREPAID_EXPENSES;
+    case 6:
+    case "PROPERTY_PLANT_EQUIPMENT":
+      return AccountType.PROPERTY_PLANT_EQUIPMENT;
+    case 7:
+    case "LIABILITY":
+      return AccountType.LIABILITY;
+    case 8:
+    case "ACCOUNTS_PAYABLE":
+      return AccountType.ACCOUNTS_PAYABLE;
+    case 9:
+    case "UNEARNED_REVENUE":
+      return AccountType.UNEARNED_REVENUE;
+    case 10:
+    case "LOAN_PAYABLE":
+      return AccountType.LOAN_PAYABLE;
+    case 11:
+    case "EQUITY":
+      return AccountType.EQUITY;
+    case 12:
+    case "COMMON_STOCK":
+      return AccountType.COMMON_STOCK;
+    case 13:
+    case "RETAINED_EARNINGS":
+      return AccountType.RETAINED_EARNINGS;
+    case 14:
+    case "DIVIDENDS_PAID":
+      return AccountType.DIVIDENDS_PAID;
+    case 15:
+    case "REVENUE":
+      return AccountType.REVENUE;
+    case 16:
+    case "SALES_REVENUE":
+      return AccountType.SALES_REVENUE;
+    case 17:
+    case "SERVICE_REVENUE":
+      return AccountType.SERVICE_REVENUE;
+    case 18:
+    case "OTHER_REVENUE":
+      return AccountType.OTHER_REVENUE;
+    case 19:
     case "EXPENSE":
-      return AccountRootType.EXPENSE;
+      return AccountType.EXPENSE;
+    case 20:
+    case "COST_OF_GOODS_SOLD":
+      return AccountType.COST_OF_GOODS_SOLD;
+    case 21:
+    case "STOCK_ADJUSTMENT":
+      return AccountType.STOCK_ADJUSTMENT;
+    case 22:
+    case "OPERATING_EXPENSES":
+      return AccountType.OPERATING_EXPENSES;
+    case 23:
+    case "DEPRECIATION_EXPENSE":
+      return AccountType.DEPRECIATION_EXPENSE;
+    case 24:
+    case "INTEREST_EXPENSE":
+      return AccountType.INTEREST_EXPENSE;
+    case 25:
+    case "TAX_EXPENSE":
+      return AccountType.TAX_EXPENSE;
+    case 26:
+    case "ACCUMULATED_DEPRECIATION":
+      return AccountType.ACCUMULATED_DEPRECIATION;
+    case 27:
+    case "ALLOWANCE_FOR_DOUBTFUL_ACCOUNTS":
+      return AccountType.ALLOWANCE_FOR_DOUBTFUL_ACCOUNTS;
+    case 28:
+    case "SALES_DISCOUNTS":
+      return AccountType.SALES_DISCOUNTS;
+    case 29:
+    case "SALES_RETURNS_AND_ALLOWANCES":
+      return AccountType.SALES_RETURNS_AND_ALLOWANCES;
+    case 30:
+    case "ASSET_RECEIVED_BUT_NOT_BILLED":
+      return AccountType.ASSET_RECEIVED_BUT_NOT_BILLED;
+    case 31:
+    case "OTHER_ASSET":
+      return AccountType.OTHER_ASSET;
+    case 32:
+    case "OTHER_LIABILITY":
+      return AccountType.OTHER_LIABILITY;
     case -1:
     case "UNRECOGNIZED":
     default:
-      return AccountRootType.UNRECOGNIZED;
+      return AccountType.UNRECOGNIZED;
   }
 }
 
-export function accountRootTypeToJSON(object: AccountRootType): string {
+export function accountTypeToJSON(object: AccountType): string {
   switch (object) {
-    case AccountRootType.ASSET:
+    case AccountType.ASSET:
       return "ASSET";
-    case AccountRootType.LIABILITIES:
-      return "LIABILITIES";
-    case AccountRootType.REVENUE:
+    case AccountType.CASH:
+      return "CASH";
+    case AccountType.BANK:
+      return "BANK";
+    case AccountType.ACCOUNTS_RECEIVABLE:
+      return "ACCOUNTS_RECEIVABLE";
+    case AccountType.INVENTORY:
+      return "INVENTORY";
+    case AccountType.PREPAID_EXPENSES:
+      return "PREPAID_EXPENSES";
+    case AccountType.PROPERTY_PLANT_EQUIPMENT:
+      return "PROPERTY_PLANT_EQUIPMENT";
+    case AccountType.LIABILITY:
+      return "LIABILITY";
+    case AccountType.ACCOUNTS_PAYABLE:
+      return "ACCOUNTS_PAYABLE";
+    case AccountType.UNEARNED_REVENUE:
+      return "UNEARNED_REVENUE";
+    case AccountType.LOAN_PAYABLE:
+      return "LOAN_PAYABLE";
+    case AccountType.EQUITY:
+      return "EQUITY";
+    case AccountType.COMMON_STOCK:
+      return "COMMON_STOCK";
+    case AccountType.RETAINED_EARNINGS:
+      return "RETAINED_EARNINGS";
+    case AccountType.DIVIDENDS_PAID:
+      return "DIVIDENDS_PAID";
+    case AccountType.REVENUE:
       return "REVENUE";
-    case AccountRootType.EXPENSE:
+    case AccountType.SALES_REVENUE:
+      return "SALES_REVENUE";
+    case AccountType.SERVICE_REVENUE:
+      return "SERVICE_REVENUE";
+    case AccountType.OTHER_REVENUE:
+      return "OTHER_REVENUE";
+    case AccountType.EXPENSE:
       return "EXPENSE";
-    case AccountRootType.UNRECOGNIZED:
+    case AccountType.COST_OF_GOODS_SOLD:
+      return "COST_OF_GOODS_SOLD";
+    case AccountType.STOCK_ADJUSTMENT:
+      return "STOCK_ADJUSTMENT";
+    case AccountType.OPERATING_EXPENSES:
+      return "OPERATING_EXPENSES";
+    case AccountType.DEPRECIATION_EXPENSE:
+      return "DEPRECIATION_EXPENSE";
+    case AccountType.INTEREST_EXPENSE:
+      return "INTEREST_EXPENSE";
+    case AccountType.TAX_EXPENSE:
+      return "TAX_EXPENSE";
+    case AccountType.ACCUMULATED_DEPRECIATION:
+      return "ACCUMULATED_DEPRECIATION";
+    case AccountType.ALLOWANCE_FOR_DOUBTFUL_ACCOUNTS:
+      return "ALLOWANCE_FOR_DOUBTFUL_ACCOUNTS";
+    case AccountType.SALES_DISCOUNTS:
+      return "SALES_DISCOUNTS";
+    case AccountType.SALES_RETURNS_AND_ALLOWANCES:
+      return "SALES_RETURNS_AND_ALLOWANCES";
+    case AccountType.ASSET_RECEIVED_BUT_NOT_BILLED:
+      return "ASSET_RECEIVED_BUT_NOT_BILLED";
+    case AccountType.OTHER_ASSET:
+      return "OTHER_ASSET";
+    case AccountType.OTHER_LIABILITY:
+      return "OTHER_LIABILITY";
+    case AccountType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

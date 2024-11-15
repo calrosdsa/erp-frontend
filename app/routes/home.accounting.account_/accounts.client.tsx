@@ -45,7 +45,7 @@ export default function AccountsClient(){
         }
     },[permission])
     return (
-        <div>
+        <div className="">
             <DataTable
             data={paginationResult?.results || []}
             columns={accountColumns()}

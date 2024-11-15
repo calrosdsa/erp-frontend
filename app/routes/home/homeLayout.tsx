@@ -89,7 +89,7 @@ export default function HomeLayout({
         data={globalState}
         openSessionDefaults={() => setOpenSessionDefaults(true)}
       />
-      <div className="flex h-screen border-collapse overflow-hidden">
+      <div className="flex h-screen border-collapse overflow-hidden max-w-[1900px] mx-auto">
         <Sidebar data={globalState} />
         <main className="flex-1 overflow-y-auto overflow-x-hidden pt-16 bg-secondary/10 pb-1">
           <div
@@ -157,7 +157,7 @@ export default function HomeLayout({
 
             <ToolBar title={getRouteName()} />
 
-            <div className="h-full">
+            <div className="h-full  max-w-[1500px">
               {children}
               </div>
           </div>

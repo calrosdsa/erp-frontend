@@ -50,6 +50,7 @@ enum PartyType {
     saleInvoice = 24;
     deliveryNote = 25;
     user = 26;
+    role = 27;
 }
 
 enum PianoPartyType {
@@ -98,14 +99,55 @@ enum PaymentType {
     INTERNAL_TRANSFER = 2;
 }
 
-enum AccountRootType {
-    ASSET = 0;
-    LIABILITIES = 1;
-    REVENUE = 2;
-    EXPENSE = 3;
+// Enum for different types of accounts
+enum AccountType {
+    // Asset Accounts
+    ASSET = 0;                            // General asset account (current, fixed, intangible)
+    CASH = 1;                             // Cash or cash equivalents
+    BANK = 2;                             // Bank accounts (Cash in banks)
+    ACCOUNTS_RECEIVABLE = 3;              // Amounts owed by customers
+    INVENTORY = 4;                       // Goods held for resale
+    PREPAID_EXPENSES = 5;                 // Expenses paid in advance
+    PROPERTY_PLANT_EQUIPMENT = 6;         // Physical fixed assets (PP&E)
+    
+    // Liability Accounts
+    LIABILITY = 7;                       // General liability account (current, long-term)
+    ACCOUNTS_PAYABLE = 8;                 // Amounts owed to suppliers
+    UNEARNED_REVENUE = 9;                 // Income received but not yet earned
+    LOAN_PAYABLE = 10;                    // Loan obligations
+    
+    // Equity Accounts
+    EQUITY = 11;                         // Owner’s equity (capital)
+    COMMON_STOCK = 12;                    // Equity from common stock issued
+    RETAINED_EARNINGS = 13;               // Accumulated profits
+    DIVIDENDS_PAID = 14;                  // Dividends issued to shareholders
+    
+    // Revenue Accounts
+    REVENUE = 15;                         // General revenue (sales)
+    SALES_REVENUE = 16;                   // Revenue from product or service sales
+    SERVICE_REVENUE = 17;                 // Revenue from services provided
+    OTHER_REVENUE = 18;                   // Non-primary revenue (e.g., interest)
+    
+    // Expense Accounts
+    EXPENSE = 19;                         // General expense account
+    COST_OF_GOODS_SOLD = 20;              // Direct costs of goods or services sold
+    STOCK_ADJUSTMENT = 21;                // Stock adjustment (inventory corrections, etc.)
+    OPERATING_EXPENSES = 22;              // Operating costs (rent, salaries, etc.)
+    DEPRECIATION_EXPENSE = 23;            // Depreciation of assets
+    INTEREST_EXPENSE = 24;                // Interest payments
+    TAX_EXPENSE = 25;                     // Taxes paid
+    
+    // Contra Accounts
+    ACCUMULATED_DEPRECIATION = 26;        // Depreciation accumulated on assets
+    ALLOWANCE_FOR_DOUBTFUL_ACCOUNTS = 27; // Estimate of uncollectible receivables
+    SALES_DISCOUNTS = 28;                 // Discounts offered on sales
+    SALES_RETURNS_AND_ALLOWANCES = 29;    // Returns and allowances granted to customers
+    
+    // Other specific types
+    ASSET_RECEIVED_BUT_NOT_BILLED = 30;   // Asset received but not yet invoiced
+    OTHER_ASSET = 31;                     // Miscellaneous or intangible assets
+    OTHER_LIABILITY = 32;                 // Miscellaneous liabilities
 }
-
-
 
 enum ItemLineType {
     ITEM_LINE_ORDER = 0;

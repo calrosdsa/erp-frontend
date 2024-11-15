@@ -4696,9 +4696,9 @@ export interface components {
             account_type: string;
             /** Format: int64 */
             credit: number;
-            date: string;
             /** Format: int64 */
             debit: number;
+            posting_date: string;
         };
         ReceiptDetailDto: {
             item_lines: components["schemas"]["ItemLineDto"][];
