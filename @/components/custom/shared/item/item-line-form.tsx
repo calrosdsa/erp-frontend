@@ -101,12 +101,15 @@ export default function ItemLineForm({
           lineReference: f.itemLineReference,
           line: line,
           onEditItemForm: (e) => {
+            console.log("EDITED ITEM",e)
             const orderLines: z.infer<typeof editLineItemSchema>[] =
               form.getValues().lines;
             const n = orderLines.map((t, idx) => {
               if (idx == rowIndex) {
                 e.rate = formatAmountToInt(e.rate)
+                e.itemLineReference = f.itemLineReference
                 t = e;
+
               }
               return t;
             });

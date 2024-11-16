@@ -58,7 +58,6 @@ export default function ItemLine({
       item_code: line?.item_code,
       item_name: line?.item_name,
       item_uuid: line?.item_uuid,
-
       uom: line?.uom,
       party_type: itemLine.partyType,
       item_price_uuid: line?.item_price_uuid,
