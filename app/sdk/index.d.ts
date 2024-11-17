@@ -539,6 +539,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cost-center": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cost Centers */
+        get: operations["cost-centers"];
+        put?: never;
+        /** Create Cost Center */
+        post: operations["create-cost-center"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cost-center/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cost Center */
+        get: operations["cost-center"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/court": {
         parameters: {
             query?: never;
@@ -686,6 +721,23 @@ export interface paths {
         };
         /** Retrieve customer */
         get: operations["get customer"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/financial-statement/cash-flow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cash flow Statement */
+        get: operations["cash-flow"];
         put?: never;
         post?: never;
         delete?: never;
@@ -877,6 +929,41 @@ export interface paths {
         get?: never;
         /** EditItemLine */
         put: operations["update-item-line"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Journal Entries */
+        get: operations["journal-entries"];
+        put?: never;
+        /** Create Journal Entry */
+        post: operations["create-journal-entry"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journal/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Journal Entry */
+        get: operations["journal-entry"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -1374,6 +1461,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/project": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Projects */
+        get: operations["projects"];
+        put?: never;
+        /** Create Project */
+        post: operations["create-cost-project"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/project/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Project */
+        get: operations["project"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/purchase/order/": {
         parameters: {
             query?: never;
@@ -1709,6 +1831,41 @@ export interface paths {
         };
         /** Get role definitions */
         get: operations["get role definitions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock-entry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Stock Entries */
+        get: operations["stock-entries"];
+        put?: never;
+        /** Create Stock Entry */
+        post: operations["create-stock-entry"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock-entry/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Stock Entry */
+        get: operations["stock-entry"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2468,6 +2625,12 @@ export interface components {
             /** Format: int64 */
             booking_id: number;
         };
+        CashFlowEntryDto: {
+            account_name: string;
+            /** Format: int64 */
+            amount: number;
+            posting_date: string;
+        };
         ChangePasswordRequestBody: {
             /**
              * Format: uri
@@ -2596,6 +2759,14 @@ export interface components {
             phone_number: string | null;
             uuid: string;
         };
+        CostCenterDto: {
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            status: string;
+        };
         Country: {
             code: string;
             label?: string;
@@ -2678,6 +2849,15 @@ export interface components {
             contact: components["schemas"]["ContactData"];
             /** Format: int64 */
             party_reference?: number | null;
+        };
+        CreateCostCenterRequetBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
+            status: string;
         };
         CreateCourtBody: {
             /**
@@ -2815,6 +2995,15 @@ export interface components {
             item_uuid: string;
             name: string;
         };
+        CreateJorunalEntryBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            entry_type: string;
+            posting_date: string;
+        };
         CreateLedgerBody: {
             /**
              * Format: uri
@@ -2942,6 +3131,15 @@ export interface components {
             isSelling: boolean;
             name: string;
         };
+        CreateProjectRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
+            status: string;
+        };
         CreatePurchaseOrderRequestBody: {
             /**
              * Format: uri
@@ -2992,6 +3190,18 @@ export interface components {
              */
             readonly $schema?: string;
             name: string;
+        };
+        CreateStockEntry: {
+            name: string;
+            status: string;
+        };
+        CreateStockEntryBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            CreateStockEntry: components["schemas"]["CreateStockEntry"];
         };
         CreateSupplierRequestBody: {
             /**
@@ -3247,6 +3457,19 @@ export interface components {
             message: string;
             result: components["schemas"]["AccountReceivableEntryDto"][];
         };
+        EntityResponseListCashFlowEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["CashFlowEntryDto"][];
+        };
         EntityResponseListCompanyEntityDtoBody: {
             /**
              * Format: uri
@@ -3390,6 +3613,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityCompanyDto"];
         };
+        EntityResponseResultEntityCostCenterDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityCostCenterDto"];
+        };
         EntityResponseResultEntityCourtDtoBody: {
             /**
              * Format: uri
@@ -3506,6 +3742,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityItemPriceDto"];
+        };
+        EntityResponseResultEntityJournalEntryDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityJournalEntryDetailDto"];
         };
         EntityResponseResultEntityLedgerDetailDtoBody: {
             /**
@@ -3676,6 +3925,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityProfileDto"];
         };
+        EntityResponseResultEntityProjectDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityProjectDto"];
+        };
         EntityResponseResultEntityReceiptDetailDtoBody: {
             /**
              * Format: uri
@@ -3714,6 +3976,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityRoleTemplateDto"];
+        };
+        EntityResponseResultEntityStockEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityStockEntryDto"];
         };
         EntityResponseResultEntitySupplierDtoBody: {
             /**
@@ -4003,6 +4278,18 @@ export interface components {
             name: string;
             uuid: string;
         };
+        JournalEntryDetailDto: {
+            journal_entry: components["schemas"]["JournalEntryDto"];
+        };
+        JournalEntryDto: {
+            code: string;
+            created_at: string;
+            entry_type: string;
+            /** Format: int64 */
+            id: number;
+            posting_date: string;
+            status: string;
+        };
         KeyValueData: {
             key: string;
             value: string;
@@ -4117,6 +4404,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListContactDto"];
         };
+        PaginationResponsePaginationResultListCostCenterDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListCostCenterDto"];
+        };
         PaginationResponsePaginationResultListCourtDtoBody: {
             /**
              * Format: uri
@@ -4216,6 +4512,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListItemVariantDto"];
         };
+        PaginationResponsePaginationResultListJournalEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListJournalEntryDto"];
+        };
         PaginationResponsePaginationResultListLedgerDtoBody: {
             /**
              * Format: uri
@@ -4279,6 +4584,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListProfileL"];
         };
+        PaginationResponsePaginationResultListProjectDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListProjectDto"];
+        };
         PaginationResponsePaginationResultListReceiptDtoBody: {
             /**
              * Format: uri
@@ -4314,6 +4628,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListRoleTemplateDto"];
+        };
+        PaginationResponsePaginationResultListStockEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListStockEntryDto"];
         };
         PaginationResponsePaginationResultListStockLevelDtoBody: {
             /**
@@ -4368,6 +4691,11 @@ export interface components {
         };
         PaginationResultListContactDto: {
             results: components["schemas"]["ContactDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListCostCenterDto: {
+            results: components["schemas"]["CostCenterDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -4426,6 +4754,11 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListJournalEntryDto: {
+            results: components["schemas"]["JournalEntryDto"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListLedgerDto: {
             results: components["schemas"]["LedgerDto"][];
             /** Format: int64 */
@@ -4461,6 +4794,11 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListProjectDto: {
+            results: components["schemas"]["ProjectDto"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListReceiptDto: {
             results: components["schemas"]["ReceiptDto"][];
             /** Format: int64 */
@@ -4478,6 +4816,11 @@ export interface components {
         };
         PaginationResultListRoleTemplateDto: {
             results: components["schemas"]["RoleTemplateDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListStockEntryDto: {
+            results: components["schemas"]["StockEntryDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -4700,6 +5043,12 @@ export interface components {
             debit: number;
             posting_date: string;
         };
+        ProjectDto: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            status: string;
+        };
         ReceiptDetailDto: {
             item_lines: components["schemas"]["ItemLineDto"][];
             receipt: components["schemas"]["ReceiptDto"];
@@ -4762,6 +5111,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ContactDto"];
+        };
+        ResponseDataCostCenterDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["CostCenterDto"];
         };
         ResponseDataCourtDtoBody: {
             /**
@@ -4827,6 +5189,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ItemPriceDto"];
+        };
+        ResponseDataJournalEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["JournalEntryDto"];
         };
         ResponseDataLedgerDtoBody: {
             /**
@@ -4919,6 +5294,19 @@ export interface components {
             message: string;
             result: components["schemas"]["PaymentDto"];
         };
+        ResponseDataProjectDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ProjectDto"];
+        };
         ResponseDataReceiptDtoBody: {
             /**
              * Format: uri
@@ -4931,6 +5319,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ReceiptDto"];
+        };
+        ResponseDataStockEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["StockEntryDto"];
         };
         ResponseMessageBody: {
             /**
@@ -4960,6 +5361,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CompanyDto"];
+        };
+        ResultEntityCostCenterDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["CostCenterDto"];
         };
         ResultEntityCourtDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -5014,6 +5421,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ItemPriceDto"];
+        };
+        ResultEntityJournalEntryDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["JournalEntryDetailDto"];
         };
         ResultEntityLedgerDetailDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -5093,6 +5506,12 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ProfileDto"];
         };
+        ResultEntityProjectDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["ProjectDto"];
+        };
         ResultEntityReceiptDetailDto: {
             activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
@@ -5110,6 +5529,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["RoleTemplateDto"];
+        };
+        ResultEntityStockEntryDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["StockEntryDto"];
         };
         ResultEntitySupplierDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -5195,6 +5620,12 @@ export interface components {
             stock_uom: string;
             warehouse_name: string;
             warehouse_uuid: string;
+        };
+        StockEntryDto: {
+            code: string;
+            /** Format: int64 */
+            id: number;
+            status: string;
         };
         StockLedgerEntryDto: {
             /** Format: int32 */
@@ -6924,6 +7355,123 @@ export interface operations {
             };
         };
     };
+    "cost-centers": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCostCenterDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-cost-center": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCostCenterRequetBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataCostCenterDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "cost-center": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityCostCenterDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get courts": {
         parameters: {
             query: {
@@ -7356,6 +7904,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityCustomerDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "cash-flow": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                currency?: string;
+                time_unit: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListCashFlowEntryDtoBody"];
                 };
             };
             /** @description Error */
@@ -7812,6 +8403,123 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "journal-entries": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListJournalEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-journal-entry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateJorunalEntryBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataJournalEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "journal-entry": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityJournalEntryDetailDtoBody"];
                 };
             };
             /** @description Error */
@@ -9271,6 +9979,123 @@ export interface operations {
             };
         };
     };
+    projects: {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListProjectDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-cost-project": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProjectRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataProjectDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    project: {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityProjectDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create purchase order": {
         parameters: {
             query?: {
@@ -10173,6 +10998,123 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleActionDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "stock-entries": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListStockEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-stock-entry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStockEntryBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataStockEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "stock-entry": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityStockEntryDtoBody"];
                 };
             };
             /** @description Error */

@@ -56,14 +56,14 @@ export const EditRolePermission = ({
       role_uuid: role.uuid,
       entityName:entityActions.entity.name,
     };
-    console.log(body)
-    // fetcher.submit({
-    //   action:"update-role-actions",
-    //   updateRoleActions:body
-    // },{
-    //   method:"POST",
-    //   encType:"application/json"
-    // })
+    // console.log(body)
+    fetcher.submit({
+      action:"update-role-actions",
+      updateRoleActions:body
+    },{
+      method:"POST",
+      encType:"application/json"
+    })
   };
 
   useEffect(()=>{

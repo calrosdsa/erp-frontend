@@ -26,6 +26,7 @@ import { DashboarNav } from "./regate/dashboard";
 import { CustomerNav } from "./regate/customer-nav";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { PianoFormsNav } from "./piano/piano-forms-nav";
+import { ProjectNav } from "./project-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -64,6 +65,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const pianoFormsNav = PianoFormsNav({
     entities: entities,
   });
+
+  const project = ProjectNav({
+    entities:entities,
+  })
   // const customerNav = CustomerNav({
   //   entities:entities
   // })
@@ -248,6 +253,11 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (usersChildren.length > 0) {
     navItems.push(manage);
   }
+
+  if(entities.includes(Entity.PROJECT)) {
+    navItems.push(project)
+  }
+
   if (entities?.includes(Entity.ADDRESS)) {
     navItems.push(addresses);
   }

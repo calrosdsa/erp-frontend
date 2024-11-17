@@ -362,6 +362,10 @@
   "supplier": "Supplier",
   "company": "Company",
   "deliveryNote":"Delivery Note",
+  "journalEntry":"Journal Entry",
+  "costCenter":"Cost Center",
+  "project":"Project",
+
 
   "generalLedger": "General Ledger",
   "accountingLedger": "Accounting Ledger",

@@ -30,6 +30,24 @@ export const AccountingNav = ({ entities }: {
       href:r.payment,
     })
   }
+  if(entities?.includes(Entity.JOURNAL_ENTRY)){
+    accountingChildrens.push({
+      title:t("journalEntry"),
+      href:r.toRoute({
+        main:r.journalEntry,
+        routePrefix:[r.accountingM]
+      }),
+    })
+  }
+  if(entities?.includes(Entity.COST_CENTER)){
+    accountingChildrens.push({
+      title:t("costCenter"),
+      href:r.toRoute({
+        main:r.costCenter,
+        routePrefix:[r.accountingM]
+      }),
+    })
+  }
 
 //   if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
 //     accountingChildrens.push({

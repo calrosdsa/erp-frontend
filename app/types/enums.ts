@@ -46,6 +46,9 @@ export enum Entity {
     PIANO_FORS = 26,
     REGATE_CHART = 27,
     DELIVERY_NOTE = 28,
+    JOURNAL_ENTRY = 29,
+    COST_CENTER = 30,
+    PROJECT = 31 ,
 }
 
 export enum PartyType {

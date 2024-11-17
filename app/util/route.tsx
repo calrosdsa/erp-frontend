@@ -87,6 +87,12 @@ class Routes {
   treeView = "treeView";
   accountM = "account"
 
+  //Party
+  journalEntry = "journalEntry"
+  costCenter = "costCenter"
+  stockEntry = "stockEntry"
+  project = "project"
+
   defaultTab = {
     tab: "info",
   };

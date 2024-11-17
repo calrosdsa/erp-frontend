@@ -41,7 +41,7 @@ export function DrawerLayout({open,onOpenChange,children,title,description,class
         {/* <DialogTrigger asChild>
           <Button variant="outline">Edit Profile</Button>
         </DialogTrigger> */}
-        <DialogContent className={cn(" max-w-xl",className)}>
+        <DialogContent className={cn(" max-w-lg",className)}>
           <DialogHeader>
             <DialogTitle>
               {title}

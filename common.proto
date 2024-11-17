@@ -51,6 +51,9 @@ enum PartyType {
     deliveryNote = 25;
     user = 26;
     role = 27;
+    journalEntry = 28;
+    costCenter = 29;
+    project = 30;
 }
 
 enum PianoPartyType {
@@ -80,6 +83,7 @@ enum State {
     PAID = 19;         // Invoice exists but payment is pending
     TO_DELIVER_AND_BILL = 20;
     TO_DELIVER = 21;
+    ENABLED = 22;
 }
 
 
@@ -105,14 +109,14 @@ enum AccountType {
     ASSET = 0;                            // General asset account (current, fixed, intangible)
     CASH = 1;                             // Cash or cash equivalents
     BANK = 2;                             // Bank accounts (Cash in banks)
-    ACCOUNTS_RECEIVABLE = 3;              // Amounts owed by customers
+    RECEIVABLE = 3;              // Amounts owed by customers
     INVENTORY = 4;                       // Goods held for resale
     PREPAID_EXPENSES = 5;                 // Expenses paid in advance
     PROPERTY_PLANT_EQUIPMENT = 6;         // Physical fixed assets (PP&E)
     
     // Liability Accounts
     LIABILITY = 7;                       // General liability account (current, long-term)
-    ACCOUNTS_PAYABLE = 8;                 // Amounts owed to suppliers
+    PAYABLE = 8;                 // Amounts owed to suppliers
     UNEARNED_REVENUE = 9;                 // Income received but not yet earned
     LOAN_PAYABLE = 10;                    // Loan obligations
     
