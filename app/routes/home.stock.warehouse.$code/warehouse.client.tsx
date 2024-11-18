@@ -8,7 +8,7 @@ import DetailLayout from "@/components/layout/detail-layout";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import WarehouseInfo from "./tab/warehouse-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 
 export default function WareHouseClient() {
@@ -35,7 +35,7 @@ export default function WareHouseClient() {
   ];
 
   setUpToolbar(()=>{
-    let actions: ActionToolbar[] = [];
+    let actions: ButtonToolbar[] = [];
     actions.push({
       label: t("stockBalance"),
       onClick: () => {

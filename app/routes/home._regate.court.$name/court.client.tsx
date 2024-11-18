@@ -16,7 +16,7 @@ import { routes } from "~/util/route";
 import { CourtState, GlobalState } from "~/types/app";
 import CourtInfoTab from "./tabs/court-info";
 import CourtSchedule from "./tabs/court-schedule";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { UpdateCourtRate, useUpdateCourtRate } from "./use-update-court-rate";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
@@ -42,7 +42,7 @@ export default function CourtDetailClient() {
   ];
 
   setUpToolbar(() => {
-    const actions: ActionToolbar[] = [];
+    const actions: ButtonToolbar[] = [];
     actions.push({
       label: "Editar precio por hora",
       onClick: () => {

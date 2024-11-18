@@ -7,7 +7,7 @@ import DetailLayout from "@/components/layout/detail-layout";
 import SupplierInfo from "./tab/supplier-info";
 import { NavItem } from "~/types";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 
 export default function SupplierClient() {
@@ -35,8 +35,8 @@ export default function SupplierClient() {
   ];
 
   setUpToolbar(() => {
-    let actions: ActionToolbar[] = [];
-    actions.push({
+    let view: ButtonToolbar[] = [];
+    view.push({
       label: t("accountingLedger"),
       onClick: () => {
         navigate(
@@ -54,7 +54,7 @@ export default function SupplierClient() {
         );
       },
     });
-    actions.push({
+    view.push({
       label: t("accountPayable"),
       onClick: () => {
         navigate(
@@ -64,14 +64,15 @@ export default function SupplierClient() {
             q: {
               fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
               toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
-              parties: encodeURIComponent(JSON.stringify([supplier?.id])),
+              party: supplier?.id.toString(),
+              partyName:supplier?.name,
             },
           })
         );
       },
     });
     return {
-      actions: actions,
+      view: view,
     };
   }, []);
   return (

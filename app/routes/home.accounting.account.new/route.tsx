@@ -21,13 +21,16 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const res = await client.POST("/ledger",{
                 body:{
                     account_type:d.accountType,
+                    account_root_type:d.accountRootType,
                     name:d.name,
                     description:d.description,
                     parent_uuid:d.parentUuid,
                     ledger_no:d.ledgerNo,
                     enabled:d.enabled,
                     is_group:d.isGroup,
-                    currency:d.currency
+                    currency:d.currency,
+                    cash_flow_section:d.cashFlowSection,
+                    report_type:d.reportType,
                 }
             })
             error = res.error?.detail

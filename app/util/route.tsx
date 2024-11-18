@@ -80,9 +80,13 @@ class Routes {
   accountReceivable = "accountReceivable";
   accountReceivableSumary = "accountReceivableSumary";
 
-
   stockLedger = "stockLedger";
   stockBalance = "stockBalance";
+
+  profitAndLoss = "profitAndLoss";
+  cashFlow = "cashFlow";
+  balanceSheet = "balanceSheet";
+
 
   treeView = "treeView";
   accountM = "account"

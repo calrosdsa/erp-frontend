@@ -23,7 +23,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
 import ReceiptConnectionsTab from "./components/tab/receipt-connections";
 import { format } from "date-fns";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 
 export default function ReceiptDetailClient() {
   const { receipt, itemLines, actions, activities } =
@@ -59,7 +59,7 @@ export default function ReceiptDetailClient() {
   ];
 
   setUpToolbar(() => {
-    let actions: ActionToolbar[] = [];
+    let actions: ButtonToolbar[] = [];
     actions.push({
       label: t("accountingLedger"),
       onClick: () => {

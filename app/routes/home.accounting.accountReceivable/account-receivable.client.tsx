@@ -10,10 +10,10 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { components } from "~/sdk";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { useMemo } from "react";
-import { accountPayableColumns } from "@/components/custom/table/columns/accounting/account-payable";
+import { accountPayableColumns } from "@/components/custom/table/columns/accounting/account-payable-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import AccountReceivableHeader from "./components/account-receivable-header";
 import { accountReceivableColumns } from "@/components/custom/table/columns/accounting/account-receivable-columns";
@@ -39,7 +39,7 @@ export default function AccountReceivableClient() {
   },[accountReceivable])
 
   setUpToolbar(()=>{
-    let actions: ActionToolbar[] = [];
+    let actions: ButtonToolbar[] = [];
     actions.push({
       label: t("accountReceivableSumary"),
       onClick: () => {

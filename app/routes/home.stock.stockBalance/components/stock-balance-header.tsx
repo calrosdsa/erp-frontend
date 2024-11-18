@@ -79,7 +79,7 @@ export default function StockBalanceHeader() {
           onValueChange={onItemChange}
           nameK={"name"}
           valueK={"id"}
-          placelholder={t("item")}
+          placeholder={t("item")}
           queryName="itemName"
           queryValue="item"
           onSelect={() => {}}
@@ -90,7 +90,7 @@ export default function StockBalanceHeader() {
           onValueChange={onWareHouseChange}
           nameK={"name"}
           valueK={"id"}
-          placelholder={t("warehouse")}
+          placeholder={t("warehouse")}
           queryName="warehouseName"
           queryValue="warehouse"
           onSelect={() => {}}

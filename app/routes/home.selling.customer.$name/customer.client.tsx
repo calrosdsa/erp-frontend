@@ -5,17 +5,15 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { loader } from "./route";
-import Typography, { subtitle } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { formatLongDate } from "~/util/format/formatDate";
 import { routes } from "~/util/route";
-import { PartyAddresses } from "../home.party/components/party-addresses";
-import { PartyType } from "~/gen/common";
 import DetailLayout from "@/components/layout/detail-layout";
 import CustomerInfo from "./components/tab/customer-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import CustomerConnections from "./components/tab/customer-connections";
+import { ButtonToolbar } from "~/types/actions";
+import { endOfMonth, format, startOfMonth } from "date-fns";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 
 export default function CustomerClient() {
   const { customer, actions, activities } = useLoaderData<typeof loader>();
@@ -24,6 +22,7 @@ export default function CustomerClient() {
   const { t, i18n } = useTranslation("common");
   const r = routes;
   const params = useParams();
+  const navigate = useNavigate()
   const navItems = [
     {
       title: t("info"),
@@ -40,10 +39,48 @@ export default function CustomerClient() {
   ];
 
   setUpToolbar(() => {
+    let view: ButtonToolbar[] = [];
+    view.push({
+      label: t("accountingLedger"),
+      onClick: () => {
+        navigate(
+          r.toRoute({
+            main: r.generalLedger,
+            routePrefix: [r.accountingM],
+            q: {
+              fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
+              toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
+              partyName: customer?.name,
+              party: customer?.id.toString(),
+              partyType: partyTypeToJSON(PartyType.supplier),
+            },
+          })
+        );
+      },
+    });
+    view.push({
+      label: t("accountReceivable"),
+      onClick: () => {
+        navigate(
+          r.toRoute({
+            main: r.accountReceivable,
+            routePrefix: [r.accountingM],
+            q: {
+              fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
+              toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
+              party: customer?.id.toString(),
+              partyName:customer?.name,
+            },
+          })
+        );
+      },
+    });
     return {
-      title: params.name,
+      view: view,
     };
   }, []);
+
+  
 
   return (
     <DetailLayout

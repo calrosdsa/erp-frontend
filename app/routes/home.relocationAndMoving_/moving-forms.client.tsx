@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 import { Check } from "lucide-react";
 import { useExporter } from "~/util/hooks/ui/useExporter";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { routes } from "~/util/route";
 import { useExporterData } from "../api.exporter/components/use-exporter-data";
 
@@ -21,7 +21,7 @@ export default function MovingForms() {
   const exporterData = useExporterData()
  
   setUpToolbar(() => {
-    let actions:ActionToolbar[] = []
+    let actions:ButtonToolbar[] = []
     actions.push({
       label:"Export Data",
       onClick:()=>{

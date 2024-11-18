@@ -8,7 +8,6 @@ import TableCellPrice from "../../cells/table-cell-price";
 import {
   PartyType,
   partyTypeToJSON,
-  regatePartyTypeToJSON,
 } from "~/gen/common";
 
 export const stockLedgerColumns = ({}: {}): ColumnDef<
@@ -49,6 +48,7 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
       );
     },
   });
+
   columns.push({
     accessorKey: "stock_uom",
     header: t("form.uom"),
@@ -56,15 +56,19 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "in_qty",
+    header: t("form.inQty"),
   });
   columns.push({
     accessorKey: "out_qty",
+    header: t("form.outQty"),
   });
   columns.push({
     accessorKey: "balance_qty",
+    header: t("form.balanceQty"),
   });
   columns.push({
     accessorKey: "warehouse_name",
+    header: t("warehouse"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -87,6 +91,7 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
   });
   columns.push({
     accessorKey: "incoming_rate",
+    header: t("form.incomingRate"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -97,6 +102,7 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "average_rate",
+    header: t("form.averageRate"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -107,6 +113,7 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "valuation_rate",
+    header: t("form.valuationRate"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -117,6 +124,7 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "balance_value",
+    header: t("form.balanceValue"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -127,6 +135,7 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "voucher_type",
+    header: t("form.voucherType"),
     cell: ({ row }) => {
       const rowData = row.original;
       return <div>{t(rowData.voucher_type)}</div>;
@@ -135,6 +144,7 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
   
   columns.push({
     accessorKey: "voucher_no",
+    header: t("form.voucherNo"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (

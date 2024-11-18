@@ -139,7 +139,7 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(amount);
+    }).format(amount/100);
   };
 
   const renderAccountTypeRow = (accountType: string) => {

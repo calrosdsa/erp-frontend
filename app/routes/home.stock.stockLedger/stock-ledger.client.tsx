@@ -3,16 +3,12 @@ import { loader } from "./route";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { routes } from "~/util/route";
 import { stockLedgerColumns } from "@/components/custom/table/columns/stock/stock-ledger-columns";
 import StockLedgerHeader from "./components/stock-ledger-header";
-
-interface LedgerData {
-  Name: string;
-}
 
 export default function StockLedgerClient() {
   const { stockLedger } = useLoaderData<typeof loader>();

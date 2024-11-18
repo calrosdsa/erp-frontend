@@ -48,6 +48,34 @@ export const AccountingNav = ({ entities }: {
       }),
     })
   }
+  accountingChildrens.push({
+    title:t("profitAndLoss"),
+    href:r.toRoute({
+      main:r.profitAndLoss,
+      routePrefix:[r.accountingM]
+    })
+  })
+  accountingChildrens.push({
+    title:t("accountPayable"),
+    href:r.toRoute({
+      main:r.accountPayable,
+      routePrefix:[r.accountingM]
+    })
+  })
+  accountingChildrens.push({
+    title:t("accountReceivable"),
+    href:r.toRoute({
+      main:r.accountReceivable,
+      routePrefix:[r.accountingM]
+    })
+  })
+  accountingChildrens.push({
+    title:t("generalLedger"),
+    href:r.toRoute({
+      main:r.generalLedger,
+      routePrefix:[r.accountingM]
+    })
+  })
 
 //   if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
 //     accountingChildrens.push({

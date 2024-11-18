@@ -23,6 +23,7 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
   });
   columns.push({
     accessorKey: "party_type",
+    header:t("form.partyType"),
     cell:({...props})=>{
       const rowData = props.row.original
       return <div>{t(rowData.party_type)} </div>
@@ -31,6 +32,7 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "party_name",
+    header:t("form.partyName"),
     cell:({...props})=>{
       const rowData = props.row.original
       return <TableCellNameNavigation
@@ -49,7 +51,7 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
   });
   columns.push({
     accessorKey: "receivable_account",
-    header: t("payableAccount"),
+    header: t("form.payableAccount"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -61,12 +63,15 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
   });
   columns.push({
     accessorKey: "voucher_type",
+    header:t("form.voucherType"),
   });
   columns.push({
     accessorKey: "voucher_no",
+    header:t("form.voucherNo"),
   });
   columns.push({
     accessorKey: "invoiced_amount",
+    header:t("form.invoiceAmount"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -76,6 +81,7 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
   });
   columns.push({
     accessorKey: "paid_amount",
+    header:t("form.paidAmount"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (

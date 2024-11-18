@@ -9,7 +9,7 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 
-export default function ProfitAndLossHeader() {
+export default function FinancialStatementHeader() {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
   const [ledgerFetcher, onLedgerChange] = useAccountLedgerDebounceFetcher({

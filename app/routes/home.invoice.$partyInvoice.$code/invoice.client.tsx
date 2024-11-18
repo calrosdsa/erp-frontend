@@ -27,7 +27,7 @@ import DetailLayout from "@/components/layout/detail-layout";
 import InvoiceInfoTab from "./components/tab/invoice-info";
 import InvoiceConnectionsTab from "./components/tab/invoice-connections";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { PlusIcon } from "lucide-react";
@@ -95,7 +95,7 @@ export default function InvoiceDetailClient() {
   };
 
   setUpToolbar(() => {
-    let actions: ActionToolbar[] = [];
+    let actions: ButtonToolbar[] = [];
     const status = stateFromJSON(invoice?.status)
     actions.push({
       label: t("accountingLedger"),

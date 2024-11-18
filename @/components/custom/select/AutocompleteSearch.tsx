@@ -31,7 +31,7 @@ import { useTranslation } from "react-i18next";
 import { DEFAULT_PAGE } from "~/constant";
 
 interface Props<T extends object, K extends keyof T, V extends keyof T> {
-  placelholder?: string;
+  placeholder?: string;
   data: T[];
   nameK: K;
   valueK: V;
@@ -61,7 +61,7 @@ export default function AutocompleteSearch<
   onCustomDisplay,
   className,
   addNew,
-  placelholder,
+  placeholder,
 }: Props<T, K,V>) {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -94,7 +94,7 @@ export default function AutocompleteSearch<
               !value && "text-muted-foreground"
             )}
           >
-            {value || placelholder}
+            {value || placeholder}
             {/* {field.value
                     ? data
                         .find((item) => item[nameK] === field.value)

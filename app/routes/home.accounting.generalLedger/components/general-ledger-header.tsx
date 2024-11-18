@@ -54,7 +54,7 @@ export default function GeneralLedgerHeader() {
           onValueChange={onLedgerChange}
           nameK={"name"}
           valueK={"id"}
-          placelholder={t("account")}
+          placeholder={t("account")}
           queryName="accountName"
           queryValue="account"
           onSelect={() => {}}
@@ -80,7 +80,7 @@ export default function GeneralLedgerHeader() {
           onValueChange={onPartyChange}
           nameK={"name"}
           valueK={"id"}
-          placelholder={t("party")}
+          placeholder={t("form.party")}
           queryName="partyName"
           queryValue="party"
           onSelect={() => {}}

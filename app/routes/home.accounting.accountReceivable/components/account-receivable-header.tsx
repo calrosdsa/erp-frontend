@@ -1,6 +1,7 @@
 import { DateTimePicker } from "@/components/custom/datetime/date-time-picker";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import AutoSearchMult from "@/components/custom/select/AutoSearchMult";
+import CustomSelect from "@/components/custom/select/custom-select";
 import { useSearchParams } from "@remix-run/react";
 import { format, parse } from "date-fns";
 import { useTranslation } from "react-i18next";
@@ -26,13 +27,13 @@ export default function AccountReceivableHeader() {
     new Date()
   );
 
-  const parties: SelectItem[] = [
-    { name: t("supplier"), value: partyTypeToJSON(PartyType.supplier) },
-    { name: t("customer"), value: partyTypeToJSON(PartyType.customer) },
-  ];
+  // const parties: SelectItem[] = [
+  //   { name: t("supplier"), value: partyTypeToJSON(PartyType.supplier) },
+  //   { name: t("customer"), value: partyTypeToJSON(PartyType.customer) },
+  // ];
 
   const [partyFetcher, onPartyChange] = usePartyDebounceFetcher({
-    partyType: partyTypeToJSON(PartyType.supplier),
+    partyType: partyTypeToJSON(PartyType.customer),
   });
 
   return (
@@ -59,7 +60,9 @@ export default function AccountReceivableHeader() {
           placeholder={t("form.toDate")}
         />
 
-        <AutoSearchMult
+      
+
+        <AutocompleteSearch
           data={partyFetcher.data?.parties || []}
           onValueChange={onPartyChange}
           nameK={"name"}
@@ -68,9 +71,8 @@ export default function AccountReceivableHeader() {
           queryName="partyName"
           queryValue="party"
           onSelect={(v) => {
-            console.log("SELECTED ITEMS",v)
+            console.log("SELECTED ITEMS", v);
           }}
-          multiple={true}
         />
       </div>
     </div>

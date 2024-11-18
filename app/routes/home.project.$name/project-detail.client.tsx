@@ -6,6 +6,7 @@ import { routes } from "~/util/route"
 import { NavItem } from "~/types"
 import ProjectInfo from "./tab/project-info"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
+import { stateFromJSON } from "~/gen/common"
 
 
 export default function ProjectDetailClient(){
@@ -31,6 +32,7 @@ export default function ProjectDetailClient(){
     ]
     setUpToolbar(()=>{
         return {
+            status:stateFromJSON(project?.status),
         }
     },[])
     return(

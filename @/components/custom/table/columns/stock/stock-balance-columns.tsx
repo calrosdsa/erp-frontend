@@ -25,6 +25,7 @@ export const stockBalanceColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "item_name",
+    header: t("item"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -52,15 +53,19 @@ export const stockBalanceColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "in_qty",
+    header: t("form.inQty"),
   });
   columns.push({
     accessorKey: "out_qty",
+    header: t("form.outQty"),
   });
   columns.push({
     accessorKey: "balance_qty",
+    header: t("form.balanceQty"),
   });
   columns.push({
     accessorKey: "balance_value",
+    header: t("form.balanceValue"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -70,6 +75,7 @@ export const stockBalanceColumns = ({}: {}): ColumnDef<
   });
   columns.push({
     accessorKey: "warehouse_name",
+    header: t("warehouse"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -93,6 +99,7 @@ export const stockBalanceColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "average_rate",
+    header: t("form.averageRate"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (

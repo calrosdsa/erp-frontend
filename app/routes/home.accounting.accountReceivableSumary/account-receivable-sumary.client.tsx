@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import AccountPayableHeader from "./components/account-receivable-header";
 import { accountPayableSumaryColumns } from "@/components/custom/table/columns/accounting/account-payable-sumary-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { routes } from "~/util/route";
@@ -36,7 +36,7 @@ export default function AccountReceivableSumaryClient() {
   },[accountReceivableSumary])
 
   setUpToolbar(()=>{
-    let actions: ActionToolbar[] = [];
+    let actions: ButtonToolbar[] = [];
     actions.push({
       label: t("accountReceivable"),
       onClick: () => {

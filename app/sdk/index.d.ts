@@ -729,6 +729,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/financial-statement/balance-sheet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Balance Sheet */
+        get: operations["balance-sheet"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/financial-statement/cash-flow": {
         parameters: {
             query?: never;
@@ -2560,6 +2577,15 @@ export interface components {
             total_price: number;
             uuid: string;
         };
+        BalanceSheetEntryDto: {
+            account_name: string;
+            account_root_type: string;
+            account_type: string;
+            /** Format: int64 */
+            credit: number;
+            /** Format: int64 */
+            debit: number;
+        };
         BookingData: {
             available_courts?: components["schemas"]["AvailableCourtDto"][];
             /** Format: int64 */
@@ -2627,9 +2653,10 @@ export interface components {
         };
         CashFlowEntryDto: {
             account_name: string;
+            account_type: string;
             /** Format: int64 */
             amount: number;
-            posting_date: string;
+            cash_flow_section: string;
         };
         ChangePasswordRequestBody: {
             /**
@@ -3010,7 +3037,9 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            account_type: string;
+            account_root_type: string;
+            account_type?: string | null;
+            cash_flow_section?: string | null;
             currency?: string;
             description?: string;
             enabled: boolean;
@@ -3018,6 +3047,7 @@ export interface components {
             ledger_no?: string | null;
             name: string;
             parent_uuid?: string | null;
+            report_type?: string | null;
         };
         CreateOrder: {
             currency: string;
@@ -3201,7 +3231,8 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            CreateStockEntry: components["schemas"]["CreateStockEntry"];
+            items: components["schemas"]["CreateItemLines"];
+            stock_entry?: components["schemas"]["CreateStockEntry"];
         };
         CreateSupplierRequestBody: {
             /**
@@ -3456,6 +3487,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["AccountReceivableEntryDto"][];
+        };
+        EntityResponseListBalanceSheetEntryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["BalanceSheetEntryDto"][];
         };
         EntityResponseListCashFlowEntryDtoBody: {
             /**
@@ -4307,6 +4351,7 @@ export interface components {
             name: string;
             parent_name: string;
             parent_uuid: string;
+            status: string;
             uuid: string;
         };
         LedgerDto: {
@@ -4320,6 +4365,7 @@ export interface components {
             is_group: boolean;
             ledger_no: string | null;
             name: string;
+            status: string;
             uuid: string;
         };
         LineItemDto: {
@@ -6107,7 +6153,7 @@ export interface operations {
                 parentId?: string;
                 from_date: string;
                 to_date: string;
-                parties?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -6149,7 +6195,7 @@ export interface operations {
                 parentId?: string;
                 from_date: string;
                 to_date: string;
-                parties?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -6191,7 +6237,7 @@ export interface operations {
                 parentId?: string;
                 from_date: string;
                 to_date: string;
-                parties?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -6233,7 +6279,7 @@ export interface operations {
                 parentId?: string;
                 from_date: string;
                 to_date: string;
-                parties?: string;
+                party?: string;
             };
             header?: {
                 Authorization?: string;
@@ -7917,6 +7963,51 @@ export interface operations {
             };
         };
     };
+    "balance-sheet": {
+        parameters: {
+            query: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                from_date: string;
+                to_date: string;
+                currency?: string;
+                time_unit?: string;
+                cost_center?: string;
+                project?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseListBalanceSheetEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "cash-flow": {
         parameters: {
             query: {
@@ -7927,7 +8018,9 @@ export interface operations {
                 from_date: string;
                 to_date: string;
                 currency?: string;
-                time_unit: string;
+                time_unit?: string;
+                cost_center?: string;
+                project?: string;
             };
             header?: {
                 Authorization?: string;
@@ -7970,7 +8063,9 @@ export interface operations {
                 from_date: string;
                 to_date: string;
                 currency?: string;
-                time_unit: string;
+                time_unit?: string;
+                cost_center?: string;
+                project?: string;
             };
             header?: {
                 Authorization?: string;

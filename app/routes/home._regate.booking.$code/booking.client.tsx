@@ -10,7 +10,7 @@ import { EventState, RegatePartyType, regatePartyTypeToJSON, State, stateFromJSO
 import ActivityFeed from "@/components/custom-ui/activity-feed";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { useEffect } from "react";
@@ -53,7 +53,7 @@ export const BookingDetailClient = () => {
 
   setUpToolbar(()=>{
     console.log("SET UP TOOLBAR")
-    let actions:ActionToolbar[] = []
+    let actions:ButtonToolbar[] = []
     const status = stateFromJSON(booking?.status)
     const allowEdit = permission?.edit && status != State.CANCELLED
     const isNotCompleted = allowEdit && status != State.COMPLETED

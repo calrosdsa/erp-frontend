@@ -15,7 +15,7 @@ import ItemInfoTab from "./components/tab/item-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { usePermission } from "~/util/hooks/useActions";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import ItemDashboardTab from "./components/dashobard/item-dashboard";
 import { endOfMonth, format, startOfMonth } from "date-fns";
@@ -62,7 +62,7 @@ export default function ItemDetailClient() {
   ];
 
   setUpToolbar(() => {
-    let view: ActionToolbar[] = [];
+    let view: ButtonToolbar[] = [];
     view.push({
       label: t("stockBalance"),
       onClick: () => {
@@ -97,7 +97,7 @@ export default function ItemDetailClient() {
         );
       },
     });
-    let actions: ActionToolbar[] = [];
+    let actions: ButtonToolbar[] = [];
     if (itemPricePermission?.view) {
       actions.push({
         label: t("itemPrice"),

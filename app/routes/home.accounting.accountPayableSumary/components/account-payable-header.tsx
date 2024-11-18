@@ -60,18 +60,17 @@ export default function AccountPayableHeader() {
           placeholder={t("form.toDate")}
         />
 
-        <AutoSearchMult
+        <AutocompleteSearch
           data={partyFetcher.data?.parties || []}
           onValueChange={onPartyChange}
           nameK={"name"}
           valueK={"id"}
-          placeholder={t("party")}
+          placeholder={t("form.party")}
           queryName="partyName"
           queryValue="party"
           onSelect={(v) => {
             console.log("SELECTED ITEMS",v)
           }}
-          multiple={true}
         />
 
       </div>

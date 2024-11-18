@@ -54,6 +54,7 @@ enum PartyType {
     journalEntry = 28;
     costCenter = 29;
     project = 30;
+    stockEntry = 31;
 }
 
 enum PianoPartyType {
@@ -200,4 +201,16 @@ enum VoucherSubtype {
     debitNote = 1;
     receive = 2;
     pay = 3;
+}
+
+enum FinacialReport {
+    BALANCE_SHEET = 0;
+    PROFIT_AND_LOSS = 1;
+    CASH_FLOW =2;
+}
+
+enum CashFlowSection {
+    OPERATING = 0;
+	INVESTING = 1;
+	FINANCING = 2;
 }

@@ -11,10 +11,10 @@ import { components } from "~/sdk";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { useMemo } from "react";
 import AccountPayableHeader from "./components/account-payable-header";
-import { accountPayableColumns } from "@/components/custom/table/columns/accounting/account-payable";
+import { accountPayableColumns } from "@/components/custom/table/columns/accounting/account-payable-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 
 interface LedgerData {
@@ -38,7 +38,7 @@ export default function AccountPayableClient() {
   },[accountPayable])
 
   setUpToolbar(()=>{
-    let actions: ActionToolbar[] = [];
+    let actions: ButtonToolbar[] = [];
     actions.push({
       label: t("accountPayableSumary"),
       onClick: () => {

@@ -18,8 +18,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     params: {
       query: {
         from_date: fromDate,
-        to_date: toDate,        
-        parties: decodeURIComponent(searchParams.get("parties") || "") || "",
+        to_date: toDate,
+        party: searchParams.get("party") || "",
       },
     },
   });

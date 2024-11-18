@@ -59,6 +59,7 @@
   "_ledger": {
     "base": "Account",
     "type": "Account Type",
+    "rootType": "Account Root Type",
     "no": "Account No.",
     "chartOfAccounts": "Chart of Accounts",
     "paidFrom": "Account Paid From",
@@ -122,6 +123,7 @@
     "cancel": "Cancel",
     "party": "Party",
     "partyType": "Party Type",
+    "partyName":"Party Name",
     "save": "Save",
     "uom": "UOM",
     "city": "City",
@@ -158,6 +160,7 @@
     "logo": "Logo",
     "isShippingAddress": "Is Shipping Address",
     "isBillingAddress": "Is Shipping Address",
+    "invoiceAmount":"Invoice Amount",
     "paidAmount": "Paid Amount",
     "outstandingAmount": "Outstanding",
     "allocated": "Allocated",
@@ -167,7 +170,22 @@
     "fromDate": "From Date",
     "toDate": "To Date",
     "totals": "Totals",
-    "voucherNo": "Voucher No."
+    "voucherNo": "Voucher No.",
+    "voucherType": "Voucher Type",
+    "voucherSubtype": "Voucher Subtype",
+    "receivableAccount":"Receivable Account",
+    "payableAccount":"Payable Account",
+    "againstAccount":"Against Account",
+    "debit": "Debit",
+    "credit": "Credit",
+    "balance":"Balance",
+    "inQty":"In Qty",
+    "outQty":"Out Qty",
+    "balanceQty":"Balance Qty",
+    "incomingRate":"Incoming Rate",
+    "averageRate":"Average Rate",
+    "valuationRate":"Valuation",
+    "balanceValue":"Balance Value"
   },
   "accounts": "Accounts",
   "_selling": {
@@ -196,8 +214,8 @@
     "editRow": "Edit Row {{o}}",
     "of": "of",
     "selected": "Selected {{o}}(s)",
-    "default":"Default {{o}} {{p}}",
-    "join":"{{o}} {{p}}"
+    "default": "Default {{o}} {{p}}",
+    "join": "{{o}} {{p}}"
   },
   "info-item": "Info {{item}}",
 
@@ -327,7 +345,7 @@
   "actions": {
     "base": "actions",
     "edit": "Edit",
-    "view":"View"
+    "view": "View"
   },
   "tooltip": {
     "selectCurrency": "Please select your currency."
@@ -348,12 +366,16 @@
   "EXPENSE": "Expense",
   "REVENUE": "Revenue",
 
+  "debitNote":"Debit Note",
+  "creditNote":"Credit Note",
+
   "item": "Item",
   "itemPrice": "Item Price",
   "priceList": "Price List",
   "purchaseInvoice": "Purchase Invoice",
   "purchaseOrder": "Purchase Order",
   "saleInvoice": "Sale Invoice",
+  "warehouse":"Warehouse",
   "saleOrder": "Sale Order",
   "purchaseReceipt": "Purchase Receipt",
   "payment": "Payment",
@@ -361,11 +383,11 @@
   "customer": "Customer",
   "supplier": "Supplier",
   "company": "Company",
-  "deliveryNote":"Delivery Note",
-  "journalEntry":"Journal Entry",
-  "costCenter":"Cost Center",
-  "project":"Project",
-
+  "deliveryNote": "Delivery Note",
+  "journalEntry": "Journal Entry",
+  "costCenter": "Cost Center",
+  "project": "Project",
+  "stockEntry": "Stock Entry",
 
   "generalLedger": "General Ledger",
   "accountingLedger": "Accounting Ledger",
@@ -376,16 +398,21 @@
   "stockLedger": "Stock Ledger",
   "stockBalance": "Stock Balance",
   "treeView": "Tree View",
+  "cashFlow": "Cash Flow",
+  "profitAndLoss": "Profit And Loss",
+  "balanceSheet": "Balance Sheet",
+  "financialStatement": "Financial Statement",
+
 
   "relocationAndMoving": "Relocation & Moving",
 
-  "accountType":{
-    "cash":"Cash",
-    "bank":"Bank",
-    "payable":"Payable",
-    "receivable":"Receivable",
-    "income":"Income",
-    "costOfGoodSolds":"Cost Of Good Solds"
+  "accountType": {
+    "cash": "Cash",
+    "bank": "Bank",
+    "payable": "Payable",
+    "receivable": "Receivable",
+    "income": "Income",
+    "costOfGoodSolds": "Cost Of Good Solds"
   },
 
   "regate": {

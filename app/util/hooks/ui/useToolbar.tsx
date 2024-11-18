@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { EventState, State } from "~/gen/common";
-import { ActionToolbar, ButtonToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 export interface SetupToolbarOpts {
-  actions?: ActionToolbar[];
+  actions?: ButtonToolbar[];
   buttons?: ButtonToolbar[];
   view?: ButtonToolbar[];
+  viewTitle?:string
   status?: State;
   title?: string;
   onChangeState?: (event: EventState) => void;
@@ -14,9 +15,10 @@ export interface SetupToolbarOpts {
 }
 
 interface ToolbarStore {
-  actions: ActionToolbar[];
+  actions: ButtonToolbar[];
   buttons: ButtonToolbar[];
   view: ButtonToolbar[];
+  viewTitle?:string
   isMounted: boolean;
   title?: string;
   loading?: boolean;
@@ -33,6 +35,7 @@ export const useToolbar = create<ToolbarStore>((set) => ({
   actions: [],
   buttons: [],
   view: [],
+  viewTitle:undefined,
   isMounted: false,
   title: undefined,
   status: undefined,
@@ -50,6 +53,7 @@ export const useToolbar = create<ToolbarStore>((set) => ({
       actions: opts.actions || [],
       buttons: opts.buttons || [],
       view: opts.view || [],
+      viewTitle:opts.viewTitle,
       title: opts.title,
       status: opts.status,
       disabledSave: opts.disabledSave,

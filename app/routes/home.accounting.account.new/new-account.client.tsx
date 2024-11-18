@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Form } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import CheckForm from "@/components/custom/input/CheckForm";
-import { AccountRootType } from "~/gen/common";
 import SelectForm from "@/components/custom/select/SelectForm";
 import { Button } from "@/components/ui/button";
 import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
@@ -24,22 +23,31 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { useNewAccount } from "./use-new-account";
+import {
+  AccountType,
+  CashFlowSection,
+  cashFlowSectionToJSON,
+  FinacialReport,
+  finacialReportToJSON,
+} from "~/gen/common";
+import AccordationLayout from "@/components/layout/accordation-layout";
 
 export default function NewAccountClient() {
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
   const { toast } = useToast();
-  const newAccount = useNewAccount()
+  const newAccount = useNewAccount();
   const form = useForm<z.infer<typeof createAccountLedger>>({
     resolver: zodResolver(createAccountLedger),
     defaultValues: {
-      currency:"",
-      parentName:newAccount.payload?.parentName,
-      parentUuid:newAccount.payload?.parentUUID,
+      currency: "",
+      parentName: newAccount.payload?.parentName,
+      parentUuid: newAccount.payload?.parentUUID,
     },
   });
   const toolbar = useToolbar();
   const [accountRootTypes, setAccountRootTypes] = useState<SelectItem[]>([]);
+  const [accountTypes, setAccountTypes] = useState<SelectItem[]>([]);
   const globalState = useOutletContext<GlobalState>();
   const [currencyDebounceFetcher, onCurrencyNameChange] =
     useCurrencyDebounceFetcher();
@@ -58,36 +66,51 @@ export default function NewAccountClient() {
   const setUpAccountRootTypes = () => {
     const n: SelectItem[] = [
       {
-        name: t(AccountRootType[AccountRootType.ASSET]),
-        value: AccountRootType[AccountRootType.ASSET],
+        name: t(AccountType[AccountType.ASSET]),
+        value: AccountType[AccountType.ASSET],
       },
       {
-        name: t(AccountRootType[AccountRootType.LIABILITIES]),
-        value: AccountRootType[AccountRootType.LIABILITIES],
+        name: t(AccountType[AccountType.LIABILITY]),
+        value: AccountType[AccountType.LIABILITY],
       },
       {
-        name: t(AccountRootType[AccountRootType.REVENUE]),
-        value: AccountRootType[AccountRootType.REVENUE],
+        name: t(AccountType[AccountType.REVENUE]),
+        value: AccountType[AccountType.REVENUE],
       },
       {
-        name: t(AccountRootType[AccountRootType.EXPENSE]),
-        value: AccountRootType[AccountRootType.EXPENSE],
+        name: t(AccountType[AccountType.EXPENSE]),
+        value: AccountType[AccountType.EXPENSE],
       },
     ];
     setAccountRootTypes(n);
   };
 
+  const setUpAccountTypes = () => {
+    const n: SelectItem[] = Object.keys(AccountType)
+      .filter(
+        (key) => !isNaN(Number(key)) && Number(key) != AccountType.UNRECOGNIZED
+      ) // Filter to get only numeric values (enum values)
+      .map((key) => {
+        return {
+          name: t(AccountType[Number(key)] || ""), // Translate enum name
+          value: AccountType[Number(key)] || "", // Use the numeric value of the enum
+        } as unknown as SelectItem;
+      });
+
+    setAccountTypes(n); // Function to handle the updated list
+  };
+
   const onSubmit = (values: z.infer<typeof createAccountLedger>) => {
-      fetcher.submit(
-        {
-          action: "create-ledger-account",
-          createAccountLedger: values,
-        },
-        {
-          method: "POST",
-          encType: "application/json",
-        }
-      );
+    fetcher.submit(
+      {
+        action: "create-ledger-account",
+        createAccountLedger: values,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
   };
 
   const setUpToolbar = () => {
@@ -102,6 +125,7 @@ export default function NewAccountClient() {
   useEffect(() => {
     setUpToolbar();
     setUpAccountRootTypes();
+    setUpAccountTypes();
   }, []);
 
   useEffect(() => {
@@ -115,10 +139,14 @@ export default function NewAccountClient() {
         title: fetcher.data.message,
       });
       navigate(
-        r.toAccountLedgerDetail(
-          fetcher.data.accountLedger?.name,
-          fetcher.data.accountLedger?.uuid
-        )
+        r.toRoute({
+          main: r.accountM,
+          routePrefix: [r.accountingM],
+          routeSufix: [fetcher.data.accountLedger?.name || ""],
+          q: {
+            tab: "info",
+          },
+        })
       );
     }
   }, [fetcher.data]);
@@ -159,9 +187,9 @@ export default function NewAccountClient() {
             <CheckForm
               label={t("form.isGroup")}
               form={form}
-              onChange={(e)=>{
-                if(e){
-                }else{
+              onChange={(e) => {
+                if (e) {
+                } else {
                 }
               }}
               description={t("form.isGroupDescription")}
@@ -170,6 +198,15 @@ export default function NewAccountClient() {
 
             <SelectForm
               data={accountRootTypes}
+              label={t("_ledger.rootType")}
+              name="accountRootType"
+              keyName={"name"}
+              keyValue={"value"}
+              form={form}
+            />
+
+            <SelectForm
+              data={accountTypes}
               label={t("_ledger.type")}
               name="accountType"
               keyName={"name"}
@@ -185,19 +222,19 @@ export default function NewAccountClient() {
                 return <Input {...field} />;
               }}
             />
-            {!form.getValues().isGroup &&
-            <FormAutocomplete
-            data={currencyDebounceFetcher.data?.currencies || []}
-            form={form}
-            name="currencyName"
-            nameK={"code"}
-            onValueChange={onCurrencyNameChange}
-              label={t("form.currency")}
-              onSelect={(v) => {
-                form.setValue("currency", v.code);
-              }}
+            {!form.getValues().isGroup && (
+              <FormAutocomplete
+                data={currencyDebounceFetcher.data?.currencies || []}
+                form={form}
+                name="currencyName"
+                nameK={"code"}
+                onValueChange={onCurrencyNameChange}
+                label={t("form.currency")}
+                onSelect={(v) => {
+                  form.setValue("currency", v.code);
+                }}
               />
-            }
+            )}
 
             {/* <div className=" col-span-full"></div> */}
             <CustomFormField
@@ -208,6 +245,52 @@ export default function NewAccountClient() {
                 return <Textarea {...field} />;
               }}
             />
+
+            <AccordationLayout
+              title="Report"
+              containerClassName=" col-span-full"
+              className="create-grid"
+            >
+              <SelectForm
+                data={[
+                  {
+                    name: t("profitAndLoss"),
+                    value: finacialReportToJSON(FinacialReport.PROFIT_AND_LOSS),
+                  },
+                  {
+                    name: t("balanceSheet"),
+                    value: finacialReportToJSON(FinacialReport.BALANCE_SHEET),
+                  },
+                ]}
+                label={t("form.reportType")}
+                name="reportType"
+                keyName={"name"}
+                keyValue={"value"}
+                form={form}
+              />
+
+              <SelectForm
+                data={[
+                  {
+                    name: t(cashFlowSectionToJSON(CashFlowSection.OPERATING)),
+                    value: cashFlowSectionToJSON(CashFlowSection.OPERATING),
+                  },
+                  {
+                    name: cashFlowSectionToJSON(CashFlowSection.INVESTING),
+                    value: cashFlowSectionToJSON(CashFlowSection.INVESTING),
+                  },
+                  {
+                    name: cashFlowSectionToJSON(CashFlowSection.FINANCING),
+                    value: cashFlowSectionToJSON(CashFlowSection.FINANCING),
+                  },
+                ]}
+                label={t("form.cashFlowSection")}
+                name="cashFlowSection"
+                keyName={"name"}
+                keyValue={"value"}
+                form={form}
+              />
+            </AccordationLayout>
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

@@ -16,7 +16,7 @@ import PaymentInfoTab from "./tab/payment-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { format } from "date-fns";
 
 export default function PaymentDetailClient() {
@@ -39,7 +39,7 @@ export default function PaymentDetailClient() {
   ]
 
   setUpToolbar(()=>{
-    let actions: ActionToolbar[] = [];
+    let actions: ButtonToolbar[] = [];
     actions.push({
       label:t("accountingLedger"),
       onClick:()=>{

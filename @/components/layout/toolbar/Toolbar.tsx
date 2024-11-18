@@ -78,7 +78,11 @@ export default function ToolBar({ title }: { title: string }) {
                     variant={"outline"}
                     className=" flex space-x-1 h-8 rounded-lg px-3"
                   >
-                    <span>{t("actions.view")}</span>
+                    <span>
+                      {toolbarState.viewTitle
+                        ? toolbarState.viewTitle
+                        : t("actions.view")}
+                    </span>
                     <ChevronsUpDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>

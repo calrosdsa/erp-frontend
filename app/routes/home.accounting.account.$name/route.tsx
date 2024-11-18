@@ -3,14 +3,12 @@ import apiClient from "~/apiclient"
 import AccountLedgerDetailClient from "./account-ledger-detail.client"
 import { handleError } from "~/util/api/handle-status-code"
 
-export const loader = async({request}:LoaderFunctionArgs)=>{
+export const loader = async({request,params}:LoaderFunctionArgs)=>{
     const client = apiClient({request})
-    const url = new URL(request.url)
-    const searchParams = url.searchParams
     const res = await client.GET("/ledger/detail/{id}",{
         params:{
             path:{
-                id:searchParams.get("id") || ""
+                id:decodeURIComponent(params.name || ""),
             }
         }
     })

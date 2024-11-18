@@ -27,6 +27,7 @@ import { CustomerNav } from "./regate/customer-nav";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { PianoFormsNav } from "./piano/piano-forms-nav";
 import { ProjectNav } from "./project-nav";
+import { StockNav } from "./stock-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -44,6 +45,9 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const sellingNav = SellingNav({
     entities: entities,
   });
+  const stockNav = StockNav({
+    entities:entities
+  })
   const accountingNav = AccountingNav({
     entities: entities,
   });
@@ -94,57 +98,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     // color: "text-sky-500",
   };
 
-  let stockChildrens: NavItem[] = [];
-  if (entities?.includes(Entity.ITEM)) {
-    stockChildrens.push({
-      title: t("items"),
-      href: r.toRoute({
-        main:partyTypeToJSON(PartyType.item),
-        routePrefix:[r.stockM],
-      }),
-    });
-  }
-  if (entities?.includes(Entity.ITEM_PRICE)) {
-    stockChildrens.push({
-      title: t("itemPrice"),
-      href:r.toRoute({
-        main:partyTypeToJSON(PartyType.itemPrice),
-        routePrefix:[r.stockM],
 
-      })
-      // href: "/home/stock/item-prices",
-    });
-  }
-  if (entities?.includes(Entity.ITEM)) {
-    stockChildrens.push({
-      title: t("item-groups"),
-      href: r.toGroupByParty(partyTypeToJSON(PartyType.itemGroup)),
-    });
-  }
-  if (entities?.includes(Entity.ITEM_ATTRIBUTES)) {
-    stockChildrens.push({
-      title: t("item-attributes"),
-      href: "/home/stock/item-attributes",
-    });
-  }
-  if (entities?.includes(Entity.ITEM_WAREHOUSE)) {
-    stockChildrens.push({
-      title: t("warehouses"),
-      href: r.toRoute({
-        main:partyTypeToJSON(PartyType.warehouse),
-        routePrefix:[r.stockM],
-      }),
-
-    });
-  }
-
-  const stock: NavItem = {
-    title: t("stock"),
-    icon: Layers3Icon,
-    href: "/home/stock",
-    isChildren: true,
-    children: stockChildrens,
-  };
 
   let usersChildren: NavItem[] = [];
   if (entities?.includes(Entity.ROLE)) {
@@ -246,9 +200,8 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (sellingNav.children && sellingNav.children.length > 0) {
     navItems.push(sellingNav);
   }
-
-  if (stockChildrens.length > 0) {
-    navItems.push(stock);
+  if (stockNav.children && stockNav.children.length > 0) {
+    navItems.push(stockNav);
   }
   if (usersChildren.length > 0) {
     navItems.push(manage);

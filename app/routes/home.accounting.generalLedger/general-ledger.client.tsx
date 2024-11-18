@@ -9,6 +9,8 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { components } from "~/sdk";
 import type { loader } from "./route";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import ResizableTable from "@/components/custom/table/ResizableTable";
 
 type GeneralLedgerEntryDto = components["schemas"]["GeneralLedgerEntryDto"];
 
@@ -99,7 +101,10 @@ export default function GeneralLedgerClient() {
           <GeneralLedgerHeader />
         </CardHeader>
         <CardContent className="px-2 py-3">
-          <DataTable data={dataWithTotal} columns={generalLedgerColumns({})} />
+      <ScrollArea className="w-full h-[550px] whitespace-nowrap rounded-md border">
+          <ResizableTable data={dataWithTotal} columns={generalLedgerColumns({})} />
+          <ScrollBar orientation="horizontal" />
+      </ScrollArea>
         </CardContent>
       </Card>
     </div>

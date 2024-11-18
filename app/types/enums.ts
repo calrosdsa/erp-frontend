@@ -48,7 +48,8 @@ export enum Entity {
     DELIVERY_NOTE = 28,
     JOURNAL_ENTRY = 29,
     COST_CENTER = 30,
-    PROJECT = 31 ,
+    PROJECT = 31,
+    STOCK_ENTRY = 32,
 }
 
 export enum PartyType {

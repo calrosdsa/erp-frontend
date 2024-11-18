@@ -20,7 +20,7 @@ import {
 } from "~/gen/common";
 import { useEffect } from "react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
-import { ActionToolbar } from "~/types/actions";
+import { ButtonToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
 import { z } from "zod";
@@ -120,7 +120,7 @@ export default function PurchaseOrderClient() {
     }
   };
   setUpToolbar(() => {
-    const actions: ActionToolbar[] = [];
+    const actions: ButtonToolbar[] = [];
     const status = stateFromJSON(order?.status);
     if (paymentPermission?.create) {
       actions.push({
