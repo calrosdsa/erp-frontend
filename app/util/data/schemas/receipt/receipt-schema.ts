@@ -5,7 +5,6 @@ import { editLineItemSchema, lineItemReceipt } from "../stock/item-line-schema";
 import { ItemLineType } from "~/gen/common";
 
 export const createReceiptSchema = z.object({
-
     partyType:z.string(),
     partyUuid:z.string(),
     partyName:z.string(),

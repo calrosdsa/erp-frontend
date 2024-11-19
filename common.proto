@@ -55,6 +55,10 @@ enum PartyType {
     costCenter = 29;
     project = 30;
     stockEntry = 31;
+    generalLedger = 32;
+    accountReceivable = 33;
+    accountPayable = 34;
+    financialStatements = 35;
 }
 
 enum PianoPartyType {
@@ -158,6 +162,7 @@ enum ItemLineType {
     ITEM_LINE_ORDER = 0;
     ITEM_LINE_INVOICE = 1;
     ITEM_LINE_RECEIPT = 2;
+    ITEM_LINE_STOCK_ENTRY = 3;
 }
 
 enum BookingType {
@@ -213,4 +218,17 @@ enum CashFlowSection {
     OPERATING = 0;
 	INVESTING = 1;
 	FINANCING = 2;
+}
+
+
+enum InvetoryValuation {
+    FIFO =0;
+    LIFO =1;
+    WEIGHTED_AVERAGE_COST = 2;
+}
+
+enum StockEntryType {
+    MATERIAL_ISSUE = 0;
+    MATERIAL_RECEIPT = 1;
+    MATERIAL_TRANSFER = 2;
 }

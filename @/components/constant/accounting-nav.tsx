@@ -6,13 +6,15 @@ import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
 import { routes } from "~/util/route";
 
-export const AccountingNav = ({ entities }: { 
-    entities: number[] | undefined
+export const AccountingNav = ({
+  entities,
+}: {
+  entities: number[] | undefined;
 }): NavItem => {
   const { t } = useTranslation("common");
-  const r = routes
-  let accountingChildrens:NavItem[] = [];
-  if(entities?.includes(Entity.LEDGER)){
+  const r = routes;
+  let accountingChildrens: NavItem[] = [];
+  if (entities?.includes(Entity.LEDGER)) {
     accountingChildrens.push({
       title: t("_ledger.chartOfAccounts"),
       href: r.chartOfAccount,
@@ -24,66 +26,75 @@ export const AccountingNav = ({ entities }: {
       href: r.taxes,
     });
   }
-  if(entities?.includes(Entity.PAYMENT)){
+  if (entities?.includes(Entity.PAYMENT)) {
     accountingChildrens.push({
-      title:t("_payment.base"),
-      href:r.payment,
-    })
+      title: t("_payment.base"),
+      href: r.payment,
+    });
   }
-  if(entities?.includes(Entity.JOURNAL_ENTRY)){
+  if (entities?.includes(Entity.JOURNAL_ENTRY)) {
     accountingChildrens.push({
-      title:t("journalEntry"),
-      href:r.toRoute({
-        main:r.journalEntry,
-        routePrefix:[r.accountingM]
+      title: t("journalEntry"),
+      href: r.toRoute({
+        main: r.journalEntry,
+        routePrefix: [r.accountingM],
       }),
-    })
+    });
   }
-  if(entities?.includes(Entity.COST_CENTER)){
-    accountingChildrens.push({
-      title:t("costCenter"),
-      href:r.toRoute({
-        main:r.costCenter,
-        routePrefix:[r.accountingM]
-      }),
-    })
-  }
-  accountingChildrens.push({
-    title:t("profitAndLoss"),
-    href:r.toRoute({
-      main:r.profitAndLoss,
-      routePrefix:[r.accountingM]
-    })
-  })
-  accountingChildrens.push({
-    title:t("accountPayable"),
-    href:r.toRoute({
-      main:r.accountPayable,
-      routePrefix:[r.accountingM]
-    })
-  })
-  accountingChildrens.push({
-    title:t("accountReceivable"),
-    href:r.toRoute({
-      main:r.accountReceivable,
-      routePrefix:[r.accountingM]
-    })
-  })
-  accountingChildrens.push({
-    title:t("generalLedger"),
-    href:r.toRoute({
-      main:r.generalLedger,
-      routePrefix:[r.accountingM]
-    })
-  })
 
-//   if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
-//     accountingChildrens.push({
-//       title: t("price-list"),
-//       href: r.priceList,
-//     });
-//   }
-const accounting: NavItem = {
+  if (entities?.includes(Entity.COST_CENTER)) {
+    accountingChildrens.push({
+      title: t("costCenter"),
+      href: r.toRoute({
+        main: r.costCenter,
+        routePrefix: [r.accountingM],
+      }),
+    });
+  }
+  if (entities?.includes(Entity.FINANCIAL_STATEMENTS)) {
+    accountingChildrens.push({
+      title: t("profitAndLoss"),
+      href: r.toRoute({
+        main: r.profitAndLoss,
+        routePrefix: [r.accountingM],
+      }),
+    });
+  }
+  if (entities?.includes(Entity.ACCOUNT_PAYABLE)) {
+    accountingChildrens.push({
+      title: t("accountPayable"),
+      href: r.toRoute({
+        main: r.accountPayable,
+        routePrefix: [r.accountingM],
+      }),
+    });
+  }
+  if (entities?.includes(Entity.ACCOUNT_RECEIVABLE)) {
+    accountingChildrens.push({
+      title: t("accountReceivable"),
+      href: r.toRoute({
+        main: r.accountReceivable,
+        routePrefix: [r.accountingM],
+      }),
+    });
+  }
+  if (entities?.includes(Entity.GENERAL_LEDGER)) {
+    accountingChildrens.push({
+      title: t("generalLedger"),
+      href: r.toRoute({
+        main: r.generalLedger,
+        routePrefix: [r.accountingM],
+      }),
+    });
+  }
+
+  //   if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
+  //     accountingChildrens.push({
+  //       title: t("price-list"),
+  //       href: r.priceList,
+  //     });
+  //   }
+  const accounting: NavItem = {
     title: t("accounting"),
     icon: CreditCardIcon,
     href: r.accounting,
@@ -91,5 +102,5 @@ const accounting: NavItem = {
     children: accountingChildrens,
   };
 
-  return accounting
-}
+  return accounting;
+};

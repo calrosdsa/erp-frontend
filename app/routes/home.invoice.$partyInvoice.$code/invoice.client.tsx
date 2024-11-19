@@ -31,13 +31,13 @@ import { ButtonToolbar } from "~/types/actions";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { PlusIcon } from "lucide-react";
-import { sumTotal } from "~/util/format/formatCurrency";
 import { useCreatePayment } from "../home.accounting.payment.new/use-create-payment";
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { format } from "date-fns";
+import { Entity } from "~/types/enums";
 
 export default function InvoiceDetailClient() {
-  const { actions, invoice, activities, associatedActions, itemLines, totals } =
+  const { invoice, activities, associatedActions, totals } =
     useLoaderData<typeof loader>();
   const toolbarState = useToolbar();
   const { t } = useTranslation("common");
@@ -50,7 +50,11 @@ export default function InvoiceDetailClient() {
   const r = routes;
   const navigate = useNavigate();
   const [paymentPermission] = usePermission({
-    actions: associatedActions && associatedActions[PartyType.payment],
+    actions: associatedActions && associatedActions[Entity.PAYMENT],
+    roleActions: globalState.roleActions,
+  });
+  const [gLPermission] = usePermission({
+    actions: associatedActions && associatedActions[Entity.GENERAL_LEDGER],
     roleActions: globalState.roleActions,
   });
   const createPayment = useCreatePayment();
@@ -96,23 +100,26 @@ export default function InvoiceDetailClient() {
 
   setUpToolbar(() => {
     let actions: ButtonToolbar[] = [];
-    const status = stateFromJSON(invoice?.status)
-    actions.push({
-      label: t("accountingLedger"),
-      onClick: () => {
-        navigate(
-          r.toRoute({
-            main: "generalLedger",
-            routePrefix: [r.accountingM],
-            q: {
-              fromDate: format(invoice?.created_at || "", "yyyy-MM-dd"),
-              toDate: format(invoice?.created_at || "", "yyyy-MM-dd"),
-              voucherNo: invoice?.code,
-            },
-          })
-        );
-      },
-    });
+    let view: ButtonToolbar[] = [];
+    const status = stateFromJSON(invoice?.status);
+    if (gLPermission?.view) {
+      view.push({
+        label: t("accountingLedger"),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: "generalLedger",
+              routePrefix: [r.accountingM],
+              q: {
+                fromDate: format(invoice?.created_at || "", "yyyy-MM-dd"),
+                toDate: format(invoice?.created_at || "", "yyyy-MM-dd"),
+                voucherNo: invoice?.code,
+              },
+            })
+          );
+        },
+      });
+    }
     if (paymentPermission?.create && enabledOrder && status != State.PAID) {
       actions.push({
         label: t("_payment.base"),
@@ -151,6 +158,7 @@ export default function InvoiceDetailClient() {
       title: `${t("_invoice.base")}(${invoice?.code})`,
       status: stateFromJSON(invoice?.status),
       actions: actions,
+      view: view,
       onChangeState: (e) => {
         const body: z.infer<typeof updateStateWithEventSchema> = {
           current_state: invoice?.status || "",
@@ -170,7 +178,7 @@ export default function InvoiceDetailClient() {
         );
       },
     };
-  }, [paymentPermission, invoice]);
+  }, [paymentPermission, invoice, gLPermission]);
 
   useEffect(() => {
     if (fetcher.state == "submitting") {

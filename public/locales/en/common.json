@@ -143,7 +143,7 @@
     "rate": "Rate",
     "itemQuantity": "Item Quantity",
     "totalQuantity": "Total Quantity",
-
+    "entryType":"Entry Type",
     "quantity": "Quantity",
     "pay": "Pay",
     "orderTotal": "Order Total",
@@ -207,6 +207,8 @@
     "edit": "Edit {{o}}",
     "enable": "Check the box to enable this {{o}}",
     "accepted": "Accepted {{o}}",
+    "source": "Source {{o}}",
+    "target": "Target {{o}}",
     "rejected": "Rejected {{o}}",
     "and": "{{o}} and {{p}}",
     "purchase": "Purchase {{o}}",

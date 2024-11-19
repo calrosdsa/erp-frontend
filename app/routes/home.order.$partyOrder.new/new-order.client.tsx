@@ -26,6 +26,8 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useRef } from "react";
 import PartyAutocomplete from "./components/party-autocomplete";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
+import { usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
+import AccordationLayout from "@/components/layout/accordation-layout";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
@@ -33,16 +35,17 @@ export default function CreatePurchaseOrdersClient() {
     useCurrencyDebounceFetcher();
   const globalState = useOutletContext<GlobalState>();
   const params = useParams();
-  const partyOrder = params.partyOrder || ""
+  const partyOrder = params.partyOrder || "";
   const { t, i18n } = useTranslation("common");
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const r = routes;
+  const [priceListFetcher, onPriceListChange] = usePriceListDebounceFetcher();
   const form = useForm<z.infer<typeof createPurchaseSchema>>({
     resolver: zodResolver(createPurchaseSchema),
     defaultValues: {
       lines: [],
-      date: new Date(), 
+      date: new Date(),
     },
   });
 
@@ -59,14 +62,14 @@ export default function CreatePurchaseOrdersClient() {
     );
   };
 
-  setUpToolbar(()=>{
+  setUpToolbar(() => {
     return {
-      title:t("f.add-new",{o:t("_order.base")}),
+      title: t("f.add-new", { o: t("_order.base") }),
       onSave: () => {
         inputRef.current?.click();
       },
-    }
-  },[])
+    };
+  }, []);
 
   useDisplayMessage(
     {
@@ -75,12 +78,12 @@ export default function CreatePurchaseOrdersClient() {
       onSuccessMessage: () => {
         navigate(
           r.toRoute({
-            main:partyOrder,
-            routePrefix:[r.orderM],
-            routeSufix:[fetcher.data?.order?.code || ""],
-            q:{
-              tab:"info"
-            }
+            main: partyOrder,
+            routePrefix: [r.orderM],
+            routeSufix: [fetcher.data?.order?.code || ""],
+            q: {
+              tab: "info",
+            },
           })
         );
       },
@@ -99,13 +102,16 @@ export default function CreatePurchaseOrdersClient() {
           >
             <div className="create-grid">
               <PartyAutocomplete
-              party={partyOrder || ""}
-              globalState={globalState}
-              form={form}
+                party={partyOrder || ""}
+                globalState={globalState}
+                form={form}
               />
 
-              <CustomFormDate form={form} name="date" label={t("form.date")} 
-              required={true}
+              <CustomFormDate
+                form={form}
+                name="date"
+                label={t("form.date")}
+                required={true}
               />
 
               <CustomFormDate
@@ -114,7 +120,27 @@ export default function CreatePurchaseOrdersClient() {
                 isDatetime={true}
                 label={t("form.deliveryDate")}
               />
-             <Typography className=" col-span-full" fontSize={subtitle}>
+
+              <AccordationLayout
+                title={t("priceList")}
+                containerClassName=" col-span-full"
+                className="create-grid"
+              >
+                <FormAutocomplete
+                  onValueChange={onPriceListChange}
+                  form={form}
+                  name="priceListName"
+                  nameK={"name"}
+                  label={t("priceList")}
+                  data={priceListFetcher.data?.priceLists || []}
+                  onSelect={(e) => {
+                    form.setValue("priceListID", e.id);
+                    form.setValue("currency", e.currency);
+                    form.trigger("currency");
+                  }}
+                />
+              </AccordationLayout>
+              {/* <Typography className=" col-span-full" fontSize={subtitle}>
                 {t("form.currencyAndPriceList")}
               </Typography>
               <FormAutocomplete
@@ -127,19 +153,18 @@ export default function CreatePurchaseOrdersClient() {
                 label={t("form.currency")}
                 onSelect={(v) => {
                   form.setValue("currency", v);
-                  form.trigger("currency")
+                  form.trigger("currency");
                 }}
-              />
+              /> */}
             </div>
-            {JSON.stringify(form.getValues().lines)}
+            {/* {JSON.stringify(form.getValues().lines)} */}
             <ItemLineForm
               form={form}
               partyType={params.partyOrder || ""}
               itemLineType={ItemLineType.ITEM_LINE_ORDER}
             />
-            
-            <input ref={inputRef} type="submit" className="hidden" />
 
+            <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>
         </Form>
       </FormLayout>

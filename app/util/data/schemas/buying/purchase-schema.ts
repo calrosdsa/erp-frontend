@@ -11,10 +11,13 @@ export const createPurchaseSchema = z.object({
   partyUuid:z.string(),
   partyName:z.string(),
   // name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+  priceListID:z.number(),
+  priceListName:z.string(),
+
   delivery_date: z.date().optional(),
   date: z.date(),
   currencyName: z.string(),
-  currency: currencySchema,
+  currency: z.string(),
   lines: z.array(editLineItemSchema),
 });
 

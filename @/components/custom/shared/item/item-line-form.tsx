@@ -123,7 +123,7 @@ export default function ItemLineForm({
   });
 
   return (
-    <div>
+    <div className="col-span-full">
       {configuteWarehouse && (
         <>
           <div className=" create-grid">
@@ -162,12 +162,13 @@ export default function ItemLineForm({
                   createWareHouse.openDialog({});
                 },
               })}
-            />
+              />
           </div>
         </>
       )}
       {/* {JSON.stringify(form.getValues())} */}
       <Typography fontSize={subtitle}>{t("items")}</Typography>
+
       <DataTable
         data={form.getValues().lines || []}
         columns={orderLineColumns({
@@ -181,9 +182,9 @@ export default function ItemLineForm({
             enableTooltipMessage:
               form.getValues().currency?.code == undefined ||
               form.getValues().currency.code == "",
-          },
+            },
         }}
-      />
+        />
       {form.getValues().lines.length > 0 && (
         <OrderSumary
           orderTotal={sumTotal(
@@ -193,11 +194,11 @@ export default function ItemLineForm({
                 (item: z.infer<typeof editLineItemSchema>) =>
                   item.rate * Number(item.quantity)
               )
-          )}
-          orderTax={0}
-          i18n={i18n}
+            )}
+            orderTax={0}
+            i18n={i18n}
           currency={addLineOrder.currency || DEFAULT_CURRENCY}
-        />
+          />
       )}
     </div>
   );

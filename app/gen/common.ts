@@ -133,6 +133,10 @@ export enum PartyType {
   costCenter = 29,
   project = 30,
   stockEntry = 31,
+  generalLedger = 32,
+  accountReceivable = 33,
+  accountPayable = 34,
+  financialStatements = 35,
   UNRECOGNIZED = -1,
 }
 
@@ -234,6 +238,18 @@ export function partyTypeFromJSON(object: any): PartyType {
     case 31:
     case "stockEntry":
       return PartyType.stockEntry;
+    case 32:
+    case "generalLedger":
+      return PartyType.generalLedger;
+    case 33:
+    case "accountReceivable":
+      return PartyType.accountReceivable;
+    case 34:
+    case "accountPayable":
+      return PartyType.accountPayable;
+    case 35:
+    case "financialStatements":
+      return PartyType.financialStatements;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -307,6 +323,14 @@ export function partyTypeToJSON(object: PartyType): string {
       return "project";
     case PartyType.stockEntry:
       return "stockEntry";
+    case PartyType.generalLedger:
+      return "generalLedger";
+    case PartyType.accountReceivable:
+      return "accountReceivable";
+    case PartyType.accountPayable:
+      return "accountPayable";
+    case PartyType.financialStatements:
+      return "financialStatements";
     case PartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -865,6 +889,7 @@ export enum ItemLineType {
   ITEM_LINE_ORDER = 0,
   ITEM_LINE_INVOICE = 1,
   ITEM_LINE_RECEIPT = 2,
+  ITEM_LINE_STOCK_ENTRY = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -879,6 +904,9 @@ export function itemLineTypeFromJSON(object: any): ItemLineType {
     case 2:
     case "ITEM_LINE_RECEIPT":
       return ItemLineType.ITEM_LINE_RECEIPT;
+    case 3:
+    case "ITEM_LINE_STOCK_ENTRY":
+      return ItemLineType.ITEM_LINE_STOCK_ENTRY;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -894,6 +922,8 @@ export function itemLineTypeToJSON(object: ItemLineType): string {
       return "ITEM_LINE_INVOICE";
     case ItemLineType.ITEM_LINE_RECEIPT:
       return "ITEM_LINE_RECEIPT";
+    case ItemLineType.ITEM_LINE_STOCK_ENTRY:
+      return "ITEM_LINE_STOCK_ENTRY";
     case ItemLineType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1249,6 +1279,84 @@ export function cashFlowSectionToJSON(object: CashFlowSection): string {
     case CashFlowSection.FINANCING:
       return "FINANCING";
     case CashFlowSection.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum InvetoryValuation {
+  FIFO = 0,
+  LIFO = 1,
+  WEIGHTED_AVERAGE_COST = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function invetoryValuationFromJSON(object: any): InvetoryValuation {
+  switch (object) {
+    case 0:
+    case "FIFO":
+      return InvetoryValuation.FIFO;
+    case 1:
+    case "LIFO":
+      return InvetoryValuation.LIFO;
+    case 2:
+    case "WEIGHTED_AVERAGE_COST":
+      return InvetoryValuation.WEIGHTED_AVERAGE_COST;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return InvetoryValuation.UNRECOGNIZED;
+  }
+}
+
+export function invetoryValuationToJSON(object: InvetoryValuation): string {
+  switch (object) {
+    case InvetoryValuation.FIFO:
+      return "FIFO";
+    case InvetoryValuation.LIFO:
+      return "LIFO";
+    case InvetoryValuation.WEIGHTED_AVERAGE_COST:
+      return "WEIGHTED_AVERAGE_COST";
+    case InvetoryValuation.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum StockEntryType {
+  MATERIAL_ISSUE = 0,
+  MATERIAL_RECEIPT = 1,
+  MATERIAL_TRANSFER = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function stockEntryTypeFromJSON(object: any): StockEntryType {
+  switch (object) {
+    case 0:
+    case "MATERIAL_ISSUE":
+      return StockEntryType.MATERIAL_ISSUE;
+    case 1:
+    case "MATERIAL_RECEIPT":
+      return StockEntryType.MATERIAL_RECEIPT;
+    case 2:
+    case "MATERIAL_TRANSFER":
+      return StockEntryType.MATERIAL_TRANSFER;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return StockEntryType.UNRECOGNIZED;
+  }
+}
+
+export function stockEntryTypeToJSON(object: StockEntryType): string {
+  switch (object) {
+    case StockEntryType.MATERIAL_ISSUE:
+      return "MATERIAL_ISSUE";
+    case StockEntryType.MATERIAL_RECEIPT:
+      return "MATERIAL_RECEIPT";
+    case StockEntryType.MATERIAL_TRANSFER:
+      return "MATERIAL_TRANSFER";
+    case StockEntryType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

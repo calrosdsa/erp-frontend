@@ -107,7 +107,7 @@ export const BookingDetailClient = () => {
        
       },
     }
-  },[permission])
+  },[permission,booking])
 
   useEffect(()=>{
     if(fetcher.data?.error){
@@ -123,7 +123,6 @@ export const BookingDetailClient = () => {
   },[fetcher.data])
   return (
     <DetailLayout navItems={navTabs} activities={activities} partyID={booking?.id}>
-
       {editPaidAmount.open &&
       <EditPaidAmount
       open={editPaidAmount.open}

@@ -50,6 +50,10 @@ export enum Entity {
     COST_CENTER = 30,
     PROJECT = 31,
     STOCK_ENTRY = 32,
+    GENERAL_LEDGER = 33,
+    ACCOUNT_RECEIVABLE = 34,
+    ACCOUNT_PAYABLE = 35,
+    FINANCIAL_STATEMENTS = 36,
 }
 
 export enum PartyType {
