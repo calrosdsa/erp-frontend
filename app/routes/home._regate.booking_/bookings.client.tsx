@@ -54,7 +54,7 @@ export default function BookingsClient() {
           nameK={"name"}
           valueK={"id"}
           onValueChange={onCustomerNameChange}
-          placelholder="Cliente"
+          placeholder="Cliente"
           queryName="partyName"
           queryValue="party"
         />
@@ -66,14 +66,14 @@ export default function BookingsClient() {
           queryName="eventName"
           queryValue="event"
           onValueChange={onEventNameChange}
-          placelholder="Evento"
+          placeholder="Evento"
         />
         <AutocompleteSearch
           data={courtFetcher.data?.courts || []}
           nameK={"name"}
           valueK={"id"}
           onValueChange={onCourtNameChange}
-          placelholder="Cancha"
+          placeholder="Cancha"
            queryName="courtName"
           queryValue="court"
         />

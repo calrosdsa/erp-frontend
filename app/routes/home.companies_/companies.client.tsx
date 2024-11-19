@@ -21,11 +21,11 @@ export default function CompaniesClient() {
   setUpToolbar(()=>{
     return {
       title:t("companies"),
-      ...(permission?.create && {
-        addNew: () => {
-          createCompany.openDialog({});
-        },
-      }),
+      // ...(permission?.create && {
+      //   addNew: () => {
+      //     createCompany.openDialog({});
+      //   },
+      // }),
     }
   },[permission])
 

@@ -28,7 +28,7 @@ import { useCreateEvent } from "~/routes/home._regate.event_/components/use-crea
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { useCreateCustomer } from "~/routes/home.customer_/components/create-customer";
+import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
 
 export default function CreateBookings({
   data,
