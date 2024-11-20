@@ -135,7 +135,6 @@
     "streetLine1": "Street Line 1",
     "streetLine2": "Street Line 2",
     "optional": "Optional",
-    "price-list": "Price List",
     "currency": "Currency",
     "buying": "Buying",
     "paymentType": "Payment Type",
@@ -224,7 +223,6 @@
   "accounting": "Accounting",
   "taxes": "Taxes",
   "selling": "Selling",
-  "price-list": "Price List",
   "_tax": {
     "base": "Tax"
   },

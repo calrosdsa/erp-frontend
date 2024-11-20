@@ -44,7 +44,7 @@ class Routes {
   customerGroups = this.selling + "/customer-groups";
   customers = this.base + "/customer";
 
-  priceList = this.sellingStock + "/price-list";
+  priceList = "priceList";
 
   accounting = this.base + "/accounting";
   accountingM = "accounting";
@@ -256,10 +256,7 @@ class Routes {
     }
     return url + `&id=${id}`;
   }
-  priceListDetail(name?: string, id?: string): string {
-    if (!name) return "N/A";
-    return `${this.priceList}/${encodeURIComponent(name)}?id=${id}`;
-  }
+
 
   toPaymentCreate() {
     return `${this.payment}/create`;

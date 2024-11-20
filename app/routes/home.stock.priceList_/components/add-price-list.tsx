@@ -46,7 +46,10 @@ export const AddPriceList =({open,onOpenChange}:{
                     createPriceList:values
                 },{
                     method:"POST",
-                    action:r.priceList,
+                    action:r.toRoute({
+                        main:r.priceList,
+                        routePrefix:[r.stockM]
+                    }),
                     encType:"application/json"
                 })
             }}

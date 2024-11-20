@@ -6,7 +6,6 @@ import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components
 import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
 import { CreateGroup, useCreateGroup } from "~/routes/home.groups.$party_/components/create-group"
 import { CreateUser, useCreateUser } from "~/routes/home.manage.users_/components/create-user"
-import { AddPriceList, useCreatePriceList } from "~/routes/home.selling.stock.price-list_/components/add-price-list"
 import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.itemPrice_/components/add-item-price"
 import { UpsertItemStockLevel, useUpsertItemStockLevel } from "~/routes/home.stock.item.$code.stock_/components/upsert-item-stock-level"
 import CreateItemVariant, { useCreateItemVariant } from "~/routes/home.stock.item.$code.variants_/components/create-item-variant"
@@ -15,6 +14,7 @@ import { NewItemPriceDialog, useNewItemPrice } from "~/routes/home.stock.itemPri
 import { CreateSupplier, useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier"
 import { CreateWareHouse, useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse"
 import { CreateCustomer, useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer"
+import { AddPriceList, useCreatePriceList } from "~/routes/home.stock.priceList_/components/add-price-list"
 
 
 export default function GlobalDialogs({globalState}:{

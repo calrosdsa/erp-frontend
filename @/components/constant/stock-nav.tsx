@@ -63,6 +63,16 @@ export const StockNav = ({ entities }: {
     });
   }
 
+  if (entities?.includes(Entity.PRICE_LIST)) {
+    stockChildrens.push({
+      title: t("priceList"),
+      href: r.toRoute({
+        main:r.priceList,
+        routePrefix:[r.stockM]
+      }),
+    });
+  }
+
   const stock: NavItem = {
     title: t("stock"),
     icon: Layers3Icon,

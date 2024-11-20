@@ -24,7 +24,7 @@ import { useItemDebounceFetcher } from "~/util/hooks/fetchers/useItemDebounceFet
 import { useTaxDebounceFetcher } from "~/util/hooks/fetchers/useTaxDebounceFetcher";
 import { usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
 import { action } from "../route";
-import { useCreatePriceList } from "~/routes/home.selling.stock.price-list_/components/add-price-list";
+import { useCreatePriceList } from "~/routes/home.stock.priceList_/components/add-price-list";
 
 export default function AddItemPrice({
   open,

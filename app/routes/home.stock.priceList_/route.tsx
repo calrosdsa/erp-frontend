@@ -12,22 +12,22 @@ type PriceListAction = {
   query: string;
   page?: string;
   size?: string;
-  createPriceList:z.infer<typeof createPriceListSchema>
+  createPriceList: z.infer<typeof createPriceListSchema>;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as PriceListAction;
   let client = apiClient({ request });
-  let message:string | undefined = undefined
-  let error:string |undefined = undefined
-  let priceLists:components["schemas"]["PriceListDto"][] = []
+  let message: string | undefined = undefined;
+  let error: string | undefined = undefined;
+  let priceLists: components["schemas"]["PriceListDto"][] = [];
   switch (data.action) {
-    case "add-price-list":{
-      const res = await client.POST("/stock/item/price-list",{
-        body:data.createPriceList
-      })
-      message = res.data?.message
-      error = res.error?.detail
+    case "add-price-list": {
+      const res = await client.POST("/stock/item/price-list", {
+        body: data.createPriceList,
+      });
+      message = res.data?.message;
+      error = res.error?.detail;
       break;
     }
     case "get": {
@@ -43,39 +43,36 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       if (res.data != undefined) {
         priceLists = res.data.pagination_result.results;
       }
-      console.log(res.error)
+      console.log(res.error);
       break;
     }
   }
   return json({
     priceLists,
-    message,error
+    message,
+    error,
   });
 };
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const client = apiClient({ request });
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
+  const res = await client.GET("/stock/item/price-list", {
+    params: {
+      query: {
+        page: searchParams.get("page") || DEFAULT_PAGE,
+        size: searchParams.get("size") || DEFAULT_SIZE,
+      },
+    },
+  });
+  handleError(res.error);
+  return json({
+    paginationResult: res.data?.pagination_result,
+    actions: res.data?.actions,
+  });
+};
 
-
-export const loader = async({request}:LoaderFunctionArgs) =>{
-    const client = apiClient({request});
-    const url = new URL(request.url)
-    const searchParams = url.searchParams
-    const res = await client.GET("/stock/item/price-list",{
-        params:{
-            query:{
-                page:searchParams.get("page") || DEFAULT_PAGE,
-                size:searchParams.get("size") || DEFAULT_SIZE
-            }
-        }
-    })
-    handleError(res.error)
-    return json({
-        paginationResult:res.data?.pagination_result,
-        actions:res.data?.actions,
-    })
-}
-
-export default function PriceLists(){
-    return(
-        <PriceListsClient/>
-    )
+export default function PriceLists() {
+  return <PriceListsClient />;
 }

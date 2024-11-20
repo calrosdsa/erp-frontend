@@ -28,12 +28,7 @@ export const SellingNav = ({ entities }: {
     });
   }
 
-  if (entities?.includes(Entity.PRICE_LIST)) {
-    sellingChildrens.push({
-      title: t("price-list"),
-      href: r.priceList,
-    });
-  }
+ 
   if(entities?.includes(Entity.SALE_ORDER)){
     sellingChildrens.push({
       title: t("saleOrder"),

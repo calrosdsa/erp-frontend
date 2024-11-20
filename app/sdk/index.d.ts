@@ -2157,8 +2157,7 @@ export interface paths {
         };
         /** Retrieve Price List items */
         get: operations["get-price-lists"];
-        /** Update item price list */
-        put: operations["update-item-price-list"];
+        put?: never;
         /** Create price list */
         post: operations["create-price-list"];
         delete?: never;
@@ -2167,7 +2166,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stock/item/price-list/{id}": {
+    "/stock/item/price-list/detail/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3222,6 +3221,7 @@ export interface components {
             name: string;
         };
         CreateStockEntry: {
+            entry_type: string;
             name: string;
             status: string;
         };
@@ -4373,6 +4373,7 @@ export interface components {
             item_line_reference?: number;
             item_price_uuid: string;
             line_receipt?: components["schemas"]["LineItemReceiptDto"];
+            line_stock_entry?: components["schemas"]["LineItemStockEntry"];
             /** Format: int32 */
             quantity: number;
             /** Format: int32 */
@@ -4387,6 +4388,12 @@ export interface components {
             rejected_quantity: number;
             /** Format: int64 */
             rejected_warehouse?: number;
+        };
+        LineItemStockEntry: {
+            /** Format: int64 */
+            source_warehouse: number;
+            /** Format: int64 */
+            target_warehouse: number;
         };
         OrderDto: {
             /** Format: int32 */
@@ -5030,22 +5037,6 @@ export interface components {
              */
             readonly $schema?: string;
             plugins: components["schemas"]["PluginApp"][];
-        };
-        PriceList: {
-            /** Format: int64 */
-            company_id: number;
-            /** Format: date-time */
-            created_at: string;
-            currency: string;
-            deleted_at: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            id: number;
-            is_buying: boolean;
-            is_selling: boolean;
-            name: string;
-            /** Format: date-time */
-            updated_at: string | null;
-            uuid: string;
         };
         PriceListDto: {
             /** Format: date-time */
@@ -5867,14 +5858,6 @@ export interface components {
              */
             readonly $schema?: string;
             itemPrice: components["schemas"]["ItemPrice"];
-        };
-        UpsertPriceListRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            itemPriceList: components["schemas"]["PriceList"];
         };
         UserDto: {
             /** Format: date-time */
@@ -12114,14 +12097,16 @@ export interface operations {
     "get-price-lists": {
         parameters: {
             query: {
-                page: string;
-                size: string;
-                enabled?: string;
-                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
                 parentId?: string;
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                is_selling?: string;
+                is_buying?: string;
             };
             header?: {
                 Authorization?: string;
@@ -12141,49 +12126,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListPriceListDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "update-item-price-list": {
-        parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpsertPriceListRequestBody"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

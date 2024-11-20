@@ -19,11 +19,19 @@ export const pricelistItemColums = (): ColumnDef<
       accessorKey: "name",
       header: t("form.name"),
       cell: ({ ...props }) => {
-        const rowData = props.row.original;
         return (
           <TableCellNameNavigation
             {...props}
-            navigate={(name) => r.priceListDetail(name, rowData.uuid)}
+            navigate={(name) =>
+              r.toRoute({
+                main: r.priceList,
+                routePrefix: [r.stockM],
+                routeSufix: [name],
+                q: {
+                  tab: "info",
+                },
+              })
+            }
           />
         );
       },

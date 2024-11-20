@@ -22,7 +22,6 @@ import { components } from "~/sdk";
 import { useItemDebounceFetcher } from "~/util/hooks/fetchers/useItemDebounceFetcher";
 import { useTaxDebounceFetcher } from "~/util/hooks/fetchers/useTaxDebounceFetcher";
 import { usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
-import { useCreatePriceList } from "~/routes/home.selling.stock.price-list_/components/add-price-list";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -40,6 +39,7 @@ import { useUomDebounceFetcher } from "~/util/hooks/fetchers/useUomDebounceFetch
 import { action, loader } from "../route";
 import { SerializeFrom } from "@remix-run/node";
 import { cn } from "@/lib/utils";
+import { useCreatePriceList } from "~/routes/home.stock.priceList_/components/add-price-list";
 
 export default function ItemPriceForm({
   form,

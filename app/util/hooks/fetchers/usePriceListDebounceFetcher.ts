@@ -22,7 +22,10 @@ export const usePriceListDebounceFetcher = () =>{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,
             encType:"application/json",
-            action:r.priceList
+            action:r.toRoute({
+                main:r.priceList,
+                routePrefix:[r.stockM]
+            }),
         })
     }
     

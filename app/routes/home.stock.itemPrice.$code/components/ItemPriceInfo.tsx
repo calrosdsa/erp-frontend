@@ -54,10 +54,14 @@ export default function ItemPriceInfo() {
           <DisplayTextValue
             title={t("form.price-list")}
             value={itemPrice?.price_list_name}
-            to={r.priceListDetail(
-              itemPrice?.price_list_name,
-              itemPrice?.price_list_uuid
-            )}
+            to={r.toRoute({
+              main:r.priceList,
+              routePrefix:[r.stockM],
+              routeSufix:[itemPrice?.price_list_name || ""],
+              q:{
+                tab:"info"
+              }
+            })}
           />
         )}
 
