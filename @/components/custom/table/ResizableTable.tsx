@@ -40,7 +40,7 @@ export default function ResizableTable<TData, TValue>({
     <div className="p-2">
       <div style={{ direction: table.options.columnResizeDirection }}>
         <div className="rounded-lg border">
-          <Table className=' overflow-auto w-[1800px]'>
+          <Table className=' overflow-auto '>
             <TableHeader>
               {table.getHeaderGroups().map(headerGroup => (
                 <TableRow key={headerGroup.id}>
@@ -51,7 +51,7 @@ export default function ResizableTable<TData, TValue>({
                         width: header.getSize(),
                         position: 'relative',
                       }}
-                      className="border-r last:border-r-0 bg-gray-100 "
+                      className="border-r last:border-r-0 bg-gray-100 whitespace-nowrap"
                     >
                       {header.isPlaceholder
                         ? null

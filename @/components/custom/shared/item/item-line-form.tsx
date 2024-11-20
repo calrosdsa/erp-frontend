@@ -1,5 +1,3 @@
-import useEditTable from "~/util/hooks/useEditTable";
-import { useAddLineOrder } from "./add-item-line";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { orderLineColumns } from "../../table/columns/order/order-line-column";
 import { formatAmountToInt, sumTotal } from "~/util/format/formatCurrency";
@@ -7,22 +5,19 @@ import OrderSumary from "../../display/order-sumary";
 import { useTranslation } from "react-i18next";
 import { DataTable } from "../../table/CustomTable";
 import { DEFAULT_CURRENCY } from "~/constant";
-import { useOutletContext, useRevalidator } from "@remix-run/react";
-import { useEffect } from "react";
+import { useOutletContext } from "@remix-run/react";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import FormAutocomplete from "../../select/FormAutocomplete";
-import { ItemLineType, PartyType } from "~/gen/common";
-import useActionRow from "~/util/hooks/useActionRow";
+import { ItemLineType } from "~/gen/common";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
 import {
-  editLineItemSchema,
+  lineItemSchema,
   mapToItemLineDto,
-} from "~/util/data/schemas/stock/item-line-schema";
+} from "~/util/data/schemas/stock/line-item-schema";
 import { z } from "zod";
 import { useItemLine } from "./item-line";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import { FontRomanIcon } from "@radix-ui/react-icons";
 import { UseFormReturn } from "react-hook-form";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse";
 
@@ -32,7 +27,7 @@ export default function ItemLineForm({
   itemLineType,
   partyType,
 }: {
-  form:UseFormReturn<any>;
+  form: UseFormReturn<any>;
   configuteWarehouse?: boolean;
   itemLineType: ItemLineType;
   partyType: string;
@@ -47,7 +42,6 @@ export default function ItemLineForm({
   });
   const createWareHouse = useCreateWareHouse();
 
-  const addLineOrder = useAddLineOrder();
   const itemLine = useItemLine();
 
   const { t, i18n } = useTranslation("common");
@@ -56,7 +50,7 @@ export default function ItemLineForm({
       itemLine.onOpenDialog({
         allowEdit: true,
         partyType: partyType,
-        currency: form.getValues().currency.code,
+        currency: form.getValues().currency,
         itemLineType: itemLineType,
         ...(itemLineType == ItemLineType.ITEM_LINE_RECEIPT && {
           lineItemReceipt: {
@@ -75,20 +69,19 @@ export default function ItemLineForm({
           // console.log("LINES",orderLines,addLineOrder.orderLine)
           form.setValue("lines", n);
           form.trigger("lines");
-          
         },
       });
       // addLineOrder.openDialog({ currency: form.getValues().currency.code,itemLineType:itemLineType });
     },
     onDelete: (rowIndex) => {
-      const orderLines: z.infer<typeof editLineItemSchema>[] =
+      const orderLines: z.infer<typeof lineItemSchema>[] =
         form.getValues().lines;
       const f = orderLines.filter((_, idx) => idx != rowIndex);
       form.setValue("lines", f);
       form.trigger("lines");
     },
     onEdit: (rowIndex) => {
-      const orderLines: z.infer<typeof editLineItemSchema>[] =
+      const orderLines: z.infer<typeof lineItemSchema>[] =
         form.getValues().lines;
       const f = orderLines.find((_, idx) => idx == rowIndex);
       if (f) {
@@ -96,26 +89,30 @@ export default function ItemLineForm({
         itemLine.onOpenDialog({
           allowEdit: true,
           partyType: partyType,
-          currency: form.getValues().currency.code,
+          currency: form.getValues().currency,
           itemLineType: itemLineType,
           lineReference: f.itemLineReference,
+          lineItemReceipt: {
+            acceptedQuantity: Number(f.quantity),
+            rejectedQuantity: 0,
+            acceptedWarehouseName:f.lineItemReceipt?.acceptedWarehouseName,
+            rejectedWarehouseName:f.lineItemReceipt?.rejectedWarehouseName,
+          },
           line: line,
           onEditItemForm: (e) => {
-            console.log("EDITED ITEM",e)
-            const orderLines: z.infer<typeof editLineItemSchema>[] =
+            console.log("EDITED ITEM", e);
+            const orderLines: z.infer<typeof lineItemSchema>[] =
               form.getValues().lines;
             const n = orderLines.map((t, idx) => {
               if (idx == rowIndex) {
-                e.rate = formatAmountToInt(e.rate)
-                e.itemLineReference = f.itemLineReference
+                e.rate = formatAmountToInt(e.rate);
+                e.itemLineReference = f.itemLineReference;
                 t = e;
-
               }
               return t;
             });
             form.setValue("lines", n);
             form.trigger("lines");
-
           },
         });
       }
@@ -162,7 +159,7 @@ export default function ItemLineForm({
                   createWareHouse.openDialog({});
                 },
               })}
-              />
+            />
           </div>
         </>
       )}
@@ -172,7 +169,7 @@ export default function ItemLineForm({
       <DataTable
         data={form.getValues().lines || []}
         columns={orderLineColumns({
-          currency: form.getValues().currency?.code || DEFAULT_CURRENCY,
+          currency: form.getValues().currency || DEFAULT_CURRENCY,
           itemLineType: itemLineType,
         })}
         metaOptions={{
@@ -180,25 +177,25 @@ export default function ItemLineForm({
             ...metaOptions,
             tooltipMessage: t("tooltip.selectCurrency"),
             enableTooltipMessage:
-              form.getValues().currency?.code == undefined ||
-              form.getValues().currency.code == "",
-            },
+              form.getValues().currency == undefined ||
+              form.getValues().currency == "",
+          },
         }}
-        />
+      />
       {form.getValues().lines.length > 0 && (
         <OrderSumary
           orderTotal={sumTotal(
             form
               .getValues()
               .lines?.map(
-                (item: z.infer<typeof editLineItemSchema>) =>
+                (item: z.infer<typeof lineItemSchema>) =>
                   item.rate * Number(item.quantity)
               )
-            )}
-            orderTax={0}
-            i18n={i18n}
-          currency={addLineOrder.currency || DEFAULT_CURRENCY}
-          />
+          )}
+          orderTax={0}
+          i18n={i18n}
+          currency={form.getValues().currency || DEFAULT_CURRENCY}
+        />
       )}
     </div>
   );

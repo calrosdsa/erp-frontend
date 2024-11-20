@@ -9,6 +9,7 @@ import { endOfMonth, format, startOfMonth } from "date-fns";
 import { routes } from "~/util/route";
 import { stockLedgerColumns } from "@/components/custom/table/columns/stock/stock-ledger-columns";
 import StockLedgerHeader from "./components/stock-ledger-header";
+import ResizableTable from "@/components/custom/table/ResizableTable";
 
 export default function StockLedgerClient() {
   const { stockLedger } = useLoaderData<typeof loader>();
@@ -28,7 +29,7 @@ export default function StockLedgerClient() {
           <StockLedgerHeader />
         </CardHeader>
         <CardContent className="px-2 py-3">
-          <DataTable
+          <ResizableTable
             data={stockLedger || []}
             columns={stockLedgerColumns({})}
           />

@@ -214,6 +214,7 @@
     "sale": "Sale {{o}}",
     "editRow": "Edit Row {{o}}",
     "of": "of",
+    
     "selected": "Selected {{o}}(s)",
     "default": "Default {{o}} {{p}}",
     "join": "{{o}} {{p}}"

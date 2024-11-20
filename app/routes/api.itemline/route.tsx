@@ -1,11 +1,11 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import apiClient from "~/apiclient";
-import { editLineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
+import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 
 type ActionData = {
   action: string;
-  editLineItem: z.infer<typeof editLineItemSchema>;
+  editLineItem: z.infer<typeof lineItemSchema>;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });

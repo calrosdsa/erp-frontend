@@ -1,4 +1,4 @@
-import { AddLineOrder, useAddLineOrder } from "@/components/custom/shared/item/add-item-line"
+// import { AddLineOrder, useAddLineOrder } from "@/components/custom/shared/item/add-item-line"
 import ItemLine, { useItemLine } from "@/components/custom/shared/item/item-line"
 import { ExporterData, useExporterData } from "~/routes/api.exporter/components/use-exporter-data"
 import { CreateEvent, useCreateEvent } from "~/routes/home._regate.event_/components/use-create-event"
@@ -37,7 +37,7 @@ export default function GlobalDialogs({globalState}:{
     const createCustomer = useCreateCustomer()
 
     const createUser = useCreateUser()
-    const addLineOrder = useAddLineOrder()
+    // const addLineOrder = useAddLineOrder()
 
     const itemLine = useItemLine()
 
@@ -76,7 +76,7 @@ export default function GlobalDialogs({globalState}:{
         globalState={globalState}
         />
         }
-        {(addLineOrder.open && addLineOrder.currency)&& 
+        {/* {(addLineOrder.open && addLineOrder.currency)&& 
         <AddLineOrder
         open={addLineOrder.open}
         currency={addLineOrder.currency}
@@ -84,7 +84,7 @@ export default function GlobalDialogs({globalState}:{
         setOrderLine={(e)=>addLineOrder.setOrderLine(e)}
         itemLineType={addLineOrder.itemLineType}
         />
-        }
+        } */}
         {createSupplier.open &&
         <CreateSupplier
         open={createSupplier.open}

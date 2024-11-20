@@ -40,11 +40,12 @@ export default function CreatePurchaseOrdersClient() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const r = routes;
-  const [priceListFetcher, onPriceListChange] = usePriceListDebounceFetcher();
   const form = useForm<z.infer<typeof createPurchaseSchema>>({
     resolver: zodResolver(createPurchaseSchema),
     defaultValues: {
       lines: [],
+      currency: globalState.companyDefaults?.currency,
+      currencyName: globalState.companyDefaults?.currency,
       date: new Date(),
     },
   });
@@ -122,11 +123,24 @@ export default function CreatePurchaseOrdersClient() {
               />
 
               <AccordationLayout
-                title={t("priceList")}
+                title={t("form.currency")}
                 containerClassName=" col-span-full"
                 className="create-grid"
               >
                 <FormAutocomplete
+                  data={currencyDebounceFetcher.data?.currencies || []}
+                  form={form}
+                  name="currencyName"
+                  required={true}
+                  nameK={"code"}
+                  onValueChange={onCurrencyChange}
+                  label={t("form.currency")}
+                  onSelect={(v) => {
+                    form.setValue("currency", v.code);
+                    form.trigger("currency");
+                  }}
+                />
+                {/* <FormAutocomplete
                   onValueChange={onPriceListChange}
                   form={form}
                   name="priceListName"
@@ -138,7 +152,7 @@ export default function CreatePurchaseOrdersClient() {
                     form.setValue("currency", e.currency);
                     form.trigger("currency");
                   }}
-                />
+                /> */}
               </AccordationLayout>
               {/* <Typography className=" col-span-full" fontSize={subtitle}>
                 {t("form.currencyAndPriceList")}
@@ -157,7 +171,6 @@ export default function CreatePurchaseOrdersClient() {
                 }}
               /> */}
             </div>
-            {/* {JSON.stringify(form.getValues().lines)} */}
             <ItemLineForm
               form={form}
               partyType={params.partyOrder || ""}

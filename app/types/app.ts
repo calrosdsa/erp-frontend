@@ -20,6 +20,7 @@ export type GlobalState = {
     profile?:components["schemas"]["ProfileDto"];
     role?:components["schemas"]["RoleDto"];
     roleActions:components["schemas"]["RoleActionDto"][]
+    companyDefaults?:components["schemas"]["CompanyDefaultsDto"]
     activeCompany?: components["schemas"]["CompanyDto"];
     session:SessionData;
     userData?:UserData  

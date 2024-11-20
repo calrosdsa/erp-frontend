@@ -25,7 +25,7 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
                 body:{
                     receipt:{
                         posting_date:d.postingDate.toString(),
-                        currency:d.currency.code,
+                        currency:d.currency,
                         party_receipt:params.partyReceipt || "",
 
                         party_uuid:d.partyUuid,

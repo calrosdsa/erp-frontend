@@ -43,7 +43,7 @@ export const loader = async({request,params}:LoaderFunctionArgs)=>{
     const res =await client.GET("/court/detail/{id}",{
         params:{
             path:{
-                id:searchParams.get("id") || ""
+                id:params.name || "",
             }
         }
     })
@@ -51,7 +51,7 @@ export const loader = async({request,params}:LoaderFunctionArgs)=>{
         courtRates = client.GET("/court-rate/{id}",{
             params:{
                 path:{
-                    id:searchParams.get("id") || ""
+                    id:params.name || "",
                 }
             }
         })

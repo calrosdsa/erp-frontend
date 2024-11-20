@@ -13,7 +13,10 @@ import { z } from "zod";
 import { create } from "zustand";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { components } from "~/sdk";
-import { editLineItemSchema, lineItemReceipt } from "~/util/data/schemas/stock/item-line-schema";
+import {
+  lineItemSchema,
+  lineItemReceipt,
+} from "~/util/data/schemas/stock/line-item-schema";
 import { useItemPriceForOrders } from "~/util/hooks/fetchers/useItemPriceForOrder";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import {
@@ -40,15 +43,15 @@ export default function ItemLine({
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  globalState:GlobalState,
+  globalState: GlobalState;
 }) {
   const itemLine = useItemLine();
-  const { line,lineItemReceipt } = itemLine;
+  const { line, lineItemReceipt } = itemLine;
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const r = routes;
-  const form = useForm<z.infer<typeof editLineItemSchema>>({
-    resolver: zodResolver(editLineItemSchema),
+  const form = useForm<z.infer<typeof lineItemSchema>>({
+    resolver: zodResolver(lineItemSchema),
     defaultValues: {
       itemLineID: line?.id,
       quantity: line?.quantity,
@@ -57,32 +60,38 @@ export default function ItemLine({
 
       item_code: line?.item_code,
       item_name: line?.item_name,
-      item_uuid: line?.item_uuid,
       uom: line?.uom,
+      // item_uuid: line?.item_uuid,
+      // uom: line?.uom,
       party_type: itemLine.partyType,
-      item_price_uuid: line?.item_price_uuid,
+      // item_price_uuid: line?.item_price_uuid,
 
-      lineItemReceipt:lineItemReceipt,
+      lineItemReceipt: lineItemReceipt,
       // itemLineReference:line.refe
     },
   });
   const [itemPriceDebounceFetcher, onItemPriceChange] = useItemPriceForOrders({
-    isBuying: itemLine.partyType == partyTypeToJSON(PartyType.purchaseOrder),
-    isSelling: itemLine.partyType == partyTypeToJSON(PartyType.saleOrder),
+    isBuying:
+      itemLine.partyType == partyTypeToJSON(PartyType.purchaseOrder) ||
+      itemLine.partyType == partyTypeToJSON(PartyType.purchaseReceipt) ||
+      itemLine.partyType == partyTypeToJSON(PartyType.purchaseInvoice),
+    isSelling:
+      itemLine.partyType == partyTypeToJSON(PartyType.saleOrder) ||
+      itemLine.partyType == partyTypeToJSON(PartyType.saleInvoice) ||
+      itemLine.partyType == partyTypeToJSON(PartyType.deliveryNote),
     currency: itemLine.currency || DEFAULT_CURRENCY,
   });
 
-  const [warehouseFetcher,onWarehouseChange] = useWarehouseDebounceFetcher({
-    isGroup:false
-  })
+  const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
+    isGroup: false,
+  });
   const [permissionWarehouse] = usePermission({
-    roleActions:globalState.roleActions,
-    actions:warehouseFetcher.data?.actions,
-  })
-  const createWareHouse = useCreateWareHouse()
+    roleActions: globalState.roleActions,
+    actions: warehouseFetcher.data?.actions,
+  });
+  const createWareHouse = useCreateWareHouse();
 
-  
-  const onSubmit = (values: z.infer<typeof editLineItemSchema>) => {
+  const onSubmit = (values: z.infer<typeof lineItemSchema>) => {
     if (values.itemLineID) {
       fetcher.submit(
         {
@@ -123,7 +132,10 @@ export default function ItemLine({
       className=" max-w-2xl "
     >
       <Form {...form}>
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)} className="px-2 pb-2">
+        <fetcher.Form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="px-2 pb-2"
+        >
           <div className="flex flex-col ">
             {itemLine.allowEdit && (
               <div className=" flex flex-wrap gap-x-3 ">
@@ -150,7 +162,6 @@ export default function ItemLine({
               form={form}
               onValueChange={onItemPriceChange}
               onSelect={(e) => {
-                //   revalidator.revalidate();
                 form.setValue("item_code", e.item_code);
                 form.setValue("item_uuid", e.item_uuid);
                 form.setValue("uom", e.uom);
@@ -184,7 +195,7 @@ export default function ItemLine({
               {t("f.and", { o: t("form.quantity"), p: t("form.rate") })}
             </Typography>
 
-            {/* {itemLine.itemLineType == ItemLineType.ITEM_LINE_ORDER && ( */}
+            {(itemLine.itemLineType != ItemLineType.ITEM_LINE_RECEIPT) && (
               <CustomFormField
                 label={t("form.quantity")}
                 form={form}
@@ -194,7 +205,7 @@ export default function ItemLine({
                 }}
                 name={"quantity"}
               />
-            {/* )} */}
+            )}
 
             {itemLine.itemLineType == ItemLineType.ITEM_LINE_RECEIPT && (
               <>
@@ -239,47 +250,45 @@ export default function ItemLine({
               name={"uom"}
             />
 
-
             {itemLine.itemLineType == ItemLineType.ITEM_LINE_RECEIPT && (
               <>
-            <Typography fontSize={subtitle} className=" col-span-full">
-              {t("_warehouse.base")}
-            </Typography>
-              <FormAutocomplete
-              data={warehouseFetcher.data?.warehouses || []}
-              nameK={"name"}
-              label={t("f.accepted",{o:t("_warehouse.base")})}
-              name="lineItemReceipt.acceptedWarehouseName"
-              form={form}
-              onValueChange={onWarehouseChange}
-              onSelect={(e) => {
-                form.setValue("lineItemReceipt.acceptedWarehouse", e.id);
-              }}
-              {...(permissionWarehouse?.create && {
-                addNew:()=>{
-                  createWareHouse.openDialog({})
-                }
-              })}
-              />
-              
-               <FormAutocomplete
-              data={warehouseFetcher.data?.warehouses || []}
-              nameK={"name"}
-              label={t("f.rejected",{o:t("_warehouse.base")})}
-              name="lineItemReceipt.rejectedWarehouseName"
-              form={form}
-              onValueChange={onWarehouseChange}
-              onSelect={(e) => {
-                form.setValue("lineItemReceipt.rejectedWarehouse", e.id);
-              }}
-              {...(permissionWarehouse?.create && {
-                addNew:()=>{
-                  createWareHouse.openDialog({})
-                }
-              })}
-              />
-              </>
+                <Typography fontSize={subtitle} className=" col-span-full">
+                  {t("_warehouse.base")}
+                </Typography>
+                <FormAutocomplete
+                  data={warehouseFetcher.data?.warehouses || []}
+                  nameK={"name"}
+                  label={t("f.accepted", { o: t("_warehouse.base") })}
+                  name="lineItemReceipt.acceptedWarehouseName"
+                  form={form}
+                  onValueChange={onWarehouseChange}
+                  onSelect={(e) => {
+                    form.setValue("lineItemReceipt.acceptedWarehouse", e.id);
+                  }}
+                  {...(permissionWarehouse?.create && {
+                    addNew: () => {
+                      createWareHouse.openDialog({});
+                    },
+                  })}
+                />
 
+                <FormAutocomplete
+                  data={warehouseFetcher.data?.warehouses || []}
+                  nameK={"name"}
+                  label={t("f.rejected", { o: t("_warehouse.base") })}
+                  name="lineItemReceipt.rejectedWarehouseName"
+                  form={form}
+                  onValueChange={onWarehouseChange}
+                  onSelect={(e) => {
+                    form.setValue("lineItemReceipt.rejectedWarehouse", e.id);
+                  }}
+                  {...(permissionWarehouse?.create && {
+                    addNew: () => {
+                      createWareHouse.openDialog({});
+                    },
+                  })}
+                />
+              </>
             )}
           </div>
         </fetcher.Form>
@@ -298,22 +307,22 @@ interface ItemLineEditStore {
   itemLineType?: ItemLineType;
   lineReference?: number;
 
-  lineItemReceipt?:z.infer<typeof lineItemReceipt>
-  onEditItemForm?: (e: z.infer<typeof editLineItemSchema>) => void;
+  lineItemReceipt?: z.infer<typeof lineItemReceipt>;
+  onEditItemForm?: (e: z.infer<typeof lineItemSchema>) => void;
   onOpenChange: (e: boolean) => void;
   onOpenDialog: (opts: {
     title?: string;
     allowEdit: boolean;
-    line?: components["schemas"]["ItemLineDto"];
+    line?: components["schemas"]["LineItemDto"];
 
-    lineItemReceipt?:z.infer<typeof lineItemReceipt>
+    lineItemReceipt?: z.infer<typeof lineItemReceipt>;
     currency?: string;
     partyType: string;
     itemLineType: ItemLineType;
     lineReference?: number;
-    onEditItemForm?: (e: z.infer<typeof editLineItemSchema>) => void;
+    onEditItemForm?: (e: z.infer<typeof lineItemSchema>) => void;
   }) => void;
-  line?: components["schemas"]["ItemLineDto"];
+  line?: components["schemas"]["LineItemDto"];
 }
 export const useItemLine = create<ItemLineEditStore>((set) => ({
   open: false,
@@ -328,7 +337,7 @@ export const useItemLine = create<ItemLineEditStore>((set) => ({
       partyType: opts.partyType,
       itemLineType: opts.itemLineType,
       lineReference: opts.lineReference,
-      lineItemReceipt:opts.lineItemReceipt,
+      lineItemReceipt: opts.lineItemReceipt,
       onEditItemForm: opts.onEditItemForm,
     })),
   onOpenChange: (e) =>

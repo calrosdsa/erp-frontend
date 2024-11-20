@@ -497,7 +497,9 @@ class Routes {
 
   //Regate
   court = this.base + "/court";
+  courtM = "court";
   booking = this.base + "/booking";
+  bookingM = "booking";
   event = this.base + "/event";
   rDashboard = this.base + "/rdashboard";
 

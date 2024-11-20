@@ -31,7 +31,7 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
                         invoice_party_type:params.partyInvoice || "",
                         due_date:d.due_date?.toString(),
                         date:d.date.toString(),
-                        currency:d.currency.code,
+                        currency:d.currency,
                         reference:d.referenceID,
                     },
                     items:{

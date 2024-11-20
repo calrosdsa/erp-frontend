@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { supplierDtoSchema } from "../buying/supplier-schema";
 import { currencySchema } from "../app/currency-schema";
-import { editLineItemSchema, lineItemReceipt } from "../stock/item-line-schema";
+import { lineItemSchema, lineItemReceipt } from "../stock/line-item-schema";
 import { ItemLineType } from "~/gen/common";
 
 export const createReceiptSchema = z.object({
@@ -19,8 +19,8 @@ export const createReceiptSchema = z.object({
     rejectedWarehouseName:z.string().optional(),
     rejectedWarehouse:z.number().optional(),
 
-    currency: currencySchema,
-    lines: z.array(editLineItemSchema),
+    currency: z.string(),
+    lines: z.array(lineItemSchema),
   }).superRefine((data,ctx)=>{
     data.lines = data.lines.map((t,i)=>{
       if(t.lineType == ItemLineType.ITEM_LINE_RECEIPT){

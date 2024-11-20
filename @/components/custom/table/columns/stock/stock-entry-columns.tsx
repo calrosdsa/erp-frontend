@@ -9,7 +9,6 @@ import TableCellStatus from "../../cells/table-cell-status";
 export const stockEntryColumns = ({}: {}): ColumnDef<
   components["schemas"]["StockEntryDto"]
 >[] => {
-  let columns: ColumnDef<components["schemas"]["StockEntryDto"]>[] = [];
   const r = routes;
   const { t, i18n } = useTranslation("common");
   return [
@@ -26,8 +25,8 @@ export const stockEntryColumns = ({}: {}): ColumnDef<
             {...props}
             navigate={(code) =>
               r.toRoute({
-                main: r.costCenter,
-                routePrefix: [r.accountingM],
+                main: r.stockEntry,
+                routePrefix: [r.stockM],
                 routeSufix: [code],
                 q: {
                   tab: "info",

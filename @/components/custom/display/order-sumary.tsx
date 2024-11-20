@@ -23,7 +23,7 @@ export default function OrderSumary({ orderTotal, orderTax,i18n,currency }: Orde
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">Order Summary</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">Summary</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4 md:space-y-0 md:flex md:justify-between md:items-center">

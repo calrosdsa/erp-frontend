@@ -1,4 +1,4 @@
-  import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import HomeLayout from "./homeLayout";
 import {
   ActionFunctionArgs,
@@ -47,9 +47,10 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
           "Set-Cookie": await destroySession(session),
         },
       });
-    } 
+    }
   }
   const sessionData = session.data as SessionData;
+  console.log(res.data?.company_defaults);
   return json(
     {
       data: res.data,
@@ -58,7 +59,8 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
       role: res.data?.role,
       profile: res.data?.profile,
       company: res.data?.company,
-      roleActions:res.data?.role_actions,
+      roleActions: res.data?.role_actions,
+      companyDefaults: res.data?.company_defaults,
       // activeCompany: res.data?.user.UserRelation.Company,
     },
     {
@@ -70,7 +72,16 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 };
 
 export default function Home() {
-  const { data, session, user,profile,role,company,roleActions} = useLoaderData<typeof loader>();
+  const {
+    data,
+    session,
+    user,
+    profile,
+    role,
+    company,
+    roleActions,
+    companyDefaults,
+  } = useLoaderData<typeof loader>();
 
   return (
     <ClientOnly fallback={<FallBack />}>
@@ -85,7 +96,8 @@ export default function Home() {
                 activeCompany: company,
                 role: role,
                 profile: profile,
-                roleActions:roleActions || [],
+                roleActions: roleActions || [],
+                companyDefaults: companyDefaults,
               }}
             >
               <Outlet
@@ -97,7 +109,8 @@ export default function Home() {
                     activeCompany: company,
                     role: role,
                     profile: profile,
-                    roleActions:roleActions,
+                    roleActions: roleActions,
+                    companyDefaults: companyDefaults,
                   } as GlobalState
                 }
               />

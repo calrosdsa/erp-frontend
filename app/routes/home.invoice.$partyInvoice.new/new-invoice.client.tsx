@@ -28,9 +28,6 @@ import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
 import {
   ItemLineType,
-  PartyType,
-  partyTypeFromJSON,
-  partyTypeToJSON,
 } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -58,10 +55,8 @@ export default function CreatePurchaseInvoiceClient() {
       partyName: createPurchaseInvoice.payload?.party_name || "",
       partyUuid: createPurchaseInvoice.payload?.party_uuid || "",
       partyType: createPurchaseInvoice.payload?.party_type || "",
-      currency: {
-        code: createPurchaseInvoice.payload?.currency || "",
-      },
-      currencyName: createPurchaseInvoice.payload?.currency,
+      currency: createPurchaseInvoice.payload?.currency || globalState.companyDefaults?.currency || "",
+      currencyName: createPurchaseInvoice.payload?.currency || globalState.companyDefaults?.currency,
       lines: createPurchaseInvoice.payload?.lines || [],
       date: new Date(),
     },
@@ -151,7 +146,7 @@ export default function CreatePurchaseInvoiceClient() {
                 onValueChange={onCurrencyChange}
                 label={t("form.currency")}
                 onSelect={(v) => {
-                  form.setValue("currency", v);
+                  form.setValue("currency", v.code);
                   form.trigger("currency");
                 }}
               />

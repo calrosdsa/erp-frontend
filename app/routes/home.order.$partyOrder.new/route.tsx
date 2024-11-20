@@ -29,7 +29,7 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
                         party_uuid:d.partyUuid,
                         party_type:d.partyType,
                         order_party_type:params.partyOrder || "",
-                        currency:d.currency.code,
+                        currency:d.currency,
                         delivery_date:d.delivery_date?.toString(),
                         date:d.date.toString(),
                     },

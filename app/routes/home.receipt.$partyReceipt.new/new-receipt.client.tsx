@@ -24,7 +24,6 @@ import { usePermission } from "~/util/hooks/useActions";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import Typography, {
   subtitle,
-  title,
 } from "@/components/typography/Typography";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
@@ -60,10 +59,8 @@ export default function NewReceiptClient() {
       partyName: payload?.party_name,
       partyUuid: payload?.party_uuid,
       partyType: payload?.party_type,
-      currency: {
-        code: payload?.currency,
-      },
-      currencyName: payload?.currency,
+      currency: payload?.currency || globalState.companyDefaults?.currency || "",
+      currencyName: payload?.currency || globalState.companyDefaults?.currency,
       reference: payload?.reference,
       lines: payload?.lines || [],
     },
@@ -140,7 +137,7 @@ export default function NewReceiptClient() {
                 onValueChange={onCurrencyChange}
                 label={t("form.currency")}
                 onSelect={(v) => {
-                  form.setValue("currency", v);
+                  form.setValue("currency", v.code);
                   revalidator.revalidate();
                 }}
               />

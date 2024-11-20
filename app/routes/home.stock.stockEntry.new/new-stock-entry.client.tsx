@@ -1,6 +1,11 @@
 import FormLayout from "@/components/custom/form/FormLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher } from "@remix-run/react";
+import {
+  Navigate,
+  useFetcher,
+  useNavigate,
+  useOutletContext,
+} from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -20,16 +25,24 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { createStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-schema";
 import AccordationLayout from "@/components/layout/accordation-layout";
-import { usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
+import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import { GlobalState } from "~/types/app";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useRef } from "react";
 
 export default function NewStockEntryClient() {
   const { t } = useTranslation("common");
-  const route = routes;
   const fetcher = useFetcher<typeof action>();
-  const [priceListFetcher, onPriceListChange] = usePriceListDebounceFetcher();
+  const { companyDefaults } = useOutletContext<GlobalState>();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  // const [priceListFetcher, onPriceListChange] = usePriceListDebounceFetcher();
+  const [currencyDebounceFetcher, onCurrencyChange] =
+    useCurrencyDebounceFetcher();
+  const navigate = useNavigate();
+  const r = routes;
   const [sourceWarehouse, onSourceWarehouseChange] =
     useWarehouseDebounceFetcher({ isGroup: false });
   const [targetWarehouse, onTargetWarehouseChange] =
@@ -51,24 +64,60 @@ export default function NewStockEntryClient() {
   const form = useForm<z.infer<typeof createStockEntrySchema>>({
     resolver: zodResolver(createStockEntrySchema),
     defaultValues: {
-      lines:[]
+      lines: [],
+      currency: companyDefaults?.currency,
+      currencyName: companyDefaults?.currency,
     },
   });
+  const onSubmit = (e: z.infer<typeof createStockEntrySchema>) => {
+    fetcher.submit(
+      {
+        createStockEntry: e as any,
+        action: "create-stock-entry",
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
+  };
+
+  setUpToolbar(() => {
+    return {
+      title: t("f.add-new", { o: t("stockEntry") }),
+      onSave: () => {
+        inputRef.current?.click();
+      },
+    };
+  }, []);
+
   useDisplayMessage(
     {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
+      onShowMessage: () => {
+        if (fetcher.data) {
+          navigate(
+            r.toRoute({
+              main: r.stockEntry,
+              routePrefix: [r.stockM],
+              routeSufix: [fetcher.data.stockEntry?.code || ""],
+              q: {
+                tab: "info",
+              },
+            })
+          );
+        }
+      },
     },
     [fetcher.data]
   );
   return (
     <FormLayout>
       <Form {...form}>
-        <fetcher.Form>
+        {JSON.stringify(form.formState.errors)}
+        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
-            {/* <Typography className=" col-span-full" variant="title2">
-              {t("_payment.type")}
-            </Typography> */}
             <CustomFormDate
               form={form}
               name="postingDate"
@@ -80,24 +129,26 @@ export default function NewStockEntryClient() {
               label={t("form.entryType")}
               keyName={"name"}
               keyValue={"value"}
-              name="paymentType"
+              name="stockEntryType"
             />
             <Separator className=" col-span-full" />
 
             <AccordationLayout
-              title={t("priceList")}
+              title={t("form.currency")}
               containerClassName=" col-span-full"
               className="create-grid"
             >
               <FormAutocomplete
-                onValueChange={onPriceListChange}
+                data={currencyDebounceFetcher.data?.currencies || []}
                 form={form}
-                name="priceListName"
-                nameK={"name"}
-                label={t("priceList")}
-                data={priceListFetcher.data?.priceLists || []}
-                onSelect={(e) => {
-                  form.setValue("priceListID", e.id);
+                name="currencyName"
+                required={true}
+                nameK={"code"}
+                onValueChange={onCurrencyChange}
+                label={t("form.currency")}
+                onSelect={(v) => {
+                  form.setValue("currency", v.code);
+                  form.trigger("currency");
                 }}
               />
             </AccordationLayout>
@@ -132,13 +183,13 @@ export default function NewStockEntryClient() {
               />
             </AccordationLayout>
 
-
             <ItemLineForm
               form={form}
               partyType={partyTypeToJSON(PartyType.stockEntry) || ""}
               itemLineType={ItemLineType.ITEM_LINE_STOCK_ENTRY}
             />
           </div>
+          <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>
     </FormLayout>

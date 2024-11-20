@@ -9,7 +9,7 @@ import {
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState, OrderGlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app";
 import {
   ItemLineType,
   PartyType,
@@ -24,7 +24,7 @@ import { ButtonToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
 import { z } from "zod";
-import { mapToLineItem } from "~/util/data/schemas/stock/item-line-schema";
+import { mapToLineItem } from "~/util/data/schemas/stock/line-item-schema";
 import { useCreateReceipt } from "../home.receipt.$partyReceipt.new/use-create-receipt";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import DetailLayout from "@/components/layout/detail-layout";

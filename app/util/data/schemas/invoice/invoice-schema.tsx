@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { supplierDtoSchema } from "../buying/supplier-schema";
 import { currencySchema } from "../app/currency-schema";
-import { editLineItemSchema, lineItemSchema } from "../stock/item-line-schema";
+import { lineItemSchema } from "../stock/line-item-schema";
 
 export const createPurchaseInvoiceSchema = z.object({
   partyType: z.string(),
@@ -13,6 +13,6 @@ export const createPurchaseInvoiceSchema = z.object({
   due_date: z.date().optional(),
   date: z.date(),
   currencyName: z.string(),
-  currency: currencySchema,
-  lines: z.array(editLineItemSchema),
+  currency: z.string(),
+  lines: z.array(lineItemSchema),
 });

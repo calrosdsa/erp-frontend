@@ -26,7 +26,7 @@ import { format } from "date-fns";
 import { ButtonToolbar } from "~/types/actions";
 
 export default function ReceiptDetailClient() {
-  const { receipt, itemLines, actions, activities } =
+  const { receipt, actions, activities } =
     useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const { t, i18n } = useTranslation("common");

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { create } from "zustand";
-import { editLineItemSchema, lineItemSchema } from "~/util/data/schemas/stock/item-line-schema";
+import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 
 interface Payload {
     party_name?:string
@@ -8,7 +8,7 @@ interface Payload {
     party_type?:string
     currency?:string
     referenceID?:number
-    lines:z.infer<typeof editLineItemSchema>[]
+    lines:z.infer<typeof lineItemSchema>[]
 }
 interface CreatePurchaseInvoiceStore {
     payload?:Payload

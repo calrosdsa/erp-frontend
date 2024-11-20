@@ -1,19 +1,35 @@
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import Typography, { subtitle } from "@/components/typography/Typography";
-import { useLoaderData } from "@remix-run/react";
+import {
+  Await,
+  useLoaderData,
+  useOutletContext,
+  useParams,
+} from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatMediumDate } from "~/util/format/formatDate";
 import { loader } from "../../route";
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { displayItemLineColumns } from "@/components/custom/table/columns/order/order-line-column";
+import { displayItemLineColumns, lineItemColumns } from "@/components/custom/table/columns/order/order-line-column";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { sumTotal } from "~/util/format/formatCurrency";
 import OrderSumary from "@/components/custom/display/order-sumary";
+import { useItemLine } from "@/components/custom/shared/item/item-line";
+import useTableRowActions from "~/util/hooks/useTableRowActions";
+import { ItemLineType, State, stateToJSON } from "~/gen/common";
+import { GlobalState } from "~/types/app";
+import { Suspense } from "react";
+import FallBack from "@/components/layout/Fallback";
+import LineItems from "@/components/custom/shared/item/line-items";
 
 export default function ReceiptInfoTab() {
   const { t, i18n } = useTranslation("common");
-  const {receipt,itemLines} = useLoaderData<typeof loader>()
+  const { receipt, lineItems } = useLoaderData<typeof loader>();
+  const { companyDefaults } = useOutletContext<GlobalState>();
+  const params = useParams();
+
+ 
   return (
     <div>
       <div className=" info-grid">
@@ -36,29 +52,14 @@ export default function ReceiptInfoTab() {
           value={receipt?.currency}
         />
 
-<div className=" col-span-full pt-3">
-        <Typography fontSize={subtitle}>{t("items")}</Typography>
-        <DataTable
-          data={itemLines || []}
-          columns={displayItemLineColumns({
-            currency: receipt?.currency || DEFAULT_CURRENCY,
-          })}
+        <LineItems
+        currency={receipt?.currency || companyDefaults?.currency || ""}
+        status={receipt?.status || ""}
+        lineItems={lineItems}
+        partyType={params.partyReceipt || ""}
+        itemLineType={ItemLineType.ITEM_LINE_RECEIPT}
         />
-
-        {receipt && itemLines.length > 0 && (
-          <OrderSumary
-            orderTotal={sumTotal(
-              itemLines.map((t) => t.rate * t.quantity)
-            )}
-            orderTax={100}
-            i18n={i18n}
-            currency={receipt?.currency || DEFAULT_CURRENCY}
-          />
-        )}
       </div>
-      </div>
-
-      
     </div>
   );
 }

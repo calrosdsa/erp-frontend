@@ -21,23 +21,35 @@ import { UpdateCourtRate, useUpdateCourtRate } from "./use-update-court-rate";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function CourtDetailClient() {
-  const { court,activities } = useLoaderData<typeof loader>();
+  const { court, activities } = useLoaderData<typeof loader>();
   const params = useParams();
   const { t } = useTranslation("common");
   const r = routes;
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
-  const toolbar = useToolbar();
   const updateCourtRate = useUpdateCourtRate();
+  const toRoute = (tab: string) => {
+    return r.toRoute({
+      main: r.courtM,
+      routeSufix: [court?.name || ""],
+      q: {
+        tab: tab,
+      },
+    });
+  };
   const navTabs: NavItem[] = [
     {
       title: t("info"),
-      href: r.toCourtDetail(court?.name || "", court?.uuid || "", "info"),
+      href: toRoute("info"),
     },
     {
       title: t("regate.schedule"),
-      href: r.toCourtDetail(court?.name || "", court?.uuid || "", "schedule"),
+      href: toRoute("schedule"),
+    },
+    {
+      title: "Reservas",
+      href: toRoute("reservas"),
     },
   ];
 
@@ -59,9 +71,11 @@ export default function CourtDetailClient() {
   }, []);
 
   return (
-    <DetailLayout navItems={navTabs}
-    activities={activities}
-    partyID={court?.id}>
+    <DetailLayout
+      navItems={navTabs}
+      activities={activities}
+      partyID={court?.id}
+    >
       {updateCourtRate.open && <UpdateCourtRate />}
 
       {tab == "info" && <CourtInfoTab />}

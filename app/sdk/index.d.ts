@@ -943,7 +943,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Item Lines */
+        get: operations["item-lines"];
         /** EditItemLine */
         put: operations["update-item-line"];
         post?: never;
@@ -1891,6 +1892,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock-entry/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Stock Entry Status */
+        put: operations["update-stock-entry-status"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock-ledger/balance": {
         parameters: {
             query?: never;
@@ -2440,6 +2458,7 @@ export interface components {
              */
             readonly $schema?: string;
             company: components["schemas"]["CompanyDto"];
+            company_defaults: components["schemas"]["CompanyDefaultsDto"];
             profile: components["schemas"]["ProfileDto"];
             role: components["schemas"]["RoleDto"];
             role_actions: components["schemas"]["RoleActionDto"][];
@@ -2739,6 +2758,9 @@ export interface components {
             updated_at: string | null;
             uuid: string;
         };
+        CompanyDefaultsDto: {
+            currency: string;
+        };
         CompanyDto: {
             /** Format: date-time */
             created_at: string;
@@ -2970,7 +2992,7 @@ export interface components {
             values: components["schemas"]["ItemAttributeValueDto"][];
         };
         CreateItemLines: {
-            lines: components["schemas"]["LineItemDto"][];
+            lines: components["schemas"]["LineItemData"][];
         };
         CreateItemPriceBody: {
             /**
@@ -3180,7 +3202,7 @@ export interface components {
             date: string;
             /** Format: date-time */
             delivery_date?: string | null;
-            lines: components["schemas"]["LineItemDto"][];
+            lines: components["schemas"]["LineItemData"][];
             party_type: string;
             party_uuid: string;
         };
@@ -3221,9 +3243,10 @@ export interface components {
             name: string;
         };
         CreateStockEntry: {
+            currency: string;
             entry_type: string;
-            name: string;
-            status: string;
+            /** Format: date-time */
+            posting_date: string;
         };
         CreateStockEntryBody: {
             /**
@@ -4368,18 +4391,36 @@ export interface components {
             status: string;
             uuid: string;
         };
-        LineItemDto: {
+        LineItemData: {
             /** Format: int32 */
             item_line_reference?: number;
             item_price_uuid: string;
-            line_receipt?: components["schemas"]["LineItemReceiptDto"];
-            line_stock_entry?: components["schemas"]["LineItemStockEntry"];
+            line_receipt?: components["schemas"]["LineItemReceiptData"];
+            line_stock_entry?: components["schemas"]["LineItemStockEntryData"];
             /** Format: int32 */
             quantity: number;
             /** Format: int32 */
             rate: number;
         };
-        LineItemReceiptDto: {
+        LineItemDto: {
+            /** Format: int32 */
+            accepted_quantity: number;
+            accepted_warehouse: string;
+            /** Format: int32 */
+            id: number;
+            item_code: string;
+            item_name: string;
+            line_type: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: int32 */
+            rate: number;
+            /** Format: int32 */
+            rejected_quantity: number;
+            rejected_warehouse?: string;
+            uom: string;
+        };
+        LineItemReceiptData: {
             /** Format: int32 */
             accepted_quantity: number;
             /** Format: int64 */
@@ -4389,11 +4430,11 @@ export interface components {
             /** Format: int64 */
             rejected_warehouse?: number;
         };
-        LineItemStockEntry: {
+        LineItemStockEntryData: {
             /** Format: int64 */
-            source_warehouse: number;
+            source_warehouse?: number;
             /** Format: int64 */
-            target_warehouse: number;
+            target_warehouse?: number;
         };
         OrderDto: {
             /** Format: int32 */
@@ -5279,6 +5320,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ChartDataDto"][];
         };
+        ResponseDataListLineItemDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["LineItemDto"][];
+        };
         ResponseDataListPartyConnectionsBody: {
             /**
              * Format: uri
@@ -5660,8 +5714,11 @@ export interface components {
         };
         StockEntryDto: {
             code: string;
+            currency: string;
+            entry_type: string;
             /** Format: int64 */
             id: number;
+            posting_date: string;
             status: string;
         };
         StockLedgerEntryDto: {
@@ -8451,6 +8508,38 @@ export interface operations {
             };
         };
     };
+    "item-lines": {
+        parameters: {
+            query?: {
+                line_type?: string;
+                id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListLineItemDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "update-item-line": {
         parameters: {
             query?: {
@@ -11193,6 +11282,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityStockEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-stock-entry-status": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
