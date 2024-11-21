@@ -1617,6 +1617,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/regate/booking-slot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Booking Slots */
+        get: operations["booking-slots"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/regate/booking/detail/{id}": {
         parameters: {
             query?: never;
@@ -2668,6 +2685,17 @@ export interface components {
             booking: components["schemas"]["BookingData"];
             /** Format: int64 */
             booking_id: number;
+        };
+        BookingSlotDto: {
+            /** Format: int64 */
+            booking_id: number;
+            /** Format: date-time */
+            datetime: string;
+            /** Format: int32 */
+            paid_price: number;
+            /** Format: int32 */
+            total_price: number;
+            type: string;
         };
         CashFlowEntryDto: {
             account_name: string;
@@ -3835,19 +3863,6 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityLedgerDetailDto"];
-        };
-        EntityResponseResultEntityListCourtRateDtoBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            associated_actions: {
-                [key: string]: components["schemas"]["ActionDto"][] | undefined;
-            };
-            message: string;
-            result: components["schemas"]["ResultEntityListCourtRateDto"];
         };
         EntityResponseResultEntityListCustomerTypeBody: {
             /**
@@ -5307,6 +5322,19 @@ export interface components {
             message: string;
             result: components["schemas"]["BookingData"][];
         };
+        ResponseDataListBookingSlotDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["BookingSlotDto"][];
+        };
         ResponseDataListChartDataDtoBody: {
             /**
              * Format: uri
@@ -5319,6 +5347,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ChartDataDto"][];
+        };
+        ResponseDataListCourtRateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["CourtRateDto"][];
         };
         ResponseDataListLineItemDtoBody: {
             /**
@@ -5524,12 +5565,6 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["LedgerDetailDto"];
-        };
-        ResultEntityListCourtRateDto: {
-            activities: components["schemas"]["ActivityDto"][];
-            addresses: components["schemas"]["AddressDto"][];
-            contacts: components["schemas"]["ContactDto"][];
-            entity: components["schemas"]["CourtRateDto"][];
         };
         ResultEntityListCustomerType: {
             activities: components["schemas"]["ActivityDto"][];
@@ -7704,7 +7739,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityListCourtRateDtoBody"];
+                    "application/json": components["schemas"]["ResponseDataListCourtRateDtoBody"];
                 };
             };
             /** @description Error */
@@ -10545,6 +10580,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "booking-slots": {
+        parameters: {
+            query: {
+                court_id: string;
+                from_date: string;
+                to_date: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListBookingSlotDtoBody"];
                 };
             };
             /** @description Error */
