@@ -59,6 +59,7 @@ export const BookingNav = ({
   const booking: NavItem = {
     title: t("regate._booking.base"),
     icon: CalendarIcon,
+    defaultOpen:true,
     href: r.booking,
     isChildren: true,
     children: bookingNavs,

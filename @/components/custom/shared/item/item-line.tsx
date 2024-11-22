@@ -1,9 +1,7 @@
-import IconButton from "@/components/custom-ui/icon-button";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFetcher, useOutletContext } from "@remix-run/react";
 import { DeleteIcon, TrashIcon } from "lucide-react";
@@ -27,7 +25,6 @@ import CustomFormField from "../../form/CustomFormField";
 import { Input } from "@/components/ui/input";
 import { action } from "~/routes/api.itemline/route";
 import { routes } from "~/util/route";
-import { useEffect } from "react";
 import AmountInput from "../../input/AmountInput";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
@@ -154,6 +151,7 @@ export default function ItemLine({
           </div>
 
           <div className="grid sm:grid-cols-2 gap-3 pt-2">
+             
             <FormAutocomplete
               data={itemPriceDebounceFetcher.data?.itemPriceForOrders || []}
               nameK={"item_name"}
@@ -168,18 +166,7 @@ export default function ItemLine({
                 form.setValue("item_price_uuid", e.uuid);
                 form.setValue("rate", formatAmounFromInt(e.rate));
               }}
-              onCustomDisplay={(item, idx) => {
-                return (
-                  <div className="w-full">
-                    {item.item_name} ({item.item_code}){" "}
-                    {formatCurrency(
-                      item.rate,
-                      itemLine.currency,
-                      i18n.language
-                    )}
-                  </div>
-                );
-              }}
+              
             />
 
             <CustomFormField

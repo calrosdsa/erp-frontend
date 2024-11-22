@@ -23,6 +23,7 @@ import { FormEvent, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { create } from "zustand";
 import { action } from "~/routes/api/route";
 import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
@@ -36,9 +37,10 @@ export const sessionDefaultsFormSchema = z.object({
 
 export const SessionDefault = ({
   session,
+  onOpenChange,
 }: {
   session: SessionData;
-  close: () => void;
+  onOpenChange: (e: boolean) => void;
 }) => {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
@@ -56,7 +58,7 @@ export const SessionDefault = ({
     fetcher.submit(
       {
         action: "update-session-defaults",
-        pathName: location.pathname + location.search+location.hash,
+        pathName: location.pathname + location.search + location.hash,
         sessionDefault: values,
       },
       {
@@ -67,7 +69,7 @@ export const SessionDefault = ({
     );
   }
 
-  const getSessions = ()=>{
+  const getSessions = () => {
     fetcherSessions.submit(
       {
         action: "get-sessions",
@@ -78,10 +80,10 @@ export const SessionDefault = ({
         action: r.api,
       }
     );
-  }
+  };
 
   useEffect(() => {
-    getSessions()
+    getSessions();
   }, []);
 
   return (
@@ -152,21 +154,33 @@ export const SessionDefault = ({
 
 export const SessionDefaultDrawer = ({
   open,
-  close,
+  onOpenChange,
   session,
 }: {
   open: boolean;
-  close: () => void;
+  onOpenChange: (e: boolean) => void;
   session: SessionData;
 }) => {
   const { t } = useTranslation("common");
   return (
     <DrawerLayout
       open={open}
-      onOpenChange={(e) => close()}
+      onOpenChange={onOpenChange}
       title={t("sidebar.sessionDefaults")}
     >
-      <SessionDefault session={session} close={close} />
+      <SessionDefault session={session} onOpenChange={onOpenChange} />
     </DrawerLayout>
   );
 };
+
+interface SessionDefaultStore {
+  open: boolean;
+  onOpenChange: (e: boolean) => void;
+}
+export const useSessionDefaults = create<SessionDefaultStore>((set) => ({
+  open: false,
+  onOpenChange: (e) =>
+    set((state) => ({
+      open: e,
+    })),
+}));

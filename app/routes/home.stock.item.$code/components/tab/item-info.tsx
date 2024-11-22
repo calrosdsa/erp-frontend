@@ -11,10 +11,6 @@ export default function ItemInfoTab() {
   return (
     <div>
       <div className="info-grid">
-        <div className=" col-span-full">
-          <Typography fontSize={title}>{t("_item.info")}</Typography>
-        </div>
-
         <DisplayTextValue title={t("form.name")} value={item?.name} />
 
         <DisplayTextValue title={t("_item.code")} value={item?.code} />

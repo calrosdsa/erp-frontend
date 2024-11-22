@@ -15,3 +15,11 @@ export const createCustomerSchema = z.object({
         data.contactData.givenName = data.name
     }
 })
+
+
+export const editCustomerSchema= z.object({
+    name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+    customerType:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+    customerID:z.number(),
+    groupID:z.number().optional(),
+})

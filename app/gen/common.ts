@@ -1362,6 +1362,51 @@ export function stockEntryTypeToJSON(object: StockEntryType): string {
   }
 }
 
+export enum JournalEntryType {
+  cashEntry = 0,
+  bankEntry = 1,
+  contraEntry = 2,
+  creditCardEntry = 3,
+  UNRECOGNIZED = -1,
+}
+
+export function journalEntryTypeFromJSON(object: any): JournalEntryType {
+  switch (object) {
+    case 0:
+    case "cashEntry":
+      return JournalEntryType.cashEntry;
+    case 1:
+    case "bankEntry":
+      return JournalEntryType.bankEntry;
+    case 2:
+    case "contraEntry":
+      return JournalEntryType.contraEntry;
+    case 3:
+    case "creditCardEntry":
+      return JournalEntryType.creditCardEntry;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return JournalEntryType.UNRECOGNIZED;
+  }
+}
+
+export function journalEntryTypeToJSON(object: JournalEntryType): string {
+  switch (object) {
+    case JournalEntryType.cashEntry:
+      return "cashEntry";
+    case JournalEntryType.bankEntry:
+      return "bankEntry";
+    case JournalEntryType.contraEntry:
+      return "contraEntry";
+    case JournalEntryType.creditCardEntry:
+      return "creditCardEntry";
+    case JournalEntryType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export interface Result {
   message: string;
 }

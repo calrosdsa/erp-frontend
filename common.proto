@@ -232,3 +232,10 @@ enum StockEntryType {
     MATERIAL_RECEIPT = 1;
     MATERIAL_TRANSFER = 2;
 }
+
+enum JournalEntryType {
+    cashEntry = 0;
+    bankEntry = 1;
+    contraEntry = 2;
+    creditCardEntry =3;
+}

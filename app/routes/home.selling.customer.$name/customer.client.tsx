@@ -21,8 +21,8 @@ export default function CustomerClient() {
   const tab = searchParams.get("tab");
   const { t, i18n } = useTranslation("common");
   const r = routes;
-  const params = useParams();
   const navigate = useNavigate()
+  
   const toRoute = (tab:string)=>{
     return r.toRoute({
         main:r.customerM,

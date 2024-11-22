@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
-import { SessionDefaultDrawer } from "./components/SessionDefaults";
+import { SessionDefaultDrawer, useSessionDefaults } from "./components/SessionDefaults";
 import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
 import {
@@ -20,6 +20,15 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useUnmount } from "usehooks-ts";
 import { Typography } from "@/components/typography";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
+import { Separator } from "@/components/ui/separator";
+import { UserNav } from "@/components/layout/user-nav";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 type RouteItem = {
   name: string;
@@ -35,7 +44,8 @@ export default function HomeLayout({
 }) {
   const location = useLocation();
   const { t } = useTranslation("common");
-  const [openSessionDefaults, setOpenSessionDefaults] = React.useState(false);
+  const sessionDefaults = useSessionDefaults();
+  
 
   const [routesName, setRoutesName] = React.useState<string[]>([]);
 
@@ -72,42 +82,25 @@ export default function HomeLayout({
     // }
   }, [location.pathname]);
   React.useEffect(() => {
-    setOpenSessionDefaults(false);
+    sessionDefaults.onOpenChange(false)
   }, [location]);
   return (
     <>
       <GlobalDialogs globalState={globalState} />
-      {openSessionDefaults && (
-        <SessionDefaultDrawer
-          open={openSessionDefaults}
-          close={() => setOpenSessionDefaults(false)}
-          session={globalState.session}
-        />
-      )}
 
-      <Header
+      {/* <Header
         data={globalState}
         openSessionDefaults={() => setOpenSessionDefaults(true)}
-      />
-      <div className="flex h-screen border-collapse overflow-hidden max-w-[1900px] mx-auto">
-        <Sidebar data={globalState} />
-        <main className="flex-1 overflow-y-auto overflow-x-hidden pt-16 bg-secondary/10 pb-1">
-          <div
-            className="
-    px-2 
-    md:px-6 
-    pt-4
-    pb-2 
-    sm:pb-2 
-    md:pb-3 
-    flex 
-    flex-col 
-    min-w-0 
-    h-custom-dvh 
-    gap-1
-  "
-          >
-            <div className="flex align-center">
+        /> */}
+
+      {/* <div className="flex h-screen border-collapse overflow-hidden max-w-[1900px] mx-auto"> */}
+      <SidebarProvider >
+        <AppSidebar data={globalState} />
+        <SidebarInset>
+          <header className="flex h-16 shrink-0 items-center gap-2 justify-between">
+            <div className="flex items-center gap-2 px-4">
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb aria-label="breadcrumbs">
                 <BreadcrumbList>
                   <BreadcrumbItem key="home">
@@ -131,7 +124,7 @@ export default function HomeLayout({
                             aria-label={item}
                             className="hover:underline"
                           >
-                            <Typography variant="caption" >{item}</Typography>
+                            <Typography variant="caption">{item}</Typography>
                           </Link>
                         </BreadcrumbLink>
                       </BreadcrumbItem>
@@ -142,10 +135,12 @@ export default function HomeLayout({
                       <BreadcrumbSeparator />
                       <BreadcrumbItem>
                         <BreadcrumbPage>
-                          <Typography variant="caption" >
-                            {t(decodeURIComponent(
-                              routesName[routesName.length - 1] || ""
-                            ))}
+                          <Typography variant="caption">
+                            {t(
+                              decodeURIComponent(
+                                routesName[routesName.length - 1] || ""
+                              )
+                            )}
                           </Typography>
                         </BreadcrumbPage>
                       </BreadcrumbItem>
@@ -154,97 +149,39 @@ export default function HomeLayout({
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
+            <div className="flex items-center space-x-2 pr-3">
+              {/* {globalState.profile != undefined && (
+                <UserNav
+                  user={globalState.profile}
+                  openSessionDefaults={()=>sessionDefaults.onOpenChange(true)}
+                />
+              )} */}
+              <ThemeToggle />
+          
+            </div>
+          </header>
+          <div
+            className="
+              px-2 
+              md:px-6 
+              pb-2 
+              sm:pb-2 
+              md:pb-3 
+              flex 
+              flex-col 
+              min-w-0 
+              h-custom-dvh 
+              gap-1
+            "
+          >
+            <div className="flex align-center"></div>
 
             <ToolBar title={getRouteName()} />
 
-            <div className="h-full  max-w-[1500px">
-              {children}
-              </div>
+            <div className="h-full  max-w-[1500px">{children}</div>
           </div>
-        </main>
-      </div>
+        </SidebarInset>
+      </SidebarProvider>
     </>
   );
 }
-
-// <Box sx={{ display: "flex", minHeight: "100dvh" }}>
-//         <Header />
-//         <Sidebar
-//         globalState={globalState}
-//         openSessionDefaults={()=>setOpenSessionDefaults(true)}
-//         />
-//         <Box
-//           component="main"
-//           className="MainContent"
-//           sx={{
-//             px: { xs: 2, md: 6 },
-//             pt: {
-//               xs: "calc(12px + var(--Header-height))",
-//               sm: "calc(12px + var(--Header-height))",
-//               md: 3,
-//             },
-//             pb: { xs: 2, sm: 2, md: 3 },
-//             flex: 1,
-//             display: "flex",
-//             flexDirection: "column",
-//             minWidth: 0,
-//             height: "100dvh",
-//             gap: 1,
-//           }}
-//         >
-// <Box sx={{ display: "flex", alignItems: "center" }}>
-//   <Breadcrumbs
-//     size="sm"
-//     aria-label="breadcrumbs"
-//     separator={<ChevronRightRoundedIcon fontSize="caption"  />}
-//     sx={{ pl: 0 }}
-//   >
-//     <Link
-//       color="neutral"
-//       to="/home"
-//       className="hover:underline"
-//       aria-label="Home"
-//     >
-//       <HomeRoundedIcon />
-//     </Link>
-//     {routesName.slice(0, routesName.length - 1).map((item, idx) => {
-//       return (
-//         <Link
-//           key={item}
-//           color="neutral"
-//           to={getRoute(idx)}
-//           aria-label={item}
-//           className="hover:underline"
-//         >
-//           <Typography fontWeight={500} fontSize={12}>
-//             {item}
-//           </Typography>
-//         </Link>
-//       );
-//     })}
-
-//     <Typography color="primary" fontWeight={500} fontSize={12}>
-//       {routesName[routesName.length - 1]}
-//     </Typography>
-//   </Breadcrumbs>
-// </Box>
-
-// <Box
-//   sx={{
-//     display: "flex",
-//     mb: 1,
-//     gap: 1,
-//     flexDirection: { xs: "column", sm: "row" },
-//     alignItems: { xs: "start", sm: "center" },
-//     flexWrap: "wrap",
-//     justifyContent: "space-between",
-//   }}
-// >
-//   <Typography level="h2" component="h1">
-//     {getRouteName()}
-//   </Typography>
-// </Box>
-
-//           {children}
-//         </Box>
-//       </Box>

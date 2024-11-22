@@ -686,7 +686,8 @@ export interface paths {
         };
         /** Retrieve customers */
         get: operations["get customers"];
-        put?: never;
+        /** Edit customer */
+        put: operations["edit-customer"];
         /** Create customer */
         post: operations["create customer"];
         delete?: never;
@@ -982,6 +983,23 @@ export interface paths {
         /** Journal Entry */
         get: operations["journal-entry"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journal/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Journal Entry Status */
+        put: operations["update-journal-entry-status"];
         post?: never;
         delete?: never;
         options?: never;
@@ -2968,7 +2986,7 @@ export interface components {
         };
         CreateCustomerData: {
             customer_type: string;
-            group_uuid: string;
+            group_uuid?: string;
             name: string;
         };
         CreateEntityRequestBody: {
@@ -3090,7 +3108,9 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            entry_lines: components["schemas"]["JournalEntryLineData"][];
             entry_type: string;
+            /** Format: date-time */
             posting_date: string;
         };
         CreateLedgerBody: {
@@ -3383,8 +3403,10 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             customer_type: string;
-            group_name?: string;
-            group_uuid?: string;
+            /** Format: int64 */
+            group_id: number | null;
+            group_name?: string | null;
+            group_uuid?: string | null;
             /** Format: int64 */
             id: number;
             name: string;
@@ -3419,6 +3441,19 @@ export interface components {
             givenName: string;
             organizationName: string;
             phoneNumber: components["schemas"]["PhoneNumber"];
+        };
+        EditCustomerBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            customer: number;
+            customer_type: string;
+            /** Format: int64 */
+            group_id?: number | null;
+            name: string;
         };
         EditRolePermissionActionsBody: {
             /**
@@ -4375,6 +4410,7 @@ export interface components {
         };
         JournalEntryDetailDto: {
             journal_entry: components["schemas"]["JournalEntryDto"];
+            journal_entry_lines: components["schemas"]["JournalEntryLineDto"][];
         };
         JournalEntryDto: {
             code: string;
@@ -4384,6 +4420,36 @@ export interface components {
             id: number;
             posting_date: string;
             status: string;
+        };
+        JournalEntryLineData: {
+            /** Format: int64 */
+            cost_center_id: number | null;
+            /** Format: double */
+            credit: number;
+            /** Format: double */
+            debit: number;
+            /** Format: int64 */
+            ledger_id: number;
+            /** Format: int64 */
+            project_id: number | null;
+        };
+        JournalEntryLineDto: {
+            account: string;
+            /** Format: int64 */
+            account_id: number;
+            cost_center: string | null;
+            /** Format: int64 */
+            cost_center_id: number | null;
+            /** Format: int64 */
+            credit: number;
+            currency: string;
+            /** Format: int64 */
+            debit: number;
+            /** Format: int32 */
+            id: number;
+            project: string | null;
+            /** Format: int64 */
+            project_id: number | null;
         };
         KeyValueData: {
             key: string;
@@ -7915,6 +7981,39 @@ export interface operations {
             };
         };
     };
+    "edit-customer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditCustomerBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create customer": {
         parameters: {
             query?: {
@@ -8722,6 +8821,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityJournalEntryDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-journal-entry-status": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

@@ -31,7 +31,6 @@ export const customerColumns = ({}): ColumnDef<
                 routeSufix: [name],
                 q: {
                   tab: "info",
-                  id: rowData.uuid,
                 },
               })
             }

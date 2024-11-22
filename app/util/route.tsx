@@ -59,12 +59,15 @@ class Routes {
   stock = this.base + "/stock";
   items = this.stock + "/item";
   itemPrices = this.stock + "/item-prices";
+  itemPriceM = "itemPrice";
   itemGroups = this.stock + "/item-groups";
   itemAttributes = this.stock + "/item-attributes";
   warehouses = this.stock + "/warehouse";
 
   manage = this.base + "/manage";
+  manageM = "manage";
   users = this.manage + "/users";
+  userM = "users"
   roles = this.manage + "/roles";
 
   purchases = this.base + "/purchases";
@@ -202,10 +205,34 @@ class Routes {
   toReferenceDetail(partyType: string, name: string, id: string): string {
     switch (partyType) {
       case PartyType[PartyType.customer]:
+        return this.toRoute({
+          main:partyType,
+          routePrefix:[this.sellingM],
+          routeSufix:[name],
+          q:{
+            tab:"info",
+          }
+        })
       case PartyType[PartyType.supplier]:
-        return this.toSupplierDetail(name, id);
+         return this.toRoute({
+          main:partyType,
+          routePrefix:[this.buyingM],
+          routeSufix:[name],
+          q:{
+            tab:"info",
+            id:id
+          }
+        });
       case PartyType[PartyType.warehouse]:
-        return this.toWarehouseInfo(name, id);
+        return this.toRoute({
+          main:partyType,
+          routePrefix:[this.stockM],
+          routeSufix:[name],
+          q:{
+            tab:"info",
+            id:id
+          }
+        });
       default:
         return this.base;
     }

@@ -53,7 +53,6 @@ export default function RoleClient() {
         </Typography>
 
         {/* {JSON.stringify(entityActions?.entity)} */}
-
         <div className=" col-span-full">
           <DataTable
            

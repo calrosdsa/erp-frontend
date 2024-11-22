@@ -29,6 +29,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
+import { useNewBooking } from "../use-new-booking";
 
 export default function CreateBookings({
   data,
@@ -58,7 +59,8 @@ export default function CreateBookings({
   });
   const createEvent = useCreateEvent();
   const r = routes;
-  const navigate = useNavigate();
+  const {resetPayload } = useNewBooking();
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const onSubmit = (values: z.infer<typeof createBookingsSchema>) => {
     console.log("OINSUBMIT", values);
@@ -105,7 +107,7 @@ export default function CreateBookings({
   return (
     <FormLayout>
       <div className="pt-2 pb-4">
-        <Button
+          <Button
           variant={"outline"}
           className=" flex space-x-2 items-center"
           onClick={() => {
@@ -116,8 +118,9 @@ export default function CreateBookings({
                 encType: "application/json",
               }
             );
+            resetPayload()
           }}
-        >
+          >
           <ArrowLeft size={15} />
           <span>Seleccionar hora y Fecha</span>
         </Button>

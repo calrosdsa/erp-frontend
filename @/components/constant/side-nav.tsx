@@ -117,7 +117,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const manage: NavItem = {
     title: t("manage"),
     icon: UserCogIcon,
-    href: "/home/users",
+    href: r.toRoute({
+      main:r.userM,
+      routePrefix:[r.manageM]
+    }),
     isChildren: true,
     children: usersChildren,
   };

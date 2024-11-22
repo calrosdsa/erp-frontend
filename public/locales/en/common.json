@@ -123,7 +123,7 @@
     "cancel": "Cancel",
     "party": "Party",
     "partyType": "Party Type",
-    "partyName":"Party Name",
+    "partyName": "Party Name",
     "save": "Save",
     "uom": "UOM",
     "city": "City",
@@ -142,7 +142,7 @@
     "rate": "Rate",
     "itemQuantity": "Item Quantity",
     "totalQuantity": "Total Quantity",
-    "entryType":"Entry Type",
+    "entryType": "Entry Type",
     "quantity": "Quantity",
     "pay": "Pay",
     "orderTotal": "Order Total",
@@ -159,7 +159,7 @@
     "logo": "Logo",
     "isShippingAddress": "Is Shipping Address",
     "isBillingAddress": "Is Shipping Address",
-    "invoiceAmount":"Invoice Amount",
+    "invoiceAmount": "Invoice Amount",
     "paidAmount": "Paid Amount",
     "outstandingAmount": "Outstanding",
     "allocated": "Allocated",
@@ -172,19 +172,20 @@
     "voucherNo": "Voucher No.",
     "voucherType": "Voucher Type",
     "voucherSubtype": "Voucher Subtype",
-    "receivableAccount":"Receivable Account",
-    "payableAccount":"Payable Account",
-    "againstAccount":"Against Account",
+    "receivableAccount": "Receivable Account",
+    "payableAccount": "Payable Account",
+    "againstAccount": "Against Account",
     "debit": "Debit",
+    "entries": "Entries",
     "credit": "Credit",
-    "balance":"Balance",
-    "inQty":"In Qty",
-    "outQty":"Out Qty",
-    "balanceQty":"Balance Qty",
-    "incomingRate":"Incoming Rate",
-    "averageRate":"Average Rate",
-    "valuationRate":"Valuation",
-    "balanceValue":"Balance Value"
+    "balance": "Balance",
+    "inQty": "In Qty",
+    "outQty": "Out Qty",
+    "balanceQty": "Balance Qty",
+    "incomingRate": "Incoming Rate",
+    "averageRate": "Average Rate",
+    "valuationRate": "Valuation",
+    "balanceValue": "Balance Value"
   },
   "accounts": "Accounts",
   "_selling": {
@@ -214,7 +215,7 @@
     "sale": "Sale {{o}}",
     "editRow": "Edit Row {{o}}",
     "of": "of",
-    
+
     "selected": "Selected {{o}}(s)",
     "default": "Default {{o}} {{p}}",
     "join": "{{o}} {{p}}"
@@ -367,8 +368,9 @@
   "EXPENSE": "Expense",
   "REVENUE": "Revenue",
 
-  "debitNote":"Debit Note",
-  "creditNote":"Credit Note",
+  "debitNote": "Debit Note",
+  "creditNote": "Credit Note",
+  "cashEntry":"Cash Entry",
 
   "item": "Item",
   "itemPrice": "Item Price",
@@ -376,7 +378,8 @@
   "purchaseInvoice": "Purchase Invoice",
   "purchaseOrder": "Purchase Order",
   "saleInvoice": "Sale Invoice",
-  "warehouse":"Warehouse",
+  "ledger": "Account",
+  "warehouse": "Warehouse",
   "saleOrder": "Sale Order",
   "purchaseReceipt": "Purchase Receipt",
   "payment": "Payment",
@@ -389,7 +392,6 @@
   "costCenter": "Cost Center",
   "project": "Project",
   "stockEntry": "Stock Entry",
-
   "generalLedger": "General Ledger",
   "accountingLedger": "Accounting Ledger",
   "accountPayable": "Account Payable",
@@ -404,8 +406,9 @@
   "balanceSheet": "Balance Sheet",
   "financialStatement": "Financial Statement",
 
-
   "relocationAndMoving": "Relocation & Moving",
+
+  "individual":"Individual",
 
   "accountType": {
     "cash": "Cash",

@@ -64,7 +64,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
       render={({ field }) => (
         <FormItem className="flex flex-col w-full ">
           {label && <FormLabel>{label} {required && "*"}</FormLabel>}
-          <Popover>
+          <Popover modal={true}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
@@ -86,7 +86,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent >
               <Command>
                 <CommandInput
                   placeholder="Search item..."

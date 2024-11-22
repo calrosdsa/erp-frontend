@@ -6,11 +6,15 @@ import FallBack from "@/components/layout/Fallback";
 import { components } from "~/sdk";
 import FieldReservation from "./components/field-reservation";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useTranslation } from "react-i18next";
 
 export default function BookingScheduleClient() {
   const { bookingSlots, courtRates } = useLoaderData<typeof loader>();
+  const {t} = useTranslation("common")
   setUpToolbar(() => {
-    return {};
+    return {
+      title:t("regate.schedule")
+    };
   }, []);
   return (
     <div>

@@ -1,82 +1,134 @@
 // import { AddLineOrder, useAddLineOrder } from "@/components/custom/shared/item/add-item-line"
-import ItemLine, { useItemLine } from "@/components/custom/shared/item/item-line"
-import { ExporterData, useExporterData } from "~/routes/api.exporter/components/use-exporter-data"
-import { CreateEvent, useCreateEvent } from "~/routes/home._regate.event_/components/use-create-event"
-import { AddTax, useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax"
-import { CreateCompany, useCreateCompany } from "~/routes/home.companies_/components/create-company"
-import { CreateGroup, useCreateGroup } from "~/routes/home.groups.$party_/components/create-group"
-import { CreateUser, useCreateUser } from "~/routes/home.manage.users_/components/create-user"
-import AddItemPrice, { useAddItemPrice } from "~/routes/home.stock.itemPrice_/components/add-item-price"
-import { UpsertItemStockLevel, useUpsertItemStockLevel } from "~/routes/home.stock.item.$code.stock_/components/upsert-item-stock-level"
-import CreateItemVariant, { useCreateItemVariant } from "~/routes/home.stock.item.$code.variants_/components/create-item-variant"
-import { GlobalState } from "~/types/app"
-import { NewItemPriceDialog, useNewItemPrice } from "~/routes/home.stock.itemPrice.new/components/new-item-price-dialog"
-import { CreateSupplier, useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier"
-import { CreateWareHouse, useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse"
-import { CreateCustomer, useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer"
-import { AddPriceList, useCreatePriceList } from "~/routes/home.stock.priceList_/components/add-price-list"
+import ItemLine, {
+  useItemLine,
+} from "@/components/custom/shared/item/item-line";
+import {
+  ExporterData,
+  useExporterData,
+} from "~/routes/api.exporter/components/use-exporter-data";
+import {
+  CreateEvent,
+  useCreateEvent,
+} from "~/routes/home._regate.event_/components/use-create-event";
+import {
+  AddTax,
+  useCreateTax,
+} from "~/routes/home.accounting.taxes_/components/add-tax";
+import {
+  CreateCompany,
+  useCreateCompany,
+} from "~/routes/home.companies_/components/create-company";
+import {
+  CreateGroup,
+  useCreateGroup,
+} from "~/routes/home.groups.$party_/components/create-group";
+import {
+  CreateUser,
+  useCreateUser,
+} from "~/routes/home.manage.users_/components/create-user";
+import AddItemPrice, {
+  useAddItemPrice,
+} from "~/routes/home.stock.itemPrice_/components/add-item-price";
+import {
+  UpsertItemStockLevel,
+  useUpsertItemStockLevel,
+} from "~/routes/home.stock.item.$code.stock_/components/upsert-item-stock-level";
+import CreateItemVariant, {
+  useCreateItemVariant,
+} from "~/routes/home.stock.item.$code.variants_/components/create-item-variant";
+import { GlobalState } from "~/types/app";
+import {
+  NewItemPriceDialog,
+  useNewItemPrice,
+} from "~/routes/home.stock.itemPrice.new/components/new-item-price-dialog";
+import {
+  CreateSupplier,
+  useCreateSupplier,
+} from "~/routes/home.buying.supplier_/components/create-supplier";
+import {
+  CreateWareHouse,
+  useCreateWareHouse,
+} from "~/routes/home.stock.warehouse_/components/add-warehouse";
+import {
+  CreateCustomer,
+  useCreateCustomer,
+} from "~/routes/home.selling.customer_/components/create-customer";
+import {
+  AddPriceList,
+  useCreatePriceList,
+} from "~/routes/home.stock.priceList_/components/add-price-list";
+import { SessionDefaultDrawer, useSessionDefaults } from "./SessionDefaults";
 
+export default function GlobalDialogs({
+  globalState,
+}: {
+  globalState: GlobalState;
+}) {
+  const sessionDefaults = useSessionDefaults();
+  const createGroup = useCreateGroup();
 
-export default function GlobalDialogs({globalState}:{
-    globalState:GlobalState
-}){
-    const createGroup = useCreateGroup()
+  const createSupplier = useCreateSupplier();
 
-    const createSupplier = useCreateSupplier()
+  const addItemStockLevel = useUpsertItemStockLevel();
+  const createTax = useCreateTax();
+  const createPriceList = useCreatePriceList();
+  const newItemPrice = useNewItemPrice();
+  const addItemPrice = useAddItemPrice();
+  const createItemVariant = useCreateItemVariant();
+  const createWareHouse = useCreateWareHouse();
 
-    const addItemStockLevel = useUpsertItemStockLevel()
-    const createTax = useCreateTax()
-    const createPriceList = useCreatePriceList()
-    const newItemPrice = useNewItemPrice()
-    const addItemPrice = useAddItemPrice()
-    const createItemVariant = useCreateItemVariant()
-    const createWareHouse = useCreateWareHouse()
+  const createCompany = useCreateCompany();
 
-    const createCompany = useCreateCompany()
+  const createCustomer = useCreateCustomer();
 
-    const createCustomer = useCreateCustomer()
+  const createUser = useCreateUser();
+  // const addLineOrder = useAddLineOrder()
 
-    const createUser = useCreateUser()
-    // const addLineOrder = useAddLineOrder()
+  const itemLine = useItemLine();
 
-    const itemLine = useItemLine()
+  const exporterData = useExporterData();
 
-    const exporterData = useExporterData()
-
-    //Regate
-    const createEvent = useCreateEvent()
-    return (
-        <>
-        {newItemPrice.open && 
+  //Regate
+  const createEvent = useCreateEvent();
+  return (
+    <>
+      {sessionDefaults.open && (
+        <SessionDefaultDrawer
+          open={sessionDefaults.open}
+          onOpenChange={sessionDefaults.onOpenChange}
+          session={globalState.session}
+        />
+      )}
+      {newItemPrice.open && (
         <NewItemPriceDialog
-        open={newItemPrice.open}
-        onOpenChange={newItemPrice.onOpenChange}
-        globalState={globalState}
+          open={newItemPrice.open}
+          onOpenChange={newItemPrice.onOpenChange}
+          globalState={globalState}
         />
-        }
+      )}
 
-        {exporterData.open && 
+      {exporterData.open && (
         <ExporterData
-        open={exporterData.open}
-        onOpenChange={exporterData.onOpenChange}
+          open={exporterData.open}
+          onOpenChange={exporterData.onOpenChange}
         />
-        }
+      )}
 
-        {itemLine.open && 
+      {itemLine.open && (
         <ItemLine
-        open={itemLine.open}
-        onOpenChange={itemLine.onOpenChange}
-        globalState={globalState}
+          open={itemLine.open}
+          onOpenChange={itemLine.onOpenChange}
+          globalState={globalState}
         />
-        }
-        {createCustomer.open &&
+      )}
+      {createCustomer.open && (
         <CreateCustomer
-        open={createCustomer.open}
-        onOpenChange={createCustomer.onOpenChange}
-        globalState={globalState}
+          open={createCustomer.open}
+          onOpenChange={createCustomer.onOpenChange}
+          globalState={globalState}
         />
-        }
-        {/* {(addLineOrder.open && addLineOrder.currency)&& 
+      )}
+      {/* {(addLineOrder.open && addLineOrder.currency)&& 
         <AddLineOrder
         open={addLineOrder.open}
         currency={addLineOrder.currency}
@@ -85,83 +137,79 @@ export default function GlobalDialogs({globalState}:{
         itemLineType={addLineOrder.itemLineType}
         />
         } */}
-        {createSupplier.open &&
+      {createSupplier.open && (
         <CreateSupplier
-        open={createSupplier.open}
-        onOpenChange={createSupplier.onOpenChange}
-        globalState={globalState}
+          open={createSupplier.open}
+          onOpenChange={createSupplier.onOpenChange}
+          globalState={globalState}
         />
-        }
-        {createGroup.open &&
+      )}
+      {createGroup.open && (
         <CreateGroup
-        open={createGroup.open}
-        onOpenChange={createGroup.onOpenChange}
+          open={createGroup.open}
+          onOpenChange={createGroup.onOpenChange}
         />
-        }
-        {createUser.open && 
+      )}
+      {createUser.open && (
         <CreateUser
-        open={createUser.open}
-        onOpenChange={createUser.onOpenChange}
-        permission={createUser.permission}
-        globalState={globalState}
+          open={createUser.open}
+          onOpenChange={createUser.onOpenChange}
+          permission={createUser.permission}
+          globalState={globalState}
         />
-        }
-        {createWareHouse.open && 
+      )}
+      {createWareHouse.open && (
         <CreateWareHouse
-        open={createWareHouse.open}
-        onOpenChange={createWareHouse.onOpenChange}
+          open={createWareHouse.open}
+          onOpenChange={createWareHouse.onOpenChange}
         />
-        }
-        {createItemVariant.open && 
+      )}
+      {createItemVariant.open && (
         <CreateItemVariant
-        open={createItemVariant.open}
-        onOpenChange={createItemVariant.onOpenChange}
-        item={createItemVariant.item}
+          open={createItemVariant.open}
+          onOpenChange={createItemVariant.onOpenChange}
+          item={createItemVariant.item}
         />
-        }
-        {createCompany.open && 
+      )}
+      {createCompany.open && (
         <CreateCompany
-        open={createCompany.open}
-        onOpenChange={createCompany.onOpenChange}
+          open={createCompany.open}
+          onOpenChange={createCompany.onOpenChange}
         />
-        }
-        {addItemPrice.open && 
+      )}
+      {addItemPrice.open && (
         <AddItemPrice
-        open={addItemPrice.open}
-        itemUuid={addItemPrice.itemUuid}
-        onOpenChange={addItemPrice.onOpenChange}
+          open={addItemPrice.open}
+          itemUuid={addItemPrice.itemUuid}
+          onOpenChange={addItemPrice.onOpenChange}
         />
-        }
-        {createPriceList.open &&
+      )}
+      {createPriceList.open && (
         <AddPriceList
-        open={createPriceList.open}
-        onOpenChange={createPriceList.onOpenChange}
+          open={createPriceList.open}
+          onOpenChange={createPriceList.onOpenChange}
         />
-        }
-        {createTax.isOpen && 
-        <AddTax
-        open={createTax.isOpen}
-        onOpenChange={createTax.onOpenChange}
-        />
-        }
-        {addItemStockLevel.isOpen && 
+      )}
+      {createTax.isOpen && (
+        <AddTax open={createTax.isOpen} onOpenChange={createTax.onOpenChange} />
+      )}
+      {addItemStockLevel.isOpen && (
         <UpsertItemStockLevel
-        itemUuid={addItemStockLevel.itemUuid}
-        open={addItemStockLevel.isOpen}
-        onOpenChange={addItemStockLevel.onOpenChange}
-        warehouseUuid={addItemStockLevel.warehouseUuid}
-        stockLevel={addItemStockLevel.stockLevel}
+          itemUuid={addItemStockLevel.itemUuid}
+          open={addItemStockLevel.isOpen}
+          onOpenChange={addItemStockLevel.onOpenChange}
+          warehouseUuid={addItemStockLevel.warehouseUuid}
+          stockLevel={addItemStockLevel.stockLevel}
         />
-        }
+      )}
 
-
-        {/* REGATE */}
-        {createEvent.open &&
+      {/* REGATE */}
+      {createEvent.open && (
         <CreateEvent
-        open={createEvent.open}
-        onOpenChange={createEvent.onOpenChange}
+          open={createEvent.open}
+          onOpenChange={createEvent.onOpenChange}
         />
-        }
-        </>
-    )
+      )}
+    </>
+  );
 }

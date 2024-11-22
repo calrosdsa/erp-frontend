@@ -98,7 +98,7 @@ export default function BookingDisplay({
   return (
     <Tabs defaultValue={sortedDates[0]} className="w-full">
       {sortedDates && sortedDates.length > 1 && (
-        <TabsList className="flex flex-wrap justify-start mb-4">
+        <TabsList className="flex  justify-start mb-4 overflow-auto">
           {sortedDates.map((date, idx) => (
             <TabsTrigger
               key={date}

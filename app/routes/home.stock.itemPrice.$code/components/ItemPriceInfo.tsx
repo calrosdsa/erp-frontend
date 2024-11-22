@@ -31,9 +31,7 @@ export default function ItemPriceInfo() {
   return (
     <div>
       <div className="info-grid">
-        <div className=" col-span-full">
-          <Typography fontSize={title}>{t("itemPrice.info")}</Typography>
-        </div>
+
 
         {/* <DisplayTextValue title={t("form.code")} value={entity.code} /> */}
         <DisplayTextValue
@@ -50,9 +48,8 @@ export default function ItemPriceInfo() {
           value={formatQuantity(itemPrice?.item_quantity, itemPrice?.uom)}
         />
 
-        {priceListPermission?.view && (
           <DisplayTextValue
-            title={t("form.price-list")}
+            title={t("priceList")}
             value={itemPrice?.price_list_name}
             to={r.toRoute({
               main:r.priceList,
@@ -63,7 +60,6 @@ export default function ItemPriceInfo() {
               }
             })}
           />
-        )}
 
         {priceListPermission?.view && (
           <DisplayTextValue
