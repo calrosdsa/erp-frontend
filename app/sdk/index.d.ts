@@ -2671,10 +2671,12 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            /** Format: double */
+            added_amount: number;
             /** Format: int64 */
             booking_id: number;
             /** Format: double */
-            paid_amount: number;
+            total_paid_amount: number;
         };
         BookingRescheduleBody: {
             /**
@@ -2686,13 +2688,24 @@ export interface components {
             /** Format: int64 */
             booking_id: number;
         };
+        BookingScheduleBodyBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            booking_slots: components["schemas"]["BookingSlotDto"][];
+            cour_rates: components["schemas"]["CourtRateDto"][];
+        };
         BookingSlotDto: {
+            booking_code: string;
             /** Format: int64 */
             booking_id: number;
             /** Format: date-time */
             datetime: string;
             /** Format: int32 */
             paid_price: number;
+            party_name: string;
             /** Format: int32 */
             total_price: number;
             type: string;
@@ -5321,19 +5334,6 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["BookingData"][];
-        };
-        ResponseDataListBookingSlotDtoBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            associated_actions: {
-                [key: string]: components["schemas"]["ActionDto"][] | undefined;
-            };
-            message: string;
-            result: components["schemas"]["BookingSlotDto"][];
         };
         ResponseDataListChartDataDtoBody: {
             /**
@@ -10612,7 +10612,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseDataListBookingSlotDtoBody"];
+                    "application/json": components["schemas"]["BookingScheduleBodyBody"];
                 };
             };
             /** @description Error */

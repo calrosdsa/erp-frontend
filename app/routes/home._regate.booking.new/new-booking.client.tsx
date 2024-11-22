@@ -6,6 +6,7 @@ import { useFetcher } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { useUnmount } from "usehooks-ts";
+import { useNewBooking } from "./use-new-booking";
 
 
 export default function NewBookingClient() {
@@ -32,6 +33,7 @@ export default function NewBookingClient() {
        ]}
        onComplete={()=>{}}
        /> */}
+       {/* {JSON.stringify(payload)} */}
        {(fetcher.data?.bookingData && fetcher.data.bookingData.length > 0)?
        <CreateBookings
        data={fetcher.data.bookingData}

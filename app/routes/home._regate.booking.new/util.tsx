@@ -1,17 +1,26 @@
-import { addDays, addMonths, getDaysInMonth, isBefore, isSameDay, parse, set, setDate } from "date-fns";
+import {
+  addDays,
+  addMonths,
+  getDaysInMonth,
+  isBefore,
+  isSameDay,
+  parse,
+  set,
+  setDate,
+} from "date-fns";
 import { z } from "zod";
 import { components } from "~/sdk";
 import { validateBookingSchema } from "~/util/data/schemas/regate/booking-schema";
 import { generateTimeIntervals } from "../home._regate.court.$name/util/generate-court-rate-interval";
-
-
 
 export const mapToBookingData = (
   values: z.infer<typeof validateBookingSchema>
 ): components["schemas"]["BookingData"][] => {
   let res: components["schemas"]["BookingData"][] = [];
 
-  const createBookingData = (date: Date): components["schemas"]["BookingData"] => ({
+  const createBookingData = (
+    date: Date
+  ): components["schemas"]["BookingData"] => ({
     court_id: values.courtID,
     day_week: date.getDay(), // Adjusting to 1-7 range
     start_date: combineDateTime(date, values.startTime).toISOString(),
@@ -19,13 +28,16 @@ export const mapToBookingData = (
     times: generateTimeIntervals(values.startTime, values.endTime),
     is_reserved: false,
     court_name: values.courtName,
-    discount:values.discount
+    discount: values.discount,
   });
 
   if (values.repeatUntilDate && values.repeat) {
     let currentDate = new Date(values.date);
 
-    while (isBefore(currentDate, values.repeatUntilDate) || isSameDay(currentDate, values.repeatUntilDate)) {
+    while (
+      isBefore(currentDate, values.repeatUntilDate) ||
+      isSameDay(currentDate, values.repeatUntilDate)
+    ) {
       if (values.repeat === "DAYLY") {
         res.push(createBookingData(currentDate));
         currentDate = addDays(currentDate, 1);
@@ -43,20 +55,23 @@ export const mapToBookingData = (
           if (Number(values.repeatOnDay) <= daysInCurrentMonth) {
             const bookingDate = new Date(currentDate);
             bookingDate.setDate(Number(values.repeatOnDay));
-            if (isBefore(bookingDate, values.repeatUntilDate) || isSameDay(bookingDate, values.repeatUntilDate)) {
+            if (
+              isBefore(bookingDate, values.repeatUntilDate) ||
+              isSameDay(bookingDate, values.repeatUntilDate)
+            ) {
               res.push(createBookingData(bookingDate));
             }
           }
         }
-        
+
         currentDate = addMonths(currentDate, 1);
-        
+
         // Adjust for months where repeatOnDay exceeds the number of days
         const daysInMonth = getDaysInMonth(currentDate);
         if (Number(values.repeatOnDay) > daysInMonth) {
           currentDate = setDate(currentDate, daysInMonth);
         } else {
-          currentDate = setDate(currentDate,Number(values.repeatOnDay));
+          currentDate = setDate(currentDate, Number(values.repeatOnDay));
         }
       }
     }
@@ -66,7 +81,6 @@ export const mapToBookingData = (
 
   return res;
 };
-
 
 // export const mapToBookingData = (
 //   values: z.infer<typeof validateBookingSchema>
@@ -78,7 +92,7 @@ export const mapToBookingData = (
 //       //apend BookingData to res
 //     }
 //     if (values.repeat == "WEEKLY") {
-//       //Repeat from date to  repeatUntilDate base on week days that is (daysWeek and array of number representing 
+//       //Repeat from date to  repeatUntilDate base on week days that is (daysWeek and array of number representing
 //       // day week from 0 sunday to 6 saturday)
 
 //       //apend BookingData to res

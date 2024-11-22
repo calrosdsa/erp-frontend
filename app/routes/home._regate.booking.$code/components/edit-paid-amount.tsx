@@ -42,7 +42,7 @@ export const EditPaidAmount = ({
     },
   });
   const onSubmit = (values: z.infer<typeof editPaidAmountSchema>) => {
-    console.log(values);
+    // console.log(values);
     fetcher.submit(
       {
         editPaidAmount: values,
@@ -100,7 +100,7 @@ export const EditPaidAmount = ({
 
           <fetcher.Form
             onSubmit={form.handleSubmit(onSubmit)}
-            className=" grid"
+            className=" grid pt-2"
           >
             <CustomFormField
               form={form}

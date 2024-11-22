@@ -22,7 +22,14 @@ export const BookingInfo = () =>{
             <DisplayTextValue
             title={t("_customer.base")}
             value={booking?.party_name}
-            to={r.toCustomerDetail(booking?.party_name ||"",booking?.party_uuid || "")}
+            to={r.toRoute({
+              main:r.customerM,
+              routePrefix:[r.sellingM],
+              routeSufix:[booking?.party_name || ""],
+              q:{
+                tab:"info"
+              }
+            })}
             />
             <DisplayTextValue
             title={t("regate._court.base")}

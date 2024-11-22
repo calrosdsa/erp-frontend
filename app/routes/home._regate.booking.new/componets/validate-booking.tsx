@@ -30,9 +30,12 @@ import { Input } from "@/components/ui/input";
 import AccordationLayout from "@/components/layout/accordation-layout";
 import AmountInput from "@/components/custom/input/AmountInput";
 import { DEFAULT_CURRENCY } from "~/constant";
+import { useNewBooking } from "../use-new-booking";
+import generateBookingData from "../util-new";
 
 export const ValidateBooking = () => {
   const fetcher = useFetcher<typeof action>({ key: "booking-data" });
+  const {payload} = useNewBooking()
 
   const form = useForm<z.infer<typeof validateBookingSchema>>({
     resolver: zodResolver(validateBookingSchema),
@@ -48,6 +51,27 @@ export const ValidateBooking = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const onBookingPayload = () =>{
+    if(payload){
+      const {court,selectedSlots,courtName} = payload
+      const body: components["schemas"]["ValidateBookingBody"] = {
+        bookings:generateBookingData(court,courtName,selectedSlots),
+      };
+      console.log("BOOKING SLOTS",body)
+        fetcher.submit(
+      {
+        action: "validate-booking-data",
+        validateBookingData: body,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
+    }
+  }
+
 
   const onSubmit = (values: z.infer<typeof validateBookingSchema>) => {
     console.log("BODY", values);
@@ -84,8 +108,15 @@ export const ValidateBooking = () => {
     };
   }, []);
 
+  useEffect(()=>{
+    if(payload){
+      onBookingPayload()
+    }
+  },[payload])
+
   return (
     <FormLayout>
+       {JSON.stringify(payload)}
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className=" create-grid">
@@ -129,7 +160,7 @@ export const ValidateBooking = () => {
                 form.setValue("endTime", e);
               }}
             />
-            <AccordationLayout title="Descuento"
+            {/* <AccordationLayout title="Descuento"
             containerClassName="col-span-full">
               <div className="create-grid">
               <CustomFormField
@@ -143,7 +174,7 @@ export const ValidateBooking = () => {
               }}
             />
               </div>
-            </AccordationLayout>
+            </AccordationLayout> */}
             <AccordationLayout 
             title="Repetir Reserva"
             containerClassName=" col-span-full"

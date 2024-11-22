@@ -4,30 +4,38 @@ import { loader } from "./route";
 import { Suspense } from "react";
 import FallBack from "@/components/layout/Fallback";
 import { components } from "~/sdk";
+import FieldReservation from "./components/field-reservation";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function BookingScheduleClient() {
-  const { paginationResult, bookingSlots } = useLoaderData<typeof loader>();
+  const { bookingSlots, courtRates } = useLoaderData<typeof loader>();
+  setUpToolbar(() => {
+    return {};
+  }, []);
   return (
     <div>
-      <BookingScheduleHeader />
-      {JSON.stringify(bookingSlots)}
-      <Suspense fallback={<FallBack />}>
-        <Await resolve={bookingSlots}>
+      <FieldReservation schedules={courtRates} reservations={bookingSlots} />
+      {/* <Suspense fallback={<FallBack />}>
+        <Await resolve={resCourtRates} errorElement={<div>ERROR</div>}>
           {(resData: any) => {
             const data =
-              resData.data as components["schemas"]["ResponseDataListCourtRateDtoBody"];
+            resData.data as components["schemas"]["ResponseDataListCourtRateDtoBody"];
+            const courtRates = data.result || []
             return (
               <div>
-                Cour rates
-                {JSON.stringify(data)}
                 <Await resolve={bookingSlots}>
                   {(resData: any) => {
                     const data =
-                      resData.data as components["schemas"]["ResponseDataListBookingSlotDtoBody"];
+                    resData.data as components["schemas"]["ResponseDataListBookingSlotDtoBody"];
+                    const bookingSlots = data.result ||[]
                     return (
-                    <div>
-                      Booking Slots
-                      {JSON.stringify(data)}
+                      <div>
+                        {courtRates.length >0 &&
+                      <FieldReservation
+                      schedules={courtRates}
+                      reservations={bookingSlots}
+                      />                      
+                    }
                     </div>)
                   }}
                 </Await>
@@ -35,7 +43,7 @@ export default function BookingScheduleClient() {
             );
           }}
         </Await>
-      </Suspense>
+      </Suspense> */}
     </div>
   );
 }

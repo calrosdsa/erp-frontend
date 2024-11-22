@@ -43,6 +43,7 @@ class Routes {
   sellingStock = this.selling + "/stock";
   customerGroups = this.selling + "/customer-groups";
   customers = this.base + "/customer";
+  customerM = "customer";
 
   priceList = "priceList";
 
@@ -201,7 +202,6 @@ class Routes {
   toReferenceDetail(partyType: string, name: string, id: string): string {
     switch (partyType) {
       case PartyType[PartyType.customer]:
-        return this.toCustomerDetail(name, id);
       case PartyType[PartyType.supplier]:
         return this.toSupplierDetail(name, id);
       case PartyType[PartyType.warehouse]:
@@ -244,17 +244,6 @@ class Routes {
     return `${this.groups}/${encodeURIComponent(party)}/${encodeURIComponent(
       name
     )}?id=${id}`;
-  }
-
-  //Selling
-  toCustomerDetail(name: string, id: string, tab?: string): string {
-    let url = this.customers + `/${encodeURIComponent(name)}`;
-    if (tab) {
-      url += `?tab=${tab}`;
-    } else {
-      url += `?tab=info`;
-    }
-    return url + `&id=${id}`;
   }
 
 

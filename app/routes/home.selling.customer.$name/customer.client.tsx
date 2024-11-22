@@ -23,18 +23,24 @@ export default function CustomerClient() {
   const r = routes;
   const params = useParams();
   const navigate = useNavigate()
+  const toRoute = (tab:string)=>{
+    return r.toRoute({
+        main:r.customerM,
+        routePrefix:[r.sellingM],
+        routeSufix:[customer?.name || ""],
+        q:{
+            tab:tab
+        }
+    })
+}
   const navItems = [
     {
       title: t("info"),
-      href: r.toCustomerDetail(customer?.name || "", customer?.uuid || ""),
+      href: toRoute("info"),
     },
     {
       title: t("connections"),
-      href: r.toCustomerDetail(
-        customer?.name || "",
-        customer?.uuid || "",
-        "connections"
-      ),
+      href: toRoute("connections"),
     },
   ];
 

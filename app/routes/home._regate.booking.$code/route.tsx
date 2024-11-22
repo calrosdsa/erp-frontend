@@ -35,7 +35,8 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
             const res = await client.PUT("/regate/booking/paid-amount",{
                 body:{
                     booking_id:d.bookingID,
-                    paid_amount:d.paidAmount,
+                    added_amount:d.addedAmount,
+                    total_paid_amount:d.paidAmount,
                 }
             })
             message = res.data?.message

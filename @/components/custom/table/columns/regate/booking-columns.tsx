@@ -45,7 +45,14 @@ export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>
             <>
                 <TableCellNameNavigation
                   {...props}
-                  navigate={(name) => r.toCustomerDetail(name,rowData.party_uuid)}
+                  navigate={(name) =>  r.toRoute({
+                    main:r.customerM,
+                    routePrefix:[r.sellingM],
+                    routeSufix:[rowData?.party_name || ""],
+                    q:{
+                        tab:"info"
+                    }
+                })}
                 />
             </>
           );

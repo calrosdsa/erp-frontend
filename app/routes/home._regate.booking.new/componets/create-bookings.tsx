@@ -66,10 +66,13 @@ export default function CreateBookings({
       const body: components["schemas"]["CreateBookingBody"] = {
         advance_payment: Number(values.advancePayment),
         customer_id: values.customerID,
-        bookings: bookings,
+        bookings: bookings.map((t) => {
+          t.discount = values.discount;
+          return t;
+        }),
         event_id: values.eventID,
       };
-      console.log("BOOKING BODY",body)
+      console.log("BOOKING BODY", body);
       fetcher.submit(
         {
           action: "create-bookings",
@@ -155,7 +158,22 @@ export default function CreateBookings({
               }}
             />
 
-           
+            <CustomFormField
+              label={t("form.discount")}
+              name="discount"
+              form={form}
+              description={
+                bookings.length > 1
+                  ? "El descuento se aplica a todas las reservas."
+                  : ""
+              }
+              children={(field) => {
+                return (
+                  <AmountInput field={field} currency={DEFAULT_CURRENCY} />
+                );
+              }}
+            />
+
             <AccordationLayout
               containerClassName="col-span-full"
               title={t("regate._event.base")}
