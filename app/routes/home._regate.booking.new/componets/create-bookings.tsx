@@ -90,7 +90,7 @@ export default function CreateBookings({
 
   setUpToolbar(() => {
     return {
-      title: "Crear Nueva Reserva",
+      titleToolbar: "Crear Nueva Reserva",
       onSave: () => {
         inputRef.current?.click();
       },

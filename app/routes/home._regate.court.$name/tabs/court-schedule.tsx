@@ -42,11 +42,11 @@ export default function CourtSchedule() {
         <Await resolve={courtRates}>
           {(courtRates: any) => {
             const vData =
-              courtRates.data as components["schemas"]["EntityResponseResultEntityListCourtRateDtoBody"];
+              courtRates.data as any;
             const { result } = vData;
             return (
               <div>
-                <TimeSchedule courtRates={result.entity || []} />
+                <TimeSchedule courtRates={result || []} />
               </div>
             );
           }}

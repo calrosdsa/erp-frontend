@@ -57,9 +57,10 @@ export default function NewItemPriceClient({}: {}) {
             r.toRoute({
               main: partyTypeToJSON(PartyType.itemPrice),
               routePrefix: [r.stockM],
-              routeSufix: [fetcher.data.itemPrice.uuid],
+              routeSufix: [form.getValues().itemName],
               q: {
                 tab: "info",
+                id:fetcher.data.itemPrice.uuid,
               },
             })
           );

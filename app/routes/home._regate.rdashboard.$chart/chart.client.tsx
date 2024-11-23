@@ -43,7 +43,7 @@ export default function ChartDataClient() {
 
   setUpToolbar(()=>{
     return {
-      title:"Panel"
+      titleToolbar:"Panel"
     }
   },[])
 

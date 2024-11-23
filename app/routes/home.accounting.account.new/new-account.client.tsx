@@ -115,7 +115,7 @@ export default function NewAccountClient() {
 
   const setUpToolbar = () => {
     toolbar.setToolbar({
-      title: t("f.add-new", { o: t("_ledger.base").toLocaleLowerCase() }),
+      titleToolbar: t("f.add-new", { o: t("_ledger.base").toLocaleLowerCase() }),
       onSave: () => {
         inputRef.current?.click();
       },

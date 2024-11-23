@@ -31,7 +31,7 @@ export default function BookingsClient() {
 
   setUpToolbar(() => {
     return {
-      title: t("regate._booking.base"),
+      titleToolbar: t("regate._booking.base"),
       ...(permission?.create && {
         addNew: () => {
           navigate(r.toCreateBooking());

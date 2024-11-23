@@ -76,9 +76,13 @@ export const StockNav = ({ entities }: {
   const stock: NavItem = {
     title: t("stock"),
     icon: Layers3Icon,
-    href: "/home/stock",
+    href: r.toRoute({
+      main:partyTypeToJSON(PartyType.item),
+      routePrefix:[r.stockM],
+    }),
     isChildren: true,
     children: stockChildrens,
+    
   };
 
 

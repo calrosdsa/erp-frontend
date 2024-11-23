@@ -20,7 +20,7 @@ export default function CompaniesClient() {
 
   setUpToolbar(()=>{
     return {
-      title:t("companies"),
+      titleToolbar:t("companies"),
       // ...(permission?.create && {
       //   addNew: () => {
       //     createCompany.openDialog({});

@@ -74,7 +74,7 @@ export default function StockEntryDetailClient() {
         });
       }
     return {
-      title: `${t("stockEntry")}(${stockEntry?.code})`,
+      titleToolbar: `${t("stockEntry")}(${stockEntry?.code})`,
       status: stateFromJSON(stockEntry?.status),
       view:view,
       onChangeState: (e) => {

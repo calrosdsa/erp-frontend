@@ -20,7 +20,7 @@ export default function CustomersClient() {
   
   setUpToolbar(()=>{
     return {
-      title:t("_customer.base"),
+      titleToolbar:t("_customer.base"),
       ...(permission?.create && {
         addNew: () => {
           createCustomer.openDialog({})

@@ -14,7 +14,6 @@ type ActionData = {
 export const action = async({request}:ActionFunctionArgs)=>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
-    console.log("CREATE COURT...")
     let message:string | undefined = undefined
     let error:string | undefined = undefined
     let court:components["schemas"]["CourtDto"] | undefined = undefined
@@ -24,7 +23,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const res = await client.POST("/court",{
                 body:{
                     name:d.name,
-                    enabled:d.enabled
+                    // enabled:d.enabled
                 }
             })
             message= res.data?.message

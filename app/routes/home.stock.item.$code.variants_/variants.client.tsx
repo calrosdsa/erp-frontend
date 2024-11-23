@@ -16,7 +16,7 @@ import CustomAlertDialog from "@/components/custom/dialog/CustomAlertDialog";
 import { useToast } from "@/components/ui/use-toast";
 import {
   createItemSchema,
-  updateItemSchema,
+  editItemSchema,
 } from "~/util/data/schemas/stock/item-schemas";
 import { z } from "zod";
 import FallBack from "@/components/layout/Fallback";
@@ -64,7 +64,7 @@ export default function ItemVariantsClient() {
           open={enableVariantsConfirmation}
           onOpenChange={(e) => setEnableVariantsConfirmation(e)}
           onContinue={() => {
-            const newItem: z.infer<typeof updateItemSchema> = {
+            const newItem: z.infer<typeof editItemSchema> = {
               itemType: ItemType.ITEM_TEMPLATE_TYPE,
               name: item.name,
             };

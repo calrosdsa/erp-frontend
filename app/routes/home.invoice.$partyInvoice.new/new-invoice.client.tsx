@@ -78,7 +78,7 @@ export default function CreatePurchaseInvoiceClient() {
 
   const setUpToolbar = () => {
     toolbar.setToolbar({
-      title: t("f.add-new", { o: t("_invoice.base").toLocaleLowerCase() }),
+      titleToolbar: t("f.add-new", { o: t("_invoice.base").toLocaleLowerCase() }),
       onSave: () => {
         inputRef.current?.click();
       },

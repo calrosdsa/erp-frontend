@@ -25,7 +25,7 @@ export default function OrdersClient() {
 
   setUpToolbar(()=>{
     return {
-      title:undefined,
+      titleToolbar:undefined,
       ...(permission?.create && {
         addNew: () => {
           navigate(r.toRoute({

@@ -46,8 +46,8 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     entities: entities,
   });
   const stockNav = StockNav({
-    entities:entities
-  })
+    entities: entities,
+  });
   const accountingNav = AccountingNav({
     entities: entities,
   });
@@ -71,8 +71,8 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   });
 
   const project = ProjectNav({
-    entities:entities,
-  })
+    entities: entities,
+  });
   // const customerNav = CustomerNav({
   //   entities:entities
   // })
@@ -98,8 +98,6 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     // color: "text-sky-500",
   };
 
-
-
   let usersChildren: NavItem[] = [];
   if (entities?.includes(Entity.ROLE)) {
     usersChildren.push({
@@ -118,8 +116,8 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     title: t("manage"),
     icon: UserCogIcon,
     href: r.toRoute({
-      main:r.userM,
-      routePrefix:[r.manageM]
+      main: r.userM,
+      routePrefix: [r.manageM],
     }),
     isChildren: true,
     children: usersChildren,
@@ -166,18 +164,9 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   // switch (session.role) {
   // case Role.ROLE_ADMIN: {
 
-  if (entities?.includes(Entity.COMPANY)) {
-    navItems.push(companies);
-  }
-  if (accountingNav.children && accountingNav.children.length > 0) {
-    navItems.push(accountingNav);
-  }
-
-  //Piano
-
-  if (pianoFormsNav.children && pianoFormsNav.children.length > 0) {
-    navItems.push(pianoFormsNav);
-  }
+  // if (entities?.includes(Entity.COMPANY)) {
+  //   navItems.push(companies);
+  // }
 
   //Regate
   if (entities.includes(Entity.REGATE_CHART)) {
@@ -193,6 +182,17 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (entities?.includes(Entity.EVENTBOOKING)) {
     navItems.push(eventNav);
   }
+
+  if (accountingNav.children && accountingNav.children.length > 0) {
+    navItems.push(accountingNav);
+  }
+
+  //Piano
+
+  if (pianoFormsNav.children && pianoFormsNav.children.length > 0) {
+    navItems.push(pianoFormsNav);
+  }
+
   // if(customerNav.children && customerNav.children.length > 0) {
   //   navItems.push(customerNav)
   // }
@@ -210,8 +210,8 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     navItems.push(manage);
   }
 
-  if(entities.includes(Entity.PROJECT)) {
-    navItems.push(project)
+  if (entities.includes(Entity.PROJECT)) {
+    navItems.push(project);
   }
 
   if (entities?.includes(Entity.ADDRESS)) {
@@ -233,12 +233,12 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   navItems.push(account);
 
   return [
-    {
-      title: "Home",
-      icon: HomeIcon,
-      href: "/home",
-      // color: "text-sky-500",
-    },
+    // {
+    //   title: "Home",
+    //   icon: HomeIcon,
+    //   href: "/home",
+    //   // color: "text-sky-500",
+    // },
     // {
     //   title: "Dashboard",
     //   icon: LayoutDashboard,

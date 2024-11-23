@@ -84,7 +84,7 @@ export default function NewReceiptClient() {
 
   setUpToolbar(() => {
     return {
-      title: t("f.add-new", { o: t("_receipt.base").toLocaleLowerCase() }),
+      titleToolbar: t("f.add-new", { o: t("_receipt.base").toLocaleLowerCase() }),
       onSave: () => {
         inputRef.current?.click();
       },

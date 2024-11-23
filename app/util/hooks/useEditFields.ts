@@ -1,3 +1,4 @@
+import { aCompanyUserColumns } from "@/components/custom/table/columns/admin/a-company-columns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState, useRef } from "react";
 import { useForm, FieldValues, DefaultValues } from "react-hook-form";
@@ -25,13 +26,19 @@ export default function useEditFields<T extends FieldValues>({ schema, defaultVa
     // Compare current form values with previous values to check if there are any changes
     const currentValues = form.getValues();
     const isEqual = JSON.stringify(currentValues) === JSON.stringify(previousValuesRef.current);
+    console.log("VALIDATING",isEqual)
     setHasChanged(!isEqual);
+    // previousValuesRef.current = currentValues
   };
+
+  const updateRef = (e:T)=>{
+    previousValuesRef.current = e
+  }
 
   useEffect(() => {
     // Validate if data has changed when form values change
     validateIfDataHasChanged();
   }, [form.getValues()]); // Re-run when form values change
 
-  return { form, hasChanged };
+  return { form, hasChanged,updateRef,previousValuesRef };
 }

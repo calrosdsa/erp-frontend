@@ -1,6 +1,12 @@
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { action, loader } from "../../route";
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { formatLongDate } from "~/util/format/formatDate";
@@ -20,22 +26,34 @@ import { useRef } from "react";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { usePermission } from "~/util/hooks/useActions";
+import { GlobalState } from "~/types/app";
 type EditCustomerType = z.infer<typeof editCustomerSchema>;
 export default function CustomerInfo() {
-  const { customer, addresses, contacts } = useLoaderData<typeof loader>();
+  const { customer, addresses, contacts, actions } =
+    useLoaderData<typeof loader>();
+  const { roleActions } = useOutletContext<GlobalState>();
+  // const [searchParams,setSearchParams] = useSearchParams();
+  const [permission] = usePermission({
+    roleActions: roleActions,
+    actions: actions,
+  });
+
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
   const r = routes;
-  const { form, hasChanged } = useEditFields<EditCustomerType>({
+  const defaultValues = {
+    name: customer?.name || "",
+    customerType: customer?.customer_type,
+    customerID: customer?.id,
+    groupID: customer?.group_id || undefined,
+  } as EditCustomerType;
+  const { form, hasChanged, updateRef } = useEditFields<EditCustomerType>({
     schema: editCustomerSchema,
-    defaultValues: {
-      name: customer?.name || "",
-      customerType: customer?.customer_type,
-      customerID: customer?.id,
-      groupID: customer?.group_id,
-    } as EditCustomerType,
+    defaultValues: defaultValues,
   });
 
   const onSubmit = (e: EditCustomerType) => {
@@ -47,44 +65,38 @@ export default function CustomerInfo() {
       {
         method: "POST",
         encType: "application/json",
-        
       }
     );
   };
   setLoadingToolbar(fetcher.state == "submitting", [fetcher.data]);
 
-  setUpToolbar(() => {
-    return {
-      onSave: () => inputRef.current?.click(),
-      disabledSave: !hasChanged,
-    };
-  }, [hasChanged]);
+  setUpToolbar(
+    (opts) => {
+      return {
+        ...opts,
+        onSave: () => inputRef.current?.click(),
+        disabledSave: !hasChanged,
+      };
+    },
+    [hasChanged]
+  );
+
   useDisplayMessage(
     {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
-      onSuccessMessage:()=>{
-        navigate(r.toRoute({
-          main:r.customerM,
-          routePrefix:[r.sellingM],
-          routeSufix:[form.getValues().name],
-          q:{
-            tab:"info"
-            
-          }
-        }))
-      }
+      onSuccessMessage: () => {
+        updateRef(form.getValues());
+      },
     },
     [fetcher.data]
   );
-
 
   return (
     <div>
       <FormLayout>
         <Form {...form}>
           <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-            {JSON.stringify(form.formState.errors)}
             <div className="info-grid">
               <Typography className="col-span-full" fontSize={subtitle}>
                 {t("_customer.info")}
@@ -97,9 +109,12 @@ export default function CustomerInfo() {
                   return (
                     <DisplayTextValue
                       value={field.value}
-                      onChange={(e) => field.onChange(e)}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        form.trigger("name");
+                      }}
                       title={t("form.name")}
-                      readOnly={false}
+                      readOnly={!permission?.edit}
                     />
                   );
                 }}
@@ -118,7 +133,7 @@ export default function CustomerInfo() {
                 to={r.toGroupsByParty(PartyType.customerGroup)}
               />
             </div>
-           <input className="hidden" type="submit" ref={inputRef}/>
+            <input className="hidden" type="submit" ref={inputRef} />
           </fetcher.Form>
         </Form>
       </FormLayout>

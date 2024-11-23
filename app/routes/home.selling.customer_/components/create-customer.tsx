@@ -32,7 +32,7 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
     const fetcher = useFetcher<typeof action>()
     const {toast} = useToast()
     const {t} = useTranslation("common")
-    const customerTypeFetcher = useFetcher<typeof action>()
+    // const customerTypeFetcher = useFetcher<typeof action>()
     const [groupDebounceFetcher,onGroupNameChange] = useGroupDebounceFetcher({
         partyType:PartyType.customerGroup
     })
@@ -42,21 +42,19 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
     })
     const createGroup = useCreateGroup()
     const r = routes
-    const getCustomerTypes = () =>{
-        customerTypeFetcher.submit({
-            action:"customer-types",
-        },{
-            encType:"application/json",
-            method:"POST",
-            action:r.toRoute({
-                main:partyTypeToJSON(PartyType.customer),
-                routePrefix:[r.sellingM],
-            })
-        })
-    }
-    useEffect(()=>{
-        getCustomerTypes()
-    },[])
+    // const getCustomerTypes = () =>{
+    //     customerTypeFetcher.submit({
+    //         action:"customer-types",
+    //     },{
+    //         encType:"application/json",
+    //         method:"POST",
+    //         action:r.toRoute({
+    //             main:partyTypeToJSON(PartyType.customer),
+    //             routePrefix:[r.sellingM],
+    //         })
+    //     })
+    // }
+   
     useEffect(()=>{
         if(fetcher.data?.error){
             toast({
@@ -106,9 +104,12 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
                     type:"string",
                     required:true,
                     typeForm:"select",
-                    data:customerTypeFetcher.data?.customerTypes || [],
+                    data:[
+                        {name:t("individual"),value:"individual"},
+                        {name:t("company"),value:"company"},
+                    ] as SelectItem[],
                     keyName:"name",
-                    keyValue:"code",
+                    keyValue:"value",
                     label:t("form.type"),
                 },
             ]}
@@ -130,7 +131,7 @@ export const CreateCustomer = ({open,onOpenChange,globalState}:{
                         }
                     })}
                     onSelect={(e)=>{
-                        form.setValue("groupUuid",e.uuid)
+                        form.setValue("groupID",e.id)
                     }}
                     />
 

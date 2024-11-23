@@ -64,7 +64,7 @@ export default function FieldReservation({
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchParams, setSearchParams] = useSearchParams();
-  const viewMode: "day" | "week" | string = searchParams.get("view") || "day";
+  const viewMode: "day" | "week" | string = searchParams.get("view") || "week";
   //   const [viewMode, setViewMode] = useState<"day" | "week" | string>(searchParams.get("view") || "day");
   const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
   const newBooking = useNewBooking();
@@ -185,10 +185,10 @@ export default function FieldReservation({
             </TooltipTrigger>
             <TooltipContent>
               {reservation
-                ? `Booking #${reservation.booking_id}`
+                ? `Reserva ${reservation.party_name}`
                 : isSelectable
-                ? "Click to select"
-                : "Not available"}
+                ? "Haz clic aquí para seleccionar"
+                : "No disponible"}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -324,6 +324,8 @@ export default function FieldReservation({
             <Button
               variant={viewMode === "day" ? "default" : "outline"}
               size="sm"
+              className="px-4"
+
               onClick={() => {
                 searchParams.set("view", "day");
                 setSearchParams(searchParams, {
@@ -336,6 +338,7 @@ export default function FieldReservation({
             <Button
               variant={viewMode === "week" ? "default" : "outline"}
               size="sm"
+              className="px-4"
               onClick={() => {
                 searchParams.set("view", "week");
                 setSearchParams(searchParams, {

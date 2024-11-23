@@ -2,34 +2,30 @@ import { z } from "zod";
 import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 import { components } from "~/sdk";
 
-export const createContactSchema = z
-  .object({
-    givenName: z
-      .string()
-      .min(DEFAULT_MIN_LENGTH)
-      .max(DEFAULT_MAX_LENGTH)
-      .optional(),
-    familyName: z
-      .string()
-      .min(DEFAULT_MIN_LENGTH)
-      .max(DEFAULT_MAX_LENGTH)
-      .optional(),
-    email: z.string().email().optional(),
-    gender: z.string().optional(),
-    phoneNumber: z.string().optional(),
-    partyReferenceId: z.number().optional(),
-  })
-//   .superRefine((data, ctx) => {
-//     if (data.givenName == undefined) {
-//       ctx.addIssue({
-//         code: z.ZodIssueCode.custom,
-//         params: {
-//           i18n: { key: "custom.required" },
-//         },
-//         path: ["givenName"],
-//       });
-//     }
-//   });
+export const createContactSchema = z.object({
+  givenName: z
+    .string()
+    .min(DEFAULT_MIN_LENGTH)
+    .max(DEFAULT_MAX_LENGTH)
+    .optional(),
+  familyName: z
+    .string()
+    .min(DEFAULT_MIN_LENGTH)
+    .max(DEFAULT_MAX_LENGTH)
+    .optional(),
+  email: z.string().email().optional(),
+  gender: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  partyReferenceId: z.number().optional(),
+});
+
+export const editContactSchema = z.object({
+  givenName: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+  familyName: z.string().optional(),
+  email: z.string().email().optional(),
+  phoneNumber: z.string().optional(),
+  partyID:z.number(),
+});
 
 export const mapToContactData = (
   d?: z.infer<typeof createContactSchema>

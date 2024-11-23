@@ -155,7 +155,7 @@ export default function InvoiceDetailClient() {
       });
     }
     return {
-      title: `${t("_invoice.base")}(${invoice?.code})`,
+      titleToolbar: `${t("_invoice.base")}(${invoice?.code})`,
       status: stateFromJSON(invoice?.status),
       actions: actions,
       view: view,

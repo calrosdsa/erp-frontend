@@ -49,7 +49,7 @@ interface Props<T extends object, K extends keyof T, V extends keyof T> {
 export default function AutocompleteSearch<
   T extends object,
   K extends keyof T,
-  V extends keyof T,
+  V extends keyof T
 >({
   data,
   nameK,
@@ -62,7 +62,7 @@ export default function AutocompleteSearch<
   className,
   addNew,
   placeholder,
-}: Props<T, K,V>) {
+}: Props<T, K, V>) {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = useState<string | undefined>(
@@ -101,18 +101,23 @@ export default function AutocompleteSearch<
                         ?.[nameK]?.toString()
                     : "Select item"} */}
             {value ? (
-              <XIcon
-                className="ml-2 h w-4 shrink-0 opacity-50"
-                onClick={() => {
-                  setValue("");
-                  searchParams.delete(queryValue);
-                  searchParams.delete(queryName);
-                  searchParams.set("page", DEFAULT_PAGE);
-                  setSearchParams(searchParams, {
-                    preventScrollReset: true,
-                  });
-                }}
-              />
+              <>
+                <IconButton
+                  icon={XIcon}
+                  size="sm"
+                  className="ml-2 h-6 w-6 shrink-0 opacity-50 "
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setValue("");
+                    searchParams.delete(queryValue);
+                    searchParams.delete(queryName);
+                    searchParams.set("page", DEFAULT_PAGE);
+                    setSearchParams(searchParams, {
+                      preventScrollReset: true,
+                    });
+                  }}
+                />
+              </>
             ) : (
               <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
             )}
@@ -121,13 +126,13 @@ export default function AutocompleteSearch<
         <PopoverContent>
           <Command>
             <CommandInput
-              placeholder="Search item..."
+              placeholder="Buscar..."
               onValueChange={(e) => {
                 onValueChange(e);
               }}
             />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>No se encontraron resultados.</CommandEmpty>
               <CommandGroup>
                 {data.map((item, idx) =>
                   onCustomDisplay ? (

@@ -21,27 +21,28 @@ export default function CustomerClient() {
   const tab = searchParams.get("tab");
   const { t, i18n } = useTranslation("common");
   const r = routes;
-  const navigate = useNavigate()
-  
-  const toRoute = (tab:string)=>{
+  const navigate = useNavigate();
+
+  const toRoute = (tab: string) => {
     return r.toRoute({
-        main:r.customerM,
-        routePrefix:[r.sellingM],
-        routeSufix:[customer?.name || ""],
-        q:{
-            tab:tab
-        }
-    })
-}
+      main: r.customerM,
+      routePrefix: [r.sellingM],
+      routeSufix: [customer?.name || ""],
+      q: {
+        tab: tab,
+        id: customer?.uuid || "",
+      },
+    });
+  };
   const navItems = [
     {
       title: t("info"),
       href: toRoute("info"),
     },
-    {
-      title: t("connections"),
-      href: toRoute("connections"),
-    },
+    // {
+    //   title: t("connections"),
+    //   href: toRoute("connections"),
+    // },
   ];
 
   setUpToolbar(() => {
@@ -75,7 +76,7 @@ export default function CustomerClient() {
               fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
               toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
               party: customer?.id.toString(),
-              partyName:customer?.name,
+              partyName: customer?.name,
             },
           })
         );
@@ -83,10 +84,9 @@ export default function CustomerClient() {
     });
     return {
       view: view,
+      triggerTabs:true
     };
   }, []);
-
-  
 
   return (
     <DetailLayout

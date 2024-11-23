@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-interface Props<T extends object, K extends keyof T,V extends keyof T> {
+interface Props<T extends object, K extends keyof T, V extends keyof T> {
   data: T[];
   keyName?: K;
   keyValue?: V;
@@ -21,8 +21,13 @@ interface Props<T extends object, K extends keyof T,V extends keyof T> {
   label?: string;
   form: any;
   onValueChange?: (e: T) => void;
+  required?: boolean;
 }
-export default function SelectForm<T extends object, K extends keyof T,V extends keyof T>({
+export default function SelectForm<
+  T extends object,
+  K extends keyof T,
+  V extends keyof T
+>({
   label,
   form,
   keyName,
@@ -30,19 +35,20 @@ export default function SelectForm<T extends object, K extends keyof T,V extends
   data,
   name,
   onValueChange,
-}: Props<T, K,V>) {
+  required,
+}: Props<T, K, V>) {
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => (
         <FormItem className="w-full flex flex-col">
-          <FormLabel>{label}</FormLabel>
+          <FormLabel>{label} {required && " *"}</FormLabel>
           <Select
             onValueChange={(e) => {
               //   const object = JSON.parse(e)
-              if(keyValue == undefined) return
-              const item =  data.find(t =>  t[keyValue] == e)
+              if (keyValue == undefined) return;
+              const item = data.find((t) => t[keyValue] == e);
               if (onValueChange != undefined && item) {
                 onValueChange(item);
               }
@@ -50,16 +56,20 @@ export default function SelectForm<T extends object, K extends keyof T,V extends
               field.onChange(e);
             }}
             defaultValue={field.value}
+            required={required}
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder="Select a option" />
+                <SelectValue placeholder="Elija una opción" />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
               {data.map((option, idx) => {
                 return (
-                  <SelectItem value={keyValue ? option[keyValue] as string : ""} key={idx}>
+                  <SelectItem
+                    value={keyValue ? (option[keyValue] as string) : ""}
+                    key={idx}
+                  >
                     {keyName ? option[keyName]?.toString() || "" : ""}
                   </SelectItem>
                 );

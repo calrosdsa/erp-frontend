@@ -61,7 +61,10 @@ export const SellingNav = ({ entities }: {
   const selling: NavItem = {
     title: t("selling"),
     icon: DollarSign,
-    href: r.selling,
+    href: r.toRoute({
+      main:partyTypeToJSON(PartyType.saleInvoice),
+      routePrefix:[r.invoiceM],
+    }),
     isChildren: true,
     children: sellingChildrens,
   };

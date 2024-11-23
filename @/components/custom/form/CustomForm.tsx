@@ -116,6 +116,7 @@ export default function CustomForm<T extends FieldValues>({
                 keyValue={item.keyValue}
                 onValueChange={(e)=>item.onSelect && item.onSelect(e)}
                 name={item.name}
+                required={item.required}
                 label={item.label}
                 form={form}
               />

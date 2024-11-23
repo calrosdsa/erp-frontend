@@ -345,10 +345,11 @@
   "cancel": "Cancel",
 
   "actions": {
-    "base": "actions",
+    "base": "Actions",
     "edit": "Edit",
     "view": "View"
   },
+  "new":"New",
   "tooltip": {
     "selectCurrency": "Please select your currency."
   },
@@ -418,6 +419,7 @@
     "income": "Income",
     "costOfGoodSolds": "Cost Of Good Solds"
   },
+  "MATERIAL_RECEIPT":"Material Receipt",
 
   "regate": {
     "schedule": "Schedule",

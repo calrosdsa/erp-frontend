@@ -65,7 +65,7 @@ export default function CreatePurchaseOrdersClient() {
 
   setUpToolbar(() => {
     return {
-      title: t("f.add-new", { o: t("_order.base") }),
+      titleToolbar: t("f.add-new", { o: t("_order.base") }),
       onSave: () => {
         inputRef.current?.click();
       },

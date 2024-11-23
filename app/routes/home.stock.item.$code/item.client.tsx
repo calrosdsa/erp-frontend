@@ -47,18 +47,18 @@ export default function ItemDetailClient() {
         },
       }),
     },
-    {
-      title: t("dashboard"),
-      href: r.toRoute({
-        main: partyTypeToJSON(PartyType.item),
-        routePrefix: [r.stockM],
-        routeSufix: [item?.name || ""],
-        q: {
-          tab: "dashboard",
-          id: item?.uuid,
-        },
-      }),
-    },
+    // {
+    //   title: t("dashboard"),
+    //   href: r.toRoute({
+    //     main: partyTypeToJSON(PartyType.item),
+    //     routePrefix: [r.stockM],
+    //     routeSufix: [item?.name || ""],
+    //     q: {
+    //       tab: "dashboard",
+    //       id: item?.uuid,
+    //     },
+    //   }),
+    // },
   ];
 
   setUpToolbar(() => {

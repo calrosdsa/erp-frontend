@@ -97,7 +97,7 @@ export const AccountingNav = ({
   const accounting: NavItem = {
     title: t("accounting"),
     icon: CreditCardIcon,
-    href: r.accounting,
+    href: r.chartOfAccount,
     isChildren: true,
     children: accountingChildrens,
   };

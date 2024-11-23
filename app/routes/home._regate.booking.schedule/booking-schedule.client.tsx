@@ -13,7 +13,7 @@ export default function BookingScheduleClient() {
   const {t} = useTranslation("common")
   setUpToolbar(() => {
     return {
-      title:t("regate.schedule")
+      titleToolbar:t("regate.schedule")
     };
   }, []);
   return (

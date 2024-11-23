@@ -250,7 +250,7 @@ export default function PurchaseOrderClient() {
     }
     return {
       actions: actions,
-      title: `${t("_order.base")}(${order?.code})`,
+      titleToolbar: `${t("_order.base")}(${order?.code})`,
       status: stateFromJSON(order?.status),
       onChangeState: (e) => {
         const body: z.infer<typeof updateStateWithEventSchema> = {

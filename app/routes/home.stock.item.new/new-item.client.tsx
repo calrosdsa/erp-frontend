@@ -61,6 +61,7 @@ export default function CreateItemClient() {
 
   setUpToolbar(()=>{
     return {
+      title:t("new"),
       onSave:()=>{
         inputRef.current?.click()
       }

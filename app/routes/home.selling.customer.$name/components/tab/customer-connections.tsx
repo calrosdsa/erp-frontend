@@ -18,18 +18,18 @@ export default function CustomerConnections() {
         <Suspense fallback={<FallBack />}>
             <Await resolve={connections}>
               {(data: any) => {
-                const d =
-                data.data as components["schemas"]["ResponseDataListPartyConnectionsBody"];
-                const relateds = customerConnections({
-                  data:d.result  || [],
-                  customer:customer
-                });
+                // const d =
+                // data.data as components["schemas"]["ResponseDataListPartyConnectionsBody"];
+                // const relateds = customerConnections({
+                //   data:d.result  || [],
+                //   customer:customer
+                // });
                 return (
                   <div>
-                    {JSON.stringify(connections)}
-                    <Connections
+                    {JSON.stringify(data)}
+                    {/* <Connections
                     connections={relateds}
-                    />
+                    /> */}
                   </div>
                 );
               }}

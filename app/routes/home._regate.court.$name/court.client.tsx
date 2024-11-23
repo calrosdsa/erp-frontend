@@ -35,6 +35,7 @@ export default function CourtDetailClient() {
       routeSufix: [court?.name || ""],
       q: {
         tab: tab,
+        id:court?.uuid,
       },
     });
   };
@@ -47,10 +48,10 @@ export default function CourtDetailClient() {
       title: t("regate.schedule"),
       href: toRoute("schedule"),
     },
-    {
-      title: "Reservas",
-      href: toRoute("reservas"),
-    },
+    // {
+    //   title: "Reservas",
+    //   href: toRoute("reservas"),
+    // },
   ];
 
   setUpToolbar(() => {
@@ -65,7 +66,7 @@ export default function CourtDetailClient() {
       },
     });
     return {
-      title: params.name,
+      titleToolbar: params.name,
       actions: actions,
     };
   }, []);

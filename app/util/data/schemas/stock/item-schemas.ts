@@ -16,7 +16,7 @@ export const createItemSchema = z.object({
   // pluginList:z.array(z.string()).optional(),
 });
 
-export const updateItemSchema = z.object({
-  name:z.string(),
-  itemType: z.string(),
+export const editItemSchema = z.object({
+  name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+  itemID:z.number(),
 });

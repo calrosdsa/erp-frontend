@@ -13,7 +13,7 @@ export default function UserClient(){
     const params = useParams()
     setUpToolbar(()=>{
         return {
-            title:params.path
+            titleToolbar:params.path
         }
     },[])
     return (

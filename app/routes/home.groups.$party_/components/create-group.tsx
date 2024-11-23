@@ -56,7 +56,6 @@ export const CreateGroup = ({
         defaultValues={
           {
             party_type_code: partyTypeToJSON(createGroup.partyType),
-            enabled: true,
           } as z.infer<typeof createGroupSchema>
         }
         onSubmit={(values: z.infer<typeof createGroupSchema>) => {
@@ -86,13 +85,7 @@ export const CreateGroup = ({
             typeForm: "check",
             type: "boolean",
           },
-          {
-            name: "enabled",
-            label: t("form.enabled"),
-            type: "boolean",
-            typeForm: "check",
-            // description:t("f.enable",{o:t("_supplier.base")})
-          },
+          
         ]}
         renderCustomInputs={(form) => {
           return (

@@ -12,7 +12,7 @@ export default function FormLayout({children,className}:{
     const { t } = useTranslation("common");
     z.setErrorMap(makeZodI18nMap({ t }));
     return (
-        <div className={cn("px-4",className)}>
+        <div className={cn("px-2",className)}>
             {children}
         </div>
     )

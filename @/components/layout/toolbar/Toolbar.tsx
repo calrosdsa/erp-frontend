@@ -1,14 +1,14 @@
+import React from "react";
 import MessageAlert from "@/components/custom-ui/message-alert";
 import { Icons } from "@/components/icons";
 import Typography from "@/components/typography/Typography";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { ChevronsUpDown, PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { EventState, State } from "~/gen/common";
@@ -16,145 +16,133 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 export default function ToolBar({ title }: { title: string }) {
   const toolbarState = useToolbar();
+  const {
+    actions,
+    status,
+    titleToolbar,
+    view,
+    viewTitle,
+    buttons,
+    disabledSave,
+    onChangeState,
+    onSave,
+    addNew,
+  } = toolbarState.payload;
   const { t } = useTranslation("common");
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
         <div className="flex flex-wrap space-x-2 ">
           <Typography fontSize={22}>
-            {toolbarState.title != undefined ? toolbarState.title : title}
+            {titleToolbar != undefined ? titleToolbar : title}
           </Typography>
-          {toolbarState.status && (
+          {status && (
             <Badge variant={"outline"} className="">
-              {State[toolbarState.status]}
+              {State[status]}
             </Badge>
           )}
         </div>
 
         <div className=" flex space-x-3">
-          {toolbarState.actions.length > 0 &&
-            toolbarState?.status != State.DRAFT && (
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button
-                    size={"sm"}
-                    className=" flex space-x-1 h-8 rounded-lg px-3"
-                  >
-                    <span>{t("actions.base")}</span>
-                    <ChevronsUpDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {/* <DropdownMenuLabel>{}</DropdownMenuLabel>
-            <DropdownMenuSeparator /> */}
+          {actions && actions.length > 0 && status != State.DRAFT && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  size={"sm"}
+                  className=" flex space-x-1 h-8 rounded-lg px-3"
+                >
+                  <span>{t("actions.base")}</span>
+                  <ChevronsUpDown className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-56">
+                <div className="flex flex-col space-y-1">
+                  {actions?.map((item, idx) => (
+                    <Button
+                      key={idx}
+                      variant="ghost"
+                      className="justify-start"
+                      onClick={() => item.onClick()}
+                    >
+                      {item.label}
+                      {item.Icon && <item.Icon className="h-3 w-3 ml-2" />}
+                    </Button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
 
-                  {toolbarState.actions.map((item, idx) => {
-                    return (
-                      <DropdownMenuItem
-                        key={idx}
-                        onClick={() => item.onClick()}
-                        className="flex space-x-2 justify-between"
-                      >
-                        <span>{item.label}</span>
-                        {item.Icon && <item.Icon className="h-3 w-3" />}
-                      </DropdownMenuItem>
-                    );
-                  })}
-                  {/* <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuSeparator />
+          {view && view.length > 0 && status != State.DRAFT && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  size={"sm"}
+                  variant={"outline"}
+                  className=" flex space-x-1 h-8 rounded-lg px-3"
+                >
+                  <span>{viewTitle ? viewTitle : t("actions.view")}</span>
+                  <ChevronsUpDown className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-56">
+                <div className="flex flex-col space-y-1">
+                  {view.map((item, idx) => (
+                    <Button
+                      key={idx}
+                      variant="ghost"
+                      className="justify-start"
+                      onClick={() => item.onClick()}
+                    >
+                      {item.label}
+                      {item.Icon && <item.Icon className="h-3 w-3 ml-2" />}
+                    </Button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
 
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem> */}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+          {buttons?.map((item, idx) => (
+            <Button
+              key={idx}
+              onClick={item.onClick}
+              className=" flex space-x-1 h-8"
+              variant={"outline"}
+              size={"sm"}
+            >
+              {item.Icon && <item.Icon className="p-1" />}
+              <span>{item.label}</span>
+            </Button>
+          ))}
 
-          {toolbarState.view.length > 0 &&
-            toolbarState?.status != State.DRAFT && (
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button
-                    size={"sm"}
-                    variant={"outline"}
-                    className=" flex space-x-1 h-8 rounded-lg px-3"
-                  >
-                    <span>
-                      {toolbarState.viewTitle
-                        ? toolbarState.viewTitle
-                        : t("actions.view")}
-                    </span>
-                    <ChevronsUpDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {/* <DropdownMenuLabel>{}</DropdownMenuLabel>
-            <DropdownMenuSeparator /> */}
-
-                  {toolbarState.view.map((item, idx) => {
-                    return (
-                      <DropdownMenuItem
-                        key={idx}
-                        onClick={() => item.onClick()}
-                        className="flex space-x-2 justify-between"
-                      >
-                        <span>{item.label}</span>
-                        {item.Icon && <item.Icon className="h-3 w-3" />}
-                      </DropdownMenuItem>
-                    );
-                  })}
-                  {/* <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem> */}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
-          {toolbarState.buttons.map((item, idx) => {
-            return (
-              <Button
-                key={idx}
-                onClick={item.onClick}
-                className=" flex space-x-1 h-8"
-                variant={"outline"}
-                size={"sm"}
-              >
-                {item.Icon && <item.Icon className="p-1" />}
-                <span>{item.label}</span>
-              </Button>
-            );
-          })}
-
-          {toolbarState.status && (
+          {status && (
             <>
-              {toolbarState.status == State.DRAFT &&
-                toolbarState.onChangeState && (
-                  <Button
-                    size={"sm"}
-                    onClick={() =>
-                      toolbarState.onChangeState &&
-                      toolbarState.onChangeState(EventState.SUBMIT_EVENT)
-                    }
-                    className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
-                    disabled={toolbarState.loading}
-                  >
-                    {toolbarState.loading ? (
-                      <Icons.spinner className="h-5 w-5 animate-spin" />
-                    ) : (
-                      t("form.submit")
-                    )}
-                  </Button>
-                )}
+              {status == State.DRAFT && onChangeState && (
+                <Button
+                  size={"sm"}
+                  onClick={() =>
+                    onChangeState && onChangeState(EventState.SUBMIT_EVENT)
+                  }
+                  className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
+                  disabled={toolbarState.loading}
+                >
+                  {toolbarState.loading ? (
+                    <Icons.spinner className="h-5 w-5 animate-spin" />
+                  ) : (
+                    t("form.submit")
+                  )}
+                </Button>
+              )}
 
-              {toolbarState.status != State.CANCELLED &&
-                toolbarState.status != State.DRAFT &&
-                toolbarState.onChangeState && (
+              {status != State.CANCELLED &&
+                status != State.DRAFT &&
+                onChangeState && (
                   <Button
                     size={"sm"}
                     onClick={() =>
-                      toolbarState.onChangeState &&
-                      toolbarState.onChangeState(EventState.CANCEL_EVENT)
+                      onChangeState && onChangeState(EventState.CANCEL_EVENT)
                     }
                     className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
                     disabled={toolbarState.loading}
@@ -169,18 +157,19 @@ export default function ToolBar({ title }: { title: string }) {
                 )}
             </>
           )}
-          {toolbarState.onSave && (
+
+          {onSave && (
             <Button
               size={"sm"}
               onClick={() => {
-                if (toolbarState.onSave) {
-                  toolbarState.onSave();
+                if (onSave) {
+                  onSave();
                 } else {
                   alert("NO ON SAVE");
                 }
               }}
               className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
-              disabled={toolbarState.disabledSave || toolbarState.loading}
+              disabled={disabledSave || toolbarState.loading}
               variant={"outline"}
             >
               {toolbarState.loading ? (
@@ -191,17 +180,15 @@ export default function ToolBar({ title }: { title: string }) {
             </Button>
           )}
 
-          {toolbarState.addNew && (
+          {addNew && (
             <Button
               size={"sm"}
               onClick={() => {
-                if (toolbarState.addNew) {
-                  toolbarState.addNew();
+                if (addNew) {
+                  addNew();
                 }
               }}
-              className=" flex space-x-1 h-8 rounded-lg px-3 w-24 justify-center"
-              // disabled={toolbarState.loading}
-              // variant={"outline"}
+              className=" flex space-x-1 h-8 rounded-lg px-3  justify-center"
             >
               <PlusIcon />
               {toolbarState.loading ? (
@@ -212,9 +199,7 @@ export default function ToolBar({ title }: { title: string }) {
             </Button>
           )}
         </div>
-        {toolbarState.status == State.DRAFT && (
-          <MessageAlert message="Submit to confirm" />
-        )}
+        {status == State.DRAFT && <MessageAlert message="Submit to confirm" />}
       </div>
     </div>
   );

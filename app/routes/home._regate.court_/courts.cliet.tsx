@@ -22,7 +22,7 @@ export default function CourtClient(){
 
     setUpToolbar(()=>{
         return {
-            title:"Canchas",
+            titleToolbar:"Canchas",
             ...(permission?.create && {
                 addNew:()=>{
                     navigate(r.toCreateCourt())

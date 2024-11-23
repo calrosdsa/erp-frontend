@@ -96,7 +96,7 @@ export default function ReceiptDetailClient() {
 
 
     return {
-      title: `${t("_receipt.base")}(${receipt?.code})`,
+      titleToolbar: `${t("_receipt.base")}(${receipt?.code})`,
       status: stateFromJSON(receipt?.status),
       actions: actions,
       onChangeState: (e) => {

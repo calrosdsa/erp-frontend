@@ -39,7 +39,7 @@ export default function JournalEntryDetailClient() {
 
   setUpToolbar(() => {
     return {
-      title: `${t("journalEntry")}(${journalEntry?.code})`,
+      titleToolbar: `${t("journalEntry")}(${journalEntry?.code})`,
       status: stateFromJSON(journalEntry?.status),
       onChangeState: (e) => {
         const body: z.infer<typeof updateStateWithEventSchema> = {

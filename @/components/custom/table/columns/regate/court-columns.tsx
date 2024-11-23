@@ -28,7 +28,14 @@ export const courtColumns = (): ColumnDef<components["schemas"]["CourtDto"]>[] =
           return(
             <TableCellNameNavigation
             {...props}
-            navigate={(name)=>r.toCourtDetail(name,rowData.uuid)}
+            navigate={(name)=>r.toRoute({
+              main:r.courtM,
+              routeSufix:[name],
+              q:{
+                tab:"info",
+                id:rowData.uuid
+              }
+            })}
             />
           )
         }

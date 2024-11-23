@@ -25,12 +25,11 @@ export default function NewCourtClient() {
   const form = useForm<z.infer<typeof createCourtSchema>>({
     resolver: zodResolver(createCourtSchema),
   });
-  const toolbar = useToolbar()
+  const toolbar = useToolbar();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const navigate = useNavigate();
   const onSubmit = (values: z.infer<typeof createCourtSchema>) => {
-
     fetcher.submit(
       {
         action: "create-court",
@@ -43,26 +42,37 @@ export default function NewCourtClient() {
     );
   };
 
-  setUpToolbar(()=>{
+  setUpToolbar(() => {
     return {
       onSave: () => {
         inputRef.current?.click();
       },
-      title:"Nueva Cancha"
-    }
-  },[])
-  useDisplayMessage({
-    error:fetcher.data?.message,
-    success:fetcher.data?.message,
-    onSuccessMessage:()=>{
-      if(fetcher.data?.court){
-        const court = fetcher.data.court;
-        navigate(r.toCourtDetail(court.name, court.uuid));
-      }
-    }
-  },[fetcher.data])
+      titleToolbar: "Nueva Cancha",
+    };
+  }, []);
+  useDisplayMessage(
+    {
+      error: fetcher.data?.message,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        if (fetcher.data?.court) {
+          const court = fetcher.data.court;
+          navigate(
+            r.toRoute({
+              main: r.courtM,
+              routeSufix: [court.name],
+              q: {
+                tab: "info",
+                id: court.uuid,
+              },
+            })
+          );
+        }
+      },
+    },
+    [fetcher.data]
+  );
 
-  
   return (
     <FormLayout>
       <Form {...form}>
@@ -76,12 +86,12 @@ export default function NewCourtClient() {
                 return <Input {...field} />;
               }}
             />
-            <CheckForm
+            {/* <CheckForm
               label={t("form.enabled")}
               form={form}
               name={"enabled"}
               description={t("f.enable", { o: t("regate._court.base") })}
-            />
+            /> */}
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

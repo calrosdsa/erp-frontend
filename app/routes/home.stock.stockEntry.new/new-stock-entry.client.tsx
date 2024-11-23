@@ -52,14 +52,6 @@ export default function NewStockEntryClient() {
       name: t(StockEntryType[StockEntryType.MATERIAL_RECEIPT]),
       value: StockEntryType[StockEntryType.MATERIAL_RECEIPT],
     },
-    {
-      name: t(StockEntryType[StockEntryType.MATERIAL_TRANSFER]),
-      value: StockEntryType[StockEntryType.MATERIAL_TRANSFER],
-    },
-    {
-      name: t(StockEntryType[StockEntryType.MATERIAL_ISSUE]),
-      value: StockEntryType[StockEntryType.MATERIAL_ISSUE],
-    },
   ];
   const form = useForm<z.infer<typeof createStockEntrySchema>>({
     resolver: zodResolver(createStockEntrySchema),
@@ -84,7 +76,7 @@ export default function NewStockEntryClient() {
 
   setUpToolbar(() => {
     return {
-      title: t("f.add-new", { o: t("stockEntry") }),
+      titleToolbar: t("f.add-new", { o: t("stockEntry") }),
       onSave: () => {
         inputRef.current?.click();
       },
@@ -115,7 +107,6 @@ export default function NewStockEntryClient() {
   return (
     <FormLayout>
       <Form {...form}>
-        {JSON.stringify(form.formState.errors)}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
             <CustomFormDate

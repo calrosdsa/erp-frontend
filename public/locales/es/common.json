@@ -1,4 +1,5 @@
 {
+  "greeting": "Hola",
   "integrations": "Integraciones",
 
   "account": "Cuenta",
@@ -10,8 +11,8 @@
     "base": "Grupo"
   },
   "_company": {
-    "base": "Empresa",
-    "companies": "Empresas"
+    "base": "Compañía",
+    "companies": "Compañías"
   },
   "purchase-orders": "Órdenes de Compra",
   "supplier-groups": "Grupos de Proveedores",
@@ -28,13 +29,13 @@
   },
   "_receipt": {
     "base": "Recibo",
-    "f": "Recibo de {{o}}"
+    "f": "{{o}} Recibo"
   },
   "_payment": {
     "base": "Pago",
     "create": "Crear Pago",
     "type": "Tipo de Pago",
-    "paymentFromTo": "Pago Desde / Hacia"
+    "paymentFromTo": "Pago Desde / A"
   },
   "create": "Crear",
   "info": "Información",
@@ -48,21 +49,21 @@
   "reset-password": "Restablecer Contraseña",
   "change-password": "Cambiar Contraseña",
   "_account": {
-    "lastLogin": "Último acceso",
+    "lastLogin": "Último Inicio de Sesión",
     "updatePassword": "Actualizar Contraseña",
-    "siginIYouA": "Iniciar sesión en tu cuenta",
-    "siginIYouADesc": "Introduce tu correo electrónico y contraseña a continuación para acceder a tu cuenta",
+    "siginIYouA": "Inicia sesión en tu cuenta",
+    "siginIYouADesc": "Ingresa tu correo electrónico y contraseña a continuación para iniciar sesión en tu cuenta",
     "forgotPassword": "¿Olvidaste tu contraseña?",
-    "resetPassowordMsg": "Introduce la dirección de correo electrónico verificada de tu cuenta y te enviaremos un enlace para restablecer tu contraseña."
+    "resetPassowordMsg": "Ingresa la dirección de correo electrónico verificada de tu cuenta y te enviaremos un enlace para restablecer la contraseña."
   },
   "_ledger": {
     "base": "Cuenta",
     "type": "Tipo de Cuenta",
     "rootType": "Tipo Raíz de Cuenta",
-    "no": "Número de Cuenta",
+    "no": "No. de Cuenta",
     "chartOfAccounts": "Plan de Cuentas",
-    "paidFrom": "Cuenta desde la que se paga",
-    "paidTo": "Cuenta a la que se paga",
+    "paidFrom": "Cuenta Pagada Desde",
+    "paidTo": "Cuenta Pagada A",
     "currency": "Moneda de la Cuenta ({{o}})"
   },
   "address": "Dirección",
@@ -70,16 +71,16 @@
     "references": "Referencias de Dirección",
     "info": "Información de Dirección",
     "list": "Direcciones",
-    "addAnother": "Añadir Otra Dirección",
-    "add": "Añadir Dirección",
-    "empty": "No hay direcciones aún"
+    "addAnother": "Agregar Otra Dirección",
+    "add": "Agregar Dirección",
+    "empty": "Aún no hay direcciones"
   },
   "contact": "Contacto",
   "_contact": {
     "list": "Contactos",
-    "addAnother": "Añadir Otro Contacto",
-    "add": "Añadir Contacto",
-    "empty": "No hay contactos aún"
+    "addAnother": "Agregar Otro Contacto",
+    "add": "Agregar Contacto",
+    "empty": "Aún no hay contactos"
   },
   "manage": "Gestionar",
   "users": "Usuarios",
@@ -87,16 +88,16 @@
     "base": "Usuario"
   },
   "form": {
-    "from": "Desde",
-    "to": "Hasta",
+    "from": "De",
+    "to": "A",
     "gender": "Género",
     "name": "Nombre",
     "date": "Fecha",
     "advancePayment": "Pago Anticipado",
-    "postingDate": "Fecha de Registro",
+    "postingDate": "Fecha de Publicación",
     "dueDate": "Fecha de Vencimiento",
     "deliveryDate": "Fecha de Entrega",
-    "pickADate": "Seleccionar Fecha",
+    "pickADate": "Seleccionar una Fecha",
     "description": "Descripción",
     "value": "Valor",
     "abbreviation": "Abreviatura",
@@ -112,21 +113,21 @@
     "confirmNewPassword": "Confirmar Nueva Contraseña",
     "email": "Correo Electrónico",
     "discount": "Descuento",
-    "companyName": "Nombre de la Empresa",
+    "companyName": "Nombre de la Compañía",
     "clientDetails": "Completa tu Información Personal",
-    "enabled": "Habilitado",
+    "enabled": "Habilitar",
     "country": "País",
     "countryCode": "Código de País",
     "item-group": "Grupo de Artículos",
     "submit": "Enviar",
     "cancel": "Cancelar",
-    "party": "Grupo",
-    "partyType": "Tipo de Grupo",
-    "partyName":"Nombre de Grupo",
+    "party": "Parte",
+    "partyType": "Tipo de Parte",
+    "partyName": "Nombre de la Parte",
     "save": "Guardar",
-    "uom": "Unidad de Medida",
+    "uom": "UM",
     "city": "Ciudad",
-    "company": "Empresa",
+    "company": "Compañía",
     "province": "Provincia",
     "postalCode": "Código Postal",
     "identificationNumber": "Número de Identificación",
@@ -134,15 +135,14 @@
     "streetLine1": "Línea de Calle 1",
     "streetLine2": "Línea de Calle 2",
     "optional": "Opcional",
-    "price-list": "Lista de Precios",
     "currency": "Moneda",
     "buying": "Compras",
     "paymentType": "Tipo de Pago",
-    "selling": "Ventas",
+    "selling": "Venta",
     "rate": "Tasa",
-    "itemQuantity": "Cantidad de Artículo",
+    "itemQuantity": "Cantidad de Artículos",
     "totalQuantity": "Cantidad Total",
-
+    "entryType": "Tipo de Entrada",
     "quantity": "Cantidad",
     "pay": "Pagar",
     "orderTotal": "Total del Pedido",
@@ -154,37 +154,45 @@
     "outOfStockThreshold": "Umbral de Agotado",
     "isGroup": "Es Grupo",
     "isGroupDescription": "Marca esta casilla para organizarlo como un grupo.",
-    "orderConfirmation": "Confirmación del Pedido",
+    "orderConfirmation": "Confirmación de Pedido",
     "siteUrl": "URL del Sitio",
     "logo": "Logo",
     "isShippingAddress": "Es Dirección de Envío",
     "isBillingAddress": "Es Dirección de Facturación",
-    "invoiceAmount":"Monto de la Factura",
+    "invoiceAmount": "Monto de la Factura",
     "paidAmount": "Monto Pagado",
     "outstandingAmount": "Pendiente",
     "allocated": "Asignado",
     "daysWeek": "Días de la Semana",
     "comment": "Comentario",
-    "addNew": "Añadir Nuevo",
-    "fromDate": "Desde Fecha",
-    "toDate": "Hasta Fecha",
+    "addNew": "Agregar Nuevo",
+    "fromDate": "Desde la Fecha",
+    "toDate": "Hasta la Fecha",
     "totals": "Totales",
-    "voucherNo": "Número de Comprobante",
-    "voucherType": "Tipo de Comprobante",
-    "voucherSubtype": "Subtipo de Comprobante",
-    "receivableAccount":"Cuenta por Cobrar",
-    "payableAccount":"Cuenta por Pagar",
-    "againstAccount":"Contra Cuenta",
+    "voucherNo": "No. de Vale",
+    "voucherType": "Tipo de Vale",
+    "voucherSubtype": "Subtipo de Vale",
+    "receivableAccount": "Cuenta por Cobrar",
+    "payableAccount": "Cuenta por Pagar",
+    "againstAccount": "Cuenta Contra",
     "debit": "Débito",
+    "entries": "Entradas",
     "credit": "Crédito",
-    "balance":"Saldo"
+    "balance": "Balance",
+    "inQty": "En Cantidad",
+    "outQty": "Fuera Cantidad",
+    "balanceQty": "Cantidad en Balance",
+    "incomingRate": "Tasa de Entrada",
+    "averageRate": "Tasa Promedio",
+    "valuationRate": "Tasa de Valoración",
+    "balanceValue": "Valor en Balance"
   },
   "accounts": "Cuentas",
   "_selling": {
     "isBuying": "Es Comprando",
     "isSelling": "Es Vendiendo",
-    "isSellingDesc": "Esta lista de precios se usará para vender productos.",
-    "isBuyingDesc": "Esta lista de precios se usará para comprar productos."
+    "isSellingDesc": "Esta lista de precios se utilizará para la venta de productos.",
+    "isBuyingDesc": "Esta lista de precios se utilizará para la compra de productos."
   },
   "customers": "Clientes",
   "customerGroup": "Grupos de Clientes",
@@ -199,14 +207,17 @@
     "edit": "Editar {{o}}",
     "enable": "Marca la casilla para habilitar este {{o}}",
     "accepted": "Aceptado {{o}}",
+    "source": "Fuente {{o}}",
+    "target": "Destino {{o}}",
     "rejected": "Rechazado {{o}}",
     "and": "{{o}} y {{p}}",
     "purchase": "Compra {{o}}",
     "sale": "Venta {{o}}",
     "editRow": "Editar Fila {{o}}",
     "of": "de",
+
     "selected": "Seleccionado {{o}}(s)",
-    "default": "Por Defecto {{o}} {{p}}",
+    "default": "Predeterminado {{o}} {{p}}",
     "join": "{{o}} {{p}}"
   },
   "info-item": "Información {{item}}",
@@ -214,11 +225,9 @@
   "accounting": "Contabilidad",
   "taxes": "Impuestos",
   "selling": "Venta",
-  "price-list": "Lista de Precios",
   "_tax": {
     "base": "Impuesto"
   },
-
   "roles": "Roles",
   "_role": {
     "permissions": "Permisos de rol",
@@ -228,49 +237,49 @@
   "action": "Acción",
 
   "sidebar": {
-    "sessionDefaults": "Predeterminados de la sesión"
+    "sessionDefaults": "Valores predeterminados de sesión"
   },
   "language": "Idioma",
 
-  "addPlugin": "Añadir Plugin",
-  "applicationId": "ID de la Aplicación",
-  "accessToken": "Token de Acceso",
-  "locationId": "ID de Ubicación",
+  "addPlugin": "Agregar complemento",
+  "applicationId": "ID de la aplicación",
+  "accessToken": "Token de acceso",
+  "locationId": "ID de ubicación",
   "apiVersion": "Versión de la API",
 
   "stock": "Inventario",
   "_stock": {
-    "createItemAttribute": "Crear Atributo de Artículo",
-    "itemAttributeInfo": "Información del Atributo del Artículo",
-    "itemAttributeValues": "Valores de Atributo del Artículo",
-    "itemAttributeValue": "Valor de Atributo del Artículo",
-    "itemAttribute": "Atributo del Artículo",
-    "addItemAttributeValue": "Añadir Valor de Atributo del Artículo",
-    "addItemPrice": "Añadir Precio del Artículo",
-    "addItemStockLevel": "Añadir Nivel de Inventario del Artículo"
+    "createItemAttribute": "Crear atributo de artículo",
+    "itemAttributeInfo": "Información del atributo de artículo",
+    "itemAttributeValues": "Valores de atributo de artículo",
+    "itemAttributeValue": "Valor de atributo de artículo",
+    "itemAttribute": "Atributo de artículo",
+    "addItemAttributeValue": "Agregar valor de atributo de artículo",
+    "addItemPrice": "Agregar precio de artículo",
+    "addItemStockLevel": "Agregar nivel de inventario de artículo"
   },
   "items": "Artículos",
 
-  "item-groups": "Grupos de Artículos",
-  "item-attributes": "Atributos de Artículos",
+  "item-groups": "Grupos de artículos",
+  "item-attributes": "Atributos de artículos",
   "warehouses": "Almacenes",
   "_warehouse": {
     "base": "Almacén"
   },
   "home": "Inicio",
   "companies": "Empresas",
-  "plugins": "Plugins",
+  "plugins": "Complementos",
 
-  "create_item": "Añadir Artículo",
-  "itemInfo": "Información del Artículo",
+  "create_item": "Agregar artículo",
+  "itemInfo": "Información del artículo",
 
-  "email": "Correo Electrónico",
+  "email": "Correo electrónico",
   "square": "Cuadrado",
   "_object": {
-    "objectId": "ID de Objeto",
-    "objectType": "Tipo de Objeto",
-    "presentAtAllLocations": "Presente en Todas las Ubicaciones",
-    "subscriptionPlanVariation": "ID de Variación del Plan de Suscripción",
+    "objectId": "ID del objeto",
+    "objectType": "Tipo de objeto",
+    "presentAtAllLocations": "Presente en todas las ubicaciones",
+    "subscriptionPlanVariation": "ID de variación del plan de suscripción",
     "phases": "Fases"
   },
 
@@ -280,51 +289,51 @@
 
   "subscription": {
     "base": "Suscripción",
-    "actions": "Acciones de Suscripción",
-    "cancel": "Cancelar Suscripción"
+    "actions": "Acciones de suscripción",
+    "cancel": "Cancelar suscripción"
   },
 
   "_item": {
-    "info": "Información del Artículo",
-    "code": "Código del Artículo",
-    "prices": "Precios de Artículos",
-    "quantity": "Cantidad de Artículos",
+    "info": "Información del artículo",
+    "code": "Código del artículo",
+    "prices": "Precios del artículo",
+    "quantity": "Cantidad de artículo",
     "base": "Artículo",
-    "type": "Tipo de Artículo",
-    "variants": "Variantes de Artículo",
-    "addVariant": "Añadir Variante de Artículo",
-    "enableForVariants": "Habilitar Artículo para Variantes"
+    "type": "Tipo de artículo",
+    "variants": "Variantes de artículo",
+    "addVariant": "Agregar variante de artículo",
+    "enableForVariants": "Habilitar artículo para variantes"
   },
 
   "orders": "Pedidos",
-  "orderInfo": "Información del Pedido",
+  "orderInfo": "Información del pedido",
   "_order": {
     "base": "Pedido",
-    "orderItems": "Artículos del Pedido"
+    "orderItems": "Artículos del pedido"
   },
   "table": {
     "new": "Nuevo",
     "received": "Recibido",
     "billed": "Facturado",
-    "createdAt": "Fecha de Creación",
-    "updatedAt": "Última Modificación",
-    "deliverdDate": "Fecha de Entrega",
+    "createdAt": "Fecha de creación",
+    "updatedAt": "Última modificación",
+    "deliverdDate": "Fecha de entrega",
     "ID": "ID",
     "code": "CÓDIGO",
     "no": "No.",
-    "attributeValue": "Valor del Atributo",
-    "effectiveDate": "Fecha Efectiva",
+    "attributeValue": "Valor del atributo",
+    "effectiveDate": "Fecha de vigencia",
     "abbreviation": "Abreviatura",
     "ordinal": "Ordinal",
     "cadence": "Cadencia",
     "periods": "Períodos",
-    "addRow": "Añadir Fila",
+    "addRow": "Agregar fila",
     "reference": "Referencia",
-    "referenceName": "Nombre de Referencia"
+    "referenceName": "Nombre de referencia"
   },
   "dialog": {
-    "title": "¿Estás seguro de que deseas proceder con esta acción?",
-    "description": "Por favor, confirma si deseas proceder con esta acción."
+    "title": "¿Está seguro de que desea continuar con esta acción?",
+    "description": "Por favor, confirme si desea continuar con esta acción."
   },
   "_page": {
     "base": "Página",
@@ -335,81 +344,86 @@
   "cancel": "Cancelar",
 
   "actions": {
-    "base": "acciones",
+    "base": "Acciones",
     "edit": "Editar",
     "view": "Ver"
   },
+  "new": "Nuevo",
   "tooltip": {
-    "selectCurrency": "Por favor selecciona tu moneda."
+    "selectCurrency": "Por favor, seleccione su moneda."
   },
   "gender": {
     "male": "Masculino",
     "female": "Femenino",
-    "noBinary": "No Binario"
+    "noBinary": "No binario"
   },
   "alert": {
-    "submit": "Por favor, envía este documento para su confirmación."
+    "submit": "Por favor, envíe este documento para confirmación."
   },
   "RECEIVE": "Recibir",
   "PAY": "Pagar",
-  "INTERNAL_TRANSFER": "Transferencia Interna",
+  "INTERNAL_TRANSFER": "Transferencia interna",
   "ASSET": "Activo",
   "LIABILITIES": "Pasivos",
   "EXPENSE": "Gasto",
-  "REVENUE": "Ingreso",
+  "REVENUE": "Ingresos",
 
-  "debitNote":"Nota de Débito",
-  "creditNote":"Nota de Crédito",
+  "debitNote": "Nota de débito",
+  "creditNote": "Nota de crédito",
+  "cashEntry": "Entrada de efectivo",
 
   "item": "Artículo",
-  "itemPrice": "Precio del Artículo",
-  "priceList": "Lista de Precios",
-  "purchaseInvoice": "Factura de Compra",
-  "purchaseOrder": "Orden de Compra",
-  "saleInvoice": "Factura de Venta",
-  "saleOrder": "Orden de Venta",
-  "purchaseReceipt": "Recibo de Compra",
+  "itemPrice": "Precio del artículo",
+  "priceList": "Lista de precios",
+  "purchaseInvoice": "Factura de compra",
+  "purchaseOrder": "Orden de compra",
+  "saleInvoice": "Factura de venta",
+  "ledger": "Cuenta",
+  "warehouse": "Almacén",
+  "saleOrder": "Orden de venta",
+  "purchaseReceipt": "Recibo de compra",
   "payment": "Pago",
-  "pianoForms": "Formularios de Piano",
+  "pianoForms": "Formularios de piano",
   "customer": "Cliente",
   "supplier": "Proveedor",
   "company": "Empresa",
-  "deliveryNote": "Nota de Entrega",
-  "journalEntry": "Asiento Contable",
-  "costCenter": "Centro de Costos",
+  "deliveryNote": "Nota de entrega",
+  "journalEntry": "Asiento contable",
+  "costCenter": "Centro de costos",
   "project": "Proyecto",
-  "stockEntry": "Entrada de Inventario",
+  "stockEntry": "Entrada de inventario",
+  "generalLedger": "Libro mayor",
+  "accountingLedger": "Libro mayor contable",
+  "accountPayable": "Cuenta por pagar",
+  "accountPayableSumary": "Resumen de cuentas por pagar",
+  "accountReceivable": "Cuenta por cobrar",
+  "accountReceivableSumary": "Resumen de cuentas por cobrar",
+  "stockLedger": "Libro mayor de inventario",
+  "stockBalance": "Balance de inventario",
+  "treeView": "Vista en árbol",
+  "cashFlow": "Flujo de efectivo",
+  "profitAndLoss": "Estado de resultados",
+  "balanceSheet": "Balance general",
+  "financialStatement": "Estado financiero",
 
-  "generalLedger": "Libro Mayor",
-  "accountingLedger": "Libro Mayor de Contabilidad",
-  "accountPayable": "Cuenta por Pagar",
-  "accountPayableSumary": "Resumen de Cuenta por Pagar",
-  "accountReceivable": "Cuenta por Cobrar",
-  "accountReceivableSumary": "Resumen de Cuenta por Cobrar",
-  "stockLedger": "Libro Mayor de Inventario",
-  "stockBalance": "Saldo de Inventario",
-  "treeView": "Vista en Árbol",
-  "cashFlow": "Flujo de Efectivo",
-  "profitAndLoss": "Pérdidas y Ganancias",
-  "balanceSheet": "Balance General",
-  "financialStatement": "Estado Financiero",
+  "relocationAndMoving": "Reubicación y mudanza",
 
-
-  "relocationAndMoving": "Reubicación y Mudanza",
+  "individual": "Individual",
 
   "accountType": {
     "cash": "Efectivo",
     "bank": "Banco",
-    "payable": "Por Pagar",
-    "receivable": "Por Cobrar",
-    "income": "Ingreso",
-    "costOfGoodSolds": "Costo de Ventas"
+    "payable": "Por pagar",
+    "receivable": "Por cobrar",
+    "income": "Ingresos",
+    "costOfGoodSolds": "Costo de bienes vendidos"
   },
+  "MATERIAL_RECEIPT": "Recibo de material",
 
   "regate": {
     "schedule": "Horario",
     "_court": {
-      "base": "Corte"
+      "base": "Cancha"
     },
     "_booking": {
       "base": "Reserva"

@@ -93,7 +93,7 @@ export const BookingDetailClient = () => {
     }
 
     return {
-      title:params.code,
+      titleToolbar:params.code,
       status:stateFromJSON(booking?.status),
       actions:actions,
       onChangeState: (e) => {

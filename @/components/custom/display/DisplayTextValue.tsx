@@ -39,7 +39,7 @@ export default function DisplayTextValue({
           </Link>
         ) : 
         <>
-          {typeof value == "string" && (
+          {(typeof value == "string" || value == undefined) && (
             <Input
               readOnly={readOnly}
               onChange={(e) => {
@@ -64,9 +64,7 @@ export default function DisplayTextValue({
                 }} />
                 </div>
             )}
-            {value == null &&
-            "-"
-            }
+          
             </>
 
             

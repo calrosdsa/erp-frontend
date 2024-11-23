@@ -1,10 +1,42 @@
-import { defer, json, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, defer, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
 import EventDetailClient from "./event.client";
 import { components } from "~/sdk";
 import { RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
 import { FetchResponse } from "openapi-fetch";
+import { z } from "zod";
+import { editEventSchema } from "~/util/data/schemas/regate/event-schema";
+
+
+type ActionData = {
+  action:string
+  editEvent:z.infer<typeof editEventSchema>
+}
+
+export const action  =  async({request}:ActionFunctionArgs)=>{
+  const client = apiClient({request})
+  const data =await request.json() as ActionData
+  let message:string | undefined = undefined
+  let error:string |undefined = undefined
+  switch(data.action){
+      case "edit-event": {
+          const d = data.editEvent;
+          const res = await client.PUT("/regate/event", {
+            body: {
+              event_id: d.eventID,
+              name: d.name,
+            },
+          });
+          error = res.error?.detail;
+          message = res.data?.message;
+          break;
+        }
+  }
+  return json({
+      message,error
+  })
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

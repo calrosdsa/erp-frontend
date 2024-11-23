@@ -21,7 +21,7 @@ export default function RolesClient(){
     })
     setUpToolbar(()=>{
         return {
-            title:t("roles"),
+            titleToolbar:t("roles"),
             ...(permission?.create && {
                 addNew:()=>{
                     createRole.openDialog({})

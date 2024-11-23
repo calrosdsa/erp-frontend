@@ -21,7 +21,7 @@ export default function UsersClient() {
   setUpToolbar(()=>{
     return {
       ...(permission?.create && {
-        title:t("users"),
+        titleToolbar:t("users"),
         addNew: () => {
           createUser.openDialog({permission:permission})
         },

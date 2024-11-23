@@ -583,7 +583,8 @@ export interface paths {
         };
         /** get courts */
         get: operations["get courts"];
-        put?: never;
+        /** Edit court */
+        put: operations["edit-court"];
         /** Create Court */
         post: operations["create court"];
         delete?: never;
@@ -1222,7 +1223,8 @@ export interface paths {
         };
         /** Get Contacts */
         get: operations["get contacts"];
-        put?: never;
+        /** Edit contact */
+        put: operations["edit-contact"];
         /** Create Contact */
         post: operations["create contact"];
         delete?: never;
@@ -1780,7 +1782,8 @@ export interface paths {
         };
         /** Get Event Booking */
         get: operations["get-event-bookings"];
-        put?: never;
+        /** Edit event */
+        put: operations["edit-event"];
         /** Create Event */
         post: operations["create-event-booking"];
         delete?: never;
@@ -1990,8 +1993,8 @@ export interface paths {
          * @description Retrieve Items
          */
         get: operations["get-items"];
-        /** Update item */
-        put: operations["update-item"];
+        /** Edit item */
+        put: operations["edit-item"];
         /** Create item */
         post: operations["create-item"];
         delete?: never;
@@ -2622,10 +2625,10 @@ export interface components {
         AvailableCourtDto: {
             /** Format: date-time */
             created_at: string;
-            enabled: boolean;
             /** Format: int64 */
             id: number;
             name: string;
+            status: string;
             /** Format: int64 */
             total_price: number;
             uuid: string;
@@ -2882,10 +2885,10 @@ export interface components {
         CourtDto: {
             /** Format: date-time */
             created_at: string;
-            enabled: boolean;
             /** Format: int64 */
             id: number;
             name: string;
+            status: string;
             uuid: string;
         };
         CourtRateData: {
@@ -2972,7 +2975,6 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            enabled: boolean;
             name: string;
         };
         CreateCustomerBody: {
@@ -2986,7 +2988,8 @@ export interface components {
         };
         CreateCustomerData: {
             customer_type: string;
-            group_uuid?: string;
+            /** Format: int64 */
+            group_id?: number | null;
             name: string;
         };
         CreateEntityRequestBody: {
@@ -3442,6 +3445,31 @@ export interface components {
             organizationName: string;
             phoneNumber: components["schemas"]["PhoneNumber"];
         };
+        EditContactBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: email */
+            email?: string | null;
+            family_name?: string | null;
+            gender?: string | null;
+            given_name: string;
+            /** Format: int64 */
+            party_id: number;
+            phone_number?: string | null;
+        };
+        EditCourtBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            court_id: number;
+            name: string;
+        };
         EditCustomerBody: {
             /**
              * Format: uri
@@ -3453,6 +3481,26 @@ export interface components {
             customer_type: string;
             /** Format: int64 */
             group_id?: number | null;
+            name: string;
+        };
+        EditEventBookingBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            event_id: number;
+            name: string;
+        };
+        EditItemBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            item_id: number;
             name: string;
         };
         EditRolePermissionActionsBody: {
@@ -5957,15 +6005,6 @@ export interface components {
             /** Format: double */
             rate: number;
         };
-        UpdateItemRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            item_type: string;
-            name: string;
-        };
         UpdatePasswordRequestBody: {
             /**
              * Format: uri
@@ -7689,6 +7728,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListCourtDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-court": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditCourtBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -9496,6 +9568,39 @@ export interface operations {
             };
         };
     };
+    "edit-contact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditContactBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create contact": {
         parameters: {
             query?: never;
@@ -11062,6 +11167,39 @@ export interface operations {
             };
         };
     };
+    "edit-event": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditEventBookingBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-event-booking": {
         parameters: {
             query?: never;
@@ -11678,26 +11816,16 @@ export interface operations {
             };
         };
     };
-    "update-item": {
+    "edit-item": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            query?: never;
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateItemRequestBody"];
+                "application/json": components["schemas"]["EditItemBody"];
             };
         };
         responses: {

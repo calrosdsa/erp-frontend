@@ -54,7 +54,7 @@ export default function DashboardClient() {
   const end = format(endOfMonth(new Date()).toLocaleDateString(), "MMM d");
   setUpToolbar(()=>{
     return {
-      title:"Panel"
+      titleToolbar:"Panel"
     }
   },[])
   return (

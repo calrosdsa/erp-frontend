@@ -24,7 +24,7 @@ export default function InvoicesClient(){
     const r = routes
     setUpToolbar(()=>{
         return {
-            title:t(partyInvoice),
+            titleToolbar:t(partyInvoice),
             ...(permission?.create && {
                 addNew:()=>{
                     navigate(r.toRoute({

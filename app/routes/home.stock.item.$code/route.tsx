@@ -12,40 +12,30 @@ import { Suspense } from "react";
 import FallBack from "@/components/layout/Fallback";
 import { z } from "zod";
 import { components } from "~/sdk";
-import { updateItemSchema } from "~/util/data/schemas/stock/item-schemas";
+import { editItemSchema } from "~/util/data/schemas/stock/item-schemas";
 
 type ActionData = {
   action: string;
-  updateItem: z.infer<typeof updateItemSchema>;
+  editItem: z.infer<typeof editItemSchema>;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
-  const url = new URL(request.url)
-  const searchParams = url.searchParams
+  const url = new URL(request.url);
   let error: string | undefined = undefined;
   let message: string | undefined = undefined;
   switch (data.action) {
-    case "update-item": {
-      const d = data.updateItem
+    case "edit-item": {
+      const d = data.editItem;
       const res = await client.PUT("/stock/item", {
         body: {
-          name:d.name,
-          item_type:d.itemType,
+          item_id: d.itemID,
+          name: d.name,
         },
-        params:{
-          query:{
-            parentId:searchParams.get("id") || ""
-          }
-        }
       });
-      if (res.data) {
-        message = res.data.message;
-      }
-      if (res.error) {
-        error = res.error.detail
-      }
-      break
+      error = res.error?.detail;
+      message = res.data?.message;
+      break;
     }
   }
   return json({
@@ -56,9 +46,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
-  const url = new URL(request.url)
-  const searchParams = url.searchParams
-  const tab = searchParams.get("tab")
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
+  const tab = searchParams.get("tab");
   const res = await client.GET("/stock/item/{id}", {
     params: {
       path: {
@@ -66,24 +56,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       },
     },
   });
-  console.log(res.data,res.error)
-  // let stockLevel:components["schemas"]["StockBalanceEntryDto"][] = []
-  // switch(tab){
-  //   case "dashboard":{
-  //     const response = await client.GET("/stock-ledger/balance", {
-  //       params:{
-  //         query:{
-  //             item:res.data?.result.entity.id.toString(),
-  //         }
-  //       }
-  //     })
-  //     stockLevel = response.data?.result || []
-  //   }
-  // }
+  console.log(res.data, res.error);
+  
   return json({
     item: res.data?.result.entity,
-    activities:res.data?.result.activities,
-    associatedActions:res.data?.associated_actions,
+    activities: res.data?.result.activities,
+    associatedActions: res.data?.associated_actions,
+    actions:res.data?.actions,
     // stockLevel,
   });
 };
@@ -92,7 +71,7 @@ export default function ItemDetail() {
   const { item } = useLoaderData<typeof loader>();
   return (
     <div>
-      <ItemDetailClient/>
+      <ItemDetailClient />
       {/* <Suspense fallback={<FallBack />}>
         <Await resolve={item}>
           {(item: any) => {

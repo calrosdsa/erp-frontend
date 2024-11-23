@@ -1,3 +1,4 @@
+import IconButton from "@/components/custom-ui/icon-button";
 import { Icons } from "@/components/icons";
 import Typography, { sm, xs } from "@/components/typography/Typography";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import {
   FormControl,
   FormDescription,
@@ -23,7 +25,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown, PlusIcon } from "lucide-react";
+import { Check, ChevronsUpDown, PlusIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Props<T extends object, K extends keyof T> {
@@ -77,25 +79,34 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                   )}
                 >
                   {field.value || "Select item"}
-                  {/* {field.value
-                    ? data
-                        .find((item) => item[nameK] === field.value)
-                        ?.[nameK]?.toString()
-                    : "Select item"} */}
-                  <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
+                  {field.value ? (
+              <>
+                <IconButton
+                  icon={XIcon}
+                  size="sm"
+                  className="ml-2 h-6 w-6 shrink-0 opacity-50 "
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    form.setValue(name, "");
+                  }}
+                />
+              </>
+            ) : (
+              <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
+            )}
                 </Button>
               </FormControl>
             </PopoverTrigger>
             <PopoverContent >
               <Command>
                 <CommandInput
-                  placeholder="Search item..."
+                  placeholder="Buscar..."
                   onValueChange={(e) => {
                     onValueChange(e);
                   }}
                 />
                 <CommandList>
-                  <CommandEmpty>No results found.</CommandEmpty>
+                  <CommandEmpty>No se encontraron resultados.</CommandEmpty>
                   <CommandGroup>
                     {data.map((item, idx) =>
                       onCustomDisplay ? (

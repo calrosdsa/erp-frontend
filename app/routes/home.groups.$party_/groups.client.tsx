@@ -22,7 +22,7 @@ export default function GroupsClient() {
   const createGroup = useCreateGroup();
   setUpToolbar(() => {
     return {
-        title:t(params.party || ""),
+        titleToolbar:t(params.party || ""),
         ...(permission?.create && {
             addNew: () => {
               if (params.party) {

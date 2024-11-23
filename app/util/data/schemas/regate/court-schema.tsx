@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 
 
 export const createCourtSchema = z.object({
     name:z.string(),
-    enabled:z.boolean()
+    // enabled:z.boolean()
 })
 
 
@@ -20,4 +21,9 @@ export const updateCourtRateSchema = z.object({
     courtUUID:z.string(),
     courtRateIntervals:z.array(courtRateInterval)
 })
+
+export const editCourtSchema = z.object({
+    name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+    courtID:z.number(),
+  });
 

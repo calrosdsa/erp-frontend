@@ -18,7 +18,7 @@ export default function EventsClient(){
     })
     setUpToolbar(()=>{
         return {
-            title:"Eventos",
+            titleToolbar:"Eventos",
             ...(permission?.create && {
                 addNew:()=>{
                     createEvent.onOpenChange(true)
