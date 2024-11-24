@@ -5,7 +5,7 @@ import { ControllerRenderProps, FieldValues } from "react-hook-form";
 
 
 interface Props {
-    form:any
+    form?:any
     label?:string
     name:string
     description?:string
@@ -19,7 +19,7 @@ export default function CustomFormField({form,label,description,name,children,re
     return (
       <div className={cn("",className)}>
         <FormField
-        control={form.control}
+        control={form?.control}
         name={name}
         render={({ field }) => (
           <FormItem className="flex flex-col">

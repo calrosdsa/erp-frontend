@@ -45,7 +45,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const client = apiClient({ request });
+    const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   const tab = searchParams.get("tab");

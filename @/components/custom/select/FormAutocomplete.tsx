@@ -70,8 +70,9 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
-                  variant="outline"
+                  variant="background"
                   role="combobox"
+                  size={"sm"}
                   onClick={() => onValueChange("")}
                   className={cn(
                     "justify-between",
@@ -127,6 +128,8 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                           value={(item[nameK] as string) || ""}
                           key={idx}
                           onSelect={() => {
+                            console.log("NAME",name)
+                            console.log("NAME value",item[nameK])
                             form.setValue(name, item[nameK]);
                             if(onSelect){
                               onSelect(item);
@@ -164,7 +167,9 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
               </div>
             </PopoverContent>
           </Popover>
+          {description &&
           <FormDescription>{description}</FormDescription>
+            }
           <FormMessage />
         </FormItem>
       )}

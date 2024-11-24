@@ -101,6 +101,7 @@ export default function EventInfoTab() {
                 return (
                   <DisplayTextValue
                     value={field.value}
+                    inputType="textarea"
                     onChange={(e) => {
                       field.onChange(e);
                       form.trigger("description");

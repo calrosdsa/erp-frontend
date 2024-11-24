@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
 import { useNewBooking } from "../use-new-booking";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function CreateBookings({
   data,
@@ -59,7 +60,7 @@ export default function CreateBookings({
   });
   const createEvent = useCreateEvent();
   const r = routes;
-  const {resetPayload } = useNewBooking();
+  const { resetPayload } = useNewBooking();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const onSubmit = (values: z.infer<typeof createBookingsSchema>) => {
@@ -73,6 +74,7 @@ export default function CreateBookings({
           return t;
         }),
         event_id: values.eventID,
+        comment: values.comment,
       };
       console.log("BOOKING BODY", body);
       fetcher.submit(
@@ -107,7 +109,7 @@ export default function CreateBookings({
   return (
     <FormLayout>
       <div className="pt-2 pb-4">
-          <Button
+        <Button
           variant={"outline"}
           className=" flex space-x-2 items-center"
           onClick={() => {
@@ -118,9 +120,9 @@ export default function CreateBookings({
                 encType: "application/json",
               }
             );
-            resetPayload()
+            resetPayload();
           }}
-          >
+        >
           <ArrowLeft size={15} />
           <span>Seleccionar hora y Fecha</span>
         </Button>
@@ -176,6 +178,16 @@ export default function CreateBookings({
                 );
               }}
             />
+
+            <CustomFormField
+              label={t("form.comment")}
+              name="comment"
+              form={form}
+              children={(field) => {
+                return <Textarea {...field} rows={3}/>;
+              }}
+            />
+          
 
             <AccordationLayout
               containerClassName="col-span-full"

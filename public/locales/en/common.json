@@ -349,7 +349,7 @@
     "edit": "Edit",
     "view": "View"
   },
-  "new":"New",
+  "new": "New",
   "tooltip": {
     "selectCurrency": "Please select your currency."
   },
@@ -371,7 +371,7 @@
 
   "debitNote": "Debit Note",
   "creditNote": "Credit Note",
-  "cashEntry":"Cash Entry",
+  "cashEntry": "Cash Entry",
 
   "item": "Item",
   "itemPrice": "Item Price",
@@ -387,6 +387,7 @@
   "pianoForms": "Piano Forms",
   "customer": "Customer",
   "supplier": "Supplier",
+  "customerGroup": "Customer Group",
   "company": "Company",
   "deliveryNote": "Delivery Note",
   "journalEntry": "Journal Entry",
@@ -409,7 +410,7 @@
 
   "relocationAndMoving": "Relocation & Moving",
 
-  "individual":"Individual",
+  "individual": "Individual",
 
   "accountType": {
     "cash": "Cash",
@@ -419,7 +420,7 @@
     "income": "Income",
     "costOfGoodSolds": "Cost Of Good Solds"
   },
-  "MATERIAL_RECEIPT":"Material Receipt",
+  "MATERIAL_RECEIPT": "Material Receipt",
 
   "regate": {
     "schedule": "Schedule",

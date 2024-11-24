@@ -9,6 +9,7 @@ export const createBookingsSchema = z.object({
 
   advancePayment: z.coerce.number().optional(),
   discount: z.coerce.number().optional(),
+  comment:z.string().optional(),
 });
 
 export const validateBookingSchema = z.object({

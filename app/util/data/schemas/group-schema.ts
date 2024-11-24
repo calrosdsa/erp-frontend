@@ -20,6 +20,12 @@ export const createGroupSchema = z.object({
   enabled: z.boolean(),
 });
 
+export const editGroupSchema = z.object({
+  name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+  groupID:z.number(),
+  partyTypeGroup:z.string(),
+});
+
 export const groupSchemaToGroupDto = (
   d: z.infer<typeof groupSchema>
 ): components["schemas"]["GroupDto"] => {

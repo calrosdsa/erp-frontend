@@ -29,6 +29,7 @@ import { Form } from "@/components/ui/form";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
+import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 type EditCustomerType = z.infer<typeof editCustomerSchema>;
 export default function CustomerInfo() {
   const { customer, addresses, contacts, actions } =
@@ -39,6 +40,9 @@ export default function CustomerInfo() {
     roleActions: roleActions,
     actions: actions,
   });
+  const [groupDebounceFetcher,onGroupNameChange] = useGroupDebounceFetcher({
+    partyType:PartyType.customerGroup
+})
 
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -50,6 +54,7 @@ export default function CustomerInfo() {
     customerType: customer?.customer_type,
     customerID: customer?.id,
     groupID: customer?.group_id || undefined,
+    groupName:customer?.group_name ||undefined,
   } as EditCustomerType;
   const { form, hasChanged, updateRef } = useEditFields<EditCustomerType>({
     schema: editCustomerSchema,
@@ -103,7 +108,6 @@ export default function CustomerInfo() {
               </Typography>
 
               <CustomFormField
-                form={form}
                 name="name"
                 children={(field) => {
                   return (
@@ -119,19 +123,60 @@ export default function CustomerInfo() {
                   );
                 }}
               />
-              <DisplayTextValue
-                value={customer?.customer_type}
-                title={t("form.type")}
+              <CustomFormField
+                name="customerType"
+                children={(field) => {
+                  return (
+                    <DisplayTextValue
+                      value={field.value}
+                      inputType="select"
+                      field={field}
+                      selectOptions={
+                        [
+                          { name: t("individual"), value: "individual" },
+                          { name: t("company"), value: "company" },
+                        ] as SelectItem[]
+                      }
+                      selectNameKey="name"
+                      onSelect={(e) => {
+                        field.onChange(e.name);
+                        form.trigger("customerType");
+                      }}
+                      title={t("form.type")}
+                      readOnly={!permission?.edit}
+                    />
+                  );
+                }}
               />
-              <DisplayTextValue
-                value={formatLongDate(customer?.created_at, i18n.language)}
-                title={t("table.createdAt")}
+
+             
+            
+                 <CustomFormField
+                name="groupName"
+                children={(field) => {
+                  return (
+                    <DisplayTextValue
+                      value={field.value}
+                      inputType="select"
+                      field={field}
+                      selectOptions={groupDebounceFetcher.data?.groups || []}
+                      selectNameKey="name"
+                      onSelect={(e) => {
+                        form.setValue("groupID",e.id);
+                        form.trigger("groupID");
+                      }}
+                      onValueChange={onGroupNameChange}
+                      title={t("customerGroup")}
+                      readOnly={!permission?.edit}
+                    />
+                  );
+                }}
               />
-              <DisplayTextValue
+              {/* <DisplayTextValue
                 value={customer?.group_name}
                 title={t("_group.base")}
                 to={r.toGroupsByParty(PartyType.customerGroup)}
-              />
+              /> */}
             </div>
             <input className="hidden" type="submit" ref={inputRef} />
           </fetcher.Form>

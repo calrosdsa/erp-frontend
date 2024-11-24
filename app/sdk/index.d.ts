@@ -807,7 +807,8 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
+        /** Edit Group */
+        put: operations["edit-group"];
         /** Create Group */
         post: operations["create group"];
         delete?: never;
@@ -2927,6 +2928,7 @@ export interface components {
             /** Format: double */
             advance_payment?: number;
             bookings: components["schemas"]["BookingData"][];
+            comment?: string;
             /** Format: int64 */
             customer_id: number;
             /** Format: int64 */
@@ -3489,9 +3491,21 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            description?: string;
             /** Format: int64 */
             event_id: number;
             name: string;
+        };
+        EditGroupBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            group_id: number;
+            name: string;
+            party_type_group: string;
         };
         EditItemBody: {
             /**
@@ -8366,6 +8380,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GreetingOutputBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-group": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditGroupBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
