@@ -1507,8 +1507,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Projects */
-        get: operations["projects"];
+        /** Serial Nos */
+        get: operations["serial-nos"];
         put?: never;
         /** Create Project */
         post: operations["create-cost-project"];
@@ -1525,8 +1525,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Project */
-        get: operations["project"];
+        /** Serial No */
+        get: operations["serial-no"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3057,6 +3057,7 @@ export interface components {
         };
         CreateItemLines: {
             lines: components["schemas"]["LineItemData"][];
+            update_stock?: boolean;
         };
         CreateItemPriceBody: {
             /**
@@ -3425,6 +3426,10 @@ export interface components {
             /** Format: date-time */
             Time: string;
             Valid: boolean;
+        };
+        DeliveryLineItemData: {
+            /** Format: int64 */
+            source_warehouse: number;
         };
         EditActivityCommnetBody: {
             /**
@@ -4169,6 +4174,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityRoleTemplateDto"];
         };
+        EntityResponseResultEntitySerialNoDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntitySerialNoDto"];
+        };
         EntityResponseResultEntityStockEntryDtoBody: {
             /**
              * Format: uri
@@ -4548,6 +4566,7 @@ export interface components {
             uuid: string;
         };
         LineItemData: {
+            delivery_line_item?: components["schemas"]["DeliveryLineItemData"];
             /** Format: int32 */
             item_line_reference?: number;
             item_price_uuid: string;
@@ -4879,6 +4898,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListRoleTemplateDto"];
         };
+        PaginationResponsePaginationResultListSerialNoDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListSerialNoDto"];
+        };
         PaginationResponsePaginationResultListStockEntryDtoBody: {
             /**
              * Format: uri
@@ -5066,6 +5094,11 @@ export interface components {
         };
         PaginationResultListRoleTemplateDto: {
             results: components["schemas"]["RoleTemplateDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListSerialNoDto: {
+            results: components["schemas"]["SerialNoDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -5784,6 +5817,12 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["RoleTemplateDto"];
         };
+        ResultEntitySerialNoDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["SerialNoDto"];
+        };
         ResultEntityStockEntryDto: {
             activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
@@ -5830,6 +5869,14 @@ export interface components {
             /** Format: int64 */
             id: number;
             name: string;
+        };
+        SerialNoDto: {
+            /** Format: int64 */
+            id: number;
+            item_code: string;
+            item_name: string;
+            serial_no: string;
+            status: string;
         };
         SignInRequestBody: {
             /**
@@ -6565,12 +6612,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -6789,12 +6831,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -7034,12 +7071,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -7184,12 +7216,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -7531,12 +7558,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -7607,12 +7629,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -7724,12 +7741,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -7993,12 +8005,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -8036,12 +8043,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -8848,12 +8850,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -9376,12 +9373,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -9584,12 +9576,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -9775,12 +9762,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -10169,12 +10151,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -10475,7 +10452,7 @@ export interface operations {
             };
         };
     };
-    projects: {
+    "serial-nos": {
         parameters: {
             query: {
                 page: string;
@@ -10486,13 +10463,9 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                serial_no?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -10504,7 +10477,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListProjectDtoBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListSerialNoDtoBody"];
                 };
             };
             /** @description Error */
@@ -10551,7 +10524,7 @@ export interface operations {
             };
         };
     };
-    project: {
+    "serial-no": {
         parameters: {
             query?: {
                 query?: string;
@@ -10578,7 +10551,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityProjectDtoBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntitySerialNoDtoBody"];
                 };
             };
             /** @description Error */
@@ -11183,12 +11156,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -11333,12 +11301,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -11542,12 +11505,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -11585,12 +11543,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -11832,12 +11785,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -11951,12 +11899,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -12164,12 +12107,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -12537,12 +12475,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -12580,12 +12513,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -12752,12 +12680,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -12879,12 +12802,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -13035,12 +12953,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -13244,12 +13157,7 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: {
-                Authorization?: string;
-                "Active-Company"?: string;
-                "User-Session-Uuid"?: string;
-                Role?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };

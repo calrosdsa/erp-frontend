@@ -28,6 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
+      console.log("ERROR",res.error)
       break;
     }
   }
@@ -56,7 +57,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       },
     },
   });
-  console.log("FETCHIN-HERE", res.error, res.data);
   handleError(res.error);
   if (res.data) {
     switch (tab) {

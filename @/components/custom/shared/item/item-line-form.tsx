@@ -8,7 +8,7 @@ import { DEFAULT_CURRENCY } from "~/constant";
 import { useOutletContext } from "@remix-run/react";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import FormAutocomplete from "../../select/FormAutocomplete";
-import { ItemLineType } from "~/gen/common";
+import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
 import {
   lineItemSchema,
@@ -20,6 +20,10 @@ import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { UseFormReturn } from "react-hook-form";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse";
+import CustomFormField from "../../form/CustomFormField";
+import CheckForm from "../../input/CheckForm";
+import { Checkbox } from "@/components/ui/checkbox";
+import { CustomCheckbox } from "../../input/CustomCheckBox";
 
 export default function ItemLineForm({
   form,
@@ -32,6 +36,7 @@ export default function ItemLineForm({
   itemLineType: ItemLineType;
   partyType: string;
 }) {
+  const formValues = form.getValues()
   const globalState = useOutletContext<GlobalState>();
   const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
     isGroup: false,
@@ -41,7 +46,8 @@ export default function ItemLineForm({
     roleActions: globalState.roleActions,
   });
   const createWareHouse = useCreateWareHouse();
-
+  const isSaleInvoice = partyType == partyTypeToJSON(PartyType.saleInvoice)
+  const isPurchaseInvoice = partyType == partyTypeToJSON(PartyType.purchaseInvoice)
   const itemLine = useItemLine();
 
   const { t, i18n } = useTranslation("common");
@@ -50,20 +56,20 @@ export default function ItemLineForm({
       itemLine.onOpenDialog({
         allowEdit: true,
         partyType: partyType,
-        currency: form.getValues().currency,
+        currency: formValues.currency,
         itemLineType: itemLineType,
         ...(itemLineType == ItemLineType.ITEM_LINE_RECEIPT && {
           lineItemReceipt: {
-            acceptedWarehouse: form.getValues().acceptedWarehouse,
-            acceptedWarehouseName: form.getValues().acceptedWarehouseName,
-            rejectedWarehouse: form.getValues().rejectedWarehouse,
-            rejectedWarehouseName: form.getValues().rejectedWarehouseName,
+            acceptedWarehouse: formValues.acceptedWarehouse,
+            acceptedWarehouseName: formValues.acceptedWarehouseName,
+            rejectedWarehouse: formValues.rejectedWarehouse,
+            rejectedWarehouseName: formValues.rejectedWarehouseName,
             acceptedQuantity: 0,
             rejectedQuantity: 0,
           },
         }),
         onEditItemForm: (e) => {
-          const orderLines = form.getValues().lines;
+          const orderLines = formValues.lines;
           e.rate = formatAmountToInt(e.rate);
           const n = [...orderLines, e];
           // console.log("LINES",orderLines,addLineOrder.orderLine)
@@ -71,38 +77,38 @@ export default function ItemLineForm({
           form.trigger("lines");
         },
       });
-      // addLineOrder.openDialog({ currency: form.getValues().currency.code,itemLineType:itemLineType });
+      // addLineOrder.openDialog({ currency: formValues.currency.code,itemLineType:itemLineType });
     },
     onDelete: (rowIndex) => {
       const orderLines: z.infer<typeof lineItemSchema>[] =
-        form.getValues().lines;
+        formValues.lines;
       const f = orderLines.filter((_, idx) => idx != rowIndex);
       form.setValue("lines", f);
       form.trigger("lines");
     },
     onEdit: (rowIndex) => {
       const orderLines: z.infer<typeof lineItemSchema>[] =
-        form.getValues().lines;
+        formValues.lines;
       const f = orderLines.find((_, idx) => idx == rowIndex);
       if (f) {
         const line = mapToItemLineDto(f);
         itemLine.onOpenDialog({
           allowEdit: true,
           partyType: partyType,
-          currency: form.getValues().currency,
+          currency: formValues.currency,
           itemLineType: itemLineType,
           lineReference: f.itemLineReference,
           lineItemReceipt: {
             acceptedQuantity: Number(f.quantity),
             rejectedQuantity: 0,
-            acceptedWarehouseName:f.lineItemReceipt?.acceptedWarehouseName,
-            rejectedWarehouseName:f.lineItemReceipt?.rejectedWarehouseName,
+            acceptedWarehouseName: f.lineItemReceipt?.acceptedWarehouseName,
+            rejectedWarehouseName: f.lineItemReceipt?.rejectedWarehouseName,
           },
           line: line,
           onEditItemForm: (e) => {
             console.log("EDITED ITEM", e);
             const orderLines: z.infer<typeof lineItemSchema>[] =
-              form.getValues().lines;
+              formValues.lines;
             const n = orderLines.map((t, idx) => {
               if (idx == rowIndex) {
                 e.rate = formatAmountToInt(e.rate);
@@ -163,13 +169,47 @@ export default function ItemLineForm({
           </div>
         </>
       )}
-      {/* {JSON.stringify(form.getValues())} */}
+      {/* {JSON.stringify(formValues)} */}
       <Typography fontSize={subtitle}>{t("items")}</Typography>
+      {(isSaleInvoice || isPurchaseInvoice) && 
+        <div className="py-4 create-grid">
+          <CustomFormField
+          form={form.control}
+          name="updateStock"
+          children={(field)=>{
+            return  <CustomCheckbox
+            checked={field.value}
+            onCheckedChange={field.onChange}
+            label={t("form.updateStock")}
+          />
+          }}
+          />
+          {(isSaleInvoice && formValues.updateStock) && 
+           <FormAutocomplete
+           form={form}
+           data={warehouseFetcher.data?.warehouses || []}
+           name="sourceWarehouseName"
+           nameK={"name"}
+           onValueChange={onWarehouseChange}
+           onSelect={(v) => {
+             form.setValue("sourceWarehouse", v.id);
+           }}
+           label={t("f.source", { o: t("_warehouse.base") })}
+           {...(permissionWarehouse?.create && {
+             addNew: () => {
+               createWareHouse.openDialog({});
+             },
+           })}
+         />
+          }
+
+        </div>
+        }
 
       <DataTable
-        data={form.getValues().lines || []}
+        data={formValues.lines || []}
         columns={orderLineColumns({
-          currency: form.getValues().currency || DEFAULT_CURRENCY,
+          currency: formValues.currency || DEFAULT_CURRENCY,
           itemLineType: itemLineType,
         })}
         metaOptions={{
@@ -177,12 +217,12 @@ export default function ItemLineForm({
             ...metaOptions,
             tooltipMessage: t("tooltip.selectCurrency"),
             enableTooltipMessage:
-              form.getValues().currency == undefined ||
-              form.getValues().currency == "",
+              formValues.currency == undefined ||
+              formValues.currency == "",
           },
         }}
       />
-      {form.getValues().lines.length > 0 && (
+      {formValues.lines.length > 0 && (
         <OrderSumary
           orderTotal={sumTotal(
             form
@@ -194,7 +234,7 @@ export default function ItemLineForm({
           )}
           orderTax={0}
           i18n={i18n}
-          currency={form.getValues().currency || DEFAULT_CURRENCY}
+          currency={formValues.currency || DEFAULT_CURRENCY}
         />
       )}
     </div>

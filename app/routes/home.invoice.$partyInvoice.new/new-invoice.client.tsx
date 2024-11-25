@@ -3,28 +3,24 @@ import {
   useNavigate,
   useOutletContext,
   useParams,
-  useRevalidator,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { useToast } from "@/components/ui/use-toast";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { useEffect, useRef } from "react";
 import { routes } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
-import { Button } from "@/components/ui/button";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { action } from "./route";
-import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
+import { createInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
 import {
   ItemLineType,
@@ -48,13 +44,13 @@ export default function CreatePurchaseInvoiceClient() {
   const r = routes;
   const params = useParams();
   const partyInvoice = params.partyInvoice || "";
-  const form = useForm<z.infer<typeof createPurchaseInvoiceSchema>>({
-    resolver: zodResolver(createPurchaseInvoiceSchema),
+  const form = useForm<z.infer<typeof createInvoiceSchema>>({
+    resolver: zodResolver(createInvoiceSchema),
     defaultValues: {
       referenceID: createPurchaseInvoice.payload?.referenceID,
-      partyName: createPurchaseInvoice.payload?.party_name || "",
-      partyUuid: createPurchaseInvoice.payload?.party_uuid || "",
-      partyType: createPurchaseInvoice.payload?.party_type || "",
+      partyName: createPurchaseInvoice.payload?.party_name,
+      partyUuid: createPurchaseInvoice.payload?.party_uuid,
+      partyType: createPurchaseInvoice.payload?.party_type,
       currency: createPurchaseInvoice.payload?.currency || globalState.companyDefaults?.currency || "",
       currencyName: createPurchaseInvoice.payload?.currency || globalState.companyDefaults?.currency,
       lines: createPurchaseInvoice.payload?.lines || [],
@@ -62,7 +58,7 @@ export default function CreatePurchaseInvoiceClient() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof createPurchaseInvoiceSchema>) => {
+  const onSubmit = (values: z.infer<typeof createInvoiceSchema>) => {
     console.log(values);
     fetcher.submit(
       {
@@ -112,6 +108,7 @@ export default function CreatePurchaseInvoiceClient() {
   return (
     <div>
       <FormLayout>
+        {JSON.stringify(form.formState.errors)}
         <Form {...form}>
           <fetcher.Form
             method="post"

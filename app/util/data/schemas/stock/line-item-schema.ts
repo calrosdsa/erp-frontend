@@ -112,6 +112,11 @@ export const lineItemStockEntry = z.object({
   targetWarehouseName: z.string().optional(),
 });
 
+export const deliveryLineItem = z.object({
+  sourceWarehouse: z.number().optional(),
+  sourceWarehouseName: z.string().optional(),
+})
+
 export const lineItemSchema = z
   .object({
     itemLineID: z.number().optional(),
@@ -122,6 +127,7 @@ export const lineItemSchema = z
     itemLineReference: z.number().optional(),
     lineItemReceipt: lineItemReceipt.optional(),
     lineItemStockEntry:lineItemStockEntry.optional(),
+    deliveryLineItem:deliveryLineItem.optional(),
     amount: z.number().optional(),
 
     uom: z.string(),

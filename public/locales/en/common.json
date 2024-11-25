@@ -150,6 +150,7 @@
     "tax": "Tax",
     "totalTax": "Total Taxes",
     "status": "Status",
+    "updateStock":"Update Stock",
     "startDate": "Start Date",
     "outOfStockThreshold": "Out of Stock Threshold",
     "isGroup": "Is Group",
@@ -195,7 +196,6 @@
     "isBuyingDesc": "This price list will be used for buying products."
   },
   "customers": "Customers",
-  "customerGroup": "Customer Groups",
   "_customer": {
     "base": "Customer",
     "create": "Create New Customer",

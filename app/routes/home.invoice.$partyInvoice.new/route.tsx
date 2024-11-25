@@ -2,7 +2,7 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import CreatePurchaseInvoiceClient from "./new-invoice.client"
 import { z } from "zod"
-import { createPurchaseInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema"
+import { createInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema"
 import { orderLineSchemaToOrderLineDto } from "~/util/data/schemas/buying/purchase-schema"
 import { currencySchemaToCurrencyDto } from "~/util/data/schemas/app/currency-schema"
 import { components } from "~/sdk"
@@ -10,7 +10,7 @@ import { PartyType } from "~/gen/common"
 
 type ActionData ={
     action:string
-    createPurchaseInvoice:z.infer<typeof createPurchaseInvoiceSchema>
+    createPurchaseInvoice:z.infer<typeof createInvoiceSchema>
 }
 
 export const action = async({request,params}:ActionFunctionArgs)=>{
@@ -35,6 +35,7 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
                         reference:d.referenceID,
                     },
                     items:{
+                        update_stock:d.updateStock,
                         lines:lines,
                     },
                 }

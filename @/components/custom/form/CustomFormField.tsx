@@ -1,12 +1,13 @@
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
-import { ControllerRenderProps, FieldValues } from "react-hook-form";
+import { Control, ControllerRenderProps, FieldValues } from "react-hook-form";
 
 
 interface Props {
     form?:any
     label?:string
+    control?:Control<any, any>
     name:string
     description?:string
     required?:boolean,
@@ -14,12 +15,12 @@ interface Props {
     children:(field: ControllerRenderProps<FieldValues, string>)=>ReactNode
 }
 export default function CustomFormField({form,label,description,name,children,required=false,
-  className=""
+  className="",control
 }:Props){
     return (
       <div className={cn("",className)}>
         <FormField
-        control={form?.control}
+        control={control}
         name={name}
         render={({ field }) => (
           <FormItem className="flex flex-col">

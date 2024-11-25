@@ -28,7 +28,12 @@ export const orderLineSchemaToOrderLineDto = (
     item_price_uuid: d.item_price_uuid || "",
     item_line_reference:d.itemLineReference,
   }
-  if(d.lineType == ItemLineType.ITEM_LINE_RECEIPT){
+  if(d.deliveryLineItem?.sourceWarehouse){
+    line.delivery_line_item = {
+      source_warehouse:d.deliveryLineItem.sourceWarehouse,
+    }
+  }
+  if(d.lineItemReceipt){
     line.line_receipt = {
       accepted_quantity:Number(d.lineItemReceipt?.acceptedQuantity),
       rejected_quantity:Number(d.lineItemReceipt?.rejectedQuantity),
@@ -36,7 +41,7 @@ export const orderLineSchemaToOrderLineDto = (
       rejected_warehouse:d.lineItemReceipt?.rejectedWarehouse,
     }
   }
-  if(d.lineType == ItemLineType.ITEM_LINE_STOCK_ENTRY) {
+  if(d.lineItemStockEntry) {
     line.line_stock_entry = {
       source_warehouse:d.lineItemStockEntry?.sourceWarehouse,
       target_warehouse:d.lineItemStockEntry?.targetWarehouse,

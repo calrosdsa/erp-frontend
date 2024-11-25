@@ -5,6 +5,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { CheckedState } from "@radix-ui/react-checkbox";
 
@@ -38,6 +39,7 @@ export default function CheckForm({ label, form, name, description,onChange}: Pr
                 {description}
                 </FormLabel>
             )}
+            <FormMessage />
           </div>
             </div>
         </FormItem>

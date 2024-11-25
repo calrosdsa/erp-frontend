@@ -40,7 +40,7 @@ interface Props<T extends object, K extends keyof T> {
   onSelect?: (v: T) => void;
   className?: string;
   addNew?: () => void;
-  required?:boolean
+  required?: boolean;
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
 }
 
@@ -65,14 +65,17 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col w-full ">
-          {label && <FormLabel>{label} {required && "*"}</FormLabel>}
+          {label && (
+            <FormLabel>
+              {label} {required && "*"}
+            </FormLabel>
+          )}
           <Popover modal={true}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
-                  variant="background"
+                  variant="outline"
                   role="combobox"
-                  size={"sm"}
                   onClick={() => onValueChange("")}
                   className={cn(
                     "justify-between",
@@ -81,24 +84,24 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                 >
                   {field.value || "Select item"}
                   {field.value ? (
-              <>
-                <IconButton
-                  icon={XIcon}
-                  size="sm"
-                  className="ml-2 h-6 w-6 shrink-0 opacity-50 "
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    form.setValue(name, "");
-                  }}
-                />
-              </>
-            ) : (
-              <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
-            )}
+                    <>
+                      <IconButton
+                        icon={XIcon}
+                        size="sm"
+                        className="ml-2 h-6 w-6 shrink-0 opacity-50 "
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          form.setValue(name, "");
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
+                  )}
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent >
+            <PopoverContent>
               <Command>
                 <CommandInput
                   placeholder="Buscar..."
@@ -116,22 +119,22 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                           key={idx}
                           onSelect={() => {
                             form.setValue(name, item[nameK]);
-                            if(onSelect){
+                            if (onSelect) {
                               onSelect(item);
                             }
                           }}
                         >
-                        {onCustomDisplay(item, idx)}
+                          {onCustomDisplay(item, idx)}
                         </CommandItem>
                       ) : (
                         <CommandItem
                           value={(item[nameK] as string) || ""}
                           key={idx}
                           onSelect={() => {
-                            console.log("NAME",name)
-                            console.log("NAME value",item[nameK])
+                            console.log("NAME", name);
+                            console.log("NAME value", item[nameK]);
                             form.setValue(name, item[nameK]);
-                            if(onSelect){
+                            if (onSelect) {
                               onSelect(item);
                             }
                           }}
@@ -167,9 +170,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
               </div>
             </PopoverContent>
           </Popover>
-          {description &&
-          <FormDescription>{description}</FormDescription>
-            }
+          {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
         </FormItem>
       )}
