@@ -1507,8 +1507,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Serial Nos */
-        get: operations["serial-nos"];
+        /** Projects */
+        get: operations["projects"];
         put?: never;
         /** Create Project */
         post: operations["create-cost-project"];
@@ -1525,8 +1525,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Serial No */
-        get: operations["serial-no"];
+        /** Project */
+        get: operations["project"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1888,6 +1888,40 @@ export interface paths {
         };
         /** Get role definitions */
         get: operations["get role definitions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/serial-no": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Serial Nos */
+        get: operations["serial-nos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/serial-no/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Serial No */
+        get: operations["serial-no"];
         put?: never;
         post?: never;
         delete?: never;
@@ -10452,7 +10486,7 @@ export interface operations {
             };
         };
     };
-    "serial-nos": {
+    projects: {
         parameters: {
             query: {
                 page: string;
@@ -10463,7 +10497,6 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
-                serial_no?: string;
             };
             header?: never;
             path?: never;
@@ -10477,7 +10510,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListSerialNoDtoBody"];
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListProjectDtoBody"];
                 };
             };
             /** @description Error */
@@ -10524,7 +10557,7 @@ export interface operations {
             };
         };
     };
-    "serial-no": {
+    project: {
         parameters: {
             query?: {
                 query?: string;
@@ -10551,7 +10584,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntitySerialNoDtoBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityProjectDtoBody"];
                 };
             };
             /** @description Error */
@@ -11518,6 +11551,86 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleActionDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "serial-nos": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+                serial_no?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListSerialNoDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "serial-no": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntitySerialNoDtoBody"];
                 };
             };
             /** @description Error */

@@ -100,6 +100,8 @@ class Routes {
   costCenter = "costCenter"
   stockEntry = "stockEntry"
   project = "project"
+  serialNo = "serialNo"
+
 
   defaultTab = {
     tab: "info",

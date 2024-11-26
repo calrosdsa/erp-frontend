@@ -59,6 +59,7 @@ enum PartyType {
     accountReceivable = 33;
     accountPayable = 34;
     financialStatements = 35;
+    serialNo = 36;
 }
 
 enum PianoPartyType {
@@ -89,6 +90,9 @@ enum State {
     TO_DELIVER_AND_BILL = 20;
     TO_DELIVER = 21;
     ENABLED = 22;
+    ACTIVE = 23;
+    INACTIVE = 24;
+    DELIVERED = 25;
 }
 
 
@@ -162,7 +166,8 @@ enum ItemLineType {
     ITEM_LINE_ORDER = 0;
     ITEM_LINE_INVOICE = 1;
     ITEM_LINE_RECEIPT = 2;
-    ITEM_LINE_STOCK_ENTRY = 3;
+    DELIVERY_LINE_ITEM = 3;
+    ITEM_LINE_STOCK_ENTRY = 4;
 }
 
 enum BookingType {

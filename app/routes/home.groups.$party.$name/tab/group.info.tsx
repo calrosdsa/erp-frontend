@@ -6,10 +6,7 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "../route";
 import { useTranslation } from "react-i18next";
-import { TreeGroupLayout } from "@/components/layout/tree/TreeLayout";
-import { Typography } from "@/components/typography";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { formatLongDate } from "~/util/format/formatDate";
 import { z } from "zod";
 import { editGroupSchema } from "~/util/data/schemas/group-schema";
 import { useRef } from "react";
