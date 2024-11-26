@@ -53,10 +53,7 @@ const orderConnections = ({data,receipt}:{
   const navigate = useNavigate()
   connections.push({
     entity: partyTypeToJSON(PartyType.purchaseOrder),
-    href: r.toOrders(PartyType.purchaseOrder,{
-        "invoiceCode":receipt?.code,
-        "receipt":receipt?.id.toString(),
-    }),
+    href:"",
     count:data.find(t=>t.party_type == partyTypeToJSON(PartyType.purchaseOrder))?.connections,
     add: () => {
       navigate(r.toCreateOrder(PartyType.purchaseOrder))

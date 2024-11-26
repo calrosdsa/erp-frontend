@@ -1,7 +1,6 @@
 import React from "react";
 import MessageAlert from "@/components/custom-ui/message-alert";
 import { Icons } from "@/components/icons";
-import Typography from "@/components/typography/Typography";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +12,7 @@ import { ChevronsUpDown, PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { EventState, State } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { Typography } from "@/components/typography";
 
 export default function ToolBar({ title }: { title: string }) {
   const toolbarState = useToolbar();
@@ -34,7 +34,7 @@ export default function ToolBar({ title }: { title: string }) {
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
         <div className="flex flex-wrap space-x-2 ">
-          <Typography fontSize={22}>
+          <Typography variant="title1">
             {titleToolbar != undefined ? titleToolbar : title}
           </Typography>
           {status && (

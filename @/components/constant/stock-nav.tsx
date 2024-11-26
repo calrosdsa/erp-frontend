@@ -73,6 +73,25 @@ export const StockNav = ({ entities }: {
     });
   }
 
+  if (entities?.includes(Entity.SERIAL_NO)) {
+    stockChildrens.push({
+      title: t("serialNo"),
+      href: r.toRoute({
+        main:r.serialNo,
+        routePrefix:[r.stockM]
+      }),
+    });
+  }
+  if (entities?.includes(Entity.BATCH_BUNDLE)) {
+    stockChildrens.push({
+      title: t("batchBundle"),
+      href: r.toRoute({
+        main:r.batchBundle,
+        routePrefix:[r.stockM]
+      }),
+    });
+  }
+
   const stock: NavItem = {
     title: t("stock"),
     icon: Layers3Icon,

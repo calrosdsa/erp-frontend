@@ -30,7 +30,7 @@ export const itemColumns = (): ColumnDef<components["schemas"]["ItemDto"]>[] => 
             routeSufix:[name],
             q:{
               tab:"info",
-              id:rowData.uuid,
+              id:rowData.code,
             }
           })}
         />

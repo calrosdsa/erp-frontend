@@ -26,7 +26,7 @@ export const generalLedgerColumns = ({}: {}): ColumnDef<
       const rowData = props.row.original;
       return (
         <>
-          <span className="truncate">{rowData.account}</span>
+          <span className="">{rowData.account}</span>
         </>
       );
     },

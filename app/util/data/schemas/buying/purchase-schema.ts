@@ -25,7 +25,8 @@ export const orderLineSchemaToOrderLineDto = (
   const line:components["schemas"]["LineItemData"]  = {
     rate: d.rate,
     quantity: Number(d.quantity),
-    item_price_uuid: d.item_price_uuid || "",
+    item_price_id: Number(d.item_price_id),
+    item_price_uuid:"",
     item_line_reference:d.itemLineReference,
   }
   if(d.deliveryLineItem?.sourceWarehouse){

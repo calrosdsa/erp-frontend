@@ -26,6 +26,7 @@
   .link {
     @apply hover:underline
   }
+  
 }
 
 @layer base {

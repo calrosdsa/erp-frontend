@@ -1,5 +1,4 @@
 import TableCellIndex from "@/components/custom/table/cells/table-cell-index";
-import ResizableTable from "@/components/custom/table/ResizableTable";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { loader } from "./route";
@@ -17,6 +16,7 @@ import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import AccountReceivableHeader from "./components/account-receivable-header";
 import { accountReceivableColumns } from "@/components/custom/table/columns/accounting/account-receivable-columns";
+import { ResizableVirtualizedTable } from "@/components/custom/table/ResizableTable";
 
 interface LedgerData {
   Name: string;
@@ -63,7 +63,7 @@ export default function AccountReceivableClient() {
           <AccountReceivableHeader />
         </CardHeader>
         <CardContent className="px-2 py-3">
-          <DataTable
+          <ResizableVirtualizedTable
             data={[
               ...(accountReceivable || []),
               {

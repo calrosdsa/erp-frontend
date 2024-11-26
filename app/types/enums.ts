@@ -54,6 +54,9 @@ export enum Entity {
     ACCOUNT_RECEIVABLE = 34,
     ACCOUNT_PAYABLE = 35,
     FINANCIAL_STATEMENTS = 36,
+    STOCK_SETTING = 37,
+    SERIAL_NO = 38,
+    BATCH_BUNDLE = 39,
 }
 
 export enum PartyType {

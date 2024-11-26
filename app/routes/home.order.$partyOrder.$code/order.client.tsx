@@ -295,6 +295,7 @@ export default function PurchaseOrderClient() {
       activities={activities}
       navItems={navItems}
     >
+      {/* {JSON.stringify(order?.order_lines)} */}
       {tab == "info" && <OrderInfoTab />}
       {tab == "connections" && <OrderConnectionsTab />}
     </DetailLayout>

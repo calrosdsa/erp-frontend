@@ -40,7 +40,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
   to,
   readOnly = true,
   onChange,
-  inputType = "input",
+  inputType,
   isEditable = false,
   field,
   selectOptions,
@@ -80,7 +80,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
   const renderValue = () => {
     if (to !== undefined) {
       return (
-        <Link to={to} className="underline h-7 items-center flex">
+        <Link to={to} className="underline h-7 px-2 items-center flex">
           <Typography variant="body2">{value}</Typography>
         </Link>
       )
@@ -104,7 +104,8 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
         readOnly: readOnly && !isEditing,
         onChange: handleInputChange,
         className: cn(
-          "focus-visible:ring-0 focus-visible:border-none border-none ring-0 ring-offset-0 focus-visible:ring-offset-0",
+          `focus-visible:ring-0 focus-visible:border-none border-none ring-0 
+          ring-offset-0focus-visible:ring-offset-0`,
           readOnly && !isEditing ? "bg-accent" : ""
         ),
         value: readOnly && !isEditing ? value || "-" : value || "",
@@ -112,7 +113,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
       }
 
       if (inputType === "input") {
-        return <Input {...commonProps} className={cn(commonProps.className, "h-8")} />
+        return <Input {...commonProps} className={cn(commonProps.className, "h-7")} />
       }
 
       if (inputType === "textarea") {
@@ -121,15 +122,6 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
 
       if (inputType === "select" && selectOptions && selectNameKey && field) {
         return (
-          // <FormAutocomplete
-          //   data={selectOptions}
-          //   selectNameKey={selectNameKey}
-          //   name={field?.name || ""}
-          //   form={form}
-          //   label={undefined}
-          //   onValueChange={onValueChange || (() => {})}
-          //   onSelect={onSelect}
-          // />
           <FormField
           name={field?.name || ""}
           render={({ field }) => (
@@ -204,26 +196,9 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
                       </CommandGroup>
                     </CommandList>
                   </Command>
-                  {/* <div className="pt-2 px-1">
-                    {addNew && (
-                      <Button
-                        onClick={() => {
-                          addNew();
-                        }}
-                        size={"sm"}
-                        className=" space-x-2 flex"
-                      >
-                        <Typography fontSize={xs}>Add New</Typography>
-                        <PlusIcon size={15} />
-                      </Button>
-                    )}
-                  </div> */}
+                
                 </PopoverContent>
               </Popover>
-              {/* {description &&
-              <FormDescription>{description}</FormDescription>
-                }
-              <FormMessage /> */}
             </FormItem>
           )}
         />
@@ -231,13 +206,13 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
       }
     }
 
-    return <Typography variant="body2">{value || "-"}</Typography>
+    return <Typography variant="body2" className="h-7 px-2 flex justify-center items-center">{value || "-"}</Typography>
   }
 
   return (
     <div className="flex flex-col space-y-1">
       <Typography variant="label">{title}</Typography>
-      <div className="bg-accent rounded-md p-[6px] shadow-sm flex justify-between items-center">
+      <div className="bg-accent rounded-md p-[3px] shadow-sm flex justify-between items-center">
         {renderValue()}
         {isEditable && (
           <Button variant="ghost" size="icon" className="h-6 w-6 ml-2" onClick={toggleEdit}>

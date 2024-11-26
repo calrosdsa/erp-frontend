@@ -3,14 +3,18 @@ import { useLoaderData } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { loader } from "../route";
 
-export default function SerialNoInfo(){
+export default function BatchBundleInfo(){
     const {t} = useTranslation("common")
-    const {serialNo} = useLoaderData<typeof loader>()
+    const {batchBundle} = useLoaderData<typeof loader>()
     return (
         <div className="info-grid">
             <DisplayTextValue
-            title={t("serialNo")}
-            value={serialNo?.serial_no}
+            title={t("item")}
+            value={batchBundle?.item}
+            />
+            <DisplayTextValue
+            title={t("warehouse")}
+            value={batchBundle?.warehouse}
             />
         </div>
     )

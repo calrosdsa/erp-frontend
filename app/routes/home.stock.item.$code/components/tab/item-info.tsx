@@ -82,6 +82,7 @@ export default function ItemInfoTab() {
                 return (
                   <DisplayTextValue
                     value={field.value}
+                    inputType="input"
                     onChange={(e) => {
                       field.onChange(e);
                       form.trigger("name");

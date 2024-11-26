@@ -63,10 +63,7 @@ const customerConnections = ({data,customer}:{
 
   connections.push({
     entity: partyTypeToJSON(PartyType.saleOrder),
-    href: r.toOrders(PartyType.saleOrder,{
-        "party":customer?.id.toString(),
-        "partyName":customer?.name,
-    }),
+    href: "",
     count:data.find(t=>t.party_type == partyTypeToJSON(PartyType.saleOrder))?.connections,
     add: () => {
       navigate(r.toCreateOrder(PartyType.saleOrder))

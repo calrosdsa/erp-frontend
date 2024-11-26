@@ -49,13 +49,12 @@ export const mapToLineItem = (
     quantity: line.quantity,
     itemLineReference: line.id,
 
-    item_price_uuid: line.item_price_uuid,
+    item_price_id: line.item_price_id,
     item_price_rate: line.rate,
 
     item_name: line.item_name,
     item_code: line.item_code,
     uom: line.uom,
-    item_uuid: line.item_uuid,
   };
   if (to == ItemLineType.ITEM_LINE_RECEIPT) {
     lineItem.lineItemReceipt = {
@@ -76,6 +75,7 @@ export const mapToItemLineDto = (
     item_code: line.item_code,
     item_name: line.item_name,
     uom: line.uom,
+    item_price_id:line.item_price_id,
     // item_price_uuid: line.item_price_uuid,
     // item_uuid: line.item_uuid,
     line_type: itemLineTypeToJSON(Number(line.lineType)),
@@ -133,10 +133,9 @@ export const lineItemSchema = z
     uom: z.string(),
 
     item_name: z.string(),
-    item_uuid: z.string(),
     item_code: z.string(),
 
-    item_price_uuid: z.string(),
+    item_price_id: z.number(),
     item_price_rate: z.number().optional(),
 
     party_type: z.string().optional(),

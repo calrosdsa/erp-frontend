@@ -88,6 +88,7 @@ export default function AutocompleteSearch<
           <Button
             variant="outline"
             role="combobox"
+            size={"sm"}
             onClick={() => onValueChange("")}
             className={cn(
               "justify-between w-full  sm:min-w-32",

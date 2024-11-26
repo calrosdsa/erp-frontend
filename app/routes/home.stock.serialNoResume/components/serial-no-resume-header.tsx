@@ -11,11 +11,17 @@ import { useTranslation } from "react-i18next";
 import { useItemDebounceFetcher } from "~/util/hooks/fetchers/useItemDebounceFetcher";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 
-export default function StockLedgerHeader() {
+export default function SerialNumberResumeHeader() {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
   const [voucherNo, setVoucherNo] = useState(
     searchParams.get("voucherNo") || ""
+  );
+  const [serialNo, setSerialNo] = useState(
+    searchParams.get("serialNo") || ""
+  );
+  const [batchBundleNo, setBatchBundleNo] = useState(
+    searchParams.get("batchBundleNo") || ""
   );
   const [itemFetcher, onItemChange] = useItemDebounceFetcher();
   const [warehouseFetcher, onWareHouseChange] = useWarehouseDebounceFetcher({
@@ -35,7 +41,7 @@ export default function StockLedgerHeader() {
 
   return (
     <div>
-      <div className="flex space-x-2">
+      <div className="flex flex-wrap gap-2">
         <DateTimePicker
           initialDate={fromDate}
           onChange={(e) => {
@@ -56,20 +62,6 @@ export default function StockLedgerHeader() {
           }}
           placeholder={t("form.toDate")}
         />
-        <TooltipLayout content={t("form.voucherNo")}>
-          <Input
-            placeholder={t("form.voucherNo")}
-            className="w-min"
-            value={voucherNo}
-            onChange={(e) => setVoucherNo(e.target.value)}
-            onBlur={(e) => {
-              searchParams.set("voucherNo", voucherNo);
-              setSearchParams(searchParams, {
-                preventScrollReset: true,
-              });
-            }}
-          />
-        </TooltipLayout>
 
         <AutocompleteSearch
           data={itemFetcher.data?.items || []}
@@ -92,6 +84,48 @@ export default function StockLedgerHeader() {
           queryValue="warehouse"
           onSelect={() => {}}
         />
+        <TooltipLayout content={t("form.voucherNo")}>
+          <Input
+            placeholder={t("form.voucherNo")}
+            className="w-min"
+            value={voucherNo}
+            onChange={(e) => setVoucherNo(e.target.value)}
+            onBlur={(e) => {
+              searchParams.set("voucherNo", voucherNo);
+              setSearchParams(searchParams, {
+                preventScrollReset: true,
+              });
+            }}
+          />
+        </TooltipLayout>
+        <TooltipLayout content={t("batchBundle")}>
+          <Input
+            placeholder={t("batchBundle")}
+            className="w-min"
+            value={batchBundleNo}
+            onChange={(e) => setBatchBundleNo(e.target.value)}
+            onBlur={(e) => {
+              searchParams.set("batchBundleNo", batchBundleNo);
+              setSearchParams(searchParams, {
+                preventScrollReset: true,
+              });
+            }}
+          />
+        </TooltipLayout>
+        <TooltipLayout content={t("serialNo")}>
+          <Input
+            placeholder={t("serialNo")}
+            className="w-min"
+            value={serialNo}
+            onChange={(e) =>setSerialNo(e.target.value)}
+            onBlur={(e) => {
+              searchParams.set("serialNo", serialNo);
+              setSearchParams(searchParams, {
+                preventScrollReset: true,
+              });
+            }}
+          />
+        </TooltipLayout>
       </div>
     </div>
   );

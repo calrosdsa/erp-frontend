@@ -58,10 +58,9 @@ export default function ItemLine({
       item_code: line?.item_code,
       item_name: line?.item_name,
       uom: line?.uom,
-      // item_uuid: line?.item_uuid,
       // uom: line?.uom,
       party_type: itemLine.partyType,
-      // item_price_uuid: line?.item_price_uuid,
+      item_price_id:line?.item_price_id,
 
       lineItemReceipt: lineItemReceipt,
       // itemLineReference:line.refe
@@ -129,6 +128,7 @@ export default function ItemLine({
       className=" max-w-2xl "
     >
       <Form {...form}>
+      {JSON.stringify(form.formState.errors)}
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
           className="px-2 pb-2"
@@ -161,9 +161,8 @@ export default function ItemLine({
               onValueChange={onItemPriceChange}
               onSelect={(e) => {
                 form.setValue("item_code", e.item_code);
-                form.setValue("item_uuid", e.item_uuid);
                 form.setValue("uom", e.uom);
-                form.setValue("item_price_uuid", e.uuid);
+                form.setValue("item_price_id", e.id);
                 form.setValue("rate", formatAmounFromInt(e.rate));
               }}
               

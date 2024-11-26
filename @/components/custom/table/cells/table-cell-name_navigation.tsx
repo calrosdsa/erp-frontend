@@ -5,7 +5,7 @@ import { SquareCheckIcon, SquareIcon } from "lucide-react";
 import { formatLongDate } from "~/util/format/formatDate";
 import { i18n } from "i18next";
 import { Link } from "@remix-run/react";
-import Typography from "@/components/typography/Typography";
+import { Typography } from "@/components/typography";
 
 
 interface TableCellProps<TData> {
@@ -23,7 +23,7 @@ export default function TableCellNameNavigation<TData>({ getValue, row, column, 
     <div>
           <div className=" uppercase">
           <Link to={navigate(nameR)}>
-            <Typography className=" text-primary underline cursor-pointer">
+            <Typography className=" text-primary text-xs underline cursor-pointer">
               {name ? name :
               typeof  nameR == "string" ? nameR : ""}
             </Typography>

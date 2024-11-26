@@ -19,7 +19,7 @@ export default function TableCellTranslate<TData>({ getValue, row, column, table
     const initialValue = getValue();
   
   return (
-    <div>
+    <div className="text-xs">
         {typeof initialValue != 'undefined' &&
         <span>{t(initialValue)}</span>
         }

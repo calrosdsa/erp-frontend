@@ -44,6 +44,7 @@ export function DateTimePicker({initialDate,onChange,isDatetime=false,placeholde
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
+          size={"sm"}
           className={cn(
             " justify-start text-left font-normal",
             !date && "text-muted-foreground",

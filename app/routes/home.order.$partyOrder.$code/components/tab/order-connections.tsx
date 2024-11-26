@@ -50,13 +50,10 @@ const orderConnections = ({data,order}:{
   const navigate = useNavigate()
   connections.push({
     entity: t(partyTypeToJSON(PartyType.purchaseInvoice)),
-    href: r.toInvoices(PartyType.purchaseInvoice,{
-        "orderCode":order?.code,
-        "order":order?.id.toString(),
-    }),
+    href: "",
     count:data.find(t=>t.party_type == partyTypeToJSON(PartyType.purchaseInvoice))?.connections,
     add: () => {
-      navigate(r.toCreateInvoice(partyType))
+      // navigate(r.toCreateInvoice(partyType))
     },
   })
 
@@ -68,19 +65,16 @@ const orderConnections = ({data,order}:{
     }),
     count:data.find(t=>t.party_type == partyTypeToJSON(PartyType.purchaseReceipt))?.connections,
     add: () => {
-      navigate(r.toCreateInvoice(partyType))
+      // navigate(r.toCreateInvoice(partyType))
     },
   })
 
   connections.push({
     entity: t(partyTypeToJSON(PartyType.payment)),
-    href: r.toInvoices(partyType,{
-        "orderCode":order?.code,
-        "order":order?.id.toString(),
-    }),
+    href: "",
     count:data.find(t=>t.party_type == partyTypeToJSON(PartyType.payment))?.connections,
     add: () => {
-      navigate(r.toCreateInvoice(partyType))
+      // navigate(r.toCreateInvoice(partyType))
     },
   })
   // data.map((t)=>{

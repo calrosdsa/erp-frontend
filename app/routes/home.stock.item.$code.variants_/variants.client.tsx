@@ -75,7 +75,7 @@ export default function ItemVariantsClient() {
               },
               {
                 method: "post",
-                action: r.toItemDetail(item.name || "", item.uuid || ""),
+                action: "",
                 encType: "application/json",
               }
             );

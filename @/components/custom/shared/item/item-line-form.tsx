@@ -169,7 +169,6 @@ export default function ItemLineForm({
           </div>
         </>
       )}
-      {/* {JSON.stringify(formValues)} */}
       <Typography fontSize={subtitle}>{t("items")}</Typography>
       {(isSaleInvoice || isPurchaseInvoice) && 
         <div className="py-4 create-grid">

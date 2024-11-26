@@ -54,7 +54,7 @@ class Routes {
   payment = this.accounting + "/payment";
 
   stockM = "stock";
-  itemN = "items";
+  itemM = "item";
 
   stock = this.base + "/stock";
   items = this.stock + "/item";
@@ -63,11 +63,12 @@ class Routes {
   itemGroups = this.stock + "/item-groups";
   itemAttributes = this.stock + "/item-attributes";
   warehouses = this.stock + "/warehouse";
+  warehouseM = "warehouse";
 
   manage = this.base + "/manage";
   manageM = "manage";
   users = this.manage + "/users";
-  userM = "users"
+  userM = "users";
   roles = this.manage + "/roles";
 
   purchases = this.base + "/purchases";
@@ -91,17 +92,20 @@ class Routes {
   cashFlow = "cashFlow";
   balanceSheet = "balanceSheet";
 
-
   treeView = "treeView";
-  accountM = "account"
+  accountM = "account";
+  serialNoResume = "serialNoResume";
+
 
   //Party
-  journalEntry = "journalEntry"
-  costCenter = "costCenter"
-  stockEntry = "stockEntry"
-  project = "project"
-  serialNo = "serialNo"
-
+  journalEntry = "journalEntry";
+  costCenter = "costCenter";
+  stockEntry = "stockEntry";
+  project = "project";
+  serialNo = "serialNo";
+  batchBundle = "batchBundle";
+  saleInvoice = "saleInvoice";
+  purchaseInvoice = "purchaseInvoice";
 
   defaultTab = {
     tab: "info",
@@ -208,32 +212,32 @@ class Routes {
     switch (partyType) {
       case PartyType[PartyType.customer]:
         return this.toRoute({
-          main:partyType,
-          routePrefix:[this.sellingM],
-          routeSufix:[name],
-          q:{
-            tab:"info",
-          }
-        })
+          main: partyType,
+          routePrefix: [this.sellingM],
+          routeSufix: [name],
+          q: {
+            tab: "info",
+          },
+        });
       case PartyType[PartyType.supplier]:
-         return this.toRoute({
-          main:partyType,
-          routePrefix:[this.buyingM],
-          routeSufix:[name],
-          q:{
-            tab:"info",
-            id:id
-          }
+        return this.toRoute({
+          main: partyType,
+          routePrefix: [this.buyingM],
+          routeSufix: [name],
+          q: {
+            tab: "info",
+            id: id,
+          },
         });
       case PartyType[PartyType.warehouse]:
         return this.toRoute({
-          main:partyType,
-          routePrefix:[this.stockM],
-          routeSufix:[name],
-          q:{
-            tab:"info",
-            id:id
-          }
+          main: partyType,
+          routePrefix: [this.stockM],
+          routeSufix: [name],
+          q: {
+            tab: "info",
+            id: id,
+          },
         });
       default:
         return this.base;
@@ -275,7 +279,6 @@ class Routes {
     )}?id=${id}`;
   }
 
-
   toPaymentCreate() {
     return `${this.payment}/create`;
   }
@@ -298,21 +301,7 @@ class Routes {
   }
 
   //STOCK
-  toCreateItem(): string {
-    return this.items + "/create_item";
-  }
-  toItem(id: string): string {
-    return `${this.items}/${encodeURIComponent(id)}`;
-  }
-  toItemDetail(name: string, id: string, tab?: string): string {
-    let url = this.items + `/${encodeURIComponent(name)}?id=${id}`;
-    if (tab) {
-      url += `&tab=${tab}`;
-    } else {
-      url += `&tab=info`;
-    }
-    return url;
-  }
+
   toItemPrice(id: string, tab?: string): string {
     let url = this.itemPrices + `/${encodeURIComponent(id)}`;
     if (tab) {
@@ -359,97 +348,11 @@ class Routes {
       name || "N/A"
     )}?id=${id}`;
   }
-  toSupplierDetail(name: string, id: string): string {
-    return `${this.suppliers}/${encodeURIComponent(name)}?id=${id}`;
-  }
-  toPurchaseOrderDetail(name: string, id: string): string {
-    return `${this.purchaseOrders}/${encodeURIComponent(name)}?id=${id}`;
-  }
-  toOrderDetail(party: PartyType, id: string, tab?: string): string {
-    let url =
-      this.order +
-      `/${encodeURIComponent(partyTypeToJSON(party))}/${encodeURIComponent(
-        id
-      )}`;
-    if (tab) {
-      url += `?tab=${tab}`;
-    } else {
-      url += `?tab=info`;
-    }
-    return url;
-  }
+
   toCreateOrder(partyType: PartyType): string {
     return `${this.order}/${encodeURIComponent(
       partyTypeToJSON(partyType)
     )}/create`;
-  }
-  toOrders(
-    partyType: PartyType,
-    q?: {
-      [x: string]: string | undefined;
-    }
-  ): string {
-    let url = `${this.order}/${encodeURIComponent(partyTypeToJSON(partyType))}`;
-    if (q) {
-      url += "?";
-      const queryParams = Object.entries(q)
-        .filter(([_, value]) => value !== undefined) // Filter out undefined values
-        .map(
-          ([key, value]) =>
-            `${encodeURIComponent(key)}=${encodeURIComponent(value || "")}`
-        ) // Encode each key-value pair
-        .join("&"); // Join them with '&'
-
-      if (queryParams) {
-        url += queryParams;
-      }
-    }
-    return url;
-  }
-
-  toInvoices(
-    partyType: PartyType,
-    q?: {
-      [x: string]: string | undefined;
-    }
-  ): string {
-    let url = `${this.invoice}/${encodeURIComponent(
-      partyTypeToJSON(partyType)
-    )}`;
-    if (q) {
-      url += "?";
-      const queryParams = Object.entries(q)
-        .filter(([_, value]) => value !== undefined) // Filter out undefined values
-        .map(
-          ([key, value]) =>
-            `${encodeURIComponent(key)}=${encodeURIComponent(value || "")}`
-        ) // Encode each key-value pair
-        .join("&"); // Join them with '&'
-
-      if (queryParams) {
-        url += queryParams;
-      }
-    }
-    return url;
-  }
-
-  toInvoiceDetail(partyType: PartyType, id: string, tab?: string): string {
-    let url =
-      this.invoice +
-      `/${encodeURIComponent(partyTypeToJSON(partyType))}/${encodeURIComponent(
-        id
-      )}`;
-    if (tab) {
-      url += `?tab=${tab}`;
-    } else {
-      url += `?tab=info`;
-    }
-    return url;
-  }
-  toCreateInvoice(partyType: PartyType): string {
-    return `${this.invoice}/${encodeURIComponent(
-      partyTypeToJSON(partyType)
-    )}/new`;
   }
 
   toReceiptDetail(partyType: string, code: string, tab?: string): string {
@@ -510,6 +413,40 @@ class Routes {
         return `${this.suppliers}/${encodeURIComponent(name)}?id=${id}`;
       default:
         return this.base;
+    }
+  }
+
+  toVoucher(voucherType: string, voucherCode: string): string {
+    switch (voucherType) {
+      case this.saleInvoice:
+        return this.toRoute({
+          main: this.saleInvoice,
+          routePrefix: [this.invoiceM],
+          routeSufix: [voucherCode],
+          q: {
+            tab: "info",
+          },
+        });
+      case this.purchaseInvoice:
+        return this.toRoute({
+          main: this.purchaseInvoice,
+          routePrefix: [this.invoiceM],
+          routeSufix: [voucherCode],
+          q: {
+            tab: "info",
+          },
+        });
+      case this.stockEntry:
+        return this.toRoute({
+          main: this.stockEntry,
+          routePrefix: [this.stockM],
+          routeSufix: [voucherCode],
+          q: {
+            tab: "info",
+          },
+        });
+      default:
+        return "";
     }
   }
 

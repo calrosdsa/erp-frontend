@@ -436,6 +436,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/batch-bundle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Bath Bundles */
+        get: operations["batch-bundles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/batch-bundle/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Batch Bundle */
+        get: operations["batch-bundle"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/client": {
         parameters: {
             query?: never;
@@ -1930,6 +1964,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/serial-no/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Serial No Transactions */
+        get: operations["serial-no-transactions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock-entry": {
         parameters: {
             query?: never;
@@ -2676,6 +2727,17 @@ export interface components {
             credit: number;
             /** Format: int64 */
             debit: number;
+        };
+        BatchBundleDto: {
+            batch_bundle_no: string;
+            created_at: string;
+            /** Format: int64 */
+            id: number;
+            item: string;
+            item_code: string;
+            voucher_type: string;
+            warehouse: string;
+            warehouse_uuid: string;
         };
         BookingData: {
             available_courts?: components["schemas"]["AvailableCourtDto"][];
@@ -3831,6 +3893,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityAddressDto"];
         };
+        EntityResponseResultEntityBatchBundleDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityBatchBundleDto"];
+        };
         EntityResponseResultEntityBookingDtoBody: {
             /**
              * Format: uri
@@ -4449,6 +4524,8 @@ export interface components {
             id: number;
             item_code: string;
             item_name: string;
+            /** Format: int64 */
+            item_price_id: number;
             item_price_uuid: string;
             item_uuid: string;
             line_type: string;
@@ -4603,6 +4680,8 @@ export interface components {
             delivery_line_item?: components["schemas"]["DeliveryLineItemData"];
             /** Format: int32 */
             item_line_reference?: number;
+            /** Format: int64 */
+            item_price_id: number;
             item_price_uuid: string;
             line_receipt?: components["schemas"]["LineItemReceiptData"];
             line_stock_entry?: components["schemas"]["LineItemStockEntryData"];
@@ -4619,6 +4698,8 @@ export interface components {
             id: number;
             item_code: string;
             item_name: string;
+            /** Format: int64 */
+            item_price_id: number;
             line_type: string;
             /** Format: int32 */
             quantity: number;
@@ -4679,6 +4760,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListAddressDto"];
+        };
+        PaginationResponsePaginationResultListBatchBundleDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListBatchBundleDto"];
         };
         PaginationResponsePaginationResultListBookingDtoBody: {
             /**
@@ -4988,6 +5078,11 @@ export interface components {
         };
         PaginationResultListAddressDto: {
             results: components["schemas"]["AddressDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListBatchBundleDto: {
+            results: components["schemas"]["BatchBundleDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -5595,6 +5690,19 @@ export interface components {
             message: string;
             result: components["schemas"]["PartyTypeDto"][];
         };
+        ResponseDataListSerialNoTransactionDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["SerialNoTransactionDto"][];
+        };
         ResponseDataListTreeEntryDtoBody: {
             /**
              * Format: uri
@@ -5676,6 +5784,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["AddressDto"];
+        };
+        ResultEntityBatchBundleDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["BatchBundleDto"];
         };
         ResultEntityBookingDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -5905,12 +6019,32 @@ export interface components {
             name: string;
         };
         SerialNoDto: {
+            created_at: string;
             /** Format: int64 */
             id: number;
             item_code: string;
             item_name: string;
             serial_no: string;
             status: string;
+        };
+        SerialNoTransactionDto: {
+            batch_bundle_no: string;
+            /** Format: int64 */
+            id: number;
+            item_code: string;
+            item_name: string;
+            posting_date: string;
+            posting_time: string;
+            /** Format: int32 */
+            qty: number;
+            serial_no: string;
+            status: string;
+            /** Format: int32 */
+            valuation_rate: number;
+            voucher_code: string;
+            voucher_type: string;
+            warehouse_name: string;
+            warehouse_uuid: string;
         };
         SignInRequestBody: {
             /**
@@ -7370,6 +7504,85 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SignInResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "batch-bundles": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListBatchBundleDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "batch-bundle": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "Active-Company"?: string;
+                "User-Session-Uuid"?: string;
+                Role?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityBatchBundleDtoBody"];
                 };
             };
             /** @description Error */
@@ -11631,6 +11844,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntitySerialNoDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "serial-no-transactions": {
+        parameters: {
+            query: {
+                from_date: string;
+                to_date: string;
+                voucher_code?: string;
+                serial_no?: string;
+                batch_bundle_no?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListSerialNoTransactionDtoBody"];
                 };
             };
             /** @description Error */

@@ -45,18 +45,22 @@ export default function InvoiceDetailClient() {
   const params = useParams();
   const partyInvoice = params.partyInvoice || "";
   const [searchParams] = useSearchParams();
-  const globalState = useOutletContext<GlobalState>();
+  const {roleActions} = useOutletContext<GlobalState>();
   const tab = searchParams.get("tab");
   const r = routes;
   const navigate = useNavigate();
   const [paymentPermission] = usePermission({
     actions: associatedActions && associatedActions[Entity.PAYMENT],
-    roleActions: globalState.roleActions,
+    roleActions: roleActions,
   });
   const [gLPermission] = usePermission({
     actions: associatedActions && associatedActions[Entity.GENERAL_LEDGER],
-    roleActions: globalState.roleActions,
+    roleActions: roleActions,
   });
+  const [serialNoPermission] = usePermission({
+    actions: associatedActions && associatedActions[Entity.SERIAL_NO],
+    roleActions:roleActions
+  })
   const createPayment = useCreatePayment();
   const { enabledOrder } = useStatus({
     status: stateFromJSON(invoice?.status),
@@ -154,6 +158,22 @@ export default function InvoiceDetailClient() {
         Icon: PlusIcon,
       });
     }
+    if(serialNoPermission?.view && status != State.DRAFT) {
+      view.push({
+        label:t("serialNoSumary"),
+        onClick:()=>{
+            navigate(r.toRoute({
+                main:r.serialNoResume,
+                routePrefix:[r.stockM],
+                q:{
+                    voucherNo:invoice?.code || "",
+                    fromDate:format(new Date(invoice?.created_at || ""),"yyyy-MM-dd")
+                    
+                }
+            }))
+        }
+    })
+    }
     return {
       titleToolbar: `${t("_invoice.base")}(${invoice?.code})`,
       status: stateFromJSON(invoice?.status),
@@ -178,7 +198,7 @@ export default function InvoiceDetailClient() {
         );
       },
     };
-  }, [paymentPermission, invoice, gLPermission]);
+  }, [paymentPermission, invoice, gLPermission,serialNoPermission]);
 
   useEffect(() => {
     if (fetcher.state == "submitting") {
