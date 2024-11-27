@@ -37,7 +37,7 @@ export const partyReferencesColumns = ({}): ColumnDef<components["schemas"]["Par
             const rowData =props.row.original
             return <TableCellNameNavigation
             {...props}
-            navigate={(name)=>r.toReferenceDetail(rowData.code,name,rowData.uuid)}
+            navigate={(name)=>r.toPartyReference(rowData.code,name,rowData.uuid)}
             />
         }
     },

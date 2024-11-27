@@ -27,13 +27,14 @@ import {
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown, PlusIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Control } from "react-hook-form";
 
 interface Props<T extends object, K extends keyof T> {
   data: T[];
   nameK: K;
   name: string;
-  onOpen?: () => void;
-  form: any;
+  form?: any;
+  control?: Control<any,any>
   label: string | undefined;
   description?: string;
   onValueChange: (e: string) => void;
@@ -49,7 +50,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   nameK,
   form,
   label,
-  onOpen,
+  control,
   description,
   name,
   onValueChange,
@@ -61,12 +62,12 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
 }: Props<T, K>) {
   return (
     <FormField
-      control={form.control}
+      control={control || form.control}
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col w-full ">
           {label && (
-            <FormLabel>
+            <FormLabel className="text-xs">
               {label} {required && "*"}
             </FormLabel>
           )}
@@ -76,6 +77,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                 <Button
                   variant="outline"
                   role="combobox"
+                  size={"sm"}
                   onClick={() => onValueChange("")}
                   className={cn(
                     "justify-between",
@@ -91,7 +93,8 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                         className="ml-2 h-6 w-6 shrink-0 opacity-50 "
                         onClick={(e) => {
                           e.stopPropagation();
-                          form.setValue(name, "");
+                          field.onChange("")
+                          // form.setValue(name, "");
                         }}
                       />
                     </>
@@ -118,7 +121,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                           value={(item[nameK] as string) || ""}
                           key={idx}
                           onSelect={() => {
-                            form.setValue(name, item[nameK]);
+                            field.onChange(item[nameK])
                             if (onSelect) {
                               onSelect(item);
                             }
@@ -133,7 +136,8 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                           onSelect={() => {
                             console.log("NAME", name);
                             console.log("NAME value", item[nameK]);
-                            form.setValue(name, item[nameK]);
+                            // form.setValue(name, item[nameK]);
+                            field.onChange(item[nameK])
                             if (onSelect) {
                               onSelect(item);
                             }

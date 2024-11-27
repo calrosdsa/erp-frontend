@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import CreatePurchaseOrdersClient from "./new-order.client";
 import { z } from "zod";
-import { createPurchaseSchema, orderLineSchemaToOrderLineDto } from "~/util/data/schemas/buying/purchase-schema";
+import { createPurchaseSchema, lineItemSchemaToLineData } from "~/util/data/schemas/buying/purchase-schema";
 import apiClient from "~/apiclient";
 import { currencySchemaToCurrencyDto } from "~/util/data/schemas/app/currency-schema";
 import { components } from "~/sdk";
@@ -22,7 +22,7 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
         case "create-order":{
             console.log(data)
             const d = data.createPurchaseOrder
-            const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
+            const lines = d.lines.map(t=>lineItemSchemaToLineData(t))
             const res = await client.POST("/order",{
                 body:{
                     order:{

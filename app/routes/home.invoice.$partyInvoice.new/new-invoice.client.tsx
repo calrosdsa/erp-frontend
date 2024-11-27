@@ -34,7 +34,7 @@ export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
   const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
-  const globalState = useOutletContext<GlobalState>();
+  const {roleActions,companyDefaults} = useOutletContext<GlobalState>();
 
   const createPurchaseInvoice = useCreatePurchaseInvoice();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -51,8 +51,8 @@ export default function CreatePurchaseInvoiceClient() {
       partyName: createPurchaseInvoice.payload?.party_name,
       partyUuid: createPurchaseInvoice.payload?.party_uuid,
       partyType: createPurchaseInvoice.payload?.party_type,
-      currency: createPurchaseInvoice.payload?.currency || globalState.companyDefaults?.currency || "",
-      currencyName: createPurchaseInvoice.payload?.currency || globalState.companyDefaults?.currency,
+      currency: createPurchaseInvoice.payload?.currency || companyDefaults?.currency || "",
+      currencyName: createPurchaseInvoice.payload?.currency || companyDefaults?.currency,
       lines: createPurchaseInvoice.payload?.lines || [],
       date: new Date(),
     },
@@ -118,7 +118,7 @@ export default function CreatePurchaseInvoiceClient() {
             <div className="create-grid">
               <PartyAutocomplete
                 party={partyInvoice}
-                globalState={globalState}
+                roleActions={roleActions}
                 form={form}
               />
 

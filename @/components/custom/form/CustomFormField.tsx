@@ -10,6 +10,7 @@ interface Props {
     control?:Control<any, any>
     name:string
     description?:string
+    
     required?:boolean,
     className?:string
     children:(field: ControllerRenderProps<FieldValues, string>)=>ReactNode
@@ -20,12 +21,12 @@ export default function CustomFormField({form,label,description,name,children,re
     return (
       <div className={cn("",className)}>
         <FormField
-        control={control}
+        control={control || form.control}
         name={name}
         render={({ field }) => (
           <FormItem className="flex flex-col">
             {label != undefined &&
-            <FormLabel>{label} {required && " *"}</FormLabel>
+            <FormLabel className=" text-xs">{label} {required && " *"}</FormLabel>
             }
             <FormControl>
               {children(field)}

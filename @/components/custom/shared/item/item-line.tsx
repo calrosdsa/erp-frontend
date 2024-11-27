@@ -3,8 +3,8 @@ import Typography, { subtitle } from "@/components/typography/Typography";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher, useOutletContext } from "@remix-run/react";
-import { DeleteIcon, TrashIcon } from "lucide-react";
+import { useFetcher } from "@remix-run/react";
+import { TrashIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -128,7 +128,7 @@ export default function ItemLine({
       className=" max-w-2xl "
     >
       <Form {...form}>
-      {JSON.stringify(form.formState.errors)}
+      {/* {JSON.stringify(form.formState.errors)} */}
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
           className="px-2 pb-2"

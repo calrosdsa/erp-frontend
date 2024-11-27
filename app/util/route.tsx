@@ -96,7 +96,7 @@ class Routes {
   accountM = "account";
   serialNoResume = "serialNoResume";
 
-
+  quotation = "quotation";
   //Party
   journalEntry = "journalEntry";
   costCenter = "costCenter";
@@ -106,6 +106,7 @@ class Routes {
   batchBundle = "batchBundle";
   saleInvoice = "saleInvoice";
   purchaseInvoice = "purchaseInvoice";
+  supplierQuotation = "supplierQuotation";
 
   defaultTab = {
     tab: "info",
@@ -208,36 +209,29 @@ class Routes {
     return `${this.groups}/${partyType}`;
   }
 
-  toReferenceDetail(partyType: string, name: string, id: string): string {
+  toPartyReference(partyType: string, name: string, q?: Record<string, string | undefined>): string {
     switch (partyType) {
+      
       case PartyType[PartyType.customer]:
         return this.toRoute({
           main: partyType,
           routePrefix: [this.sellingM],
           routeSufix: [name],
-          q: {
-            tab: "info",
-          },
+          q: q,
         });
       case PartyType[PartyType.supplier]:
         return this.toRoute({
           main: partyType,
           routePrefix: [this.buyingM],
           routeSufix: [name],
-          q: {
-            tab: "info",
-            id: id,
-          },
+          q:q,
         });
       case PartyType[PartyType.warehouse]:
         return this.toRoute({
           main: partyType,
           routePrefix: [this.stockM],
           routeSufix: [name],
-          q: {
-            tab: "info",
-            id: id,
-          },
+          q: q,
         });
       default:
         return this.base;

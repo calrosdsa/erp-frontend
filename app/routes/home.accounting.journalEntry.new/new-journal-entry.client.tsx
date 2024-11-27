@@ -147,7 +147,6 @@ export default function NewJournalEntryClient() {
       {journalEntryLine.open && (
         <JournalEntryLine open={journalEntryLine.open} />
       )}
-      {JSON.stringify(form.getValues())}
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">

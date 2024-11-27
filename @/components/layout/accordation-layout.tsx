@@ -5,8 +5,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import Typography, { subtitle } from "../typography/Typography";
 import { cn } from "@/lib/utils";
+import { Typography } from "../typography";
 
 export default function AccordationLayout({
   title,
@@ -26,7 +26,7 @@ export default function AccordationLayout({
       <Accordion type="single" collapsible defaultValue={open ? "item-1":""}>
         <AccordionItem value="item-1">
           <AccordionTrigger>
-            <Typography fontSize={subtitle}>{title}</Typography>
+            <Typography variant="subtitle2">{title}</Typography>
           </AccordionTrigger>
           <AccordionContent className={cn(className, "px-1")}>
             {children}

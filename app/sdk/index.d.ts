@@ -1586,6 +1586,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/quotation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Quotation */
+        post: operations["create-quotation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/quotation/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Quotation */
+        get: operations["quotation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/quotation/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Quotation Status */
+        put: operations["update-quotation-status"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/quotation/{party}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Quotations */
+        get: operations["quotations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/receipt": {
         parameters: {
             query?: never;
@@ -3369,6 +3437,32 @@ export interface components {
             party_type: string;
             party_uuid: string;
         };
+        CreateQuationData: {
+            /** Format: int64 */
+            cost_center?: number;
+            currency: string;
+            /** Format: int64 */
+            party_id: number;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            project?: number;
+            quotation_party_type: string;
+            tz: string;
+            /** Format: date-time */
+            valid_till: string;
+        };
+        CreateQuotationBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["CreateItemLines"];
+            quotation?: components["schemas"]["CreateQuationData"];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
+        };
         CreateReceipt: {
             currency: string;
             party_receipt: string;
@@ -3430,6 +3524,9 @@ export interface components {
             /** Format: int64 */
             group_id: number;
             name: string;
+        };
+        CreateTaxAndChanges: {
+            lines: components["schemas"]["TaxAndChargeLineData"][];
         };
         CreateTaxRequestBody: {
             /**
@@ -4244,6 +4341,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityProjectDto"];
         };
+        EntityResponseResultEntityQuotationDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityQuotationDto"];
+        };
         EntityResponseResultEntityReceiptDetailDtoBody: {
             /**
              * Format: uri
@@ -4986,6 +5096,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListProjectDto"];
         };
+        PaginationResponsePaginationResultListQuotationDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListQuotationDto"];
+        };
         PaginationResponsePaginationResultListReceiptDtoBody: {
             /**
              * Format: uri
@@ -5203,6 +5322,11 @@ export interface components {
         };
         PaginationResultListProjectDto: {
             results: components["schemas"]["ProjectDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListQuotationDto: {
+            results: components["schemas"]["QuotationDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -5443,6 +5567,18 @@ export interface components {
             /** Format: int64 */
             id: number;
             name: string;
+            status: string;
+        };
+        QuotationDto: {
+            code: string;
+            currency: string;
+            /** Format: int64 */
+            id: number;
+            party_name: string;
+            party_type: string;
+            party_uuid: string;
+            posting_date: string;
+            posting_time: string;
             status: string;
         };
         ReceiptDetailDto: {
@@ -5742,6 +5878,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ProjectDto"];
         };
+        ResponseDataQuotationDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["QuotationDto"];
+        };
         ResponseDataReceiptDtoBody: {
             /**
              * Format: uri
@@ -5946,6 +6095,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ProjectDto"];
+        };
+        ResultEntityQuotationDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["QuotationDto"];
         };
         ResultEntityReceiptDetailDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -6161,6 +6316,13 @@ export interface components {
             name: string;
             uuid: string;
         };
+        TaxAndChargeLineData: {
+            /** Format: int64 */
+            ledger: number;
+            /** Format: int32 */
+            tax_rate: number;
+            type: string;
+        };
         TaxDto: {
             /** Format: date-time */
             created_at: string;
@@ -6332,17 +6494,10 @@ export type $defs = Record<string, never>;
 export interface operations {
     "get-account": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -6406,17 +6561,10 @@ export interface operations {
     };
     "update-password": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -6484,17 +6632,10 @@ export interface operations {
     };
     "get-sessions": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -6557,19 +6698,13 @@ export interface operations {
     "get-account-payable": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 party?: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -6599,19 +6734,13 @@ export interface operations {
     "get-account-payable-sumary": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 party?: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -6641,19 +6770,13 @@ export interface operations {
     "account-receivable": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 party?: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -6683,19 +6806,13 @@ export interface operations {
     "receivable-sumary": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 party?: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -6725,10 +6842,6 @@ export interface operations {
     "get-general-ledger": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 account?: string;
@@ -6740,9 +6853,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -6781,7 +6892,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -6809,17 +6923,10 @@ export interface operations {
     };
     "create-tax": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -6860,9 +6967,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -7000,7 +7105,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -7069,9 +7177,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -7240,7 +7346,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -7342,9 +7451,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -7385,7 +7492,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -7454,9 +7564,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -7530,7 +7638,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -7566,9 +7677,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -7599,17 +7708,10 @@ export interface operations {
     };
     "get-client-profile": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -7638,17 +7740,10 @@ export interface operations {
     };
     "update-client-profile": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -7681,17 +7776,10 @@ export interface operations {
     };
     "create-company": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -7732,9 +7820,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -7806,7 +7892,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -7877,7 +7966,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -7946,9 +8038,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -7989,7 +8079,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -8083,17 +8176,10 @@ export interface operations {
     };
     "update-court-rates": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -8134,9 +8220,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -8175,9 +8259,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -8253,7 +8335,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -8291,7 +8376,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -8352,17 +8440,10 @@ export interface operations {
     };
     "create customer": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -8395,17 +8476,10 @@ export interface operations {
     };
     "customer types": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -8442,9 +8516,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -8476,10 +8548,6 @@ export interface operations {
     "balance-sheet": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 currency?: string;
@@ -8489,9 +8557,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -8521,10 +8587,6 @@ export interface operations {
     "cash-flow": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 currency?: string;
@@ -8534,9 +8596,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -8566,10 +8626,6 @@ export interface operations {
     "profit-and-loss": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 currency?: string;
@@ -8579,9 +8635,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -8678,17 +8732,10 @@ export interface operations {
     };
     "create group": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -8722,17 +8769,11 @@ export interface operations {
     "get group descendents": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 party: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -8764,17 +8805,11 @@ export interface operations {
     "get group": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 party: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -8817,9 +8852,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 party: string;
@@ -8884,17 +8917,11 @@ export interface operations {
     "get invoice": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 party: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -8925,17 +8952,10 @@ export interface operations {
     };
     "update invoice state": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -8980,9 +9000,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 party: string;
@@ -9045,17 +9063,10 @@ export interface operations {
     };
     "update-item-line": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -9098,7 +9109,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -9167,9 +9181,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -9200,17 +9212,10 @@ export interface operations {
     };
     "update-journal-entry-status": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -9257,9 +9262,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -9329,9 +9332,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -9363,10 +9364,6 @@ export interface operations {
     "get-general-ledger": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 account?: string;
@@ -9378,9 +9375,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -9438,17 +9433,10 @@ export interface operations {
     };
     "create order": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -9482,17 +9470,11 @@ export interface operations {
     "get order": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 party: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -9523,17 +9505,10 @@ export interface operations {
     };
     "update-order-status": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -9578,9 +9553,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 party: string;
@@ -9621,7 +9594,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -9649,17 +9625,10 @@ export interface operations {
     };
     "create address": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -9700,9 +9669,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -9733,17 +9700,10 @@ export interface operations {
     };
     "get address references": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -9773,17 +9733,11 @@ export interface operations {
     "get party connections": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 party: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -9824,7 +9778,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -9926,9 +9883,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -9967,9 +9922,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 party_type: string;
@@ -10010,7 +9963,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -10038,17 +9994,10 @@ export interface operations {
     };
     "add party reference": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10081,17 +10030,10 @@ export interface operations {
     };
     "get party type references": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10120,17 +10062,10 @@ export interface operations {
     };
     "get party user types": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10173,9 +10108,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10274,9 +10207,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -10307,17 +10238,10 @@ export interface operations {
     };
     "get-parties-type": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10346,17 +10270,10 @@ export interface operations {
     };
     "update payment state": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10399,7 +10316,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -10462,17 +10382,10 @@ export interface operations {
     };
     "export data": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10511,9 +10424,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -10573,17 +10484,10 @@ export interface operations {
     };
     "add-plugin": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10616,17 +10520,10 @@ export interface operations {
     };
     "get-plugin": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 plugin: string;
@@ -10657,17 +10554,10 @@ export interface operations {
     };
     "update-plugin-credentials": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 plugin: string;
@@ -10712,7 +10602,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -10781,9 +10674,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -10814,17 +10705,10 @@ export interface operations {
     };
     "create purchase order": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10855,9 +10739,118 @@ export interface operations {
             };
         };
     };
-    "create-receipt": {
+    "create-quotation": {
         parameters: {
-            query?: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateQuotationBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataQuotationDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    quotation: {
+        parameters: {
+            query: {
+                party: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityQuotationDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-quotation-status": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    quotations: {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
@@ -10865,9 +10858,41 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
+            };
+            path: {
+                party: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListQuotationDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-receipt": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
             };
             path?: never;
             cookie?: never;
@@ -10901,17 +10926,11 @@ export interface operations {
     "get-receipt-detail": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 party: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -10942,17 +10961,10 @@ export interface operations {
     };
     "update-receipt-state": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -10997,9 +11009,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 party: string;
@@ -11045,9 +11055,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -11150,9 +11158,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -11249,17 +11255,10 @@ export interface operations {
     };
     "update-booking-status": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -11403,7 +11402,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -11505,9 +11507,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -11548,7 +11548,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -11576,17 +11579,10 @@ export interface operations {
     };
     "create role": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -11627,9 +11623,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -11660,17 +11654,10 @@ export interface operations {
     };
     "get entity actions": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -11699,17 +11686,10 @@ export interface operations {
     };
     "update role permision action": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -11752,7 +11732,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -11827,9 +11810,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -11905,7 +11886,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -11974,9 +11958,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -12007,17 +11989,10 @@ export interface operations {
     };
     "update-stock-entry-status": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12051,10 +12026,6 @@ export interface operations {
     "get-stock-balance-report": {
         parameters: {
             query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date?: string;
                 to_date?: string;
                 item?: string;
@@ -12062,9 +12033,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12094,10 +12063,6 @@ export interface operations {
     "get-stock_ledger-report": {
         parameters: {
             query: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
                 from_date: string;
                 to_date: string;
                 voucher_no?: string;
@@ -12106,9 +12071,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12147,7 +12110,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -12208,17 +12174,10 @@ export interface operations {
     };
     "create-item": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12261,7 +12220,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -12289,17 +12251,10 @@ export interface operations {
     };
     "create-item-attribute": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12332,17 +12287,10 @@ export interface operations {
     };
     "update-item-attribute-value": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12375,17 +12323,10 @@ export interface operations {
     };
     "create-item-attribute-value": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12426,9 +12367,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -12469,7 +12408,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -12497,17 +12439,10 @@ export interface operations {
     };
     "update-item-price": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12540,17 +12475,10 @@ export interface operations {
     };
     "create-item-price": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12620,9 +12548,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -12665,9 +12591,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12701,16 +12625,10 @@ export interface operations {
                 size: string;
                 enabled?: string;
                 is_group?: string;
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 item_id: string;
@@ -12741,17 +12659,10 @@ export interface operations {
     };
     "edit-item-to-warehouse": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12784,17 +12695,10 @@ export interface operations {
     };
     "add-item-to-warehouse": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12837,7 +12741,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -12875,7 +12782,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -12917,9 +12827,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12948,17 +12856,10 @@ export interface operations {
     };
     "create-price-list": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -12999,9 +12900,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -13042,7 +12941,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -13070,17 +12972,10 @@ export interface operations {
     };
     "create-item-variant": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -13121,9 +13016,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -13164,7 +13057,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -13192,17 +13088,10 @@ export interface operations {
     };
     "create-warehouse": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -13243,9 +13132,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -13315,7 +13202,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -13343,17 +13233,10 @@ export interface operations {
     };
     "create supplier": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -13394,9 +13277,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -13435,9 +13316,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -13466,17 +13345,10 @@ export interface operations {
     };
     "create user": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -13519,7 +13391,10 @@ export interface operations {
                 column?: string;
                 parentId?: string;
             };
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -13547,17 +13422,10 @@ export interface operations {
     };
     "create user": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -13598,9 +13466,7 @@ export interface operations {
             };
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path: {
                 id: string;
@@ -13631,17 +13497,10 @@ export interface operations {
     };
     "get-profile-session": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;
@@ -13670,17 +13529,10 @@ export interface operations {
     };
     "update-profile-session": {
         parameters: {
-            query?: {
-                query?: string;
-                order?: string;
-                column?: string;
-                parentId?: string;
-            };
+            query?: never;
             header?: {
                 Authorization?: string;
-                "Active-Company"?: string;
                 "User-Session-Uuid"?: string;
-                Role?: string;
             };
             path?: never;
             cookie?: never;

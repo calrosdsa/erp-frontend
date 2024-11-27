@@ -90,25 +90,7 @@ export const  orderLineColumns = ({
       cell: DataTableRowActions,
   })
 
-  // columns.push({
-  //   accessorKey: "amount",
-  //   header: t("form.tax"),
-  //   cell: ({ ...props }) => {
-  //     const rowData = props.row.original
-  //     const taxPrice = getTaxPorcent(rowData.item_price.tax_value,rowData.item_price.rate,currency,i18n.language)
-  //     return currency ? (
-  //       <TableCellPrice {...props} currency={currency} i18n={i18n} price={taxPrice}/>
-  //     ) : (
-  //       "-"
-  //     );
-  //   },
-  // });
 
-
-  // columns.push({
-  //     id: "actions-row",
-  //     cell: DataTableRowActions,
-  //   })
   return [...columns];
 };
 

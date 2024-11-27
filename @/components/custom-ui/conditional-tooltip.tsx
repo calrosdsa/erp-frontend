@@ -23,7 +23,7 @@ export default function ConditionalTooltip({
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (enableTooltip) {
-      setIsOpen(!isOpen)
+      setIsOpen(!isOpen)  
     }
     buttonProps.onClick?.(event)
   }

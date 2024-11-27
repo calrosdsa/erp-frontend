@@ -58,6 +58,9 @@ import {
   useCreatePriceList,
 } from "~/routes/home.stock.priceList_/components/add-price-list";
 import { SessionDefaultDrawer, useSessionDefaults } from "./SessionDefaults";
+import TaxAndChargeLine, {
+  useTaxAndCharge,
+} from "@/components/custom/shared/accounting/tax-and-charge-line";
 
 export default function GlobalDialogs({
   globalState,
@@ -85,6 +88,7 @@ export default function GlobalDialogs({
   // const addLineOrder = useAddLineOrder()
 
   const itemLine = useItemLine();
+  const taxAndCharges = useTaxAndCharge();
 
   const exporterData = useExporterData();
 
@@ -113,7 +117,12 @@ export default function GlobalDialogs({
           onOpenChange={exporterData.onOpenChange}
         />
       )}
-
+      {taxAndCharges.open && (
+        <TaxAndChargeLine
+          open={taxAndCharges.open}
+          onOpenChange={taxAndCharges.onOpenChange}
+        />
+      )}
       {itemLine.open && (
         <ItemLine
           open={itemLine.open}

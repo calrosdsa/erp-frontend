@@ -5,6 +5,7 @@ import { z } from "zod";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier";
 import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
+import { components } from "~/sdk";
 import { GlobalState } from "~/types/app";
 import { createPurchaseSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
@@ -14,11 +15,11 @@ import { usePermission } from "~/util/hooks/useActions";
 export default function PartyAutocomplete({
   party,
   form,
-  globalState,
+  roleActions,
 }: {
   party: string;
   form: UseFormReturn<any>;
-  globalState: GlobalState;
+  roleActions: components["schemas"]["RoleActionDto"][];
 }) {
   const { t } = useTranslation("common");
   const [supplierDebounceFetcher, onSupplierChange] =
@@ -26,12 +27,12 @@ export default function PartyAutocomplete({
   const [customerFetcher, onCustomerChange] = useCustomerDebounceFetcher();
   const [customerPermission] = usePermission({
     actions: customerFetcher.data?.actions,
-    roleActions: globalState.roleActions,
+    roleActions: roleActions,
   });
   const createCustomer = useCreateCustomer();
   const [supplierPermission] = usePermission({
     actions: supplierDebounceFetcher.data?.actions,
-    roleActions: globalState.roleActions,
+    roleActions: roleActions,
   });
   const createSupplier = useCreateSupplier();
 
@@ -39,7 +40,9 @@ export default function PartyAutocomplete({
     <>
       {(party == partyTypeToJSON(PartyType.purchaseOrder) ||
         party == partyTypeToJSON(PartyType.purchaseInvoice) ||
-        party == partyTypeToJSON(PartyType.purchaseReceipt)) && (
+        party == partyTypeToJSON(PartyType.purchaseReceipt) || 
+        party == partyTypeToJSON(PartyType.supplierQuotation)
+      ) && (
         <FormAutocomplete
           required={true}
           data={supplierDebounceFetcher.data?.suppliers || []}
@@ -50,6 +53,7 @@ export default function PartyAutocomplete({
           label={t("supplier")}
           onSelect={(v) => {
             form.setValue("partyUuid", v.uuid);
+            form.setValue("partyID", v.id);
             form.setValue("partyType", partyTypeToJSON(PartyType.supplier));
           }}
           {...(supplierPermission?.create && {
@@ -62,7 +66,9 @@ export default function PartyAutocomplete({
 
       {(party == partyTypeToJSON(PartyType.saleOrder) ||
         party == partyTypeToJSON(PartyType.saleInvoice) || 
-        party == partyTypeToJSON(PartyType.deliveryNote)) && (
+        party == partyTypeToJSON(PartyType.deliveryNote) ||
+        party == partyTypeToJSON(PartyType.quotation)
+      ) && (
         <FormAutocomplete
           required={true}
           data={customerFetcher.data?.customers || []}
@@ -73,6 +79,7 @@ export default function PartyAutocomplete({
           label={t("customer")}
           onSelect={(v) => {
             form.setValue("partyUuid", v.uuid);
+            form.setValue("partyID", v.id);
             form.setValue("partyType", partyTypeToJSON(PartyType.customer));
           }}
           {...(customerPermission?.create && {

@@ -13,13 +13,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Control } from "react-hook-form";
 interface Props<T extends object, K extends keyof T, V extends keyof T> {
   data: T[];
   keyName?: K;
   keyValue?: V;
   name: string;
+  control?: Control<any,any>
   label?: string;
-  form: any;
+  form?: any;
   onValueChange?: (e: T) => void;
   required?: boolean;
 }
@@ -36,14 +38,15 @@ export default function SelectForm<
   name,
   onValueChange,
   required,
+  control,
 }: Props<T, K, V>) {
   return (
     <FormField
-      control={form.control}
+      control={control || form.control}
       name={name}
       render={({ field }) => (
         <FormItem className="w-full flex flex-col">
-          <FormLabel>{label} {required && " *"}</FormLabel>
+          <FormLabel className="text-xs">{label} {required && " *"}</FormLabel>
           <Select
             onValueChange={(e) => {
               //   const object = JSON.parse(e)
@@ -59,8 +62,8 @@ export default function SelectForm<
             required={required}
           >
             <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="Elija una opción" />
+              <SelectTrigger className="h-9">
+                <SelectValue  placeholder="Elija una opción" />
               </SelectTrigger>
             </FormControl>
             <SelectContent>

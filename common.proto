@@ -60,6 +60,9 @@ enum PartyType {
     accountPayable = 34;
     financialStatements = 35;
     serialNo = 36;
+    batchBundle = 37;
+    supplierQuotation = 38;
+    quotation = 39;
 }
 
 enum PianoPartyType {
@@ -168,6 +171,11 @@ enum ItemLineType {
     ITEM_LINE_RECEIPT = 2;
     DELIVERY_LINE_ITEM = 3;
     ITEM_LINE_STOCK_ENTRY = 4;
+    QUOTATION_LINE_ITEM = 5;
+}
+enum TaxChargeLineType {
+    ON_NET_TOTAL = 0;
+    FIXED_AMOUNT = 1;
 }
 
 enum BookingType {

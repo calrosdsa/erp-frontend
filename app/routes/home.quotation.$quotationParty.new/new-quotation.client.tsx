@@ -5,11 +5,11 @@ import {
   useFetcher,
   useNavigate,
   useOutletContext,
+  useParams,
 } from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { createJournalEntrySchema } from "~/util/data/schemas/accounting/journal-entry-schema";
 import { routes } from "~/util/route";
 import { action } from "./route";
 import { Form } from "@/components/ui/form";
@@ -23,7 +23,6 @@ import {
   StockEntryType,
 } from "~/gen/common";
 import { Separator } from "@/components/ui/separator";
-import { createStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-schema";
 import AccordationLayout from "@/components/layout/accordation-layout";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
@@ -32,8 +31,14 @@ import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDeb
 import { GlobalState } from "~/types/app";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useRef } from "react";
+import { createQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
+import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
+import { format, formatRFC3339 } from "date-fns";
+import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
+import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
+import TaxAndChargesLines from "@/components/custom/shared/accounting/tax-and-charge-lines";
 
-export default function NewStockEntryClient() {
+export default function NewQuotationClient() {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const { companyDefaults } = useOutletContext<GlobalState>();
@@ -43,29 +48,25 @@ export default function NewStockEntryClient() {
     useCurrencyDebounceFetcher();
   const navigate = useNavigate();
   const r = routes;
-  const [sourceWarehouse, onSourceWarehouseChange] =
-    useWarehouseDebounceFetcher({ isGroup: false });
-  const [targetWarehouse, onTargetWarehouseChange] =
-    useWarehouseDebounceFetcher({ isGroup: false });
-  const entryTypes: SelectItem[] = [
-    {
-      name: t(StockEntryType[StockEntryType.MATERIAL_RECEIPT]),
-      value: StockEntryType[StockEntryType.MATERIAL_RECEIPT],
-    },
-  ];
-  const form = useForm<z.infer<typeof createStockEntrySchema>>({
-    resolver: zodResolver(createStockEntrySchema),
+  const params = useParams();
+  const quotationParty = params.quotationParty || "";
+  const { roleActions } = useOutletContext<GlobalState>();
+  const form = useForm<z.infer<typeof createQuotationSchema>>({
+    resolver: zodResolver(createQuotationSchema),
     defaultValues: {
       lines: [],
+      taxLines:[],
       currency: companyDefaults?.currency,
-      currencyName: companyDefaults?.currency,
+      postingTime: formatRFC3339(new Date()),
+      postingDate:new Date(),
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   });
-  const onSubmit = (e: z.infer<typeof createStockEntrySchema>) => {
+  const onSubmit = (e: z.infer<typeof createQuotationSchema>) => {
     fetcher.submit(
       {
-        createStockEntry: e as any,
-        action: "create-stock-entry",
+        createQuotation: e as any,
+        action: "create-quotation",
       },
       {
         method: "POST",
@@ -87,13 +88,13 @@ export default function NewStockEntryClient() {
     {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
-      onShowMessage: () => {
+      onSuccessMessage: () => {
         if (fetcher.data) {
           navigate(
             r.toRoute({
-              main: r.stockEntry,
-              routePrefix: [r.stockM],
-              routeSufix: [fetcher.data.stockEntry?.code || ""],
+              main: r.supplierQuotation,
+              routePrefix: [r.quotation],
+              routeSufix: [fetcher.data.quotation?.code || ""],
               q: {
                 tab: "info",
               },
@@ -107,21 +108,32 @@ export default function NewStockEntryClient() {
   return (
     <FormLayout>
       <Form {...form}>
+        {/* {JSON.stringify(format(form.getValues().postingTime, "HH:mm:SS"))} */}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
+            <PartyAutocomplete
+              party={quotationParty}
+              roleActions={roleActions}
+              form={form}
+            />
             <CustomFormDate
               control={form.control}
               name="postingDate"
-              label={t("form.date")}
+              label={t("form.postingDate")}
             />
-            <SelectForm
-              form={form}
-              data={entryTypes}
-              label={t("form.entryType")}
-              keyName={"name"}
-              keyValue={"value"}
-              name="stockEntryType"
+            <CustomFormTime
+              control={form.control}
+              name="postingTime"
+              label={t("form.postingTime")}
+              description={form.getValues().tz}
             />
+
+            <CustomFormDate
+              control={form.control}
+              name="validTill"
+              label={t("form.validTill")}
+            />
+
             <Separator className=" col-span-full" />
 
             <AccordationLayout
@@ -132,7 +144,7 @@ export default function NewStockEntryClient() {
               <FormAutocomplete
                 data={currencyDebounceFetcher.data?.currencies || []}
                 form={form}
-                name="currencyName"
+                name="currency"
                 required={true}
                 nameK={"code"}
                 onValueChange={onCurrencyChange}
@@ -144,40 +156,19 @@ export default function NewStockEntryClient() {
               />
             </AccordationLayout>
 
-            <AccordationLayout
-              title={t("warehouse")}
-              open={true}
-              containerClassName=" col-span-full"
-              className="create-grid"
-            >
-              <FormAutocomplete
-                onValueChange={onSourceWarehouseChange}
-                form={form}
-                name="sourceWarehouseName"
-                nameK={"name"}
-                label={t("f.source", { o: t("warehouse") })}
-                data={sourceWarehouse.data?.warehouses || []}
-                onSelect={(e) => {
-                  form.setValue("sourceWarehouse", e.id);
-                }}
-              />
-              <FormAutocomplete
-                onValueChange={onTargetWarehouseChange}
-                form={form}
-                name="targetWarehouseName"
-                nameK={"name"}
-                label={t("f.target", { o: t("warehouse") })}
-                data={targetWarehouse.data?.warehouses || []}
-                onSelect={(e) => {
-                  form.setValue("targetWarehouse", e.id);
-                }}
-              />
-            </AccordationLayout>
+            <AccountingDimensionForm
+            form={form}/>
 
             <ItemLineForm
               form={form}
-              partyType={partyTypeToJSON(PartyType.stockEntry) || ""}
-              itemLineType={ItemLineType.ITEM_LINE_STOCK_ENTRY}
+              partyType={quotationParty || ""}
+              itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
+            />
+            <TaxAndChargesLines
+            taxLines={form.getValues().taxLines}
+            onChange={(e)=>{
+              form.setValue("taxLines",e)
+            }}
             />
           </div>
           <input ref={inputRef} type="submit" className="hidden" />

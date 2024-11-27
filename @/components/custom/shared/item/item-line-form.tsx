@@ -1,4 +1,3 @@
-import Typography, { subtitle } from "@/components/typography/Typography";
 import { orderLineColumns } from "../../table/columns/order/order-line-column";
 import { formatAmountToInt, sumTotal } from "~/util/format/formatCurrency";
 import OrderSumary from "../../display/order-sumary";
@@ -21,9 +20,8 @@ import { usePermission } from "~/util/hooks/useActions";
 import { UseFormReturn } from "react-hook-form";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse";
 import CustomFormField from "../../form/CustomFormField";
-import CheckForm from "../../input/CheckForm";
-import { Checkbox } from "@/components/ui/checkbox";
 import { CustomCheckbox } from "../../input/CustomCheckBox";
+import { Typography } from "@/components/typography";
 
 export default function ItemLineForm({
   form,
@@ -130,7 +128,7 @@ export default function ItemLineForm({
       {configuteWarehouse && (
         <>
           <div className=" create-grid">
-            <Typography fontSize={subtitle} className=" col-span-full">
+            <Typography variant="subtitle2" className=" col-span-full">
               {t("warehouses")}
             </Typography>
             <FormAutocomplete
@@ -169,7 +167,7 @@ export default function ItemLineForm({
           </div>
         </>
       )}
-      <Typography fontSize={subtitle}>{t("items")}</Typography>
+      <Typography variant="subtitle2">{t("items")}</Typography>
       {(isSaleInvoice || isPurchaseInvoice) && 
         <div className="py-4 create-grid">
           <CustomFormField
@@ -215,9 +213,7 @@ export default function ItemLineForm({
           meta: {
             ...metaOptions,
             tooltipMessage: t("tooltip.selectCurrency"),
-            enableTooltipMessage:
-              formValues.currency == undefined ||
-              formValues.currency == "",
+            enableTooltipMessage:false
           },
         }}
       />

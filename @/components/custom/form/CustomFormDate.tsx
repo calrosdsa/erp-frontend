@@ -18,6 +18,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { TimePicker } from "../datetime/time-picker";
 import { useTranslation } from "react-i18next";
+import { Control } from "react-hook-form";
 
 export default function CustomFormDate({
   form,
@@ -25,30 +26,33 @@ export default function CustomFormDate({
   name,
   description,
   isDatetime,
-  required
+  required,
+  control,
 }: {
-  form: any;
+  form?: any;
   name: string;
   label: string;
   description?: string;
+  control?: Control<any,any>
   isDatetime?:boolean
   required?:boolean
 }) {
   const { t } = useTranslation("common");
   return (
     <FormField
-      control={form.control}
+      control={control || form.control}
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col">
-          <FormLabel className="text-left">{label} {required && "*"}</FormLabel>
+          <FormLabel className="text-left text-xs">{label} {required && "*"}</FormLabel>
           <Popover>
             <FormControl>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
+                  size={"sm"}
                   className={cn(
-                    "justify-start text-left font-normal",
+                    "justify-start text-left font-normal    ",
                     !field.value && "text-muted-foreground"
                   )}
                 >

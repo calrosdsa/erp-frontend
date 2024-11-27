@@ -19,7 +19,7 @@ export const createPurchaseSchema = z.object({
 });
 
 
-export const orderLineSchemaToOrderLineDto = (
+export const lineItemSchemaToLineData = (
   d: z.infer<typeof lineItemSchema>
 ): components["schemas"]["LineItemData"] => {
   const line:components["schemas"]["LineItemData"]  = {

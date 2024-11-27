@@ -4,7 +4,7 @@ import apiClient from "~/apiclient";
 import { createJournalEntrySchema } from "~/util/data/schemas/accounting/journal-entry-schema";
 import NewStockEntryClient from "./new-stock-entry.client";
 import { createStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-schema";
-import { orderLineSchemaToOrderLineDto } from "~/util/data/schemas/buying/purchase-schema";
+import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/purchase-schema";
 import { format, formatRFC3339 } from "date-fns";
 import { components } from "~/sdk";
 
@@ -24,7 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "create-stock-entry": {
       const d = data.createStockEntry;
       console.log(format(d.postingDate, "yyyy-MM-dd"));
-      const lines = d.lines.map((t) => orderLineSchemaToOrderLineDto(t));
+      const lines = d.lines.map((t) => lineItemSchemaToLineData(t));
       const res = await client.POST("/stock-entry", {
         body: {
           stock_entry: {

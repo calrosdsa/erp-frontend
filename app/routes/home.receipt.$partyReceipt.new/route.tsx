@@ -4,7 +4,7 @@ import { createReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema"
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { components } from "~/sdk";
-import { orderLineSchemaToOrderLineDto } from "~/util/data/schemas/buying/purchase-schema";
+import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/purchase-schema";
 
 type ActionData = {
     action:string
@@ -20,7 +20,7 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
     switch(data.action){
         case "create-receipt":{
             const d = data.createReceipt
-            const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
+            const lines = d.lines.map(t=>lineItemSchemaToLineData(t))
             const res =await client.POST("/receipt",{
                 body:{
                     receipt:{

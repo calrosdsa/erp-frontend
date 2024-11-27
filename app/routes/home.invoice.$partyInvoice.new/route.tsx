@@ -3,7 +3,7 @@ import apiClient from "~/apiclient"
 import CreatePurchaseInvoiceClient from "./new-invoice.client"
 import { z } from "zod"
 import { createInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema"
-import { orderLineSchemaToOrderLineDto } from "~/util/data/schemas/buying/purchase-schema"
+import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/purchase-schema"
 import { currencySchemaToCurrencyDto } from "~/util/data/schemas/app/currency-schema"
 import { components } from "~/sdk"
 import { PartyType } from "~/gen/common"
@@ -22,7 +22,7 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
     switch(data.action){
         case "create-invoice":{
             const d = data.createPurchaseInvoice
-            const lines = d.lines.map(t=>orderLineSchemaToOrderLineDto(t))
+            const lines = d.lines.map(t=>lineItemSchemaToLineData(t))
             const res = await client.POST("/invoice",{
                 body:{
                     invoice:{
