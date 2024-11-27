@@ -62,9 +62,21 @@ export default function CourtDetailClient() {
         updateCourtRate.onOpenDialog({
           court: court,
           title: "Editar precio por hora",
+          isEdit:true,
         });
       },
     });
+    actions.push({
+      label: "Agregar precio por hora",
+      onClick: () => {
+        updateCourtRate.onOpenDialog({
+          court: court,
+          title: "Agregar precio por hora",
+          isEdit:false,
+        });
+      },
+    });
+  
     return {
       titleToolbar: params.name,
       actions: actions,

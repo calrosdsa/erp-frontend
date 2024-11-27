@@ -14,30 +14,7 @@ export default function CourtSchedule() {
 
   return (
     <div>
-      <div className=" flex space-x-3">
-        <Button
-          variant={"outline"}
-          size={"icon"}
-          onClick={() => {
-            updateCourtRate.onOpenDialog({
-              court: court,
-              title:"Editar precio por hora"
-            });
-          }}
-        >
-          <EditIcon size={13} />
-        </Button>
-        {/* <Button variant={"outline"} size={"icon"}
-        onClick={() => {
-            updateCourtRate.onOpenDialog({
-              court: court,
-              title:"Editar precio por hora"
-            });
-          }}
-        >
-          <TrashIcon size={13} />
-        </Button> */}
-      </div>
+      
       <Suspense fallback={<FallBack />}>
         <Await resolve={courtRates}>
           {(courtRates: any) => {

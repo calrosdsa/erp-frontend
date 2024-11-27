@@ -6209,6 +6209,7 @@ export interface components {
             readonly $schema?: string;
             court_rate: components["schemas"]["CourtRateData"][];
             court_uuid: string;
+            is_edit?: boolean;
         };
         UpdateCredentialsPluginRequestBody: {
             /**

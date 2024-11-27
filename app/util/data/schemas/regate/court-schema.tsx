@@ -19,6 +19,7 @@ export const updateCourtRateSchema = z.object({
     // courtRates:z.array(courtRateSchema)
     dayWeeks:z.array(z.number()),
     courtUUID:z.string(),
+    isEdit:z.boolean(),
     courtRateIntervals:z.array(courtRateInterval)
 })
 

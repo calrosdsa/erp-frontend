@@ -49,6 +49,7 @@ export const UpdateCourtRate = ({}: {
     defaultValues: {
       courtRateIntervals: [],
       courtUUID:updateCourtRate.court?.uuid,
+      isEdit:updateCourtRate.isEdit
     },
   })
 
@@ -58,7 +59,7 @@ export const UpdateCourtRate = ({}: {
     const body:components["schemas"]["UpdateCourtRatesBody"] = {
         court_rate:mapToCourtRateData(values),
         court_uuid:values.courtUUID,
-        
+        is_edit:values.isEdit
     }
     console.log("BODY",body)
     fetcher.submit({
@@ -194,11 +195,12 @@ const AddCourtRate = ({
   onOpenChange: (e: boolean) => void;
   onAddCourtRate: (e: z.infer<typeof courtRateInterval>) => void;
 }) => {
+ 
   const form = useForm<z.infer<typeof courtRateInterval>>({
     resolver: zodResolver(courtRateInterval),
     defaultValues: {
         enabled:true,
-
+        
     },
   });
   const { t } = useTranslation("common");
@@ -218,6 +220,7 @@ const AddCourtRate = ({
             <CustomFormField
               label={t("form.rate")}
               name="rate"
+              description="Precio por cada 30 minutes"
               form={form}
               children={(field) => {
                 return <AmountInput field={field} currency={"BOB"} />;
@@ -254,17 +257,20 @@ const AddCourtRate = ({
 interface UseUpdateCourtRateStore {
   open: boolean;
   title?:string
+  isEdit?:boolean
   court: components["schemas"]["CourtDto"] | undefined;
   onOpenChange: (e: boolean) => void;
   onOpenDialog: (opts: {
     court: components["schemas"]["CourtDto"] | undefined;
     title:string
+    isEdit:boolean
   }) => void;
 }
 
 export const useUpdateCourtRate = create<UseUpdateCourtRateStore>((set) => ({
   open: false,
   court: undefined,
+  isEdit:false,
   title:undefined,
   onOpenChange: (e) =>
     set((state) => ({
@@ -274,5 +280,6 @@ export const useUpdateCourtRate = create<UseUpdateCourtRateStore>((set) => ({
     set((state) => ({
       court: opts.court,
       open: true,
+      isEdit:opts.isEdit,
     })),
 }));

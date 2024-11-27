@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import React, { useState, useMemo, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, Plus, RefreshCw, Settings } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
+import React, { useState, useMemo, useCallback } from "react"
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Badge } from "@/components/ui/badge"
+import { CalendarIcon, Plus, RefreshCw } from 'lucide-react'
+import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/popover"
 import {
   format,
   addDays,
@@ -19,123 +19,123 @@ import {
   addMinutes,
   isSameDay,
   parseISO,
-} from "date-fns";
-import { toast } from "@/components/ui/use-toast";
+} from "date-fns"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
-import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
-import { useNewBooking } from "~/routes/home._regate.booking.new/use-new-booking";
-import { useNavigate, useSearchParams } from "@remix-run/react";
-import { routes } from "~/util/route";
-import { components } from "~/sdk";
+} from "@/components/ui/tooltip"
+import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch"
+import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher"
+import { useNewBooking } from "~/routes/home._regate.booking.new/use-new-booking"
+import { useNavigate, useSearchParams } from "@remix-run/react"
+import { routes } from "~/util/route"
+import { components } from "~/sdk"
+import { useTranslation } from "react-i18next"
+import { formatCurrency } from "~/util/format/formatCurrency"
 
 interface FieldReservationProps {
-  schedules: components["schemas"]["CourtRateDto"][];
-  reservations: components["schemas"]["BookingSlotDto"][];
+  schedules: components["schemas"]["CourtRateDto"][]
+  reservations: components["schemas"]["BookingSlotDto"][]
 }
 
 const generateTimeSlots = () => {
-  const slots = [];
-  let currentTime = new Date(2024, 0, 1);
-  const endTime = new Date(2024, 0, 2);
+  const slots = []
+  let currentTime = new Date(2024, 0, 1)
+  const endTime = new Date(2024, 0, 2)
 
   while (currentTime < endTime) {
-    slots.push(format(currentTime, "HH:mm:ss"));
-    currentTime = addMinutes(currentTime, 30);
+    slots.push(format(currentTime, "HH:mm:ss"))
+    currentTime = addMinutes(currentTime, 30)
   }
 
-  return slots;
-};
+  return slots
+}
 
 const colorHash = (id: number) => {
-  const hue = (id * 137.508) % 360;
-  return `hsl(${hue}, 50%, 75%)`;
-};
+  const hue = (id * 137.508) % 360
+  return `hsl(${hue}, 50%, 75%)`
+}
 
 export default function FieldReservation({
   schedules,
   reservations,
 }: FieldReservationProps) {
-  const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [searchParams, setSearchParams] = useSearchParams();
-  const viewMode: "day" | "week" | string = searchParams.get("view") || "week";
-  //   const [viewMode, setViewMode] = useState<"day" | "week" | string>(searchParams.get("view") || "day");
-  const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
-  const newBooking = useNewBooking();
-  const navigate = useNavigate();
-  const r = routes;
+  const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher()
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [searchParams, setSearchParams] = useSearchParams()
+  const viewMode: "day" | "week" | string = searchParams.get("view") || "week"
+  const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set())
+  const newBooking = useNewBooking()
+  const navigate = useNavigate()
+  const r = routes
+  const { i18n } = useTranslation("common")
 
-  const timeSlots = useMemo(() => generateTimeSlots(), []);
+  const timeSlots = useMemo(() => generateTimeSlots(), [])
 
   const getDaySchedule = useCallback(
     (date: Date) => {
-      const dayOfWeek = date.getDay();
-      return schedules.filter((schedule) => schedule.day_week === dayOfWeek);
+      const dayOfWeek = date.getDay()
+      return schedules.filter((schedule) => schedule.day_week === dayOfWeek)
     },
     [schedules]
-  );
+  )
 
   const getReservationForSlot = useCallback(
     (date: Date, time: string) => {
       return reservations.find((reservation) => {
-        const reservationDate = parseISO(reservation.datetime);
+        const reservationDate = parseISO(reservation.datetime)
         return (
           isSameDay(reservationDate, date) &&
           format(reservationDate, "HH:mm:ss") === time
-        );
-      });
+        )
+      })
     },
     [reservations]
-  );
+  )
 
   const isSlotSelectable = useCallback(
     (date: Date, time: string) => {
-      const schedule = getDaySchedule(date).find((s) => s.time === time);
-      //   return schedule?.enabled && !getReservationForSlot(date, time);
-      return schedule?.enabled;
+      const schedule = getDaySchedule(date).find((s) => s.time === time)
+      return schedule?.enabled
     },
     [getDaySchedule]
-  );
+  )
 
   const handleSlotClick = useCallback(
     (date: Date, time: string) => {
-      const slotKey = `${format(date, "yyyy-MM-dd")} ${time}`;
+      const slotKey = `${format(date, "yyyy-MM-dd")} ${time}`
 
       if (!isSlotSelectable(date, time)) {
-        return;
+        return
       }
 
-      const newSelectedSlots = new Set(selectedSlots);
+      const newSelectedSlots = new Set(selectedSlots)
       if (newSelectedSlots.has(slotKey)) {
-        newSelectedSlots.delete(slotKey);
+        newSelectedSlots.delete(slotKey)
       } else {
-        newSelectedSlots.add(slotKey);
+        newSelectedSlots.add(slotKey)
       }
-      setSelectedSlots(newSelectedSlots);
+      setSelectedSlots(newSelectedSlots)
     },
     [selectedSlots, isSlotSelectable]
-  );
+  )
 
   const renderTimeSlot = useCallback(
     (date: Date, time: string) => {
-      const reservation = getReservationForSlot(date, time);
-      const schedule = getDaySchedule(date).find((s) => s.time === time);
+      const reservation = getReservationForSlot(date, time)
+      const schedule = getDaySchedule(date).find((s) => s.time === time)
       const isSelected = selectedSlots.has(
         `${format(date, "yyyy-MM-dd")} ${time}`
-      );
-      const isSelectable = isSlotSelectable(date, time);
+      )
+      const isSelectable = isSlotSelectable(date, time)
 
       return (
-        <TooltipProvider key={`${date} ${time}`}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div
+        // <TooltipProvider key={`${date} ${time}`}>
+        //   <Tooltip>
+        //     <TooltipTrigger asChild>
+              <td
                 className={`border text-center cursor-pointer transition-colors duration-200 ${
                   isSelected ? "bg-primary/20" : ""
                 } ${isSelectable ? "" : "opacity-50 cursor-not-allowed"}`}
@@ -144,10 +144,6 @@ export default function FieldReservation({
                     ? colorHash(reservation.booking_id)
                     : undefined,
                   height: "50px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
                 }}
                 onClick={() => {
                   if (reservation) {
@@ -159,10 +155,9 @@ export default function FieldReservation({
                           tab: "info",
                         },
                       })
-                    );
-                    // fetchBookingDetail(reservation.booking_id);
+                    )
                   } else {
-                    handleSlotClick(date, time);
+                    handleSlotClick(date, time)
                   }
                 }}
               >
@@ -174,25 +169,25 @@ export default function FieldReservation({
                   </Badge>
                 ) : schedule?.enabled ? (
                   <span className="text-xs">
-                    {schedule.rate} {schedule.currency}
+                    {formatCurrency(schedule.rate, schedule.currency, i18n.language)}
                   </span>
                 ) : (
                   <span className="text-xs text-muted-foreground">
                     No disponible
                   </span>
                 )}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              {reservation
-                ? `Reserva ${reservation.party_name}`
-                : isSelectable
-                ? "Haz clic aquí para seleccionar"
-                : "No disponible"}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
+              </td>
+          //   </TooltipTrigger>
+          //   <TooltipContent>
+          //     {reservation
+          //       ? `Reserva ${reservation.party_name}`
+          //       : isSelectable
+          //       ? "Haz clic aquí para seleccionar"
+          //       : "No disponible"}
+          //   </TooltipContent>
+          // </Tooltip>
+        // </TooltipProvider>
+      )
     },
     [
       viewMode,
@@ -201,70 +196,71 @@ export default function FieldReservation({
       getDaySchedule,
       isSlotSelectable,
       handleSlotClick,
+      navigate,
+      r,
+      i18n.language,
     ]
-  );
+  )
 
   const renderDayView = useCallback(
     (date: Date) => (
-      <div className="grid grid-cols-[80px_1fr] gap-1">
-        <div className="space-y-1">
+      <table className="w-full border-collapse">
+        <tbody>
           {timeSlots.map((time) => (
-            <div
-              key={time}
-              className="h-[50px] flex items-center justify-end pr-2 text-sm"
-            >
-              {time.substring(0, 5)}
-            </div>
+            <tr key={time}>
+              <td className="border p-2 text-sm text-right w-20">
+                {time.substring(0, 5)}
+              </td>
+              {renderTimeSlot(date, time)}
+            </tr>
           ))}
-        </div>
-        <div className="grid grid-cols-1 gap-1">
-          {timeSlots.map((time) => renderTimeSlot(date, time))}
-        </div>
-      </div>
+        </tbody>
+      </table>
     ),
     [timeSlots, renderTimeSlot]
-  );
+  )
 
   const renderWeekView = useCallback(() => {
-    const weekStart = startOfWeek(selectedDate);
+    const weekStart = startOfWeek(selectedDate)
     return (
-      <div className="grid grid-cols-8 gap-1 overflow-auto ">
-        <div className="sticky left-0 bg-background z-10">
-          <div className="h-8  "></div>
-          {timeSlots.map((time) => (
-            <div
-              key={time}
-              className="h-[50px] flex items-center justify-end pr-2 text-sm"
-            >
-              {time.substring(0, 5)}
-            </div>
-          ))}
-        </div>
-        <ScrollArea className="col-span-7 overflow-x-auto  min-w-[700px]">
-          <div className="grid grid-cols-7 gap-1 min-w-[700px]">
-            {Array.from({ length: 7 }).map((_, index) => {
-              const date = addDays(weekStart, index);
-              return (
-                <div key={index}>
-                  <div className="sticky top-0 bg-background z-10 h-8 flex items-center justify-center font-semibold">
+      <div className="overflow-auto h-[70vh]">
+        <table className="w-full border-collapse">
+          <thead className="sticky top-0 bg-background z-10">
+            <tr>
+              <th className="border p-2"></th>
+              {Array.from({ length: 7 }).map((_, index) => {
+                const date = addDays(weekStart, index)
+                return (
+                  <th key={index} className="border p-2 text-center font-semibold">
                     {format(date, "EEE dd")}
-                  </div>
-                  {timeSlots.map((time) => renderTimeSlot(date, time))}
-                </div>
-              );
-            })}
-          </div>
-        </ScrollArea>
+                  </th>
+                )
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {timeSlots.map((time) => (
+              <tr key={time}>
+                <td className="border p-2 text-sm text-right sticky left-0 bg-background z-10">
+                  {time.substring(0, 5)}
+                </td>
+                {Array.from({ length: 7 }).map((_, index) => {
+                  const date = addDays(weekStart, index)
+                  return renderTimeSlot(date, time)
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    );
-  }, [selectedDate, timeSlots, renderTimeSlot]);
+    )
+  }, [selectedDate, timeSlots, renderTimeSlot])
 
   return (
     <div className="flex flex-col">
-      {/* {JSON.stringify()} */}
       <div className="w-full p-4">
-        <div className="flex flex-wrap items-center justify-between mb-4 gap-2">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center justify-between mb-4 gap-2 overflow-auto">
+          <div className="flex items-center gap-2">
             <AutocompleteSearch
               data={courtFetcher.data?.courts || []}
               nameK={"name"}
@@ -273,9 +269,6 @@ export default function FieldReservation({
               valueK={"id"}
               onValueChange={onCourtNameChange}
             />
-            {/* <Button variant="outline" size="sm">
-              <RefreshCw className="w-4 h-4" />
-            </Button> */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm">
@@ -289,11 +282,11 @@ export default function FieldReservation({
                   selected={selectedDate}
                   onSelect={(date) => {
                     if (date) {
-                      setSelectedDate(date);
-                      searchParams.set("date", date.toJSON());
+                      setSelectedDate(date)
+                      searchParams.set("date", date.toJSON())
                       setSearchParams(searchParams, {
                         preventScrollReset: true,
-                      });
+                      })
                     }
                   }}
                   initialFocus
@@ -308,13 +301,13 @@ export default function FieldReservation({
                   court: Number(searchParams.get("court")),
                   courtName: searchParams.get("courtName") || "",
                   selectedSlots: Array.from(selectedSlots),
-                });
+                })
                 navigate(
                   r.toRoute({
                     main: r.bookingM,
                     routeSufix: ["new"],
                   })
-                );
+                )
               }}
             >
               CREAR RESERVA <Plus className="w-4 h-4 ml-2" />
@@ -325,12 +318,11 @@ export default function FieldReservation({
               variant={viewMode === "day" ? "default" : "outline"}
               size="sm"
               className="px-4"
-
               onClick={() => {
-                searchParams.set("view", "day");
+                searchParams.set("view", "day")
                 setSearchParams(searchParams, {
                   preventScrollReset: true,
-                });
+                })
               }}
             >
               Día
@@ -340,24 +332,20 @@ export default function FieldReservation({
               size="sm"
               className="px-4"
               onClick={() => {
-                searchParams.set("view", "week");
+                searchParams.set("view", "week")
                 setSearchParams(searchParams, {
                   preventScrollReset: true,
-                });
+                })
               }}
             >
               Semana
             </Button>
           </div>
         </div>
-        <ScrollArea className="h-[calc(100vh-16rem)]">
-          <div className="w-full mx-auto">
-            {viewMode === "day"
-              ? renderDayView(selectedDate)
-              : renderWeekView()}
-          </div>
-        </ScrollArea>
+        <div className="w-full mx-auto">
+          {viewMode === "day" ? renderDayView(selectedDate) : renderWeekView()}
+        </div>
       </div>
     </div>
-  );
+  )
 }
