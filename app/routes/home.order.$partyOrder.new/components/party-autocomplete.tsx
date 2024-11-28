@@ -7,7 +7,7 @@ import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/cre
 import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
 import { components } from "~/sdk";
 import { GlobalState } from "~/types/app";
-import { createPurchaseSchema } from "~/util/data/schemas/buying/purchase-schema";
+import { createOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";

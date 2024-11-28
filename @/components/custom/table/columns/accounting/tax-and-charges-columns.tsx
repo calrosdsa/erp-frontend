@@ -27,24 +27,19 @@ export const  taxAndChargesColumns = ({
     });
   
     columns.push({
-      accessorKey: "amount",
+      accessorKey: "taxRate",
       header: t("form.rate"),
-      cell: ({...props})=>{
-        return currency ? (
-          <TableCellPrice {...props}  currency={currency} i18n={i18n}/>
-        ): (
-          "-"
-        );
-      },
     });
   
     columns.push({
-      accessorKey: "totalAmount",
+      accessorKey: "amount",
       header: t("form.amount"),
       cell: ({ ...props }) => {
         const rowData = props.row.original
         return currency ? (
-            <TableCellPrice {...props}  currency={currency} i18n={i18n}/>
+            <TableCellPrice {...props}  currency={currency} i18n={i18n}
+            isAmount={true}
+            />
         ) : (
           "-"
         );

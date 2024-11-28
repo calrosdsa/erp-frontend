@@ -49,6 +49,15 @@ export const BuyingNav = ({ entities }: {
       href:r.toReceipts(PartyType.purchaseReceipt)
     })
   }
+  if(entities?.includes(Entity.SUPPLIER_QUOTATION)){
+    buyingChildrens.push({
+      title: t("supplierQuotation"),
+      href:r.toRoute({
+        main:r.supplierQuotation,
+        routePrefix:[r.quotation]
+      })
+    })
+  }
 
   const buying:NavItem = {
     title: t("form.buying"),

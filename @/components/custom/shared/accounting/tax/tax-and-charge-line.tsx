@@ -6,17 +6,21 @@ import { TypeOf, z } from "zod";
 import { create } from "zustand";
 import { taxAndChargeSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 import { routes } from "~/util/route";
-import FormLayout from "../../form/FormLayout";
+import FormLayout from "../../../form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { useFetcher } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
-import SelectForm from "../../select/SelectForm";
+import SelectForm from "../../../select/SelectForm";
 import { TaxChargeLineType, taxChargeLineTypeToJSON } from "~/gen/common";
 import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
-import FormAutocomplete from "../../select/FormAutocomplete";
-import CustomFormField from "../../form/CustomFormField";
+import FormAutocomplete from "../../../select/FormAutocomplete";
+import CustomFormField from "../../../form/CustomFormField";
 import { Input } from "@/components/ui/input";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { action } from "~/routes/api.taxAndChargeLine/route";
+import CheckForm from "@/components/custom/input/CheckForm";
+import { CustomCheckbox } from "@/components/custom/input/CustomCheckBox";
 
 export default function TaxAndChargeLine({
   onOpenChange,
@@ -27,7 +31,7 @@ export default function TaxAndChargeLine({
 }) {
   const { t } = useTranslation("common");
   const r = routes;
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
   const taxAndCharge = useTaxAndCharge();
   const payload = taxAndCharge.payload;
   const [accountFetcher, onAccountChange] = useAccountLedgerDebounceFetcher({
@@ -40,17 +44,69 @@ export default function TaxAndChargeLine({
       type: payload?.line?.type,
       accountHeadName: payload?.line?.accountHeadName,
       accountHead: payload?.line?.accountHead,
+      isDeducted: payload?.line?.isDeducted,
+      amount: payload?.line?.amount,
+      taxLineID: payload?.line?.taxLineID,
     },
   });
+  const formValues = form.getValues();
   const onSubmit = (e: z.infer<typeof taxAndChargeSchema>) => {
-    if (e.taxLineID) {
-    } else {
-      if (payload?.onEdit) {
-        payload.onEdit(e);
-      }
+    if (e.type != "FIXED_AMOUNT") {
+      const amount = addOrDeductToNetAmount(
+        Number(payload?.netTotal),
+        Number(e.taxRate)
+      );
+
+      e.amount = amount;
     }
-    onOpenChange(false);
+    // Helper function to submit the form
+    const submitTaxLine = (actionType: string, taxLineData: typeof e) => {
+      fetcher.submit(
+        {
+          action: actionType,
+          taxLineData,
+          docPartyID: Number(payload?.docPartyID),
+        },
+        {
+          encType: "application/json",
+          action: r.apiTaxAndChargeLine,
+          method: "POST",
+        }
+      );
+    };
+    if (e.taxLineID) {
+      submitTaxLine("edit-tax-line", e);
+      return;
+    }
+
+    if (payload?.docPartyID) {
+      submitTaxLine("add-tax-line", e);
+      return;
+    }
+
+    if (payload?.onEdit) {
+      payload.onEdit(e);
+      onOpenChange(false);
+    }
   };
+
+  const addOrDeductToNetAmount = (
+    netTotal: number,
+    taxRate: number
+  ): number => {
+    return netTotal * (taxRate / 100);
+  };
+
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        onOpenChange(false);
+      },
+    },
+    [fetcher.data]
+  );
 
   return (
     <DrawerLayout
@@ -59,6 +115,7 @@ export default function TaxAndChargeLine({
       className=" max-w-2xl"
     >
       <FormLayout>
+        {JSON.stringify(formValues)}
         <Form {...form}>
           <fetcher.Form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -106,6 +163,8 @@ export default function TaxAndChargeLine({
                 name="type"
               />
 
+              
+
               <FormAutocomplete
                 data={accountFetcher.data?.accounts || []}
                 form={form}
@@ -122,8 +181,28 @@ export default function TaxAndChargeLine({
                 name="taxRate"
                 control={form.control}
                 children={(field) => {
-                  return <Input {...field} />;
+                  return (
+                    <Input
+                      {...field}
+                      disabled={formValues.type == "FIXED_AMOUNT"}
+                    />
+                  );
                 }}
+              />
+              {formValues.type == "FIXED_AMOUNT" && (
+                <CustomFormField
+                  label="Monto"
+                  name="amount"
+                  control={form.control}
+                  children={(field) => {
+                    return <Input {...field} />;
+                  }}
+                />
+              )}
+              <CheckForm
+              name="isDeducted"
+              label="Deducir"
+              control={form.control}
               />
             </div>
           </fetcher.Form>
@@ -138,6 +217,8 @@ interface Payload {
   currency: string;
   onEdit?: (e: z.infer<typeof taxAndChargeSchema>) => void;
   allowEdit?: boolean;
+  netTotal: number;
+  docPartyID?: number;
 }
 
 interface TaxAndChargeStore {

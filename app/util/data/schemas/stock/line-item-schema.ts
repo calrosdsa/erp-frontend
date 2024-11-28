@@ -7,7 +7,7 @@ import {
 } from "~/gen/common";
 import { validateNumber, validateStringNumber } from "../base/base-schema";
 import { components } from "~/sdk";
-import { formatAmountToInt } from "~/util/format/formatCurrency";
+import { formatAmounFromInt, formatAmountToInt } from "~/util/format/formatCurrency";
 
 export const itemPriceDtoSchema = z.object({
   code: z.string().optional(),
@@ -36,11 +36,39 @@ export const itemLineDtoSchema = z.object({
   uom: z.string(),
 });
 
-// transform: (arg: string, ctx: z.RefinementCtx) => number | Promise<number>): z.ZodEffects<z.ZodString, number, string>
+export const toLineItemSchema = (
+  line: components["schemas"]["LineItemDto"],
+  to?: ItemLineType
+): z.infer<typeof lineItemSchema> => {
+  const lineItem: z.infer<typeof lineItemSchema> = {
+    amount: formatAmounFromInt(line.quantity * line.rate),
+    lineType: to,
+    rate: formatAmounFromInt(line.rate),
+    quantity: line.quantity,
+    itemLineReference: line.id,
 
-export const mapToLineItem = (
+    item_price_id: line.item_price_id,
+    item_price_rate: line.rate,
+
+    item_name: line.item_name,
+    item_code: line.item_code,
+    uom: line.uom,
+  };
+  if (to == ItemLineType.ITEM_LINE_RECEIPT) {
+    lineItem.lineItemReceipt = {
+      acceptedQuantity: line.quantity,
+      rejectedQuantity: 0,
+      acceptedWarehouse: 0,
+      acceptedWarehouseName: "",
+    };
+  }
+  return lineItem;
+};
+
+
+export const mapToLineItemSchema = (
   line: components["schemas"]["ItemLineDto"],
-  to: ItemLineType
+  to?: ItemLineType
 ): z.infer<typeof lineItemSchema> => {
   const lineItem: z.infer<typeof lineItemSchema> = {
     amount: line.quantity * line.rate,

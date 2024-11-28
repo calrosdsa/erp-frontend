@@ -13,6 +13,7 @@ class Routes {
   apiCore = this.api + "/core";
   apiExporter = this.api + "/exporter";
   apiItemLine = this.api + "/itemline";
+  apiTaxAndChargeLine = this.api + "/taxAndChargeLine";
   base = "/home";
   party = this.base + "/party";
 
@@ -95,8 +96,8 @@ class Routes {
   treeView = "treeView";
   accountM = "account";
   serialNoResume = "serialNoResume";
-
   quotation = "quotation";
+
   //Party
   journalEntry = "journalEntry";
   costCenter = "costCenter";
@@ -106,6 +107,7 @@ class Routes {
   batchBundle = "batchBundle";
   saleInvoice = "saleInvoice";
   purchaseInvoice = "purchaseInvoice";
+  purchaseOrder = "purchaseOrder";
   supplierQuotation = "supplierQuotation";
 
   defaultTab = {
@@ -209,9 +211,12 @@ class Routes {
     return `${this.groups}/${partyType}`;
   }
 
-  toPartyReference(partyType: string, name: string, q?: Record<string, string | undefined>): string {
+  toPartyReference(
+    partyType: string,
+    name: string,
+    q?: Record<string, string | undefined>
+  ): string {
     switch (partyType) {
-      
       case PartyType[PartyType.customer]:
         return this.toRoute({
           main: partyType,
@@ -224,7 +229,7 @@ class Routes {
           main: partyType,
           routePrefix: [this.buyingM],
           routeSufix: [name],
-          q:q,
+          q: q,
         });
       case PartyType[PartyType.warehouse]:
         return this.toRoute({

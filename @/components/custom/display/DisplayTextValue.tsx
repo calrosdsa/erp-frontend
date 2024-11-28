@@ -1,5 +1,3 @@
-"use client"
-
 import { Typography } from "@/components/typography"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -31,6 +29,7 @@ interface DisplayTextValueProps <T extends object, K extends keyof T> {
   selectOptions?:T[]
   selectNameKey?: K;
   onValueChange?: (e: string) => void
+  className?:string
   onSelect?: (v: T) => void;
 }
 
@@ -47,6 +46,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
   selectNameKey,
   onValueChange,
   onSelect,
+  className
 }: DisplayTextValueProps<T, K>) {
   const { t } = useTranslation("common")
   z.setErrorMap(makeZodI18nMap({ t }))
@@ -210,9 +210,9 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
   }
 
   return (
-    <div className="flex flex-col space-y-1">
-      <Typography variant="label">{title}</Typography>
-      <div className="bg-accent rounded-md p-[3px] shadow-sm flex justify-between items-center">
+    <div className={cn(className,"flex flex-col space-y-1")}>
+      <Typography variant="label" className="text-xs">{title}</Typography>
+      <div className="bg-accent rounded-md p-[3px] shadow-sm flex justify-between items-center ">
         {renderValue()}
         {isEditable && (
           <Button variant="ghost" size="icon" className="h-6 w-6 ml-2" onClick={toggleEdit}>

@@ -5,7 +5,7 @@ import {
   useParams,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { createPurchaseSchema } from "~/util/data/schemas/buying/purchase-schema";
+import { createOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
@@ -21,34 +21,48 @@ import { GlobalState } from "~/types/app";
 import { ItemLineType, PartyType, partyTypeFromJSON } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { useRef } from "react";
-import PartyAutocomplete from "./components/party-autocomplete";
+import { useEffect, useRef } from "react";
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
 import AccordationLayout from "@/components/layout/accordation-layout";
+import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
+import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
+import GrandTotal from "@/components/custom/shared/item/grand-total";
+import { useLineItems } from "@/components/custom/shared/item/use-line-items";
+import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
+import LineItems from "@/components/custom/shared/item/line-items";
+import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
+import PartyAutocomplete from "./components/party-autocomplete";
+import { formatRFC3339 } from "date-fns";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
   const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
-  const globalState = useOutletContext<GlobalState>();
+  const {roleActions,companyDefaults} = useOutletContext<GlobalState>();
   const params = useParams();
   const partyOrder = params.partyOrder || "";
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const r = routes;
-  const form = useForm<z.infer<typeof createPurchaseSchema>>({
-    resolver: zodResolver(createPurchaseSchema),
+  const lineItemsStore = useLineItems();
+  const taxLinesStore = useTaxAndCharges();
+  const form = useForm<z.infer<typeof createOrderSchema>>({
+    resolver: zodResolver(createOrderSchema),
     defaultValues: {
-      lines: [],
-      currency: globalState.companyDefaults?.currency,
-      currencyName: globalState.companyDefaults?.currency,
-      date: new Date(),
+      currency: companyDefaults?.currency,
+      postingTime: formatRFC3339(new Date()),
+      postingDate: new Date(),
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+
+      lines: lineItemsStore.lines,
+      taxLines:taxLinesStore.lines,
     },
   });
+  const formValues = form.getValues();
 
-  const onSubmit = (values: z.infer<typeof createPurchaseSchema>) => {
+  const onSubmit = (values: z.infer<typeof createOrderSchema>) => {
     fetcher.submit(
       {
         action: "create-order",
@@ -89,6 +103,13 @@ export default function CreatePurchaseOrdersClient() {
     },
     [fetcher.data]
   );
+  useEffect(() => {
+    taxLinesStore.onLines(formValues.taxLines);
+  }, [formValues.taxLines]);
+
+  useEffect(() => {
+    lineItemsStore.onLines(formValues.lines);
+  }, [formValues.lines]);
 
   return (
     <div>
@@ -100,25 +121,28 @@ export default function CreatePurchaseOrdersClient() {
             className={cn("", "gap-y-3 grid p-3")}
           >
             <div className="create-grid">
-              <PartyAutocomplete
-                party={partyOrder || ""}
-                globalState={globalState}
-                form={form}
-              />
+            <PartyAutocomplete
+              party={partyOrder}
+              roleActions={roleActions}
+              form={form}
+            />
+            <CustomFormDate
+              control={form.control}
+              name="postingDate"
+              label={t("form.postingDate")}
+            />
+            <CustomFormTime
+              control={form.control}
+              name="postingTime"
+              label={t("form.postingTime")}
+              description={formValues.tz}
+            />
 
-              <CustomFormDate
-                form={form}
-                name="date"
-                label={t("form.date")}
-                required={true}
-              />
-
-              <CustomFormDate
-                form={form}
-                name="delivery_date"
-                isDatetime={true}
-                label={t("form.deliveryDate")}
-              />
+            <CustomFormDate
+              control={form.control}
+              name="deliveryDate"
+              label={t("form.deliveryDate")}
+            />
 
               <AccordationLayout
                 title={t("form.currency")}
@@ -138,42 +162,28 @@ export default function CreatePurchaseOrdersClient() {
                     form.trigger("currency");
                   }}
                 />
-                {/* <FormAutocomplete
-                  onValueChange={onPriceListChange}
-                  form={form}
-                  name="priceListName"
-                  nameK={"name"}
-                  label={t("priceList")}
-                  data={priceListFetcher.data?.priceLists || []}
-                  onSelect={(e) => {
-                    form.setValue("priceListID", e.id);
-                    form.setValue("currency", e.currency);
-                    form.trigger("currency");
-                  }}
-                /> */}
+               
               </AccordationLayout>
-              {/* <Typography className=" col-span-full" fontSize={subtitle}>
-                {t("form.currencyAndPriceList")}
-              </Typography>
-              <FormAutocomplete
-                data={currencyDebounceFetcher.data?.currencies || []}
-                form={form}
-                name="currencyName"
-                required={true}
-                nameK={"code"}
-                onValueChange={onCurrencyChange}
-                label={t("form.currency")}
-                onSelect={(v) => {
-                  form.setValue("currency", v);
-                  form.trigger("currency");
-                }}
-              /> */}
-            </div>
-            <ItemLineForm
-              form={form}
-              partyType={params.partyOrder || ""}
+              
+            <LineItems
+              onChange={(e) => {
+                form.setValue("lines", e);
+                form.trigger("lines");
+              }}
               itemLineType={ItemLineType.ITEM_LINE_ORDER}
+              partyType={partyOrder}
+              currency={formValues.currency}
+              />
+            <TaxAndChargesLines
+              onChange={(e) => {
+                form.setValue("taxLines", e);
+                form.trigger("taxLines");
+              }}
+              currency={formValues.currency}
             />
+            <GrandTotal currency={formValues.currency} />
+            <TaxBreakup currency={formValues.currency} />
+                </div>
 
             <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>

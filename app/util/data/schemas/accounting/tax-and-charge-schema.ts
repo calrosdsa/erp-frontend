@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { TaxChargeLineType, taxChargeLineTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
+import { formatAmounFromInt } from "~/util/format/formatCurrency";
 
 export const taxAndChargeSchema = z.object({
   taxLineID: z.number().optional(),
@@ -10,14 +11,33 @@ export const taxAndChargeSchema = z.object({
   ]),
   accountHeadName: z.string(),
   accountHead: z.number(),
-  taxRate: z.coerce.number(),
+  amount: z.coerce.number().optional(),
+  isDeducted: z.boolean(),
+  taxRate: z.coerce.number().optional(),
 });
 
+export const mapToTaxAndChargeData = (
+  line: z.infer<typeof taxAndChargeSchema>
+): components["schemas"]["TaxAndChargeLineData"] => {
+  return {
+    type: line.type,
+    tax_rate: line.taxRate || 0,
+    ledger: line.accountHead,
+    amount: Number(line.amount),
+    is_deducted: line.isDeducted,
+  };
+};
 
-export const mapToTaxAndChargeData = (line:z.infer<typeof taxAndChargeSchema>):components["schemas"]["TaxAndChargeLineData"] =>{
-    return {
-        type:line.type,
-        tax_rate:line.taxRate,
-        ledger:line.accountHead,
-    }
-}
+export const toTaxAndChargeLineSchema = (
+  line: components["schemas"]["TaxAndChargeLineDto"]
+): z.infer<typeof taxAndChargeSchema> => {
+  return {
+    taxLineID: line.id,
+    type: line.type,
+    taxRate: line.tax_rate,
+    accountHeadName: line.account_head,
+    accountHead: line.account_head_id,
+    amount: formatAmounFromInt(Number(line.amount)),
+    isDeducted: line.is_deducted,
+  };
+};

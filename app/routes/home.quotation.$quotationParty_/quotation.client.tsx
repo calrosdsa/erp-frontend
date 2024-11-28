@@ -15,6 +15,7 @@ export default function QuotationsClient(){
     const {paginationResult,actions} = useLoaderData<typeof loader>()
     const globalState = useOutletContext<GlobalState>()
     const params = useParams()
+    const quotationParty = params.quotationParty || ""
     const r = routes
     const navigate = useNavigate()
     const {t} = useTranslation()
@@ -27,7 +28,11 @@ export default function QuotationsClient(){
         return {
             ...(permission?.create && {
                 addNew:()=>{
-                    navigate(r.toCreateReceipt(partyTypeFromJSON(params.partyReceipt)))
+                    navigate(r.toRoute({
+                        main:quotationParty,
+                        routePrefix:[r.quotation],
+                        routeSufix:["new"]
+                    }))
                 }
             }) 
         }

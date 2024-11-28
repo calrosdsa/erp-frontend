@@ -24,7 +24,7 @@ import { ButtonToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
 import { z } from "zod";
-import { mapToLineItem } from "~/util/data/schemas/stock/line-item-schema";
+import { mapToLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import { useCreateReceipt } from "../home.receipt.$partyReceipt.new/use-create-receipt";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import DetailLayout from "@/components/layout/detail-layout";
@@ -135,19 +135,6 @@ export default function PurchaseOrderClient() {
       actions.push({
         label: t("f.sale", { o: t("_invoice.base") }),
         onClick: () => {
-          createPurchaseInvoice.setData({
-            payload: {
-              party_name: order?.party_name,
-              party_uuid: order?.party_uuid,
-              party_type: getPartyType(partyOrder),
-              currency: order?.currency,
-              referenceID: order?.id,
-              lines:
-                order?.order_lines.map((line) =>
-                  mapToLineItem(line, ItemLineType.ITEM_LINE_INVOICE)
-                ) || [],
-            },
-          });
           navigate(
             r.toRoute({
               main: getInvoicePartyType(partyOrder),
@@ -167,19 +154,6 @@ export default function PurchaseOrderClient() {
       actions.push({
         label: t("f.purchase", { o: t("_invoice.base") }),
         onClick: () => {
-          createPurchaseInvoice.setData({
-            payload: {
-              party_name: order?.party_name,
-              party_uuid: order?.party_uuid,
-              party_type: getPartyType(partyOrder),
-              currency: order?.currency,
-              referenceID: order?.id,
-              lines:
-                order?.order_lines.map((line) =>
-                  mapToLineItem(line, ItemLineType.ITEM_LINE_INVOICE)
-                ) || [],
-            },
-          });
           navigate(
             r.toRoute({
               main: getInvoicePartyType(partyOrder),
@@ -195,19 +169,6 @@ export default function PurchaseOrderClient() {
       actions.push({
         label: t("f.purchase", { o: t("_receipt.base") }),
         onClick: () => {
-          createReceipt.setData({
-            payload: {
-              party_name: order?.party_name,
-              party_uuid: order?.party_uuid,
-              party_type: PartyType[PartyType.supplier],
-              currency: order?.currency,
-              reference: order?.id,
-              lines:
-                order?.order_lines.map((line) =>
-                  mapToLineItem(line, ItemLineType.ITEM_LINE_RECEIPT)
-                ) || [],
-            },
-          });
           navigate(
             r.toRoute({
               main: partyTypeToJSON(PartyType.purchaseReceipt),
@@ -224,19 +185,6 @@ export default function PurchaseOrderClient() {
       actions.push({
         label: t("deliveryNote"),
         onClick: () => {
-          createReceipt.setData({
-            payload: {
-              party_name: order?.party_name,
-              party_uuid: order?.party_uuid,
-              party_type: PartyType[PartyType.customer],
-              currency: order?.currency,
-              reference: order?.id,
-              lines:
-                order?.order_lines.map((line) =>
-                  mapToLineItem(line, ItemLineType.ITEM_LINE_RECEIPT)
-                ) || [],
-            },
-          });
           navigate(
             r.toRoute({
               main: partyTypeToJSON(PartyType.deliveryNote),

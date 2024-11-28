@@ -22,19 +22,24 @@ import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { action } from "./route";
 import { createInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
-import {
-  ItemLineType,
-} from "~/gen/common";
+import { ItemLineType } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
+import { useLineItems } from "@/components/custom/shared/item/use-line-items";
+import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
+import { formatRFC3339 } from "date-fns";
+import LineItems from "@/components/custom/shared/item/line-items";
+import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
+import GrandTotal from "@/components/custom/shared/item/grand-total";
+import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
   const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
-  const {roleActions,companyDefaults} = useOutletContext<GlobalState>();
+  const { roleActions, companyDefaults } = useOutletContext<GlobalState>();
 
   const createPurchaseInvoice = useCreatePurchaseInvoice();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -42,21 +47,26 @@ export default function CreatePurchaseInvoiceClient() {
   const toolbar = useToolbar();
   const navigate = useNavigate();
   const r = routes;
+  const lineItemsStore = useLineItems();
+  const taxLinesStore = useTaxAndCharges();
   const params = useParams();
   const partyInvoice = params.partyInvoice || "";
   const form = useForm<z.infer<typeof createInvoiceSchema>>({
     resolver: zodResolver(createInvoiceSchema),
     defaultValues: {
       referenceID: createPurchaseInvoice.payload?.referenceID,
-      partyName: createPurchaseInvoice.payload?.party_name,
-      partyUuid: createPurchaseInvoice.payload?.party_uuid,
-      partyType: createPurchaseInvoice.payload?.party_type,
-      currency: createPurchaseInvoice.payload?.currency || companyDefaults?.currency || "",
-      currencyName: createPurchaseInvoice.payload?.currency || companyDefaults?.currency,
-      lines: createPurchaseInvoice.payload?.lines || [],
-      date: new Date(),
+      currency:
+        createPurchaseInvoice.payload?.currency ||
+        companyDefaults?.currency ||
+        "",
+      lines: lineItemsStore.lines,
+      taxLines: taxLinesStore.lines,
+      postingTime: formatRFC3339(new Date()),
+      postingDate: new Date(),
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   });
+  const formValues = form.getValues();
 
   const onSubmit = (values: z.infer<typeof createInvoiceSchema>) => {
     console.log(values);
@@ -74,7 +84,9 @@ export default function CreatePurchaseInvoiceClient() {
 
   const setUpToolbar = () => {
     toolbar.setToolbar({
-      titleToolbar: t("f.add-new", { o: t("_invoice.base").toLocaleLowerCase() }),
+      titleToolbar: t("f.add-new", {
+        o: t("_invoice.base").toLocaleLowerCase(),
+      }),
       onSave: () => {
         inputRef.current?.click();
       },
@@ -91,19 +103,29 @@ export default function CreatePurchaseInvoiceClient() {
       success: fetcher.data?.message,
       onSuccessMessage: () => {
         if (fetcher.data?.invoice) {
-          navigate(r.toRoute({
-            main:partyInvoice,
-            routeSufix:[fetcher.data.invoice.code],
-            routePrefix:["invoice"],
-            q:{
-              tab:"info"
-            }
-          }));
+          navigate(
+            r.toRoute({
+              main: partyInvoice,
+              routeSufix: [fetcher.data.invoice.code],
+              routePrefix: ["invoice"],
+              q: {
+                tab: "info",
+              },
+            })
+          );
         }
       },
     },
     [fetcher.data]
   );
+
+  useEffect(() => {
+    taxLinesStore.onLines(formValues.taxLines);
+  }, [formValues.taxLines]);
+
+  useEffect(() => {
+    lineItemsStore.onLines(formValues.lines);
+  }, [formValues.lines]);
 
   return (
     <div>
@@ -147,12 +169,26 @@ export default function CreatePurchaseInvoiceClient() {
                   form.trigger("currency");
                 }}
               />
+              <LineItems
+                onChange={(e) => {
+                  form.setValue("lines", e);
+                  form.trigger("lines");
+                }}
+                itemLineType={ItemLineType.ITEM_LINE_INVOICE}
+                partyType={partyInvoice}
+                currency={formValues.currency}
+              />
+              <TaxAndChargesLines
+                onChange={(e) => {
+                  form.setValue("taxLines", e);
+                  form.trigger("taxLines");
+                }}
+                currency={formValues.currency}
+              />
+              <GrandTotal currency={formValues.currency} />
+              <TaxBreakup currency={formValues.currency} />
             </div>
-            <ItemLineForm
-              itemLineType={ItemLineType.ITEM_LINE_INVOICE}
-              form={form}
-              partyType={params.partyInvoice || ""}
-            />
+
             <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>
         </Form>

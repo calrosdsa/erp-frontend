@@ -120,7 +120,6 @@ export default function CreateItemClient() {
                 form={form}
                 label={t("_group.base")}
                 data={groupDebounceFetcher.data?.groups || []}
-                onOpen={() => onChangeGroupName("")}
                 onValueChange={(e) => onChangeGroupName(e)}
                 name="groupName"
                 nameK={"name"}

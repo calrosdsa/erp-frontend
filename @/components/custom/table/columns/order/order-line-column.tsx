@@ -12,11 +12,11 @@ import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import { ItemLineType } from "~/gen/common";
 import { DataTableRowActions } from "../../data-table-row-actions";
 
-export const  orderLineColumns = ({
+export const  lineItemsColumns = ({
   currency,
   itemLineType,
 }: {
-  currency?: string;
+  currency: string;
   itemLineType:ItemLineType
 }): ColumnDef<z.infer<typeof lineItemSchema>>[] => {
   let columns: ColumnDef<z.infer<typeof lineItemSchema>>[] = [];
@@ -63,7 +63,9 @@ export const  orderLineColumns = ({
     header: t("form.rate"),
     cell: ({...props})=>{
       return currency ? (
-        <TableCellPrice {...props}  currency={currency} i18n={i18n}/>
+        <TableCellPrice {...props}  currency={currency} i18n={i18n}
+        isAmount={true}
+        />
       ): (
         "-"
       );
@@ -78,6 +80,7 @@ export const  orderLineColumns = ({
       return currency ? (
         <TableCellPrice {...props} currency={currency} i18n={i18n}
         price={rowData.rate * Number(rowData.quantity)}
+        isAmount={true}
          />
       ) : (
         "-"

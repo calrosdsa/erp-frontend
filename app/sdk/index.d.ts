@@ -2515,6 +2515,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/taxes-and-charges": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Tax and charges */
+        get: operations["tax-and-charges"];
+        /** Edit tax and charge */
+        put: operations["edit-tax-and-charge"];
+        /** Add tax and charge */
+        post: operations["add-tax-and-charge"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/uom": {
         parameters: {
             query?: never;
@@ -3189,17 +3208,22 @@ export interface components {
             party_type_code: string;
         };
         CreateInvoice: {
+            /** Format: int64 */
+            cost_center?: number;
             currency: string;
-            /** Format: date-time */
-            date: string;
             /** Format: date-time */
             due_date?: string | null;
             invoice_party_type: string;
-            party_type: string;
-            /** Format: uuid */
-            party_uuid: string;
+            /** Format: int64 */
+            party_id: number;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            project?: number;
             /** Format: int64 */
             reference?: number | null;
+            tz: string;
         };
         CreateInvoiceBody: {
             /**
@@ -3209,6 +3233,7 @@ export interface components {
             readonly $schema?: string;
             invoice: components["schemas"]["CreateInvoice"];
             items: components["schemas"]["CreateItemLines"];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
         };
         CreateItemAttributeRequestBody: {
             /**
@@ -3302,14 +3327,20 @@ export interface components {
             report_type?: string | null;
         };
         CreateOrder: {
+            /** Format: int64 */
+            cost_center?: number;
             currency: string;
-            /** Format: date-time */
-            date: string;
             /** Format: date-time */
             delivery_date?: string | null;
             order_party_type: string;
-            party_type: string;
-            party_uuid: string;
+            /** Format: int64 */
+            party_id: number;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            project?: number;
+            tz: string;
         };
         CreateOrderBody: {
             /**
@@ -3319,6 +3350,7 @@ export interface components {
             readonly $schema?: string;
             items: components["schemas"]["CreateItemLines"];
             order: components["schemas"]["CreateOrder"];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
         };
         CreatePartyAddressRequestBody: {
             /**
@@ -3464,14 +3496,20 @@ export interface components {
             tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
         };
         CreateReceipt: {
+            /** Format: int64 */
+            cost_center?: number;
             currency: string;
+            /** Format: int64 */
+            party_id: number;
             party_receipt: string;
-            party_type: string;
-            party_uuid: string;
             /** Format: date-time */
             posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            project?: number;
             /** Format: int64 */
             reference?: number | null;
+            tz: string;
         };
         CreateReceiptBody: {
             /**
@@ -3481,6 +3519,7 @@ export interface components {
             readonly $schema?: string;
             items: components["schemas"]["CreateItemLines"];
             receipt: components["schemas"]["CreateReceipt"];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
         };
         CreateRoleRequestBody: {
             /**
@@ -3724,6 +3763,23 @@ export interface components {
             actionSelecteds: components["schemas"]["ActionSelected"][];
             entityName: string;
             role_uuid: string;
+        };
+        EditTaxLineRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: double */
+            amount: number;
+            /** Format: int32 */
+            id: number;
+            is_deducted: boolean;
+            /** Format: int64 */
+            ledger: number;
+            /** Format: int32 */
+            tax_rate: number;
+            type: string;
         };
         EditableProfileFields: {
             family_name: string;
@@ -4566,7 +4622,6 @@ export interface components {
         };
         InvoiceDetailDto: {
             invoice: components["schemas"]["InvoiceDto"];
-            item_lines: components["schemas"]["ItemLineDto"][];
             totals: components["schemas"]["TotalsDto"];
         };
         InvoiceDto: {
@@ -4583,8 +4638,11 @@ export interface components {
             party_name: string;
             party_type: string;
             party_uuid: string;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
             status: string;
-            uuid: string;
+            tz: string;
         };
         ItemAttributeDto: {
             /** Format: date-time */
@@ -4797,7 +4855,7 @@ export interface components {
             line_stock_entry?: components["schemas"]["LineItemStockEntryData"];
             /** Format: int32 */
             quantity: number;
-            /** Format: int32 */
+            /** Format: double */
             rate: number;
         };
         LineItemDto: {
@@ -4844,15 +4902,15 @@ export interface components {
             created_at: string;
             currency: string;
             /** Format: date-time */
-            date: string;
-            /** Format: date-time */
             delivery_date: string | null;
             /** Format: int64 */
             id: number;
-            order_lines: components["schemas"]["ItemLineDto"][];
             party_name: string;
             party_type: string;
             party_uuid: string;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
             /** Format: int32 */
             received_items: number;
             status: string;
@@ -4860,7 +4918,7 @@ export interface components {
             total_amount: number;
             /** Format: int32 */
             total_items: number;
-            uuid: string;
+            tz: string;
         };
         PaginationResponsePaginationResultListAddressDtoBody: {
             /**
@@ -5597,7 +5655,9 @@ export interface components {
             party_uuid: string;
             /** Format: date-time */
             posting_date: string;
+            posting_time: string;
             status: string;
+            tz: string;
         };
         RequestAddPartyReferenceBody: {
             /**
@@ -5838,6 +5898,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["SerialNoTransactionDto"][];
+        };
+        ResponseDataListTaxAndChargeLineDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["TaxAndChargeLineDto"][];
         };
         ResponseDataListTreeEntryDtoBody: {
             /**
@@ -6317,8 +6390,30 @@ export interface components {
             uuid: string;
         };
         TaxAndChargeLineData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: double */
+            amount: number;
+            is_deducted: boolean;
             /** Format: int64 */
             ledger: number;
+            /** Format: int32 */
+            tax_rate: number;
+            type: string;
+        };
+        TaxAndChargeLineDto: {
+            account_head: string;
+            /** Format: int64 */
+            account_head_id: number;
+            account_head_uuid: string;
+            /** Format: int32 */
+            amount: number;
+            /** Format: int64 */
+            id: number;
+            is_deducted: boolean;
             /** Format: int32 */
             tax_rate: number;
             type: string;
@@ -13293,6 +13388,105 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntitySupplierDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "tax-and-charges": {
+        parameters: {
+            query: {
+                id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListTaxAndChargeLineDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-tax-and-charge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditTaxLineRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "add-tax-and-charge": {
+        parameters: {
+            query: {
+                id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaxAndChargeLineData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

@@ -50,9 +50,9 @@ export default function ItemLine({
   const form = useForm<z.infer<typeof lineItemSchema>>({
     resolver: zodResolver(lineItemSchema),
     defaultValues: {
-      itemLineID: line?.id,
+      itemLineID: line?.itemLineID,
       quantity: line?.quantity,
-      rate: formatAmounFromInt(line?.rate),
+      rate: line?.rate,
       lineType: itemLine.itemLineType,
 
       item_code: line?.item_code,
@@ -60,7 +60,7 @@ export default function ItemLine({
       uom: line?.uom,
       // uom: line?.uom,
       party_type: itemLine.partyType,
-      item_price_id:line?.item_price_id,
+      item_price_id: line?.item_price_id,
 
       lineItemReceipt: lineItemReceipt,
       // itemLineReference:line.refe
@@ -103,8 +103,8 @@ export default function ItemLine({
     } else {
       if (itemLine.onEditItemForm) {
         itemLine.onEditItemForm(values);
+        onOpenChange(false);
       }
-      onOpenChange(false);
       console.log("VALUES", values);
     }
   };
@@ -128,7 +128,7 @@ export default function ItemLine({
       className=" max-w-2xl "
     >
       <Form {...form}>
-      {/* {JSON.stringify(form.formState.errors)} */}
+        {/* {JSON.stringify(form.formState.errors)} */}
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
           className="px-2 pb-2"
@@ -151,7 +151,6 @@ export default function ItemLine({
           </div>
 
           <div className="grid sm:grid-cols-2 gap-3 pt-2">
-             
             <FormAutocomplete
               data={itemPriceDebounceFetcher.data?.itemPriceForOrders || []}
               nameK={"item_name"}
@@ -165,7 +164,6 @@ export default function ItemLine({
                 form.setValue("item_price_id", e.id);
                 form.setValue("rate", formatAmounFromInt(e.rate));
               }}
-              
             />
 
             <CustomFormField
@@ -181,7 +179,7 @@ export default function ItemLine({
               {t("f.and", { o: t("form.quantity"), p: t("form.rate") })}
             </Typography>
 
-            {(itemLine.itemLineType != ItemLineType.ITEM_LINE_RECEIPT) && (
+            {itemLine.itemLineType != ItemLineType.ITEM_LINE_RECEIPT && (
               <CustomFormField
                 label={t("form.quantity")}
                 form={form}
@@ -299,7 +297,7 @@ interface ItemLineEditStore {
   onOpenDialog: (opts: {
     title?: string;
     allowEdit: boolean;
-    line?: components["schemas"]["LineItemDto"];
+    line?: z.infer<typeof lineItemSchema>;
 
     lineItemReceipt?: z.infer<typeof lineItemReceipt>;
     currency?: string;
@@ -308,7 +306,7 @@ interface ItemLineEditStore {
     lineReference?: number;
     onEditItemForm?: (e: z.infer<typeof lineItemSchema>) => void;
   }) => void;
-  line?: components["schemas"]["LineItemDto"];
+  line?: z.infer<typeof lineItemSchema>;
 }
 export const useItemLine = create<ItemLineEditStore>((set) => ({
   open: false,

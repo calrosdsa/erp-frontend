@@ -26,17 +26,17 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       // console.log(format(d.postingDate, "yyyy-MM-dd"));
       const lines = d.lines.map((t) => lineItemSchemaToLineData(t));
       const taxLines = d.taxLines.map((t) => mapToTaxAndChargeData(t));
-      console.log(format(d.postingTime, "HH:mm"));
+      console.log(taxLines);
       const res = await client.POST("/quotation", {
         body: {
           quotation: {
+            quotation_party_type: params.quotationParty || "",
+            valid_till: formatRFC3339(d.validTill),
             posting_date: formatRFC3339(d.postingDate),
             posting_time: format(d.postingTime, "HH:mm"),
             tz: d.tz,
             party_id: d.partyID,
-            quotation_party_type: params.quotationParty || "",
             currency: d.currency,
-            valid_till: formatRFC3339(d.validTill),
             project: d.projectID,
             cost_center: d.costCenterID,
           },

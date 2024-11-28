@@ -1,4 +1,3 @@
-import { orderLineColumns } from "../../table/columns/order/order-line-column";
 import { formatAmountToInt, sumTotal } from "~/util/format/formatCurrency";
 import OrderSumary from "../../display/order-sumary";
 import { useTranslation } from "react-i18next";
@@ -203,7 +202,7 @@ export default function ItemLineForm({
         </div>
         }
 
-      <DataTable
+      {/* <DataTable
         data={formValues.lines || []}
         columns={orderLineColumns({
           currency: formValues.currency || DEFAULT_CURRENCY,
@@ -216,7 +215,7 @@ export default function ItemLineForm({
             enableTooltipMessage:false
           },
         }}
-      />
+      /> */}
       {formValues.lines.length > 0 && (
         <OrderSumary
           orderTotal={sumTotal(

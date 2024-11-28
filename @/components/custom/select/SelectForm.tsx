@@ -52,11 +52,11 @@ export default function SelectForm<
               //   const object = JSON.parse(e)
               if (keyValue == undefined) return;
               const item = data.find((t) => t[keyValue] == e);
+              field.onChange(e);
+              console.log(e);
               if (onValueChange != undefined && item) {
                 onValueChange(item);
               }
-              console.log(e);
-              field.onChange(e);
             }}
             defaultValue={field.value}
             required={required}

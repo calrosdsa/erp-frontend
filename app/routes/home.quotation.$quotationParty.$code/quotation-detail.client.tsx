@@ -8,14 +8,12 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { GlobalState } from "~/types/app";
-import { usePermission } from "~/util/hooks/useActions";
 import QuotationInfoTab from "./components/tab/quotation-info";
 import { useTranslation } from "react-i18next";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { stateFromJSON } from "~/gen/common";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
-import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -24,10 +22,26 @@ import { routes } from "~/util/route";
 import QuotationConnections from "./components/tab/quotation-connections";
 import { format } from "date-fns";
 import { ButtonToolbar } from "~/types/actions";
+import { usePermission } from "~/util/hooks/useActions";
+import { Entity } from "~/types/enums";
+import { useStatus } from "~/util/hooks/data/useStatus";
 
 export default function QuotationDetailClient() {
-  const { quotation, actions, activities } = useLoaderData<typeof loader>();
-  const globalState = useOutletContext<GlobalState>();
+  const { quotation, actions, activities, assocActions } =
+    useLoaderData<typeof loader>();
+  const { roleActions } = useOutletContext<GlobalState>();
+  const [poPermission] = usePermission({
+    actions:assocActions&& assocActions[Entity.PURCHASE_ORDER],
+    roleActions,
+  })
+  const [soPermission] = usePermission({
+    actions:assocActions&& assocActions[Entity.SALE_ORDER],
+    roleActions,
+  })
+  const [qPermission] = usePermission({
+    actions:assocActions&& assocActions[Entity.QUOTATION],
+    roleActions,
+  })
   const { t, i18n } = useTranslation("common");
 
   const [searchParams] = useSearchParams();
@@ -35,9 +49,10 @@ export default function QuotationDetailClient() {
   const toolbar = useToolbar();
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
-  const quotationParty = params.quotationParty || ""
+  const quotationParty = params.quotationParty || "";
   const navigate = useNavigate();
   const r = routes;
+  const {allowActions} = useStatus({status:stateFromJSON(quotation?.status)})
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: r.supplierQuotation,
@@ -62,7 +77,18 @@ export default function QuotationDetailClient() {
 
   setUpToolbar(() => {
     let actions: ButtonToolbar[] = [];
-    
+    if(poPermission?.create && allowActions ){
+      actions.push({
+        label:"Crear Orden de Compra",
+        onClick:()=>{
+          navigate(r.toRoute({
+            main:r.purchaseOrder,
+            routePrefix:[r.orderM],
+            routeSufix:["new"]
+          }))
+        }
+      })
+    }
     return {
       titleToolbar: `${t(quotationParty)}(${quotation?.code})`,
       status: stateFromJSON(quotation?.status),
@@ -70,7 +96,7 @@ export default function QuotationDetailClient() {
       onChangeState: (e) => {
         const body: z.infer<typeof updateStateWithEventSchema> = {
           current_state: quotation?.status || "",
-          party_type: params.partyReceipt || "",
+          party_type: quotationParty || "",
           party_id: quotation?.code || "",
           events: [e],
         };
@@ -86,7 +112,7 @@ export default function QuotationDetailClient() {
         );
       },
     };
-  }, [quotation]);
+  }, [quotation,poPermission,soPermission,qPermission]);
 
   useEffect(() => {
     if (fetcher.state == "submitting") {

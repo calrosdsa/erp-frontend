@@ -1,92 +1,110 @@
 import FallBack from "@/components/layout/Fallback";
 import { Typography } from "@/components/typography";
 import { Await } from "@remix-run/react";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ItemLineType, State, stateToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
 import { useItemLine } from "./item-line";
 import { DataTable } from "../../table/CustomTable";
-import { lineItemColumns } from "../../table/columns/order/order-line-column";
+import { lineItemColumns, lineItemsColumns } from "../../table/columns/order/order-line-column";
 import { DEFAULT_CURRENCY } from "~/constant";
 import OrderSumary from "../../display/order-sumary";
-import { sumTotal } from "~/util/format/formatCurrency";
+import { formatCurrencyAmount, sumTotal } from "~/util/format/formatCurrency";
+import { useTotal } from "~/util/hooks/data/useTotal";
+import { useLineItems } from "./use-line-items";
+import { z } from "zod";
+import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
+import DisplayTextValue from "../../display/DisplayTextValue";
+import { Separator } from "@/components/ui/separator";
 
 export default function LineItems({
-  lineItems,
   status,
   currency,
   partyType,
   itemLineType,
+  allowEdit,
+  onChange,
 }: {
-  lineItems: any;
-  status: string;
+  onChange?: (e: z.infer<typeof lineItemSchema>[]) => void;
+  status?: string;
   currency: string;
   partyType: string;
+  allowEdit?:boolean;
   itemLineType: ItemLineType;
 }) {
   const { t, i18n } = useTranslation("common");
+  const {total,lines:lineItems,totalQuantity} = useLineItems()
   const itemLine = useItemLine();
-  return (
-    <div className=" col-span-full pt-3">
-      <Typography variant="subtitle2">{t("items")}</Typography>
-
-      <Suspense fallback={<FallBack />}>
-        <Await resolve={lineItems}>
-          {(resData: any) => {
-            const { result: lineItems } =
-              resData.data as components["schemas"]["ResponseDataListLineItemDtoBody"];
-            const [metaOptions] = useTableRowActions({
-              onEdit: (rowIndex) => {
-                const line = lineItems[rowIndex];
-                itemLine.onOpenDialog({
-                  title: t("f.editRow", { o: `#${rowIndex}` }),
-                  allowEdit: status == stateToJSON(State.DRAFT),
-                  line: line,
-                  currency: currency,
-                  partyType: partyType,
-                  itemLineType: itemLineType,
-                  ...(itemLineType == ItemLineType.ITEM_LINE_RECEIPT && {
-                    lineItemReceipt: {
-                      acceptedQuantity: Number(line?.accepted_quantity),
-                      rejectedQuantity: Number(line?.rejected_quantity),
-                      acceptedWarehouseName: line?.accepted_warehouse,
-                      rejectedWarehouseName: line?.rejected_warehouse,
-                    },
-                  }),
-                });
-              },
+  const shared = {
+    currency: currency,
+    partyType: partyType,
+    allowEdit:allowEdit || true,
+    itemLineType: itemLineType,
+  };
+  const [metaOptions] = useTableRowActions({
+    onAddRow:()=>{
+      itemLine.onOpenDialog({
+        ...shared,
+        onEditItemForm: (e) => {
+          const lines = [...lineItems, e];
+          if (onChange) {
+            onChange(lines);
+          }
+        },
+      });
+    },
+    onEdit: (rowIndex) => {
+      const f = lineItems.find((t, idx) => idx == rowIndex);
+      if (f) {
+        itemLine.onOpenDialog({
+          ...shared,
+          line:f,
+          onEditItemForm: (e) => {
+            const lines = lineItems.map((t,idx)=>{
+              if(idx == rowIndex){
+                t = e
+              }
+              return t
             });
-            return (
-              <div>
-                <DataTable
-                  data={lineItems || []}
-                  columns={lineItemColumns({
-                    currency: currency || DEFAULT_CURRENCY,
-                  })}
-                  metaOptions={{
-                    meta: {
-                      ...metaOptions,
-                    },
-                  }}
-                />
+            if (onChange) {
+              onChange(lines);
+            }
+          },
+        });
+      }
+    },
+  });
+  
+  return (
+    <>
+    <Separator className=" col-span-full"/>   
+    <div className=" col-span-full">
+      <Typography variant="subtitle2">{t("items")}</Typography>
+      {/* {JSON.stringify(lineItems)} */}
+      <DataTable
+      data={lineItems}
+      columns={lineItemsColumns({
+        currency:currency,
+        itemLineType:itemLineType
+      })}
+      metaOptions={{
+        meta:{
+          ...metaOptions
+        }
+      }}
+      />
 
-                {lineItems.length > 0 && (
-                  <OrderSumary
-                    orderTotal={sumTotal(
-                      lineItems.map((t) => t.rate * t.quantity)
-                    )}
-                    orderTax={100}
-                    i18n={i18n}
-                    currency={currency || DEFAULT_CURRENCY}
-                  />
-                )}
-              </div>
-            );
-          }}
-        </Await>
-      </Suspense>
     </div>
+      <DisplayTextValue
+      title="Total"
+      value={formatCurrencyAmount(total,currency,i18n.language)}
+      />
+       <DisplayTextValue
+      title="Cantidad Total"
+      value={totalQuantity.toString()}
+      />
+      </>
   );
 }

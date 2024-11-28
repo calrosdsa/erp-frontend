@@ -60,7 +60,7 @@ import {
 import { SessionDefaultDrawer, useSessionDefaults } from "./SessionDefaults";
 import TaxAndChargeLine, {
   useTaxAndCharge,
-} from "@/components/custom/shared/accounting/tax-and-charge-line";
+} from "@/components/custom/shared/accounting/tax/tax-and-charge-line";
 
 export default function GlobalDialogs({
   globalState,

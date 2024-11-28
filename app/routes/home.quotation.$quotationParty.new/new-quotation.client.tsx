@@ -30,13 +30,18 @@ import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { GlobalState } from "~/types/app";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { createQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
-import { format, formatRFC3339 } from "date-fns";
+import { addMonths, format, formatRFC3339 } from "date-fns";
 import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
-import TaxAndChargesLines from "@/components/custom/shared/accounting/tax-and-charge-lines";
+import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
+import LineItems from "@/components/custom/shared/item/line-items";
+import { useLineItems } from "@/components/custom/shared/item/use-line-items";
+import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
+import GrandTotal from "@/components/custom/shared/item/grand-total";
+import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 
 export default function NewQuotationClient() {
   const { t } = useTranslation("common");
@@ -55,13 +60,18 @@ export default function NewQuotationClient() {
     resolver: zodResolver(createQuotationSchema),
     defaultValues: {
       lines: [],
-      taxLines:[],
+      taxLines: [],
+      validTill: addMonths(new Date(), 1),
       currency: companyDefaults?.currency,
       postingTime: formatRFC3339(new Date()),
-      postingDate:new Date(),
+      postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   });
+  const formValues = form.getValues();
+  const lineItemsStore = useLineItems();
+  const taxLinesStore = useTaxAndCharges();
+
   const onSubmit = (e: z.infer<typeof createQuotationSchema>) => {
     fetcher.submit(
       {
@@ -105,6 +115,14 @@ export default function NewQuotationClient() {
     },
     [fetcher.data]
   );
+
+  useEffect(() => {
+    taxLinesStore.onLines(formValues.taxLines);
+  }, [formValues.taxLines]);
+
+  useEffect(() => {
+    lineItemsStore.onLines(formValues.lines);
+  }, [formValues.lines]);
   return (
     <FormLayout>
       <Form {...form}>
@@ -125,7 +143,7 @@ export default function NewQuotationClient() {
               control={form.control}
               name="postingTime"
               label={t("form.postingTime")}
-              description={form.getValues().tz}
+              description={formValues.tz}
             />
 
             <CustomFormDate
@@ -156,20 +174,25 @@ export default function NewQuotationClient() {
               />
             </AccordationLayout>
 
-            <AccountingDimensionForm
-            form={form}/>
-
-            <ItemLineForm
-              form={form}
-              partyType={quotationParty || ""}
+            <AccountingDimensionForm form={form} />
+            <LineItems
+              onChange={(e) => {
+                form.setValue("lines", e);
+                form.trigger("lines");
+              }}
               itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
+              partyType={quotationParty}
+              currency={formValues.currency}
             />
             <TaxAndChargesLines
-            taxLines={form.getValues().taxLines}
-            onChange={(e)=>{
-              form.setValue("taxLines",e)
-            }}
+              onChange={(e) => {
+                form.setValue("taxLines", e);
+                form.trigger("taxLines");
+              }}
+              currency={formValues.currency}
             />
+            <GrandTotal currency={formValues.currency} />
+            <TaxBreakup currency={formValues.currency} />
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

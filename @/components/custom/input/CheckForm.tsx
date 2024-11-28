@@ -8,18 +8,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { CheckedState } from "@radix-ui/react-checkbox";
+import { Control } from "react-hook-form";
 
 interface Props {
   label?: string;
-  form: any;
+  form?: any;
   name: string;
   description?: string;
+  control?:Control<any, any>
   onChange?:(e:CheckedState)=>void
 }
-export default function CheckForm({ label, form, name, description,onChange}: Props) {
+export default function CheckForm({ label, form,control, name, description,onChange}: Props) {
   return (
     <FormField
-      control={form.control}
+      control={control || form.control}
       name={name}
       render={({ field }) => (
         <FormItem  className="flex flex-col">

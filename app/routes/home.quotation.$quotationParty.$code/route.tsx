@@ -42,6 +42,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     undefined;
   let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
+  let taxLinesRes: Promise<FetchResponse<any, any, any>> | undefined =
+    undefined;
   const res = await client.GET("/quotation/detail/{id}", {
     params: {
       path: {
@@ -53,7 +55,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
-  
+  console.log("REFETCH...")
 
   if (res.data) {
     switch (tab) {
@@ -80,6 +82,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
+        taxLinesRes = client.GET("/taxes-and-charges",{
+          params:{
+            query:{
+              id:res.data.result.entity.id.toString(),
+            }
+          }
+        })
         break;
       }
     }
@@ -91,6 +100,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     connections: resConnections,
     activities: res.data?.result.activities,
     lineItems: lineItemRes,
+    taxLines:taxLinesRes,
+    assocActions:res.data?.associated_actions
   });
 };
 

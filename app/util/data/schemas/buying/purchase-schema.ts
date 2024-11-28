@@ -2,20 +2,25 @@ import { z } from "zod";
 import { components } from "~/sdk";
 import { lineItemSchema } from "../stock/line-item-schema";
 import { ItemLineType } from "~/gen/common";
+import { taxAndChargeSchema } from "../accounting/tax-and-charge-schema";
 
-export const createPurchaseSchema = z.object({
-  partyType:z.string(),
-  partyUuid:z.string(),
+export const createOrderSchema = z.object({
   partyName:z.string(),
-  // name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
-  // priceListID:z.number(),
-  // priceListName:z.string(),
+  partyID: z.number(),
 
-  delivery_date: z.date().optional(),
-  date: z.date(),
-  currencyName: z.string(),
+  postingDate: z.date(),
+  postingTime: z.string(),
+  tz:z.string(),
+  deliveryDate: z.date().optional(),
   currency: z.string(),
+
+  projectName:z.string().optional(),
+  projectID:z.number().optional(),
+
+  costCenterName:z.string().optional(),
+  costCenterID:z.number().optional(),
   lines: z.array(lineItemSchema),
+  taxLines:z.array(taxAndChargeSchema)
 });
 
 
