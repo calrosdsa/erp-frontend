@@ -109,9 +109,11 @@ export default function CustomerInfo() {
 
               <CustomFormField
                 name="name"
+                control={form.control}
                 children={(field) => {
                   return (
                     <DisplayTextValue
+                    inputType="input"
                       value={field.value}
                       onChange={(e) => {
                         field.onChange(e);
@@ -125,6 +127,7 @@ export default function CustomerInfo() {
               />
               <CustomFormField
                 name="customerType"
+                control={form.control}
                 children={(field) => {
                   return (
                     <DisplayTextValue
@@ -153,6 +156,7 @@ export default function CustomerInfo() {
             
                  <CustomFormField
                 name="groupName"
+                control={form.control}
                 children={(field) => {
                   return (
                     <DisplayTextValue
@@ -162,6 +166,7 @@ export default function CustomerInfo() {
                       selectOptions={groupDebounceFetcher.data?.groups || []}
                       selectNameKey="name"
                       onSelect={(e) => {
+                        console.log("GROUP",e)
                         form.setValue("groupID",e.id);
                         form.trigger("groupID");
                       }}

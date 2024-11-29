@@ -1,19 +1,23 @@
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
-import { loader } from "./route";
+import { useFetcher, useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
+import { action, loader } from "./route";
 import { bookingColumns } from "@/components/custom/table/columns/regate/booking-columns";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { routes } from "~/util/route";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PaginationLayout from "@/components/layout/pagination-layout";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import { useEventDebounceFetcher } from "~/util/hooks/fetchers/regate/useEventDebounceFetcher";
 import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
+import { components } from "~/sdk";
+import { Button } from "@/components/ui/button";
+import { State, stateToJSON } from "~/gen/common";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 export default function BookingsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -22,12 +26,21 @@ export default function BookingsClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
+  const fetcher = useFetcher<typeof action>()
   const [customerFetcher, onCustomerNameChange] = useCustomerDebounceFetcher();
   const [eventoFetcher, onEventNameChange] = useEventDebounceFetcher();
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
   const { t } = useTranslation("common");
   const navigate = useNavigate();
+  const [selectedBookings, setSelectedBookings] = useState<
+    components["schemas"]["BookingDto"][]
+  >([]);
   const r = routes;
+
+  useDisplayMessage({
+    success:fetcher.data?.message,
+    error:fetcher.data?.error
+  },[fetcher.data])
 
   setUpToolbar(() => {
     return {
@@ -42,52 +55,72 @@ export default function BookingsClient() {
 
   return (
     <PaginationLayout
-    orderOptions={[
-        {name:t("table.createdAt"),value:"created_at"},
-        {name:t("form.status"),value:"status"},
-    ]}
-    filterOptions={()=>{
+      orderOptions={[
+        { name: t("table.createdAt"), value: "created_at" },
+        { name: t("form.status"), value: "status" },
+      ]}
+      filterOptions={() => {
         return (
-      <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
-        <AutocompleteSearch
-          data={customerFetcher.data?.customers || []}
-          nameK={"name"}
-          valueK={"id"}
-          onValueChange={onCustomerNameChange}
-          placeholder="Cliente"
-          queryName="partyName"
-          queryValue="party"
-        />
+          <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
+            <AutocompleteSearch
+              data={customerFetcher.data?.customers || []}
+              nameK={"name"}
+              valueK={"id"}
+              onValueChange={onCustomerNameChange}
+              placeholder="Cliente"
+              queryName="partyName"
+              queryValue="party"
+            />
 
-        <AutocompleteSearch
-          data={eventoFetcher.data?.events || []}
-          nameK={"name"}
-          valueK={"id"}
-          queryName="eventName"
-          queryValue="event"
-          onValueChange={onEventNameChange}
-          placeholder="Evento"
-        />
-        <AutocompleteSearch
-          data={courtFetcher.data?.courts || []}
-          nameK={"name"}
-          valueK={"id"}
-          onValueChange={onCourtNameChange}
-          placeholder="Cancha"
-           queryName="courtName"
-          queryValue="court"
-        />
-      </div>
-        )
-    }}>
+            <AutocompleteSearch
+              data={eventoFetcher.data?.events || []}
+              nameK={"name"}
+              valueK={"id"}
+              queryName="eventName"
+              queryValue="event"
+              onValueChange={onEventNameChange}
+              placeholder="Evento"
+            />
+            <AutocompleteSearch
+              data={courtFetcher.data?.courts || []}
+              nameK={"name"}
+              valueK={"id"}
+              onValueChange={onCourtNameChange}
+              placeholder="Cancha"
+              queryName="courtName"
+              queryValue="court"
+            />
+            <Button onClick={()=>{
+              const body:components["schemas"]["UpdateBookingBatchRequestBody"] = {
+                booking_ids:selectedBookings.map(t=>t.id),
+                target_state:stateToJSON(State.CANCELLED)
+              }
+              fetcher.submit({
+                action:"update-bookings-batch",
+                updateBookingsBatch:body
+              },{
+                method:"POST",
+                encType:"application/json"
+              })
+            }}>
+              Complete Bookings
+            </Button>
+          </div>
+        );
+      }}
+    >
       <DataTable
         data={paginationResult?.results || []}
         columns={bookingColumns()}
         hiddenColumns={{
           created_at: false,
         }}
+        enableRowSelection={true}
+        onSelectionChange={(e) => {
+          setSelectedBookings(e);
+        }}
         paginationOptions={{
-            rowCount:paginationResult?.total
+          rowCount: paginationResult?.total,
         }}
       />
     </PaginationLayout>

@@ -48,7 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           customer:{
             name: d.name,
             customer_type: d.customerType,
-            group_uuid: d.groupUuid,
+            group_id: d.groupID,
           },
           contact:mapToContactData(d.contactData)
         },

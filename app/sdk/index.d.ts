@@ -1808,6 +1808,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/regate/booking/update-booking-batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Update Booking Batch */
+        post: operations["update-booking-batch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/regate/booking/update-status": {
         parameters: {
             query?: never;
@@ -6457,6 +6474,15 @@ export interface components {
              */
             readonly $schema?: string;
             results: components["schemas"]["UOMDto"][];
+        };
+        UpdateBookingBatchRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            booking_ids: number[];
+            target_state: string;
         };
         UpdateCourtRatesBody: {
             /**
@@ -11325,6 +11351,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["BookingRescheduleBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-booking-batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBookingBatchRequestBody"];
             };
         };
         responses: {

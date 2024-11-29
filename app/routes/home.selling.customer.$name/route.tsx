@@ -37,6 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           name: d.name,
           customer_type: d.customerType,
           customer: d.customerID,
+          group_id:d.groupID,
         },
       });
       error = res.error?.detail;

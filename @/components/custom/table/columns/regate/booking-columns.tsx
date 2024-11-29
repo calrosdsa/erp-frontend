@@ -48,9 +48,10 @@ export const bookingColumns = (): ColumnDef<components["schemas"]["BookingDto"]>
                   navigate={(name) =>  r.toRoute({
                     main:r.customerM,
                     routePrefix:[r.sellingM],
-                    routeSufix:[rowData?.party_name || ""],
+                    routeSufix:[name || ""],
                     q:{
-                        tab:"info"
+                        tab:"info",
+                        id:rowData.party_uuid,
                     }
                 })}
                 />

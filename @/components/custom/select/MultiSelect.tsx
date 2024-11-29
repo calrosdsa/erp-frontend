@@ -1,25 +1,33 @@
-import * as React from "react";
-import { X } from "lucide-react";
+"use client"
 
-import { Badge } from "@/components/ui/badge";
+import * as React from "react"
+import { X } from 'lucide-react'
+import { Badge } from "@/components/ui/badge"
 import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { Command as CommandPrimitive } from "cmdk";
-import { FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import {
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Props<T extends object, K extends keyof T> {
-  data: T[];
-  keyName?: K;
-  keyValue?:K;
-  name: string;
-  form: any;
-  label?: string;
-  description?: string;
-  onSelect: (t: T[]) => void;
+  data: T[]
+  keyName?: K
+  keyValue?: K
+  name: string
+  form: any
+  label?: string
+  description?: string
+  onSelect: (t: T[]) => void
 }
 
 export function MultiSelect<T extends object, K extends keyof T>({
@@ -32,47 +40,50 @@ export function MultiSelect<T extends object, K extends keyof T>({
   label,
   onSelect,
 }: Props<T, K>) {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<T[]>([]);
-  const [inputValue, setInputValue] = React.useState("");
+  const [open, setOpen] = React.useState(false)
+  const [selected, setSelected] = React.useState<T[]>([])
+  const [searchQuery, setSearchQuery] = React.useState("")
+  const inputRef = React.useRef<HTMLInputElement>(null)
 
   const handleUnselect = React.useCallback((item: T) => {
-    if(typeof keyName == "undefined") return
-    setSelected((prev) => prev.filter((s) => s[keyName] !== item[keyName]));
-  }, []);
+    if (typeof keyName == "undefined") return
+    setSelected((prev) => prev.filter((s) => s[keyName] !== item[keyName]))
+  }, [keyName])
 
   const handleKeyDown = React.useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      const input = inputRef.current;
-      if (input) {
-        if (e.key === "Delete" || e.key === "Backspace") {
-          if (input.value === "") {
-            setSelected((prev) => {
-              const newSelected = [...prev];
-              newSelected.pop();
-              return newSelected;
-            });
-          }
-        }
-        // This is not a default behaviour of the <input /> field
-        if (e.key === "Escape") {
-          input.blur();
-        }
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Backspace" && searchQuery === "" && selected.length > 0) {
+        setSelected((prev) => {
+          const newSelected = [...prev]
+          newSelected.pop()
+          return newSelected
+        })
+      }
+
+      if (e.key === "Escape") {
+        setOpen(false)
       }
     },
-    []
-  );
+    [searchQuery, selected]
+  )
 
-  const selectables = data.filter((item) => !selected.includes(item));
+  const selectables = React.useMemo(() => {
+    return data
+      .filter((item) => !selected.includes(item))
+      .filter((item) => {
+        if (!keyName || !searchQuery) return true
+        const value = item[keyName]?.toString().toLowerCase()
+        return value?.includes(searchQuery.toLowerCase())
+      })
+  }, [data, selected, keyName, searchQuery])
 
   React.useEffect(() => {
     if (selected.length > 0) {
-      const selectedValues = selected.map((item) =>keyValue != undefined && item[keyValue]);
-      form.setValue(name, selectedValues);
-      onSelect(selected);
+      const selectedValues = selected.map((item) => keyValue != undefined && item[keyValue])
+      form.setValue(name, selectedValues)
+      onSelect(selected)
     }
-  }, [selected]);
+  }, [selected, keyValue, name, form, onSelect])
 
   return (
     <FormField
@@ -81,83 +92,91 @@ export function MultiSelect<T extends object, K extends keyof T>({
       render={({ field }) => (
         <FormItem className="flex flex-col w-full">
           <FormLabel>{label}</FormLabel>
-          <Command
-            onKeyDown={handleKeyDown}
-            className="overflow-visible bg-transparent"
-          >
-            <div className="group rounded-md border border-input px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-              <div className="flex flex-wrap gap-1">
-                {selected.map((item, idx) => {
-                  return (
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-full justify-start h-auto min-h-10"
+              >
+                <div className="flex flex-wrap gap-1">
+                  {selected.map((item, idx) => (
                     typeof keyName != "undefined" && (
-                      <Badge key={idx} variant="secondary">
+                      <Badge
+                        key={idx}
+                        variant="secondary"
+                        className="mr-1 mb-1"
+                      >
                         {item[keyName]?.toString() || ""}
                         <button
                           className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                              handleUnselect(item);
+                              handleUnselect(item)
                             }
                           }}
                           onMouseDown={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
+                            e.preventDefault()
+                            e.stopPropagation()
                           }}
-                          onClick={() => handleUnselect(item)}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            handleUnselect(item)
+                          }}
                         >
                           <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                         </button>
                       </Badge>
                     )
-                  );
-                })}
-                {/* Avoid having the "Search" Icon */}
-                <CommandPrimitive.Input
-                  ref={inputRef}
-                  value={inputValue}
-                  onValueChange={setInputValue}
-                  onBlur={() => setOpen(false)}
-                  onFocus={() => setOpen(true)}
-                  placeholder="Select frameworks..."
-                  className="ml-2 flex-1 bg-transparent outline-none placeholder:text-muted-foreground"
-                />
-              </div>
-            </div>
-            <div className="relative mt-2">
-              <CommandList>
-                {open && selectables.length > 0 ? (
-                  <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
-                    <CommandGroup className="h-full overflow-auto ">
-                      {selectables.map((item, idx) => {
-                        return (
-                          <CommandItem
-                            key={idx}
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                            }}
-                            onSelect={(value) => {
-                              setInputValue("");
-                              setSelected((prev) => [...prev, item]);
-                            }}
-                            className={"cursor-pointer"}
-                          >
-                            {(typeof keyName != "undefined" &&
-                              item[keyName]?.toString()) ||
-                              ""}
-                          </CommandItem>
-                        );
-                      })}
-                    </CommandGroup>
+                  ))}
+                  <input
+                    ref={inputRef}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={selected.length === 0 ? "Select items..." : ""}
+                    className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground min-w-[120px] ml-1"
+                  />
+                </div>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+              <ScrollArea className="h-auto">
+                {selectables.length > 0 ? (
+                  <div className="grid">
+                    {selectables.map((item, idx) => (
+                      <div
+                        key={idx}
+                        role="option"
+                        onClick={() => {
+                          setSearchQuery("")
+                          setSelected((prev) => [...prev, item])
+                          inputRef.current?.focus()
+                        }}
+                        className={cn(
+                          "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none",
+                          "hover:bg-accent hover:text-accent-foreground",
+                          "data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                        )}
+                      >
+                        {(typeof keyName != "undefined" && item[keyName]?.toString()) || ""}
+                      </div>
+                    ))}
                   </div>
-                ) : null}
-              </CommandList>
-            </div>
-          </Command>
+                ) : (
+                  <p className="text-sm text-center p-4 text-muted-foreground">
+                    No items found.
+                  </p>
+                )}
+              </ScrollArea>
+            </PopoverContent>
+          </Popover>
           <FormDescription>{description}</FormDescription>
-            <FormMessage />
+          <FormMessage />
         </FormItem>
       )}
     />
-  );
+  )
 }
