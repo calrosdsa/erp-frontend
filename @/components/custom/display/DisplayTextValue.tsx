@@ -80,7 +80,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
   const renderValue = () => {
     if (to !== undefined) {
       return (
-        <Link to={to} className="underline h-9 px-2 items-center flex">
+        <Link to={to} className="underline h-8 px-2 items-center flex">
           <Typography variant="body2">{value}</Typography>
         </Link>
       )
@@ -88,7 +88,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
 
     if (typeof value === "boolean") {
       return (
-        <div className="h-9 w-7 flex justify-center items-center">
+        <div className="h-8 w-7 flex justify-center items-center">
           <Checkbox
             checked={value}
             className="h-6 w-6"
@@ -113,7 +113,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
       }
 
       if (inputType === "input") {
-        return <Input {...commonProps} className={cn(commonProps.className, "h-9")} />
+        return <Input {...commonProps} className={cn(commonProps.className, "h-8")} />
       }
 
       if (inputType === "textarea") {
@@ -206,7 +206,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
       }
     }
 
-    return <Typography variant="body2" className="h-9 px-2 flex justify-center items-center">{value || "-"}</Typography>
+    return <Typography variant="body2" className="h-8 px-2 flex justify-center items-center">{value || "-"}</Typography>
   }
 
   return (

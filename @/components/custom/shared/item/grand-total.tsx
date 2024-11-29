@@ -19,7 +19,7 @@ export default function GrandTotal({currency}:{
       <DisplayTextValue
         title="Total"
         className=" col-start-end"
-        value={formatCurrencyAmount((total-totalTaxAndCharges), currency, i18n.language)}
+        value={formatCurrencyAmount((total+totalTaxAndCharges), currency, i18n.language)}
       />
     </>
   );

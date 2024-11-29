@@ -96,6 +96,7 @@ enum State {
     ACTIVE = 23;
     INACTIVE = 24;
     DELIVERED = 25;
+    DELETED = 26;
 }
 
 

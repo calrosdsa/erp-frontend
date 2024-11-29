@@ -15,7 +15,7 @@ export default function AccountingDimensionForm({
   const [costCenterFetcher, onCostCenterChange] = useCostCenterFetcher();
   return (
     <AccordationLayout
-      title={t("accountingDimensions")}
+      title={"Dimensiones Contables"}
       containerClassName=" col-span-full"
       className="create-grid"
     >
@@ -27,18 +27,18 @@ export default function AccountingDimensionForm({
         onValueChange={onProjectChange}
         label={t("project")}
         onSelect={(v) => {
-          form.setValue("project", v.id);
+          form.setValue("projectID", v.id);
         }}
       />
       <FormAutocomplete
         data={costCenterFetcher.data?.costCenters || []}
         form={form}
-        name="costCenter"
+        name="costCenterName"
         nameK={"name"}
         onValueChange={onCostCenterChange}
         label={t("costCenter")}
         onSelect={(v) => {
-          form.setValue("project", v.id);
+          form.setValue("costCenterID", v.id);
         }}
       />
     </AccordationLayout>

@@ -43,7 +43,7 @@ export default function ItemLine({
   globalState: GlobalState;
 }) {
   const itemLine = useItemLine();
-  const { line, lineItemReceipt } = itemLine;
+  const { line } = itemLine;
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const r = routes;
@@ -62,7 +62,7 @@ export default function ItemLine({
       party_type: itemLine.partyType,
       item_price_id: line?.item_price_id,
 
-      lineItemReceipt: lineItemReceipt,
+      // lineItemReceipt: lineItemReceipt,
       // itemLineReference:line.refe
     },
   });
@@ -283,15 +283,13 @@ export default function ItemLine({
 
 interface ItemLineEditStore {
   open: boolean;
-  isEdit: boolean;
   title?: string;
   allowEdit?: boolean;
   currency?: string;
   partyType?: string;
   itemLineType?: ItemLineType;
-  lineReference?: number;
 
-  lineItemReceipt?: z.infer<typeof lineItemReceipt>;
+  // lineItemReceipt?: z.infer<typeof lineItemReceipt>;
   onEditItemForm?: (e: z.infer<typeof lineItemSchema>) => void;
   onOpenChange: (e: boolean) => void;
   onOpenDialog: (opts: {
@@ -299,18 +297,16 @@ interface ItemLineEditStore {
     allowEdit: boolean;
     line?: z.infer<typeof lineItemSchema>;
 
-    lineItemReceipt?: z.infer<typeof lineItemReceipt>;
+    // lineItemReceipt?: z.infer<typeof lineItemReceipt>;
     currency?: string;
     partyType: string;
     itemLineType: ItemLineType;
-    lineReference?: number;
     onEditItemForm?: (e: z.infer<typeof lineItemSchema>) => void;
   }) => void;
   line?: z.infer<typeof lineItemSchema>;
 }
 export const useItemLine = create<ItemLineEditStore>((set) => ({
   open: false,
-  isEdit: false,
   onOpenDialog: (opts) =>
     set((state) => ({
       open: true,
@@ -320,8 +316,7 @@ export const useItemLine = create<ItemLineEditStore>((set) => ({
       currency: opts.currency,
       partyType: opts.partyType,
       itemLineType: opts.itemLineType,
-      lineReference: opts.lineReference,
-      lineItemReceipt: opts.lineItemReceipt,
+      // lineItemReceipt: opts.lineItemReceipt,
       onEditItemForm: opts.onEditItemForm,
     })),
   onOpenChange: (e) =>

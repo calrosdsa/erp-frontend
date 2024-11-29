@@ -765,6 +765,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/delete-collectors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Test Request */
+        delete: operations["test-request"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/financial-statement/balance-sheet": {
         parameters: {
             query?: never;
@@ -1421,6 +1438,23 @@ export interface paths {
         };
         /** Get Parties Type */
         get: operations["get-parties-type"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment/payment-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Payment Accounts */
+        get: operations["payment-accouts"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2705,6 +2739,16 @@ export interface components {
             payable_acct_uuid: string;
             receivable_acct_name: string;
             receivable_acct_uuid: string;
+        };
+        AccountingDimensionDto: {
+            cost_center: string;
+            /** Format: int64 */
+            cost_center_id: number;
+            cost_center_uuid: string;
+            project: string;
+            /** Format: int64 */
+            project_id: number;
+            project_uuid: string;
         };
         ActionDto: {
             /** Format: int64 */
@@ -4336,6 +4380,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityListPartyTypeDto"];
         };
+        EntityResponseResultEntityOrderDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityOrderDetailDto"];
+        };
         EntityResponseResultEntityOrderDtoBody: {
             /**
              * Format: uri
@@ -4638,6 +4695,7 @@ export interface components {
             uuid: string;
         };
         InvoiceDetailDto: {
+            acct_dimensions: components["schemas"]["AccountingDimensionDto"];
             invoice: components["schemas"]["InvoiceDto"];
             totals: components["schemas"]["TotalsDto"];
         };
@@ -4911,6 +4969,10 @@ export interface components {
             /** Format: int64 */
             target_warehouse?: number;
         };
+        OrderDetailDto: {
+            acc_dimensions: components["schemas"]["AccountingDimensionDto"];
+            order: components["schemas"]["OrderDto"];
+        };
         OrderDto: {
             /** Format: int32 */
             billed_amount: number;
@@ -4922,6 +4984,8 @@ export interface components {
             delivery_date: string | null;
             /** Format: int64 */
             id: number;
+            /** Format: int64 */
+            party_id: number;
             party_name: string;
             party_type: string;
             party_uuid: string;
@@ -5476,6 +5540,17 @@ export interface components {
             code: string;
             name: string;
         };
+        PaymentAccountsDto: {
+            cash_acct: string;
+            /** Format: int64 */
+            cash_acct_id: number;
+            payable_acct: string;
+            /** Format: int64 */
+            payable_acct_id: number;
+            receivable_acct: string;
+            /** Format: int64 */
+            receivable_acct_id: number;
+        };
         PaymentDetailDto: {
             PartyBankAccount: string | null;
             /** Format: int64 */
@@ -5942,6 +6017,19 @@ export interface components {
             message: string;
             result: components["schemas"]["TreeEntryDto"][];
         };
+        ResponseDataPaymentAccountsDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["PaymentAccountsDto"];
+        };
         ResponseDataPaymentDtoBody: {
             /**
              * Format: uri
@@ -6149,6 +6237,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PartyTypeDto"][];
+        };
+        ResultEntityOrderDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["OrderDetailDto"];
         };
         ResultEntityOrderDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -8666,6 +8760,38 @@ export interface operations {
             };
         };
     };
+    "test-request": {
+        parameters: {
+            query?: {
+                states?: string;
+                collectorGroups?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "balance-sheet": {
         parameters: {
             query: {
@@ -9610,7 +9736,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityOrderDtoBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityOrderDetailDtoBody"];
                 };
             };
             /** @description Error */
@@ -10376,6 +10502,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataListPartyTypeDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "payment-accouts": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataPaymentAccountsDtoBody"];
                 };
             };
             /** @description Error */

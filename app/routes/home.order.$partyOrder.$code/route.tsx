@@ -70,14 +70,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
           params: {
             query: {
               line_type: itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER),
-              id: res.data?.result.entity.id.toString(),
+              id: res.data?.result.entity.order.id.toString(),
             },
           },
         });
         taxLinesRes = client.GET("/taxes-and-charges",{
           params:{
             query:{
-              id:res.data.result.entity.id.toString(),
+              id:res.data.result.entity.order.id.toString(),
             }
           }
         })
@@ -87,7 +87,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         resConnections = client.GET("/party/connections/{id}", {
           params: {
             path: {
-              id: res.data.result.entity.id.toString(),
+              id: res.data.result.entity.order.id.toString(),
             },
             query: {
               party: params.partyOrder || "",
@@ -102,12 +102,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   // res.data?.related_actions
   return defer({
     actions: res.data?.actions,
-    order: res.data?.result.entity,
+    order: res.data?.result.entity.order,
+    acctDimension:res.data?.result.entity.acc_dimensions,
     associatedActions: res.data?.associated_actions,
     activities: res.data?.result.activities,
     connections: resConnections,
     lineItems: lineItemRes,
-    taxLines:taxLinesRes,
+    taxLines:taxLinesRes, 
   });
 };
 

@@ -1,34 +1,25 @@
 import { z } from "zod";
 import { create } from "zustand";
-import { components } from "~/sdk";
 import { taxAndChargeSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
 interface TaxAndChargesStore {
-  onLines: (lines: z.infer<typeof taxAndChargeSchema>[]) => void;
+  lines: z.infer<typeof taxAndChargeSchema>[];
   totalDeducted: number;
   totalAdded: number;
   total: number;
-  lines: z.infer<typeof taxAndChargeSchema>[];
+  reset: () => void;
+  onLines: (lines: z.infer<typeof taxAndChargeSchema>[]) => void;
 }
+
 export const useTaxAndCharges = create<TaxAndChargesStore>((set) => ({
   lines: [],
   totalDeducted: 0,
   totalAdded: 0,
   total: 0,
-  onLines: (e) =>
-    set((state) => {
-      const totalDeducted = e
-        .filter((t) => t.isDeducted)
-        .reduce((prev, curr) => prev + Number(curr.amount), 0);
-      const totalAdded = e
-        .filter((t) => !t.isDeducted)
-        .reduce((prev, curr) => prev + Number(curr.amount), 0);
-      const total = totalAdded - totalDeducted
-      return {
-        lines: e,
-        totalDeducted:totalDeducted,
-        totalAdded:totalAdded,
-        total:total, 
-      };
-    }),
+  reset: () => set({ lines: [], totalDeducted: 0, totalAdded: 0, total: 0 }),
+  onLines: (lines) => {
+    const totalDeducted = lines.filter(t => t.isDeducted).reduce((sum, t) => sum + Number(t.amount), 0);
+    const totalAdded = lines.filter(t => !t.isDeducted).reduce((sum, t) => sum + Number(t.amount), 0);
+    return set({ lines, totalDeducted, totalAdded, total: totalAdded - totalDeducted });
+  },
 }));

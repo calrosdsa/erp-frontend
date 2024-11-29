@@ -60,7 +60,7 @@ export default function SelectForm<
           <FormLabel className="text-xs">
             {label} {required && "*"}
           </FormLabel>
-          <div className="relative">
+          <div className="">
             <Select
               onValueChange={(e) => {
                 if (keyValue == undefined) return

@@ -44,7 +44,7 @@ export default function TaxAndChargeLine({
       type: payload?.line?.type,
       accountHeadName: payload?.line?.accountHeadName,
       accountHead: payload?.line?.accountHead,
-      isDeducted: payload?.line?.isDeducted,
+      isDeducted: payload?.line?.isDeducted == undefined ? false :payload?.line?.isDeducted,
       amount: payload?.line?.amount,
       taxLineID: payload?.line?.taxLineID,
     },
@@ -115,7 +115,7 @@ export default function TaxAndChargeLine({
       className=" max-w-2xl"
     >
       <FormLayout>
-        {JSON.stringify(formValues)}
+        {/* {JSON.stringify(formValues)} */}
         <Form {...form}>
           <fetcher.Form
             onSubmit={form.handleSubmit(onSubmit)}

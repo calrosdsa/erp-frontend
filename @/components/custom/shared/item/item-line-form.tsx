@@ -94,16 +94,15 @@ export default function ItemLineForm({
           partyType: partyType,
           currency: formValues.currency,
           itemLineType: itemLineType,
-          lineReference: f.itemLineReference,
-          lineItemReceipt: {
-            acceptedQuantity: Number(f.quantity),
-            rejectedQuantity: 0,
-            acceptedWarehouseName: f.lineItemReceipt?.acceptedWarehouseName,
-            rejectedWarehouseName: f.lineItemReceipt?.rejectedWarehouseName,
-          },
+          // lineReference: f.itemLineReference,
+          // lineItemReceipt: {
+          //   acceptedQuantity: Number(f.quantity),
+          //   rejectedQuantity: 0,
+          //   acceptedWarehouseName: f.lineItemReceipt?.acceptedWarehouseName,
+          //   rejectedWarehouseName: f.lineItemReceipt?.rejectedWarehouseName,
+          // },
           line: line,
           onEditItemForm: (e) => {
-            console.log("EDITED ITEM", e);
             const orderLines: z.infer<typeof lineItemSchema>[] =
               formValues.lines;
             const n = orderLines.map((t, idx) => {

@@ -7,8 +7,7 @@ export const createStockEntrySchema = z.object({
     postingDate: z.date(),
 
     currency: z.string(),
-    currencyName:z.string(),
-    // priceListID: z.number(),
+      // priceListID: z.number(),
     // priceListName:z.string(),
 
     stockEntryType:z.enum([

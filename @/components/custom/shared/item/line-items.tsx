@@ -8,7 +8,10 @@ import { components } from "~/sdk";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
 import { useItemLine } from "./item-line";
 import { DataTable } from "../../table/CustomTable";
-import { lineItemColumns, lineItemsColumns } from "../../table/columns/order/order-line-column";
+import {
+  lineItemColumns,
+  lineItemsColumns,
+} from "../../table/columns/order/order-line-column";
 import { DEFAULT_CURRENCY } from "~/constant";
 import OrderSumary from "../../display/order-sumary";
 import { formatCurrencyAmount, sumTotal } from "~/util/format/formatCurrency";
@@ -26,25 +29,27 @@ export default function LineItems({
   itemLineType,
   allowEdit,
   onChange,
+  complement,
 }: {
   onChange?: (e: z.infer<typeof lineItemSchema>[]) => void;
   status?: string;
   currency: string;
   partyType: string;
-  allowEdit?:boolean;
+  allowEdit?: boolean;
   itemLineType: ItemLineType;
+  complement?: JSX.Element;
 }) {
   const { t, i18n } = useTranslation("common");
-  const {total,lines:lineItems,totalQuantity} = useLineItems()
+  const { total, lines: lineItems, totalQuantity } = useLineItems();
   const itemLine = useItemLine();
   const shared = {
     currency: currency,
     partyType: partyType,
-    allowEdit:allowEdit || true,
+    allowEdit: allowEdit || true,
     itemLineType: itemLineType,
   };
   const [metaOptions] = useTableRowActions({
-    onAddRow:()=>{
+    onAddRow: () => {
       itemLine.onOpenDialog({
         ...shared,
         onEditItemForm: (e) => {
@@ -60,13 +65,13 @@ export default function LineItems({
       if (f) {
         itemLine.onOpenDialog({
           ...shared,
-          line:f,
+          line: f,
           onEditItemForm: (e) => {
-            const lines = lineItems.map((t,idx)=>{
-              if(idx == rowIndex){
-                t = e
+            const lines = lineItems.map((t, idx) => {
+              if (idx == rowIndex) {
+                t = e;
               }
-              return t
+              return t;
             });
             if (onChange) {
               onChange(lines);
@@ -76,35 +81,38 @@ export default function LineItems({
       }
     },
   });
-  
+
   return (
     <>
-    <Separator className=" col-span-full"/>   
-    <div className=" col-span-full">
-      <Typography variant="subtitle2">{t("items")}</Typography>
-      {/* {JSON.stringify(lineItems)} */}
-      <DataTable
-      data={lineItems}
-      columns={lineItemsColumns({
-        currency:currency,
-        itemLineType:itemLineType
-      })}
-      metaOptions={{
-        meta:{
-          ...metaOptions
-        }
-      }}
-      />
+      <Separator className=" col-span-full" />
+      <Typography variant="subtitle2" className="col-span-full">
+        {t("items")}
+      </Typography>
 
-    </div>
+      {complement}
+      <div className=" col-span-full">
+        {/* {JSON.stringify(lineItems)} */}
+        <DataTable
+          data={lineItems}
+          columns={lineItemsColumns({
+            currency: currency,
+            itemLineType: itemLineType,
+          })}
+          metaOptions={{
+            meta: {
+              ...metaOptions,
+            },
+          }}
+        />
+      </div>
       <DisplayTextValue
-      title="Total"
-      value={formatCurrencyAmount(total,currency,i18n.language)}
+        title="Total"
+        value={formatCurrencyAmount(total, currency, i18n.language)}
       />
-       <DisplayTextValue
-      title="Cantidad Total"
-      value={totalQuantity.toString()}
+      <DisplayTextValue
+        title="Cantidad Total"
+        value={totalQuantity.toString()}
       />
-      </>
+    </>
   );
 }

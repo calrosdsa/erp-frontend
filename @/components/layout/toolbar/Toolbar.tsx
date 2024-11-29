@@ -34,7 +34,7 @@ export default function ToolBar({ title }: { title: string }) {
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
         <div className="flex flex-wrap space-x-2 ">
-          <Typography variant="title1">
+          <Typography variant="title2">
             {titleToolbar != undefined ? titleToolbar : title}
           </Typography>
           {status && (
@@ -61,6 +61,7 @@ export default function ToolBar({ title }: { title: string }) {
                   {actions?.map((item, idx) => (
                     <Button
                       key={idx}
+                      size={"sm"}
                       variant="ghost"
                       className="justify-start"
                       onClick={() => item.onClick()}
@@ -188,7 +189,7 @@ export default function ToolBar({ title }: { title: string }) {
                   addNew();
                 }
               }}
-              className=" flex space-x-1 h-8 rounded-lg px-3  justify-center"
+              className=" flex space-x-1  rounded-lg px-3  justify-center"
             >
               <PlusIcon />
               {toolbarState.loading ? (

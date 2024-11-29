@@ -23,6 +23,23 @@ export const createOrderSchema = z.object({
   taxLines:z.array(taxAndChargeSchema)
 });
 
+export const editOrderSchema = z.object({
+  partyName:z.string(),
+  partyID: z.number(),
+
+  postingDate: z.date(),
+  postingTime: z.string(),
+  tz:z.string(),
+  deliveryDate: z.date().optional(),
+  currency: z.string(),
+
+  projectName:z.string().optional(),
+  projectID:z.number().optional(),
+
+  costCenterName:z.string().optional(),
+  costCenterID:z.number().optional(),
+})
+
 
 export const lineItemSchemaToLineData = (
   d: z.infer<typeof lineItemSchema>

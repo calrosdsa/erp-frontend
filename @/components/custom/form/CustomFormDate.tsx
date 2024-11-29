@@ -79,7 +79,8 @@ export default function CustomFormDate({
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
-                        field.onChange(undefined)
+                        console.log("CREAR")
+                        field.onChange('')
                       }}
                     >
                       <X className="h-3 w-3" />

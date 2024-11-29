@@ -65,8 +65,6 @@ export default function PurchaseOrderClient() {
   })
   const { t, i18n } = useTranslation("common");
   const toolbar = useToolbar();
-  const createPurchaseInvoice = useCreatePurchaseInvoice();
-  const createReceipt = useCreateReceipt();
   const r = routes;
   const navigate = useNavigate();
   const params = useParams();

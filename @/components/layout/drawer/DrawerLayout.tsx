@@ -1,7 +1,7 @@
-import * as React from "react"
- 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -19,45 +19,51 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useMediaQuery } from 'usehooks-ts'
-import { Separator } from "@/components/ui/separator"
- 
-export function DrawerLayout({open,onOpenChange,children,title,description,className}:{
-  children:React.ReactNode
-  open:boolean
-  onOpenChange:(e:boolean)=>void
-  title?:string
-  description?:string
-  className?:string
+} from "@/components/ui/drawer";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useMediaQuery } from "usehooks-ts";
+import { Separator } from "@/components/ui/separator";
+
+export function DrawerLayout({
+  open,
+  onOpenChange,
+  children,
+  title,
+  description,
+  className,
+}: {
+  children: React.ReactNode;
+  open: boolean;
+  onOpenChange: (e: boolean) => void;
+  title?: string;
+  description?: string;
+  className?: string;
 }) {
-  const isDesktop = useMediaQuery("(min-width: 768px)")
- 
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={onOpenChange} >
+      <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
         {/* <DialogTrigger asChild>
           <Button variant="outline">Edit Profile</Button>
         </DialogTrigger> */}
-        <DialogContent className={cn(" max-w-lg",className)}>
+        <DialogContent
+          className={cn(" max-w-lg", className)}
+          onPointerDownOutside={(e) => {
+            e.preventDefault();
+          }}
+        >
           <DialogHeader>
-            <DialogTitle>
-              {title}
-              </DialogTitle>
-            <DialogDescription>
-             {description}
-            </DialogDescription>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <div className="overflow-auto ">
-          {children}
-          </div>
+          <div className="overflow-auto ">{children}</div>
         </DialogContent>
       </Dialog>
-    )
+    );
   }
- 
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       {/* <DrawerTrigger asChild>
@@ -66,9 +72,7 @@ export function DrawerLayout({open,onOpenChange,children,title,description,class
       <DrawerContent className="p-2">
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
-          <DrawerDescription>
-           {description}
-          </DrawerDescription>
+          <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
         {/* <ProfileForm className="px-4" /> */}
 
@@ -80,9 +84,9 @@ export function DrawerLayout({open,onOpenChange,children,title,description,class
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }
- 
+
 function ProfileForm({ className }: React.ComponentProps<"form">) {
   return (
     <form className={cn("grid items-start gap-4", className)}>
@@ -96,5 +100,5 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
       </div>
       <Button type="submit">Save changes</Button>
     </form>
-  )
+  );
 }

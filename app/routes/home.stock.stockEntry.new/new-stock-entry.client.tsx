@@ -9,7 +9,6 @@ import {
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { createJournalEntrySchema } from "~/util/data/schemas/accounting/journal-entry-schema";
 import { routes } from "~/util/route";
 import { action } from "./route";
 import { Form } from "@/components/ui/form";
@@ -31,7 +30,9 @@ import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { GlobalState } from "~/types/app";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import LineItems from "@/components/custom/shared/item/line-items";
+import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 
 export default function NewStockEntryClient() {
   const { t } = useTranslation("common");
@@ -43,6 +44,7 @@ export default function NewStockEntryClient() {
     useCurrencyDebounceFetcher();
   const navigate = useNavigate();
   const r = routes;
+  const lineItemsStore = useLineItems();
   const [sourceWarehouse, onSourceWarehouseChange] =
     useWarehouseDebounceFetcher({ isGroup: false });
   const [targetWarehouse, onTargetWarehouseChange] =
@@ -58,9 +60,9 @@ export default function NewStockEntryClient() {
     defaultValues: {
       lines: [],
       currency: companyDefaults?.currency,
-      currencyName: companyDefaults?.currency,
     },
   });
+  const formValues = form.getValues()
   const onSubmit = (e: z.infer<typeof createStockEntrySchema>) => {
     fetcher.submit(
       {
@@ -104,6 +106,10 @@ export default function NewStockEntryClient() {
     },
     [fetcher.data]
   );
+
+  useEffect(() => {
+    lineItemsStore.onLines(formValues.lines);
+  }, [formValues.lines]);
   return (
     <FormLayout>
       <Form {...form}>
@@ -132,7 +138,7 @@ export default function NewStockEntryClient() {
               <FormAutocomplete
                 data={currencyDebounceFetcher.data?.currencies || []}
                 form={form}
-                name="currencyName"
+                name="currency"
                 required={true}
                 nameK={"code"}
                 onValueChange={onCurrencyChange}
@@ -174,11 +180,17 @@ export default function NewStockEntryClient() {
               />
             </AccordationLayout>
 
-            <ItemLineForm
-              form={form}
-              partyType={partyTypeToJSON(PartyType.stockEntry) || ""}
-              itemLineType={ItemLineType.ITEM_LINE_STOCK_ENTRY}
-            />
+            <LineItems
+                onChange={(e) => {
+                  form.setValue("lines", e);
+                  form.trigger("lines");
+                }}
+                itemLineType={ItemLineType.ITEM_LINE_STOCK_ENTRY}
+                partyType={r.stockEntry}
+                currency={formValues.currency}
+              />
+
+          
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

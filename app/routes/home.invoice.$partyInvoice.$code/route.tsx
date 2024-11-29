@@ -47,6 +47,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     undefined;
   let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
+  let taxLinesRes: Promise<FetchResponse<any, any, any>> | undefined =
+    undefined;
   const res = await client.GET("/invoice/purchase/{id}", {
     params: {
       path: {
@@ -69,6 +71,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
+        taxLinesRes = client.GET("/taxes-and-charges",{
+          params:{
+            query:{
+              id:res.data.result.entity.invoice.id.toString(),
+            }
+          }
+        })
         break;
       }
       case "connections": {
@@ -95,6 +104,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     activities: res.data?.result.activities,
     totals: res.data?.result.entity.totals,
     lineItems:lineItemRes,
+    taxLines:taxLinesRes,
+
   });
 };
 export default function InvoiceDetail() {

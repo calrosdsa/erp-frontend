@@ -42,15 +42,13 @@ import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import GrandTotal from "@/components/custom/shared/item/grand-total";
 import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
+import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 
 export default function NewQuotationClient() {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const { companyDefaults } = useOutletContext<GlobalState>();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  // const [priceListFetcher, onPriceListChange] = usePriceListDebounceFetcher();
-  const [currencyDebounceFetcher, onCurrencyChange] =
-    useCurrencyDebounceFetcher();
   const navigate = useNavigate();
   const r = routes;
   const params = useParams();
@@ -154,25 +152,7 @@ export default function NewQuotationClient() {
 
             <Separator className=" col-span-full" />
 
-            <AccordationLayout
-              title={t("form.currency")}
-              containerClassName=" col-span-full"
-              className="create-grid"
-            >
-              <FormAutocomplete
-                data={currencyDebounceFetcher.data?.currencies || []}
-                form={form}
-                name="currency"
-                required={true}
-                nameK={"code"}
-                onValueChange={onCurrencyChange}
-                label={t("form.currency")}
-                onSelect={(v) => {
-                  form.setValue("currency", v.code);
-                  form.trigger("currency");
-                }}
-              />
-            </AccordationLayout>
+           <CurrencyAndPriceList form={form}/>
 
             <AccountingDimensionForm form={form} />
             <LineItems

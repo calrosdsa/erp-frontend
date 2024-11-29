@@ -22,8 +22,6 @@ import { ItemLineType, PartyType, partyTypeFromJSON } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef } from "react";
-import ItemLineForm from "@/components/custom/shared/item/item-line-form";
-import { usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
 import AccordationLayout from "@/components/layout/accordation-layout";
 import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
@@ -34,6 +32,7 @@ import LineItems from "@/components/custom/shared/item/line-items";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import PartyAutocomplete from "./components/party-autocomplete";
 import { formatRFC3339 } from "date-fns";
+import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
@@ -164,6 +163,7 @@ export default function CreatePurchaseOrdersClient() {
                 />
                
               </AccordationLayout>
+
               
             <LineItems
               onChange={(e) => {

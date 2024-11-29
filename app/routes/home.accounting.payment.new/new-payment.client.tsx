@@ -28,15 +28,19 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { routes } from "~/util/route";
 import { action, loader } from "./route";
 import { useCreatePayment } from "./use-create-payment";
-import { formatAmounFromInt, formatAmountToInt } from "~/util/format/formatCurrency";
+import {
+  formatAmounFromInt,
+  formatAmountToInt,
+} from "~/util/format/formatCurrency";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { Typography } from "@/components/typography";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { paymentReferencesColumns } from "@/components/custom/table/columns/accounting/payment-columns";
+import AccordationLayout from "@/components/layout/accordation-layout";
 
 export default function PaymentCreateClient() {
-  const { associatedActions } = useLoaderData<typeof loader>();
+  const { associatedActions, paymentAccounts } = useLoaderData<typeof loader>();
   const fetcherPaymentPartiesType = useFetcher<typeof action>();
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
@@ -47,7 +51,7 @@ export default function PaymentCreateClient() {
     resolver: zodResolver(createPaymentSchema),
     defaultValues: {
       amount: formatAmounFromInt(createPayment.payload?.amount),
-      paymentType:createPayment.payload?.paymentType,
+      paymentType: createPayment.payload?.paymentType,
       partyName: createPayment.payload?.partyName,
       partyUuid: createPayment.payload?.partyUuid,
       partyType: createPayment.payload?.partyType,
@@ -55,6 +59,7 @@ export default function PaymentCreateClient() {
       partyReferences: createPayment.payload?.partyReferences || [],
     },
   });
+  const formValues = form.getValues();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const toolbar = useToolbar();
   const globalState = useOutletContext<GlobalState>();
@@ -77,6 +82,25 @@ export default function PaymentCreateClient() {
       associatedActions && associatedActions[partyTypeToJSON(PartyType.ledger)],
   });
   const revalidator = useRevalidator();
+
+  const onPartyTypeChange = (d: z.infer<typeof createPaymentSchema>) => {
+    switch (d.partyType) {
+      case partyTypeToJSON(PartyType.customer):
+        form.setValue("accountPaidFrom", paymentAccounts?.receivable_acct_id);
+        form.setValue("accountPaidFromName", paymentAccounts?.receivable_acct);
+        form.setValue("accountPaidTo", paymentAccounts?.cash_acct_id);
+        form.setValue("accountPaidToName", paymentAccounts?.cash_acct);
+        break;
+      case partyTypeToJSON(PartyType.supplier):
+        form.setValue("accountPaidTo", paymentAccounts?.payable_acct_id);
+        form.setValue("accountPaidToName", paymentAccounts?.payable_acct);
+        form.setValue("accountPaidFrom", paymentAccounts?.cash_acct_id);
+        form.setValue("accountPaidFromName", paymentAccounts?.cash_acct);
+        break;
+    }
+    form.trigger("accountPaidFrom")
+    form.trigger("accountPaidTo")
+  };
 
   const fetchInitialData = () => {
     fetcherPaymentPartiesType.submit(
@@ -129,6 +153,10 @@ export default function PaymentCreateClient() {
   };
 
   useEffect(() => {
+    onPartyTypeChange(formValues);
+  }, [formValues.partyType, paymentAccounts]);
+
+  useEffect(() => {
     setUpPaymentTypes();
     fetchInitialData();
     setUpToolbar();
@@ -145,14 +173,16 @@ export default function PaymentCreateClient() {
       toast({
         title: fetcher.data.message,
       });
-      navigate(r.toRoute({
-        main:partyTypeToJSON(PartyType.payment),
-        routePrefix:[r.accountingM],
-        routeSufix:[fetcher.data.payment?.code || ""],
-        q:{
-          tab:"info"
-        }
-      }));
+      navigate(
+        r.toRoute({
+          main: partyTypeToJSON(PartyType.payment),
+          routePrefix: [r.accountingM],
+          routeSufix: [fetcher.data.payment?.code || ""],
+          q: {
+            tab: "info",
+          },
+        })
+      );
     }
   }, [fetcher.data]);
   return (
@@ -233,22 +263,21 @@ export default function PaymentCreateClient() {
                     onBlur={() => {
                       //Distribute among the references
                       const values = form.getValues();
-                      let total =formatAmountToInt(values.amount);
+                      let total = formatAmountToInt(values.amount);
                       if (values.partyReferences.length > 0) {
                         const n = values.partyReferences.map((t) => {
                           if (total >= t.outstanding) {
-                            t.allocated =  Number(t.outstanding)
-                            total = total - t.outstanding
+                            t.allocated = Number(t.outstanding);
+                            total = total - t.outstanding;
                           } else {
-                            t.allocated = Number(total)
-                            total = 0
+                            t.allocated = Number(total);
+                            total = 0;
                           }
-                          return t
+                          return t;
                         });
-                        console.log("ALLOCATED",n)
-                        form.setValue("partyReferences",n)
-                        form.trigger("partyReferences")
-
+                        console.log("ALLOCATED", n);
+                        form.setValue("partyReferences", n);
+                        form.trigger("partyReferences");
                       }
                     }}
                   />
@@ -256,36 +285,37 @@ export default function PaymentCreateClient() {
               }}
             />
 
-              <>
-                <Separator className=" col-span-full" />
+            <Separator className=" col-span-full" />
+            <AccordationLayout
+              open={!formValues.accountPaidFrom || !formValues.accountPaidTo}
+              title={t("accounts")}
+              containerClassName=" col-span-full"
+              className="create-grid"
+            >
+              <FormAutocomplete
+                data={accountPaidFromFetcher.data?.accounts || []}
+                form={form}
+                label={t("_ledger.paidFrom")}
+                onValueChange={onAccountPaidFromChange}
+                name="accountPaidFromName"
+                onSelect={(e) => {
+                  form.setValue("accountPaidFrom", e.id);
+                }}
+                nameK={"name"}
+              />
 
-                <Typography className=" col-span-full" variant="title2">
-                  {t("accounts")}
-                </Typography>
-                <FormAutocomplete
-                  data={accountPaidFromFetcher.data?.accounts || []}
-                  form={form}
-                  label={t("_ledger.paidFrom")}
-                  onValueChange={onAccountPaidFromChange}
-                  name="accountPaidFromName"
-                  onSelect={(e) => {
-                    form.setValue("accountPaidFrom", e.id);
-                  }}
-                  nameK={"name"}
-                />
-
-                <FormAutocomplete
-                  data={accountPaidToFetcher.data?.accounts || []}
-                  form={form}
-                  label={t("_ledger.paidTo")}
-                  onValueChange={onAccountPaidToChange}
-                  name="accountPaidToName"
-                  onSelect={(e) => {
-                    form.setValue("accountPaidTo", e.id);
-                  }}
-                  nameK={"name"}
-                />
-              </>
+              <FormAutocomplete
+                data={accountPaidToFetcher.data?.accounts || []}
+                form={form}
+                label={t("_ledger.paidTo")}
+                onValueChange={onAccountPaidToChange}
+                name="accountPaidToName"
+                onSelect={(e) => {
+                  form.setValue("accountPaidTo", e.id);
+                }}
+                nameK={"name"}
+              />
+            </AccordationLayout>
             <Separator className=" col-span-full" />
             <Typography className=" col-span-full" variant="title2">
               {t("table.reference")}

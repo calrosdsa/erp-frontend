@@ -22,7 +22,8 @@ export const useCostCenterFetcher = () => {
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         encType: "application/json",
         action: r.toRoute({
-          main: partyTypeToJSON(PartyType.project),
+          main: partyTypeToJSON(PartyType.costCenter),
+          routePrefix:[r.accountingM],
         }),
       }
     );

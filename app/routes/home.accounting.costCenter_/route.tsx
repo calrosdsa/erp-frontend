@@ -53,6 +53,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({
     message,
     error,
+    costCenters,
   });
 };
 

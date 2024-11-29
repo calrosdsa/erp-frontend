@@ -1,5 +1,10 @@
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { useFetcher, useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+} from "@remix-run/react";
 import { action, loader } from "./route";
 import { bookingColumns } from "@/components/custom/table/columns/regate/booking-columns";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
@@ -18,6 +23,7 @@ import { components } from "~/sdk";
 import { Button } from "@/components/ui/button";
 import { State, stateToJSON } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { BookingActionsDropdown } from "./components/booking-actions-dropdown";
 
 export default function BookingsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -26,7 +32,7 @@ export default function BookingsClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
-  const fetcher = useFetcher<typeof action>()
+  const fetcher = useFetcher<typeof action>();
   const [customerFetcher, onCustomerNameChange] = useCustomerDebounceFetcher();
   const [eventoFetcher, onEventNameChange] = useEventDebounceFetcher();
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
@@ -37,10 +43,32 @@ export default function BookingsClient() {
   >([]);
   const r = routes;
 
-  useDisplayMessage({
-    success:fetcher.data?.message,
-    error:fetcher.data?.error
-  },[fetcher.data])
+  const onActions = (state: State) => {
+    const body: components["schemas"]["UpdateBookingBatchRequestBody"] = {
+      booking_ids: selectedBookings.map((t) => t.id),
+      target_state: stateToJSON(state),
+    };
+    fetcher.submit(
+      {
+        action: "update-bookings-batch",
+        updateBookingsBatch: body,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
+  };
+
+  useDisplayMessage(
+    {
+      success: fetcher.data?.message,
+      error: fetcher.data?.error,
+      onSuccessMessage:()=>{
+      }
+    },
+    [fetcher.data]
+  );
 
   setUpToolbar(() => {
     return {
@@ -90,21 +118,12 @@ export default function BookingsClient() {
               queryName="courtName"
               queryValue="court"
             />
-            <Button onClick={()=>{
-              const body:components["schemas"]["UpdateBookingBatchRequestBody"] = {
-                booking_ids:selectedBookings.map(t=>t.id),
-                target_state:stateToJSON(State.CANCELLED)
-              }
-              fetcher.submit({
-                action:"update-bookings-batch",
-                updateBookingsBatch:body
-              },{
-                method:"POST",
-                encType:"application/json"
-              })
-            }}>
-              Complete Bookings
-            </Button>
+            <BookingActionsDropdown
+              selectedBookings={selectedBookings}
+              onComplete={onActions}
+              onCancel={onActions}
+              onDelete={onActions}
+            />
           </div>
         );
       }}

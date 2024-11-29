@@ -104,8 +104,8 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent>
-              <Command>
+            <PopoverContent className=" ">
+              <Command className="max-h-[200px]">
                 <CommandInput
                   placeholder="Buscar..."
                   onValueChange={(e) => {

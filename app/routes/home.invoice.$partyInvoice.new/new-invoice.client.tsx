@@ -34,36 +34,44 @@ import LineItems from "@/components/custom/shared/item/line-items";
 import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
 import GrandTotal from "@/components/custom/shared/item/grand-total";
 import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
+import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
+import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
+import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
+import UpdateStock from "@/components/custom/shared/document/update-stock";
+import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
+import { Card } from "@/components/ui/card";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
-  const [currencyDebounceFetcher, onCurrencyChange] =
-    useCurrencyDebounceFetcher();
   const { roleActions, companyDefaults } = useOutletContext<GlobalState>();
-
   const createPurchaseInvoice = useCreatePurchaseInvoice();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { t, i18n } = useTranslation("common");
   const toolbar = useToolbar();
   const navigate = useNavigate();
   const r = routes;
+  const documentStore = useDocumentStore();
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
+  const { payload } = useDocumentStore();
   const params = useParams();
   const partyInvoice = params.partyInvoice || "";
   const form = useForm<z.infer<typeof createInvoiceSchema>>({
     resolver: zodResolver(createInvoiceSchema),
     defaultValues: {
-      referenceID: createPurchaseInvoice.payload?.referenceID,
-      currency:
-        createPurchaseInvoice.payload?.currency ||
-        companyDefaults?.currency ||
-        "",
+      referenceID: payload?.documentRefernceID,
+      currency: payload?.currency || companyDefaults?.currency,
       lines: lineItemsStore.lines,
       taxLines: taxLinesStore.lines,
       postingTime: formatRFC3339(new Date()),
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      costCenterID: payload?.costCenterID,
+      costCenterName: payload?.costCenterName,
+      projectID: payload?.projectID,
+      projectName: payload?.projectName,
+      partyID: payload?.partyID,
+      partyName: payload?.partyName,
     },
   });
   const formValues = form.getValues();
@@ -129,6 +137,8 @@ export default function CreatePurchaseInvoiceClient() {
 
   return (
     <div>
+      <Card>
+
       <FormLayout>
         {JSON.stringify(form.formState.errors)}
         <Form {...form}>
@@ -143,32 +153,22 @@ export default function CreatePurchaseInvoiceClient() {
                 roleActions={roleActions}
                 form={form}
               />
-
-              <CustomFormDate form={form} name="date" label={t("form.date")} />
-
-              {/* <CustomFormDate
-                form={form}
-                name="due_date"
-                isDatetime={true}
-                label={t("form.dueDate")}
-              /> */}
-
-              <Typography className=" col-span-full" fontSize={subtitle}>
-                {t("form.currencyAndPriceList")}
-              </Typography>
-              <FormAutocomplete
-                data={currencyDebounceFetcher.data?.currencies || []}
-                form={form}
-                name="currencyName"
-                required={true}
-                nameK={"code"}
-                onValueChange={onCurrencyChange}
-                label={t("form.currency")}
-                onSelect={(v) => {
-                  form.setValue("currency", v.code);
-                  form.trigger("currency");
-                }}
+              <CustomFormDate
+                control={form.control}
+                name="postingDate"
+                label={t("form.postingDate")}
               />
+              <CustomFormTime
+                control={form.control}
+                name="postingTime"
+                label={t("form.postingTime")}
+                description={formValues.tz}
+              />
+
+              <CurrencyAndPriceList form={form} />
+
+              <AccountingDimensionForm form={form} />
+              
               <LineItems
                 onChange={(e) => {
                   form.setValue("lines", e);
@@ -177,6 +177,13 @@ export default function CreatePurchaseInvoiceClient() {
                 itemLineType={ItemLineType.ITEM_LINE_INVOICE}
                 partyType={partyInvoice}
                 currency={formValues.currency}
+                complement={
+                  <UpdateStock
+                    form={form}
+                    updateStock={formValues.updateStock}
+                    partyType={partyInvoice}
+                  />
+                }
               />
               <TaxAndChargesLines
                 onChange={(e) => {
@@ -193,6 +200,8 @@ export default function CreatePurchaseInvoiceClient() {
           </fetcher.Form>
         </Form>
       </FormLayout>
+      </Card>
+
     </div>
   );
 }

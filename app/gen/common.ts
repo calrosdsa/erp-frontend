@@ -430,6 +430,7 @@ export enum State {
   ACTIVE = 23,
   INACTIVE = 24,
   DELIVERED = 25,
+  DELETED = 26,
   UNRECOGNIZED = -1,
 }
 
@@ -513,6 +514,9 @@ export function stateFromJSON(object: any): State {
     case 25:
     case "DELIVERED":
       return State.DELIVERED;
+    case 26:
+    case "DELETED":
+      return State.DELETED;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -574,6 +578,8 @@ export function stateToJSON(object: State): string {
       return "INACTIVE";
     case State.DELIVERED:
       return "DELIVERED";
+    case State.DELETED:
+      return "DELETED";
     case State.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

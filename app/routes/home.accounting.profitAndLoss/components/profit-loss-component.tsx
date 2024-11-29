@@ -241,8 +241,8 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
               <SelectValue placeholder="Select grouping" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="month">Monthly</SelectItem>
-              <SelectItem value="year">Yearly</SelectItem>
+              <SelectItem value="month">Mensual</SelectItem>
+              <SelectItem value="year">Anual</SelectItem>
             </SelectContent>
           </Select>
         </CardHeader>
@@ -300,7 +300,7 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[200px]">Account</TableHead>
+                <TableHead className="w-[200px]">Cuenta</TableHead>
                 {periods.map((period) => (
                   <TableHead key={period} className="text-right">
                     {grouping === "month" ? period.slice(0, 7) : period}
@@ -311,7 +311,7 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
             <TableBody>
               <TableRow>
                 <TableCell colSpan={periods.length + 1} className="font-bold">
-                  Direct Income (Net Sales)
+                Ingresos directos (ventas netas)
                 </TableCell>
               </TableRow>
               {renderAccountTypeRow(
@@ -320,7 +320,7 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
 
               <TableRow>
                 <TableCell colSpan={periods.length + 1} className="font-bold">
-                  Cost of Sales
+                Costo de ventas
                 </TableCell>
               </TableRow>
               {renderAccountTypeRow(
@@ -328,7 +328,7 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
               )}
 
               <TableRow className="font-bold">
-                <TableCell>Gross Profit</TableCell>
+                <TableCell>Beneficio bruto</TableCell>
                 {periods.map((period) => (
                   <TableCell key={period} className="text-right">
                     {formatAmount(calculateGrossProfit(period))}
@@ -338,7 +338,7 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
 
               <TableRow>
                 <TableCell colSpan={periods.length + 1} className="font-bold">
-                  Operating Expenses
+                Gastos de operación
                 </TableCell>
               </TableRow>
               {accountTypes
@@ -350,7 +350,7 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
                 .map(renderAccountTypeRow)}
 
               <TableRow className="font-bold">
-                <TableCell>Net Profit/Loss</TableCell>
+                <TableCell>Ganancia/pérdida neta</TableCell>
                 {periods.map((period) => (
                   <TableCell key={period} className="text-right">
                     {formatAmount(

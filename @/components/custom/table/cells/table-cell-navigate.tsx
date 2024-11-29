@@ -26,7 +26,7 @@ export default function TableCellNavigate<TData>({ getValue, row, column, table 
         {typeof idN != "undefined" &&(
           <div className=" uppercase">
           <Link to={navigate(nameR,idN?.toString() || "")}>
-            <Typography className=" text-primary underline cursor-pointer">
+            <Typography className=" text-primary font-semibold underline cursor-pointer">
               {typeof  nameR == "string" ? nameR : "-"}
             </Typography>
           </Link>

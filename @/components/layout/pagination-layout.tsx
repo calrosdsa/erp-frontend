@@ -37,7 +37,7 @@ export default function PaginationLayout({
         <div>{filterOptions && filterOptions()}</div>
         <div className=" flex space-x-2">
 
-        <DropdownMenu>
+        {/* <DropdownMenu>
                 <div className="flex items-center">
             <DropdownMenuTrigger>
                 <Button  variant={"outline"} size={"sm"} className=" rounded-r-none flex space-x-2">
@@ -71,7 +71,7 @@ export default function PaginationLayout({
                         </CardFooter>
 
                 </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
 
           <DropdownMenu>
             <div className="flex items-center">

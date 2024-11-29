@@ -63,8 +63,10 @@ export const action = async({request}:ActionFunctionArgs)=>{
 export const loader = async({request}:LoaderFunctionArgs)=>{
     const client = apiClient({request})
     const res =await client.GET("/payment/associated-actions")
+    const paymentAccountsRes = await client.GET("/payment/payment-accounts")
     return json({
-        associatedActions:res.data?.associated_actions
+        associatedActions:res.data?.associated_actions,
+        paymentAccounts:paymentAccountsRes.data?.result
     })
 }
 
