@@ -154,6 +154,7 @@
     "status": "Status",
     "updateStock": "Update Stock",
     "startDate": "Start Date",
+    "endDate": "End Date",
     "outOfStockThreshold": "Out of Stock Threshold",
     "isGroup": "Is Group",
     "isGroupDescription": "Check this box to organize it as a group.",

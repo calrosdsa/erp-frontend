@@ -59,7 +59,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         resConnections  = client.GET("/party/connections/{id}", {
           params: {
             path: {
-              id: res.data.result.entity.id.toString(),
+              id: res.data.result.entity.event?.id.toString(),
             },
             query: {
               party: regatePartyTypeToJSON(RegatePartyType.eventBooking),
@@ -72,7 +72,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
   }
   return defer({
-    event: res.data?.result.entity,
+    event: res.data?.result.entity.event,
+    bookingInfo:res.data?.result.entity.booking_info,
     actions: res.data?.actions,
     activities: res.data?.result.activities,
     connections: resConnections,

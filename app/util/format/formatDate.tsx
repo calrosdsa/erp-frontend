@@ -1,7 +1,7 @@
 
 
 export const formatLongDate = (date:string | undefined,locale:string) =>{
-  if(typeof date == "undefined") return "-"
+  if(typeof date == "undefined" || date == null || date == "" ) return "-"
     const formattedDate = new Intl.DateTimeFormat(locale, {dateStyle:"long",timeStyle:"medium"}).format(
         new Date(date)
       );
@@ -12,7 +12,7 @@ export const formatLongDate = (date:string | undefined,locale:string) =>{
 
 
 export const formatMediumDate = (date: string | undefined | null, locale: string) => {
-  if (typeof date === "undefined" || date == null) return "-";
+  if (typeof date === "undefined" || date == null || date == "") return "-";
   const formattedDate = new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(
     new Date(date)
   );

@@ -4198,7 +4198,7 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityEntityDetailDto"];
         };
-        EntityResponseResultEntityEventBookingDtoBody: {
+        EntityResponseResultEntityEventBookingDetailBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -4209,7 +4209,7 @@ export interface components {
                 [key: string]: components["schemas"]["ActionDto"][] | undefined;
             };
             message: string;
-            result: components["schemas"]["ResultEntityEventBookingDto"];
+            result: components["schemas"]["ResultEntityEventBookingDetail"];
         };
         EntityResponseResultEntityGroupDtoBody: {
             /**
@@ -4625,6 +4625,10 @@ export interface components {
              */
             type: string;
         };
+        EventBookingDetail: {
+            booking_info: components["schemas"]["EventBookingInfo"];
+            event: components["schemas"]["EventBookingDto"];
+        };
         EventBookingDto: {
             /** Format: date-time */
             created_at: string;
@@ -4634,6 +4638,16 @@ export interface components {
             name: string;
             status: string;
             uuid: string;
+        };
+        EventBookingInfo: {
+            end_date: string;
+            start_date: string;
+            /** Format: int64 */
+            total_discount: number;
+            /** Format: int64 */
+            total_paid: number;
+            /** Format: int64 */
+            total_price: number;
         };
         GeneralLedgerData: {
             entries: components["schemas"]["GeneralLedgerEntryDto"][];
@@ -6154,11 +6168,11 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["EntityDetailDto"];
         };
-        ResultEntityEventBookingDto: {
+        ResultEntityEventBookingDetail: {
             activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
-            entity: components["schemas"]["EventBookingDto"];
+            entity: components["schemas"]["EventBookingDetail"];
         };
         ResultEntityGroupDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -11834,7 +11848,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityEventBookingDtoBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityEventBookingDetailBody"];
                 };
             };
             /** @description Error */
