@@ -62,6 +62,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   addNew,
   required,
 }: Props<T, K>) {
+  const [open, setOpen] = useState(false)
   return (
     <FormField
       control={control || form.control}
@@ -73,7 +74,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
               {label} {required && "*"}
             </FormLabel>
           )}
-          <Popover>
+          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
@@ -81,7 +82,10 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                   role="combobox"
                   disabled={disabled}
                   size={"sm"}
-                  onClick={() => onValueChange("")}
+                  onClick={() => {
+                    onValueChange("")
+                    setOpen(!open);
+                  }}
                   className={cn(
                     "justify-between",
                     !field.value && "text-muted-foreground"
@@ -98,6 +102,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                         onClick={(e) => {
                           e.stopPropagation();
                           field.onChange("")
+                          setOpen(false);
                           // form.setValue(name, "");
                         }}
                       />
@@ -124,11 +129,13 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                         <CommandItem
                           value={(item[nameK] as string) || ""}
                           key={idx}
+                          className=" border-b"
                           onSelect={() => {
                             field.onChange(item[nameK])
                             if (onSelect) {
                               onSelect(item);
                             }
+                            setOpen(false); 
                           }}
                         >
                           {onCustomDisplay(item, idx)}
@@ -145,6 +152,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                             if (onSelect) {
                               onSelect(item);
                             }
+                            setOpen(false); 
                           }}
                         >
                           <Check

@@ -15,9 +15,12 @@ import LineItemsDisplay from "@/components/custom/shared/item/line-items-display
 import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 import GrandTotal from "@/components/custom/shared/item/grand-total";
 import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
-import { createOrderSchema, editOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
+import {
+  createOrderSchema,
+  editOrderSchema,
+} from "~/util/data/schemas/buying/purchase-schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,79 +30,137 @@ import { Form } from "@/components/ui/form";
 import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { usePermission } from "~/util/hooks/useActions";
+import { Separator } from "@/components/ui/separator";
+import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
+import { useEditFields } from "~/util/hooks/useEditFields";
+import { isEqual } from "lodash";
 
 type EditData = z.infer<typeof editOrderSchema>;
 export default function OrderInfoTab() {
-  const { order, lineItems, taxLines, acctDimension } =
+  const { order, lineItems, taxLines, actions } =
     useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
   const { roleActions } = useOutletContext<GlobalState>();
   const params = useParams();
   const partyOrder = params.partyOrder || "";
   const fetcher = useFetcher<typeof action>();
-  const form = useForm<z.infer<typeof editOrderSchema>>({
-    resolver: zodResolver(editOrderSchema),
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { form, hasChanged, updateRef,previousValues } = useEditFields<EditData>({
+    schema: editOrderSchema,
     defaultValues: {
+      id:order?.id,
       partyID: order?.party_id,
       partyName: order?.party_name,
       currency: order?.currency,
-      postingTime: formatRFC3339(new Date()),
+      postingTime: order?.posting_time,
       postingDate: new Date(order?.posting_date || new Date()),
       deliveryDate: new Date(order?.delivery_date || new Date()),
       tz: order?.tz,
-      projectID:acctDimension?.project_id,
-      projectName:acctDimension?.project,
-      costCenterID:acctDimension?.cost_center_id,
-      costCenterName:acctDimension?.cost_center,
+      projectID: order?.project_id,
+      projectName: order?.project,
+      costCenterID: order?.cost_center_id,
+      costCenterName: order?.cost_center,   
     },
   });
   const formValues = form.getValues();
+  const [orderPerm] = usePermission({ roleActions, actions });
+  const isDraft = stateFromJSON(order?.status) == State.DRAFT;
+  const isDisabled = !isDraft || !orderPerm?.edit;
   const { companyDefaults } = useOutletContext<GlobalState>();
   const documentStore = useDocumentStore();
+
+  const onSubmit = (e: EditData) => {
+    fetcher.submit(
+      {
+        action: "edit",
+        editData: e as any,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
+  };
+
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"SAVE"
+  }, [fetcher.state]);
+
+  setUpToolbar(
+    (opts) => {
+      return {
+        ...opts,
+        onSave: () => inputRef.current?.click(),
+        disabledSave: !hasChanged,
+      };
+    },
+    [hasChanged]
+  );
+
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        updateRef(form.getValues());
+      },
+    },
+    [fetcher.data]
+  );
+
   useEffect(() => {
     documentStore.setData({
       partyID: order?.party_id,
       documentRefernceID: order?.id,
       partyName: order?.party_name,
       currency: order?.currency,
-      projectID: acctDimension?.project_id,
-      projectName: acctDimension?.project,
-      costCenterID: acctDimension?.cost_center_id,
-      costCenterName: acctDimension?.cost_center,
+      projectID: order?.project_id,
+      projectName: order?.project,
+      costCenterID: order?.cost_center_id,
+      costCenterName: order?.cost_center,
     });
   }, [order]);
   return (
     <Form {...form}>
-      <fetcher.Form>
+      <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="info-grid">
           <PartyAutocomplete
             party={partyOrder}
             roleActions={roleActions}
             form={form}
-            
+            disabled={isDisabled}
           />
 
           <CustomFormDate
             control={form.control}
             name="postingDate"
             label={t("form.postingDate")}
-            disabled={true}
-            required={true}
+            disabled={isDisabled}
           />
           <CustomFormTime
             control={form.control}
             name="postingTime"
             label={t("form.postingTime")}
             description={formValues.tz}
-            disabled={true}
+            disabled={isDisabled}
           />
           <CustomFormDate
             control={form.control}
             name="deliveryDate"
             label={t("form.deliveryDate")}
+            disabled={isDisabled}
           />
+          <Separator className=" col-span-full" />
 
-          <AccountingDimensionForm form={form} />
+          <CurrencyAndPriceList form={form} disabled={isDisabled} />
+          <AccountingDimensionForm form={form} disabled={isDisabled} />
 
           <LineItemsDisplay
             currency={order?.currency || companyDefaults?.currency || ""}
@@ -123,6 +184,7 @@ export default function OrderInfoTab() {
             </>
           )}
         </div>
+        <input className="hidden" type="submit" ref={inputRef} />
       </fetcher.Form>
     </Form>
   );

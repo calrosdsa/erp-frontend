@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, ShouldRevalidateFunctionArgs, useLoaderData } from "@remix-run/react";
 import HomeLayout from "./homeLayout";
 import {
   ActionFunctionArgs,
@@ -31,6 +31,17 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
       return redirect("/signin");
   }
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+}:ShouldRevalidateFunctionArgs) {
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
+
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   console.log("API URL CONTEXT", context);

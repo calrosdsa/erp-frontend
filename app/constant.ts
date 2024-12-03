@@ -14,6 +14,9 @@ export const MAX_DEFAULT_SIZE = "30";
 
 export const DEFAULT_COMPANY_NAME = "ERP";
 
+//Action for loader
+export const LOAD_ACTION = "load"
+
 export const CURRENCY_CODES: CurrencyCode[] = [
   { Code: "BOB" },
   { Code: "USD" },

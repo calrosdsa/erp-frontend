@@ -1,6 +1,7 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import apiClient from "~/apiclient";
+import { LOAD_ACTION } from "~/constant";
 import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 
 type ActionData = {
@@ -19,9 +20,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const res = await client.PUT("/item-line", {
         body: {
           rate: d.rate,
-          quantity: d.quantity,
+          quantity: d.quantity || 0,
           item_line: d.itemLineID || 0,
-          item_price_uuid: d.item_price_uuid,
+          item_price_id: d.item_price_id,
           party_type: d.party_type || "",
         },
       });
@@ -31,5 +32,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
   }
-  return json({ message, error });
+  return json({ message, error,
+    action:LOAD_ACTION
+   });
 };

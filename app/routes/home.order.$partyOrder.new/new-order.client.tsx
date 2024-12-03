@@ -31,7 +31,7 @@ import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-
 import LineItems from "@/components/custom/shared/item/line-items";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import PartyAutocomplete from "./components/party-autocomplete";
-import { formatRFC3339 } from "date-fns";
+import { format, formatRFC3339 } from "date-fns";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
@@ -56,7 +56,7 @@ export default function CreatePurchaseOrdersClient() {
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
       currency: companyDefaults?.currency,
-      postingTime: formatRFC3339(new Date()),
+      postingTime: format(new Date(), "HH:mm:ss"),
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 
@@ -125,65 +125,66 @@ export default function CreatePurchaseOrdersClient() {
   return (
     <div>
       <Card>
-      <FormLayout>
-        <Form {...form}>
-          <fetcher.Form
-            method="post"
-            onSubmit={form.handleSubmit(onSubmit)}
-            className={cn("", "gap-y-3 grid p-3")}
-          >
-            <div className="create-grid">
-              <PartyAutocomplete
-                party={partyOrder}
-                roleActions={roleActions}
-                form={form}
-              />
-              <CustomFormDate
-                control={form.control}
-                name="postingDate"
-                label={t("form.postingDate")}
-              />
-              <CustomFormTime
-                control={form.control}
-                name="postingTime"
-                label={t("form.postingTime")}
-                description={formValues.tz}
-              />
+        <FormLayout>
+          <Form {...form}>
+            <fetcher.Form
+              method="post"
+              onSubmit={form.handleSubmit(onSubmit)}
+              className={cn("", "gap-y-3 grid p-3")}
+            >
+              <div className="create-grid">
+                <PartyAutocomplete
+                  party={partyOrder}
+                  roleActions={roleActions}
+                  form={form}
+                />
+                <CustomFormDate
+                  control={form.control}
+                  name="postingDate"
+                  label={t("form.postingDate")}
+                />
+                <CustomFormTime
+                  control={form.control}
+                  name="postingTime"
+                  label={t("form.postingTime")}
+                  description={formValues.tz}
+                />
 
-              <CustomFormDate
-                control={form.control}
-                name="deliveryDate"
-                label={t("form.deliveryDate")}
-              />
+                <CustomFormDate
+                  control={form.control}
+                  name="deliveryDate"
+                  label={t("form.deliveryDate")}
+                />
 
-              <CurrencyAndPriceList form={form} />
+                <CurrencyAndPriceList form={form} />
 
-              <AccountingDimensionForm form={form} />
+                <AccountingDimensionForm form={form} />
 
-              <LineItems
-                onChange={(e) => {
-                  form.setValue("lines", e);
-                  form.trigger("lines");
-                }}
-                itemLineType={ItemLineType.ITEM_LINE_ORDER}
-                partyType={partyOrder}
-                currency={formValues.currency}
-              />
-              <TaxAndChargesLines
-                onChange={(e) => {
-                  form.setValue("taxLines", e);
-                  form.trigger("taxLines");
-                }}
-                currency={formValues.currency}
-              />
-              <GrandTotal currency={formValues.currency} />
-              <TaxBreakup currency={formValues.currency} />
-            </div>
+                <LineItems
+                  onChange={(e) => {
+                    form.setValue("lines", e);
+                    form.trigger("lines");
+                  }}
+                  allowEdit={true}
+                  itemLineType={ItemLineType.ITEM_LINE_ORDER}
+                  partyType={partyOrder}
+                  currency={formValues.currency}
+                />
+                <TaxAndChargesLines
+                  onChange={(e) => {
+                    form.setValue("taxLines", e);
+                    form.trigger("taxLines");
+                  }}
+                  currency={formValues.currency}
+                />
+                <GrandTotal currency={formValues.currency} />
+                <TaxBreakup currency={formValues.currency} />
+              </div>
 
-            <input ref={inputRef} type="submit" className="hidden" />
-          </fetcher.Form>
-        </Form>
-      </FormLayout>
+              <input ref={inputRef} type="submit" className="hidden" />
+            </fetcher.Form>
+          </Form>
+        </FormLayout>
       </Card>
     </div>
   );

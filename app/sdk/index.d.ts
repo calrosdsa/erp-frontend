@@ -4794,6 +4794,8 @@ export interface components {
             due_date: string | null;
             /** Format: int64 */
             id: number;
+            /** Format: int64 */
+            party_id: number;
             party_name: string;
             party_type: string;
             party_uuid: string;
@@ -6756,8 +6758,8 @@ export interface components {
             readonly $schema?: string;
             /** Format: int32 */
             item_line: number;
-            /** Format: uuid */
-            item_price_uuid: string;
+            /** Format: int64 */
+            item_price_id: number;
             party_type: string;
             /** Format: int32 */
             quantity: number;

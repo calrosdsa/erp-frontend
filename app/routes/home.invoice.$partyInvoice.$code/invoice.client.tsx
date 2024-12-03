@@ -26,7 +26,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import DetailLayout from "@/components/layout/detail-layout";
 import InvoiceInfoTab from "./components/tab/invoice-info";
 import InvoiceConnectionsTab from "./components/tab/invoice-connections";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
@@ -188,7 +188,7 @@ export default function InvoiceDetailClient() {
         };
         fetcher.submit(
           {
-            action: "update-state-with-event",
+            action: "update-status-with-event",
             updateStateWithEvent: body,
           },
           {
@@ -200,12 +200,9 @@ export default function InvoiceDetailClient() {
     };
   }, [paymentPermission, invoice, gLPermission,serialNoPermission]);
 
-  useEffect(() => {
-    if (fetcher.state == "submitting") {
-      toolbarState.setLoading(true);
-    } else {
-      toolbarState.setLoading(false);
-    }
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"STATE"
   }, [fetcher.state]);
 
   useDisplayMessage(

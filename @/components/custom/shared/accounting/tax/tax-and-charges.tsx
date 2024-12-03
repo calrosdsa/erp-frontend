@@ -24,7 +24,7 @@ export default function TaxAndCharges({
         <Await resolve={taxLines} errorElement={<ErrorElement />}>
           {(resData: any) => {
             const { result: taxLines } =
-              resData.data as components["schemas"]["ResponseDataListTaxAndChargeLineDtoBody"];
+              resData.data as components["schemas"]["ResponseDataListTaxAndChargeLineDtoBody"] || [];
             const taxAndCharges = useTaxAndCharges();
 
             useEffect(() => {

@@ -1,72 +1,92 @@
-import { UseFormReturn } from "react-hook-form";
-import { useDocumentStore } from "./use-document-store";
-import { GlobalState } from "~/types/app";
-import { useOutletContext } from "@remix-run/react";
-import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
-import { usePermission } from "~/util/hooks/useActions";
-import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse";
-import { PartyType, partyTypeToJSON } from "~/gen/common";
-import CustomFormField from "../../form/CustomFormField";
-import { CustomCheckbox } from "../../input/CustomCheckBox";
-import FormAutocomplete from "../../select/FormAutocomplete";
-import { useTranslation } from "react-i18next";
+"use client"
 
-export default function UpdateStock({form,updateStock,partyType}:{
-    form: UseFormReturn<any>;
-    updateStock?:boolean
-    partyType:string
-}){
-  const {roleActions} = useOutletContext<GlobalState>();
-  const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
-    isGroup: false,
-  });
-  const [permissionWarehouse] = usePermission({
-    actions: warehouseFetcher.data?.actions,
-    roleActions: roleActions,
-  });
-  const createWareHouse = useCreateWareHouse();
-  const isSaleInvoice = partyType == partyTypeToJSON(PartyType.saleInvoice)
-  const isPurchaseInvoice = partyType == partyTypeToJSON(PartyType.purchaseInvoice)
-  const {t} = useTranslation("common")
-    return(
-        <>
-         {(isSaleInvoice || isPurchaseInvoice) && 
-        <>
-          <CustomFormField
-          form={form.control}
-          name="updateStock"
-          children={(field)=>{
-            return  <CustomCheckbox
+import { UseFormReturn } from "react-hook-form"
+import { PartyType, partyTypeToJSON } from "~/gen/common"
+import CustomFormField from "../../form/CustomFormField"
+import { CustomCheckbox } from "../../input/CustomCheckBox"
+import FormAutocomplete from "../../select/FormAutocomplete"
+import { useTranslation } from "react-i18next"
+import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher"
+import { useMemo } from "react"
+
+interface UpdateStockProps {
+  form: UseFormReturn<any>
+  updateStock?: boolean
+  partyType: string
+}
+
+export default function UpdateStock({ form, updateStock, partyType }: UpdateStockProps) {
+  const { t } = useTranslation("common")
+
+  const isSaleInvoice = partyType === partyTypeToJSON(PartyType.saleInvoice)
+  const isPurchaseInvoice = partyType === partyTypeToJSON(PartyType.purchaseInvoice)
+
+  const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({ isGroup: false })
+  const [acceptedWarehouse, onAcceptedWarehouseChange] = useWarehouseDebounceFetcher({ isGroup: false })
+  const [rejectedWarehouse, onRejectedWarehouseChange] = useWarehouseDebounceFetcher({ isGroup: false })
+
+  if (!isSaleInvoice && !isPurchaseInvoice) {
+    return null
+  }
+
+  return (
+    <>
+      <CustomFormField
+        form={form.control}
+        name="updateStock"
+      >
+        {(field) => (
+          <CustomCheckbox
             checked={field.value}
-            onCheckedChange={(e)=>{
-                field.onChange(e)
-                form.trigger("updateStock")
+            onCheckedChange={(e) => {
+              field.onChange(e)
+              form.trigger("updateStock")
             }}
             label={t("form.updateStock")}
           />
-          }}
-          />
-          {(isSaleInvoice &&  updateStock) && 
-           <FormAutocomplete
-           control={form.control}
-           data={warehouseFetcher.data?.warehouses || []}
-           name="sourceWarehouseName"
-           nameK={"name"}
-           onValueChange={onWarehouseChange}
-           onSelect={(v) => {
-             form.setValue("sourceWarehouse", v.id);
-           }}
-           label={t("f.source", { o: t("_warehouse.base") })}
-           {...(permissionWarehouse?.create && {
-             addNew: () => {
-               createWareHouse.openDialog({});
-             },
-           })}
-         />
-          }
+        )}
+      </CustomFormField>
 
+      {updateStock && isSaleInvoice && (
+        <FormAutocomplete
+          control={form.control}
+          data={warehouseFetcher.data?.warehouses || []}
+          name="sourceWarehouseName"
+          nameK="name"
+          onValueChange={onWarehouseChange}
+          onSelect={(v) => {
+            form.setValue("sourceWarehouse", v.id)
+          }}
+          label={t("f.source", { o: t("_warehouse.base") })}
+        />
+      )}
+
+      {updateStock && isPurchaseInvoice && (
+        <>
+          <FormAutocomplete
+            control={form.control}
+            data={acceptedWarehouse.data?.warehouses || []}
+            name="acceptedWarehouseName"
+            nameK="name"
+            onValueChange={onAcceptedWarehouseChange}
+            onSelect={(v) => {
+              form.setValue("acceptedWarehouseID", v.id)
+            }}
+            label={t("f.accepted", { o: t("warehouse") })}
+          />
+          <FormAutocomplete
+            control={form.control}
+            data={rejectedWarehouse.data?.warehouses || []}
+            name="rejectedWarehouseName"
+            nameK="name"
+            onValueChange={onRejectedWarehouseChange}
+            onSelect={(v) => {
+              form.setValue("rejectedWarehouseID", v.id)
+            }}
+            label={t("f.rejected", { o: t("warehouse") })}
+          />
         </>
-        }
-        </>
-    )
+      )}
+    </>
+  )
 }

@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { EventState, State } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { Typography } from "@/components/typography";
+import { cn } from "@/lib/utils";
 
 export default function ToolBar({ title }: { title: string }) {
   const toolbarState = useToolbar();
@@ -126,14 +127,17 @@ export default function ToolBar({ title }: { title: string }) {
                   onClick={() =>
                     onChangeState && onChangeState(EventState.SUBMIT_EVENT)
                   }
-                  className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
+                  className={cn(
+                    "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
+                    (disabledSave || toolbarState.loading) &&
+                      "disabled:opacity-50"
+                  )}
+                  loading={
+                    toolbarState.loading && toolbarState.loadingType == "STATE"
+                  }
                   disabled={toolbarState.loading}
                 >
-                  {toolbarState.loading ? (
-                    <Icons.spinner className="h-5 w-5 animate-spin" />
-                  ) : (
-                    t("form.submit")
-                  )}
+                  {t("form.submit")}
                 </Button>
               )}
 
@@ -145,7 +149,14 @@ export default function ToolBar({ title }: { title: string }) {
                     onClick={() =>
                       onChangeState && onChangeState(EventState.CANCEL_EVENT)
                     }
-                    className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
+                    className={cn(
+                      "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
+                      (disabledSave || toolbarState.loading) &&
+                        "disabled:opacity-50"
+                    )}
+                    loading={
+                      toolbarState.loading && toolbarState.loadingType == "STATE"
+                    }
                     disabled={toolbarState.loading}
                     variant={"outline"}
                   >
@@ -169,7 +180,13 @@ export default function ToolBar({ title }: { title: string }) {
                   alert("NO ON SAVE");
                 }
               }}
-              className=" flex space-x-1 h-8 rounded-lg px-3 w-20 justify-center"
+              className={cn(
+                "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
+                (disabledSave || toolbarState.loading) && "disabled:opacity-50"
+              )}
+              loading={
+                toolbarState.loading && toolbarState.loadingType == "SAVE"
+              }
               disabled={disabledSave || toolbarState.loading}
               variant={"outline"}
             >

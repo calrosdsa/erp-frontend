@@ -58,12 +58,17 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
   return json({
     message,
     error,
+    action:data.action
   });
 };
 export function shouldRevalidate({
   formMethod,
   defaultShouldRevalidate,
+  actionResult
 }:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == "update-state-with-event") {
+    return defaultShouldRevalidate;
+  }
   if (formMethod === "POST") {
     return false;
   }

@@ -28,7 +28,7 @@ import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema
 import DetailLayout from "@/components/layout/detail-layout";
 import OrderInfoTab from "./components/tab/order-info";
 import OrderConnectionsTab from "./components/tab/order-connections";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { useCreatePurchaseInvoice } from "../home.invoice.$partyInvoice.new/use-purchase-invoice";
@@ -116,6 +116,7 @@ export default function PurchaseOrderClient() {
     }
   };
   setUpToolbar(() => {
+    console.log("SET UP TOOLBAR...")
     const actions: ButtonToolbar[] = [];
     const status = stateFromJSON(order?.status);
     if (paymentPermission?.create) {
@@ -215,14 +216,11 @@ export default function PurchaseOrderClient() {
         );
       },
     };
-  }, [purchaseInvoicePermission, receiptPermission, order,deliveryNotePermission]);
+  }, [order,purchaseInvoicePermission, receiptPermission, order,deliveryNotePermission]);
 
-  useEffect(() => {
-    if (fetcher.state == "submitting") {
-      toolbar.setLoading(true);
-    } else {
-      toolbar.setLoading(false);
-    }
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"STATE"
   }, [fetcher.state]);
 
   useDisplayMessage(

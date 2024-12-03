@@ -11,32 +11,75 @@ import PurchaseInvoiceDetailClient from "./invoice.client";
 import { z } from "zod";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { FetchResponse } from "openapi-fetch";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { editInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
+import { formatRFC3339 } from "date-fns";
+import { LOAD_ACTION } from "~/constant";
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStateWithEventSchema>;
+  editData:z.infer<typeof editInvoiceSchema>;
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request,params }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  let action:string| undefined = undefined
   switch (data.action) {
-    case "update-state-with-event": {
+    case "update-status-with-event": {
+      console.log("UPDATE STATUS",data)
       const res = await client.PUT("/invoice/update-state", {
         body: data.updateStateWithEvent,
       });
       message = res.data?.message;
       error = res.error?.detail;
+      action = "load"
       console.log("ERROR",res.error)
       break;
+    }
+    case "edit":{
+      const d = data.editData
+      const res = await client.PUT("/invoice",{
+        body:{
+          party_id: d.partyID,
+          invoice_party_type: params.partyInvoice || "",
+          due_date: d.dueDate ? formatRFC3339(d.dueDate) : undefined,
+          posting_date: formatRFC3339(d.postingDate),
+          posting_time: d.postingTime,
+          tz: d.tz,
+          project: d.projectID,
+          cost_center: d.costCenterID,
+          currency: d.currency,
+          id: d.id
+        }
+      })
+      message = res.data?.message
+      error = res.error?.detail
+      break
     }
   }
   return json({
     message,
     error,
+    action,
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult
+}:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

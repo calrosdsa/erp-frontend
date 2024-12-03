@@ -16,12 +16,13 @@ import { Form } from "@/components/ui/form";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import SelectForm from "@/components/custom/select/SelectForm";
-import {
-  ItemLineType,
-} from "~/gen/common";
+import { ItemLineType } from "~/gen/common";
 import { Separator } from "@/components/ui/separator";
 import { GlobalState } from "~/types/app";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useMemo, useRef } from "react";
 import { createQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
 import { addMonths, format, formatRFC3339 } from "date-fns";
@@ -35,6 +36,8 @@ import GrandTotal from "@/components/custom/shared/item/grand-total";
 import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
+import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
+import { Card } from "@/components/ui/card";
 
 export default function NewQuotationClient() {
   const { t } = useTranslation("common");
@@ -46,21 +49,28 @@ export default function NewQuotationClient() {
   const params = useParams();
   const quotationParty = params.quotationParty || "";
   const { roleActions } = useOutletContext<GlobalState>();
+  const lineItemsStore = useLineItems();
+  const taxLinesStore = useTaxAndCharges();
+  const { payload } = useDocumentStore();
   const form = useForm<z.infer<typeof createQuotationSchema>>({
     resolver: zodResolver(createQuotationSchema),
     defaultValues: {
-      lines: [],
-      taxLines: [],
       validTill: addMonths(new Date(), 1),
-      currency: companyDefaults?.currency,
-      postingTime: formatRFC3339(new Date()),
+      postingTime: format(new Date(), "HH:mm:ss"),
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+
+      lines: lineItemsStore.lines,
+      taxLines: taxLinesStore.lines,
+
+      currency: payload?.currency || companyDefaults?.currency,
+      costCenterID: payload?.costCenterID,
+      costCenterName: payload?.costCenterName,
+      projectID: payload?.projectID,
+      projectName: payload?.projectName,
     },
   });
   const formValues = form.getValues();
-  const lineItemsStore = useLineItems();
-  const taxLinesStore = useTaxAndCharges();
 
   const onSubmit = (e: z.infer<typeof createQuotationSchema>) => {
     fetcher.submit(
@@ -75,9 +85,17 @@ export default function NewQuotationClient() {
     );
   };
 
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
+
   setUpToolbar(() => {
     return {
-      titleToolbar: t("f.add-new", { o: t("stockEntry") }),
+      titleToolbar: t("f.add-new", { o: t(quotationParty) }),
       onSave: () => {
         inputRef.current?.click();
       },
@@ -92,7 +110,7 @@ export default function NewQuotationClient() {
         if (fetcher.data) {
           navigate(
             r.toRoute({
-              main: r.supplierQuotation,
+              main: quotationParty,
               routePrefix: [r.quotation],
               routeSufix: [fetcher.data.quotation?.code || ""],
               q: {
@@ -114,61 +132,69 @@ export default function NewQuotationClient() {
     lineItemsStore.onLines(formValues.lines);
   }, [formValues.lines]);
   return (
-    <FormLayout>
-      <Form {...form}>
-        {JSON.stringify(format(form.getValues().postingTime, "HH:mm:SS"))}
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="create-grid">
-            <PartyAutocomplete
-              party={quotationParty}
-              roleActions={roleActions}
-              form={form}
-            />
-            <CustomFormDate
-              control={form.control}
-              name="postingDate"
-              label={t("form.postingDate")}
-            />
-            <CustomFormTime
-              control={form.control}
-              name="postingTime"
-              label={t("form.postingTime")}
-              description={formValues.tz}
-            />
+    <div>
 
-            <CustomFormDate
-              control={form.control}
-              name="validTill"
-              label={t("form.validTill")}
-            />
+    <Card>
+      <FormLayout>
+        <Form {...form}>
+          <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}
+            className={"gap-y-3 grid p-3"}
 
-            <Separator className=" col-span-full" />
+          >
+            <div className="create-grid">
+              <PartyAutocomplete
+                party={quotationParty}
+                roleActions={roleActions}
+                form={form}
+              />
+              <CustomFormDate
+                control={form.control}
+                name="postingDate"
+                label={t("form.postingDate")}
+              />
+              <CustomFormTime
+                control={form.control}
+                name="postingTime"
+                label={t("form.postingTime")}
+                description={formValues.tz}
+              />
 
-           <CurrencyAndPriceList form={form}/>
+              <CustomFormDate
+                control={form.control}
+                name="validTill"
+                label={t("form.validTill")}
+              />
 
-            <AccountingDimensionForm form={form} />
-            <LineItems
-              onChange={(e) => {
-                form.setValue("lines", e);
-                form.trigger("lines");
-              }}
-              itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
-              partyType={quotationParty}
-              currency={formValues.currency}
-            />
-            <TaxAndChargesLines
-              onChange={(e) => {
-                form.setValue("taxLines", e);
-                form.trigger("taxLines");
-              }}
-              currency={formValues.currency}
-            />
-            <GrandTotal currency={formValues.currency} />
-            <TaxBreakup currency={formValues.currency} />
-          </div>
-          <input ref={inputRef} type="submit" className="hidden" />
-        </fetcher.Form>
-      </Form>
-    </FormLayout>
+              <Separator className=" col-span-full" />
+
+              <CurrencyAndPriceList form={form} />
+
+              <AccountingDimensionForm form={form} />
+              <LineItems
+                onChange={(e) => {
+                  form.setValue("lines", e);
+                  form.trigger("lines");
+                }}
+                allowEdit={true}
+                itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
+                partyType={quotationParty}
+                currency={formValues.currency}
+              />
+              <TaxAndChargesLines
+                onChange={(e) => {
+                  form.setValue("taxLines", e);
+                  form.trigger("taxLines");
+                }}
+                currency={formValues.currency}
+              />
+              <GrandTotal currency={formValues.currency} />
+              <TaxBreakup currency={formValues.currency} />
+            </div>
+            <input ref={inputRef} type="submit" className="hidden" />
+          </fetcher.Form>
+        </Form>
+      </FormLayout>
+    </Card>
+    </div>
   );
 }

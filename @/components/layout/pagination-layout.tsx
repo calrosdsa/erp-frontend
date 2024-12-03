@@ -131,7 +131,7 @@ export default function PaginationLayout({
           </DropdownMenu>
         </div>
       </div>
-      <div className="px-1 sm:px-2 py-2 w-full">{children}</div>
+      <div className="py-2 w-full">{children}</div>
     </div>
   );
 }

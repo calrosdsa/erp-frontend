@@ -70,6 +70,12 @@ export default function TaxAndChargesLines({
         });
       }
     },
+    onDelete:(rowIndex)=>{
+      const f = taxLines.filter((t, idx) => idx != rowIndex);
+      if (onChange) {
+        onChange(f);
+      }
+    }
   });
 
   return (

@@ -62,7 +62,7 @@ enum PartyType {
     serialNo = 36;
     batchBundle = 37;
     supplierQuotation = 38;
-    quotation = 39;
+    salesQuotation = 39;
 }
 
 enum PianoPartyType {

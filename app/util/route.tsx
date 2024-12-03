@@ -97,6 +97,7 @@ class Routes {
   accountM = "account";
   serialNoResume = "serialNoResume";
   quotation = "quotation";
+  salesQuotation = "salesQuotation";
 
   //Party
   journalEntry = "journalEntry";

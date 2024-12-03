@@ -26,7 +26,7 @@ import {
 } from "../home.accounting.journalEntry.$name/components/journal-entry-line";
 import { GlobalState } from "~/types/app";
 import { DEFAULT_CURRENCY } from "~/constant";
-import { setLoadingToolbar, setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useRef } from "react";
 
 export default function NewJournalEntryClient() {
@@ -134,7 +134,10 @@ export default function NewJournalEntryClient() {
     };
   }, []);
 
-  setLoadingToolbar(fetcher.state == "submitting",[fetcher.data]);
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"SAVE"
+  }, [fetcher.state]);
 
   useDisplayMessage(
     {

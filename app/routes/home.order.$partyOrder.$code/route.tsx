@@ -17,6 +17,7 @@ import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
 import { editOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { formatRFC3339 } from "date-fns";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
@@ -35,10 +36,10 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
-      console.log("ORDER ", res.error);
       break;
     }
     case "edit":{
+      console.log("EDIT ORDER")
       const d = data.editData
       const res = await client.PUT("/order",{
         body:{
@@ -54,15 +55,29 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
       })
       message = res.data?.message
       error = res.error?.detail
-      console.log(res.error);
       break;
     }
   }
   return json({
     message,
     error,
+    action:data.action
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult
+}:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == "update-status-with-event") {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
@@ -122,6 +137,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     }
   }
   // res.data?.related_actions
+  console.log("FETCH ORDER ...")
   return defer({
     actions: res.data?.actions,
     order: res.data?.result.entity.order,

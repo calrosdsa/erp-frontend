@@ -1,44 +1,58 @@
-import { aCompanyUserColumns } from "@/components/custom/table/columns/admin/a-company-columns";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState, useRef } from "react";
-import { useForm, FieldValues, DefaultValues } from "react-hook-form";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { useForm, FieldValues, UseFormReturn, DefaultValues } from "react-hook-form";
 import { z } from "zod";
+import { isEqual } from 'lodash';
 
-// Props type that takes a generic schema and default values
-interface Props<T extends FieldValues> {
+// Improved Props type with better type inference
+interface UseEditFieldsProps<T extends FieldValues> {
   schema: z.ZodSchema<T>;
-  defaultValues: any;
+  defaultValues:DefaultValues<T>;
 }
 
-export default function useEditFields<T extends FieldValues>({ schema, defaultValues }: Props<T>) {
-  // Use zodResolver with schema and ensure the defaultValues match the inferred type
+// Return type for better type inference
+interface UseEditFieldsReturn<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  hasChanged: boolean;
+  updateRef: (values: DefaultValues<T>) => void;
+  previousValues: DefaultValues<T>;
+}
+
+export function useEditFields<T extends FieldValues>({ 
+  schema, 
+  defaultValues 
+}: UseEditFieldsProps<T>): UseEditFieldsReturn<T> {
   const form = useForm<T>({
     resolver: zodResolver(schema),
-    defaultValues, // Ensure defaultValues is of type T
+    defaultValues,
   });
 
   const [hasChanged, setHasChanged] = useState(false);
-  
-  // Use a ref to keep track of previous values for comparison
-  const previousValuesRef = useRef<T>(defaultValues);
+  const previousValuesRef = useRef<DefaultValues<T>>(defaultValues);
 
-  const validateIfDataHasChanged = () => {
-    // Compare current form values with previous values to check if there are any changes
+  const validateIfDataHasChanged = useCallback(() => {
     const currentValues = form.getValues();
-    const isEqual = JSON.stringify(currentValues) === JSON.stringify(previousValuesRef.current);
-    console.log("VALIDATING",isEqual)
-    setHasChanged(!isEqual);
-    // previousValuesRef.current = currentValues
-  };
+    const hasChanges = isEqual(currentValues, previousValuesRef.current);
+    setHasChanged(!hasChanges);
+  }, [form]);
 
-  const updateRef = (e:T)=>{
-    previousValuesRef.current = e
-  }
+  const updateRef = useCallback((newValues: DefaultValues<T>) => {
+    previousValuesRef.current = newValues;
+    validateIfDataHasChanged();
+  }, [validateIfDataHasChanged]);
 
   useEffect(() => {
-    // Validate if data has changed when form values change
-    validateIfDataHasChanged();
-  }, [form.getValues()]); // Re-run when form values change
+    const subscription = form.watch(() => {
+      validateIfDataHasChanged();
+    });
 
-  return { form, hasChanged,updateRef,previousValuesRef };
+    return () => subscription.unsubscribe();
+  }, [form, validateIfDataHasChanged]);
+
+  return { 
+    form, 
+    hasChanged, 
+    updateRef,
+    previousValues: previousValuesRef.current 
+  };
 }

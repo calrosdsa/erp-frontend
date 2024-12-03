@@ -84,6 +84,7 @@ export default function CustomFormDate({
                         e.stopPropagation();
                         console.log("CREAR");
                         field.onChange(null);
+                        
                       }}
                     >
                       <X className="h-3 w-3" />

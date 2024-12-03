@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             invoice_party_type: params.partyInvoice || "",
             due_date: d.due_date?.toString(),
             posting_date: formatRFC3339(d.postingDate),
-            posting_time: format(d.postingTime, "HH:mm"),
+            posting_time: d.postingTime,
             tz: d.tz,
             project: d.projectID,
             cost_center: d.costCenterID,

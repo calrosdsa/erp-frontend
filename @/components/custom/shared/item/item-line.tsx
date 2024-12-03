@@ -1,5 +1,4 @@
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
-import Typography, { subtitle } from "@/components/typography/Typography";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { create } from "zustand";
 import { DEFAULT_CURRENCY } from "~/constant";
-import { components } from "~/sdk";
 import {
   lineItemSchema,
   lineItemReceipt,
@@ -32,6 +30,7 @@ import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseD
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse";
+import { Typography } from "@/components/typography";
 
 export default function ItemLine({
   open,
@@ -164,6 +163,19 @@ export default function ItemLine({
                 form.setValue("item_price_id", e.id);
                 form.setValue("rate", formatAmounFromInt(e.rate));
               }}
+              onCustomDisplay={(e)=>{
+                return (
+                  <div className="flex flex-col">
+                    <div className="flex font-medium space-x-1">
+                      <span>{e.item_name}</span>
+                      <span className=" uppercase">{" "}{e.uuid.slice(0,5)}</span>
+                    </div>
+                    <div className="flexspace-x-1">
+                      {e.price_list_name}: {formatCurrency(e.rate,e.price_list_currency,i18n.language)}
+                    </div>
+                  </div>
+                )
+              }}
             />
 
             <CustomFormField
@@ -175,7 +187,7 @@ export default function ItemLine({
               name={"item_code"}
             />
 
-            <Typography fontSize={subtitle} className=" col-span-full">
+            <Typography className=" col-span-full" variant="subtitle2">
               {t("f.and", { o: t("form.quantity"), p: t("form.rate") })}
             </Typography>
 
@@ -236,7 +248,7 @@ export default function ItemLine({
 
             {itemLine.itemLineType == ItemLineType.ITEM_LINE_RECEIPT && (
               <>
-                <Typography fontSize={subtitle} className=" col-span-full">
+                <Typography variant="subtitle2" className=" col-span-full">
                   {t("_warehouse.base")}
                 </Typography>
                 <FormAutocomplete

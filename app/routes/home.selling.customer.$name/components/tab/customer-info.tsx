@@ -15,12 +15,12 @@ import { routes } from "~/util/route";
 import { PartyAddresses } from "~/routes/home.party/components/party-addresses";
 import { PartyContacts } from "~/routes/home.party/components/party-contacts";
 import { editCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
-import useEditFields from "~/util/hooks/useEditFields";
+
 import { z } from "zod";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import {
-  setLoadingToolbar,
   setUpToolbar,
+  useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useRef } from "react";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -30,6 +30,7 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
+import { useEditFields } from "~/util/hooks/useEditFields";
 type EditCustomerType = z.infer<typeof editCustomerSchema>;
 export default function CustomerInfo() {
   const { customer, addresses, contacts, actions } =
@@ -73,7 +74,11 @@ export default function CustomerInfo() {
       }
     );
   };
-  setLoadingToolbar(fetcher.state == "submitting", [fetcher.data]);
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"SAVE"
+  }, [fetcher.state]);
+
 
   setUpToolbar(
     (opts) => {

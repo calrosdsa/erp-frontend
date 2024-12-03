@@ -33,7 +33,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             quotation_party_type: params.quotationParty || "",
             valid_till: formatRFC3339(d.validTill),
             posting_date: formatRFC3339(d.postingDate),
-            posting_time: format(d.postingTime, "HH:mm"),
+            posting_time: d.postingTime,
             tz: d.tz,
             party_id: d.partyID,
             currency: d.currency,

@@ -32,13 +32,13 @@ export const BuyingNav = ({ entities }: {
   }
   if(entities?.includes(Entity.PURCHASE_ORDER)){
     buyingChildrens.push({
-      title: t("purchase-orders"),
+      title: t("purchaseOrder"),
       href: r.purchaseOrders,
     });
   }
   if(entities?.includes(Entity.PURCHASE_INVOICE)){
     buyingChildrens.push({
-      title: t("purchase-invoice"),
+      title: t("purchaseInvoice"),
       href: r.purchaseInvoices,
     });
   }

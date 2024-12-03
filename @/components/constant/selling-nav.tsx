@@ -57,6 +57,15 @@ export const SellingNav = ({ entities }: {
       }),
     });
   }
+  if(entities?.includes(Entity.QUOTATION)) {
+    sellingChildrens.push({
+      title: t("salesQuotation"),
+      href: r.toRoute({
+        main:r.salesQuotation,
+        routePrefix:[r.quotation],
+      }),
+    });
+  }
   
   const selling: NavItem = {
     title: t("selling"),

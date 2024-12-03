@@ -29,7 +29,7 @@ import Typography, { subtitle } from "@/components/typography/Typography";
 import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
-import { formatRFC3339 } from "date-fns";
+import { format, formatRFC3339 } from "date-fns";
 import LineItems from "@/components/custom/shared/item/line-items";
 import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
 import GrandTotal from "@/components/custom/shared/item/grand-total";
@@ -40,6 +40,7 @@ import AccountingDimensionForm from "@/components/custom/shared/accounting/accou
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { Card } from "@/components/ui/card";
+import { useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
@@ -59,11 +60,12 @@ export default function CreatePurchaseInvoiceClient() {
   const form = useForm<z.infer<typeof createInvoiceSchema>>({
     resolver: zodResolver(createInvoiceSchema),
     defaultValues: {
+      invoicePartyType:partyInvoice,
       referenceID: payload?.documentRefernceID,
       currency: payload?.currency || companyDefaults?.currency,
       lines: lineItemsStore.lines,
       taxLines: taxLinesStore.lines,
-      postingTime: formatRFC3339(new Date()),
+      postingTime: format(new Date(),"HH:mm:ss"),
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
       
@@ -90,6 +92,12 @@ export default function CreatePurchaseInvoiceClient() {
       }
     );
   };
+
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"SAVE"
+  }, [fetcher.state]);
+
 
   const setUpToolbar = () => {
     toolbar.setToolbar({
@@ -128,6 +136,8 @@ export default function CreatePurchaseInvoiceClient() {
     [fetcher.data]
   );
 
+
+
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
   }, [formValues.taxLines]);
@@ -139,7 +149,6 @@ export default function CreatePurchaseInvoiceClient() {
   return (
     <div>
       <Card>
-
       <FormLayout>
         <Form {...form}>
           <fetcher.Form
@@ -174,6 +183,7 @@ export default function CreatePurchaseInvoiceClient() {
                   form.setValue("lines", e);
                   form.trigger("lines");
                 }}
+                allowEdit={true}
                 itemLineType={ItemLineType.ITEM_LINE_INVOICE}
                 partyType={partyInvoice}
                 currency={formValues.currency}

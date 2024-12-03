@@ -45,7 +45,7 @@ export default function LineItems({
   const shared = {
     currency: currency,
     partyType: partyType,
-    allowEdit: allowEdit || true,
+    allowEdit: allowEdit || false,
     itemLineType: itemLineType,
   };
   const [metaOptions] = useTableRowActions({

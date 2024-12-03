@@ -14,19 +14,24 @@ export interface SetupToolbarOpts {
   addNew?: () => void;
   triggerTabs?: boolean;
 }
+export type LoadingType = 'SAVE' | 'STATE' | '';
 
 interface ToolbarStore {
   payload: SetupToolbarOpts;
   loading?: boolean;
+  loadingType?: LoadingType
   isMounted: boolean;
-  setLoading: (loading: boolean) => void;
+  setLoading: (opts: {
+    loading:boolean
+    loadingType:LoadingType
+  }) => void;
   setToolbar: (opts: SetupToolbarOpts) => void;
 }
 export const useToolbar = create<ToolbarStore>((set) => ({
   payload: {},
   isMounted: false,
   loading: false,
-  setLoading: (e) => set((state) => ({ loading: e })),
+  setLoading: (opts) => set((state) => ({ loading: opts.loading,loadingType:opts.loadingType })),
   setToolbar: (opts) =>
     set((state) => ({
       payload: opts,

@@ -28,14 +28,14 @@ export default function LineItemsDisplay({
 }) {
   const { t } = useTranslation("common");
   return (
-    <Suspense fallback={<FallBack />}>
+    <Suspense fallback={<FallBack />} >
       <Await resolve={lineItems} errorElement={<ErrorElement />}>
         {(resData: any) => {
           const { result: lines } =
             resData.data as components["schemas"]["ResponseDataListLineItemDtoBody"];
           const lineItemsStore = useLineItems();
           const setPayload = () => {
-            lineItemsStore.onLines(lines.map((t)=>toLineItemSchema(t)));
+            lineItemsStore.onLines(lines.map((t)=>toLineItemSchema(t,{partyType:partyType})));
           };
           useEffect(() => {
             setPayload();

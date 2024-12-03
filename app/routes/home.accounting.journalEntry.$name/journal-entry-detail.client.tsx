@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { routes } from "~/util/route";
 import { NavItem } from "~/types";
 import JournalEntryInfo from "./tab/journal-entry-info";
-import { setLoadingToolbar, setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { stateFromJSON } from "~/gen/common";
 import { z } from "zod";
@@ -35,7 +35,10 @@ export default function JournalEntryDetailClient() {
     },
   ];
 
-  setLoadingToolbar(fetcher.state == "submitting",[fetcher.data])
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"STATE"
+  }, [fetcher.state]);
 
   setUpToolbar(() => {
     return {

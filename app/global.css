@@ -29,6 +29,9 @@
   .link {
     @apply hover:underline
   }
+  .responsive-container {
+    @apply w-[88vw] md:w-[57vw] lg:w-[68vw] xl:w-full  mx-auto overflow-auto max-w-[1400px] pb-2
+  }
   
 }
 

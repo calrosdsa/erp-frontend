@@ -10,7 +10,7 @@ export const mapToCourtRateData = (d:z.infer<typeof updateCourtRateSchema>):comp
             const timeInterval = generateTimeIntervals(t.start_time,t.end_time)
             const courtRatesDay:components["schemas"]["CourtRateData"][] = timeInterval.map((time)=>{
                 return {
-                    rate:t.rate,
+                    rate:t.rate/2,
                     time:time,
                     enabled:t.enabled,
                     day_week:day

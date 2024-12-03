@@ -12,15 +12,15 @@ import { editGroupSchema } from "~/util/data/schemas/group-schema";
 import { useRef } from "react";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import useEditFields from "~/util/hooks/useEditFields";
 import {
-  setLoadingToolbar,
   setUpToolbar,
+  useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
+import { useEditFields } from "~/util/hooks/useEditFields";
 
 type EditType = z.infer<typeof editGroupSchema>;
 export default function GroupInfoTab() {
@@ -54,7 +54,13 @@ export default function GroupInfoTab() {
       }
     );
   };
-  setLoadingToolbar(fetcher.state == "submitting", [fetcher.data]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
   setUpToolbar(
     (opts) => {
       return {

@@ -220,7 +220,6 @@ const AddCourtRate = ({
             <CustomFormField
               label={t("form.rate")}
               name="rate"
-              description="Precio por cada 30 minutes"
               form={form}
               children={(field) => {
                 return <AmountInput field={field} currency={"BOB"} />;

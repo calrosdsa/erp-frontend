@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             order_party_type: params.partyOrder || "",
             delivery_date: d.deliveryDate && formatRFC3339(d.deliveryDate),
             posting_date: formatRFC3339(d.postingDate),
-            posting_time: format(d.postingTime, "HH:mm"),
+            posting_time: d.postingTime,
             tz: d.tz,
             party_id: d.partyID,
             currency: d.currency,

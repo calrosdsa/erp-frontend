@@ -14,7 +14,6 @@
     "base": "Empresa",
     "companies": "Empresas"
   },
-  "purchase-orders": "Órdenes de Compra",
   "supplier-groups": "Grupos de Proveedores",
   "suppliers": "Proveedores",
   "_supplier": {
@@ -380,6 +379,7 @@
 
   "order":"Orden",
   "quotation":"Cotización",
+  "salesQuotation":"Cotización de Venta",
 
   "item": "Artículo",
   "event": "Evento",

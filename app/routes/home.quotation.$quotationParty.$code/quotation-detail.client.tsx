@@ -17,7 +17,7 @@ import { z } from "zod";
 import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
 import QuotationConnections from "./components/tab/quotation-connections";
 import { format } from "date-fns";
@@ -46,7 +46,6 @@ export default function QuotationDetailClient() {
 
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
-  const toolbar = useToolbar();
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
   const quotationParty = params.quotationParty || "";
@@ -90,6 +89,18 @@ export default function QuotationDetailClient() {
         }
       })
     }
+    if(qPermission?.create && allowActions ){
+      actions.push({
+        label:"Crear  Cotización",
+        onClick:()=>{
+          navigate(r.toRoute({
+            main:r.salesQuotation,
+            routePrefix:[r.quotation],
+            routeSufix:["new"]
+          }))
+        }
+      })
+    }
     return {
       titleToolbar: `${t(quotationParty)}(${quotation?.code})`,
       status: stateFromJSON(quotation?.status),
@@ -115,13 +126,11 @@ export default function QuotationDetailClient() {
     };
   }, [quotation,poPermission,soPermission,qPermission]);
 
-  useEffect(() => {
-    if (fetcher.state == "submitting") {
-      toolbar.setLoading(true);
-    } else {
-      toolbar.setLoading(false);
-    }
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"STATE"
   }, [fetcher.state]);
+
 
   useDisplayMessage(
     {

@@ -7,10 +7,9 @@ import { PartyReferences } from "~/routes/home.party/components/party-references
 import { useRef } from "react";
 import { editContactSchema } from "~/util/data/schemas/contact/contact-schema";
 import { z } from "zod";
-import useEditFields from "~/util/hooks/useEditFields";
 import {
-  setLoadingToolbar,
   setUpToolbar,
+  useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -18,6 +17,7 @@ import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
+import { useEditFields } from "~/util/hooks/useEditFields";
 
 type EditContactType = z.infer<typeof editContactSchema>;
 export const ContactInfo = () => {
@@ -51,7 +51,14 @@ export const ContactInfo = () => {
       }
     );
   };
-  setLoadingToolbar(fetcher.state == "submitting", [fetcher.data]);
+
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
   setUpToolbar(
     (opts) => {
       return {

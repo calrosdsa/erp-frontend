@@ -7,10 +7,9 @@ import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { editEventSchema } from "~/util/data/schemas/regate/event-schema";
 import { z } from "zod";
-import useEditFields from "~/util/hooks/useEditFields";
 import {
-  setLoadingToolbar,
   setUpToolbar,
+  useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -21,6 +20,7 @@ import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
 import { formatAmounFromInt, formatCurrency } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { Typography } from "@/components/typography";
+import { useEditFields } from "~/util/hooks/useEditFields";
 
 type EditType = z.infer<typeof editEventSchema>;
 export default function EventInfoTab() {
@@ -52,7 +52,14 @@ export default function EventInfoTab() {
       }
     );
   };
-  setLoadingToolbar(fetcher.state == "submitting", [fetcher.data]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
+
   setUpToolbar(
     (opts) => {
       return {

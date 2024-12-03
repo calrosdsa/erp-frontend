@@ -41,14 +41,14 @@ import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import { Form } from "@/components/ui/form";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
-import useEditFields from "~/util/hooks/useEditFields";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
-  setLoadingToolbar,
   setUpToolbar,
+  useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { toZonedTime } from "date-fns-tz";
 import { usePermission } from "~/util/hooks/useActions";
+import { useEditFields } from "~/util/hooks/useEditFields";
 
 type EditData = z.infer<typeof editQuotationSchema>;
 export default function QuotationInfoTab() {
@@ -64,25 +64,25 @@ export default function QuotationInfoTab() {
   const isDraft = stateFromJSON(quotation?.status) == State.DRAFT;
   const isDisabled = !isDraft || !quotationPerm?.edit
   const documentStore = useDocumentStore();
-  const defaultValues = {
-    id: quotation?.id,
-    partyID: quotation?.party_id,
-    partyName: quotation?.party_name,
-    currency: quotation?.currency,
-    postingTime: quotation?.posting_time,
-    postingDate: new Date(quotation?.posting_date || ""),
-    validTill: new Date(quotation?.valid_till || new Date()),
-    tz: quotation?.tz,
-    projectID: quotation?.project_id,
-    projectName: quotation?.project,
-    costCenterID: quotation?.cost_center_id,
-    costCenterName: quotation?.cost_center,
-  } as EditData;
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: editQuotationSchema,
-    defaultValues: defaultValues,
+    defaultValues: {
+      id: quotation?.id,
+      partyID: quotation?.party_id,
+      partyName: quotation?.party_name,
+      currency: quotation?.currency,
+      postingTime: quotation?.posting_time,
+      postingDate: new Date(quotation?.posting_date || ""),
+      validTill: new Date(quotation?.valid_till || new Date()),
+      tz: quotation?.tz,
+      projectID: quotation?.project_id,
+      projectName: quotation?.project,
+      costCenterID: quotation?.cost_center_id,
+      costCenterName: quotation?.cost_center,
+    },
   });
   const formValues = form.getValues();
+ 
 
   const onSubmit = (e: EditData) => {
     fetcher.submit(
@@ -96,7 +96,6 @@ export default function QuotationInfoTab() {
       }
     );
   };
-  setLoadingToolbar(fetcher.state == "submitting", [fetcher.data]);
 
   setUpToolbar(
     (opts) => {
@@ -108,6 +107,11 @@ export default function QuotationInfoTab() {
     },
     [hasChanged]
   );
+
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"SAVE"
+  }, [fetcher.state]);
 
   useDisplayMessage(
     {
@@ -134,7 +138,6 @@ export default function QuotationInfoTab() {
   }, [quotation]);
   return (
     <Form {...form}>
-      {/* {JSON.stringify(formValues)} */}
       <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
         <div className=" info-grid">
           <PartyAutocomplete

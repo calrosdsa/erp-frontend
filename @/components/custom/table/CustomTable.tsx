@@ -183,7 +183,8 @@ export function DataTable<TData, TValue>({
     <div className="py-3 space-y-4 w-full">
       {metaActions != undefined && <DataTableToolbar table={table} />}
 
-      <div className="rounded-md border h-full relative">
+      <div className="rounded-md border h-full relative w-[96vw] mx-auto md:w-[60vw] lg:w-[75vw] xl:w-full overflow-auto"
+      >
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

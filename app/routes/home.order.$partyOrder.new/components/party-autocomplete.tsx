@@ -43,7 +43,7 @@ export default function PartyAutocomplete({
       {(party == partyTypeToJSON(PartyType.purchaseOrder) ||
         party == partyTypeToJSON(PartyType.purchaseInvoice) ||
         party == partyTypeToJSON(PartyType.purchaseReceipt) || 
-        party == partyTypeToJSON(PartyType.supplierQuotation)
+        party == partyTypeToJSON(PartyType.supplierQuotation) 
       ) && (
         <FormAutocomplete
           required={true}
@@ -71,7 +71,7 @@ export default function PartyAutocomplete({
       {(party == partyTypeToJSON(PartyType.saleOrder) ||
         party == partyTypeToJSON(PartyType.saleInvoice) || 
         party == partyTypeToJSON(PartyType.deliveryNote) ||
-        party == partyTypeToJSON(PartyType.quotation)
+        party == partyTypeToJSON(PartyType.salesQuotation) 
       ) && (
         <FormAutocomplete
           required={true}

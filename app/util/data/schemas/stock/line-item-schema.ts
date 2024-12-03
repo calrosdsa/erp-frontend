@@ -38,11 +38,15 @@ export const itemLineDtoSchema = z.object({
 
 export const toLineItemSchema = (
   line: components["schemas"]["LineItemDto"],
-  to?: ItemLineType
+  opts:{
+    to?: ItemLineType,
+    partyType?:string,
+  }
 ): z.infer<typeof lineItemSchema> => {
   const lineItem: z.infer<typeof lineItemSchema> = {
+    itemLineID:line.id,
     amount: formatAmounFromInt(line.quantity * line.rate),
-    lineType: to,
+    lineType: opts.to,
     rate: formatAmounFromInt(line.rate),
     quantity: line.quantity,
     itemLineReference: line.id,
@@ -53,8 +57,9 @@ export const toLineItemSchema = (
     item_name: line.item_name,
     item_code: line.item_code,
     uom: line.uom,
+    party_type:opts.partyType
   };
-  if (to == ItemLineType.ITEM_LINE_RECEIPT) {
+  if (opts.to == ItemLineType.ITEM_LINE_RECEIPT) {
     lineItem.lineItemReceipt = {
       acceptedQuantity: line.quantity,
       rejectedQuantity: 0,

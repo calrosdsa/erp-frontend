@@ -1,11 +1,13 @@
 import { z } from "zod";
 import { supplierDtoSchema } from "../buying/supplier-schema";
 import { currencySchema } from "../app/currency-schema";
-import { deliveryLineItem, lineItemSchema } from "../stock/line-item-schema";
+import { deliveryLineItem, lineItemReceipt, lineItemSchema } from "../stock/line-item-schema";
 import { taxAndChargeSchema } from "../accounting/tax-and-charge-schema";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
 
 export const createInvoiceSchema = z
   .object({
+    invoicePartyType:z.string(),
     partyName:z.string(),
     partyID: z.number(),
 
@@ -23,6 +25,12 @@ export const createInvoiceSchema = z
     sourceWarehouse: z.number().optional(),
     sourceWarehouseName: z.string().optional(),
 
+    acceptedWarehouseID: z.number().optional(),
+    acceptedWarehouseName: z.string().optional(),
+
+    rejectedWarehouseID: z.number().optional(),
+    rejectedWarehouseName: z.string().optional(),
+
     projectName:z.string().optional(),
     projectID:z.number().optional(),
 
@@ -35,6 +43,30 @@ export const createInvoiceSchema = z
   })
   .superRefine((data, ctx) => {
     if (data.updateStock) {
+      //For purchase invoice 
+      if (data.acceptedWarehouseName && data.acceptedWarehouseID) {
+        data.lines = data.lines.map((t, i) => {
+          const receiptLineItem: z.infer<typeof lineItemReceipt> = {
+            acceptedWarehouse:t.lineItemReceipt?.acceptedWarehouse || data.acceptedWarehouseID,
+            acceptedWarehouseName:t.lineItemReceipt?.acceptedWarehouseName || data.acceptedWarehouseName,
+            rejectedWarehouse:t.lineItemReceipt?.rejectedWarehouse || data.rejectedWarehouseID,
+            rejectedWarehouseName:t.lineItemReceipt?.rejectedWarehouseName || data.rejectedWarehouseName,
+            acceptedQuantity:t.lineItemReceipt?.acceptedQuantity || t.quantity || 0,
+            rejectedQuantity:t.lineItemReceipt?.rejectedQuantity || 0,
+          };
+          t.lineItemReceipt = receiptLineItem;
+          return t;
+        });
+      } else if(data.invoicePartyType == partyTypeToJSON(PartyType.purchaseInvoice)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          params: {
+            i18n: { key: "custom.required" },
+          },
+          path: ["acceptedWarehouseName"],
+        });
+      }
+      //For sale invoice
       if (data.sourceWarehouse && data.sourceWarehouseName) {
         data.lines = data.lines.map((t, i) => {
           const deliveryLine: z.infer<typeof deliveryLineItem> = {
@@ -44,7 +76,7 @@ export const createInvoiceSchema = z
           t.deliveryLineItem = deliveryLine;
           return t;
         });
-      } else {
+      } else if(data.invoicePartyType == partyTypeToJSON(PartyType.saleInvoice)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           params: {
@@ -55,4 +87,24 @@ export const createInvoiceSchema = z
       }
     }
   });
-// E
+
+
+
+  export const editInvoiceSchema = z.object({
+    id:z.number(),
+    partyName:z.string(),
+    partyID: z.number(),
+  
+    postingDate: z.date(),
+    postingTime: z.string(),
+    tz:z.string(),
+    dueDate: z.date().optional(),
+    currency: z.string(),
+  
+    projectName:z.string().optional(),
+    projectID:z.number().optional(),
+  
+    costCenterName:z.string().optional(),
+    costCenterID:z.number().optional(),
+  })
+  

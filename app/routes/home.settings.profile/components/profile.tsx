@@ -15,11 +15,11 @@ import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { updateClientSchema } from "~/util/data/schemas/client/client-schema";
 import { useEffect, useRef } from "react";
-import useEditFields from "~/util/hooks/useEditFields";
 import { toast, useToast } from "@/components/ui/use-toast";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useEditFields } from "~/util/hooks/useEditFields";
 
 export default function ProfileInfo() {
   const { profile } = useLoaderData<typeof loader>();
@@ -34,7 +34,11 @@ export default function ProfileInfo() {
   };
   const { form, hasChanged } = useEditFields<z.infer<typeof updateClientSchema>>({
     schema: updateClientSchema,
-    defaultValues,
+    defaultValues:{
+      givenName: profile?.given_name,
+      familyName: profile?.family_name,
+      phoneNumber: profile?.phone_number || undefined,
+    },
   });
   function onSubmit(values: z.infer<typeof updateClientSchema>) {
     fetcher.submit(
@@ -48,6 +52,13 @@ export default function ProfileInfo() {
       }
     );
   }
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
   setUpToolbar(()=>{
     return {
       onSave:()=> inputRef.current?.click(),
