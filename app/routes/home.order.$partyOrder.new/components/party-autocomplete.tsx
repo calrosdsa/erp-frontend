@@ -16,9 +16,11 @@ export default function PartyAutocomplete({
   party,
   form,
   roleActions,
+  disabled
 }: {
   party: string;
   form: UseFormReturn<any>;
+  disabled?:boolean
   roleActions: components["schemas"]["RoleActionDto"][];
 }) {
   const { t } = useTranslation("common");
@@ -49,12 +51,14 @@ export default function PartyAutocomplete({
           form={form}
           name="partyName"
           nameK={"name"}
+          disabled={disabled}
           onValueChange={onSupplierChange}
           label={t("supplier")}
           onSelect={(v) => {
-            form.setValue("partyUuid", v.uuid);
+            // form.setValue("partyUuid", v.uuid);
             form.setValue("partyID", v.id);
-            form.setValue("partyType", partyTypeToJSON(PartyType.supplier));
+            // form.setValue("partyType", partyTypeToJSON(PartyType.supplier));
+            form.trigger("partyID")
           }}
           {...(supplierPermission?.create && {
             addNew: () => {
@@ -77,10 +81,12 @@ export default function PartyAutocomplete({
           nameK={"name"}
           onValueChange={onCustomerChange}
           label={t("customer")}
+          disabled={disabled}
           onSelect={(v) => {
-            form.setValue("partyUuid", v.uuid);
+            // form.setValue("partyUuid", v.uuid);
             form.setValue("partyID", v.id);
-            form.setValue("partyType", partyTypeToJSON(PartyType.customer));
+            // form.setValue("partyType", partyTypeToJSON(PartyType.customer));
+            form.trigger("partyID")
           }}
           {...(customerPermission?.create && {
             addNew: () => {

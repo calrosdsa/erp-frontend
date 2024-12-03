@@ -24,6 +24,7 @@ export const createOrderSchema = z.object({
 });
 
 export const editOrderSchema = z.object({
+  id:z.number(),
   partyName:z.string(),
   partyID: z.number(),
 

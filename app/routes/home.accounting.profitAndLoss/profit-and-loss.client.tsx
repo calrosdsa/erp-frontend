@@ -15,56 +15,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import { routes } from "~/util/route";
-type GroupedAccounts = {
-  [accountType: string]: {
-    [date: string]: AccountEntry[];
-  };
-};
-type AccountEntry = components["schemas"]["ProfitAndLossEntryDto"];
-const data: AccountEntry[] = [
-  {
-    account_type: "COST_OF_GOODS_SOLD",
-    account_name: "Cost Of Goods Sold",
-    posting_date: "2024-11-01T00:00:00Z",
-    credit: 0,
-    debit: 35000,
-  },
-  {
-    account_type: "COST_OF_GOODS_SOLD",
-    account_name: "Cost Of Goods Sold",
-    posting_date: "2024-10-01T00:00:00Z",
-    credit: 0,
-    debit: 30000,
-  },
-  {
-    account_type: "SALES_REVENUE",
-    account_name: "Sales",
-    posting_date: "2024-11-01T00:00:00Z",
-    credit: 30000,
-    debit: 0,
-  },
-  {
-    account_type: "SALES_REVENUE",
-    account_name: "Sales External",
-    posting_date: "2024-10-01T00:00:00Z",
-    credit: 36000,
-    debit: 0,
-  },
-  {
-    account_type: "SALES_REVENUE",
-    account_name: "Sales External",
-    posting_date: "2024-02-01T00:00:00Z",
-    credit: 102000,
-    debit: 0,
-  },
-  {
-    account_type: "COST_OF_GOODS_SOLD",
-    account_name: "Cost Of Goods Sold",
-    posting_date: "2024-02-01T00:00:00Z",
-    credit: 0,
-    debit: 55000,
-  },
-];
+
 export default function ProfitAndLossClient() {
   const { profitAndLoss } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");

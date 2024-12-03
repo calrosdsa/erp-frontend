@@ -78,6 +78,7 @@ export default function ProfileInfo() {
                     title={t("form.givenName")}
                     onChange={(e) => field.onChange(e)}
                     value={field.value}
+                    inputType="input"
                     readOnly={false}
                   />
                 );
@@ -91,8 +92,10 @@ export default function ProfileInfo() {
                 return (
                   <DisplayTextValue
                     title={t("form.familyName")}
+                    field={field}
                     onChange={(e) => field.onChange(e)}
                     value={field.value}
+                    inputType="input"
                     readOnly={false}
                   />
                 );
@@ -113,11 +116,14 @@ export default function ProfileInfo() {
                     title={t("form.phoneNumber")}
                     onChange={(e) => field.onChange(e)}
                     value={field.value}
+                    inputType="input"
+                    field={field}
                     readOnly={false}
                   />
                 );
               }}
             />
+            
           </>
         )}
       </fetcher.Form>

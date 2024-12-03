@@ -2,6 +2,7 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import {
   Await,
+  useFetcher,
   useLoaderData,
   useOutletContext,
   useParams,
@@ -9,8 +10,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatMediumDate } from "~/util/format/formatDate";
-import { loader } from "../../route";
-import { ItemLineType, State, stateToJSON } from "~/gen/common";
+import { action, loader } from "../../route";
+import { ItemLineType, State, stateFromJSON, stateToJSON } from "~/gen/common";
 import { GlobalState } from "~/types/app";
 import LineItems from "@/components/custom/shared/item/line-items";
 import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
@@ -20,63 +21,179 @@ import LineItemsDisplay from "@/components/custom/shared/item/line-items-display
 import { Separator } from "@/components/ui/separator";
 import GrandTotal from "@/components/custom/shared/item/grand-total";
 import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
+import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
+import { useEffect, useRef } from "react";
+import { editQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  addDays,
+  addHours,
+  format,
+  formatRFC3339,
+  parse,
+  parseISO,
+} from "date-fns";
+import { z } from "zod";
+import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
+import CustomFormDate from "@/components/custom/form/CustomFormDate";
+import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
+import { Form } from "@/components/ui/form";
+import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
+import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
+import useEditFields from "~/util/hooks/useEditFields";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import {
+  setLoadingToolbar,
+  setUpToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
+import { toZonedTime } from "date-fns-tz";
+import { usePermission } from "~/util/hooks/useActions";
 
+type EditData = z.infer<typeof editQuotationSchema>;
 export default function QuotationInfoTab() {
   const { t, i18n } = useTranslation("common");
-  const { quotation, lineItems, taxLines } = useLoaderData<typeof loader>();
-  const { companyDefaults } = useOutletContext<GlobalState>();
+  const fetcher = useFetcher<typeof action>();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { quotation, lineItems, taxLines, actions } =
+    useLoaderData<typeof loader>();
+  const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const params = useParams();
+  const [quotationPerm] = usePermission({roleActions,actions});
+  const quotationParty = params.quotationParty || "";
+  const isDraft = stateFromJSON(quotation?.status) == State.DRAFT;
+  const isDisabled = !isDraft || !quotationPerm?.edit
+  const documentStore = useDocumentStore();
+  const defaultValues = {
+    id: quotation?.id,
+    partyID: quotation?.party_id,
+    partyName: quotation?.party_name,
+    currency: quotation?.currency,
+    postingTime: quotation?.posting_time,
+    postingDate: new Date(quotation?.posting_date || ""),
+    validTill: new Date(quotation?.valid_till || new Date()),
+    tz: quotation?.tz,
+    projectID: quotation?.project_id,
+    projectName: quotation?.project,
+    costCenterID: quotation?.cost_center_id,
+    costCenterName: quotation?.cost_center,
+  } as EditData;
+  const { form, hasChanged, updateRef } = useEditFields<EditData>({
+    schema: editQuotationSchema,
+    defaultValues: defaultValues,
+  });
+  const formValues = form.getValues();
+
+  const onSubmit = (e: EditData) => {
+    fetcher.submit(
+      {
+        action: "edit",
+        editData: e as any,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
+  };
+  setLoadingToolbar(fetcher.state == "submitting", [fetcher.data]);
+
+  setUpToolbar(
+    (opts) => {
+      return {
+        ...opts,
+        onSave: () => inputRef.current?.click(),
+        disabledSave: !hasChanged,
+      };
+    },
+    [hasChanged]
+  );
+
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        updateRef(form.getValues());
+      },
+    },
+    [fetcher.data]
+  );
+
+  useEffect(() => {
+    documentStore.setData({
+      partyID: quotation?.party_id,
+      documentRefernceID: quotation?.id,
+      partyName: quotation?.party_name,
+      currency: quotation?.currency,
+      projectID: quotation?.project_id,
+      projectName: quotation?.project,
+      costCenterID: quotation?.cost_center_id,
+      costCenterName: quotation?.cost_center,
+    });
+  }, [quotation]);
   return (
-    <div>
-      <div className=" info-grid">
-        <DisplayTextValue title={t("form.code")} value={quotation?.code} />
-        <DisplayTextValue
-          title={t("form.party")}
-          value={quotation?.party_name}
-        />
-        <DisplayTextValue
-          title={t("form.postingDate")}
-          value={formatMediumDate(quotation?.posting_date, i18n.language)}
-        />
-        {/* <DisplayTextValue
-                title={t("form.dueDate")}
-                value={formatMediumDate(quotation?.due_date,i18n.language)}
-                /> */}
-
-        <Typography className=" col-span-full" fontSize={subtitle}>
-          {t("form.currencyAndPriceList")}
-        </Typography>
-        <DisplayTextValue
-          title={t("form.currency")}
-          value={quotation?.currency}
-        />
-
-        <LineItemsDisplay
-          currency={quotation?.currency || companyDefaults?.currency || ""}
-          status={quotation?.status || ""}
-          lineItems={lineItems}
-          partyType={params.partyReceipt || ""}
-          itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
-        />
-        {quotation && (
-          <>
-          <TaxAndCharges
-            currency={quotation.currency}
-            status={quotation.status}
-            taxLines={taxLines}
-            docPartyID={quotation.id}
+    <Form {...form}>
+      {/* {JSON.stringify(formValues)} */}
+      <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className=" info-grid">
+          <PartyAutocomplete
+            party={quotationParty}
+            roleActions={roleActions}
+            form={form}
+            disabled={isDisabled}
+          />
+          <CustomFormDate
+            control={form.control}
+            name="postingDate"
+            disabled={isDisabled}
+            label={t("form.postingDate")}
+          />
+          <CustomFormTime
+            control={form.control}
+            name="postingTime"
+            label={t("form.postingTime")}
+            disabled={isDisabled}
+            description={formValues.tz}
           />
 
-        <GrandTotal
-        currency={quotation.currency}
-        />
+          <CustomFormDate
+            control={form.control}
+            name="validTill"
+            disabled={isDisabled}
+            label={t("form.validTill")}
+          />
 
-        <TaxBreakup
-        currency={quotation.currency}
-        />
-        </>
-      )}
-      </div>
-    </div>
+          <Separator className=" col-span-full" />
+
+          <CurrencyAndPriceList form={form} disabled={isDisabled} />
+
+          <AccountingDimensionForm form={form} disabled={isDisabled} />
+
+          <LineItemsDisplay
+            currency={quotation?.currency || companyDefaults?.currency || ""}
+            status={quotation?.status || ""}
+            lineItems={lineItems}
+            partyType={params.partyReceipt || ""}
+            itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
+          />
+          {quotation && (
+            <>
+              <TaxAndCharges
+                currency={quotation.currency}
+                status={quotation.status}
+                taxLines={taxLines}
+                docPartyID={quotation.id}
+              />
+
+              <GrandTotal currency={quotation.currency} />
+
+              <TaxBreakup currency={quotation.currency} />
+            </>
+          )}
+        </div>
+        <input className="hidden" type="submit" ref={inputRef} />
+      </fetcher.Form>
+    </Form>
   );
 }

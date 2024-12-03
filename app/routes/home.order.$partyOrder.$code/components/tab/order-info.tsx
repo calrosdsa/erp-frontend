@@ -17,17 +17,18 @@ import GrandTotal from "@/components/custom/shared/item/grand-total";
 import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
 import { useEffect } from "react";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
-import { createOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
+import { createOrderSchema, editOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { formatRFC3339 } from "date-fns";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
-import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { Form } from "@/components/ui/form";
 import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
+import CustomFormDate from "@/components/custom/form/CustomFormDate";
 
+type EditData = z.infer<typeof editOrderSchema>;
 export default function OrderInfoTab() {
   const { order, lineItems, taxLines, acctDimension } =
     useLoaderData<typeof loader>();
@@ -36,8 +37,8 @@ export default function OrderInfoTab() {
   const params = useParams();
   const partyOrder = params.partyOrder || "";
   const fetcher = useFetcher<typeof action>();
-  const form = useForm<z.infer<typeof createOrderSchema>>({
-    resolver: zodResolver(createOrderSchema),
+  const form = useForm<z.infer<typeof editOrderSchema>>({
+    resolver: zodResolver(editOrderSchema),
     defaultValues: {
       partyID: order?.party_id,
       partyName: order?.party_name,
@@ -75,18 +76,22 @@ export default function OrderInfoTab() {
             party={partyOrder}
             roleActions={roleActions}
             form={form}
+            
           />
 
           <CustomFormDate
             control={form.control}
             name="postingDate"
             label={t("form.postingDate")}
+            disabled={true}
+            required={true}
           />
           <CustomFormTime
             control={form.control}
             name="postingTime"
             label={t("form.postingTime")}
             description={formValues.tz}
+            disabled={true}
           />
           <CustomFormDate
             control={form.control}

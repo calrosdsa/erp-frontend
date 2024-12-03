@@ -96,7 +96,7 @@ export default function HomeLayout({
         /> */}
 
       {/* <div className="flex h-screen border-collapse overflow-hidden max-w-[1900px] mx-auto"> */}
-      <div className=" max-w-[1500px] mx-auto">
+      <div className=" max-w-[1400px] mx-auto">
         <SidebarProvider>
           <AppSidebar data={globalState} />
           <SidebarInset>

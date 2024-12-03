@@ -81,16 +81,16 @@ export const BookingDetailClient = () => {
         }
       })
     }
-    if(allowEdit){
-      actions.push({
-        label:"Reprogramar la Reserva",
-        onClick:()=>{
-          rescheduleBooking.openDialog({
-            booking:booking
-          })
-        }
-      })
-    }
+    // if(allowEdit){
+    //   actions.push({
+    //     label:"Reprogramar la Reserva",
+    //     onClick:()=>{
+    //       rescheduleBooking.openDialog({
+    //         booking:booking
+    //       })
+    //     }
+    //   })
+    // }
 
     return {
       titleToolbar:params.code,

@@ -24,8 +24,9 @@ interface TimePickerProps {
   name: string
   label: string
   description?: string
-  control: Control<any,any>
+  control: Control<any, any>
   required?: boolean
+  disabled?:boolean
 }
 
 export function CustomFormTime({
@@ -33,12 +34,14 @@ export function CustomFormTime({
   name,
   label,
   description,
-  required
+  required,
+  disabled,
 }: TimePickerProps) {
   const { t } = useTranslation("common")
 
   const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'))
   const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'))
+  const seconds = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'))
 
   return (
     <FormField
@@ -49,7 +52,7 @@ export function CustomFormTime({
           <FormLabel className="text-left text-xs">{label} {required && "*"}</FormLabel>
           <Popover>
             <FormControl>
-              <PopoverTrigger asChild>
+              <PopoverTrigger asChild disabled={disabled}>
                 <Button
                   variant="outline"
                   size={"sm"}
@@ -60,7 +63,7 @@ export function CustomFormTime({
                 >
                   <Clock className="mr-2 h-4 w-4" />
                   {field.value ? (
-                    format(field.value, "HH:mm")
+                    field.value
                   ) : (
                     <span></span>
                   )}
@@ -71,11 +74,11 @@ export function CustomFormTime({
               <div className="flex p-3">
                 <Select
                   onValueChange={(value) => {
-                    const newDate = new Date(field.value || new Date())
-                    newDate.setHours(parseInt(value))
-                    field.onChange(newDate)
+                    const [hours, minutes, seconds] = (field.value || "00:00:00").split(":")
+                    const newDate = new Date(1970, 0, 1, parseInt(value), parseInt(minutes), parseInt(seconds))
+                    field.onChange(format(newDate, "HH:mm:ss"))
                   }}
-                  value={field.value ? format(field.value, "HH") : undefined}
+                  value={field.value ? field.value.split(":")[0] : undefined}
                 >
                   <SelectTrigger className="w-[80px]">
                     <SelectValue placeholder="HH" />
@@ -91,11 +94,11 @@ export function CustomFormTime({
                 <span className="mx-2 text-2xl">:</span>
                 <Select
                   onValueChange={(value) => {
-                    const newDate = new Date(field.value || new Date())
-                    newDate.setMinutes(parseInt(value))
-                    field.onChange(newDate)
+                    const [hours, minutes, seconds] = (field.value || "00:00:00").split(":")
+                    const newDate = new Date(1970, 0, 1, parseInt(hours), parseInt(value), parseInt(seconds))
+                    field.onChange(format(newDate, "HH:mm:ss"))
                   }}
-                  value={field.value ? format(field.value, "mm") : undefined}
+                  value={field.value ? field.value.split(":")[1] : undefined}
                 >
                   <SelectTrigger className="w-[80px]">
                     <SelectValue placeholder="MM" />
@@ -108,6 +111,7 @@ export function CustomFormTime({
                     ))}
                   </SelectContent>
                 </Select>
+               
               </div>
             </PopoverContent>
           </Popover>

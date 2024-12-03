@@ -84,7 +84,6 @@ export default function LineItems({
 
   return (
     <>
-      <Separator className=" col-span-full" />
       <Typography variant="subtitle2" className="col-span-full">
         {t("items")}
       </Typography>

@@ -16,6 +16,7 @@ export const accountReceivableSumaryColumns = ({}: {}): ColumnDef<
   
   columns.push({
     accessorKey: "party_type",
+    header:t("form.party"),
     cell:({...props})=>{
       const rowData = props.row.original
       return <div>{t(rowData.party_type)} </div>
@@ -24,6 +25,7 @@ export const accountReceivableSumaryColumns = ({}: {}): ColumnDef<
 
   columns.push({
     accessorKey: "party_name",
+    header:t("form.name"),
     cell:({...props})=>{
       const rowData = props.row.original
       return <TableCellNameNavigation
@@ -44,6 +46,8 @@ export const accountReceivableSumaryColumns = ({}: {}): ColumnDef<
   
   columns.push({
     accessorKey: "total_invoiced_amount",
+    header:t("form.invoiceAmount"),
+
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -53,6 +57,7 @@ export const accountReceivableSumaryColumns = ({}: {}): ColumnDef<
   });
   columns.push({
     accessorKey: "total_paid_amount",
+    header:t("form.paidAmount"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (

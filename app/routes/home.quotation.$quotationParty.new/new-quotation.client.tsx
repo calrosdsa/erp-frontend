@@ -18,21 +18,12 @@ import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import SelectForm from "@/components/custom/select/SelectForm";
 import {
   ItemLineType,
-  PartyType,
-  partyTypeToJSON,
-  StockEntryType,
 } from "~/gen/common";
 import { Separator } from "@/components/ui/separator";
-import AccordationLayout from "@/components/layout/accordation-layout";
-import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
-import ItemLineForm from "@/components/custom/shared/item/item-line-form";
-import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { GlobalState } from "~/types/app";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useMemo, useRef } from "react";
 import { createQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
-import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import { addMonths, format, formatRFC3339 } from "date-fns";
 import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
@@ -43,6 +34,7 @@ import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-
 import GrandTotal from "@/components/custom/shared/item/grand-total";
 import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
+import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 
 export default function NewQuotationClient() {
   const { t } = useTranslation("common");
@@ -124,7 +116,7 @@ export default function NewQuotationClient() {
   return (
     <FormLayout>
       <Form {...form}>
-        {/* {JSON.stringify(format(form.getValues().postingTime, "HH:mm:SS"))} */}
+        {JSON.stringify(format(form.getValues().postingTime, "HH:mm:SS"))}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
             <PartyAutocomplete

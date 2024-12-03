@@ -5,9 +5,9 @@ import FormAutocomplete from "../../select/FormAutocomplete";
 import { UseFormReturn } from "react-hook-form";
 
 
-export default function CurrencyAndPriceList({form}:{
+export default function CurrencyAndPriceList({form,disabled}:{
     form: UseFormReturn<any>;
-    
+    disabled?:boolean
 }){
     const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
@@ -22,14 +22,11 @@ export default function CurrencyAndPriceList({form}:{
                 data={currencyDebounceFetcher.data?.currencies || []}
                 control={form.control}
                 name="currency"
+                disabled={disabled}
                 required={true}
                 nameK={"code"}
                 onValueChange={onCurrencyChange}
                 label={t("form.currency")}
-                onSelect={(v) => {
-                  form.setValue("currency", v.code);
-                  form.trigger("currency");
-                }}
               />
             </AccordationLayout>
     )

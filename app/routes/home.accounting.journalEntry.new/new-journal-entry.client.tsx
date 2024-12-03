@@ -1,6 +1,6 @@
 import FormLayout from "@/components/custom/form/FormLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher, useOutletContext } from "@remix-run/react";
+import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -31,7 +31,7 @@ import { useRef } from "react";
 
 export default function NewJournalEntryClient() {
   const { t } = useTranslation("common");
-  const route = routes;
+  const r = routes;
   const fetcher = useFetcher<typeof action>();
   const form = useForm<z.infer<typeof createJournalEntrySchema>>({
     resolver: zodResolver(createJournalEntrySchema),
@@ -39,6 +39,7 @@ export default function NewJournalEntryClient() {
       lines: [],
     },
   });
+  const navigate = useNavigate()
   const inputRef = useRef<HTMLInputElement | null>(null);
   const journalEntryLine = useJournalEntryLine();
   const { companyDefaults } = useOutletContext<GlobalState>();
@@ -139,6 +140,13 @@ export default function NewJournalEntryClient() {
     {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
+      onSuccessMessage:()=>{
+        navigate(r.toRoute({
+          main:r.journalEntry,
+          routePrefix:[r.accountingM],
+          routeSufix:[fetcher.data?.journalEntry?.code || ""]
+        }))
+      }
     },
     [fetcher.data]
   );

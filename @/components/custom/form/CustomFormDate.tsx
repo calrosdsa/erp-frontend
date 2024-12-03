@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   FormControl,
   FormDescription,
@@ -9,18 +9,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { CalendarIcon, X } from 'lucide-react'
-import { TimePicker } from "../datetime/time-picker"
-import { useTranslation } from "react-i18next"
-import { Control } from "react-hook-form"
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { addHours, format } from "date-fns";
+import { CalendarIcon, X } from "lucide-react";
+import { TimePicker } from "../datetime/time-picker";
+import { useTranslation } from "react-i18next";
+import { Control } from "react-hook-form";
+import { toZonedTime } from "date-fns-tz";
 
 export default function CustomFormDate({
   form,
@@ -30,16 +31,18 @@ export default function CustomFormDate({
   isDatetime,
   required,
   control,
+  disabled,
 }: {
-  form?: any
-  name: string
-  label: string
-  description?: string
-  control?: Control<any, any>
-  isDatetime?: boolean
-  required?: boolean
+  form?: any;
+  name: string;
+  label: string;
+  description?: string;
+  control?: Control<any, any>;
+  isDatetime?: boolean;
+  required?: boolean;
+  disabled?: boolean;
 }) {
-  const { t } = useTranslation("common")
+  const { t } = useTranslation("common");
 
   return (
     <FormField
@@ -52,7 +55,7 @@ export default function CustomFormDate({
           </FormLabel>
           <Popover>
             <FormControl>
-              <PopoverTrigger asChild>
+              <PopoverTrigger asChild disabled={disabled}>
                 <Button
                   variant="outline"
                   size={"sm"}
@@ -66,21 +69,21 @@ export default function CustomFormDate({
                     <span className="flex-1">
                       {isDatetime
                         ? format(field.value, "PPP HH:mm:ss")
-                        : format(field.value, "PPP")}
+                        : format(toZonedTime(field.value, "UTC"), "PPP")}
                     </span>
                   ) : (
                     <span>{t("form.pickADate")}</span>
                   )}
-                  {field.value && (
+                  {(field.value && !disabled) && (
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-4 w-4 p-0 opacity-70 hover:opacity-100 ml-auto"
                       onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        console.log("CREAR")
-                        field.onChange('')
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log("CREAR");
+                        field.onChange(null);
                       }}
                     >
                       <X className="h-3 w-3" />
@@ -93,7 +96,7 @@ export default function CustomFormDate({
             <PopoverContent className="w-auto p-0">
               <Calendar
                 mode="single"
-                selected={field.value}
+                selected={toZonedTime(field.value, "Etc/UTC")}
                 onSelect={field.onChange}
                 initialFocus
               />
@@ -109,5 +112,5 @@ export default function CustomFormDate({
         </FormItem>
       )}
     />
-  )
+  );
 }

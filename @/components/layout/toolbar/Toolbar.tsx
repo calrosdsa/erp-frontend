@@ -39,7 +39,7 @@ export default function ToolBar({ title }: { title: string }) {
           </Typography>
           {status && (
             <Badge variant={"outline"} className="">
-              {State[status]}
+              {t(State[status])}
             </Badge>
           )}
         </div>
@@ -183,7 +183,7 @@ export default function ToolBar({ title }: { title: string }) {
 
           {addNew && (
             <Button
-              size={"sm"}
+              size={"xs"}
               onClick={() => {
                 if (addNew) {
                   addNew();

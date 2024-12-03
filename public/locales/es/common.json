@@ -11,8 +11,8 @@
     "base": "Grupo"
   },
   "_company": {
-    "base": "Compañía",
-    "companies": "Compañías"
+    "base": "Empresa",
+    "companies": "Empresas"
   },
   "purchase-orders": "Órdenes de Compra",
   "supplier-groups": "Grupos de Proveedores",
@@ -29,7 +29,7 @@
   },
   "_receipt": {
     "base": "Recibo",
-    "f": "{{o}} Recibo"
+    "f": "Recibo de {{o}}"
   },
   "_payment": {
     "base": "Pago",
@@ -49,7 +49,7 @@
   "reset-password": "Restablecer Contraseña",
   "change-password": "Cambiar Contraseña",
   "_account": {
-    "lastLogin": "Último Inicio de Sesión",
+    "lastLogin": "Último Ingreso",
     "updatePassword": "Actualizar Contraseña",
     "siginIYouA": "Inicia sesión en tu cuenta",
     "siginIYouADesc": "Ingresa tu correo electrónico y contraseña a continuación para iniciar sesión en tu cuenta",
@@ -59,7 +59,7 @@
   "_ledger": {
     "base": "Cuenta",
     "type": "Tipo de Cuenta",
-    "rootType": "Tipo Raíz de Cuenta",
+    "rootType": "Tipo de Cuenta Raíz",
     "no": "No. de Cuenta",
     "chartOfAccounts": "Plan de Cuentas",
     "paidFrom": "Cuenta Pagada Desde",
@@ -93,7 +93,7 @@
     "gender": "Género",
     "name": "Nombre",
     "date": "Fecha",
-    "advancePayment": "Pago Anticipado",
+    "advancePayment": "Pago Adelantado",
     "postingDate": "Fecha de Publicación",
     "dueDate": "Fecha de Vencimiento",
     "deliveryDate": "Fecha de Entrega",
@@ -113,11 +113,11 @@
     "confirmNewPassword": "Confirmar Nueva Contraseña",
     "email": "Correo Electrónico",
     "discount": "Descuento",
-    "companyName": "Nombre de la Compañía",
-    "clientDetails": "Completa tu Información Personal",
+    "companyName": "Nombre de la Empresa",
+    "clientDetails": "Completa Tu Información Personal",
     "enabled": "Habilitar",
     "country": "País",
-    "countryCode": "Código de País",
+    "countryCode": "Código del País",
     "item-group": "Grupo de Artículos",
     "submit": "Enviar",
     "cancel": "Cancelar",
@@ -127,7 +127,7 @@
     "save": "Guardar",
     "uom": "UM",
     "city": "Ciudad",
-    "company": "Compañía",
+    "company": "Empresa",
     "province": "Provincia",
     "postalCode": "Código Postal",
     "identificationNumber": "Número de Identificación",
@@ -136,66 +136,70 @@
     "streetLine2": "Línea de Calle 2",
     "optional": "Opcional",
     "currency": "Moneda",
-    "buying": "Compras",
+    "buying": "Compra",
     "paymentType": "Tipo de Pago",
     "selling": "Venta",
     "rate": "Tasa",
-    "itemQuantity": "Cantidad de Artículos",
+    "itemQuantity": "Cantidad de Artículo",
     "totalQuantity": "Cantidad Total",
     "entryType": "Tipo de Entrada",
     "quantity": "Cantidad",
     "pay": "Pagar",
-    "orderTotal": "Total del Pedido",
+    "orderTotal": "Total de la Orden",
     "total": "Total",
     "tax": "Impuesto",
-    "totalTax": "Impuestos Totales",
+    "totalTax": "Total de Impuestos",
+    "postingTime": "Hora de Publicación",
+    "validTill": "Válido Hasta",
     "status": "Estado",
+    "updateStock": "Actualizar Stock",
     "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Finalización",
     "outOfStockThreshold": "Umbral de Agotado",
     "isGroup": "Es Grupo",
     "isGroupDescription": "Marca esta casilla para organizarlo como un grupo.",
-    "orderConfirmation": "Confirmación de Pedido",
+    "orderConfirmation": "Confirmación de Orden",
     "siteUrl": "URL del Sitio",
-    "logo": "Logo",
+    "logo": "Logotipo",
     "isShippingAddress": "Es Dirección de Envío",
     "isBillingAddress": "Es Dirección de Facturación",
     "invoiceAmount": "Monto de la Factura",
     "paidAmount": "Monto Pagado",
     "outstandingAmount": "Pendiente",
     "allocated": "Asignado",
-    "daysWeek": "Días de la Semana",
+    "daysWeek": "Días por Semana",
     "comment": "Comentario",
     "addNew": "Agregar Nuevo",
     "fromDate": "Desde la Fecha",
     "toDate": "Hasta la Fecha",
     "totals": "Totales",
-    "voucherNo": "No. de Vale",
-    "voucherType": "Tipo de Vale",
-    "voucherSubtype": "Subtipo de Vale",
+    "voucherNo": "No. de Comprobante",
+    "voucherType": "Tipo de Comprobante",
+    "voucherSubtype": "Subtipo de Comprobante",
     "receivableAccount": "Cuenta por Cobrar",
     "payableAccount": "Cuenta por Pagar",
-    "againstAccount": "Cuenta Contra",
+    "againstAccount": "Contra Cuenta",
     "debit": "Débito",
     "entries": "Entradas",
+    "sumary": "Resumen",
     "credit": "Crédito",
-    "balance": "Balance",
-    "inQty": "En Cantidad",
-    "outQty": "Fuera Cantidad",
-    "balanceQty": "Cantidad en Balance",
+    "balance": "Saldo",
+    "inQty": "Cantidad Entrada",
+    "outQty": "Cantidad Salida",
+    "balanceQty": "Cantidad Saldo",
     "incomingRate": "Tasa de Entrada",
     "averageRate": "Tasa Promedio",
     "valuationRate": "Tasa de Valoración",
-    "balanceValue": "Valor en Balance"
+    "balanceValue": "Valor de Saldo"
   },
   "accounts": "Cuentas",
   "_selling": {
-    "isBuying": "Es Comprando",
-    "isSelling": "Es Vendiendo",
-    "isSellingDesc": "Esta lista de precios se utilizará para la venta de productos.",
-    "isBuyingDesc": "Esta lista de precios se utilizará para la compra de productos."
+    "isBuying": "Es Compra",
+    "isSelling": "Es Venta",
+    "isSellingDesc": "Esta lista de precios será utilizada para la venta de productos.",
+    "isBuyingDesc": "Esta lista de precios será utilizada para la compra de productos."
   },
   "customers": "Clientes",
-  "customerGroup": "Grupos de Clientes",
   "_customer": {
     "base": "Cliente",
     "create": "Crear Nuevo Cliente",
@@ -225,9 +229,11 @@
   "accounting": "Contabilidad",
   "taxes": "Impuestos",
   "selling": "Venta",
+
   "_tax": {
     "base": "Impuesto"
   },
+
   "roles": "Roles",
   "_role": {
     "permissions": "Permisos de rol",
@@ -250,7 +256,7 @@
   "stock": "Inventario",
   "_stock": {
     "createItemAttribute": "Crear atributo de artículo",
-    "itemAttributeInfo": "Información del atributo de artículo",
+    "itemAttributeInfo": "Información de atributo de artículo",
     "itemAttributeValues": "Valores de atributo de artículo",
     "itemAttributeValue": "Valor de atributo de artículo",
     "itemAttribute": "Atributo de artículo",
@@ -261,7 +267,7 @@
   "items": "Artículos",
 
   "item-groups": "Grupos de artículos",
-  "item-attributes": "Atributos de artículos",
+  "item-attributes": "Atributos de artículo",
   "warehouses": "Almacenes",
   "_warehouse": {
     "base": "Almacén"
@@ -276,7 +282,7 @@
   "email": "Correo electrónico",
   "square": "Cuadrado",
   "_object": {
-    "objectId": "ID del objeto",
+    "objectId": "ID de objeto",
     "objectType": "Tipo de objeto",
     "presentAtAllLocations": "Presente en todas las ubicaciones",
     "subscriptionPlanVariation": "ID de variación del plan de suscripción",
@@ -297,7 +303,7 @@
     "info": "Información del artículo",
     "code": "Código del artículo",
     "prices": "Precios del artículo",
-    "quantity": "Cantidad de artículo",
+    "quantity": "Cantidad del artículo",
     "base": "Artículo",
     "type": "Tipo de artículo",
     "variants": "Variantes de artículo",
@@ -320,9 +326,9 @@
     "deliverdDate": "Fecha de entrega",
     "ID": "ID",
     "code": "CÓDIGO",
-    "no": "No.",
-    "attributeValue": "Valor del atributo",
-    "effectiveDate": "Fecha de vigencia",
+    "no": "Nº",
+    "attributeValue": "Valor de atributo",
+    "effectiveDate": "Fecha efectiva",
     "abbreviation": "Abreviatura",
     "ordinal": "Ordinal",
     "cadence": "Cadencia",
@@ -332,8 +338,8 @@
     "referenceName": "Nombre de referencia"
   },
   "dialog": {
-    "title": "¿Está seguro de que desea continuar con esta acción?",
-    "description": "Por favor, confirme si desea continuar con esta acción."
+    "title": "¿Estás seguro de que deseas proceder con esta acción?",
+    "description": "Por favor, confirma si deseas proceder con esta acción."
   },
   "_page": {
     "base": "Página",
@@ -350,7 +356,7 @@
   },
   "new": "Nuevo",
   "tooltip": {
-    "selectCurrency": "Por favor, seleccione su moneda."
+    "selectCurrency": "Por favor, selecciona tu moneda."
   },
   "gender": {
     "male": "Masculino",
@@ -358,7 +364,7 @@
     "noBinary": "No binario"
   },
   "alert": {
-    "submit": "Por favor, envíe este documento para confirmación."
+    "submit": "Por favor, envía este documento para confirmación."
   },
   "RECEIVE": "Recibir",
   "PAY": "Pagar",
@@ -372,8 +378,12 @@
   "creditNote": "Nota de crédito",
   "cashEntry": "Entrada de efectivo",
 
+  "order":"Orden",
+  "quotation":"Cotización",
+
   "item": "Artículo",
-  "itemPrice": "Precio del artículo",
+  "event": "Evento",
+  "itemPrice": "Precio de artículo",
   "priceList": "Lista de precios",
   "purchaseInvoice": "Factura de compra",
   "purchaseOrder": "Orden de compra",
@@ -386,6 +396,7 @@
   "pianoForms": "Formularios de piano",
   "customer": "Cliente",
   "supplier": "Proveedor",
+  "customerGroup": "Grupo de clientes",
   "company": "Empresa",
   "deliveryNote": "Nota de entrega",
   "journalEntry": "Asiento contable",
@@ -393,20 +404,28 @@
   "project": "Proyecto",
   "stockEntry": "Entrada de inventario",
   "generalLedger": "Libro mayor",
-  "accountingLedger": "Libro mayor contable",
-  "accountPayable": "Cuenta por pagar",
-  "accountPayableSumary": "Resumen de cuentas por pagar",
-  "accountReceivable": "Cuenta por cobrar",
-  "accountReceivableSumary": "Resumen de cuentas por cobrar",
-  "stockLedger": "Libro mayor de inventario",
-  "stockBalance": "Balance de inventario",
+  "stockLedger": "Libro mayor de inventarios",
+  "stockBalance": "Saldo de inventario",
   "treeView": "Vista en árbol",
-  "cashFlow": "Flujo de efectivo",
+  "cashFlow": "Flujo de caja",
   "profitAndLoss": "Estado de resultados",
   "balanceSheet": "Balance general",
   "financialStatement": "Estado financiero",
+  "serialNo": "Número de serie",
+  "batchBundle": "Lote agrupado",
+  "supplierQuotation": "Cotización de proveedor",
 
-  "relocationAndMoving": "Reubicación y mudanza",
+  "accountingLedger": "Libro mayor contable",
+  "accountPayable": "Cuentas por pagar",
+  "accountPayableSumary": "Resumen de cuentas por pagar",
+  "accountReceivable": "Cuentas por cobrar",
+  "accountReceivableSumary": "Resumen de cuentas por cobrar",
+  "serialNoSumary": "Resumen de números de serie",
+
+  "booking": "Reserva",
+  "schedule": "Horario",
+
+  "relocationAndMoving": "Reubicación y mudanzas",
 
   "individual": "Individual",
 
@@ -419,6 +438,19 @@
     "costOfGoodSolds": "Costo de bienes vendidos"
   },
   "MATERIAL_RECEIPT": "Recibo de material",
+
+  "COST_OF_GOODS_SOLD": "Costo de bienes vendidos",
+  "SALES_REVENUE": "Ingresos por ventas",
+  "OPERATING_EXPENSES": "Gastos operativos",
+  "TAX_EXPENSE": "Gastos fiscales",
+
+  "DRAFT":"BORRADOR",
+  "UNPAID":"NO PAGADO",
+  "PAID":"PAGADO",
+  "SUBMITTED":"EMITIDO",
+  "CANCELLED":"CANCELADO",
+  "COMPLETED":"COMPLETADO",
+  "PARTIALLY_PAID":"PAGADO PARCIALMENTE",
 
   "regate": {
     "schedule": "Horario",

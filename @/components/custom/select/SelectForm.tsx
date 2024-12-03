@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
-import { X } from 'lucide-react'
+import { X, Trash2 } from 'lucide-react'
 import { Control } from "react-hook-form"
 import { cn } from "@/lib/utils"
 
@@ -32,6 +32,7 @@ interface Props<T extends object, K extends keyof T, V extends keyof T> {
   onValueChange?: (e: T | null) => void
   required?: boolean
   placeholder?: string
+  onDelete?: (item: T | null) => void
 }
 
 export default function SelectForm<
@@ -50,6 +51,7 @@ export default function SelectForm<
   control,
   description,
   placeholder = "Choose an option",
+  onDelete,
 }: Props<T, K, V>) {
   return (
     <FormField
@@ -60,7 +62,7 @@ export default function SelectForm<
           <FormLabel className="text-xs">
             {label} {required && "*"}
           </FormLabel>
-          <div className="">
+          <div className="relative">
             <Select
               onValueChange={(e) => {
                 if (keyValue == undefined) return
@@ -90,23 +92,43 @@ export default function SelectForm<
               </SelectContent>
             </Select>
             {field.value && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-8 top-0 h-full px-2 py-0 hover:bg-transparent"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  field.onChange(undefined)
-                  if (onValueChange) {
-                    onValueChange(null)
-                  }
-                }}
-              >
-                <X className="h-3 w-3 opacity-70 hover:opacity-100" />
-                <span className="sr-only">Clear selection</span>
-              </Button>
+              <>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-8 top-0 h-full px-2 py-0 hover:bg-transparent"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    field.onChange(undefined)
+                    if (onValueChange) {
+                      onValueChange(null)
+                    }
+                  }}
+                >
+                  <X className="h-3 w-3 opacity-70 hover:opacity-100" />
+                  <span className="sr-only">Clear selection</span>
+                </Button>
+                {onDelete && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-2 py-0 hover:bg-transparent"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      const item = data.find((t) => keyValue && t[keyValue] == field.value)
+                      onDelete(item || null)
+                      field.onChange(undefined)
+                    }}
+                  >
+                    <Trash2 className="h-3 w-3 opacity-70 hover:opacity-100" />
+                    <span className="sr-only">Delete item</span>
+                  </Button>
+                )}
+              </>
             )}
           </div>
           {description && <FormDescription>{description}</FormDescription>}
@@ -115,4 +137,4 @@ export default function SelectForm<
       )}
     />
   )
-}
+}       

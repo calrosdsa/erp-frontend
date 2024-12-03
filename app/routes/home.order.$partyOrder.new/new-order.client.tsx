@@ -32,13 +32,16 @@ import LineItems from "@/components/custom/shared/item/line-items";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import PartyAutocomplete from "./components/party-autocomplete";
 import { formatRFC3339 } from "date-fns";
+import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
+import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
+import { Card } from "@/components/ui/card";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
   const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
-  const {roleActions,companyDefaults} = useOutletContext<GlobalState>();
+  const { roleActions, companyDefaults } = useOutletContext<GlobalState>();
   const params = useParams();
   const partyOrder = params.partyOrder || "";
   const { t, i18n } = useTranslation("common");
@@ -47,6 +50,8 @@ export default function CreatePurchaseOrdersClient() {
   const r = routes;
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
+  const { payload } = useDocumentStore();
+
   const form = useForm<z.infer<typeof createOrderSchema>>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
@@ -56,7 +61,14 @@ export default function CreatePurchaseOrdersClient() {
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 
       lines: lineItemsStore.lines,
-      taxLines:taxLinesStore.lines,
+      taxLines: taxLinesStore.lines,
+
+      costCenterID: payload?.costCenterID,
+      costCenterName: payload?.costCenterName,
+      projectID: payload?.projectID,
+      projectName: payload?.projectName,
+      partyID: payload?.partyID,
+      partyName: payload?.partyName,
     },
   });
   const formValues = form.getValues();
@@ -112,6 +124,7 @@ export default function CreatePurchaseOrdersClient() {
 
   return (
     <div>
+      <Card>
       <FormLayout>
         <Form {...form}>
           <fetcher.Form
@@ -120,75 +133,58 @@ export default function CreatePurchaseOrdersClient() {
             className={cn("", "gap-y-3 grid p-3")}
           >
             <div className="create-grid">
-            <PartyAutocomplete
-              party={partyOrder}
-              roleActions={roleActions}
-              form={form}
-            />
-            <CustomFormDate
-              control={form.control}
-              name="postingDate"
-              label={t("form.postingDate")}
-            />
-            <CustomFormTime
-              control={form.control}
-              name="postingTime"
-              label={t("form.postingTime")}
-              description={formValues.tz}
-            />
-
-            <CustomFormDate
-              control={form.control}
-              name="deliveryDate"
-              label={t("form.deliveryDate")}
-            />
-
-              <AccordationLayout
-                title={t("form.currency")}
-                containerClassName=" col-span-full"
-                className="create-grid"
-              >
-                <FormAutocomplete
-                  data={currencyDebounceFetcher.data?.currencies || []}
-                  form={form}
-                  name="currencyName"
-                  required={true}
-                  nameK={"code"}
-                  onValueChange={onCurrencyChange}
-                  label={t("form.currency")}
-                  onSelect={(v) => {
-                    form.setValue("currency", v.code);
-                    form.trigger("currency");
-                  }}
-                />
-               
-              </AccordationLayout>
-
-              
-            <LineItems
-              onChange={(e) => {
-                form.setValue("lines", e);
-                form.trigger("lines");
-              }}
-              itemLineType={ItemLineType.ITEM_LINE_ORDER}
-              partyType={partyOrder}
-              currency={formValues.currency}
+              <PartyAutocomplete
+                party={partyOrder}
+                roleActions={roleActions}
+                form={form}
               />
-            <TaxAndChargesLines
-              onChange={(e) => {
-                form.setValue("taxLines", e);
-                form.trigger("taxLines");
-              }}
-              currency={formValues.currency}
-            />
-            <GrandTotal currency={formValues.currency} />
-            <TaxBreakup currency={formValues.currency} />
-                </div>
+              <CustomFormDate
+                control={form.control}
+                name="postingDate"
+                label={t("form.postingDate")}
+              />
+              <CustomFormTime
+                control={form.control}
+                name="postingTime"
+                label={t("form.postingTime")}
+                description={formValues.tz}
+              />
+
+              <CustomFormDate
+                control={form.control}
+                name="deliveryDate"
+                label={t("form.deliveryDate")}
+              />
+
+              <CurrencyAndPriceList form={form} />
+
+              <AccountingDimensionForm form={form} />
+
+              <LineItems
+                onChange={(e) => {
+                  form.setValue("lines", e);
+                  form.trigger("lines");
+                }}
+                itemLineType={ItemLineType.ITEM_LINE_ORDER}
+                partyType={partyOrder}
+                currency={formValues.currency}
+              />
+              <TaxAndChargesLines
+                onChange={(e) => {
+                  form.setValue("taxLines", e);
+                  form.trigger("taxLines");
+                }}
+                currency={formValues.currency}
+              />
+              <GrandTotal currency={formValues.currency} />
+              <TaxBreakup currency={formValues.currency} />
+            </div>
 
             <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>
         </Form>
       </FormLayout>
+      </Card>
     </div>
   );
 }

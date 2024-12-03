@@ -33,7 +33,7 @@ import MessageAlert from "@/components/custom-ui/message-alert";
 const dayNames = [
   "Domingo",
   "Lunes",
-  "Tuesday",
+  "Martes",
   "Miercoles",
   "Jueves",
   "Viernes",

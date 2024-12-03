@@ -66,6 +66,7 @@ export default function CreatePurchaseInvoiceClient() {
       postingTime: formatRFC3339(new Date()),
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      
       costCenterID: payload?.costCenterID,
       costCenterName: payload?.costCenterName,
       projectID: payload?.projectID,
@@ -140,7 +141,6 @@ export default function CreatePurchaseInvoiceClient() {
       <Card>
 
       <FormLayout>
-        {JSON.stringify(form.formState.errors)}
         <Form {...form}>
           <fetcher.Form
             method="post"

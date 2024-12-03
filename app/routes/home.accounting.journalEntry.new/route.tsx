@@ -7,6 +7,7 @@ import {
 } from "~/util/data/schemas/accounting/journal-entry-schema";
 import NewJournalEntryClient from "./new-journal-entry.client";
 import { formatRFC3339 } from "date-fns";
+import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
@@ -17,6 +18,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  let journalEntry:components["schemas"]["JournalEntryDto"] | undefined = undefined
   switch (data.action) {
     case "create-journal-entry": {
       const d = data.createJournalEntry;
@@ -31,12 +33,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
+      journalEntry = res.data?.result
       break;
     }
   }
   return json({
     message,
     error,
+    journalEntry
   });
 };
 

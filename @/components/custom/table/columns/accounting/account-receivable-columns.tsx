@@ -74,6 +74,13 @@ export const accountReceivableColumns = ({}: {}): ColumnDef<
   columns.push({
     accessorKey: "voucher_no",
     header:t("form.voucherNo"),
+    cell:({...props})=>{
+      const rowData = props.row.original
+      return <TableCellNameNavigation
+      {...props}
+      navigate={(code)=>r.toVoucher(rowData.voucher_type,code)}
+      />
+    }
   });
   columns.push({
     accessorKey: "invoiced_amount",

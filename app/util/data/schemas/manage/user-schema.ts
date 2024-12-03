@@ -13,6 +13,6 @@ export const createUserSchema = z.object({
     // companyIds:z.array(z.number()),
     givenName:z.string().min(3).max(50),
     familyName:z.string().min(3).max(50),
-    phoneNumber:z.string().max(50).optional(),
+    phoneNumber:z.string().optional(),
     keyValue:z.array(keyValue).optional(),
 })

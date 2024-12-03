@@ -23,4 +23,22 @@ export const createQuotationSchema = z
     taxLines: z.array(taxAndChargeSchema),
   })
   
-// E
+
+  export const editQuotationSchema = z
+  .object({
+    id:z.number(),
+    partyName:z.string(),
+    partyID: z.number(),
+
+    postingDate: z.date(),
+    postingTime: z.string(),
+    tz:z.string(),
+    validTill:z.date(),
+    currency: z.string(),
+
+    projectName:z.string().optional(),
+    projectID:z.number().optional(),
+
+    costCenterName:z.string().optional(),
+    costCenterID:z.number().optional(),
+  })

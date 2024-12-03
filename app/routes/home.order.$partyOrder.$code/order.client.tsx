@@ -24,8 +24,6 @@ import { ButtonToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
 import { z } from "zod";
-import { mapToLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
-import { useCreateReceipt } from "../home.receipt.$partyReceipt.new/use-create-receipt";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import DetailLayout from "@/components/layout/detail-layout";
 import OrderInfoTab from "./components/tab/order-info";

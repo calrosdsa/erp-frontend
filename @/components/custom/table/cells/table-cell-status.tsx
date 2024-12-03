@@ -6,6 +6,7 @@ import { formatLongDate } from "~/util/format/formatDate";
 import { i18n } from "i18next";
 import { formatCurrency } from "~/util/format/formatCurrency";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 type Option = {
   label: string;
@@ -20,10 +21,11 @@ interface TableCellProps<TData> {
 
 export default function TableCellStatus<TData>({ getValue, row, column, table}:TableCellProps<TData>) {
   const initialValue = getValue();
+  const {t} = useTranslation("common")
   return (
     <div>
         {typeof initialValue == "string" &&(
-            <Badge variant={"outline"}>{initialValue}</Badge>
+            <Badge variant={"outline"}>{t(initialValue)}</Badge>
         )
         }
     </div>

@@ -15,12 +15,15 @@ import {
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
+import { editOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
+import { formatRFC3339 } from "date-fns";
 
 type ActionData = {
   action: string;
   updateStatusWithEvent: z.infer<typeof updateStateWithEventSchema>;
+  editData:z.infer<typeof editOrderSchema>
 };
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request,params }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
@@ -33,6 +36,25 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       message = res.data?.message;
       error = res.error?.detail;
       console.log("ORDER ", res.error);
+      break;
+    }
+    case "edit":{
+      const d = data.editData
+      const res = await client.PUT("/order",{
+        body:{
+          id: d.id,
+          currency: d.currency,
+          party_id: d.partyID,
+          posting_date: formatRFC3339(d.postingDate),
+          posting_time: d.postingTime,
+          order_party_type:params.partyOrder || "",
+          tz: d.tz,
+          delivery_date:d.deliveryDate ? formatRFC3339(d.deliveryDate):undefined,
+        }
+      })
+      message = res.data?.message
+      error = res.error?.detail
+      console.log(res.error);
       break;
     }
   }

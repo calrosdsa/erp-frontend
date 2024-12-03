@@ -20,6 +20,7 @@ import { formatDate } from "date-fns";
 import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
 import { formatAmounFromInt, formatCurrency } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
+import { Typography } from "@/components/typography";
 
 type EditType = z.infer<typeof editEventSchema>;
 export default function EventInfoTab() {
@@ -80,28 +81,6 @@ export default function EventInfoTab() {
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
           <div className="info-grid">
-          <DisplayTextValue
-              value={formatLongDate(bookingInfo?.start_date, i18n.language)}
-              title={t("form.startDate")}
-            />
-            <DisplayTextValue
-              value={formatLongDate(bookingInfo?.end_date, i18n.language)}
-              title={t("form.endDate")}
-            />
-              <DisplayTextValue
-              value={formatCurrency(bookingInfo?.total_price,DEFAULT_CURRENCY ,i18n.language)}
-              title={t("form.total")}
-            />
-             <DisplayTextValue
-              value={formatCurrency(bookingInfo?.total_paid,DEFAULT_CURRENCY ,i18n.language)}
-              title={t("form.paidAmount")}
-            />
-            <DisplayTextValue
-              value={formatCurrency(bookingInfo?.total_discount,DEFAULT_CURRENCY ,i18n.language)}
-              title={t("form.discount")}
-            />
-
-              <div className=" col-span-full"/>
             <CustomFormField
               form={form}
               name="name"
@@ -109,6 +88,7 @@ export default function EventInfoTab() {
                 return (
                   <DisplayTextValue
                     value={field.value}
+                    inputType="input"
                     onChange={(e) => {
                       field.onChange(e);
                       form.trigger("name");
@@ -138,7 +118,30 @@ export default function EventInfoTab() {
                 );
               }}
             />
-           
+          <div className=" col-span-full"/>
+          <Typography variant="subtitle2" className=" col-span-full">Información de reserva del evento</Typography>
+          <DisplayTextValue
+              value={formatLongDate(bookingInfo?.start_date, i18n.language)}
+              title={t("form.startDate")}
+            />
+            <DisplayTextValue
+              value={formatLongDate(bookingInfo?.end_date, i18n.language)}
+              title={t("form.endDate")}
+            />
+              <DisplayTextValue
+              value={formatCurrency(bookingInfo?.total_price,DEFAULT_CURRENCY ,i18n.language)}
+              title={t("form.total")}
+            />
+             <DisplayTextValue
+              value={formatCurrency(bookingInfo?.total_paid,DEFAULT_CURRENCY ,i18n.language)}
+              title={t("form.paidAmount")}
+            />
+            <DisplayTextValue
+              value={formatCurrency(bookingInfo?.total_discount,DEFAULT_CURRENCY ,i18n.language)}
+              title={t("form.discount")}
+            />
+
+          
           </div>
         </fetcher.Form>
       </Form>

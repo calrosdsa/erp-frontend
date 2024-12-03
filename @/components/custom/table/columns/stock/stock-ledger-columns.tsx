@@ -148,24 +148,10 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
-        <>
-          {rowData.voucher_type ==
-            partyTypeToJSON(PartyType.purchaseReceipt) && (
-            <TableCellNameNavigation
-              navigate={(name) =>
-                r.toRoute({
-                  main: partyTypeToJSON(PartyType.purchaseReceipt),
-                  routePrefix: [r.receiptM],
-                  routeSufix: [name],
-                  q: {
-                    tab: "info",
-                  },
-                })
-              }
-              {...props}
-            />
-          )}
-        </>
+        <TableCellNameNavigation
+        {...props}
+        navigate={(code)=>r.toVoucher(rowData.voucher_type,rowData.voucher_no)}
+        />
       );
     },
   });

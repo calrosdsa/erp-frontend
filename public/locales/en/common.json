@@ -378,6 +378,7 @@
   "cashEntry": "Cash Entry",
 
   "item": "Item",
+  "event":"Event",
   "itemPrice": "Item Price",
   "priceList": "Price List",
   "purchaseInvoice": "Purchase Invoice",
@@ -417,6 +418,9 @@
   "accountReceivableSumary": "Account Receivable Sumary",
   "serialNoSumary": "Serial Number Sumary",
 
+  "booking":"Reserva",
+  "schedule":"Schedule",
+
   "relocationAndMoving": "Relocation & Moving",
 
   "individual": "Individual",
@@ -430,6 +434,19 @@
     "costOfGoodSolds": "Cost Of Good Solds"
   },
   "MATERIAL_RECEIPT": "Material Receipt",
+
+  "COST_OF_GOODS_SOLD":"Cost of Good Solds",
+  "SALES_REVENUE":"Sales Revenue",
+  "OPERATING_EXPENSES":"Operating Expenses",
+  "TAX_EXPENSE":"Tax Expense",
+
+  "DRAFT":"DRAFT",
+  "UNPAID":"UNPAID",
+  "PAID":"PAID",
+  "SUBMITTED":"SUBMITTED",
+  "CANCELLED":"CANCELLED",
+  "COMPLETED":"COMPLETED",
+  "PARTIALLY_PAID":"PARTIALLY PAID",
 
   "regate": {
     "schedule": "Schedule",

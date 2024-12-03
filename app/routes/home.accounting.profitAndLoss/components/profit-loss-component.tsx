@@ -16,10 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Typography } from "@/components/typography";
-import { AccountType, accountTypeToJSON } from "~/gen/common";
-import { Separator } from "@/components/ui/separator";
 import {
   LineChart,
   Line,
@@ -36,19 +32,24 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useTranslation } from "react-i18next";
+import { useOutletContext } from "@remix-run/react";
+import { GlobalState } from "~/types/app";
+import { DEFAULT_CURRENCY } from "~/constant";
+import { formatCurrency } from "~/util/format/formatCurrency";
+import { AccountType, accountTypeToJSON } from "~/gen/common";
 
 type GroupingOption = "month" | "year";
 
-type AccountEntry = {
+interface ProfitLossEntry {
   account_type: string;
   account_name: string;
   posting_date: string;
-  credit: number;
-  debit: number;
-};
+  balance: number;
+}
 
 interface ProfitLossStatementProps {
-  data: AccountEntry[];
+  data: ProfitLossEntry[];
   startDate: string;
   endDate: string;
   timeUnit: string;
@@ -63,31 +64,32 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
   const [grouping, setGrouping] = useState<GroupingOption>(
     timeUnit as GroupingOption
   );
+  const { t,i18n } = useTranslation("common");
+  const {companyDefaults} = useOutletContext<GlobalState>()
+  const currency = companyDefaults?.currency || DEFAULT_CURRENCY
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
   const group = (groupBy: GroupingOption) => {
     const groupedData = data.reduce<{
-      [key: string]: { [key: string]: { debit: number; credit: number } };
+      [key: string]: { [key: string]: number };
     }>((acc, entry) => {
-      const date = new Date(entry.posting_date);
-      let groupKey: string;
-
-      if (groupBy === "month") {
-        groupKey = entry.posting_date.slice(0, 7); // "YYYY-MM"
-      } else {
-        groupKey = entry.posting_date.slice(0, 4); // "YYYY"
-      }
+      const groupKey =
+        groupBy === "month"
+          ? entry.posting_date.slice(0, 7) // "YYYY-MM"
+          : entry.posting_date.slice(0, 4); // "YYYY"
 
       if (!acc[entry.account_type]) {
         acc[entry.account_type] = {};
       }
 
-      if (!acc[entry.account_type][groupKey]) {
-        acc[entry.account_type][groupKey] = { debit: 0, credit: 0 };
+      if (!acc[entry.account_type]![groupKey]) {
+        acc[entry.account_type]![groupKey] = 0;
       }
 
-      acc[entry.account_type][groupKey].debit += entry.debit;
-      acc[entry.account_type][groupKey].credit += entry.credit;
+      if (acc[entry.account_type]) {
+        acc[entry.account_type]![groupKey] =
+          (acc[entry.account_type]![groupKey] ?? 0) + entry.balance;
+      }
 
       return acc;
     }, {});
@@ -116,7 +118,6 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
         grouping === "month"
           ? currentDate.toISOString().slice(0, 7)
           : currentDate.getFullYear().toString();
-      console.log(period);
       if (!periods.includes(period)) {
         periods.push(period);
       }
@@ -135,12 +136,12 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
     return Array.from(new Set(data.map((entry) => entry.account_type)));
   }, [data]);
 
-  const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount/100);
-  };
+  // const formatAmount = (amount: number) => {
+  //   return new Intl.NumberFormat("en-US", {
+  //     style: "currency",
+  //     currency: "USD",
+  //   }).format(amount);
+  // };
 
   const renderAccountTypeRow = (accountType: string) => {
     const isExpanded = expandedGroups.has(accountType);
@@ -157,15 +158,12 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
               ) : (
                 <ChevronRight className="mr-2 h-4 w-4" />
               )}
-              {accountType}
+              {t(accountType)}
             </div>
           </TableCell>
           {periods.map((period) => (
             <TableCell key={period} className="text-right">
-              {formatAmount(
-                groupedData[accountType]?.[period]?.credit -
-                  groupedData[accountType]?.[period]?.debit || 0
-              )}
+              {formatCurrency(groupedData[accountType]?.[period] || 0,currency,i18n.language)}
             </TableCell>
           ))}
         </TableRow>
@@ -179,10 +177,10 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
                   <TableCell key={period} className="text-right">
                     {grouping === "month"
                       ? period === entry.posting_date.slice(0, 7)
-                        ? formatAmount(entry.credit - entry.debit)
+                        ? formatCurrency(entry.balance,currency,i18n.language)
                         : "-"
                       : period === entry.posting_date.slice(0, 4)
-                      ? formatAmount(entry.credit - entry.debit)
+                      ? formatCurrency(entry.balance,currency,i18n.language)
                       : "-"}
                   </TableCell>
                 ))}
@@ -193,46 +191,38 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
   };
 
   const calculateTotalForPeriod = (accountType: string, period: string) => {
-    return (
-      groupedData[accountType]?.[period]?.credit -
-        groupedData[accountType]?.[period]?.debit || 0
-    );
+    return groupedData[accountType]?.[period] || 0;
   };
 
   const calculateGrossProfit = (period: string) => {
-    const revenue = calculateTotalForPeriod(
-      accountTypeToJSON(AccountType.SALES_REVENUE),
+    const revenue = calculateTotalForPeriod("SALES_REVENUE", period);
+    const costOfSales = calculateTotalForPeriod("COST_OF_GOODS_SOLD", period);
+    return revenue + costOfSales; // Note: costOfSales is negative
+  };
+
+  const calculateOperatingProfit = (period: string) => {
+    const grossProfit = calculateGrossProfit(period);
+    const operatingExpenses = calculateTotalForPeriod(
+      "OPERATING_EXPENSES",
       period
     );
-    const costOfSales = calculateTotalForPeriod(
-      accountTypeToJSON(AccountType.COST_OF_GOODS_SOLD),
-      period
-    );
-    return revenue - (-costOfSales);
+    return grossProfit + operatingExpenses; // Note: operatingExpenses is negative
   };
 
   const chartData = useMemo(() => {
     return periods.map((period) => ({
       name: grouping === "month" ? period.slice(0, 7) : period,
-      revenue: calculateTotalForPeriod(
-        accountTypeToJSON(AccountType.SALES_REVENUE),
-        period
-      ),
-      costOfSales: calculateTotalForPeriod(
-        accountTypeToJSON(AccountType.COST_OF_GOODS_SOLD),
-        period
-      ),
+      revenue: calculateTotalForPeriod("SALES_REVENUE", period),
+      costOfSales: calculateTotalForPeriod("COST_OF_GOODS_SOLD", period),
       grossProfit: calculateGrossProfit(period),
     }));
   }, [periods, grouping, groupedData]);
 
   return (
-    <ScrollArea className=" max-w-[1500px] whitespace-nowrap  border ">
-      <Card className="">
-      
-
+    <ScrollArea className="max-w-[1500px] whitespace-nowrap border">
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Profit & Loss Statement</CardTitle>
+          <CardTitle>{t("profitAndLoss")}</CardTitle>
           <Select
             value={grouping}
             onValueChange={(value: GroupingOption) => setGrouping(value)}
@@ -247,7 +237,7 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
           </Select>
         </CardHeader>
         <CardContent>
-      <ScrollBar orientation="horizontal" />
+          <ScrollBar orientation="horizontal" />
 
           <ChartContainer
             config={{
@@ -295,8 +285,6 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
             </ResponsiveContainer>
           </ChartContainer>
 
-
-
           <Table>
             <TableHeader>
               <TableRow>
@@ -309,58 +297,50 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell colSpan={periods.length + 1} className="font-bold">
-                Ingresos directos (ventas netas)
-                </TableCell>
-              </TableRow>
-              {renderAccountTypeRow(
-                accountTypeToJSON(AccountType.SALES_REVENUE)
-              )}
-
-              <TableRow>
-                <TableCell colSpan={periods.length + 1} className="font-bold">
-                Costo de ventas
-                </TableCell>
-              </TableRow>
-              {renderAccountTypeRow(
-                accountTypeToJSON(AccountType.COST_OF_GOODS_SOLD)
-              )}
+              {renderAccountTypeRow("SALES_REVENUE")}
+              {renderAccountTypeRow("COST_OF_GOODS_SOLD")}
 
               <TableRow className="font-bold">
-                <TableCell>Beneficio bruto</TableCell>
+                <TableCell>Utilidad o pérdida bruta</TableCell>
                 {periods.map((period) => (
                   <TableCell key={period} className="text-right">
-                    {formatAmount(calculateGrossProfit(period))}
+                    {formatCurrency(calculateGrossProfit(period),currency,i18n.language)}
                   </TableCell>
                 ))}
               </TableRow>
 
-              <TableRow>
-                <TableCell colSpan={periods.length + 1} className="font-bold">
-                Gastos de operación
-                </TableCell>
-              </TableRow>
-              {accountTypes
-                .filter(
-                  (type) =>
-                    type !== accountTypeToJSON(AccountType.SALES_REVENUE) &&
-                    type !== accountTypeToJSON(AccountType.COST_OF_GOODS_SOLD)
-                )
-                .map(renderAccountTypeRow)}
+              {renderAccountTypeRow("OPERATING_EXPENSES")}
 
+              <TableRow className="font-bold">
+                <TableCell>Utilidad o pérdida en operaciones  (EBIT)</TableCell>
+                {periods.map((period) => (
+                  <TableCell key={period} className="text-right">
+                    {formatCurrency(calculateOperatingProfit(period),currency,i18n.language)}
+                  </TableCell>
+                ))}
+              </TableRow>
+
+              <TableRow className="font-bold">
+                <TableCell>Utilidad antes de Impuesto (EBT)</TableCell>
+                {periods.map((period) => (
+                  <TableCell key={period} className="text-right">
+                    {formatCurrency(calculateOperatingProfit(period),currency,i18n.language)}
+                  </TableCell>
+                ))}
+              </TableRow>
+
+
+              {renderAccountTypeRow(accountTypeToJSON(AccountType.TAX_EXPENSE))}
+              
               <TableRow className="font-bold">
                 <TableCell>Ganancia/pérdida neta</TableCell>
                 {periods.map((period) => (
                   <TableCell key={period} className="text-right">
-                    {formatAmount(
+                    {formatCurrency(
                       Object.values(groupedData).reduce(
-                        (sum, accountType) =>
-                          sum +
-                          (accountType[period]?.credit || 0) -
-                          (accountType[period]?.debit || 0),
+                        (sum, accountType) => sum + (accountType[period] || 0),
                         0
-                      )
+                      ),currency,i18n.language
                     )}
                   </TableCell>
                 ))}

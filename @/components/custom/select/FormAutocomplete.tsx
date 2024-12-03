@@ -40,6 +40,7 @@ interface Props<T extends object, K extends keyof T> {
   onValueChange: (e: string) => void;
   onSelect?: (v: T) => void;
   className?: string;
+  disabled?:boolean
   addNew?: () => void;
   required?: boolean;
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
@@ -57,6 +58,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   onSelect,
   onCustomDisplay,
   className,
+  disabled,
   addNew,
   required,
 }: Props<T, K>) {
@@ -71,12 +73,13 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
               {label} {required && "*"}
             </FormLabel>
           )}
-          <Popover modal={true}>
+          <Popover>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
                   variant="outline"
                   role="combobox"
+                  disabled={disabled}
                   size={"sm"}
                   onClick={() => onValueChange("")}
                   className={cn(
@@ -85,7 +88,8 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                   )}
                 >
                   {field.value || "Select item"}
-                  {field.value ? (
+
+                  {(field.value && !disabled) ? (
                     <>
                       <IconButton
                         icon={XIcon}

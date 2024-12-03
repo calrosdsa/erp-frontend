@@ -23,7 +23,7 @@ export default function TableCellNameNavigation<TData>({ getValue, row, column, 
     <div>
           <div className="">
           <Link to={navigate(nameR)}>
-            <Typography className=" text-primary font-semibold text-[14px] underline cursor-pointer">
+            <Typography className=" text-primary font-semibold text-xs underline cursor-pointer">
               {name ? name :
               typeof  nameR == "string" ? nameR : ""}
             </Typography>

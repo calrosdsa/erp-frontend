@@ -116,7 +116,7 @@ export default function NewReceiptClient() {
             <div className="create-grid">
               <PartyAutocomplete
                 party={partyReceipt}
-                globalState={globalState}
+                roleActions={globalState.roleActions}
                 form={form}
               />
 

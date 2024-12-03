@@ -444,6 +444,14 @@ class Routes {
             tab: "info",
           },
         });
+        case this.bookingM:
+        return this.toRoute({
+          main: this.bookingM,
+          routeSufix: [voucherCode],
+          q: {
+            tab: "info",
+          },
+        });
       default:
         return "";
     }

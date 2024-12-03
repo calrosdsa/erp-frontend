@@ -51,7 +51,7 @@ export default function DashboardClient() {
   const { t, i18n } = useTranslation("common");
   const r = routes;
   const start = format(startOfMonth(new Date()), "MMM d");
-  const end = format(endOfMonth(new Date()).toLocaleDateString(), "MMM d");
+  const end = format(endOfMonth(new Date()), "MMM d");
   setUpToolbar(()=>{
     return {
       titleToolbar:"Panel"

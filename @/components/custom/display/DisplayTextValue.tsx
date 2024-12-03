@@ -99,7 +99,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
       )
     }
 
-    if (typeof value === "string" || value === undefined) {
+    if (typeof value === "string" || value === undefined || inputType != undefined) {
       const commonProps = {
         readOnly: readOnly && !isEditing,
         onChange: handleInputChange,

@@ -120,7 +120,6 @@ export default function PaymentInfoTab() {
           {t("table.reference")}
         </Typography>
         <div className=" col-span-full">
-          {JSON.stringify(paymentData?.payment_references)}
           <DataTable
             columns={paymentReferencesColumns()}
             data={

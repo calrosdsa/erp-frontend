@@ -77,6 +77,7 @@ export default function QuotationDetailClient() {
 
   setUpToolbar(() => {
     let actions: ButtonToolbar[] = [];
+    console.log("SET UP TOOLBAR...")
     if(poPermission?.create && allowActions ){
       actions.push({
         label:"Crear Orden de Compra",

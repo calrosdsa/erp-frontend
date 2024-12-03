@@ -19,6 +19,7 @@ export const useCurrencyDebounceFetcher = () =>{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,
             encType:"application/json",
+            relative:"path",
             action:r.apiData
         })
     }
