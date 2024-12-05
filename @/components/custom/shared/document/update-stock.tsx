@@ -1,53 +1,61 @@
-"use client"
+"use client";
 
-import { UseFormReturn } from "react-hook-form"
-import { PartyType, partyTypeToJSON } from "~/gen/common"
-import CustomFormField from "../../form/CustomFormField"
-import { CustomCheckbox } from "../../input/CustomCheckBox"
-import FormAutocomplete from "../../select/FormAutocomplete"
-import { useTranslation } from "react-i18next"
-import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher"
-import { useMemo } from "react"
+import { UseFormReturn } from "react-hook-form";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
+import CustomFormField from "../../form/CustomFormField";
+import { CustomCheckbox } from "../../input/CustomCheckBox";
+import FormAutocomplete from "../../select/FormAutocomplete";
+import { useTranslation } from "react-i18next";
+import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
+import { useMemo } from "react";
 
 interface UpdateStockProps {
-  form: UseFormReturn<any>
-  updateStock?: boolean
-  partyType: string
+  form: UseFormReturn<any>;
+  updateStock?: boolean;
+  partyType: string;
+  isInvoice?: boolean;
 }
 
-export default function UpdateStock({ form, updateStock, partyType }: UpdateStockProps) {
-  const { t } = useTranslation("common")
+export default function UpdateStock({
+  form,
+  updateStock,
+  partyType,
+  isInvoice = false,
+}: UpdateStockProps) {
+  const { t } = useTranslation("common");
 
-  const isSaleInvoice = partyType === partyTypeToJSON(PartyType.saleInvoice)
-  const isPurchaseInvoice = partyType === partyTypeToJSON(PartyType.purchaseInvoice)
+  const isSaleInvoice = partyType === partyTypeToJSON(PartyType.saleInvoice);
+  const isPurchaseInvoice =
+    partyType === partyTypeToJSON(PartyType.purchaseInvoice);
+  const isPurchaseReceipt =
+    partyType === partyTypeToJSON(PartyType.purchaseReceipt);
+  const isDeliveryNote = partyType === partyTypeToJSON(PartyType.deliveryNote);
 
-  const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({ isGroup: false })
-  const [acceptedWarehouse, onAcceptedWarehouseChange] = useWarehouseDebounceFetcher({ isGroup: false })
-  const [rejectedWarehouse, onRejectedWarehouseChange] = useWarehouseDebounceFetcher({ isGroup: false })
-
-  if (!isSaleInvoice && !isPurchaseInvoice) {
-    return null
-  }
+  const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
+    isGroup: false,
+  });
+  const [acceptedWarehouse, onAcceptedWarehouseChange] =
+    useWarehouseDebounceFetcher({ isGroup: false });
+  const [rejectedWarehouse, onRejectedWarehouseChange] =
+    useWarehouseDebounceFetcher({ isGroup: false });
 
   return (
     <>
-      <CustomFormField
-        form={form.control}
-        name="updateStock"
-      >
-        {(field) => (
-          <CustomCheckbox
-            checked={field.value}
-            onCheckedChange={(e) => {
-              field.onChange(e)
-              form.trigger("updateStock")
-            }}
-            label={t("form.updateStock")}
-          />
-        )}
-      </CustomFormField>
-
-      {updateStock && isSaleInvoice && (
+      {isInvoice && (
+        <CustomFormField form={form.control} name="updateStock">
+          {(field) => (
+            <CustomCheckbox
+              checked={field.value}
+              onCheckedChange={(e) => {
+                field.onChange(e);
+                form.trigger("updateStock");
+              }}
+              label={t("form.updateStock")}
+            />
+          )}
+        </CustomFormField>
+      )}
+      {((updateStock && isSaleInvoice) || isDeliveryNote) && (
         <FormAutocomplete
           control={form.control}
           data={warehouseFetcher.data?.warehouses || []}
@@ -55,13 +63,13 @@ export default function UpdateStock({ form, updateStock, partyType }: UpdateStoc
           nameK="name"
           onValueChange={onWarehouseChange}
           onSelect={(v) => {
-            form.setValue("sourceWarehouse", v.id)
+            form.setValue("sourceWarehouse", v.id);
           }}
           label={t("f.source", { o: t("_warehouse.base") })}
         />
       )}
 
-      {updateStock && isPurchaseInvoice && (
+      {((updateStock && isPurchaseInvoice) || isPurchaseReceipt) && (
         <>
           <FormAutocomplete
             control={form.control}
@@ -70,7 +78,7 @@ export default function UpdateStock({ form, updateStock, partyType }: UpdateStoc
             nameK="name"
             onValueChange={onAcceptedWarehouseChange}
             onSelect={(v) => {
-              form.setValue("acceptedWarehouseID", v.id)
+              form.setValue("acceptedWarehouseID", v.id);
             }}
             label={t("f.accepted", { o: t("warehouse") })}
           />
@@ -81,12 +89,12 @@ export default function UpdateStock({ form, updateStock, partyType }: UpdateStoc
             nameK="name"
             onValueChange={onRejectedWarehouseChange}
             onSelect={(v) => {
-              form.setValue("rejectedWarehouseID", v.id)
+              form.setValue("rejectedWarehouseID", v.id);
             }}
             label={t("f.rejected", { o: t("warehouse") })}
           />
         </>
       )}
     </>
-  )
+  );
 }

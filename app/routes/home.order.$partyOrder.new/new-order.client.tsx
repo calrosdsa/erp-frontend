@@ -120,6 +120,7 @@ export default function CreatePurchaseOrdersClient() {
 
   useEffect(() => {
     lineItemsStore.onLines(formValues.lines);
+    taxLinesStore.updateFromItems(formValues.lines)
   }, [formValues.lines]);
 
   return (
@@ -155,6 +156,16 @@ export default function CreatePurchaseOrdersClient() {
                   name="deliveryDate"
                   label={t("form.deliveryDate")}
                 />
+                 {/* <FormAutocomplete
+                data={currencyDebounceFetcher.data?.currencies || []}
+                control={form.control}
+                name="currency"
+                disabled={false}
+                required={true}
+                nameK={"code"}
+                onValueChange={onCurrencyChange}
+                label={t("form.currency")}
+              /> */}
 
                 <CurrencyAndPriceList form={form} />
 

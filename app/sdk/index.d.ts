@@ -470,6 +470,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/charge-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Charges Templates */
+        get: operations["charges-templates"];
+        /** Edit Charges Template */
+        put: operations["edit-charges-template"];
+        /** Create Charge Template */
+        post: operations["create-charge-template"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/charge-template/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Charges Template */
+        get: operations["charges-template"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/client": {
         parameters: {
             query?: never;
@@ -3003,6 +3039,26 @@ export interface components {
             password: string;
             token: string;
         };
+        ChargesTemplateBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            charges_template: components["schemas"]["ChargesTemplateData"];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
+        };
+        ChargesTemplateData: {
+            name: string;
+        };
+        ChargesTemplateDto: {
+            created_at: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            status: string;
+            uuid: string;
+        };
         ChartDashboardData: {
             booking_hours: components["schemas"]["ChartDataDto"][];
             booking_hours_avg: components["schemas"]["ChartDataDto"][];
@@ -3695,6 +3751,16 @@ export interface components {
             /** Format: int32 */
             id: number;
         };
+        EditChargesTemplateRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+        };
         EditClientRequestBody: {
             /**
              * Format: uri
@@ -3789,6 +3855,8 @@ export interface components {
             project?: number;
             /** Format: int64 */
             reference?: number | null;
+            /** Format: double */
+            total_amount: number;
             tz: string;
         };
         EditItemBody: {
@@ -3856,6 +3924,8 @@ export interface components {
             /** Format: int64 */
             cost_center?: number;
             currency: string;
+            /** Format: date-time */
+            due_date?: string | null;
             /** Format: int64 */
             id: number;
             /** Format: int64 */
@@ -4187,6 +4257,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityBookingDto"];
+        };
+        EntityResponseResultEntityChargesTemplateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityChargesTemplateDto"];
         };
         EntityResponseResultEntityCompanyDtoBody: {
             /**
@@ -4779,6 +4862,8 @@ export interface components {
             project?: number;
             /** Format: int64 */
             reference?: number | null;
+            /** Format: double */
+            total_amount: number;
             tz: string;
         };
         InvoiceDetailDto: {
@@ -4801,6 +4886,8 @@ export interface components {
             due_date: string | null;
             /** Format: int64 */
             id: number;
+            /** Format: int32 */
+            paid: number;
             /** Format: int64 */
             party_id: number;
             party_name: string;
@@ -4814,6 +4901,8 @@ export interface components {
             project_id: number;
             project_uuid: string;
             status: string;
+            /** Format: int32 */
+            total: number;
             tz: string;
         };
         ItemAttributeDto: {
@@ -4991,7 +5080,6 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             description: string;
-            enabled: boolean;
             /** Format: int64 */
             id: number;
             is_group: boolean;
@@ -5007,7 +5095,6 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             description: string;
-            enabled: boolean;
             /** Format: int64 */
             id: number;
             is_group: boolean;
@@ -5132,6 +5219,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListBookingDto"];
+        };
+        PaginationResponsePaginationResultListChargesTemplateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListChargesTemplateDto"];
         };
         PaginationResponsePaginationResultListCompanyDtoBody: {
             /**
@@ -5451,6 +5547,11 @@ export interface components {
         };
         PaginationResultListBookingDto: {
             results: components["schemas"]["BookingDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListChargesTemplateDto: {
+            results: components["schemas"]["ChargesTemplateDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -5872,6 +5973,8 @@ export interface components {
             /** Format: int64 */
             cost_center?: number;
             currency: string;
+            /** Format: date-time */
+            due_date?: string | null;
             /** Format: int64 */
             party_id: number;
             party_receipt: string;
@@ -5899,6 +6002,8 @@ export interface components {
             currency: string;
             /** Format: int64 */
             id: number;
+            /** Format: int64 */
+            party_id: number;
             party_name: string;
             party_type: string;
             party_uuid: string;
@@ -5930,6 +6035,19 @@ export interface components {
              */
             readonly $schema?: string;
             email: string;
+        };
+        ResponseDataChargesTemplateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ChargesTemplateDto"];
         };
         ResponseDataChartDashboardDataBody: {
             /**
@@ -6284,6 +6402,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["BookingDto"];
+        };
+        ResultEntityChargesTemplateDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["ChargesTemplateDto"];
         };
         ResultEntityCompanyDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -7227,6 +7351,7 @@ export interface operations {
                 party?: string;
                 currency?: string;
                 project?: string;
+                cost_center?: string;
             };
             header?: {
                 Authorization?: string;
@@ -8070,6 +8195,152 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityBatchBundleDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "charges-templates": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListChargesTemplateDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-charges-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditChargesTemplateRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-charge-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChargesTemplateBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataChargesTemplateDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "charges-template": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityChargesTemplateDtoBody"];
                 };
             };
             /** @description Error */
@@ -9815,6 +10086,7 @@ export interface operations {
                 party?: string;
                 currency?: string;
                 project?: string;
+                cost_center?: string;
             };
             header?: {
                 Authorization?: string;

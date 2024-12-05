@@ -26,7 +26,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const d = data.createPurchaseInvoice;
       const lines = d.lines.map((t) => lineItemSchemaToLineData(t));
       const taxLines = d.taxLines.map((t) => mapToTaxAndChargeData(t));
-      console.log("TAX LINES",taxLines)
+      console.log("TAX LINES", taxLines);
       const res = await client.POST("/invoice", {
         body: {
           invoice: {
@@ -40,14 +40,20 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             cost_center: d.costCenterID,
             currency: d.currency,
             reference: d.referenceID,
+            total_amount:
+              d.lines.reduce(
+                (prev, curr) => prev + Number(curr.quantity) * curr.rate,
+                0
+              ) +
+              d.taxLines.reduce((prev, curr) => prev + Number(curr.amount), 0),
           },
           items: {
             update_stock: d.updateStock,
             lines: lines,
           },
-          tax_and_charges:{
-            lines:taxLines
-          }
+          tax_and_charges: {
+            lines: taxLines,
+          },
         },
       });
       error = res.error?.detail;

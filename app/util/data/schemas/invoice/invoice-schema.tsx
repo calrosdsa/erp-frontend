@@ -37,7 +37,6 @@ export const createInvoiceSchema = z
     costCenterName:z.string().optional(),
     costCenterID:z.number().optional(),
 
-
     lines: z.array(lineItemSchema),
     taxLines: z.array(taxAndChargeSchema),
   })

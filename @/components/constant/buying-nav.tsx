@@ -46,7 +46,7 @@ export const BuyingNav = ({ entities }: {
   if(entities?.includes(Entity.PURCHASE_RECEIPT)){
     buyingChildrens.push({
       title: t("_receipt.f",{o:t("_purchase.base")}),
-      href:r.toReceipts(PartyType.purchaseReceipt)
+      href:r.toReceipts(PartyType.purchaseReceipt),
     })
   }
   if(entities?.includes(Entity.SUPPLIER_QUOTATION)){
@@ -62,7 +62,10 @@ export const BuyingNav = ({ entities }: {
   const buying:NavItem = {
     title: t("form.buying"),
     icon: CreditCardIcon,
-    href: r.buying,
+    href: r.toRoute({
+      main:partyTypeToJSON(PartyType.supplier),
+      routePrefix:[r.buyingM],
+    }),
     isChildren: true,
     children: buyingChildrens,
   }

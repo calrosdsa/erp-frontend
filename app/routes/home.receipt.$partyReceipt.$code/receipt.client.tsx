@@ -19,7 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
 import ReceiptConnectionsTab from "./components/tab/receipt-connections";
 import { format } from "date-fns";
@@ -116,13 +116,12 @@ export default function ReceiptDetailClient() {
     };
   }, [receipt]);
 
-  useEffect(() => {
-    if (fetcher.state == "submitting") {
-      toolbar.setLoading(true);
-    } else {
-      toolbar.setLoading(false);
-    }
+  useLoadingTypeToolbar({
+    loading:fetcher.state == "submitting",
+    loadingType:"STATE"
   }, [fetcher.state]);
+
+  
 
   useDisplayMessage(
     {
@@ -132,9 +131,6 @@ export default function ReceiptDetailClient() {
     [fetcher.data]
   );
 
-  // useEffect(() => {
-  //   setUpToolBar();
-  // }, [receipt]);
 
   return (
     <DetailLayout

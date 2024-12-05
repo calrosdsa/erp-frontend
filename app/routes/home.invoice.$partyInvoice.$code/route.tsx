@@ -51,7 +51,8 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
           project: d.projectID,
           cost_center: d.costCenterID,
           currency: d.currency,
-          id: d.id
+          id: d.id,
+          total_amount:0,
         }
       })
       message = res.data?.message

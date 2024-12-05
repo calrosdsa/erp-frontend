@@ -102,6 +102,7 @@ class Routes {
   //Party
   journalEntry = "journalEntry";
   costCenter = "costCenter";
+  chargesTemplate = "chargesTemplate";
   stockEntry = "stockEntry";
   project = "project";
   serialNo = "serialNo";

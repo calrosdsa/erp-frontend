@@ -17,11 +17,13 @@ export default function TaxAndChargesLines({
   currency,
   docPartyID,
   allowEdit,
+  showTotal = true,
 }: {
   onChange?: (e: z.infer<typeof taxAndChargeSchema>[]) => void;
   currency: string;
   allowEdit?: boolean;
   docPartyID?: number;
+  showTotal?: boolean;
 }) {
   const { t, i18n } = useTranslation("common");
   const taxAndCharge = useTaxAndCharge();
@@ -70,17 +72,17 @@ export default function TaxAndChargesLines({
         });
       }
     },
-    onDelete:(rowIndex)=>{
+    onDelete: (rowIndex) => {
       const f = taxLines.filter((t, idx) => idx != rowIndex);
       if (onChange) {
         onChange(f);
       }
-    }
+    },
   });
 
   return (
     <>
-    <Separator className=" col-span-full"/>   
+      <Separator className=" col-span-full" />
       <div className=" col-span-full">
         <Typography variant="subtitle2">Impuestos y cargos</Typography>
         {/* {JSON.stringify(taxLines)} */}
@@ -97,18 +99,22 @@ export default function TaxAndChargesLines({
         />
       </div>
 
-      <DisplayTextValue
-      title="Impuestos y cargos añadidos"
-      value={formatCurrencyAmount(totalAdded,currency,i18n.language)}
-      />
-       <DisplayTextValue
-      title="Impuestos y cargos deducidos"
-      value={formatCurrencyAmount(totalDeducted,currency,i18n.language)}
-      />
-       <DisplayTextValue
-      title="Total de impuestos y cargos"
-      value={formatCurrencyAmount(total,currency,i18n.language)}
-      />
+      {showTotal && (
+        <>
+          <DisplayTextValue
+            title="Impuestos y cargos añadidos"
+            value={formatCurrencyAmount(totalAdded, currency, i18n.language)}
+          />
+          <DisplayTextValue
+            title="Impuestos y cargos deducidos"
+            value={formatCurrencyAmount(totalDeducted, currency, i18n.language)}
+          />
+          <DisplayTextValue
+            title="Total de impuestos y cargos"
+            value={formatCurrencyAmount(total, currency, i18n.language)}
+          />
+        </>
+      )}
     </>
   );
 }

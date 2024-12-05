@@ -130,6 +130,7 @@ export default function NewQuotationClient() {
 
   useEffect(() => {
     lineItemsStore.onLines(formValues.lines);
+    taxLinesStore.updateFromItems(formValues.lines)
   }, [formValues.lines]);
   return (
     <div>

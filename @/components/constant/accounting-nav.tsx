@@ -87,6 +87,15 @@ export const AccountingNav = ({
       }),
     });
   }
+  if(entities?.includes(Entity.CHARGES_TEMPLATE)){
+    accountingChildrens.push({
+      title: t("chargesTemplate"),
+      href:r.toRoute({
+        main:r.chargesTemplate,
+        routePrefix: [r.accountingM]
+      })
+    })
+  }
 
   //   if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
   //     accountingChildrens.push({

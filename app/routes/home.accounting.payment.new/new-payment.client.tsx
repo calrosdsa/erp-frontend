@@ -38,6 +38,7 @@ import { Typography } from "@/components/typography";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { paymentReferencesColumns } from "@/components/custom/table/columns/accounting/payment-columns";
 import AccordationLayout from "@/components/layout/accordation-layout";
+import { Card } from "@/components/ui/card";
 
 export default function PaymentCreateClient() {
   const { associatedActions, paymentAccounts } = useLoaderData<typeof loader>();
@@ -98,8 +99,8 @@ export default function PaymentCreateClient() {
         form.setValue("accountPaidFromName", paymentAccounts?.cash_acct);
         break;
     }
-    form.trigger("accountPaidFrom")
-    form.trigger("accountPaidTo")
+    form.trigger("accountPaidFrom");
+    form.trigger("accountPaidTo");
   };
 
   const fetchInitialData = () => {
@@ -186,150 +187,152 @@ export default function PaymentCreateClient() {
     }
   }, [fetcher.data]);
   return (
-    <FormLayout>
-      <Form {...form}>
-        <fetcher.Form
-          method="post"
-          onSubmit={form.handleSubmit(onSubmit)}
-          className={cn("", "gap-y-3 grid p-3")}
-        >
-          <div className="create-grid">
-            <Typography className=" col-span-full" variant="title2">
-              {t("_payment.type")}
-            </Typography>
-            <CustomFormDate
-              form={form}
-              name="postingDate"
-              label={t("form.date")}
-            />
-            <SelectForm
-              form={form}
-              data={paymentTypes}
-              label={t("form.paymentType")}
-              keyName={"name"}
-              keyValue={"value"}
-              name="paymentType"
-            />
-            <Separator className=" col-span-full" />
+    <Card>
+      <FormLayout>
+        <Form {...form}>
+          <fetcher.Form
+            method="post"
+            onSubmit={form.handleSubmit(onSubmit)}
+            className={cn("", "gap-y-3 grid p-3")}
+          >
+            <div className="create-grid">
+              <Typography className=" col-span-full" variant="title2">
+                {t("_payment.type")}
+              </Typography>
+              <CustomFormDate
+                form={form}
+                name="postingDate"
+                label={t("form.date")}
+              />
+              <SelectForm
+                form={form}
+                data={paymentTypes}
+                label={t("form.paymentType")}
+                keyName={"name"}
+                keyValue={"value"}
+                name="paymentType"
+              />
+              <Separator className=" col-span-full" />
 
-            <Typography className=" col-span-full" variant="title2">
-              {t("_payment.paymentFromTo")}
-            </Typography>
+              <Typography className=" col-span-full" variant="title2">
+                {t("_payment.paymentFromTo")}
+              </Typography>
 
-            <SelectForm
-              form={form}
-              data={fetcherPaymentPartiesType.data?.partiesType || []}
-              label={t("form.partyType")}
-              keyName={"name"}
-              onValueChange={() => {
-                revalidator.revalidate();
-              }}
-              keyValue={"code"}
-              name="partyType"
-            />
+              <SelectForm
+                form={form}
+                data={fetcherPaymentPartiesType.data?.partiesType || []}
+                label={t("form.partyType")}
+                keyName={"name"}
+                onValueChange={() => {
+                  revalidator.revalidate();
+                }}
+                keyValue={"code"}
+                name="partyType"
+              />
 
-            {form.getValues().partyType && (
-              <div>
+              {form.getValues().partyType && (
+                <div>
+                  <FormAutocomplete
+                    data={partiesDebounceFetcher.data?.parties || []}
+                    form={form}
+                    label={t("form.party")}
+                    onValueChange={onPartyNameChange}
+                    name="partyName"
+                    onSelect={(e) => {
+                      form.setValue("partyUuid", e.uuid);
+                    }}
+                    nameK={"name"}
+                  />
+                </div>
+              )}
+              <Separator className=" col-span-full" />
+              <Typography className=" col-span-full" variant="title2">
+                {t("form.amount")}
+              </Typography>
+
+              <CustomFormField
+                form={form}
+                label={t("form.paidAmount", { o: "BOB" })}
+                name="amount"
+                children={(field) => {
+                  return (
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      onBlur={() => {
+                        //Distribute among the references
+                        const values = form.getValues();
+                        let total = formatAmountToInt(values.amount);
+                        if (values.partyReferences.length > 0) {
+                          const n = values.partyReferences.map((t) => {
+                            if (total >= t.outstanding) {
+                              t.allocated = Number(t.outstanding);
+                              total = total - t.outstanding;
+                            } else {
+                              t.allocated = Number(total);
+                              total = 0;
+                            }
+                            return t;
+                          });
+                          console.log("ALLOCATED", n);
+                          form.setValue("partyReferences", n);
+                          form.trigger("partyReferences");
+                        }
+                      }}
+                    />
+                  );
+                }}
+              />
+
+              <Separator className=" col-span-full" />
+              <AccordationLayout
+                open={!formValues.accountPaidFrom || !formValues.accountPaidTo}
+                title={t("accounts")}
+                containerClassName=" col-span-full"
+                className="create-grid"
+              >
                 <FormAutocomplete
-                  data={partiesDebounceFetcher.data?.parties || []}
+                  data={accountPaidFromFetcher.data?.accounts || []}
                   form={form}
-                  label={t("form.party")}
-                  onValueChange={onPartyNameChange}
-                  name="partyName"
+                  label={t("_ledger.paidFrom")}
+                  onValueChange={onAccountPaidFromChange}
+                  name="accountPaidFromName"
                   onSelect={(e) => {
-                    form.setValue("partyUuid", e.uuid);
+                    form.setValue("accountPaidFrom", e.id);
                   }}
                   nameK={"name"}
                 />
+
+                <FormAutocomplete
+                  data={accountPaidToFetcher.data?.accounts || []}
+                  form={form}
+                  label={t("_ledger.paidTo")}
+                  onValueChange={onAccountPaidToChange}
+                  name="accountPaidToName"
+                  onSelect={(e) => {
+                    form.setValue("accountPaidTo", e.id);
+                  }}
+                  nameK={"name"}
+                />
+              </AccordationLayout>
+              <Separator className=" col-span-full" />
+              <Typography className=" col-span-full" variant="title2">
+                {t("table.reference")}
+              </Typography>
+              <div className=" col-span-full">
+                <DataTable
+                  data={form.getValues().partyReferences}
+                  columns={paymentReferencesColumns()}
+                />
               </div>
-            )}
-            <Separator className=" col-span-full" />
-            <Typography className=" col-span-full" variant="title2">
-              {t("form.amount")}
-            </Typography>
-
-            <CustomFormField
-              form={form}
-              label={t("form.paidAmount", { o: "BOB" })}
-              name="amount"
-              children={(field) => {
-                return (
-                  <Input
-                    type="number"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    onBlur={() => {
-                      //Distribute among the references
-                      const values = form.getValues();
-                      let total = formatAmountToInt(values.amount);
-                      if (values.partyReferences.length > 0) {
-                        const n = values.partyReferences.map((t) => {
-                          if (total >= t.outstanding) {
-                            t.allocated = Number(t.outstanding);
-                            total = total - t.outstanding;
-                          } else {
-                            t.allocated = Number(total);
-                            total = 0;
-                          }
-                          return t;
-                        });
-                        console.log("ALLOCATED", n);
-                        form.setValue("partyReferences", n);
-                        form.trigger("partyReferences");
-                      }
-                    }}
-                  />
-                );
-              }}
-            />
-
-            <Separator className=" col-span-full" />
-            <AccordationLayout
-              open={!formValues.accountPaidFrom || !formValues.accountPaidTo}
-              title={t("accounts")}
-              containerClassName=" col-span-full"
-              className="create-grid"
-            >
-              <FormAutocomplete
-                data={accountPaidFromFetcher.data?.accounts || []}
-                form={form}
-                label={t("_ledger.paidFrom")}
-                onValueChange={onAccountPaidFromChange}
-                name="accountPaidFromName"
-                onSelect={(e) => {
-                  form.setValue("accountPaidFrom", e.id);
-                }}
-                nameK={"name"}
-              />
-
-              <FormAutocomplete
-                data={accountPaidToFetcher.data?.accounts || []}
-                form={form}
-                label={t("_ledger.paidTo")}
-                onValueChange={onAccountPaidToChange}
-                name="accountPaidToName"
-                onSelect={(e) => {
-                  form.setValue("accountPaidTo", e.id);
-                }}
-                nameK={"name"}
-              />
-            </AccordationLayout>
-            <Separator className=" col-span-full" />
-            <Typography className=" col-span-full" variant="title2">
-              {t("table.reference")}
-            </Typography>
-            <div className=" col-span-full">
-              <DataTable
-                data={form.getValues().partyReferences}
-                columns={paymentReferencesColumns()}
-              />
             </div>
-          </div>
-          <input ref={inputRef} type="submit" className="hidden" />
-        </fetcher.Form>
-      </Form>
-    </FormLayout>
+            <input ref={inputRef} type="submit" className="hidden" />
+          </fetcher.Form>
+        </Form>
+      </FormLayout>
+    </Card>
   );
 }

@@ -9,8 +9,6 @@ import apiClient from "~/apiclient";
 import {
   ItemLineType,
   itemLineTypeToJSON,
-  PartyType,
-  regatePartyTypeToJSON,
 } from "~/gen/common";
 import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";

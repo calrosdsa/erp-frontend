@@ -6,16 +6,22 @@ import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema
 import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { LOAD_ACTION } from "~/constant";
+import { editReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
+import { formatRFC3339 } from "date-fns";
 
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStateWithEventSchema>;
+  editData:z.infer<typeof editReceiptSchema>
 };
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request,params }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  let actionRes = LOAD_ACTION
   switch (data.action) {
     case "update-state-with-event": {
       const res = await client.PUT("/receipt/update-state", {
@@ -26,12 +32,47 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       console.log(res.error);
       break;
     }
+    case "edit":{
+      const d = data.editData
+      const res = await client.PUT("/receipt",{
+        body:{
+          party_id: d.partyID,
+          party_receipt: params.partyReceipt || "",
+          posting_date: formatRFC3339(d.postingDate),
+          posting_time: d.postingTime,
+          tz: d.tz,
+          project: d.projectID,
+          cost_center: d.costCenterID,
+          currency: d.currency,
+          id: d.id
+        }
+      })
+      message = res.data?.message
+      error = res.error?.detail
+      actionRes = ""
+      break
+    }
   }
   return json({
     message,
     error,
+    action
   });
 };
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult
+}:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
+
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
@@ -41,6 +82,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
   let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
+    undefined;
+  let taxLinesRes: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
   const res = await client.GET("/receipt/detail/{id}", {
     params: {
@@ -53,8 +96,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
-  
-
   if (res.data) {
     switch (tab) {
       case "connections": {
@@ -80,6 +121,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
+        taxLinesRes = client.GET("/taxes-and-charges",{
+          params:{
+            query:{
+              id:res.data.result.entity.receipt.id.toString(),
+            }
+          }
+        })
         break;
       }
     }
@@ -92,6 +140,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     connections: resConnections,
     activities: res.data?.result.activities,
     lineItems: lineItemRes,
+    taxLines:taxLinesRes,
   });
 };
 

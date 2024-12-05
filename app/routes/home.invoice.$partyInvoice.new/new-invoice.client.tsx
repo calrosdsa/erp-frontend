@@ -10,26 +10,21 @@ import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { useEffect, useRef } from "react";
 import { routes } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
-import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { action } from "./route";
 import { createInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
 import { ItemLineType } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import Typography, { subtitle } from "@/components/typography/Typography";
 import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
-import { format, formatRFC3339 } from "date-fns";
+import { format } from "date-fns";
 import LineItems from "@/components/custom/shared/item/line-items";
 import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
 import GrandTotal from "@/components/custom/shared/item/grand-total";
@@ -40,7 +35,7 @@ import AccountingDimensionForm from "@/components/custom/shared/accounting/accou
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { Card } from "@/components/ui/card";
-import { useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
@@ -51,7 +46,6 @@ export default function CreatePurchaseInvoiceClient() {
   const toolbar = useToolbar();
   const navigate = useNavigate();
   const r = routes;
-  const documentStore = useDocumentStore();
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
   const { payload } = useDocumentStore();
@@ -60,15 +54,15 @@ export default function CreatePurchaseInvoiceClient() {
   const form = useForm<z.infer<typeof createInvoiceSchema>>({
     resolver: zodResolver(createInvoiceSchema),
     defaultValues: {
-      invoicePartyType:partyInvoice,
+      invoicePartyType: partyInvoice,
       referenceID: payload?.documentRefernceID,
       currency: payload?.currency || companyDefaults?.currency,
       lines: lineItemsStore.lines,
       taxLines: taxLinesStore.lines,
-      postingTime: format(new Date(),"HH:mm:ss"),
+      postingTime: format(new Date(), "HH:mm:ss"),
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      
+
       costCenterID: payload?.costCenterID,
       costCenterName: payload?.costCenterName,
       projectID: payload?.projectID,
@@ -93,25 +87,23 @@ export default function CreatePurchaseInvoiceClient() {
     );
   };
 
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"SAVE"
-  }, [fetcher.state]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
-
-  const setUpToolbar = () => {
-    toolbar.setToolbar({
+  setUpToolbar(() => {
+    return {
       titleToolbar: t("f.add-new", {
-        o: t("_invoice.base").toLocaleLowerCase(),
+        o: t(partyInvoice),
       }),
       onSave: () => {
         inputRef.current?.click();
       },
-    });
-  };
-
-  useEffect(() => {
-    setUpToolbar();
+    };
   }, []);
 
   useDisplayMessage(
@@ -136,82 +128,81 @@ export default function CreatePurchaseInvoiceClient() {
     [fetcher.data]
   );
 
-
-
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
   }, [formValues.taxLines]);
 
   useEffect(() => {
     lineItemsStore.onLines(formValues.lines);
+    taxLinesStore.updateFromItems(formValues.lines)
   }, [formValues.lines]);
 
   return (
     <div>
       <Card>
-      <FormLayout>
-        <Form {...form}>
-          <fetcher.Form
-            method="post"
-            onSubmit={form.handleSubmit(onSubmit)}
-            className={cn("", "gap-y-3 grid p-3")}
-          >
-            <div className="create-grid">
-              <PartyAutocomplete
-                party={partyInvoice}
-                roleActions={roleActions}
-                form={form}
-              />
-              <CustomFormDate
-                control={form.control}
-                name="postingDate"
-                label={t("form.postingDate")}
-              />
-              <CustomFormTime
-                control={form.control}
-                name="postingTime"
-                label={t("form.postingTime")}
-                description={formValues.tz}
-              />
+        <FormLayout>
+          <Form {...form}>
+            <fetcher.Form
+              method="post"
+              onSubmit={form.handleSubmit(onSubmit)}
+              className={cn("", "gap-y-3 grid p-3")}
+            >
+              <div className="create-grid">
+                <PartyAutocomplete
+                  party={partyInvoice}
+                  roleActions={roleActions}
+                  form={form}
+                />
+                <CustomFormDate
+                  control={form.control}
+                  name="postingDate"
+                  label={t("form.postingDate")}
+                />
+                <CustomFormTime
+                  control={form.control}
+                  name="postingTime"
+                  label={t("form.postingTime")}
+                  description={formValues.tz}
+                />
 
-              <CurrencyAndPriceList form={form} />
+                <CurrencyAndPriceList form={form} />
 
-              <AccountingDimensionForm form={form} />
-              
-              <LineItems
-                onChange={(e) => {
-                  form.setValue("lines", e);
-                  form.trigger("lines");
-                }}
-                allowEdit={true}
-                itemLineType={ItemLineType.ITEM_LINE_INVOICE}
-                partyType={partyInvoice}
-                currency={formValues.currency}
-                complement={
-                  <UpdateStock
-                    form={form}
-                    updateStock={formValues.updateStock}
-                    partyType={partyInvoice}
-                  />
-                }
-              />
-              <TaxAndChargesLines
-                onChange={(e) => {
-                  form.setValue("taxLines", e);
-                  form.trigger("taxLines");
-                }}
-                currency={formValues.currency}
-              />
-              <GrandTotal currency={formValues.currency} />
-              <TaxBreakup currency={formValues.currency} />
-            </div>
+                <AccountingDimensionForm form={form} />
 
-            <input ref={inputRef} type="submit" className="hidden" />
-          </fetcher.Form>
-        </Form>
-      </FormLayout>
+                <LineItems
+                  onChange={(e) => {
+                    form.setValue("lines", e);
+                    form.trigger("lines");
+                  }}
+                  allowEdit={true}
+                  itemLineType={ItemLineType.ITEM_LINE_INVOICE}
+                  partyType={partyInvoice}
+                  currency={formValues.currency}
+                  complement={
+                    <UpdateStock
+                      form={form}
+                      updateStock={formValues.updateStock}
+                      partyType={partyInvoice}
+                      isInvoice={true}
+                    />
+                  }
+                />
+                <TaxAndChargesLines
+                  onChange={(e) => {
+                    form.setValue("taxLines", e);
+                    form.trigger("taxLines");
+                  }}
+                  currency={formValues.currency}
+                />
+                <GrandTotal currency={formValues.currency} />
+                <TaxBreakup currency={formValues.currency} />
+              </div>
+
+              <input ref={inputRef} type="submit" className="hidden" />
+            </fetcher.Form>
+          </Form>
+        </FormLayout>
       </Card>
-
     </div>
   );
 }

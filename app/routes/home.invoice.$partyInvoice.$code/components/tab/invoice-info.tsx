@@ -191,33 +191,25 @@ export default function InvoiceInfoTab() {
             </>
           )}
 
-          {totals && (
+          {totals && invoice && (
             <>
               <Typography variant="title1" className=" col-span-full">
                 {t("form.totals")}
               </Typography>
 
               <DisplayTextValue
-                title={t("form.total")}
-                value={formatCurrency(
-                  totals.total,
-                  invoice?.currency,
-                  i18n.language
-                )}
-              />
-              <DisplayTextValue
                 title={t("form.paidAmount")}
                 value={formatCurrency(
-                  totals.paid,
-                  invoice?.currency,
+                  invoice.paid,
+                  invoice.currency,
                   i18n.language
                 )}
               />
               <DisplayTextValue
                 title={t("form.outstandingAmount")}
                 value={formatCurrency(
-                  totals.total - totals.paid,
-                  invoice?.currency,
+                  invoice.total - invoice.paid,
+                  invoice.currency,
                   i18n.language
                 )}
               />

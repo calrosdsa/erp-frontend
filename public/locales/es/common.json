@@ -414,6 +414,7 @@
   "serialNo": "Número de serie",
   "batchBundle": "Lote agrupado",
   "supplierQuotation": "Cotización de proveedor",
+  "chargesTemplate":"Plantilla de cargos",
 
   "accountingLedger": "Libro mayor contable",
   "accountPayable": "Cuentas por pagar",

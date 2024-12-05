@@ -35,7 +35,9 @@ export default function LineItemsDisplay({
             resData.data as components["schemas"]["ResponseDataListLineItemDtoBody"];
           const lineItemsStore = useLineItems();
           const setPayload = () => {
-            lineItemsStore.onLines(lines.map((t)=>toLineItemSchema(t,{partyType:partyType})));
+            lineItemsStore.onLines(lines.map((t)=>toLineItemSchema(t,{
+              partyType:partyType,
+            })));
           };
           useEffect(() => {
             setPayload();

@@ -26,7 +26,10 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import DetailLayout from "@/components/layout/detail-layout";
 import InvoiceInfoTab from "./components/tab/invoice-info";
 import InvoiceConnectionsTab from "./components/tab/invoice-connections";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
@@ -35,17 +38,18 @@ import { useCreatePayment } from "../home.accounting.payment.new/use-create-paym
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { format } from "date-fns";
 import { Entity } from "~/types/enums";
+import { useLineItems } from "@/components/custom/shared/item/use-line-items";
+import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 
 export default function InvoiceDetailClient() {
   const { invoice, activities, associatedActions, totals } =
     useLoaderData<typeof loader>();
-  const toolbarState = useToolbar();
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
   const partyInvoice = params.partyInvoice || "";
   const [searchParams] = useSearchParams();
-  const {roleActions} = useOutletContext<GlobalState>();
+  const { roleActions } = useOutletContext<GlobalState>();
   const tab = searchParams.get("tab");
   const r = routes;
   const navigate = useNavigate();
@@ -59,12 +63,14 @@ export default function InvoiceDetailClient() {
   });
   const [serialNoPermission] = usePermission({
     actions: associatedActions && associatedActions[Entity.SERIAL_NO],
-    roleActions:roleActions
-  })
+    roleActions: roleActions,
+  });
   const createPayment = useCreatePayment();
   const { enabledOrder } = useStatus({
     status: stateFromJSON(invoice?.status),
   });
+  const { total } = useLineItems();
+  const { total: totalTaxAndCharges } = useTaxAndCharges();
 
   const navItems = [
     {
@@ -128,7 +134,8 @@ export default function InvoiceDetailClient() {
       actions.push({
         label: t("_payment.base"),
         onClick: () => {
-          const outstanding = Number(totals?.total) - Number(totals?.paid);
+          const total = invoice?.total || 0
+          const outstanding = total - Number(totals?.paid);
           createPayment.setData({
             amount: outstanding,
             partyUuid: invoice?.party_uuid,
@@ -141,9 +148,9 @@ export default function InvoiceDetailClient() {
                 partyType: partyInvoice,
                 partyName: invoice?.code || "",
                 partyID: Number(invoice?.id),
-                grandTotal: Number(totals?.total),
+                grandTotal: total,
                 outstanding: outstanding,
-                allocated: Number(totals?.total) - Number(totals?.paid),
+                allocated: total - Number(totals?.paid),
               },
             ],
           });
@@ -158,21 +165,25 @@ export default function InvoiceDetailClient() {
         Icon: PlusIcon,
       });
     }
-    if(serialNoPermission?.view && status != State.DRAFT) {
+    if (serialNoPermission?.view && status != State.DRAFT) {
       view.push({
-        label:t("serialNoSumary"),
-        onClick:()=>{
-            navigate(r.toRoute({
-                main:r.serialNoResume,
-                routePrefix:[r.stockM],
-                q:{
-                    voucherNo:invoice?.code || "",
-                    fromDate:format(new Date(invoice?.created_at || ""),"yyyy-MM-dd")
-                    
-                }
-            }))
-        }
-    })
+        label: t("serialNoSumary"),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: r.serialNoResume,
+              routePrefix: [r.stockM],
+              q: {
+                voucherNo: invoice?.code || "",
+                fromDate: format(
+                  new Date(invoice?.created_at || ""),
+                  "yyyy-MM-dd"
+                ),
+              },
+            })
+          );
+        },
+      });
     }
     return {
       titleToolbar: `${t("_invoice.base")}(${invoice?.code})`,
@@ -198,12 +209,22 @@ export default function InvoiceDetailClient() {
         );
       },
     };
-  }, [paymentPermission, invoice, gLPermission,serialNoPermission]);
+  }, [
+    paymentPermission,
+    invoice,
+    gLPermission,
+    serialNoPermission,
+    total,
+    totalTaxAndCharges,
+  ]);
 
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"STATE"
-  }, [fetcher.state]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "STATE",
+    },
+    [fetcher.state]
+  );
 
   useDisplayMessage(
     {

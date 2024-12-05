@@ -80,6 +80,12 @@ export default function LineItems({
         });
       }
     },
+    onDelete:(rowIndex)=>{
+      const f = lineItems.filter((t, idx) => idx != rowIndex);
+      if (onChange) {
+        onChange(f);  
+      }
+    }
   });
 
   return (

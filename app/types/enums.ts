@@ -59,6 +59,7 @@ export enum Entity {
     BATCH_BUNDLE = 39,
     SUPPLIER_QUOTATION = 40,
     QUOTATION = 41,
+    CHARGES_TEMPLATE = 42,
 }
 
 export enum PartyType {
