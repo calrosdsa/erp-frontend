@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/chart";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useTranslation } from "react-i18next";
-import { useOutletContext } from "@remix-run/react";
+import { useOutletContext, useSearchParams } from "@remix-run/react";
 import { GlobalState } from "~/types/app";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { formatCurrency } from "~/util/format/formatCurrency";
@@ -61,15 +61,14 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
   endDate,
   timeUnit,
 }) => {
-  const [grouping, setGrouping] = useState<GroupingOption>(
-    timeUnit as GroupingOption
-  );
   const { t,i18n } = useTranslation("common");
   const {companyDefaults} = useOutletContext<GlobalState>()
   const currency = companyDefaults?.currency || DEFAULT_CURRENCY
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const [searchParams] = useSearchParams()
+  const grouping = searchParams.get("timeUnit") || "month"
 
-  const group = (groupBy: GroupingOption) => {
+  const group = (groupBy: string) => {
     const groupedData = data.reduce<{
       [key: string]: { [key: string]: number };
     }>((acc, entry) => {
@@ -223,18 +222,7 @@ export const ProfitLossStatement: React.FC<ProfitLossStatementProps> = ({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>{t("profitAndLoss")}</CardTitle>
-          <Select
-            value={grouping}
-            onValueChange={(value: GroupingOption) => setGrouping(value)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select grouping" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="month">Mensual</SelectItem>
-              <SelectItem value="year">Anual</SelectItem>
-            </SelectContent>
-          </Select>
+          
         </CardHeader>
         <CardContent>
           <ScrollBar orientation="horizontal" />

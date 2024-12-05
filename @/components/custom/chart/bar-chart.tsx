@@ -117,10 +117,9 @@ export default function BarChartComponent({
                 <Button
                   variant={"ghost"}
                   key={chart}
-                  size={"display"}
                   data-active={activeCharts.includes(chart)}
                   className={cn(
-                    `relative  flex flex-1 flex-col justify-center gap-1 border-t 
+                    `relative  flex flex-1 flex-col justify-center gap-1 border-t h-20
                   text-left even:border-l sm:border-l 
                   sm:border-t-0`,
                     activeCharts.includes(chart) && "bg-muted"
@@ -137,7 +136,7 @@ export default function BarChartComponent({
                   <span className="text-xs text-muted-foreground">
                     {chartConfig[chart]?.label}
                   </span>
-                  <span className="text-base font-bold leading-none">
+                  <span className="text-sm font-bold leading-none">
                     {formatter(total[key as keyof typeof total])}
                   </span>
                 </Button>

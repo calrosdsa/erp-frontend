@@ -8,6 +8,7 @@ import { NavItem } from "~/types"
 import { routes } from "~/util/route"
 import EventConnectionsTab from "./tab/event-connections"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
+import { stateFromJSON } from "~/gen/common"
 
 export default function EventDetailClient(){
     const [searchParams] = useSearchParams()
@@ -27,7 +28,9 @@ export default function EventDetailClient(){
     }
 
     setUpToolbar(()=>{
-        return {}
+        return {
+            status:stateFromJSON(event?.status),
+        }
     },[])
 
     useEffect(()=>{

@@ -451,6 +451,7 @@
   "CANCELLED":"CANCELADO",
   "COMPLETED":"COMPLETADO",
   "PARTIALLY_PAID":"PAGADO PARCIALMENTE",
+  "ACTIVE":"ACTIVO",
 
   "regate": {
     "schedule": "Horario",

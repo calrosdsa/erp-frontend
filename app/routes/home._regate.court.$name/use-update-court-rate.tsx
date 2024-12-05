@@ -91,6 +91,7 @@ export const UpdateCourtRate = ({}: {
       open={updateCourtRate.open}
       onOpenChange={updateCourtRate.onOpenChange}
       className="max-w-2xl"
+      title={updateCourtRate.title}
     >
       {openAddRateDialog && (
         <AddCourtRate
@@ -279,6 +280,7 @@ export const useUpdateCourtRate = create<UseUpdateCourtRateStore>((set) => ({
     set((state) => ({
       court: opts.court,
       open: true,
+      title:opts.title,
       isEdit:opts.isEdit,
     })),
 }));

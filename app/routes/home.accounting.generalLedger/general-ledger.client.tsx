@@ -97,10 +97,10 @@ export default function GeneralLedgerClient() {
   return (
     <div>
       <Card>
-        <CardHeader>
+        <CardHeader className="">
           <GeneralLedgerHeader />
         </CardHeader>
-        <CardContent className="px-2 py-3">
+        <CardContent className="py-3">
       <ScrollArea className="w-full rounded-md border">
           <ResizableVirtualizedTable data={dataWithTotal} columns={generalLedgerColumns({})} />
           <ScrollBar orientation="horizontal" />

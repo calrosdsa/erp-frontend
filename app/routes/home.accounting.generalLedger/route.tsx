@@ -24,6 +24,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         party: searchParams.get("party") || "",
         party_type: searchParams.get("partyType") || "",
         account:searchParams.get("account") || "",
+        project:searchParams.get("project") || "",
+        cost_center:searchParams.get("costCenter") || "",
       },
     },
   });

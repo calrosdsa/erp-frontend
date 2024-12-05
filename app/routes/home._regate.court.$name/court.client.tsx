@@ -89,7 +89,10 @@ export default function CourtDetailClient() {
       activities={activities}
       partyID={court?.id}
     >
-      {updateCourtRate.open && <UpdateCourtRate />}
+      {updateCourtRate.open && 
+      <UpdateCourtRate 
+      />
+      }
 
       {tab == "info" && <CourtInfoTab />}
       {tab == "schedule" && <CourtSchedule />}

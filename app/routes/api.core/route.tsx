@@ -1,6 +1,7 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import apiClient from "~/apiclient";
+import { LOAD_ACTION } from "~/constant";
 import { components } from "~/sdk";
 import {
   createCommentSchema,
@@ -55,6 +56,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         },
       });
       error = res.error?.detail;
+      message = res.data?.message
       break;
     }
   }
@@ -62,5 +64,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     message,
     activities,
+    action:LOAD_ACTION,
   });
 };

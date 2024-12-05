@@ -92,6 +92,7 @@ export default function CourtInfoTab() {
                       field.onChange(e);
                       form.trigger("name");
                     }}
+                    inputType="input"
                     title={t("form.name")}
                     readOnly={!permission?.edit}
                   />

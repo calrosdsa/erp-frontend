@@ -1,9 +1,12 @@
 import { addDays, endOfMonth, format, setHours, setMinutes } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
+import { es } from "date-fns/locale";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { ChartType, chartTypeToJSON, TimeUnit } from "~/gen/common";
 import { daysWeek } from "~/util/data/day-weeks";
 import { months } from "~/util/data/moths";
 import { formatCurrency } from "~/util/format/formatCurrency";
+import { formatDateUTC } from "~/util/format/formatDate";
 
 export const formatterValue = (
   chart: ChartType,
@@ -63,10 +66,7 @@ export const getChartName = (
         case TimeUnit.day:
         default:
           const date = new Date(value);
-          return date.toLocaleDateString(lng, {
-            month: "short",
-            day: "numeric",
-          });
+          return formatDateUTC(date,"PP",lng);
       }
 
     case ChartType.BOOKING_HOUR_AVG:

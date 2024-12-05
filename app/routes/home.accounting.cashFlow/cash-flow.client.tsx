@@ -45,6 +45,7 @@ export default function CashFlowClient(){
   }, []);
     return (
         <div className="grid gap-y-2">
+          {JSON.stringify(cashFlow)}
       <FinancialStatementHeader />
       {/* <CashFlowReportDemo/> */}
       <CashFlowReport

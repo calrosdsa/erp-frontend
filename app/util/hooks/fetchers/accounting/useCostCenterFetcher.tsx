@@ -1,8 +1,28 @@
+import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import { routes } from "~/util/route";
+
+export const CostCenterSearch = ({placeholder}:{
+  placeholder:string  
+})  =>{
+  const [costCenterFetcher, onCostCenterChange] = useCostCenterFetcher();
+  return (
+<AutocompleteSearch
+          data={costCenterFetcher.data?.costCenters || []}
+          onValueChange={onCostCenterChange}
+          nameK={"name"}
+          valueK={"id"}
+          placeholder={placeholder}
+          queryName="costCenterName"
+          queryValue="costCenter"
+          onSelect={() => {}}
+        />
+  )
+}
+
 
 export const useCostCenterFetcher = () => {
   const r = routes;

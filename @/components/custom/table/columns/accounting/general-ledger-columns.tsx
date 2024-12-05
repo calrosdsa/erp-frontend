@@ -81,6 +81,13 @@ export const generalLedgerColumns = ({}: {}): ColumnDef<
   columns.push({
     accessorKey: "voucher_no",
     header: t("form.voucherNo"),
+    cell:({ ...props}) =>{
+      const rowData = props.row.original
+      return <TableCellNameNavigation
+      {...props}
+      navigate={(name)=>r.toVoucher(rowData.voucher_type,name)}
+      />
+    }
   });
 
   columns.push({

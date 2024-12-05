@@ -2927,6 +2927,8 @@ export interface components {
             id: number;
             /** Format: int32 */
             paid: number;
+            /** Format: int64 */
+            party_id: number;
             party_name: string;
             party_uuid: string;
             /** Format: date-time */
@@ -2955,8 +2957,13 @@ export interface components {
              */
             readonly $schema?: string;
             booking: components["schemas"]["BookingData"];
+            booking_code: string;
             /** Format: int64 */
             booking_id: number;
+            /** Format: int32 */
+            paid_amount: number;
+            /** Format: int64 */
+            party_id: number;
         };
         BookingScheduleBodyBody: {
             /**
@@ -7219,6 +7226,7 @@ export interface operations {
                 party_type?: string;
                 party?: string;
                 currency?: string;
+                project?: string;
             };
             header?: {
                 Authorization?: string;
@@ -9806,6 +9814,7 @@ export interface operations {
                 party_type?: string;
                 party?: string;
                 currency?: string;
+                project?: string;
             };
             header?: {
                 Authorization?: string;

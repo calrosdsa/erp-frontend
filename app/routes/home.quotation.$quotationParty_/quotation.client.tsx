@@ -42,7 +42,9 @@ export default function QuotationsClient(){
         <div>
             <DataTable           
             data={paginationResult?.results || []}
-            columns={quotationColumns()}
+            columns={quotationColumns({
+                quotationType:quotationParty
+            })}
             />
         </div>
     )

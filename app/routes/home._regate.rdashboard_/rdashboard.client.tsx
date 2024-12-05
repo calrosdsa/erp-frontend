@@ -8,21 +8,7 @@ import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { ReactNode } from "react";
 import { routes } from "~/util/route";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChartNoAxesColumn, MoreVertical } from "lucide-react";
-import IconButton from "@/components/custom-ui/icon-button";
+
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 const chartConfig = {

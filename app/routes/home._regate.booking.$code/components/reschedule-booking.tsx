@@ -114,6 +114,9 @@ export const RescheduleBooking = ({
                 const body: components["schemas"]["BookingRescheduleBody"] = {
                   booking_id: booking?.id,
                   booking: b,
+                  booking_code:booking.code,
+                  paid_amount:booking.paid,
+                  party_id:booking.party_id,
                 };
                 console.log("BODY", body);
                 rescheduleFetcher.submit(
@@ -128,6 +131,7 @@ export const RescheduleBooking = ({
                 );
               }}
             >
+              {/* {JSON.stringify(booking?.paid)} */}
               <BookingDisplay bookings={fetcher.data?.bookingData || []} />
               <Button
                 type="submit"
@@ -199,7 +203,9 @@ export const RescheduleBooking = ({
                   </div>
                 </AccordationLayout>
 
-                <Button className="col-span-full">Validar Reserva</Button>
+                <Button className="col-span-full"
+                loading={fetcher.state == "submitting"}
+                >Validar Reserva</Button>
               </div>
             </fetcher.Form>
           </Form>

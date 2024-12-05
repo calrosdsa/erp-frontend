@@ -1,8 +1,27 @@
+import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import { routes } from "~/util/route";
+
+export const ProjectSearch = ({placeholder}:{
+  placeholder:string  
+})  =>{
+  const [projectsFetcher, onProjectChange] = useProjectFetcher();
+  return (
+    <AutocompleteSearch
+    data={projectsFetcher.data?.projects || []}
+    onValueChange={onProjectChange}
+    nameK={"name"}
+    valueK={"id"}
+    placeholder={placeholder}
+    queryName="projectName"
+    queryValue="project"
+    onSelect={() => {}}
+  />
+  )
+}
 
 export const useProjectFetcher = () => {
   const r = routes;

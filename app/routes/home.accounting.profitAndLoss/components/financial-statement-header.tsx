@@ -5,7 +5,9 @@ import CustomSelect from "@/components/custom/select/custom-select";
 import { useSearchParams } from "@remix-run/react";
 import { format, parse } from "date-fns";
 import { useTranslation } from "react-i18next";
-import { PartyType, partyTypeToJSON } from "~/gen/common";
+import { PartyType, partyTypeToJSON, TimeUnit, timeUnitToJSON } from "~/gen/common";
+import { CostCenterSearch } from "~/util/hooks/fetchers/accounting/useCostCenterFetcher";
+import { ProjectSearch } from "~/util/hooks/fetchers/accounting/useProjectFetcher";
 import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 
@@ -26,15 +28,10 @@ export default function FinancialStatementHeader() {
     "yyyy-MM-dd",
     new Date()
   );
-
-  const parties: SelectItem[] = [
-    { name: t("supplier"), value: partyTypeToJSON(PartyType.supplier) },
-    { name: t("customer"), value: partyTypeToJSON(PartyType.customer) },
+  const periodicity: SelectItem[] = [
+    { name: "Mensualemente", value: timeUnitToJSON(TimeUnit.month) },
+    { name: "Anualmente", value: timeUnitToJSON(TimeUnit.year) },
   ];
-
-  const [partyFetcher, onPartyChange] = usePartyDebounceFetcher({
-    partyType: partyTypeToJSON(PartyType.supplier),
-  });
 
   return (
     <div>
@@ -59,8 +56,21 @@ export default function FinancialStatementHeader() {
           }}
           placeholder={t("form.toDate")}
         />
-
-       
+          <CustomSelect
+          data={periodicity}
+          keyName="name"
+          defaultValue={searchParams.get("timeUnit") || timeUnitToJSON(TimeUnit.month)}
+          placeholder={t("Periodicidad")}
+          keyValue="value"
+          onValueChange={(e) => {
+            searchParams.set("timeUnit", e.value);
+            setSearchParams(searchParams, {
+              preventScrollReset: true,
+            });
+          }}
+        />
+        <ProjectSearch placeholder={t("project")} />
+        <CostCenterSearch placeholder={t("costCenter")} />
       </div>
     </div>
   );

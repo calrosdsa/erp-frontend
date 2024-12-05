@@ -26,7 +26,7 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
-  let action:string| undefined = undefined
+  let actionRes = LOAD_ACTION
   switch (data.action) {
     case "update-status-with-event": {
       console.log("UPDATE STATUS",data)
@@ -35,7 +35,6 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
-      action = "load"
       console.log("ERROR",res.error)
       break;
     }
@@ -57,13 +56,14 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
       })
       message = res.data?.message
       error = res.error?.detail
+      actionRes = ""
       break
     }
   }
   return json({
     message,
     error,
-    action,
+    action:actionRes,
   });
 };
 

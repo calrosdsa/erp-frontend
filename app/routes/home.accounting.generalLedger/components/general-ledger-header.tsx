@@ -1,10 +1,15 @@
 import { DateTimePicker } from "@/components/custom/datetime/date-time-picker";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import CustomSelect from "@/components/custom/select/custom-select";
+import { TooltipLayout } from "@/components/layout/tooltip-layout";
+import { Input } from "@/components/ui/input";
 import { useSearchParams } from "@remix-run/react";
 import { format, parse } from "date-fns";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
+import { CostCenterSearch, useCostCenterFetcher } from "~/util/hooks/fetchers/accounting/useCostCenterFetcher";
+import { ProjectSearch, useProjectFetcher } from "~/util/hooks/fetchers/accounting/useProjectFetcher";
 import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 
@@ -14,9 +19,22 @@ export default function GeneralLedgerHeader() {
   const [ledgerFetcher, onLedgerChange] = useAccountLedgerDebounceFetcher({
     isGroup: false,
   });
-  const defaultValue = format(new Date(),"yyyy-MM-dd")
-  const fromDate = parse(searchParams.get("fromDate") || defaultValue,"yyyy-MM-dd",new Date())
-  const toDate = parse(searchParams.get("toDate") || defaultValue,"yyyy-MM-dd",new Date())
+  const defaultValue = format(new Date(), "yyyy-MM-dd");
+  const fromDate = parse(
+    searchParams.get("fromDate") || defaultValue,
+    "yyyy-MM-dd",
+    new Date()
+  );
+  const toDate = parse(
+    searchParams.get("toDate") || defaultValue,
+    "yyyy-MM-dd",
+    new Date()
+  );
+  const [voucherNo, setVoucherNo] = useState(
+    searchParams.get("voucherNo") || ""
+  );
+
+  
 
   const parties: SelectItem[] = [
     { name: t("supplier"), value: partyTypeToJSON(PartyType.supplier) },
@@ -29,25 +47,27 @@ export default function GeneralLedgerHeader() {
 
   return (
     <div>
-      <div className="flex space-x-2">
+      <div className="flex flex-wrap gap-2">
         <DateTimePicker
           initialDate={fromDate}
           onChange={(e) => {
-            searchParams.set("fromDate",format(e,"yyyy-MM-dd"))
-            setSearchParams(searchParams,{
-              preventScrollReset:true
-            })
+            searchParams.set("fromDate", format(e, "yyyy-MM-dd"));
+            setSearchParams(searchParams, {
+              preventScrollReset: true,
+            });
           }}
           placeholder={t("form.fromDate")}
         />
-        <DateTimePicker 
-        initialDate={toDate}
-        onChange={(e) => {
-          searchParams.set("toDate",format(e,"yyyy-MM-dd"))
-            setSearchParams(searchParams,{
-              preventScrollReset:true
-            })
-        }} placeholder={t("form.toDate")} />
+        <DateTimePicker
+          initialDate={toDate}
+          onChange={(e) => {
+            searchParams.set("toDate", format(e, "yyyy-MM-dd"));
+            setSearchParams(searchParams, {
+              preventScrollReset: true,
+            });
+          }}
+          placeholder={t("form.toDate")}
+        />
 
         <AutocompleteSearch
           data={ledgerFetcher.data?.accounts || []}
@@ -85,6 +105,27 @@ export default function GeneralLedgerHeader() {
           queryValue="party"
           onSelect={() => {}}
         />
+        <ProjectSearch
+        placeholder={t("project")}
+        />
+        <CostCenterSearch
+          placeholder={t("costCenter")}
+        />
+      
+        <TooltipLayout content={t("form.voucherNo")}>
+          <Input
+            placeholder={t("form.voucherNo")}
+            className="w-min"
+            value={voucherNo}
+            onChange={(e) => setVoucherNo(e.target.value)}
+            onBlur={(e) => {
+              searchParams.set("voucherNo", voucherNo);
+              setSearchParams(searchParams, {
+                preventScrollReset: true,
+              });
+            }}
+          />
+        </TooltipLayout>
       </div>
     </div>
   );

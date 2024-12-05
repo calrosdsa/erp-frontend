@@ -1,5 +1,4 @@
 import TableCellIndex from "@/components/custom/table/cells/table-cell-index";
-import ResizableTable from "@/components/custom/table/ResizableTable";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { loader } from "./route";

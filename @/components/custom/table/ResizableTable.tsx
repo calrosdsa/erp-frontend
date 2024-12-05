@@ -120,7 +120,7 @@ export function ResizableVirtualizedTable<TData, TValue>({
   }, [table])
 
   return (
-    <div className="rounded-md border" ref={tableRef}>
+    <div className="rounded-md border " ref={tableRef}>
       <TableVirtuoso
         style={{ height: '70vh'}}
         data={data}

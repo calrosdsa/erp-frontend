@@ -70,6 +70,9 @@ export default function ActivityFeed({
   useDisplayMessage({
     error:fetcher.data?.error,
     success:fetcher.data?.message,
+    onSuccessMessage:()=>{
+      form.setValue("comment","")
+    }
   },[fetcher.data])
   return (
     <>
@@ -87,7 +90,7 @@ export default function ActivityFeed({
       <FormLayout className="px-0">
         <Card className="w-full mx-auto">
           <CardHeader>
-            <CardTitle>Comments</CardTitle>
+            <CardTitle>Comentarios</CardTitle>
             <div className="">
               <Form {...form}>
                 <fetcher.Form
@@ -110,14 +113,16 @@ export default function ActivityFeed({
                     }}
                   />
 
-                  <Button type="submit">Send</Button>
+                  <Button type="submit"
+                  loading={fetcher.state == "submitting"}
+                  >Enviar</Button>
                 </fetcher.Form>
               </Form>
             </div>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Activity</h2>
+              <h2 className="text-xl font-semibold">Actividad</h2>
             </div>
             <div className="space-y-4">
               {activities.map((activity) => (
@@ -161,9 +166,9 @@ export default function ActivityFeed({
                         >
                           Editar
                         </Button>
-                        <Button variant="ghost" size="icon">
+                        {/* <Button variant="ghost" size="icon">
                           <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                        </Button> */}
                       </div>
                     </div>
                     <p className="mt-1">{activity.comment}</p>

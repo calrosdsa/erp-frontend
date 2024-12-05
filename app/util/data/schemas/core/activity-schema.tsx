@@ -3,7 +3,7 @@ import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 
 
 export const createCommentSchema = z.object({
-    comment:z.string().max(DEFAULT_MAX_LENGTH).superRefine((data,ctx)=>{
+    comment:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH).superRefine((data,ctx)=>{
        if(data == "") {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,

@@ -8,7 +8,9 @@ import { routes } from "~/util/route";
 import TableCellStatus from "../../cells/table-cell-status";
 import TableCellDate from "../../cells/table-cell-date";
 
-export const quotationColumns = (): ColumnDef<components["schemas"]["QuotationDto"]>[] => {
+export const quotationColumns = ({quotationType}:{
+  quotationType:string
+}): ColumnDef<components["schemas"]["QuotationDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["QuotationDto"]>[] = [];
   const { t, i18n } = useTranslation("common");
   const r = routes;
@@ -25,7 +27,7 @@ export const quotationColumns = (): ColumnDef<components["schemas"]["QuotationDt
           {...props}
           navigate={(name) =>
             r.toRoute({
-              main: r.supplierQuotation,
+              main: quotationType,
               routePrefix: [r.quotation],
               routeSufix: [name],
               q: {

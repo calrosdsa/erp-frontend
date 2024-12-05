@@ -51,14 +51,13 @@ export default function TimeSchedule({ courtRates }: { courtRates: CourtRateDto[
   }, [courtRates])
 
   const getSlotRate = (day: Date, time: string): CourtRateDto | undefined => {
-    const dayOfWeek = day.getDay() || 7 // Convert Sunday (0) to 7
+    const dayOfWeek = day.getDay() 
     return ratesByDayAndTime.get(dayOfWeek)?.get(`${time}:00`)
   }
 
   return (
     <div className="container  py-3 px-1 xl:px-4 text-sm">
       <div className=" responsive-container border rounded-lg shadow-lg  " style={{ height: '600px' }}>
-
         <table className="border-collapse ">
           <thead className="sticky top-0 z-10 bg-background">
             <tr>
