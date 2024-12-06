@@ -8,6 +8,8 @@ import { routes } from "~/util/route";
 import ProgressBarWithTooltip from "@/components/custom-ui/progress-bar-with-tooltip";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { partyTypeFromJSON } from "~/gen/common";
+import { useLineItems } from "@/components/custom/shared/item/use-line-items";
+import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 
 export default function OrdersClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -20,6 +22,8 @@ export default function OrdersClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
+  const lineItems = useLineItems()
+  const taxAndCharges = useTaxAndCharges()
 
 
 
@@ -28,6 +32,8 @@ export default function OrdersClient() {
       titleToolbar:undefined,
       ...(permission?.create && {
         addNew: () => {
+          lineItems.reset()
+          taxAndCharges.reset()
           navigate(r.toRoute({
             main:partyOrder,
             routePrefix:["order"],

@@ -453,6 +453,7 @@
   "COMPLETED":"COMPLETADO",
   "PARTIALLY_PAID":"PAGADO PARCIALMENTE",
   "ACTIVE":"ACTIVO",
+  "ENABLED":"HABILITADO",
 
   "regate": {
     "schedule": "Horario",

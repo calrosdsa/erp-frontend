@@ -17,8 +17,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
-  let costCenters: components["schemas"]["ChargesTemplateDto"][] = [];
+  let chargesTemplates: components["schemas"]["ChargesTemplateDto"][] = [];
   let actions: components["schemas"]["ActionDto"][] = [];
+  console.log("CHARGES TEMPLATE...")
   switch (data.action) {
     case "get": {
       const res = await client.GET("/charge-template", {
@@ -30,7 +31,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
         },
       });
-      costCenters = res.data?.pagination_result.results || [];
+      console.log(res.data?.pagination_result.results)
+      chargesTemplates = res.data?.pagination_result.results || [];
       actions = res.data?.actions || [];
       break;
     }
@@ -38,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({
     message,
     error,
-    costCenters,
+    chargesTemplates,
   });
 };
 

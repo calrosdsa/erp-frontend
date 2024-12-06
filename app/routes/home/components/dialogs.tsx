@@ -61,6 +61,7 @@ import { SessionDefaultDrawer, useSessionDefaults } from "./SessionDefaults";
 import TaxAndChargeLine, {
   useTaxAndCharge,
 } from "@/components/custom/shared/accounting/tax/tax-and-charge-line";
+import { ConfirmationDialog, useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 
 export default function GlobalDialogs({
   globalState,
@@ -94,8 +95,16 @@ export default function GlobalDialogs({
 
   //Regate
   const createEvent = useCreateEvent();
+
+  const confirmationDialog = useConfirmationDialog()
   return (
     <>
+    {confirmationDialog.isOpen && 
+    <ConfirmationDialog
+    isOpen={confirmationDialog.isOpen}
+    onOpenChange={confirmationDialog.onOpenChange}
+    />
+    }
       {sessionDefaults.open && (
         <SessionDefaultDrawer
           open={sessionDefaults.open}

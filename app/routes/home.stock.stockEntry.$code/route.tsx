@@ -10,12 +10,12 @@ import { handleError } from "~/util/api/handle-status-code";
 import StockEntry from "../home.stock.stockEntry_/route";
 import { FetchResponse } from "openapi-fetch";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 
 type ActionData = {
   action: string;
-  updateStatusWithEvent: z.infer<typeof updateStateWithEventSchema>;
+  updateStatusWithEvent: z.infer<typeof updateStatusWithEventSchema>;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

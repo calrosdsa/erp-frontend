@@ -143,19 +143,19 @@ export default function ReceiptInfoTab() {
             party={partyReceipt}
             roleActions={roleActions}
             form={form}
-            disabled={isDisabled}
+            allowEdit={isDisabled}
           />
           <CustomFormDate
             control={form.control}
             name="postingDate"
-            disabled={isDisabled}
+            allowEdit={isDisabled}
             label={t("form.postingDate")}
           />
           <CustomFormTime
             control={form.control}
             name="postingTime"
             label={t("form.postingTime")}
-            disabled={isDisabled}
+            allowEdit={isDisabled}
             description={formValues.tz}
           />
 
@@ -163,9 +163,9 @@ export default function ReceiptInfoTab() {
 
           <Separator className=" col-span-full" />
 
-          <CurrencyAndPriceList form={form} disabled={isDisabled} />
+          <CurrencyAndPriceList form={form} allowEdit={isDisabled} />
 
-          <AccountingDimensionForm form={form} disabled={isDisabled} />
+          <AccountingDimensionForm form={form} allowEdit={isDisabled} />
 
           <LineItemsDisplay
             currency={receipt?.currency || companyDefaults?.currency || ""}

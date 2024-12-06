@@ -6,6 +6,7 @@ import EventsClient from "./events.client"
 import { z } from "zod"
 import { createEventSchema } from "~/util/data/schemas/regate/event-schema"
 import { components } from "~/sdk"
+import { State, stateToJSON } from "~/gen/common"
 
 
 type ActionData = {
@@ -27,7 +28,8 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     query:{
                         page:DEFAULT_PAGE,
                         size:DEFAULT_SIZE,
-                        query:data.query
+                        query:data.query,
+                        status:stateToJSON(State.ENABLED),
                     }
                 }
             })

@@ -18,73 +18,73 @@ import { MultiSelect } from "@/components/custom/select/MultiSelect";
 import { daysWeek } from "~/util/data/day-weeks";
 import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/custom/form/CustomFormField";
-import { Input } from "@/components/ui/input";
 import TimeSelectInput from "@/components/custom/select/time-select-input";
 import AmountInput from "@/components/custom/input/AmountInput";
 import { useEffect, useState } from "react";
 import CheckForm from "@/components/custom/input/CheckForm";
-import { DrawerClose } from "@/components/ui/drawer";
 import {
-  formatCurrency,
   formatCurrencyAmount,
 } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { Badge } from "@/components/ui/badge";
 import { Clock, DollarSign, TrashIcon } from "lucide-react";
 import IconButton from "@/components/custom-ui/icon-button";
-import { parse, format, addMinutes, isBefore, isEqual, setHours, setMinutes, setSeconds, setMilliseconds, interval } from 'date-fns';
+
 import { mapToCourtRateData } from "./util/generate-court-rate-interval";
 import { routes } from "~/util/route";
+import { ActivityType, activityTypeToJSON } from "~/gen/common";
 
-export const UpdateCourtRate = ({}: {
-}) => {
+export const UpdateCourtRate = ({}: {}) => {
   const updateCourtRate = useUpdateCourtRate();
   const { toast } = useToast();
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const [openAddRateDialog, setOpenAddRateDialog] = useState(false);
-  const r = routes
+  const r = routes;
   const form = useForm<z.infer<typeof updateCourtRateSchema>>({
     resolver: zodResolver(updateCourtRateSchema),
     defaultValues: {
       courtRateIntervals: [],
-      courtUUID:updateCourtRate.court?.uuid,
-      isEdit:updateCourtRate.isEdit
+      courtUUID: updateCourtRate.court?.uuid,
+      action: activityTypeToJSON(updateCourtRate.action),
     },
-  })
-
-
+  });
 
   const onSubmit = (values: z.infer<typeof updateCourtRateSchema>) => {
-    const body:components["schemas"]["UpdateCourtRatesBody"] = {
-        court_rate:mapToCourtRateData(values),
-        court_uuid:values.courtUUID,
-        is_edit:values.isEdit
-    }
-    console.log("BODY",body)
-    fetcher.submit({
-        action:"update-court-rate",
-        updateCourtRateData:body,
-    },{
-        action:r.toCourtDetail(updateCourtRate.court?.name ||"",updateCourtRate.court?.uuid || ""),
-        encType:"application/json",
-        method:"POST"
-    })
+    const body: components["schemas"]["UpdateCourtRatesBody"] = {
+      court_rate: mapToCourtRateData(values),
+      court_uuid: values.courtUUID,
+      action: values.action,
+    };
+    fetcher.submit(
+      {
+        action: "update-court-rate",
+        updateCourtRateData: body,
+      },
+      {
+        action: r.toCourtDetail(
+          updateCourtRate.court?.name || "",
+          updateCourtRate.court?.uuid || ""
+        ),
+        encType: "application/json",
+        method: "POST",
+      }
+    );
   };
 
-  useEffect(()=>{
-    if(fetcher.data?.error){
-        toast({
-            title:fetcher.data.error,
-        })
+  useEffect(() => {
+    if (fetcher.data?.error) {
+      toast({
+        title: fetcher.data.error,
+      });
     }
-    if(fetcher.data?.message){
-        toast({
-            title:fetcher.data?.message
-        })
-        updateCourtRate.onOpenChange(false)
+    if (fetcher.data?.message) {
+      toast({
+        title: fetcher.data?.message,
+      });
+      updateCourtRate.onOpenChange(false);
     }
-  },[fetcher.data])
+  }, [fetcher.data]);
 
   return (
     <DrawerLayout
@@ -95,6 +95,7 @@ export const UpdateCourtRate = ({}: {
     >
       {openAddRateDialog && (
         <AddCourtRate
+          action={updateCourtRate.action}
           open={openAddRateDialog}
           onOpenChange={(e) => setOpenAddRateDialog(e)}
           onAddCourtRate={(e) => {
@@ -119,13 +120,15 @@ export const UpdateCourtRate = ({}: {
                 border flex-wrap"
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="font-medium">
-                      {formatCurrencyAmount(
-                        t.rate,
-                        DEFAULT_CURRENCY,
-                        i18n.language
-                      )}
-                    </span>
+                    {updateCourtRate.action != ActivityType.DELETE && (
+                      <span className="font-medium">
+                        {formatCurrencyAmount(
+                          t.rate,
+                          DEFAULT_CURRENCY,
+                          i18n.language
+                        )}
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />
@@ -133,15 +136,19 @@ export const UpdateCourtRate = ({}: {
                       {t.start_time} - {t.end_time}
                     </span>
                   </div>
-                  <Badge variant={t.enabled ? "default" : "secondary"}>
-                    {/* <Toggle className="h-4 w-4 mr-1" /> */}
-                    {t.enabled ? "Habilitado" : "Deshabilitado"}
-                  </Badge>
+                  {updateCourtRate.action != ActivityType.DELETE && (
+                    <Badge variant={t.enabled ? "default" : "secondary"}>
+                      {/* <Toggle className="h-4 w-4 mr-1" /> */}
+                      {t.enabled ? "Habilitado" : "Deshabilitado"}
+                    </Badge>
+                  )}
                   <IconButton
                     onClick={() => {
-                      const f = form.getValues().courtRateIntervals.filter((t,index)=>index != idx);
+                      const f = form
+                        .getValues()
+                        .courtRateIntervals.filter((t, index) => index != idx);
                       form.setValue("courtRateIntervals", f);
-                      form.trigger("courtRateIntervals")
+                      form.trigger("courtRateIntervals");
                     }}
                     icon={TrashIcon}
                   />
@@ -165,7 +172,7 @@ export const UpdateCourtRate = ({}: {
               keyName="dayName"
               keyValue={"day"}
               onSelect={(e) => {
-                console.log("DAYWEEKS",e)
+                console.log("DAYWEEKS", e);
                 form.setValue(
                   "dayWeeks",
                   e.map((t) => t.day)
@@ -191,17 +198,18 @@ const AddCourtRate = ({
   open,
   onOpenChange,
   onAddCourtRate,
+  action,
 }: {
   open: boolean;
   onOpenChange: (e: boolean) => void;
   onAddCourtRate: (e: z.infer<typeof courtRateInterval>) => void;
+  action: ActivityType;
 }) => {
- 
   const form = useForm<z.infer<typeof courtRateInterval>>({
     resolver: zodResolver(courtRateInterval),
     defaultValues: {
-        enabled:true,
-        
+      enabled: true,
+      rate: 0,
     },
   });
   const { t } = useTranslation("common");
@@ -218,15 +226,23 @@ const AddCourtRate = ({
             onSubmit={form.handleSubmit(onSubmit)}
             className="grid gap-3 sm:grid-cols-2"
           >
-            <CustomFormField
-              label={t("form.rate")}
-              name="rate"
-              form={form}
-              children={(field) => {
-                return <AmountInput field={field} currency={"BOB"} />;
-              }}
-            />
-            <CheckForm label={t("form.enabled")} name="enabled" form={form} />
+            {action != ActivityType.DELETE && (
+              <>
+                <CustomFormField
+                  label={t("form.rate")}
+                  name="rate"
+                  form={form}
+                  children={(field) => {
+                    return <AmountInput field={field} currency={"BOB"} />;
+                  }}
+                />
+                <CheckForm
+                  label={t("form.enabled")}
+                  name="enabled"
+                  form={form}
+                />
+              </>
+            )}
 
             <div className="col-span-full" />
             <TimeSelectInput
@@ -256,22 +272,23 @@ const AddCourtRate = ({
 
 interface UseUpdateCourtRateStore {
   open: boolean;
-  title?:string
-  isEdit?:boolean
+  title?: string;
+  isEdit?: boolean;
+  action: ActivityType;
   court: components["schemas"]["CourtDto"] | undefined;
   onOpenChange: (e: boolean) => void;
   onOpenDialog: (opts: {
     court: components["schemas"]["CourtDto"] | undefined;
-    title:string
-    isEdit:boolean
+    title: string;
+    action: ActivityType;
   }) => void;
 }
 
 export const useUpdateCourtRate = create<UseUpdateCourtRateStore>((set) => ({
   open: false,
+  action: ActivityType.EDIT,
   court: undefined,
-  isEdit:false,
-  title:undefined,
+  title: undefined,
   onOpenChange: (e) =>
     set((state) => ({
       open: e,
@@ -280,7 +297,7 @@ export const useUpdateCourtRate = create<UseUpdateCourtRateStore>((set) => ({
     set((state) => ({
       court: opts.court,
       open: true,
-      title:opts.title,
-      isEdit:opts.isEdit,
+      title: opts.title,
+      action: opts.action,
     })),
 }));

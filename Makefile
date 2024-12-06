@@ -8,7 +8,7 @@ generate-sdk:
 
 tag=latest
 docker:
-	docker build -t jmiranda21/erp-front:$(tag) .
-	docker push jmiranda21/erp-front:$(tag)	
+	docker build -t jmiranda0521/erp-frontend:$(tag) .
+	docker push jmiranda0521/erp-frontend:$(tag)	
 
 

@@ -36,9 +36,6 @@ export const action = async({request}:ActionFunctionArgs)=>{
             error = res.error?.detail
             message = res.data?.message
             console.log(res.data?.errors,res.data?.message)
-            if(res.response.ok){
-                return redirect(r.booking)
-            }
         }
     }
     return json({

@@ -25,10 +25,11 @@ export default function CheckForm({ label, form,control, name, description,onCha
       name={name}
       render={({ field }) => (
         <FormItem  className="flex flex-col">
-            {label && <FormLabel>{label}</FormLabel>}
-            <div className="flex flex-row items-center space-x-3 space-y-0 rounded-md border py-3 px-2">
+            {label && <FormLabel className="text-xs">{label}</FormLabel>}
+            <div className="flex flex-row items-center space-x-3 space-y-0 rounded-md border pb-[10px] pt-[10px] px-2">
           <FormControl >
-            <Checkbox checked={field.value} onCheckedChange={(e)=>{
+            <Checkbox 
+            checked={field.value} onCheckedChange={(e)=>{
               field.onChange(e)
               if(onChange){
                 onChange(e)

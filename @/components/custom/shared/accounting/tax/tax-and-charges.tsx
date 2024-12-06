@@ -13,13 +13,17 @@ export default function TaxAndCharges({
   status,
   currency,
   docPartyID,
-  showTotal = true
+  showTotal = true,
+  allowEdit = true,
+  allowCreate = true,
 }: {
   taxLines: any;
   status: string;
   currency: string;
   docPartyID: number;
   showTotal?:boolean
+  allowEdit?:boolean
+  allowCreate?:boolean
 }) {
   return (
       <Suspense fallback={<FallBack />}>
@@ -37,7 +41,8 @@ export default function TaxAndCharges({
                   docPartyID={docPartyID}
                   currency={currency}
                   showTotal={showTotal}
-                  allowEdit={status == stateToJSON(State.DRAFT)}
+                  allowEdit={allowEdit}
+                  allowCreate={allowCreate}
                 />
             );
           }}

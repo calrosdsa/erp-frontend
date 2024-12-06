@@ -10,7 +10,7 @@ import {
   ItemLineType,
   itemLineTypeToJSON,
 } from "~/gen/common";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
 import { editOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
@@ -19,7 +19,7 @@ import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
-  updateStatusWithEvent: z.infer<typeof updateStateWithEventSchema>;
+  updateStatusWithEvent: z.infer<typeof updateStatusWithEventSchema>;
   editData:z.infer<typeof editOrderSchema>
 };
 export const action = async ({ request,params }: ActionFunctionArgs) => {

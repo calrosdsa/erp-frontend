@@ -26,7 +26,7 @@ interface TimePickerProps {
   description?: string
   control: Control<any, any>
   required?: boolean
-  disabled?:boolean
+  allowEdit?:boolean
 }
 
 export function CustomFormTime({
@@ -35,7 +35,7 @@ export function CustomFormTime({
   label,
   description,
   required,
-  disabled,
+  allowEdit = true,
 }: TimePickerProps) {
   const { t } = useTranslation("common")
 
@@ -52,13 +52,15 @@ export function CustomFormTime({
           <FormLabel className="text-left text-xs">{label} {required && "*"}</FormLabel>
           <Popover>
             <FormControl>
-              <PopoverTrigger asChild disabled={disabled}>
+              <PopoverTrigger asChild disabled={!allowEdit}>
                 <Button
                   variant="outline"
                   size={"sm"}
                   className={cn(
                     "justify-start text-left font-normal ",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
+                    !allowEdit &&
+                      "disabled:opacity-100 disabled:cursor-default bg-secondary"
                   )}
                 >
                   <Clock className="mr-2 h-4 w-4" />

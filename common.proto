@@ -63,6 +63,7 @@ enum PartyType {
     batchBundle = 37;
     supplierQuotation = 38;
     salesQuotation = 39;
+    chargesTemplate = 40;
 }
 
 enum PianoPartyType {
@@ -97,6 +98,7 @@ enum State {
     INACTIVE = 24;
     DELIVERED = 25;
     DELETED = 26;
+    DISABLED = 27;
 }
 
 
@@ -106,7 +108,7 @@ enum EventState {
     CANCEL_EVENT = 2;  //used to transition from any state to  CANCELLED
     APPROVED_EVENT = 3; //used to transition from any state to APPROVED
     COMPLETED_EVENT = 4; //used to transition from any state to APPROVED
-    
+    ENABLED_EVENT = 5;
 }
 
 

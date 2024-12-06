@@ -12,7 +12,6 @@ import { invoiceColumns } from "@/components/custom/table/columns/invoice/invoic
 import { routes } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
-import { partyTypeFromJSON } from "~/gen/common";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 

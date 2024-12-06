@@ -27,7 +27,8 @@ export default function LineItems({
   currency,
   partyType,
   itemLineType,
-  allowEdit,
+  allowEdit = true,
+  allowCreate = true,
   onChange,
   complement,
 }: {
@@ -36,6 +37,7 @@ export default function LineItems({
   currency: string;
   partyType: string;
   allowEdit?: boolean;
+  allowCreate?: boolean;
   itemLineType: ItemLineType;
   complement?: JSX.Element;
 }) {
@@ -45,21 +47,23 @@ export default function LineItems({
   const shared = {
     currency: currency,
     partyType: partyType,
-    allowEdit: allowEdit || false,
+    allowEdit: allowEdit,
     itemLineType: itemLineType,
   };
   const [metaOptions] = useTableRowActions({
-    onAddRow: () => {
-      itemLine.onOpenDialog({
-        ...shared,
-        onEditItemForm: (e) => {
-          const lines = [...lineItems, e];
-          if (onChange) {
-            onChange(lines);
-          }
-        },
-      });
-    },
+    ...(allowCreate && {
+      onAddRow: () => {
+        itemLine.onOpenDialog({
+          ...shared,
+          onEditItemForm: (e) => {
+            const lines = [...lineItems, e];
+            if (onChange) {
+              onChange(lines);
+            }
+          },
+        });
+      },
+    }),
     onEdit: (rowIndex) => {
       const f = lineItems.find((t, idx) => idx == rowIndex);
       if (f) {
@@ -80,12 +84,15 @@ export default function LineItems({
         });
       }
     },
-    onDelete:(rowIndex)=>{
-      const f = lineItems.filter((t, idx) => idx != rowIndex);
-      if (onChange) {
-        onChange(f);  
-      }
-    }
+
+    ...(onChange && {
+      onDelete: (rowIndex) => {
+        const f = lineItems.filter((t, idx) => idx != rowIndex);
+        if (onChange) {
+          onChange(f);
+        }
+      },
+    }),
   });
 
   return (

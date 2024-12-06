@@ -17,7 +17,10 @@ import CustomFormField from "@/components/custom/form/CustomFormField";
 import AmountInput from "@/components/custom/input/AmountInput";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { useEffect, useRef, useState } from "react";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { useEventDebounceFetcher } from "~/util/hooks/fetchers/regate/useEventDebounceFetcher";
@@ -61,6 +64,7 @@ export default function CreateBookings({
   const createEvent = useCreateEvent();
   const r = routes;
   const { resetPayload } = useNewBooking();
+  const navigate = useNavigate();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const onSubmit = (values: z.infer<typeof createBookingsSchema>) => {
@@ -89,6 +93,13 @@ export default function CreateBookings({
       );
     }
   };
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
   setUpToolbar(() => {
     return {
@@ -102,6 +113,14 @@ export default function CreateBookings({
   useDisplayMessage(
     {
       error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        navigate(
+          r.toRoute({
+            main: r.bookingM,
+          })
+        );
+      },
     },
     [fetcher.data]
   );
@@ -184,10 +203,9 @@ export default function CreateBookings({
               name="comment"
               form={form}
               children={(field) => {
-                return <Textarea {...field} rows={3}/>;
+                return <Textarea {...field} rows={3} />;
               }}
             />
-          
 
             <AccordationLayout
               containerClassName="col-span-full"

@@ -116,6 +116,7 @@ export default function CreatePurchaseOrdersClient() {
   );
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
+    taxLinesStore.updateFromItems(formValues.lines)
   }, [formValues.taxLines]);
 
   useEffect(() => {
@@ -187,6 +188,9 @@ export default function CreatePurchaseOrdersClient() {
                     form.trigger("taxLines");
                   }}
                   currency={formValues.currency}
+                  form={form}
+                  allowCreate={true}
+                  allowEdit={true}
                 />
                 <GrandTotal currency={formValues.currency} />
                 <TaxBreakup currency={formValues.currency} />

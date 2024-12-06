@@ -246,8 +246,8 @@ export default function FieldReservation({
             </tr>
           </thead>
           <tbody>
-            {timeSlots.map((time) => (
-              <tr key={time}>
+            {timeSlots.map((time,idx) => (
+              <tr key={idx}>
                 <td className="border p-2 text-sm text-right sticky left-0 bg-background z-10">
                   {time.substring(0, 5)}
                 </td>

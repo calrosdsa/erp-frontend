@@ -8,6 +8,8 @@ import { routes } from "~/util/route";
 import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
+import { useLineItems } from "@/components/custom/shared/item/use-line-items";
+import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 
 
 export default function ReceiptsClient(){
@@ -21,11 +23,15 @@ export default function ReceiptsClient(){
         actions:actions,
         roleActions:globalState.roleActions
     })
+    const lineItems = useLineItems()
+    const taxAndCharges = useTaxAndCharges()
 
     setUpToolbar(()=>{
         return {
             ...(permission?.create && {
                 addNew:()=>{
+                    lineItems.reset()
+                    taxAndCharges.reset()
                     navigate(r.toCreateReceipt(partyTypeFromJSON(params.partyReceipt)))
                 }
             }) 

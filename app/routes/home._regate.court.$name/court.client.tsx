@@ -19,6 +19,7 @@ import CourtSchedule from "./tabs/court-schedule";
 import { ButtonToolbar } from "~/types/actions";
 import { UpdateCourtRate, useUpdateCourtRate } from "./use-update-court-rate";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { ActivityType } from "~/gen/common";
 
 export default function CourtDetailClient() {
   const { court, activities } = useLoaderData<typeof loader>();
@@ -62,21 +63,31 @@ export default function CourtDetailClient() {
         updateCourtRate.onOpenDialog({
           court: court,
           title: "Editar precio por hora",
-          isEdit:true,
+          action:ActivityType.EDIT,
         });
       },
     });
     actions.push({
-      label: "Agregar precio por hora",
+      label: "Agregar precio hora",
       onClick: () => {
         updateCourtRate.onOpenDialog({
           court: court,
           title: "Agregar precio por hora",
-          isEdit:false,
+          action:ActivityType.CREATE,
         });
       },
     });
-  
+    
+    actions.push({
+      label: "Eliminar horas",
+      onClick: () => {
+        updateCourtRate.onOpenDialog({
+          court: court,
+          title: "Eliminar horas",
+          action:ActivityType.DELETE,
+        });
+      },
+    });
     return {
       titleToolbar: params.name,
       actions: actions,

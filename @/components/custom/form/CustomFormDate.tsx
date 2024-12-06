@@ -31,7 +31,7 @@ export default function CustomFormDate({
   isDatetime,
   required,
   control,
-  disabled,
+  allowEdit = true,
 }: {
   form?: any;
   name: string;
@@ -40,7 +40,7 @@ export default function CustomFormDate({
   control?: Control<any, any>;
   isDatetime?: boolean;
   required?: boolean;
-  disabled?: boolean;
+  allowEdit?: boolean;
 }) {
   const { t } = useTranslation("common");
 
@@ -55,13 +55,15 @@ export default function CustomFormDate({
           </FormLabel>
           <Popover>
             <FormControl>
-              <PopoverTrigger asChild disabled={disabled}>
+              <PopoverTrigger asChild disabled={!allowEdit}>
                 <Button
                   variant="outline"
                   size={"sm"}
                   className={cn(
                     "justify-start text-left font-normal group",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
+                    !allowEdit &&
+                      "disabled:opacity-100 disabled:cursor-default bg-secondary"
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
@@ -74,7 +76,7 @@ export default function CustomFormDate({
                   ) : (
                     <span>{t("form.pickADate")}</span>
                   )}
-                  {(field.value && !disabled) && (
+                  {(field.value && allowEdit) && (
                     <Button
                       variant="ghost"
                       size="icon"

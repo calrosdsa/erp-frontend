@@ -51,27 +51,29 @@ export default function OrderInfoTab() {
   const partyOrder = params.partyOrder || "";
   const fetcher = useFetcher<typeof action>();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { form, hasChanged, updateRef,previousValues } = useEditFields<EditData>({
-    schema: editOrderSchema,
-    defaultValues: {
-      id:order?.id,
-      partyID: order?.party_id,
-      partyName: order?.party_name,
-      currency: order?.currency,
-      postingTime: order?.posting_time,
-      postingDate: new Date(order?.posting_date || new Date()),
-      deliveryDate: new Date(order?.delivery_date || new Date()),
-      tz: order?.tz,
-      projectID: order?.project_id,
-      projectName: order?.project,
-      costCenterID: order?.cost_center_id,
-      costCenterName: order?.cost_center,   
-    },
-  });
+  const { form, hasChanged, updateRef, previousValues } =
+    useEditFields<EditData>({
+      schema: editOrderSchema,
+      defaultValues: {
+        id: order?.id,
+        partyID: order?.party_id,
+        partyName: order?.party_name,
+        currency: order?.currency,
+        postingTime: order?.posting_time,
+        postingDate: new Date(order?.posting_date || new Date()),
+        deliveryDate: new Date(order?.delivery_date || new Date()),
+        tz: order?.tz,
+        projectID: order?.project_id,
+        projectName: order?.project,
+        costCenterID: order?.cost_center_id,
+        costCenterName: order?.cost_center,
+      },
+    });
   const formValues = form.getValues();
   const [orderPerm] = usePermission({ roleActions, actions });
   const isDraft = stateFromJSON(order?.status) == State.DRAFT;
-  const isDisabled = !isDraft || !orderPerm?.edit;
+  const allowEdit = isDraft && orderPerm?.edit;
+  const allowCreate = isDraft && orderPerm.create;
   const { companyDefaults } = useOutletContext<GlobalState>();
   const documentStore = useDocumentStore();
 
@@ -88,10 +90,13 @@ export default function OrderInfoTab() {
     );
   };
 
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"SAVE"
-  }, [fetcher.state]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
   setUpToolbar(
     (opts) => {
@@ -135,32 +140,32 @@ export default function OrderInfoTab() {
             party={partyOrder}
             roleActions={roleActions}
             form={form}
-            disabled={isDisabled}
+            allowEdit={allowEdit}
           />
 
           <CustomFormDate
             control={form.control}
             name="postingDate"
             label={t("form.postingDate")}
-            disabled={isDisabled}
+            allowEdit={allowEdit}
           />
           <CustomFormTime
             control={form.control}
             name="postingTime"
             label={t("form.postingTime")}
             description={formValues.tz}
-            disabled={isDisabled}
+            allowEdit={allowEdit}
           />
           <CustomFormDate
             control={form.control}
             name="deliveryDate"
             label={t("form.deliveryDate")}
-            disabled={isDisabled}
+            allowEdit={allowEdit}
           />
           <Separator className=" col-span-full" />
 
-          <CurrencyAndPriceList form={form} disabled={isDisabled} />
-          <AccountingDimensionForm form={form} disabled={isDisabled} />
+          <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
+          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
 
           <LineItemsDisplay
             currency={order?.currency || companyDefaults?.currency || ""}
@@ -168,6 +173,8 @@ export default function OrderInfoTab() {
             lineItems={lineItems}
             partyType={params.partyReceipt || ""}
             itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
+            allowCreate={allowCreate}
+            allowEdit={allowEdit}
           />
           {order && (
             <>
@@ -176,6 +183,8 @@ export default function OrderInfoTab() {
                 status={order.status}
                 taxLines={taxLines}
                 docPartyID={order.id}
+                allowCreate={allowCreate}
+                allowEdit={allowEdit}
               />
 
               <GrandTotal currency={order.currency} />

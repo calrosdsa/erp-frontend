@@ -5,6 +5,7 @@ import { handleError } from "~/util/api/handle-status-code"
 import { FetchResponse } from "openapi-fetch"
 import { z } from "zod"
 import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charges-template-schema"
+import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
 
 type ActionData = {
     action: string;
@@ -15,6 +16,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const data = (await request.json()) as ActionData;
     let message: string | undefined = undefined;
     let error: string | undefined = undefined;
+    console.log("EDIT DATA",data.editData)
     switch (data.action) {
       case "edit": {
         const d = data.editData;
@@ -66,7 +68,8 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
       }
     return defer({
         chargesTemplate:res.data?.result.entity,
-        taxLines:taxLinesRes
+        taxLines:taxLinesRes,
+        actions:res.data?.actions
     })
 }
 

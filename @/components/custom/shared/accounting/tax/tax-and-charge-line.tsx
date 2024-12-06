@@ -21,6 +21,8 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { action } from "~/routes/api.taxAndChargeLine/route";
 import CheckForm from "@/components/custom/input/CheckForm";
 import { CustomCheckbox } from "@/components/custom/input/CustomCheckBox";
+import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
 export default function TaxAndChargeLine({
   onOpenChange,
@@ -44,12 +46,16 @@ export default function TaxAndChargeLine({
       type: payload?.line?.type,
       accountHeadName: payload?.line?.accountHeadName,
       accountHead: payload?.line?.accountHead,
-      isDeducted: payload?.line?.isDeducted == undefined ? false :payload?.line?.isDeducted,
+      isDeducted:
+        payload?.line?.isDeducted == undefined
+          ? false
+          : payload?.line?.isDeducted,
       amount: payload?.line?.amount,
       taxLineID: payload?.line?.taxLineID,
     },
   });
   const formValues = form.getValues();
+  const confirmationDialog = useConfirmationDialog();
   const onSubmit = (e: z.infer<typeof taxAndChargeSchema>) => {
     if (e.type != "FIXED_AMOUNT") {
       const amount = addOrDeductToNetAmount(
@@ -97,6 +103,32 @@ export default function TaxAndChargeLine({
     return netTotal * (taxRate / 100);
   };
 
+  const deleteTaxLine = () => {
+    if (formValues.taxLineID) {
+      confirmationDialog.onOpenDialog({
+        onConfirm: () => {
+          fetcher.submit(
+            {
+              action: "delete-tax-line",
+              taxLineID: formValues.taxLineID || 0,
+            },
+            {
+              encType: "application/json",
+              action: r.apiTaxAndChargeLine,
+              method: "POST",
+            }
+          );
+        },
+        title: "Eliminar línea de impuestos y cargos",
+      });
+    } else {
+      if (payload?.onDelete) {
+        payload.onDelete();
+        onOpenChange(false)
+      }
+    }
+  };
+
   useDisplayMessage(
     {
       error: fetcher.data?.error,
@@ -124,9 +156,17 @@ export default function TaxAndChargeLine({
             <div className="flex flex-col ">
               {payload?.allowEdit && (
                 <div className=" flex flex-wrap gap-x-3 ">
-                  <Button size={"xs"}>
-                    <TrashIcon size={15} />
-                  </Button>
+                  {payload.onDelete != undefined && (
+                    <Button
+                      size={"xs"}
+                      type="button"
+                      onClick={() => {
+                        deleteTaxLine();
+                      }}
+                    >
+                      <TrashIcon size={15} />
+                    </Button>
+                  )}
                   <Button
                     type="submit"
                     size={"xs"}
@@ -158,16 +198,16 @@ export default function TaxAndChargeLine({
                     },
                   ] as SelectItem[]
                 }
+                allowEdit={payload?.allowEdit}
                 keyName={"name"}
                 keyValue={"value"}
                 name="type"
               />
 
-              
-
               <FormAutocomplete
                 data={accountFetcher.data?.accounts || []}
                 form={form}
+                allowEdit={payload?.allowEdit}
                 label={"Cuenta Contable"}
                 onValueChange={onAccountChange}
                 name="accountHeadName"
@@ -176,7 +216,16 @@ export default function TaxAndChargeLine({
                 }}
                 nameK={"name"}
               />
-              <CustomFormField
+              {formValues.type != "FIXED_AMOUNT" && (
+                <CustomFormFieldInput
+                  label="Tasa de impuesto"
+                  name="taxRate"
+                  control={form.control}
+                  inputType="input"
+                  allowEdit={payload?.allowEdit}
+                />
+              )}
+              {/* <CustomFormField
                 label="Tasa de impuesto"
                 name="taxRate"
                 control={form.control}
@@ -188,21 +237,22 @@ export default function TaxAndChargeLine({
                     />
                   );
                 }}
-              />
+              /> */}
               {formValues.type == "FIXED_AMOUNT" && (
-                <CustomFormField
+                <CustomFormFieldInput
                   label="Monto"
                   name="amount"
                   control={form.control}
-                  children={(field) => {
-                    return <Input {...field} />;
-                  }}
+                  inputType="input"
+                  allowEdit={payload?.allowEdit}
                 />
               )}
-              <CheckForm
-              name="isDeducted"
-              label="Deducir"
-              control={form.control}
+              <CustomFormFieldInput
+                name="isDeducted"
+                label="Deducir"
+                control={form.control}
+                inputType="check"
+                allowEdit={payload?.allowEdit}
               />
             </div>
           </fetcher.Form>
@@ -216,6 +266,7 @@ interface Payload {
   line?: z.infer<typeof taxAndChargeSchema>;
   currency: string;
   onEdit?: (e: z.infer<typeof taxAndChargeSchema>) => void;
+  onDelete?: () => void;
   allowEdit?: boolean;
   netTotal: number;
   docPartyID?: number;

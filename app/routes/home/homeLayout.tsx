@@ -6,8 +6,6 @@ import {
   SessionDefaultDrawer,
   useSessionDefaults,
 } from "./components/SessionDefaults";
-import Sidebar from "@/components/layout/sidebar";
-import Header from "@/components/layout/header";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,7 +18,6 @@ import { HomeIcon } from "lucide-react";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useUnmount } from "usehooks-ts";
 import { Typography } from "@/components/typography";
 import {
@@ -30,7 +27,6 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
-import { UserNav } from "@/components/layout/user-nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 type RouteItem = {
@@ -54,7 +50,7 @@ export default function HomeLayout({
   const toolbar = useToolbar();
 
   const getRoutes = () => {
-    const routesName = location.pathname.split("/").map((word) => t(word));
+    const routesName = location.pathname.split("/").map((word) => word);
     setRoutesName(routesName.slice(2));
   };
 
@@ -90,12 +86,6 @@ export default function HomeLayout({
     <>
       <GlobalDialogs globalState={globalState} />
 
-      {/* <Header
-        data={globalState}
-        openSessionDefaults={() => setOpenSessionDefaults(true)}
-        /> */}
-
-      {/* <div className="flex h-screen border-collapse overflow-hidden max-w-[1900px] mx-auto"> */}
       <div className=" max-w-[1400px] mx-auto">
         <SidebarProvider>
           <AppSidebar data={globalState} />
@@ -127,7 +117,7 @@ export default function HomeLayout({
                               aria-label={item}
                               className="hover:underline"
                             >
-                              <Typography variant="caption">{item}</Typography>
+                              <Typography variant="caption">{t(item)}</Typography>
                             </Link>
                           </BreadcrumbLink>
                         </BreadcrumbItem>
@@ -153,12 +143,6 @@ export default function HomeLayout({
                 </Breadcrumb>
               </div>
               <div className="flex items-center space-x-2 pr-3">
-                {/* {globalState.profile != undefined && (
-                <UserNav
-                user={globalState.profile}
-                  openSessionDefaults={()=>sessionDefaults.onOpenChange(true)}
-                  />
-                  )} */}
                 <ThemeToggle />
               </div>
             </header>

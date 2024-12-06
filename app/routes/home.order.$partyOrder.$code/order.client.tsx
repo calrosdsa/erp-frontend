@@ -24,7 +24,7 @@ import { ButtonToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import { routes } from "~/util/route";
 import { z } from "zod";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import DetailLayout from "@/components/layout/detail-layout";
 import OrderInfoTab from "./components/tab/order-info";
 import OrderConnectionsTab from "./components/tab/order-connections";
@@ -198,7 +198,7 @@ export default function PurchaseOrderClient() {
       titleToolbar: `${t("_order.base")}(${order?.code})`,
       status: stateFromJSON(order?.status),
       onChangeState: (e) => {
-        const body: z.infer<typeof updateStateWithEventSchema> = {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: order?.status || "",
           party_type: params.partyOrder || "",
           party_id: order?.code || "",

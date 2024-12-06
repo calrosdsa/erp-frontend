@@ -34,13 +34,13 @@ interface Props<T extends object, K extends keyof T> {
   nameK: K;
   name: string;
   form?: any;
-  control?: Control<any,any>
-  label: string | undefined;
+  control?: Control<any, any>;
+  label?: string;
   description?: string;
   onValueChange: (e: string) => void;
   onSelect?: (v: T) => void;
   className?: string;
-  disabled?:boolean
+  allowEdit?: boolean;
   addNew?: () => void;
   required?: boolean;
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
@@ -58,11 +58,11 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   onSelect,
   onCustomDisplay,
   className,
-  disabled,
+  allowEdit = true,
   addNew,
   required,
 }: Props<T, K>) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   return (
     <FormField
       control={control || form.control}
@@ -80,20 +80,22 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                 <Button
                   variant="outline"
                   role="combobox"
-                  disabled={disabled}
                   size={"sm"}
+                  disabled={!allowEdit}
                   onClick={() => {
-                    onValueChange("")
+                    onValueChange("");
                     setOpen(!open);
                   }}
                   className={cn(
                     "justify-between",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
+                    !allowEdit &&
+                      "disabled:opacity-100 disabled:cursor-default bg-secondary"
                   )}
                 >
                   {field.value || "Select item"}
 
-                  {(field.value && !disabled) ? (
+                  {field.value && allowEdit ? (
                     <>
                       <IconButton
                         icon={XIcon}
@@ -101,7 +103,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                         className="ml-2 h-6 w-6 shrink-0 opacity-50 "
                         onClick={(e) => {
                           e.stopPropagation();
-                          field.onChange("")
+                          field.onChange("");
                           setOpen(false);
                           // form.setValue(name, "");
                         }}
@@ -131,11 +133,11 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                           key={idx}
                           className=" border-b"
                           onSelect={() => {
-                            field.onChange(item[nameK])
+                            field.onChange(item[nameK]);
                             if (onSelect) {
                               onSelect(item);
                             }
-                            setOpen(false); 
+                            setOpen(false);
                           }}
                         >
                           {onCustomDisplay(item, idx)}
@@ -148,11 +150,11 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                             console.log("NAME", name);
                             console.log("NAME value", item[nameK]);
                             // form.setValue(name, item[nameK]);
-                            field.onChange(item[nameK])
+                            field.onChange(item[nameK]);
                             if (onSelect) {
                               onSelect(item);
                             }
-                            setOpen(false); 
+                            setOpen(false);
                           }}
                         >
                           <Check

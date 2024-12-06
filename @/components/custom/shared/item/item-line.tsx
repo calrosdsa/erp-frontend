@@ -31,6 +31,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse";
 import { Typography } from "@/components/typography";
+import CustomFormFieldInput from "../../form/CustomFormInput";
 
 export default function ItemLine({
   open,
@@ -127,7 +128,7 @@ export default function ItemLine({
       className=" max-w-2xl "
     >
       <Form {...form}>
-        {/* {JSON.stringify(form.formState.errors)} */}
+        {JSON.stringify(form.formState.errors)}
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
           className="px-2 pb-2"
@@ -155,6 +156,7 @@ export default function ItemLine({
               nameK={"item_name"}
               label={t("_item.base")}
               name="item_name"
+              allowEdit={itemLine.allowEdit}
               form={form}
               onValueChange={onItemPriceChange}
               onSelect={(e) => {
@@ -178,12 +180,11 @@ export default function ItemLine({
               }}
             />
 
-            <CustomFormField
+            <CustomFormFieldInput
               label={t("_item.code")}
-              form={form}
-              children={(field) => {
-                return <Input disabled={true} {...field} readOnly={true} />;
-              }}
+              control={form.control}
+              allowEdit={false}
+              inputType="input"
               name={"item_code"}
             />
 
@@ -192,58 +193,51 @@ export default function ItemLine({
             </Typography>
 
             {itemLine.itemLineType != ItemLineType.ITEM_LINE_RECEIPT && (
-              <CustomFormField
+              <CustomFormFieldInput
                 label={t("form.quantity")}
-                form={form}
+                control={form.control}
                 required={true}
-                children={(field) => {
-                  return <Input {...field} type="number" required={true} />;
-                }}
+                allowEdit={itemLine.allowEdit}
+                inputType="input"
                 name={"quantity"}
               />
             )}
 
             {itemLine.itemLineType == ItemLineType.ITEM_LINE_RECEIPT && (
               <>
-                <CustomFormField
+                <CustomFormFieldInput
                   required={true}
                   name="lineItemReceipt.acceptedQuantity"
                   label={t("f.accepted", { o: t("form.quantity") })}
-                  form={form}
-                  children={(field) => {
-                    return <Input {...field} type="number" />;
-                  }}
+                  control={form.control}
+                  allowEdit={itemLine.allowEdit}
+                  inputType="input"
                 />
-                <CustomFormField
+                <CustomFormFieldInput
                   name="lineItemReceipt.rejectedQuantity"
                   label={t("f.rejected", { o: t("form.quantity") })}
-                  form={form}
-                  children={(field) => {
-                    return <Input {...field} type="number" />;
-                  }}
+                  control={form.control}
+                  allowEdit={itemLine.allowEdit}
+                  inputType="input"
                 />
               </>
             )}
 
-            <CustomFormField
+            <CustomFormFieldInput
               label={t("form.rate")}
-              form={form}
+              control={form.control}
               required={true}
-              children={(field) => {
-                return (
-                  <AmountInput currency={itemLine.currency} field={field} />
-                );
-              }}
               name={"rate"}
+              allowEdit={itemLine.allowEdit}
+              inputType="input"
             />
 
-            <CustomFormField
+            <CustomFormFieldInput
               label={t("form.uom")}
-              form={form}
-              children={(field) => {
-                return <Input disabled={true} {...field} readOnly={true} />;
-              }}
+              control={form.control}
               name={"uom"}
+              allowEdit={false}
+              inputType="input"
             />
 
             {itemLine.itemLineType == ItemLineType.ITEM_LINE_RECEIPT && (
@@ -257,6 +251,7 @@ export default function ItemLine({
                   label={t("f.accepted", { o: t("_warehouse.base") })}
                   name="lineItemReceipt.acceptedWarehouseName"
                   form={form}
+                  allowEdit={itemLine.allowEdit}
                   onValueChange={onWarehouseChange}
                   onSelect={(e) => {
                     form.setValue("lineItemReceipt.acceptedWarehouse", e.id);
@@ -274,6 +269,7 @@ export default function ItemLine({
                   label={t("f.rejected", { o: t("_warehouse.base") })}
                   name="lineItemReceipt.rejectedWarehouseName"
                   form={form}
+                  allowEdit={itemLine.allowEdit}
                   onValueChange={onWarehouseChange}
                   onSelect={(e) => {
                     form.setValue("lineItemReceipt.rejectedWarehouse", e.id);
@@ -306,7 +302,7 @@ interface ItemLineEditStore {
   onOpenChange: (e: boolean) => void;
   onOpenDialog: (opts: {
     title?: string;
-    allowEdit: boolean;
+    allowEdit?: boolean;
     line?: z.infer<typeof lineItemSchema>;
 
     // lineItemReceipt?: z.infer<typeof lineItemReceipt>;

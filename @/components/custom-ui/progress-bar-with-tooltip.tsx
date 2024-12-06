@@ -32,7 +32,7 @@ export default function ProgressBarWithTooltip({ current = 0, total = 100,label 
             >
               <Progress 
                 value={percentage} 
-                className="w-full h-4"
+                className="w-full h-3"
               />
             </div>
           </TooltipTrigger>

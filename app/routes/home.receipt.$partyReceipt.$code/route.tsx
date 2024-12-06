@@ -2,7 +2,7 @@ import { ActionFunctionArgs, defer, json, LoaderFunctionArgs } from "@remix-run/
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
 import ReceiptDetailClient from "./receipt.client";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
@@ -13,7 +13,7 @@ import { formatRFC3339 } from "date-fns";
 
 type ActionData = {
   action: string;
-  updateStateWithEvent: z.infer<typeof updateStateWithEventSchema>;
+  updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
   editData:z.infer<typeof editReceiptSchema>
 };
 export const action = async ({ request,params }: ActionFunctionArgs) => {

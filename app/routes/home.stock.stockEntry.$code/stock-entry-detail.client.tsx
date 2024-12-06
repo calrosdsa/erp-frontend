@@ -14,7 +14,7 @@ import StockEntryInfo from "./tab/stock-entry-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { stateFromJSON } from "~/gen/common";
 import { z } from "zod";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";
 import { Entity } from "~/types/enums";
@@ -78,7 +78,7 @@ export default function StockEntryDetailClient() {
       status: stateFromJSON(stockEntry?.status),
       view:view,
       onChangeState: (e) => {
-        const body: z.infer<typeof updateStateWithEventSchema> = {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: stockEntry?.status || "",
           party_id: stockEntry?.code || "",
           events: [e],

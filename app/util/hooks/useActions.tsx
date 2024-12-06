@@ -1,33 +1,41 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { components } from "~/sdk";
 import { Permission } from "~/types/permission";
 
 
-
-export function usePermission({actions,roleActions}:{
-    actions?:components["schemas"]["ActionDto"][]
-    roleActions?:components["schemas"]["RoleActionDto"][]
-}){
-    const [permission,setPermissions] = useState<Permission>({
-        create:false,
-        view:false,
-        edit:false
-    })
-
-    const checkPermission = ()=>{
-        let p = permission
-        actions?.map((item)=>{
-            p = {
-                ...p,
-                [item.name]:roleActions?.map(t=>t.action_id).includes(item.id)
-            }
-        })
-        setPermissions(p)
-    }
-
-    useEffect(()=>{
-        checkPermission()
-    },[roleActions,actions])
-
+type ActionDto = components["schemas"]["ActionDto"]
+type RoleActionDto = components["schemas"]["RoleActionDto"]
+interface UsePermissionProps {
+    actions?: ActionDto[]
+    roleActions?: RoleActionDto[]
+  }
+  
+  export function usePermission({ actions, roleActions }: UsePermissionProps): [Permission] {
+    const permission = useMemo(() => {
+      if (!actions || !roleActions) {
+        return {
+          create: false,
+          view: false,
+          edit: false,
+          delete: false,
+        }
+      }
+  
+      const roleActionIds = new Set(roleActions.map(ra => ra.action_id))
+  
+      return actions.reduce((acc, action) => {
+        if (action.name) {
+          acc[action.name as keyof Permission] = roleActionIds.has(action.id)
+        }
+        return acc
+      }, {} as Permission)
+    }, [actions, roleActions])
+  
+    // useEffect(() => {
+    //   if (!actions || !roleActions) {
+    //     console.warn('usePermission: actions or roleActions is undefined')
+    //   }
+    // }, [actions, roleActions])
+  
     return [permission]
-}
+  }

@@ -2003,6 +2003,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/regate/event/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Event Update Status */
+        put: operations["event-update-status"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/role": {
         parameters: {
             query?: never;
@@ -2619,7 +2636,8 @@ export interface paths {
         put: operations["edit-tax-and-charge"];
         /** Add tax and charge */
         post: operations["add-tax-and-charge"];
-        delete?: never;
+        /** Delete tax and charge */
+        delete: operations["delete-tax-and-charge"];
         options?: never;
         head?: never;
         patch?: never;
@@ -6869,9 +6887,9 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            action: string;
             court_rate: components["schemas"]["CourtRateData"][];
             court_uuid: string;
-            is_edit?: boolean;
         };
         UpdateCredentialsPluginRequestBody: {
             /**
@@ -7388,6 +7406,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -7601,6 +7620,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -7842,6 +7862,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -7988,6 +8009,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -8134,6 +8156,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -8214,6 +8237,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -8534,6 +8558,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -8608,6 +8633,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -8721,6 +8747,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -8977,6 +9004,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -9018,6 +9046,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -9524,6 +9553,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -9705,6 +9735,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -9816,6 +9847,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -9965,6 +9997,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -10293,6 +10326,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -10336,6 +10370,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -10520,6 +10555,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -10705,6 +10741,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -10846,13 +10883,13 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
                 column?: string;
                 parentId?: string;
                 invoice_id?: string;
-                status?: string;
             };
             header?: {
                 Authorization?: string;
@@ -11090,6 +11127,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -11376,6 +11414,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -11663,6 +11702,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -11847,6 +11887,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -11893,6 +11934,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -12275,6 +12317,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -12323,8 +12366,8 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Created */
-            201: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -12415,12 +12458,49 @@ export interface operations {
             };
         };
     };
+    "event-update-status": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get roles": {
         parameters: {
             query: {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -12605,6 +12685,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -12646,6 +12727,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -12759,6 +12841,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -12983,6 +13066,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -13093,6 +13177,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -13281,6 +13366,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -13503,6 +13589,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
             };
             header?: {
@@ -13614,6 +13701,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -13655,6 +13743,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -13700,6 +13789,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 is_selling?: string;
                 is_buying?: string;
@@ -13814,6 +13904,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -13930,6 +14021,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -14075,6 +14167,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;
@@ -14284,6 +14377,38 @@ export interface operations {
             };
         };
     };
+    "delete-tax-and-charge": {
+        parameters: {
+            query: {
+                id: string;
+                party_type?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     uom: {
         parameters: {
             query?: {
@@ -14363,6 +14488,7 @@ export interface operations {
                 page: string;
                 size: string;
                 enabled?: string;
+                status?: string;
                 is_group?: string;
                 query?: string;
                 order?: string;

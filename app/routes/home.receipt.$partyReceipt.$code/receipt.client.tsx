@@ -13,7 +13,7 @@ import ReceiptInfoTab from "./components/tab/receipt-info";
 import { useTranslation } from "react-i18next";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { stateFromJSON } from "~/gen/common";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
@@ -96,7 +96,7 @@ export default function ReceiptDetailClient() {
       status: stateFromJSON(receipt?.status),
       actions: actions,
       onChangeState: (e) => {
-        const body: z.infer<typeof updateStateWithEventSchema> = {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: receipt?.status || "",
           party_type: params.partyReceipt || "",
           party_id: receipt?.code || "",

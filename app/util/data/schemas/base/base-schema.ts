@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 
-export const updateStateWithEventSchema = z.object({
+export const updateStatusWithEventSchema = z.object({
     party_id:z.string(),
     party_type:z.string().optional(),
     events:z.array(z.number()),

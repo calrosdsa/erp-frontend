@@ -14,8 +14,10 @@ import {
   getSortedRowModel,
   OnChangeFn,
   PaginationState,
+  RowSelectionState,
   SortingState,
   TableMeta,
+  Updater,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
@@ -37,6 +39,7 @@ import { DataTableToolbar } from "./data-table-toolbar"
 import { useTranslation } from "react-i18next"
 import DataTableEditFooter from "./data-table-edit-footer"
 import { useSearchParams } from "@remix-run/react"
+import { create } from "zustand"
 
 export interface PaginationOptions {
   rowCount?: number
@@ -111,7 +114,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
     hiddenColumns || {}
   )
-  const [rowSelection, setRowSelection] = useState({})
+  const {rowSelection,setRowSelection} = useTable()
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
   const [expanded, setExpanded] = useState<ExpandedState>({})
@@ -180,10 +183,10 @@ export function DataTable<TData, TValue>({
   }, [rowSelection, table])
 
   return (
-    <div className="py-3 space-y-4 w-full">
+    <div className="py-3 space-y-4 ">
       {metaActions != undefined && <DataTableToolbar table={table} />}
-
-      <div className="rounded-md border h-full relative w-[96vw] mx-auto md:w-[60vw] lg:w-[75vw] xl:w-full overflow-auto"
+      <div className="rounded-md border h-full 
+      relative w-[90vw] mx-auto md:w-[60vw] lg:w-full xl:w-full overflow-auto"
       >
         <Table>
           <TableHeader>
@@ -232,7 +235,8 @@ export function DataTable<TData, TValue>({
           </TableBody>
           <TableFooter className="w-full">
             <TableRow>
-              <TableHead colSpan={table.getCenterLeafColumns().length} align="right">
+              <TableHead colSpan={table.getCenterLeafColumns().length} align="right"
+              className="py-1 h-5">
                 {metaOptions != undefined && (
                   <DataTableEditFooter table={table} />
                 )}
@@ -247,3 +251,25 @@ export function DataTable<TData, TValue>({
     </div>
   )
 } 
+
+interface TableStore {
+  rowSelection:{}
+  setRowSelection:(updaterOrValue: Updater<RowSelectionState>)=>void
+}
+export const useTable = create<TableStore>((set)=>({
+  //Complete and take row selection from here
+  rowSelection: {},
+  setRowSelection: (updaterOrValue) => {
+    return set((state)=>{
+      let newState: RowSelectionState | undefined = undefined
+      if (typeof updaterOrValue === "function") {
+        newState = updaterOrValue(state.rowSelection)
+      } else {
+        newState = updaterOrValue
+      }
+      return {
+        rowSelection:newState
+      }
+    })
+  },
+}))

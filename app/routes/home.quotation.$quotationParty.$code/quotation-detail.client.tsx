@@ -12,7 +12,7 @@ import QuotationInfoTab from "./components/tab/quotation-info";
 import { useTranslation } from "react-i18next";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { stateFromJSON } from "~/gen/common";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
@@ -106,7 +106,7 @@ export default function QuotationDetailClient() {
       status: stateFromJSON(quotation?.status),
       actions: actions,
       onChangeState: (e) => {
-        const body: z.infer<typeof updateStateWithEventSchema> = {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: quotation?.status || "",
           party_type: quotationParty || "",
           party_id: quotation?.code || "",

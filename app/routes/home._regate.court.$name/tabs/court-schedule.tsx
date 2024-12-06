@@ -3,14 +3,9 @@ import TimeSchedule from "../components/time-schedule";
 import { loader } from "../route";
 import { Suspense } from "react";
 import FallBack from "@/components/layout/Fallback";
-import { components } from "~/sdk";
-import { Button } from "@/components/ui/button";
-import { EditIcon, TrashIcon } from "lucide-react";
-import { useUpdateCourtRate } from "../use-update-court-rate";
 
 export default function CourtSchedule() {
   const { courtRates,court} = useLoaderData<typeof loader>();
-  const updateCourtRate = useUpdateCourtRate();
 
   return (
     <div>

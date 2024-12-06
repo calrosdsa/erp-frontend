@@ -14,7 +14,7 @@ import { PartyType, partyTypeToJSON, stateFromJSON } from "~/gen/common";
 import DetailLayout from "@/components/layout/detail-layout";
 import PaymentInfoTab from "./tab/payment-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { ButtonToolbar } from "~/types/actions";
 import { format } from "date-fns";
@@ -58,7 +58,7 @@ export default function PaymentDetailClient() {
       actions:actions,
       status:stateFromJSON(paymentData?.status),
       onChangeState: (e) => {
-        const body: z.infer<typeof updateStateWithEventSchema> = {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: paymentData?.status || "",
           party_id: paymentData?.code || "",
           events: [e],

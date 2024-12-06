@@ -1,5 +1,10 @@
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { useFetcher, useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+} from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { action, loader } from "../route";
 import { GlobalState } from "~/types/app";
@@ -9,21 +14,32 @@ import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charge
 import { useRef } from "react";
 import { routes } from "~/util/route";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { z } from "zod";
+import FormLayout from "@/components/custom/form/FormLayout";
+import { Form } from "@/components/ui/form";
+import CustomFormField from "@/components/custom/form/CustomFormField";
+import { Input } from "@/components/ui/input";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import { usePermission } from "~/util/hooks/useActions";
 type EditCustomerType = z.infer<typeof editChargesTemplateSchema>;
 export default function ChargesTemplateInfo() {
   const { t } = useTranslation("common");
-  const { chargesTemplate,taxLines } = useLoaderData<typeof loader>();
-  const {companyDefaults} = useOutletContext<GlobalState>()
+  const { chargesTemplate, taxLines, actions } = useLoaderData<typeof loader>();
+  const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
+  const [chargesPerm] = usePermission({ actions, roleActions });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
-  const navigate = useNavigate();
-  const r = routes;
   const { form, hasChanged, updateRef } = useEditFields<EditCustomerType>({
     schema: editChargesTemplateSchema,
-    defaultValues: {},
+    defaultValues: {
+      name: chargesTemplate?.name,
+      id: chargesTemplate?.id,
+    },
   });
 
   const onSubmit = (e: EditCustomerType) => {
@@ -38,11 +54,13 @@ export default function ChargesTemplateInfo() {
       }
     );
   };
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"SAVE"
-  }, [fetcher.state]);
-
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
   setUpToolbar(
     (opts) => {
@@ -67,18 +85,32 @@ export default function ChargesTemplateInfo() {
   );
 
   return (
-    <div className="info-grid">
-      <DisplayTextValue title={t("form.name")} value={chargesTemplate?.name} />
-
-      {chargesTemplate &&
-       <TaxAndCharges
-       currency={companyDefaults?.currency || DEFAULT_CURRENCY}
-       status={chargesTemplate.status}
-       taxLines={taxLines}
-       docPartyID={chargesTemplate.id}
-       showTotal={false}
-     />
-      }
-    </div>
+    <FormLayout>
+      <Form {...form}>
+        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="info-grid">
+            <CustomFormFieldInput
+              label={t("form.name")}
+              control={form.control}
+              name="name"
+              inputType="input"
+              allowEdit={chargesPerm?.edit || false}
+            />
+            {chargesTemplate && (
+              <TaxAndCharges
+                currency={companyDefaults?.currency || DEFAULT_CURRENCY}
+                status={chargesTemplate.status}
+                taxLines={taxLines}
+                docPartyID={chargesTemplate.id}
+                showTotal={false}
+                allowEdit={chargesPerm?.edit || false}
+                allowCreate={chargesPerm?.create || false}
+              />
+            )}
+          </div>
+          <input className="hidden" type="submit" ref={inputRef} />
+        </fetcher.Form>
+      </Form>
+    </FormLayout>
   );
 }

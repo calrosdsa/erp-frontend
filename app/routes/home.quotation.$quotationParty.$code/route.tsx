@@ -7,7 +7,7 @@ import {
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
 import QuotationDetailClient from "./quotation-detail.client";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
@@ -17,7 +17,7 @@ import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
-  updateStateWithEvent: z.infer<typeof updateStateWithEventSchema>;
+  updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
   editData: z.infer<typeof editQuotationSchema>;
 };
 export const action = async ({ request,params }: ActionFunctionArgs) => {

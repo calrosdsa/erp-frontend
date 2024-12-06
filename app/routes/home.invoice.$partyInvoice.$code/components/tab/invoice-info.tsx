@@ -55,8 +55,11 @@ export default function InvoiceInfoTab() {
   const [invoicePerm] = usePermission({ roleActions, actions });
   const invoiceParty = params.partyInvoice || "";
   const isDraft = stateFromJSON(invoice?.status) == State.DRAFT;
+  const allowEdit = isDraft && invoicePerm?.edit;
+  const allowCreate = isDraft && invoicePerm.create;
   const isDisabled = !isDraft || !invoicePerm?.edit;
   const documentStore = useDocumentStore();
+
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: editInvoiceSchema,
     defaultValues: {
@@ -141,39 +144,41 @@ export default function InvoiceInfoTab() {
             party={invoiceParty}
             roleActions={roleActions}
             form={form}
-            disabled={isDisabled}
+            allowEdit={allowEdit}
           />
           <CustomFormDate
             control={form.control}
             name="postingDate"
-            disabled={isDisabled}
+            allowEdit={allowEdit}
             label={t("form.postingDate")}
           />
           <CustomFormTime
             control={form.control}
             name="postingTime"
             label={t("form.postingTime")}
-            disabled={isDisabled}
+            allowEdit={allowEdit}
             description={formValues.tz}
           />
           <CustomFormDate
             control={form.control}
             name="dueDate"
-            disabled={isDisabled}
+            allowEdit={allowEdit}
             label={t("form.dueDate")}
           />
 
           <Separator className=" col-span-full" />
 
-          <CurrencyAndPriceList form={form} disabled={isDisabled} />
+          <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
 
-          <AccountingDimensionForm form={form} disabled={isDisabled} />
+          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
 
           <LineItemsDisplay
             currency={invoice?.currency || companyDefaults?.currency || ""}
             status={invoice?.status || ""}
             lineItems={lineItems}
             partyType={invoiceParty}
+            allowCreate={allowCreate}
+            allowEdit={allowEdit}
             itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
           />
           {invoice && (
@@ -183,6 +188,8 @@ export default function InvoiceInfoTab() {
                 status={invoice.status}
                 taxLines={taxLines}
                 docPartyID={invoice.id}
+                allowCreate={allowCreate}
+                allowEdit={allowEdit}
               />
 
               <GrandTotal currency={invoice.currency} />

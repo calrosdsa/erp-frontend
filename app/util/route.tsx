@@ -465,6 +465,7 @@ class Routes {
   booking = this.base + "/booking";
   bookingM = "booking";
   event = this.base + "/event";
+  eventM = "event";
   rDashboard = this.base + "/rdashboard";
 
   toBookings(q?: { [x: string]: string | undefined }): string {

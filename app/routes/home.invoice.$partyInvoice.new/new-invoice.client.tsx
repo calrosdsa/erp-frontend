@@ -192,7 +192,10 @@ export default function CreatePurchaseInvoiceClient() {
                     form.setValue("taxLines", e);
                     form.trigger("taxLines");
                   }}
+                  form={form}
                   currency={formValues.currency}
+                  allowCreate={true}
+                  allowEdit={true}
                 />
                 <GrandTotal currency={formValues.currency} />
                 <TaxBreakup currency={formValues.currency} />

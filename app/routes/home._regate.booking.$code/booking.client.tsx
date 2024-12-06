@@ -11,7 +11,7 @@ import ActivityFeed from "@/components/custom-ui/activity-feed";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { ButtonToolbar } from "~/types/actions";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
@@ -38,7 +38,7 @@ export const BookingDetailClient = () => {
     { title: t("info"), href: r.toBookingDetail(booking?.code || "","info") },
   ];
 
-  const updateStatus = (values:z.infer<typeof updateStateWithEventSchema>)=>{
+  const updateStatus = (values:z.infer<typeof updateStatusWithEventSchema>)=>{
     fetcher.submit(
       {
         action: "update-status",
@@ -61,7 +61,7 @@ export const BookingDetailClient = () => {
       actions.push({
         label:"Completar Reserva",
         onClick:()=>{
-        const body: z.infer<typeof updateStateWithEventSchema> = {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: booking?.status || "",
           party_type: regatePartyTypeToJSON(RegatePartyType.booking),
           party_id: booking?.id.toString() || "",
@@ -97,7 +97,7 @@ export const BookingDetailClient = () => {
       status:stateFromJSON(booking?.status),
       actions:actions,
       onChangeState: (e) => {
-        const body: z.infer<typeof updateStateWithEventSchema> = {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: booking?.status || "",
           party_type: regatePartyTypeToJSON(RegatePartyType.booking),
           party_id: booking?.id.toString() || "",

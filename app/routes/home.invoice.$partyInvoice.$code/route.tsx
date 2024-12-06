@@ -9,7 +9,7 @@ import { ItemLineType, itemLineTypeToJSON, PartyType } from "~/gen/common";
 import { handleError } from "~/util/api/handle-status-code";
 import PurchaseInvoiceDetailClient from "./invoice.client";
 import { z } from "zod";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { FetchResponse } from "openapi-fetch";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { editInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
@@ -17,7 +17,7 @@ import { formatRFC3339 } from "date-fns";
 import { LOAD_ACTION } from "~/constant";
 type ActionData = {
   action: string;
-  updateStateWithEvent: z.infer<typeof updateStateWithEventSchema>;
+  updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
   editData:z.infer<typeof editInvoiceSchema>;
 };
 

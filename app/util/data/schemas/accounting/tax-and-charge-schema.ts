@@ -29,15 +29,21 @@ export const mapToTaxAndChargeData = (
 };
 
 export const toTaxAndChargeLineSchema = (
-  line: components["schemas"]["TaxAndChargeLineDto"]
+  line: components["schemas"]["TaxAndChargeLineDto"],
+  opts?:{
+    ignoreID?:boolean
+  }
 ): z.infer<typeof taxAndChargeSchema> => {
-  return {
-    taxLineID: line.id,
+  const d:z.infer<typeof taxAndChargeSchema> = {
     type: line.type,
     taxRate: line.tax_rate,
     accountHeadName: line.account_head,
     accountHead: line.account_head_id,
     amount: formatAmounFromInt(Number(line.amount)),
     isDeducted: line.is_deducted,
-  };
+  }
+  if(!opts?.ignoreID){
+    d.taxLineID = line.id
+  } 
+  return d;
 };

@@ -5,9 +5,9 @@ import FormAutocomplete from "../../select/FormAutocomplete";
 import { UseFormReturn } from "react-hook-form";
 
 
-export default function CurrencyAndPriceList({form,disabled}:{
+export default function CurrencyAndPriceList({form,allowEdit}:{
     form: UseFormReturn<any>;
-    disabled?:boolean
+    allowEdit?:boolean
 }){
     const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
@@ -22,7 +22,7 @@ export default function CurrencyAndPriceList({form,disabled}:{
                 data={currencyDebounceFetcher.data?.currencies || []}
                 control={form.control}
                 name="currency"
-                disabled={disabled}
+                allowEdit={allowEdit}
                 required={true}
                 nameK={"code"}
                 onValueChange={onCurrencyChange}

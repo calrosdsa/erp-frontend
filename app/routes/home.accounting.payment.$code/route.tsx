@@ -2,12 +2,12 @@
 import apiClient from "~/apiclient"
 import { handleError } from "~/util/api/handle-status-code"
 import PaymentDetailClient from "./payment.client"
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema"
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema"
 import { z } from "zod"
 
 type ActionData = {
     action:string
-    updateStateWithEvent:z.infer<typeof updateStateWithEventSchema>
+    updateStateWithEvent:z.infer<typeof updateStatusWithEventSchema>
 }
 
 export const action = async({request}:ActionFunctionArgs)=>{

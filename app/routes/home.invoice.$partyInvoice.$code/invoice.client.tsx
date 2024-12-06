@@ -7,8 +7,6 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   PartyType,
@@ -20,7 +18,7 @@ import {
   stateFromJSON,
 } from "~/gen/common";
 import { z } from "zod";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { routes } from "~/util/route";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import DetailLayout from "@/components/layout/detail-layout";
@@ -191,7 +189,7 @@ export default function InvoiceDetailClient() {
       actions: actions,
       view: view,
       onChangeState: (e) => {
-        const body: z.infer<typeof updateStateWithEventSchema> = {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: invoice?.status || "",
           party_type: params.partyInvoice || "",
           party_id: invoice?.code || "",

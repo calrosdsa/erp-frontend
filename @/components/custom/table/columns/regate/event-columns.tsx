@@ -33,11 +33,11 @@ export const eventBookingsColumns = (): ColumnDef<components["schemas"]["EventBo
           )
         }
       },
-      // {
-      //   accessorKey:"status",
-      //   header:t("form.status"),
-      //   cell:TableCellStatus
-      // },
+      {
+        accessorKey:"status",
+        header:t("form.status"),
+        cell:TableCellStatus
+      },
     {
         accessorKey: "created_at",
         header: t("table.createdAt"),

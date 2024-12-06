@@ -8,7 +8,7 @@ import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
 import { BookingDetailClient } from "./booking.client";
 import { z } from "zod";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
 import { editPaidAmountSchema } from "~/util/data/schemas/regate/booking-schema";
 import { components } from "~/sdk";
@@ -17,7 +17,7 @@ import { LOAD_ACTION } from "~/constant";
 
 type ActionData = {
   action: string;
-  updateStatus: z.infer<typeof updateStateWithEventSchema>;
+  updateStatus: z.infer<typeof updateStatusWithEventSchema>;
   editPaidAmount: z.infer<typeof editPaidAmountSchema>;
   rescheduleBooking: components["schemas"]["BookingRescheduleBody"];
 };

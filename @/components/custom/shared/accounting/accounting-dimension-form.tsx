@@ -7,10 +7,10 @@ import FormAutocomplete from "../../select/FormAutocomplete";
 
 export default function AccountingDimensionForm({
   form,
-  disabled
+  allowEdit
 }: {
   form: UseFormReturn<any, any, undefined>;
-  disabled?:boolean
+  allowEdit?:boolean
 }) {
   const { t } = useTranslation("common");
   const [projectsFetcher, onProjectChange] = useProjectFetcher();
@@ -26,7 +26,7 @@ export default function AccountingDimensionForm({
         form={form}
         name="projectName"
         nameK={"name"}
-        disabled={disabled}
+        allowEdit={allowEdit}
         onValueChange={onProjectChange}
         label={t("project")}
         onSelect={(v) => {
@@ -39,7 +39,7 @@ export default function AccountingDimensionForm({
         name="costCenterName"
         nameK={"name"}
         onValueChange={onCostCenterChange}
-        disabled={disabled}
+        allowEdit={allowEdit}
         label={t("costCenter")}
         onSelect={(v) => {
           form.setValue("costCenterID", v.id);

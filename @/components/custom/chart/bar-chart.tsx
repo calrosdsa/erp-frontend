@@ -136,7 +136,7 @@ export default function BarChartComponent({
                   <span className="text-xs text-muted-foreground">
                     {chartConfig[chart]?.label}
                   </span>
-                  <span className="text-sm font-bold leading-none">
+                  <span className="text-sm font-semibold leading-none">
                     {formatter(total[key as keyof typeof total])}
                   </span>
                 </Button>

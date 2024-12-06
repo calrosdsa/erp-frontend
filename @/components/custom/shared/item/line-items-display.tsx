@@ -19,25 +19,33 @@ export default function LineItemsDisplay({
   currency,
   partyType,
   itemLineType,
+  allowEdit = true,
+  allowCreate = true,
 }: {
   lineItems: any;
   status: string;
   currency: string;
   partyType: string;
   itemLineType: ItemLineType;
+  allowEdit?: boolean;
+  allowCreate?: boolean;
 }) {
   const { t } = useTranslation("common");
   return (
-    <Suspense fallback={<FallBack />} >
+    <Suspense fallback={<FallBack />}>
       <Await resolve={lineItems} errorElement={<ErrorElement />}>
         {(resData: any) => {
           const { result: lines } =
             resData.data as components["schemas"]["ResponseDataListLineItemDtoBody"];
           const lineItemsStore = useLineItems();
           const setPayload = () => {
-            lineItemsStore.onLines(lines.map((t)=>toLineItemSchema(t,{
-              partyType:partyType,
-            })));
+            lineItemsStore.onLines(
+              lines.map((t) =>
+                toLineItemSchema(t, {
+                  partyType: partyType,
+                })
+              )
+            );
           };
           useEffect(() => {
             setPayload();
@@ -47,7 +55,8 @@ export default function LineItemsDisplay({
               itemLineType={itemLineType}
               partyType={partyType}
               currency={currency}
-              allowEdit={status == stateToJSON(State.DRAFT)}
+              allowCreate={allowCreate}
+              allowEdit={allowEdit}
             />
           );
         }}

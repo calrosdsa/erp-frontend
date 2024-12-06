@@ -6,7 +6,7 @@ import { routes } from "~/util/route";
 import { NavItem } from "~/types";
 import JournalEntryInfo from "./tab/journal-entry-info";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { updateStateWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { stateFromJSON } from "~/gen/common";
 import { z } from "zod";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -45,7 +45,7 @@ export default function JournalEntryDetailClient() {
       titleToolbar: `${t("journalEntry")}(${journalEntry?.code})`,
       status: stateFromJSON(journalEntry?.status),
       onChangeState: (e) => {
-        const body: z.infer<typeof updateStateWithEventSchema> = {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: journalEntry?.status || "",
           party_id: journalEntry?.code || "",
           events: [e],

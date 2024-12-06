@@ -35,6 +35,8 @@ export default function NewBookingClient() {
     }
   };
 
+  
+
   useEffect(() => {
     if (payload) {
       onBookingPayload();
