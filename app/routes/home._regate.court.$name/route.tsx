@@ -68,6 +68,7 @@ export const loader = async({request,params}:LoaderFunctionArgs)=>{
                 }
             }
         })
+        console.log("LOADING COURT...")
     }
     handleError(res.error)
     return defer({
