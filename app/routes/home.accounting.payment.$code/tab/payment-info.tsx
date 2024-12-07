@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { formatMediumDate } from "~/util/format/formatDate";
 import { Separator } from "@/components/ui/separator";
 import {
-  formatAmounFromInt,
+  formatAmount,
   formatCurrency,
 } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";

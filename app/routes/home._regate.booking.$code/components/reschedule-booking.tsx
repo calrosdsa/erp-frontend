@@ -22,7 +22,7 @@ import { action } from "~/routes/home._regate.booking.new/route";
 import { mapToBookingData } from "~/routes/home._regate.booking.new/util";
 import { components } from "~/sdk";
 import { validateBookingSchema } from "~/util/data/schemas/regate/booking-schema";
-import { formatAmounFromInt } from "~/util/format/formatCurrency";
+import { formatAmount } from "~/util/format/formatCurrency";
 import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { routes } from "~/util/route";
@@ -47,7 +47,7 @@ export const RescheduleBooking = ({
       startTime: format(toDate(booking?.start_date || new Date()), "hh:mm a"),
       endTime: format(toDate(booking?.end_date || new Date()), "hh:mm a"),
       bookingID: booking?.id,
-      discount:formatAmounFromInt(booking?.discount),
+      discount:formatAmount(booking?.discount),
     },
   });
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();

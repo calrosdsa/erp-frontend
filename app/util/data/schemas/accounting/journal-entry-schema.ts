@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { components } from "~/sdk";
-import { formatAmounFromInt } from "~/util/format/formatCurrency";
+import { formatAmount } from "~/util/format/formatCurrency";
 
 export const journalEntryLineSchema = z.object({
   debit: z.coerce.number(),
@@ -35,8 +35,8 @@ export const mapToJournalEntryLineSchama = (
   e: components["schemas"]["JournalEntryLineDto"]
 ): z.infer<typeof journalEntryLineSchema> => {
   return {
-    debit: formatAmounFromInt(e.debit),
-    credit: formatAmounFromInt(e.credit),
+    debit: formatAmount(e.debit),
+    credit: formatAmount(e.credit),
     currency: e.currency,
     accountName: e.account,
     accountID: e.account_id,

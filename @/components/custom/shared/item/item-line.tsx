@@ -16,7 +16,7 @@ import {
 import { useItemPriceForOrders } from "~/util/hooks/fetchers/useItemPriceForOrder";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import {
-  formatAmounFromInt,
+  formatAmount,
   formatCurrency,
 } from "~/util/format/formatCurrency";
 import CustomFormField from "../../form/CustomFormField";
@@ -163,7 +163,7 @@ export default function ItemLine({
                 form.setValue("item_code", e.item_code);
                 form.setValue("uom", e.uom);
                 form.setValue("item_price_id", e.id);
-                form.setValue("rate", formatAmounFromInt(e.rate));
+                form.setValue("rate", formatAmount(e.rate));
               }}
               onCustomDisplay={(e)=>{
                 return (

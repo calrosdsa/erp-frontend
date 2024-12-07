@@ -29,7 +29,7 @@ import { routes } from "~/util/route";
 import { action, loader } from "./route";
 import { useCreatePayment } from "./use-create-payment";
 import {
-  formatAmounFromInt,
+  formatAmount,
   formatAmountToInt,
 } from "~/util/format/formatCurrency";
 import { usePermission } from "~/util/hooks/useActions";
@@ -51,7 +51,7 @@ export default function PaymentCreateClient() {
   const form = useForm<z.infer<typeof createPaymentSchema>>({
     resolver: zodResolver(createPaymentSchema),
     defaultValues: {
-      amount: formatAmounFromInt(createPayment.payload?.amount),
+      amount: formatAmount(createPayment.payload?.amount),
       paymentType: createPayment.payload?.paymentType,
       partyName: createPayment.payload?.partyName,
       partyUuid: createPayment.payload?.partyUuid,

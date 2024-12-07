@@ -56,6 +56,7 @@ export const CreateGroup = ({
         defaultValues={
           {
             party_type_code: partyTypeToJSON(createGroup.partyType),
+            enabled:true
           } as z.infer<typeof createGroupSchema>
         }
         onSubmit={(values: z.infer<typeof createGroupSchema>) => {

@@ -28,7 +28,7 @@ export default function CustomFormFieldInput({
   description,
   name,
   required = false,
-  allowEdit,
+  allowEdit= true,
   className = "",
   inputType,
   control,
@@ -68,10 +68,11 @@ export default function CustomFormFieldInput({
                   />
                 )}
                 {inputType == "check" && (
-                  <div>
+                  <div className="h-8 items-center flex">
                     <Checkbox
                       {...field}
                       className={cn(
+                        "",
                         !allowEdit &&
                           "disabled:opacity-100 disabled:cursor-default bg-secondary"
                       )}

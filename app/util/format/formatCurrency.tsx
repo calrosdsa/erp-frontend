@@ -1,6 +1,6 @@
 import { components } from "~/sdk";
 
-export const formatAmounFromInt = (v?: number): number => {
+export const formatAmount = (v?: number): number => {
   if (!v) {
     return 0;
   }

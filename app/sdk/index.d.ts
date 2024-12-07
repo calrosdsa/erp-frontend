@@ -748,6 +748,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/currency-exchange": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Currency Exchanges */
+        get: operations["currency-exchanges"];
+        /** Edit Currency Exchange */
+        put: operations["edit-currency-exchange"];
+        /** Create Currency Exchange */
+        post: operations["create-currency-exchange"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/currency-exchange/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Currency Exchange */
+        get: operations["currency-exchange"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/customer": {
         parameters: {
             query?: never;
@@ -3308,6 +3344,20 @@ export interface components {
             readonly $schema?: string;
             name: string;
         };
+        CreateCurrencyExchangeRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int32 */
+            exchange_rate: number;
+            for_buying: boolean;
+            for_selling: boolean;
+            from_currency: string;
+            name: string;
+            to_currency: string;
+        };
         CreateCustomerBody: {
             /**
              * Format: uri
@@ -3733,6 +3783,19 @@ export interface components {
         CurrencyDto: {
             code: string;
         };
+        CurrencyExchangeDto: {
+            /** Format: int32 */
+            exchange_rate: number;
+            for_buying: boolean;
+            for_selling: boolean;
+            from_currency: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            status: string;
+            to_currency: string;
+            uuid: string;
+        };
         CustomerDto: {
             /** Format: date-time */
             created_at: string;
@@ -3814,6 +3877,22 @@ export interface components {
             /** Format: int64 */
             court_id: number;
             name: string;
+        };
+        EditCurrencyExchangeRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int32 */
+            exchange_rate: number;
+            for_buying: boolean;
+            for_selling: boolean;
+            from_currency: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            to_currency: string;
         };
         EditCustomerBody: {
             /**
@@ -4327,6 +4406,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityCourtDto"];
+        };
+        EntityResponseResultEntityCurrencyExchangeDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityCurrencyExchangeDto"];
         };
         EntityResponseResultEntityCustomerDtoBody: {
             /**
@@ -5292,6 +5384,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListCurrencyDto"];
         };
+        PaginationResponsePaginationResultListCurrencyExchangeDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListCurrencyExchangeDto"];
+        };
         PaginationResponsePaginationResultListCustomerDtoBody: {
             /**
              * Format: uri
@@ -5595,6 +5696,11 @@ export interface components {
         };
         PaginationResultListCurrencyDto: {
             results: components["schemas"]["CurrencyDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListCurrencyExchangeDto: {
+            results: components["schemas"]["CurrencyExchangeDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -6119,6 +6225,19 @@ export interface components {
             message: string;
             result: components["schemas"]["CourtDto"];
         };
+        ResponseDataCurrencyExchangeDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["CurrencyExchangeDto"];
+        };
         ResponseDataEventBookingDtoBody: {
             /**
              * Format: uri
@@ -6444,6 +6563,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CourtDto"];
+        };
+        ResultEntityCurrencyExchangeDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["CurrencyExchangeDto"];
         };
         ResultEntityCustomerDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -9027,6 +9152,153 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListCurrencyDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "currency-exchanges": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                status?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCurrencyExchangeDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-currency-exchange": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditCurrencyExchangeRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-currency-exchange": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCurrencyExchangeRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataCurrencyExchangeDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "currency-exchange": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityCurrencyExchangeDtoBody"];
                 };
             };
             /** @description Error */

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { components } from "~/sdk";
-import { formatAmounFromInt } from "~/util/format/formatCurrency";
+import { formatAmount } from "~/util/format/formatCurrency";
 
 export const paymentReferceSchema = z.object({
   partyID:z.number(),
@@ -35,9 +35,9 @@ export const createPaymentSchema = z.object({
 .superRefine((data,ctx)=>{
     if(data.partyReferences.length > 0)  {
       data.partyReferences = data.partyReferences.map((t)=>{
-        t.allocated = formatAmounFromInt(t.allocated)
-        t.outstanding = formatAmounFromInt(t.outstanding)
-        t.grandTotal = formatAmounFromInt(t.grandTotal)   
+        t.allocated = formatAmount(t.allocated)
+        t.outstanding = formatAmount(t.outstanding)
+        t.grandTotal = formatAmount(t.grandTotal)   
         return t
       })
     }

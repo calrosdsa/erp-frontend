@@ -413,8 +413,9 @@
   "financialStatement": "Estado financiero",
   "serialNo": "Número de serie",
   "batchBundle": "Lote agrupado",
-  "supplierQuotation": "Cotización de proveedor",
-  "chargesTemplate":"Plantilla de cargos",
+  "supplierQuotation": "Cotización de Proveedor",
+  "chargesTemplate":"Plantilla de Cargos",
+  "currencyExchange":"Cambio de Divisas",
 
   "accountingLedger": "Libro mayor contable",
   "accountPayable": "Cuentas por pagar",

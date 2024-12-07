@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  formatAmounFromInt,
+  formatAmount,
   formatCurrency,
   formatCurrencyAmount,
 } from "~/util/format/formatCurrency";
@@ -37,8 +37,8 @@ export const EditPaidAmount = ({
     resolver: zodResolver(editPaidAmountSchema),
     defaultValues: {
       bookingID: booking?.id,
-      paidAmount: formatAmounFromInt(booking?.paid),
-      totalPrice: formatAmounFromInt(booking?.total_price),
+      paidAmount: formatAmount(booking?.paid),
+      totalPrice: formatAmount(booking?.total_price),
     },
   });
   const onSubmit = (values: z.infer<typeof editPaidAmountSchema>) => {

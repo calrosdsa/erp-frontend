@@ -97,12 +97,16 @@ export const AccountingNav = ({
     })
   }
 
-  //   if (entities?.includes(Entity.PRICE_LIST_ENTITY_ID)) {
-  //     accountingChildrens.push({
-  //       title: t("price-list"),
-  //       href: r.priceList,
-  //     });
-  //   }
+  if(entities?.includes(Entity.CURRENCY_EXCHANGE)){
+    accountingChildrens.push({
+      title: t("currencyExchange"),
+      href:r.toRoute({
+        main:r.currencyExchange,
+      })
+    })
+  }
+
+  
   const accounting: NavItem = {
     title: t("accounting"),
     icon: CreditCardIcon,

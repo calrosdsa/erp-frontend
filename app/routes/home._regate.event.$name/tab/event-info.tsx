@@ -17,7 +17,7 @@ import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { formatDate } from "date-fns";
 import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
-import { formatAmounFromInt, formatCurrency } from "~/util/format/formatCurrency";
+import { formatAmount, formatCurrency } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { Typography } from "@/components/typography";
 import { useEditFields } from "~/util/hooks/useEditFields";

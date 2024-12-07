@@ -7,7 +7,7 @@ import {
 } from "~/gen/common";
 import { validateNumber, validateStringNumber } from "../base/base-schema";
 import { components } from "~/sdk";
-import { formatAmounFromInt, formatAmountToInt } from "~/util/format/formatCurrency";
+import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 
 export const itemPriceDtoSchema = z.object({
   code: z.string().optional(),
@@ -45,9 +45,9 @@ export const toLineItemSchema = (
 ): z.infer<typeof lineItemSchema> => {
   const lineItem: z.infer<typeof lineItemSchema> = {
     itemLineID:line.id,
-    amount: formatAmounFromInt(line.quantity * line.rate),
+    amount: formatAmount(line.quantity * line.rate),
     lineType: opts.to,
-    rate: formatAmounFromInt(line.rate),
+    rate: formatAmount(line.rate),
     quantity: line.quantity,
     itemLineReference: line.id,
 

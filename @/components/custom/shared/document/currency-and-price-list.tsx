@@ -1,8 +1,8 @@
 import AccordationLayout from "@/components/layout/accordation-layout";
 import { useTranslation } from "react-i18next";
-import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import { UseFormReturn } from "react-hook-form";
+import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 
 
 export default function CurrencyAndPriceList({form,allowEdit}:{

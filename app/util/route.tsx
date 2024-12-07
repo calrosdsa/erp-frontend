@@ -103,6 +103,7 @@ class Routes {
   journalEntry = "journalEntry";
   costCenter = "costCenter";
   chargesTemplate = "chargesTemplate";
+  currencyExchange = "currencyExchange";
   stockEntry = "stockEntry";
   project = "project";
   serialNo = "serialNo";

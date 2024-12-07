@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { TaxChargeLineType, taxChargeLineTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
-import { formatAmounFromInt } from "~/util/format/formatCurrency";
+import { formatAmount } from "~/util/format/formatCurrency";
 
 export const taxAndChargeSchema = z.object({
   taxLineID: z.number().optional(),
@@ -39,7 +39,7 @@ export const toTaxAndChargeLineSchema = (
     taxRate: line.tax_rate,
     accountHeadName: line.account_head,
     accountHead: line.account_head_id,
-    amount: formatAmounFromInt(Number(line.amount)),
+    amount: formatAmount(Number(line.amount)),
     isDeducted: line.is_deducted,
   }
   if(!opts?.ignoreID){
