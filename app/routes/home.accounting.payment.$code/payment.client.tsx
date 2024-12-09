@@ -20,7 +20,7 @@ import { ButtonToolbar } from "~/types/actions";
 import { format } from "date-fns";
 
 export default function PaymentDetailClient() {
-  const { paymentData, actions,associatedActions,activities } = useLoaderData<typeof loader>();
+  const { payment, actions,activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>()
   const globalState = useOutletContext<GlobalState>()
   const [searchParams ] = useSearchParams()
@@ -32,7 +32,7 @@ export default function PaymentDetailClient() {
   const tabs =[
     {
       title: t("info"),
-      href: r.toModulePartyDetail("accounting",partyTypeToJSON(PartyType.payment), paymentData?.code || "", {
+      href: r.toModulePartyDetail("accounting",partyTypeToJSON(PartyType.payment), payment?.code || "", {
         tab: "info",
       }),
     },
@@ -47,20 +47,20 @@ export default function PaymentDetailClient() {
           main:"generalLedger",
           routePrefix:[r.accountingM],
           q:{
-            fromDate:format(paymentData?.created_at || "","yyyy-MM-dd"),
-            toDate:format(paymentData?.created_at || "","yyyy-MM-dd"),
-            voucherNo:paymentData?.code,
+            fromDate:format(payment?.created_at || "","yyyy-MM-dd"),
+            toDate:format(payment?.created_at || "","yyyy-MM-dd"),
+            voucherNo:payment?.code,
           }
         }))
       }
     })
     return {
       actions:actions,
-      status:stateFromJSON(paymentData?.status),
+      status:stateFromJSON(payment?.status),
       onChangeState: (e) => {
         const body: z.infer<typeof updateStatusWithEventSchema> = {
-          current_state: paymentData?.status || "",
-          party_id: paymentData?.code || "",
+          current_state: payment?.status || "",
+          party_id: payment?.code || "",
           events: [e],
         };
         fetcher.submit(
@@ -75,12 +75,12 @@ export default function PaymentDetailClient() {
         );
       },
     };
-  },[paymentData])
+  },[payment])
 
   return (
     <DetailLayout
     activities={activities}
-    partyID={paymentData?.id}
+    partyID={payment?.id}
     navItems={tabs}
     >
       {tab == "info" && 

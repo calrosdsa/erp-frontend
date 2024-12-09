@@ -20,22 +20,18 @@ export default function SuppliersClient (){
 
     setUpToolbar(()=>{    
         return {
+            ...(permission?.create && {
+                addNew:()=>{
+                    createSupplier.openDialog({})
+                }
+            })
         }
-    },[])
+    },[permission])
     return (
         <div>
             <DataTable
             data={paginationResult?.results || []}
             columns={supplierColumns({})}
-            metaActions={{
-                meta:{
-                    ...(permission?.create && {
-                        addNew:()=>{
-                            createSupplier.openDialog({})
-                        }
-                    })
-                }
-            }}
             />
         </div>
     )

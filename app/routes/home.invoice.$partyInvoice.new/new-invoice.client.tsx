@@ -35,7 +35,10 @@ import AccountingDimensionForm from "@/components/custom/shared/accounting/accou
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { Card } from "@/components/ui/card";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
@@ -134,7 +137,7 @@ export default function CreatePurchaseInvoiceClient() {
 
   useEffect(() => {
     lineItemsStore.onLines(formValues.lines);
-    taxLinesStore.updateFromItems(formValues.lines)
+    taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.lines]);
 
   return (
@@ -192,6 +195,7 @@ export default function CreatePurchaseInvoiceClient() {
                     form.setValue("taxLines", e);
                     form.trigger("taxLines");
                   }}
+                  docPartyType={partyInvoice}
                   form={form}
                   currency={formValues.currency}
                   allowCreate={true}

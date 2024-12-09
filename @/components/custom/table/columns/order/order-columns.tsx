@@ -8,6 +8,7 @@ import TableCellProgress from "../../cells/table-cell-progressbar";
 import TableCellStatus from "../../cells/table-cell-status";
 import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 import TableCellIndex from "../../cells/table-cell-index";
+import TableCellPrice from "../../cells/table-cell-price";
 
 export const orderColumns = ({
   orderPartyType,
@@ -120,6 +121,15 @@ export const orderColumns = ({
         />
       );
     },
+  });
+  columns.push({
+    accessorKey: "total_amount",
+    header: t("table.total"),
+    cell: ({ ...props }) => <TableCellPrice
+    {...props} 
+    i18n={i18n}
+    
+    />,
   });
   columns.push({
     accessorKey: "created_at",

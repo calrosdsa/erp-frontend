@@ -6,28 +6,23 @@ import {
 } from "@remix-run/react";
 import { GlobalState, OrderGlobalState } from "~/types/app";
 import { useTranslation } from "react-i18next";
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { formatMediumDate } from "~/util/format/formatDate";
-import { ItemLineType, State, stateFromJSON, stateToJSON } from "~/gen/common";
+import {
+  ItemLineType,
+  itemLineTypeToJSON,
+  State,
+  stateFromJSON,
+  stateToJSON,
+} from "~/gen/common";
 import { action, loader } from "../../route";
-import LineItems from "@/components/custom/shared/item/line-items";
 import LineItemsDisplay from "@/components/custom/shared/item/line-items-display";
 import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 import GrandTotal from "@/components/custom/shared/item/grand-total";
 import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
 import { useEffect, useRef } from "react";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
-import {
-  createOrderSchema,
-  editOrderSchema,
-} from "~/util/data/schemas/buying/purchase-schema";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { editOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { z } from "zod";
-import { formatRFC3339 } from "date-fns";
-import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import { Form } from "@/components/ui/form";
-import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import {
@@ -39,7 +34,8 @@ import { usePermission } from "~/util/hooks/useActions";
 import { Separator } from "@/components/ui/separator";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { isEqual } from "lodash";
+import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
+import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
 
 type EditData = z.infer<typeof editOrderSchema>;
 export default function OrderInfoTab() {
@@ -171,10 +167,10 @@ export default function OrderInfoTab() {
             currency={order?.currency || companyDefaults?.currency || ""}
             status={order?.status || ""}
             lineItems={lineItems}
-            partyType={params.partyReceipt || ""}
-            itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
-            allowCreate={allowCreate}
+            lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
+            docPartyType={partyOrder}
             allowEdit={allowEdit}
+            allowCreate={allowCreate}
           />
           {order && (
             <>
@@ -183,6 +179,7 @@ export default function OrderInfoTab() {
                 status={order.status}
                 taxLines={taxLines}
                 docPartyID={order.id}
+                docPartyType={partyOrder}
                 allowCreate={allowCreate}
                 allowEdit={allowEdit}
               />

@@ -13,7 +13,6 @@ import { GroupAutocompleteForm, useGroupDebounceFetcher } from "~/util/hooks/fet
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { useCreateGroup } from "~/routes/home.groups.$party_/components/create-group";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 
 export const CreateSupplier = ({
@@ -29,7 +28,6 @@ export const CreateSupplier = ({
   const { t } = useTranslation("common");
   const { toast } = useToast();
   
-  const createGroup = useCreateGroup();
   
   const r = routes;
   useEffect(() => {
@@ -96,7 +94,6 @@ export const CreateSupplier = ({
             <GroupAutocompleteForm
             control={form.control}
             label={t("group")}
-            name="groupName"
             isGroup={false}
             partyType={r.itemGroup}
             onSelect={(e) => {

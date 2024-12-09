@@ -26,7 +26,7 @@ export default function GroupsClient() {
         ...(permission?.create && {
             addNew: () => {
               if (params.party) {
-                createGroup.openDialog({ partyType:partyTypeFromJSON(params.party)});
+                createGroup.openDialog({ partyType:params.party});
               }
             },
           }),

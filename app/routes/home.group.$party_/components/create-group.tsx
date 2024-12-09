@@ -9,9 +9,6 @@ import { createGroupSchema } from "~/util/data/schemas/group-schema";
 import { z } from "zod";
 import { routes } from "~/util/route";
 import { useEffect } from "react";
-import { GroupAutocompleteForm, useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
-import { PartyType, partyTypeToJSON } from "~/gen/common";
-import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 
 export const CreateGroup = ({
   open,
@@ -25,11 +22,6 @@ export const CreateGroup = ({
   const { t } = useTranslation("common");
   const { toast } = useToast();
   const r = routes;
-
-  const [groupFetcher, onGroupChange] = useGroupDebounceFetcher({
-    partyType: createGroup.partyType,
-    isGroup:true,
-  });
 
   useEffect(() => {
     if (fetcher.data?.message) {
@@ -55,8 +47,7 @@ export const CreateGroup = ({
         fetcher={fetcher}
         defaultValues={
           {
-            party_type_code:createGroup.partyType,
-            enabled:true
+            party_type_code: createGroup.partyType,
           } as z.infer<typeof createGroupSchema>
         }
         onSubmit={(values: z.infer<typeof createGroupSchema>) => {
@@ -69,8 +60,8 @@ export const CreateGroup = ({
               method: "POST",
               encType: "application/json",
               action: r.toRoute({
-                main:createGroup.partyType,
-                routePrefix:[r.group]
+                main: createGroup.partyType,
+                routePrefix: [r.group],
               }),
             }
           );
@@ -81,46 +72,34 @@ export const CreateGroup = ({
             label: t("form.name"),
             typeForm: "input",
             type: "string",
-            required:true
+            required: true,
           },
-          {
-            name: "is_group",
-            label: t("form.isGroup"),
-            description: t("form.isGroupDescription"),
-            typeForm: "check",
-            type: "boolean",
-          },
-          
+          // {
+          //   name: "is_group",
+          //   label: t("form.isGroup"),
+          //   description: t("form.isGroupDescription"),
+          //   typeForm: "check",
+          //   type: "boolean",
+          // },
         ]}
-        renderCustomInputs={(form) => {
-          return (
-            <>
-              <GroupAutocompleteForm
-              control={form.control}
-              label={t("group")}
-              name="groupName"
-              // roleActions={roleActions}
-              // actions={entityActions && entityActions[Entity.ITEM_GROUP]}
-              isGroup={true}
-              partyType={r.itemGroup}
-              onSelect={(e) => {
-                form.setValue("parentID", e.id);
-              }}
-            />
-              {/* <FormAutocomplete
-                form={form}
-                onValueChange={onGroupChange}
-                name="parentName"
-                nameK={"name"}
-                label={t("_group.base")}
-                data={groupFetcher.data?.groups || []}
-                onSelect={(e) => {
-                  form.setValue("parentID", e.id);
-                }}
-              /> */}
-            </>
-          );
-        }}
+        // renderCustomInputs={(form) => {
+        //   return (
+        //     <>
+        //       <GroupAutocompleteForm
+        //       control={form.control}
+        //       label={t("group")}
+        //       name="groupName"
+        //       // roleActions={roleActions}
+        //       // actions={entityActions && entityActions[Entity.ITEM_GROUP]}
+        //       isGroup={true}
+        //       partyType={r.itemGroup}
+        //       onSelect={(e) => {
+        //         form.setValue("parentID", e.id);
+        //       }}
+        //     />
+        //     </>
+        //   );
+        // }}
       />
     </DrawerLayout>
   );
@@ -136,8 +115,9 @@ export const useCreateGroup = create<CreateGroupStore>((set) => ({
   open: false,
   openDialog: (opts) =>
     set((state) => ({
-         open: true, partyType: opts.partyType 
-        })),
+      open: true,
+      partyType: opts.partyType,
+    })),
   onOpenChange: (e) => set((state) => ({ open: e })),
   partyType: "",
 }));

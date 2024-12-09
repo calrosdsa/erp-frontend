@@ -90,10 +90,10 @@ export const generalLedgerColumns = ({}: {}): ColumnDef<
     }
   });
 
-  columns.push({
-    accessorKey: "against_account",
-    header: t("form.againstAccount"),
-  });
+  // columns.push({
+  //   accessorKey: "against_account",
+  //   header: t("form.againstAccount"),
+  // });
 
   columns.push({
     accessorKey: "party_type",

@@ -49,7 +49,7 @@ export const lineItemSchemaToLineData = (
     rate: d.rate,
     quantity: Number(d.quantity),
     item_price_id: Number(d.item_price_id),
-    item_price_uuid:"",
+    line_type:d.lineType,
     item_line_reference:d.itemLineReference,
   }
   if(d.deliveryLineItem?.sourceWarehouse){

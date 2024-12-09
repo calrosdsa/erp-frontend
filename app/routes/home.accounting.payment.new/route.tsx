@@ -4,6 +4,8 @@ import apiClient from "~/apiclient";
 import { z } from "zod";
 import { createPaymentSchema, partyReferencesToDto } from "~/util/data/schemas/accounting/payment-schema";
 import { components } from "~/sdk";
+import { formatRFC3339 } from "date-fns";
+import { mapToTaxAndChargeData } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
 type ActionData = {
     action:string
@@ -26,26 +28,23 @@ export const action = async({request}:ActionFunctionArgs)=>{
         }
         case "create-payment":{
             const d = data.createPayment
+            const taxLines = d.taxLines.map((t) => mapToTaxAndChargeData(t));
             const paymentReferences = d.partyReferences.map((t)=>partyReferencesToDto(t))
             const res = await client.POST("/payment",{
                 body:{
-                    payment:{
-                        amount:d.amount,
-                        payment_type:d.paymentType,
-                        postuing_date:d.postingDate.toString(),
-                        payment_references:paymentReferences,
+                    payment: {
+                        amount: d.amount,
+                        payment_type: d.paymentType,
+                        posting_date: formatRFC3339(d.postingDate),
+                        party_id: d.partyID,
+                        // party_reference:d.partyReference,
+                        paid_from_id: d.accountPaidFromID,
+                        paid_to_id: d.accountPaidToID,
                     },
-                    payment_party:{
-                        party_uuid:d.partyUuid,
-                        party_type:d.partyType,
-                        party_bank_account:d.partyBankAccount,
-                        company_bank_account:d.companyBankAccount,
-                        party_reference:d.partyReference
+                    tax_and_charges: {
+                        lines: taxLines
                     },
-                    payment_accounts:{
-                        paid_from_id:d.accountPaidFrom,
-                        paid_to_id:d.accountPaidTo,
-                    }
+                    payment_references:paymentReferences
                 }
             })
             error = res.error?.detail

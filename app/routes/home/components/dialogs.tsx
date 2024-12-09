@@ -19,10 +19,6 @@ import {
   useCreateCompany,
 } from "~/routes/home.companies_/components/create-company";
 import {
-  CreateGroup,
-  useCreateGroup,
-} from "~/routes/home.groups.$party_/components/create-group";
-import {
   CreateUser,
   useCreateUser,
 } from "~/routes/home.manage.users_/components/create-user";
@@ -61,7 +57,14 @@ import { SessionDefaultDrawer, useSessionDefaults } from "./SessionDefaults";
 import TaxAndChargeLine, {
   useTaxAndCharge,
 } from "@/components/custom/shared/accounting/tax/tax-and-charge-line";
-import { ConfirmationDialog, useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
+import {
+  ConfirmationDialog,
+  useConfirmationDialog,
+} from "@/components/layout/drawer/ConfirmationDialog";
+import {
+  CreateGroup,
+  useCreateGroup,
+} from "~/routes/home.group.$party_/components/create-group";
 
 export default function GlobalDialogs({
   globalState,
@@ -96,15 +99,15 @@ export default function GlobalDialogs({
   //Regate
   const createEvent = useCreateEvent();
 
-  const confirmationDialog = useConfirmationDialog()
+  const confirmationDialog = useConfirmationDialog();
   return (
     <>
-    {confirmationDialog.isOpen && 
-    <ConfirmationDialog
-    isOpen={confirmationDialog.isOpen}
-    onOpenChange={confirmationDialog.onOpenChange}
-    />
-    }
+      {confirmationDialog.isOpen && (
+        <ConfirmationDialog
+          isOpen={confirmationDialog.isOpen}
+          onOpenChange={confirmationDialog.onOpenChange}
+        />
+      )}
       {sessionDefaults.open && (
         <SessionDefaultDrawer
           open={sessionDefaults.open}
@@ -126,10 +129,11 @@ export default function GlobalDialogs({
           onOpenChange={exporterData.onOpenChange}
         />
       )}
-      {taxAndCharges.open && (
+      {(taxAndCharges.open && taxAndCharges.payload)&& (
         <TaxAndChargeLine
           open={taxAndCharges.open}
           onOpenChange={taxAndCharges.onOpenChange}
+          payload={taxAndCharges.payload}
         />
       )}
       {itemLine.open && (
@@ -180,6 +184,7 @@ export default function GlobalDialogs({
         <CreateWareHouse
           open={createWareHouse.open}
           onOpenChange={createWareHouse.onOpenChange}
+          roleActions={globalState.roleActions}
         />
       )}
       {createItemVariant.open && (

@@ -12,6 +12,7 @@ import { GlobalState } from "~/types/app";
 import { routes } from "~/util/route";
 import DetailLayout from "@/components/layout/detail-layout";
 import PriceListInfo from "./tab/price-list-info";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function PriceListDetailClient() {
   const { priceList, actions } = useLoaderData<typeof loader>();
@@ -39,8 +40,12 @@ export default function PriceListDetailClient() {
       href: toRoute("info"),
     },
   ];
+  setUpToolbar(()=>{
+    return {}
+  })
   return (
-    <DetailLayout navItems={navItems}>
+    <DetailLayout navItems={navItems}
+    partyID={priceList?.id}>
       {tab == "info" && <PriceListInfo />}
     </DetailLayout>
   );

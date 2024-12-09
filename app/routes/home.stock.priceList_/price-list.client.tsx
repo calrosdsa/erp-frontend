@@ -5,29 +5,30 @@ import { pricelistItemColums } from "@/components/custom/table/columns/selling/s
 import { useCreatePriceList } from "./components/add-price-list";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function PriceListsClient() {
-  const globalState = useOutletContext<GlobalState>()
-  const { paginationResult,actions } = useLoaderData<typeof loader>();
-  const createPriceList = useCreatePriceList()
+  const globalState = useOutletContext<GlobalState>();
+  const { paginationResult, actions } = useLoaderData<typeof loader>();
+  const createPriceList = useCreatePriceList();
   const [permission] = usePermission({
-    actions:actions,
-    roleActions:globalState.roleActions,
-  })
+    actions: actions,
+    roleActions: globalState.roleActions,
+  });
+  setUpToolbar(() => {
+    return {
+      ...(permission?.view && {
+        addNew: () => {
+          createPriceList.onOpenChange(true);
+        },
+      }),
+    };
+  }, [permission]);
   return (
     <>
       <DataTable
         columns={pricelistItemColums()}
         data={paginationResult?.results || []}
-        metaActions={{
-          meta: {
-            ...(permission?.view && {
-              addNew: () => {
-                createPriceList.onOpenChange(true);
-              },
-            })
-          },
-        }}
       />
     </>
   );

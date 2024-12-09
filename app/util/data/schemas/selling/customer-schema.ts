@@ -7,7 +7,7 @@ export const createCustomerSchema = z.object({
     name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
     customerType:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
     groupID:z.number().optional(),
-    groupName:z.string().optional(),
+    group:z.string().optional(),
 
     contactData:createContactSchema.optional(),
 }).superRefine((data,ctx)=>{

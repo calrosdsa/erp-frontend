@@ -52,7 +52,7 @@ export default function SelectForm<
   control,
   allowEdit = true,
   description,
-  placeholder = "Choose an option",
+  placeholder = "",
   onDelete,
 }: Props<T, K, V>) {
   return (
@@ -88,7 +88,7 @@ export default function SelectForm<
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
-              <SelectContent>
+              <SelectContent >
                 {data.map((option, idx) => (
                   <SelectItem
                     value={keyValue ? (option[keyValue] as string) : ""}
@@ -110,7 +110,7 @@ export default function SelectForm<
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    field.onChange(undefined);
+                    field.onChange(null);
                     if (onValueChange) {
                       onValueChange(null);
                     }

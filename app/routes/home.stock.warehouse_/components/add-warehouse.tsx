@@ -6,16 +6,19 @@ import { t } from "i18next";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { addWareHouseSchema } from "~/util/data/schemas/stock/warehouse-schema";
+import { createWarehouseSchema } from "~/util/data/schemas/stock/warehouse-schema";
 import { action } from "../route";
 import { useToast } from "@/components/ui/use-toast";
 import { create } from "zustand";
 import { routes } from "~/util/route";
+import { WarehouseAutocompleteForm } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
+import { components } from "~/sdk";
 
 
-export const CreateWareHouse = ({open,onOpenChange}:{
+export const CreateWareHouse = ({open,onOpenChange,roleActions}:{
     open:boolean
     onOpenChange:(e:boolean)=>void
+    roleActions:components["schemas"]["RoleActionDto"][]
 })=>{
     const {t} = useTranslation("common")
     const fetcher = useFetcher<typeof action>()
@@ -41,8 +44,11 @@ export const CreateWareHouse = ({open,onOpenChange}:{
         onOpenChange={onOpenChange}
         >
             <CustomForm
-            schema={addWareHouseSchema}
+            schema={createWarehouseSchema}
             fetcher={fetcher}
+            defaultValues={{
+                isGroup:false
+            } as z.infer<typeof createWarehouseSchema>}
             formItemsData={[
                 {
                     name:"name",
@@ -51,15 +57,13 @@ export const CreateWareHouse = ({open,onOpenChange}:{
                     label:t("form.name")
                 },
                 {
-                    name:"enabled",
+                    name:"isGroup",
                     type:"boolean",
                     typeForm:"check",
-                    label:t("form.enabled"),
-                    description:t("f.enable",{o:t("_warehouse.base")})
+                    label:t("form.isGroup")
                 },
-                
             ]}
-            onSubmit={(values:z.infer<typeof addWareHouseSchema>)=>{
+            onSubmit={(values:z.infer<typeof createWarehouseSchema>)=>{
                 fetcher.submit({
                     action:"add-warehouse",
                     addWareHouse:values
@@ -69,21 +73,42 @@ export const CreateWareHouse = ({open,onOpenChange}:{
                     encType:"application/json"
                 })
             }}
+            renderCustomInputs={(form)=>{
+                return (
+                    <WarehouseAutocompleteForm
+                    label="Almacén Principal"
+                    control={form.control}
+                    name="parentName"
+                    isGroup={true}
+                    roleActions={roleActions}
+                    onSelect={(e)=>{
+                      form.setValue("parentID",e.id)
+                    }}
+                    />      
+                )
+            }}
             />
         </DrawerLayout>
 
     )
 }
 
+interface Payload {
+}
+
 interface CreateWareHouse {
+    payload?:Payload
     open:boolean
     onOpenChange:(e:boolean)=>void
-    openDialog:(opts:{})=>void
+    openDialog:(opts:Payload)=>void
 }
 export const useCreateWareHouse = create<CreateWareHouse>((set=>({
     open:false,
     onOpenChange:(e)=>set((state)=>({open:e})),
-    openDialog:(opts)=>set((state)=>({open:true}))
+    openDialog:(opts)=>set((state)=>({
+        open:true,
+        payload:opts
+    }))
 })))
 
 // export default function useCreateWareHouse(){

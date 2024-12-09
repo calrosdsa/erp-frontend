@@ -11,8 +11,6 @@ import GroupInfoTab from "./tab/group.info"
 import { routes } from "~/util/route"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
-
-
 export default function GroupClient(){
     const {group,actions,groupDescendents,activities} = useLoaderData<typeof loader>()
     const {t,i18n} = useTranslation("common")

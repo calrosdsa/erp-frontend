@@ -7,7 +7,7 @@ import { editGroupSchema } from "~/util/data/schemas/group-schema";
 
 type ActionData = {
     action: string;
-    editGroup: z.infer<typeof editGroupSchema>;
+    editData: z.infer<typeof editGroupSchema>;
   };
   export const action = async ({ request }: ActionFunctionArgs) => {
     const client = apiClient({ request });
@@ -15,13 +15,13 @@ type ActionData = {
     let error: string | undefined = undefined;
     let message: string | undefined = undefined;
     switch (data.action) {
-      case "edit-group": {
-        const d = data.editGroup;
+      case "edit": {
+        const d = data.editData;
         const res = await client.PUT("/group", {
           body: {
-            group_id: d.groupID,
+            id: d.id,
             name: d.name,
-            party_type_group:d.partyTypeGroup
+            party_type_code:d.partyTypeGroup
           },
         });
         error = res.error?.detail;

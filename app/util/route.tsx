@@ -20,8 +20,8 @@ class Routes {
   address = this.base + "/address";
   contact = this.base + "/contact";
   createAddress = this.address + "/new";
-  group = "groups";
-  groups = this.base + "/groups";
+  group = "group";
+  groups = this.base + "/group";
   companies = this.base + "/companies";
   companiesM = "companies";
 
@@ -35,6 +35,7 @@ class Routes {
   buying = this.base + "/buying";
   buyingM = "buying";
   supplierGroups = this.buying + "/supplier-groups";
+  supplier = "supplier";
   suppliers = this.base + "/supplier";
   purchaseOrders = this.order + `/${PartyType[PartyType.purchaseOrder]}`;
   purchaseInvoices = this.invoice + `/${PartyType[PartyType.purchaseInvoice]}`;

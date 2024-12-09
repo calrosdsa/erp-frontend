@@ -47,10 +47,10 @@ export const action = async({request,params}:ActionFunctionArgs)=>{
             const res = await client.POST("/group",{
                 body:{
                     name:d.name,
-                    is_group:d.is_group,
+                    // is_group:d.is_group,
                     party_type_code:d.party_type_code,
-                    enabled:d.enabled,
-                    parent_id:d.parentID,
+                    // enabled:d.enabled,
+                    // parent_id:d.parentID,
                 }
             })
             message = res.data?.message

@@ -29,7 +29,7 @@ export default function CurrencyExchangeDetailClient(){
 
     const navItems:NavItem[] = [
         {
-            title:t("form.name"),
+            title:t("info"),
             href:toRoute("info")
         }
     ]

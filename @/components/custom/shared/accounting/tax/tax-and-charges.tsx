@@ -13,6 +13,7 @@ export default function TaxAndCharges({
   status,
   currency,
   docPartyID,
+  docPartyType,
   showTotal = true,
   allowEdit = true,
   allowCreate = true,
@@ -21,6 +22,7 @@ export default function TaxAndCharges({
   status: string;
   currency: string;
   docPartyID: number;
+  docPartyType:string
   showTotal?:boolean
   allowEdit?:boolean
   allowCreate?:boolean
@@ -39,6 +41,7 @@ export default function TaxAndCharges({
             return (
                 <TaxAndChargesLines
                   docPartyID={docPartyID}
+                  docPartyType={docPartyType}
                   currency={currency}
                   showTotal={showTotal}
                   allowEdit={allowEdit}

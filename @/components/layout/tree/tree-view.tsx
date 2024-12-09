@@ -101,7 +101,7 @@ export const TreeView: React.FC<TreeViewProps> = ({ data, onAddChild, onEdit, on
                     className="flex items-center"
                   >
                     <Plus className="w-3 h-3 mr-1" />
-                    Add Child
+                    Agregar Cuenta
                   </Button>
                   <Button
                     variant="outline"
@@ -110,7 +110,7 @@ export const TreeView: React.FC<TreeViewProps> = ({ data, onAddChild, onEdit, on
                     className="flex items-center"
                   >
                     <Edit className="w-3 h-3 mr-1" />
-                    Edit
+                    Editar
                   </Button>
                 </>
               ) : (
@@ -121,7 +121,7 @@ export const TreeView: React.FC<TreeViewProps> = ({ data, onAddChild, onEdit, on
                     onClick={() => onEdit && onEdit(item)}
                     className="flex items-center"
                   >
-                    Edit
+                    Editar
                   </Button>
                   {/* <Button
                     variant="outline"
@@ -153,7 +153,7 @@ export const TreeView: React.FC<TreeViewProps> = ({ data, onAddChild, onEdit, on
           className="flex items-center"
         >
           <ChevronDown className="w-4 h-4 mr-1" />
-          Expand All
+          Expandir
         </Button>
         <Button
           variant="outline"
@@ -162,7 +162,7 @@ export const TreeView: React.FC<TreeViewProps> = ({ data, onAddChild, onEdit, on
           className="flex items-center"
         >
           <ChevronUp className="w-4 h-4 mr-1" />
-          Collapse All
+          Colapsar
         </Button>
       </div>
       {renderTreeItems(0)}

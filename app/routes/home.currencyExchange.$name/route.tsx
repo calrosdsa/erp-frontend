@@ -9,6 +9,8 @@ import CurrencyExchangeDetailClient from "./currency-exchange-detail.client";
 import { handleError } from "~/util/api/handle-status-code";
 import { z } from "zod";
 import { editCurrencyExchangeSchema } from "~/util/data/schemas/core/currency-exchange-schema";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { LOAD_ACTION } from "~/constant";
 
 type ActionData = {
   action: string;
@@ -19,6 +21,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  let actionRes = LOAD_ACTION
   console.log("EDIT DATA", data.editData);
   switch (data.action) {
     case "edit": {
@@ -42,8 +45,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({
     error,
     message,
+    action:actionRes,
   });
 };
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult
+}:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

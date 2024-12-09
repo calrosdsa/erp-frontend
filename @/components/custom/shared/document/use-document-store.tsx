@@ -21,3 +21,6 @@ export const  useDocumentStore = create<DocumentStore>((set)=>({
         payload:opts,
     }))
 }))
+
+
+

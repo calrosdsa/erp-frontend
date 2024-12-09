@@ -7,7 +7,7 @@ import { usePermission } from "../useActions";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { Control } from "react-hook-form";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { useCreateGroup } from "~/routes/home.groups.$party_/components/create-group";
+import { useCreateGroup } from "~/routes/home.group.$party_/components/create-group";
 
 export const GroupAutocompleteForm = ({
   allowEdit = true,
@@ -18,7 +18,6 @@ export const GroupAutocompleteForm = ({
   isGroup,
   partyType,
   roleActions,
-  actions,
 }: {
   allowEdit?: boolean;
   control?: Control<any, any>;
@@ -28,14 +27,13 @@ export const GroupAutocompleteForm = ({
   isGroup: boolean;
   partyType: string;
   roleActions?: components["schemas"]["RoleActionDto"][];
-  actions?: components["schemas"]["ActionDto"][];
 }) => {
   const [fetcherDebounce, onChange] = useGroupDebounceFetcher({
     isGroup,
     partyType,
   });
   const [permission] = usePermission({
-    actions,
+    actions:fetcherDebounce.data?.actions,
     roleActions,
   });
   const createGroup = useCreateGroup();
@@ -45,7 +43,7 @@ export const GroupAutocompleteForm = ({
       data={fetcherDebounce.data?.groups || []}
       onValueChange={onChange}
       label={label}
-      name={name || "uom"}
+      name={name || "group"}
       nameK="name"
       control={control}
       allowEdit={allowEdit}

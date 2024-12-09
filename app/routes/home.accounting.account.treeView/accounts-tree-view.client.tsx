@@ -36,12 +36,23 @@ export default function AccountsTreeViewClient(){
             onAddChild={(e)=>{
                 newAccount.setPayload({
                     parentName:e.name,
-                    parentUUID:e.uuid
+                    parentID:e.id
                 })
                 navigate(r.toRoute({
                     main:r.accountM,
                     routePrefix:[r.accountingM],
                     routeSufix:["new"]
+                }))
+            }}
+            onEdit={(e)=>{
+                navigate(r.toRoute({
+                    main:r.accountM,
+                    routePrefix:[r.accountingM],
+                    routeSufix:[e.name],
+                    q:{
+                        tab:"info",
+                        id:e.uuid
+                    }
                 }))
             }}
             />    

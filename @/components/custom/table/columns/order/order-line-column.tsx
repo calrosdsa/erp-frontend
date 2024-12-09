@@ -9,23 +9,23 @@ import TableCellPrice from "../../cells/table-cell-price";
 import TableCellIndex from "../../cells/table-cell-index";
 import { formatTax, getTaxPorcent } from "~/util/format/formatCurrency";
 import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
-import { ItemLineType } from "~/gen/common";
+import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { DataTableRowActions } from "../../data-table-row-actions";
 
-export const  lineItemsColumns = ({
+export const lineItemsColumns = ({
   currency,
-  itemLineType,
+  lineType,
 }: {
   currency: string;
-  itemLineType:ItemLineType
+  lineType: string;
 }): ColumnDef<z.infer<typeof lineItemSchema>>[] => {
   let columns: ColumnDef<z.infer<typeof lineItemSchema>>[] = [];
   const r = routes;
   const { t, i18n } = useTranslation("common");
   columns.push({
-    header:t("table.no"),
-    cell:TableCellIndex
-  })
+    header: t("table.no"),
+    cell: TableCellIndex,
+  });
   columns.push({
     accessorKey: "item_code",
     header: t("_item.code"),
@@ -39,34 +39,36 @@ export const  lineItemsColumns = ({
   //   header: t("form.uom"),
   // });
 
-  // if(itemLineType == ItemLineType.ITEM_LINE_ORDER) {
-    columns.push({
-      accessorKey: "quantity",
-      header: t("_item.quantity"),
-    });
+  // if(lineType == ItemLineType.ITEM_LINE_ORDER) {
+  columns.push({
+    accessorKey: "quantity",
+    header: t("_item.quantity"),
+  });
   // }
 
-
-  if(itemLineType == ItemLineType.ITEM_LINE_RECEIPT) {
+  if (lineType == itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)) {
     columns.push({
       accessorKey: "lineItemReceipt.acceptedQuantity",
-      header: t("f.accepted",{o:t("form.quantity")}),
-    });  
+      header: t("f.accepted", { o: t("form.quantity") }),
+    });
     columns.push({
       accessorKey: "lineItemReceipt.rejectedQuantity",
-      header: t("f.rejected",{o:t("form.quantity")}),
-    });  
+      header: t("f.rejected", { o: t("form.quantity") }),
+    });
   }
 
   columns.push({
     accessorKey: "rate",
     header: t("form.rate"),
-    cell: ({...props})=>{
+    cell: ({ ...props }) => {
       return currency ? (
-        <TableCellPrice {...props}  currency={currency} i18n={i18n}
-        isAmount={true}
+        <TableCellPrice
+          {...props}
+          currency={currency}
+          i18n={i18n}
+          isAmount={true}
         />
-      ): (
+      ) : (
         "-"
       );
     },
@@ -76,12 +78,15 @@ export const  lineItemsColumns = ({
     accessorKey: "amount",
     header: t("form.amount"),
     cell: ({ ...props }) => {
-      const rowData = props.row.original
+      const rowData = props.row.original;
       return currency ? (
-        <TableCellPrice {...props} currency={currency} i18n={i18n}
-        price={rowData.rate * Number(rowData.quantity)}
-        isAmount={true}
-         />
+        <TableCellPrice
+          {...props}
+          currency={currency}
+          i18n={i18n}
+          price={rowData.rate * Number(rowData.quantity)}
+          isAmount={true}
+        />
       ) : (
         "-"
       );
@@ -89,14 +94,12 @@ export const  lineItemsColumns = ({
   });
 
   columns.push({
-      id: "actions",
-      cell: DataTableRowActions,
-  })
-
+    id: "actions",
+    cell: DataTableRowActions,
+  });
 
   return [...columns];
 };
-
 
 //FOR DISPLAY ITEM LINES IN ORDERS,INVOICE AND RECEIPT
 export const displayItemLineColumns = ({
@@ -108,9 +111,9 @@ export const displayItemLineColumns = ({
   const r = routes;
   const { t, i18n } = useTranslation("common");
   columns.push({
-    header:t("table.no"),
-    cell:TableCellIndex
-  })
+    header: t("table.no"),
+    cell: TableCellIndex,
+  });
   columns.push({
     accessorKey: "item_code",
     header: t("_item.code"),
@@ -144,11 +147,15 @@ export const displayItemLineColumns = ({
     id: "amount",
     header: t("form.amount"),
     cell: ({ ...props }) => {
-      const rowData = props.row.original
-      const total = rowData.rate * rowData.quantity
+      const rowData = props.row.original;
+      const total = rowData.rate * rowData.quantity;
       return currency ? (
-        <TableCellPrice {...props} currency={currency} i18n={i18n}
-        price={total}/>
+        <TableCellPrice
+          {...props}
+          currency={currency}
+          i18n={i18n}
+          price={total}
+        />
       ) : (
         "-"
       );
@@ -169,14 +176,12 @@ export const displayItemLineColumns = ({
   //   },
   // });
 
-
   columns.push({
-      id: "actions-row",
-      cell: DataTableRowActions,
-    })
+    id: "actions-row",
+    cell: DataTableRowActions,
+  });
   return [...columns];
 };
-
 
 //FOR DISPLAY ITEM LINES IN ORDERS,INVOICE AND RECEIPT
 export const lineItemColumns = ({
@@ -188,9 +193,9 @@ export const lineItemColumns = ({
   const r = routes;
   const { t, i18n } = useTranslation("common");
   columns.push({
-    header:t("table.no"),
-    cell:TableCellIndex
-  })
+    header: t("table.no"),
+    cell: TableCellIndex,
+  });
   columns.push({
     accessorKey: "item_code",
     header: t("_item.code"),
@@ -224,11 +229,15 @@ export const lineItemColumns = ({
     id: "amount",
     header: t("form.amount"),
     cell: ({ ...props }) => {
-      const rowData = props.row.original
-      const total = rowData.rate * rowData.quantity
+      const rowData = props.row.original;
+      const total = rowData.rate * rowData.quantity;
       return currency ? (
-        <TableCellPrice {...props} currency={currency} i18n={i18n}
-        price={total}/>
+        <TableCellPrice
+          {...props}
+          currency={currency}
+          i18n={i18n}
+          price={total}
+        />
       ) : (
         "-"
       );
@@ -249,10 +258,9 @@ export const lineItemColumns = ({
   //   },
   // });
 
-
   columns.push({
-      id: "actions-row",
-      cell: DataTableRowActions,
-    })
+    id: "actions-row",
+    cell: DataTableRowActions,
+  });
   return [...columns];
 };

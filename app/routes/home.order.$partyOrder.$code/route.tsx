@@ -16,6 +16,7 @@ import { FetchResponse } from "openapi-fetch";
 import { editOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
 import { formatRFC3339 } from "date-fns";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { LOAD_ACTION } from "~/constant";
 
 type ActionData = {
   action: string;
@@ -27,6 +28,7 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  let actionRes = LOAD_ACTION
   switch (data.action) {
     case "update-status-with-event": {
       const res = await client.PUT("/order/update-status", {
@@ -53,13 +55,14 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
       })
       message = res.data?.message
       error = res.error?.detail
+      actionRes = ""
       break;
     }
   }
   return json({
     message,
     error,
-    action:data.action
+    action:actionRes,
   });
 };
 
@@ -68,7 +71,7 @@ export function shouldRevalidate({
   defaultShouldRevalidate,
   actionResult
 }:ShouldRevalidateFunctionArgs) {
-  if (actionResult?.action == "update-status-with-event") {
+  if (actionResult?.action == LOAD_ACTION) {
     return defaultShouldRevalidate;
   }
   if (formMethod === "POST") {

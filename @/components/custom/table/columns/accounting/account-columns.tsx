@@ -23,13 +23,18 @@ export const accountColumns = (): ColumnDef<components["schemas"]["LedgerDto"]>[
       accessorKey: "name",
       header: t("form.name"),
       cell:({...props})=>{
+        const rowData = props.row.original
         return(
           <TableCellNameNavigation
           {...props}
           navigate={(name)=>r.toRoute({
             main:r.accountM,
             routePrefix:[r.accountingM],
-            routeSufix:[name]
+            routeSufix:[name],
+            q:{
+              tab:"info",
+              id:rowData.uuid,
+            }
           })}
           />
         )

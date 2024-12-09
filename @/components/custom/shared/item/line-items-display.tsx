@@ -9,7 +9,6 @@ import { components } from "~/sdk";
 import LineItems from "./line-items";
 import { useLineItems } from "./use-line-items";
 import {
-  mapToLineItemSchema,
   toLineItemSchema,
 } from "~/util/data/schemas/stock/line-item-schema";
 
@@ -17,16 +16,18 @@ export default function LineItemsDisplay({
   lineItems,
   status,
   currency,
-  partyType,
-  itemLineType,
+  docPartyType,
+  docPartyID,
+  lineType,
   allowEdit = true,
   allowCreate = true,
 }: {
   lineItems: any;
   status: string;
   currency: string;
-  partyType: string;
-  itemLineType: ItemLineType;
+  docPartyType?: string;
+  docPartyID?:number,
+  lineType: string;
   allowEdit?: boolean;
   allowCreate?: boolean;
 }) {
@@ -42,7 +43,7 @@ export default function LineItemsDisplay({
             lineItemsStore.onLines(
               lines.map((t) =>
                 toLineItemSchema(t, {
-                  partyType: partyType,
+                  partyType: docPartyType,
                 })
               )
             );
@@ -52,8 +53,9 @@ export default function LineItemsDisplay({
           }, [lines]);
           return (
             <LineItems
-              itemLineType={itemLineType}
-              partyType={partyType}
+              lineType={lineType}
+              docPartyType={docPartyType}
+              docPartyID={docPartyID}
               currency={currency}
               allowCreate={allowCreate}
               allowEdit={allowEdit}

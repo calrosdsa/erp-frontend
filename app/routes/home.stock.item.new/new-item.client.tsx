@@ -19,7 +19,6 @@ import { UomAutocompleteForm } from "~/util/hooks/fetchers/useUomDebounceFetcher
 import { GroupAutocompleteForm } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { useCreateGroup } from "../home.groups.$party_/components/create-group";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
@@ -122,7 +121,6 @@ export default function NewItemClient() {
               label={t("group")}
               name="groupName"
               roleActions={roleActions}
-              actions={entityActions && entityActions[Entity.ITEM_GROUP]}
               isGroup={false}
               partyType={r.itemGroup}
               onSelect={(e) => {

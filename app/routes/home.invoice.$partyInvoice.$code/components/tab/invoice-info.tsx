@@ -188,6 +188,7 @@ export default function InvoiceInfoTab() {
                 status={invoice.status}
                 taxLines={taxLines}
                 docPartyID={invoice.id}
+                docPartyType={invoiceParty}
                 allowCreate={allowCreate}
                 allowEdit={allowEdit}
               />

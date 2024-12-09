@@ -1074,8 +1074,10 @@ export interface paths {
         get: operations["item-lines"];
         /** EditItemLine */
         put: operations["update-item-line"];
-        post?: never;
-        delete?: never;
+        /** Add Line Item */
+        post: operations["add-line-item"];
+        /** Delete Line Item */
+        delete: operations["delete-line-item"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1142,7 +1144,8 @@ export interface paths {
         };
         /** Get Accounts */
         get: operations["get-acconts"];
-        put?: never;
+        /** Edit Ledger */
+        put: operations["edit-ledger"];
         /** Create Ledger */
         post: operations["create-ledger"];
         delete?: never;
@@ -1460,7 +1463,8 @@ export interface paths {
         };
         /** Get Payments */
         get: operations["get-payments"];
-        put?: never;
+        /** Edit Payment */
+        put: operations["edit-payment"];
         /** Create Payment */
         post: operations["create-payment"];
         delete?: never;
@@ -2529,7 +2533,8 @@ export interface paths {
         };
         /** Retrieve Price List items */
         get: operations["get-price-lists"];
-        put?: never;
+        /** Edit Price List */
+        put: operations["edit-price-list"];
         /** Create price list */
         post: operations["create-price-list"];
         delete?: never;
@@ -2599,7 +2604,8 @@ export interface paths {
         };
         /** Get Warehouses */
         get: operations["get-warehouses"];
-        put?: never;
+        /** Edit Warehouse */
+        put: operations["edit-warehouse"];
         /** Create Warehouse */
         post: operations["create-warehouse"];
         delete?: never;
@@ -2906,6 +2912,22 @@ export interface components {
             entity_id: number;
             name: string;
         };
+        AddLineItemRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            doc_party_id?: number;
+            doc_party_type?: string;
+            line_item_data: components["schemas"]["LineItemData"];
+            /** Format: double */
+            total_amount?: number;
+            /** Format: int32 */
+            total_items?: number;
+            update_stock?: boolean;
+        };
         AddPluginRequestBody: {
             /**
              * Format: uri
@@ -2935,6 +2957,26 @@ export interface components {
             /** Format: int32 */
             stock: number;
             warehouse_uuid: string;
+        };
+        AddTaxLineRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: double */
+            amount: number;
+            /** Format: int64 */
+            doc_party_id?: number;
+            doc_party_type?: string;
+            is_deducted: boolean;
+            /** Format: int64 */
+            ledger: number;
+            /** Format: int32 */
+            tax_rate: number;
+            /** Format: double */
+            total_amount: number;
+            type: string;
         };
         AddressDto: {
             city: string;
@@ -3414,11 +3456,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            enabled: boolean;
-            is_group: boolean;
             name: string;
-            /** Format: int64 */
-            parent_id?: number | null;
             party_type_code: string;
         };
         CreateInvoiceBody: {
@@ -3495,24 +3533,6 @@ export interface components {
             /** Format: date-time */
             posting_date: string;
         };
-        CreateLedgerBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            account_root_type: string;
-            account_type?: string | null;
-            cash_flow_section?: string | null;
-            currency?: string;
-            description?: string;
-            enabled: boolean;
-            is_group?: boolean;
-            ledger_no?: string | null;
-            name: string;
-            parent_uuid?: string | null;
-            report_type?: string | null;
-        };
         CreateOrder: {
             /** Format: int64 */
             cost_center?: number;
@@ -3527,6 +3547,8 @@ export interface components {
             posting_time: string;
             /** Format: int64 */
             project?: number;
+            /** Format: double */
+            total_amount?: number;
             tz: string;
         };
         CreateOrderBody: {
@@ -3548,40 +3570,6 @@ export interface components {
             address: components["schemas"]["AddressRequestData"];
             /** Format: int64 */
             party_reference?: number | null;
-        };
-        CreatePayment: {
-            /** Format: double */
-            amount: number;
-            payment_references: components["schemas"]["CreatePaymentReference"][];
-            payment_type: string;
-            /** Format: date-time */
-            postuing_date: string;
-        };
-        CreatePaymentAccounts: {
-            paid_from?: string;
-            /** Format: int64 */
-            paid_from_id?: number | null;
-            paid_to?: string;
-            /** Format: int64 */
-            paid_to_id?: number | null;
-        };
-        CreatePaymentBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            payment: components["schemas"]["CreatePayment"];
-            payment_accounts?: components["schemas"]["CreatePaymentAccounts"];
-            payment_party: components["schemas"]["CreatePaymentParty"];
-        };
-        CreatePaymentParty: {
-            company_bank_account?: string | null;
-            party_bank_account?: string | null;
-            /** Format: int64 */
-            party_reference?: number;
-            party_type: string;
-            party_uuid: string;
         };
         CreatePaymentReference: {
             /** Format: double */
@@ -3761,10 +3749,10 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            enabled?: boolean;
+            is_group: boolean;
             name: string;
             /** Format: int64 */
-            parentId?: number | null;
+            parent_id?: number;
         };
         CuatropfSubscriptionRequestBody: {
             /**
@@ -3815,6 +3803,36 @@ export interface components {
         CustomerType: {
             code: string;
             name: string;
+        };
+        DeleteLineItemRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            doc_party_id?: number;
+            doc_party_type?: string;
+            /** Format: int32 */
+            id: number;
+            /** Format: double */
+            total_amount: number;
+            /** Format: int32 */
+            total_items: number;
+        };
+        DeleteTaxLineRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            doc_party_id?: number;
+            doc_party_type?: string;
+            /** Format: int32 */
+            id: number;
+            /** Format: double */
+            total_amount: number;
         };
         DeletedAt: {
             /** Format: date-time */
@@ -3921,16 +3939,16 @@ export interface components {
             event_id: number;
             name: string;
         };
-        EditGroupBody: {
+        EditGroupRequestBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             /** Format: int64 */
-            group_id: number;
+            id: number;
             name: string;
-            party_type_group: string;
+            party_type_code: string;
         };
         EditInvoiceRequestBody: {
             /**
@@ -3992,6 +4010,52 @@ export interface components {
             /** Format: int64 */
             uom_id: number;
         };
+        EditLedgerRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            account_root_type: string;
+            account_type?: string;
+            cash_flow_section?: string;
+            /** Format: int64 */
+            id: number;
+            is_group?: boolean;
+            ledger_no?: string;
+            name: string;
+            /** Format: int64 */
+            parent_id?: number;
+            report_type?: string;
+        };
+        EditLineItemRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            delivery_line_item?: components["schemas"]["DeliveryLineItemData"];
+            /** Format: int64 */
+            doc_party_id?: number;
+            doc_party_type?: string;
+            /** Format: int32 */
+            id: number;
+            /** Format: int32 */
+            item_line_reference?: number;
+            /** Format: int64 */
+            item_price_id: number;
+            line_receipt?: components["schemas"]["LineItemReceiptData"];
+            line_stock_entry?: components["schemas"]["LineItemStockEntryData"];
+            line_type: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: double */
+            rate: number;
+            /** Format: double */
+            total_amount: number;
+            /** Format: int32 */
+            total_items: number;
+        };
         EditOrderRequestBody: {
             /**
              * Format: uri
@@ -4013,7 +4077,46 @@ export interface components {
             posting_time: string;
             /** Format: int64 */
             project?: number;
+            /** Format: double */
+            total_amount?: number;
             tz: string;
+        };
+        EditPaymentRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: double */
+            amount: number;
+            /** Format: int64 */
+            cost_center?: number;
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            paid_from_id?: number;
+            /** Format: int64 */
+            paid_to_id?: number;
+            /** Format: int64 */
+            party_id: number;
+            payment_type: string;
+            /** Format: date-time */
+            posting_date: string;
+            /** Format: int64 */
+            project?: number;
+        };
+        EditPriceListRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            currency: string;
+            /** Format: int64 */
+            id: number;
+            isBuying: boolean;
+            isSelling: boolean;
+            name: string;
         };
         EditQuotationRequestBody: {
             /**
@@ -4100,6 +4203,9 @@ export interface components {
             readonly $schema?: string;
             /** Format: double */
             amount: number;
+            /** Format: int64 */
+            doc_party_id?: number;
+            doc_party_type?: string;
             /** Format: int32 */
             id: number;
             is_deducted: boolean;
@@ -4107,7 +4213,22 @@ export interface components {
             ledger: number;
             /** Format: int32 */
             tax_rate: number;
+            /** Format: double */
+            total_amount: number;
             type: string;
+        };
+        EditWarehouseRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            id: number;
+            is_group: boolean;
+            name: string;
+            /** Format: int64 */
+            parent_id?: number;
         };
         EditableProfileFields: {
             family_name: string;
@@ -5206,8 +5327,26 @@ export interface components {
             key: string;
             value: string;
         };
+        LedgerData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            account_root_type: string;
+            account_type?: string;
+            cash_flow_section?: string;
+            is_group?: boolean;
+            ledger_no?: string;
+            name: string;
+            /** Format: int64 */
+            parent_id?: number;
+            report_type?: string;
+        };
         LedgerDetailDto: {
+            account_root_type: string;
             account_type: string;
+            cash_flow_section: string;
             /** Format: date-time */
             created_at: string;
             description: string;
@@ -5216,13 +5355,17 @@ export interface components {
             is_group: boolean;
             ledger_no: string | null;
             name: string;
-            parent_name: string;
-            parent_uuid: string;
+            parent: string;
+            /** Format: int64 */
+            parent_id: number;
+            report_type: string;
             status: string;
             uuid: string;
         };
         LedgerDto: {
+            account_root_type: string;
             account_type: string;
+            cash_flow_section: string;
             /** Format: date-time */
             created_at: string;
             description: string;
@@ -5231,6 +5374,7 @@ export interface components {
             is_group: boolean;
             ledger_no: string | null;
             name: string;
+            report_type: string;
             status: string;
             uuid: string;
         };
@@ -5240,9 +5384,9 @@ export interface components {
             item_line_reference?: number;
             /** Format: int64 */
             item_price_id: number;
-            item_price_uuid: string;
             line_receipt?: components["schemas"]["LineItemReceiptData"];
             line_stock_entry?: components["schemas"]["LineItemStockEntryData"];
+            line_type: string;
             /** Format: int32 */
             quantity: number;
             /** Format: double */
@@ -5902,6 +6046,33 @@ export interface components {
             /** Format: int64 */
             receivable_acct_id: number;
         };
+        PaymentData: {
+            /** Format: double */
+            amount: number;
+            /** Format: int64 */
+            cost_center?: number;
+            /** Format: int64 */
+            paid_from_id?: number;
+            /** Format: int64 */
+            paid_to_id?: number;
+            /** Format: int64 */
+            party_id: number;
+            payment_type: string;
+            /** Format: date-time */
+            posting_date: string;
+            /** Format: int64 */
+            project?: number;
+        };
+        PaymentDataBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            payment: components["schemas"]["PaymentData"];
+            payment_references: components["schemas"]["CreatePaymentReference"][];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
+        };
         PaymentDetailDto: {
             PartyBankAccount: string | null;
             /** Format: int64 */
@@ -5913,11 +6084,17 @@ export interface components {
             /** Format: int64 */
             id: number;
             paid_from_currency: string;
+            /** Format: int64 */
+            paid_from_id: number;
             paid_from_name: string;
             paid_from_uuid: string;
             paid_to_currency: string;
+            /** Format: int64 */
+            paid_to_id: number;
             paid_to_name: string;
             paid_to_uuid: string;
+            /** Format: int64 */
+            party_id: number;
             party_name: string;
             party_type: string;
             party_uuid: string;
@@ -5937,6 +6114,8 @@ export interface components {
             created_at: string;
             /** Format: int64 */
             id: number;
+            /** Format: int64 */
+            party_id: number;
             party_name: string;
             party_type: string;
             party_uuid: string;
@@ -6972,11 +7151,6 @@ export interface components {
             uuid: string;
         };
         TaxAndChargeLineData: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
             /** Format: double */
             amount: number;
             is_deducted: boolean;
@@ -7067,22 +7241,6 @@ export interface components {
             readonly $schema?: string;
             credentials: string;
         };
-        UpdateItemLineBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int32 */
-            item_line: number;
-            /** Format: int64 */
-            item_price_id: number;
-            party_type: string;
-            /** Format: int32 */
-            quantity: number;
-            /** Format: double */
-            rate: number;
-        };
         UpdatePasswordRequestBody: {
             /**
              * Format: uri
@@ -7158,6 +7316,7 @@ export interface components {
             enabled: boolean;
             /** Format: int64 */
             id: number;
+            is_group: boolean;
             name: string;
             uuid: string;
         };
@@ -9722,7 +9881,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditGroupBody"];
+                "application/json": components["schemas"]["EditGroupRequestBody"];
             };
         };
         responses: {
@@ -10124,7 +10283,73 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateItemLineBody"];
+                "application/json": components["schemas"]["EditLineItemRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "add-line-item": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddLineItemRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-line-item": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteLineItemRequestBody"];
             };
         };
         responses: {
@@ -10342,6 +10567,39 @@ export interface operations {
             };
         };
     };
+    "edit-ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditLedgerRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-ledger": {
         parameters: {
             query?: never;
@@ -10351,7 +10609,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateLedgerBody"];
+                "application/json": components["schemas"]["LedgerData"];
             };
         };
         responses: {
@@ -11227,6 +11485,39 @@ export interface operations {
             };
         };
     };
+    "edit-payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditPaymentRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-payment": {
         parameters: {
             query?: never;
@@ -11236,7 +11527,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreatePaymentBody"];
+                "application/json": components["schemas"]["PaymentDataBody"];
             };
         };
         responses: {
@@ -14189,6 +14480,39 @@ export interface operations {
             };
         };
     };
+    "edit-price-list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditPriceListRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-price-list": {
         parameters: {
             query?: never;
@@ -14410,6 +14734,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListWareHouseDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-warehouse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditWarehouseRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -14710,16 +15067,14 @@ export interface operations {
     };
     "add-tax-and-charge": {
         parameters: {
-            query: {
-                id: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TaxAndChargeLineData"];
+                "application/json": components["schemas"]["AddTaxLineRequestBody"];
             };
         };
         responses: {
@@ -14745,15 +15100,16 @@ export interface operations {
     };
     "delete-tax-and-charge": {
         parameters: {
-            query: {
-                id: string;
-                party_type?: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteTaxLineRequestBody"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {

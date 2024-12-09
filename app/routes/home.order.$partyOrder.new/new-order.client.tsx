@@ -18,7 +18,7 @@ import { routes } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { action } from "./route";
 import { GlobalState } from "~/types/app";
-import { ItemLineType, PartyType, partyTypeFromJSON } from "~/gen/common";
+import { ItemLineType, itemLineTypeToJSON, PartyType, partyTypeFromJSON } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef } from "react";
@@ -39,8 +39,6 @@ import { Card } from "@/components/ui/card";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
-  const [currencyDebounceFetcher, onCurrencyChange] =
-    useCurrencyDebounceFetcher();
   const { roleActions, companyDefaults } = useOutletContext<GlobalState>();
   const params = useParams();
   const partyOrder = params.partyOrder || "";
@@ -116,12 +114,12 @@ export default function CreatePurchaseOrdersClient() {
   );
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
-    taxLinesStore.updateFromItems(formValues.lines)
+    taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.taxLines]);
 
   useEffect(() => {
     lineItemsStore.onLines(formValues.lines);
-    taxLinesStore.updateFromItems(formValues.lines)
+    taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.lines]);
 
   return (
@@ -157,7 +155,7 @@ export default function CreatePurchaseOrdersClient() {
                   name="deliveryDate"
                   label={t("form.deliveryDate")}
                 />
-                 {/* <FormAutocomplete
+                {/* <FormAutocomplete
                 data={currencyDebounceFetcher.data?.currencies || []}
                 control={form.control}
                 name="currency"
@@ -178,8 +176,8 @@ export default function CreatePurchaseOrdersClient() {
                     form.trigger("lines");
                   }}
                   allowEdit={true}
-                  itemLineType={ItemLineType.ITEM_LINE_ORDER}
-                  partyType={partyOrder}
+                  lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
+                  docPartyType={partyOrder}
                   currency={formValues.currency}
                 />
                 <TaxAndChargesLines
@@ -187,6 +185,7 @@ export default function CreatePurchaseOrdersClient() {
                     form.setValue("taxLines", e);
                     form.trigger("taxLines");
                   }}
+                  docPartyType={partyOrder}
                   currency={formValues.currency}
                   form={form}
                   allowCreate={true}

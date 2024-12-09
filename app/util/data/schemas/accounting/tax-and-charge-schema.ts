@@ -30,20 +30,20 @@ export const mapToTaxAndChargeData = (
 
 export const toTaxAndChargeLineSchema = (
   line: components["schemas"]["TaxAndChargeLineDto"],
-  opts?:{
-    ignoreID?:boolean
+  opts?: {
+    ignoreID?: boolean;
   }
 ): z.infer<typeof taxAndChargeSchema> => {
-  const d:z.infer<typeof taxAndChargeSchema> = {
+  const d: z.infer<typeof taxAndChargeSchema> = {
     type: line.type,
     taxRate: line.tax_rate,
     accountHeadName: line.account_head,
     accountHead: line.account_head_id,
     amount: formatAmount(Number(line.amount)),
     isDeducted: line.is_deducted,
+  };
+  if (!opts?.ignoreID) {
+    d.taxLineID = line.id;
   }
-  if(!opts?.ignoreID){
-    d.taxLineID = line.id
-  } 
   return d;
 };

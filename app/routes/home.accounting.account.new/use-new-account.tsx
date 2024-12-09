@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 interface Payload {
     parentName?:string
-    parentUUID?:string
+    parentID?:number
 }
 
 interface NewAccountStore {

@@ -1,7 +1,42 @@
+import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
+import { Control } from "react-hook-form";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { components } from "~/sdk";
 import { routes } from "~/util/route";
+
+
+interface PartyAutocompleteProps {
+  allowEdit?: boolean;
+  control?: Control<any, any>;
+  label?: string;
+  partyType:string;
+  onSelect: (e: components["schemas"]["PartyDto"]) => void;
+}
+
+export const PartyAutocompleteForm =({
+  allowEdit,
+  control,
+  label,
+  partyType,
+  onSelect,
+}: PartyAutocompleteProps) => {
+  const [fetcher, onChange] = usePartyDebounceFetcher({partyType});
+
+  return (
+    <FormAutocomplete
+      data={fetcher.data?.parties || []}
+      onValueChange={onChange}
+      label={label}
+      name="party"
+      nameK="name"
+      control={control}
+      allowEdit={allowEdit}
+      onSelect={onSelect}
+    />
+  );
+}
+
 
 export const usePartyDebounceFetcher = ({
   partyType,

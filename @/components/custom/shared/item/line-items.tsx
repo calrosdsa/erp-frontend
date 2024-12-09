@@ -25,8 +25,9 @@ import { Separator } from "@/components/ui/separator";
 export default function LineItems({
   status,
   currency,
-  partyType,
-  itemLineType,
+  docPartyType,
+  docPartyID,
+  lineType,
   allowEdit = true,
   allowCreate = true,
   onChange,
@@ -35,10 +36,11 @@ export default function LineItems({
   onChange?: (e: z.infer<typeof lineItemSchema>[]) => void;
   status?: string;
   currency: string;
-  partyType: string;
+  docPartyType?: string;
+  docPartyID?:number;
   allowEdit?: boolean;
   allowCreate?: boolean;
-  itemLineType: ItemLineType;
+  lineType: string;
   complement?: JSX.Element;
 }) {
   const { t, i18n } = useTranslation("common");
@@ -46,21 +48,29 @@ export default function LineItems({
   const itemLine = useItemLine();
   const shared = {
     currency: currency,
-    partyType: partyType,
+    docPartyType: docPartyType,
+    docPartyID:docPartyID,
     allowEdit: allowEdit,
-    itemLineType: itemLineType,
   };
   const [metaOptions] = useTableRowActions({
     ...(allowCreate && {
       onAddRow: () => {
         itemLine.onOpenDialog({
           ...shared,
-          onEditItemForm: (e) => {
+          onEditLineItem: (e) => {
             const lines = [...lineItems, e];
             if (onChange) {
               onChange(lines);
             }
           },
+          line: {
+            rate: 0,
+            lineType: "",
+            uom: "",
+            item_name: "",
+            item_code: "",
+            item_price_id: 0
+          }
         });
       },
     }),
@@ -70,7 +80,7 @@ export default function LineItems({
         itemLine.onOpenDialog({
           ...shared,
           line: f,
-          onEditItemForm: (e) => {
+          onEditLineItem: (e) => {
             const lines = lineItems.map((t, idx) => {
               if (idx == rowIndex) {
                 t = e;
@@ -108,7 +118,7 @@ export default function LineItems({
           data={lineItems}
           columns={lineItemsColumns({
             currency: currency,
-            itemLineType: itemLineType,
+            lineType: lineType,
           })}
           metaOptions={{
             meta: {

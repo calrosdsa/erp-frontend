@@ -22,6 +22,8 @@ interface Props {
   required?: boolean;
   className?: string;
   allowEdit?: boolean;
+  onChange?:()=>void
+  onBlur?:()=>void
 }
 export default function CustomFormFieldInput({
   label,
@@ -32,6 +34,8 @@ export default function CustomFormFieldInput({
   className = "",
   inputType,
   control,
+  onChange,
+  onBlur
 }: Props) {
   return (
     <div className={cn("", className)}>
@@ -55,6 +59,11 @@ export default function CustomFormFieldInput({
                         "disabled:opacity-100 disabled:cursor-default bg-secondary"
                     )}
                     {...field}
+                    onBlur={()=>{
+                      if(onBlur){
+                        onBlur()
+                      }
+                    }}
                   />
                 )}
                 {inputType == "textarea" && (
@@ -76,9 +85,13 @@ export default function CustomFormFieldInput({
                         !allowEdit &&
                           "disabled:opacity-100 disabled:cursor-default bg-secondary"
                       )}
+                      disabled={!allowEdit}
                       checked={field.value}
                       onCheckedChange={(e) => {
                         field.onChange(e);
+                        if(onChange){
+                          onChange()
+                        }
                       }}
                     />
                   </div>

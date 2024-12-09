@@ -6,7 +6,6 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "../route";
 import { useTranslation } from "react-i18next";
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { z } from "zod";
 import { editGroupSchema } from "~/util/data/schemas/group-schema";
 import { useRef } from "react";
@@ -19,8 +18,9 @@ import {
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
-import CustomFormField from "@/components/custom/form/CustomFormField";
 import { useEditFields } from "~/util/hooks/useEditFields";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import { routes } from "~/util/route";
 
 type EditType = z.infer<typeof editGroupSchema>;
 export default function GroupInfoTab() {
@@ -31,22 +31,23 @@ export default function GroupInfoTab() {
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { roleActions } = useOutletContext<GlobalState>();
+  const r = routes
   const [permission] = usePermission({ roleActions, actions });
   const fetcher = useFetcher<typeof action>();
-  const defaultValues = {
-    name: group?.name,
-    groupID: group?.id,
-    partyTypeGroup: groupParty,
-  } as EditType;
+  const allowEdit = permission.edit
   const { form, hasChanged, updateRef } = useEditFields<EditType>({
     schema: editGroupSchema,
-    defaultValues: defaultValues,
+    defaultValues: {
+      id: group?.id,
+      name: group?.name,
+      partyTypeGroup:groupParty,
+    },
   });
   const onSubmit = (e: EditType) => {
     fetcher.submit(
       {
-        action: "edit-group",
-        editGroup: e,
+        action: "edit",
+        editData: e,
       },
       {
         method: "POST",
@@ -88,30 +89,13 @@ export default function GroupInfoTab() {
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
           <div className="info-grid">
-          <CustomFormField
-              form={form}
+          <CustomFormFieldInput
+              control={form.control}
               name="name"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    value={field.value}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      form.trigger("name");
-                    }}
-                    title={t("form.name")}
-                    readOnly={!permission?.edit}
-                  />
-                );
-              }}
+              label={t("form.name")}
+              inputType="input"
+              allowEdit={allowEdit}
             />
-
-            {/* {group &&
-                  <DisplayTextValue
-                  title={t("table.createdAt")}
-                  value={formatLongDate(group.created_at,i18n.language)}
-                  />
-                } */}
           </div>
         </fetcher.Form>
       </Form>

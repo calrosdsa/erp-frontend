@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { components } from "~/sdk";
 import { formatAmount } from "~/util/format/formatCurrency";
+import { taxAndChargeSchema } from "./tax-and-charge-schema";
 
 export const paymentReferceSchema = z.object({
   partyID:z.number(),
@@ -16,19 +17,20 @@ export const createPaymentSchema = z.object({
   amount: z.coerce.number(),
   paymentType: z.string(),
 
+  party: z.string(),
   partyType: z.string(),
-  partyUuid: z.string(),
-  partyName: z.string(),
-  partyBankAccount: z.string().optional(),
-  companyBankAccount: z.string().optional(),
+  partyID: z.number(),
+  // partyBankAccount: z.string().optional(),
+  // companyBankAccount: z.string().optional(),
   partyReference: z.number().optional(),
 
   //Party references
   partyReferences: z.array(paymentReferceSchema),
+  taxLines: z.array(taxAndChargeSchema),
 
   //UUID
-  accountPaidFrom: z.number().optional(),
-  accountPaidTo: z.number().optional(),
+  accountPaidFromID: z.number().optional(),
+  accountPaidToID: z.number().optional(),
   accountPaidFromName: z.string().optional(),
   accountPaidToName: z.string().optional(),
 })
@@ -41,8 +43,30 @@ export const createPaymentSchema = z.object({
         return t
       })
     }
+});
+export const editPayment = z.object({
+  id:z.number(),
+  postingDate: z.date(),
+  amount: z.coerce.number(),
+  paymentType: z.string(),
+
+  party: z.string(),
+  partyType: z.string(),
+  partyID: z.number(),
+  // partyBankAccount: z.string().optional(),
+  // companyBankAccount: z.string().optional(),
+  partyReference: z.number().optional(),
+
+  //Party references
+  // partyReferences: z.array(paymentReferceSchema),
+  // taxLines: z.array(taxAndChargeSchema),
+
+  //UUID
+  accountPaidFromID: z.number().optional(),
+  accountPaidFromName: z.string().optional(),
+  accountPaidToID: z.number().optional(),
+  accountPaidToName: z.string().optional(),
 })
-;
 
 export const partyReferencesToDto = (
   d: z.infer<typeof paymentReferceSchema>
@@ -54,5 +78,18 @@ export const partyReferencesToDto = (
     allocated:d.allocated,
     total:d.grandTotal,
     outstanding:d.outstanding,
+  };
+};
+
+export const mapToPaymentReferenceSchema = (
+  d: components["schemas"]["PaymentReferenceDto"]
+): z.infer<typeof paymentReferceSchema> => {
+  return {
+    partyID: d.party_id,
+    partyType: d.party_type,
+    partyName: d.party_code,
+    grandTotal: d.total,
+    outstanding: d.outstanding,
+    allocated: d.allocated,
   };
 };

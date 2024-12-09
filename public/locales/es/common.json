@@ -11,7 +11,6 @@
     "base": "Empresa",
     "companies": "Empresas"
   },
-  "supplier-groups": "Grupos de Proveedores",
   "suppliers": "Proveedores",
   "_supplier": {
     "base": "Proveedor"
@@ -114,7 +113,6 @@
     "enabled": "Habilitar",
     "country": "País",
     "countryCode": "Código del País",
-    "item-group": "Grupo de Artículos",
     "submit": "Enviar",
     "cancel": "Cancelar",
     "party": "Parte",
@@ -368,7 +366,7 @@
   "PAY": "Pagar",
   "INTERNAL_TRANSFER": "Transferencia interna",
   "ASSET": "Activo",
-  "LIABILITIES": "Pasivos",
+  "LIABILITY": "Pasivo",
   "EXPENSE": "Gasto",
   "REVENUE": "Ingresos",
 
@@ -382,6 +380,7 @@
   "salesQuotation":"Cotización de Venta",
 
   "item": "Artículo",
+  "itemGroup":"Grupo de artículos",
   "event": "Evento",
   "itemPrice": "Precio de artículo",
   "priceList": "Lista de precios",
@@ -395,8 +394,9 @@
   "payment": "Pago",
   "pianoForms": "Formularios de piano",
   "customer": "Cliente",
-  "supplier": "Proveedor",
   "customerGroup": "Grupo de clientes",
+  "supplier":"Supplier",
+  "supplierGroup":"Grupo de proveedores",
   "company": "Empresa",
   "deliveryNote": "Nota de entrega",
   "journalEntry": "Asiento contable",

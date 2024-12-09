@@ -3,12 +3,13 @@ import WareHousesClient from "./warehouses.client";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
-import { addWareHouseSchema } from "~/util/data/schemas/stock/warehouse-schema";
+import { createWarehouseSchema } from "~/util/data/schemas/stock/warehouse-schema";
 import { components } from "~/sdk";
 
 type ActionData = {
     action:string
-    addWareHouse:z.infer<typeof addWareHouseSchema>
+    addWareHouse:z.infer<typeof createWarehouseSchema>
+    isGroup:boolean
 }
 
 export const action = async({request}:ActionFunctionArgs)=>{
@@ -20,8 +21,13 @@ export const action = async({request}:ActionFunctionArgs)=>{
     let actions:components["schemas"]["ActionDto"][] = []
     switch(data.action){
         case "add-warehouse":{
+            const d  =data.addWareHouse
             const res = await client.POST("/stock/warehouse",{
-                body:data.addWareHouse
+                body:{
+                    name:d.name,
+                    parent_id:d.parentID,
+                    is_group:d.isGroup,
+                }
             })
             error = res.error?.detail
             message = res.data?.message
@@ -33,6 +39,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     query:{
                         page:DEFAULT_PAGE,
                         size:DEFAULT_SIZE,
+                        is_group:data.isGroup.toString(),
                     }
                 }
             })

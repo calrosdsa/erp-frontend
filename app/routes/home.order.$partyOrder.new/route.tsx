@@ -40,6 +40,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             currency: d.currency,
             project: d.projectID,
             cost_center: d.costCenterID,
+            total_amount:
+              d.lines.reduce(
+                (prev, curr) => prev + Number(curr.quantity) * curr.rate,
+                0
+              ) +
+              d.taxLines.reduce((prev, curr) => prev + Number(curr.amount), 0),
           },
           items: {
             lines: lines,

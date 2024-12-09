@@ -14,7 +14,7 @@ export const BuyingNav = ({ entities }: {
   let buyingChildrens:NavItem[] = [];
   if(entities?.includes(Entity.SUPPLIER)){
     buyingChildrens.push({
-      title: t("supplier-groups"),
+      title: t("supplierGroup"),
       href: r.toRoute({
         main:partyTypeToJSON(PartyType.supplierGroup),
         routePrefix:[r.group],

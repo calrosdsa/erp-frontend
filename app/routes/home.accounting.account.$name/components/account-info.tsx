@@ -1,31 +1,31 @@
-import { useToast } from "@/components/ui/use-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { z } from "zod";
-import { createAccountLedger } from "~/util/data/schemas/accounting/account-schema";
-import { action } from "./route";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
-import FormLayout from "@/components/custom/form/FormLayout";
-import CustomFormField from "@/components/custom/form/CustomFormField";
-import { Input } from "@/components/ui/input";
-import { Form } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import CheckForm from "@/components/custom/input/CheckForm";
-import SelectForm from "@/components/custom/select/SelectForm";
-import { Button } from "@/components/ui/button";
+import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import {
-  LedgerAutocompleteForm,
-  useAccountLedgerDebounceFetcher,
-} from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
-import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { routes } from "~/util/route";
-import { usePermission } from "~/util/hooks/useActions";
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+} from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
-import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
-import { useNewAccount } from "./use-new-account";
+import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charges-template-schema";
+import { useEffect, useRef, useState } from "react";
+import { routes } from "~/util/route";
+import { useEditFields } from "~/util/hooks/useEditFields";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { z } from "zod";
+import FormLayout from "@/components/custom/form/FormLayout";
+import { Form } from "@/components/ui/form";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import { usePermission } from "~/util/hooks/useActions";
+import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import { action, loader } from "../route";
+import { editAccountLedger } from "~/util/data/schemas/accounting/account-schema";
+import { LedgerAutocompleteForm } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import SelectForm from "@/components/custom/select/SelectForm";
 import {
   AccountType,
   CashFlowSection,
@@ -34,28 +34,18 @@ import {
   finacialReportToJSON,
 } from "~/gen/common";
 import AccordationLayout from "@/components/layout/accordation-layout";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
-
-export default function NewAccountClient() {
-  const fetcher = useFetcher<typeof action>();
+type EditData = z.infer<typeof editAccountLedger>;
+export default function AccountInfo() {
   const { t } = useTranslation("common");
-  const { toast } = useToast();
-  const newAccount = useNewAccount();
-  const form = useForm<z.infer<typeof createAccountLedger>>({
-    resolver: zodResolver(createAccountLedger),
-    defaultValues: {
-      parent: newAccount.payload?.parentName,
-      parentID: newAccount.payload?.parentID,
-    },
-  });
-  const formValues = form.getValues();
-  const r = routes;
-  const navigate = useNavigate();
+  const { account, actions } = useLoaderData<typeof loader>();
+  const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
+  const [permission] = usePermission({ actions, roleActions });
   const inputRef = useRef<HTMLInputElement | null>(null);
-  // const [accountRootTypes, setAccountRootTypes] = useState<SelectItem[]>([]);
+  const fetcher = useFetcher<typeof action>();
+  const [accountRootTypes, setAccountRootTypes] = useState<SelectItem[]>([]);
   const [accountTypes, setAccountTypes] = useState<SelectItem[]>([]);
-  const accountRootTypes: SelectItem[] = [
+  const setUpAccountRootTypes = () => {
+    const n: SelectItem[] = [
       {
         name: t(AccountType[AccountType.ASSET]),
         value: AccountType[AccountType.ASSET],
@@ -73,6 +63,8 @@ export default function NewAccountClient() {
         value: AccountType[AccountType.EXPENSE],
       },
     ];
+    setAccountRootTypes(n);
+  };
 
   const setUpAccountTypes = () => {
     const n: SelectItem[] = Object.keys(AccountType)
@@ -89,11 +81,30 @@ export default function NewAccountClient() {
     setAccountTypes(n); // Function to handle the updated list
   };
 
-  const onSubmit = (values: z.infer<typeof createAccountLedger>) => {
+  const { form, hasChanged, updateRef } = useEditFields<EditData>({
+    schema: editAccountLedger,
+    defaultValues: {
+      id: account?.id,
+      name: account?.name,
+      isGroup: account?.is_group,
+      accountType: account?.account_type,
+      accountRootType:account?.account_root_type,
+      reportType: account?.report_type,
+      cashFlowSection: account?.cash_flow_section,
+      ledgerNo: account?.ledger_no,
+      parent:account?.parent,
+      parentID:account?.parent_id,
+      // accountRootType:account.
+    },
+  });
+  const allowEdit = permission?.edit || false;
+  const formValues = form.getValues();
+
+  const onSubmit = (e: EditData) => {
     fetcher.submit(
       {
-        action: "create-ledger-account",
-        createAccountLedger: values,
+        action: "edit",
+        editData: e,
       },
       {
         method: "POST",
@@ -101,55 +112,53 @@ export default function NewAccountClient() {
       }
     );
   };
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
-  setUpToolbar(() => {
-    return {
-      titleToolbar: t("f.add-new", {
-        o: t("_ledger.base").toLocaleLowerCase(),
-      }),
-      onSave: () => {
-        inputRef.current?.click();
+  setUpToolbar(
+    (opts) => {
+      return {
+        ...opts,
+        onSave: () => inputRef.current?.click(),
+        disabledSave: !hasChanged,
+      };
+    },
+    [hasChanged]
+  );
+
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        updateRef(form.getValues());
       },
-    };
-  }, []);
+    },
+    [fetcher.data]
+  );
 
   useEffect(() => {
+    setUpAccountRootTypes();
     setUpAccountTypes();
-  }, []);
-
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-      navigate(
-        r.toRoute({
-          main: r.accountM,
-          routePrefix: [r.accountingM],
-          routeSufix: [fetcher.data.accountLedger?.name || ""],
-          q: {
-            tab: "info",
-          },
-        })
-      );
-    }
-  }, [fetcher.data]);
+  }, [t]);
 
   return (
     <FormLayout>
+      {/* {JSON.stringify(account)} */}
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="create-grid">
+          <div className="info-grid">
             <CustomFormFieldInput
               label={t("form.name")}
               control={form.control}
               name="name"
               inputType="input"
+              allowEdit={allowEdit}
             />
 
             <LedgerAutocompleteForm
@@ -157,6 +166,7 @@ export default function NewAccountClient() {
               control={form.control}
               name="parent"
               isGroup={true}
+              allowEdit={allowEdit}
               onSelect={(e) => {
                 form.setValue("parentID", e.id);
               }}
@@ -165,11 +175,9 @@ export default function NewAccountClient() {
               label={t("form.isGroup")}
               control={form.control}
               name="isGroup"
+              allowEdit={false}
               inputType="check"
               // description={t("form.isGroupDescription")}
-              onChange={() => {
-                form.trigger("isGroup");
-              }}
             />
             <div className=" col-span-full" />
 
@@ -179,7 +187,8 @@ export default function NewAccountClient() {
               name="accountRootType"
               keyName={"name"}
               keyValue={"value"}
-              control={form.control}
+              allowEdit={allowEdit}
+              form={form}
             />
 
             {!formValues.isGroup && (
@@ -188,8 +197,9 @@ export default function NewAccountClient() {
                 label={t("_ledger.type")}
                 name="accountType"
                 keyName={"name"}
+              allowEdit={allowEdit}
                 keyValue={"value"}
-                control={form.control}
+                form={form}
               />
             )}
 
@@ -198,11 +208,12 @@ export default function NewAccountClient() {
               control={form.control}
               name="ledgerNo"
               inputType="input"
+              allowEdit={allowEdit}
             />
             {/* <div className=" col-span-full"></div> */}
 
             <AccordationLayout
-              title="Report"
+              title="Reporte"
               containerClassName=" col-span-full"
               className="create-grid"
             >
@@ -220,6 +231,7 @@ export default function NewAccountClient() {
                 label={"Tipo de Reporte"}
                 name="reportType"
                 keyName={"name"}
+                allowEdit={allowEdit}
                 keyValue={"value"}
                 control={form.control}
               />
@@ -241,13 +253,14 @@ export default function NewAccountClient() {
                 ]}
                 label={t("Sección de flujo de efectivo")}
                 name="cashFlowSection"
+                allowEdit={allowEdit}
                 keyName={"name"}
                 keyValue={"value"}
                 control={form.control}
               />
             </AccordationLayout>
           </div>
-          <input ref={inputRef} type="submit" className="hidden" />
+          <input className="hidden" type="submit" ref={inputRef} />
         </fetcher.Form>
       </Form>
     </FormLayout>

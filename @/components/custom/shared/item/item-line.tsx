@@ -9,23 +9,14 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { create } from "zustand";
 import { DEFAULT_CURRENCY } from "~/constant";
-import {
-  lineItemSchema,
-  lineItemReceipt,
-} from "~/util/data/schemas/stock/line-item-schema";
+import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import { useItemPriceForOrders } from "~/util/hooks/fetchers/useItemPriceForOrder";
 import FormAutocomplete from "../../select/FormAutocomplete";
-import {
-  formatAmount,
-  formatCurrency,
-} from "~/util/format/formatCurrency";
-import CustomFormField from "../../form/CustomFormField";
-import { Input } from "@/components/ui/input";
+import { formatAmount, formatCurrency } from "~/util/format/formatCurrency";
 import { action } from "~/routes/api.itemline/route";
 import { routes } from "~/util/route";
-import AmountInput from "../../input/AmountInput";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
+import { ItemLineType, itemLineTypeToJSON, PartyType, partyTypeToJSON } from "~/gen/common";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
@@ -43,39 +34,34 @@ export default function ItemLine({
   globalState: GlobalState;
 }) {
   const itemLine = useItemLine();
-  const { line } = itemLine;
+  const {
+    line,
+    docPartyType,
+    docPartyID,
+    currency,
+    allowEdit,
+    onEditLineItem,
+    title,
+  } = itemLine.payload as Payload;
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const r = routes;
   const form = useForm<z.infer<typeof lineItemSchema>>({
     resolver: zodResolver(lineItemSchema),
     defaultValues: {
-      itemLineID: line?.itemLineID,
-      quantity: line?.quantity,
-      rate: line?.rate,
-      lineType: itemLine.itemLineType,
-
-      item_code: line?.item_code,
-      item_name: line?.item_name,
-      uom: line?.uom,
-      // uom: line?.uom,
-      party_type: itemLine.partyType,
-      item_price_id: line?.item_price_id,
-
-      // lineItemReceipt: lineItemReceipt,
-      // itemLineReference:line.refe
+      ...line,
     },
   });
   const [itemPriceDebounceFetcher, onItemPriceChange] = useItemPriceForOrders({
     isBuying:
-      itemLine.partyType == partyTypeToJSON(PartyType.purchaseOrder) ||
-      itemLine.partyType == partyTypeToJSON(PartyType.purchaseReceipt) ||
-      itemLine.partyType == partyTypeToJSON(PartyType.purchaseInvoice),
+      docPartyType == partyTypeToJSON(PartyType.purchaseOrder) ||
+      docPartyType == partyTypeToJSON(PartyType.purchaseReceipt) ||
+      docPartyType == partyTypeToJSON(PartyType.purchaseInvoice),
     isSelling:
-      itemLine.partyType == partyTypeToJSON(PartyType.saleOrder) ||
-      itemLine.partyType == partyTypeToJSON(PartyType.saleInvoice) ||
-      itemLine.partyType == partyTypeToJSON(PartyType.deliveryNote),
-    currency: itemLine.currency || DEFAULT_CURRENCY,
+      docPartyType == partyTypeToJSON(PartyType.saleOrder) ||
+      docPartyType == partyTypeToJSON(PartyType.saleInvoice) ||
+      docPartyType == partyTypeToJSON(PartyType.deliveryNote),
+    currency: currency || DEFAULT_CURRENCY,
   });
 
   const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
@@ -86,9 +72,12 @@ export default function ItemLine({
     actions: warehouseFetcher.data?.actions,
   });
   const createWareHouse = useCreateWareHouse();
-
+  const formValues = form.getValues();
   const onSubmit = (values: z.infer<typeof lineItemSchema>) => {
     if (values.itemLineID) {
+      const lineItemData = {
+
+      }
       fetcher.submit(
         {
           action: "edit-line-item",
@@ -101,8 +90,8 @@ export default function ItemLine({
         }
       );
     } else {
-      if (itemLine.onEditItemForm) {
-        itemLine.onEditItemForm(values);
+      if (onEditLineItem) {
+        onEditLineItem(values);
         onOpenChange(false);
       }
       console.log("VALUES", values);
@@ -124,7 +113,7 @@ export default function ItemLine({
     <DrawerLayout
       open={open}
       onOpenChange={onOpenChange}
-      title={itemLine.title}
+      title={title}
       className=" max-w-2xl "
     >
       <Form {...form}>
@@ -134,7 +123,7 @@ export default function ItemLine({
           className="px-2 pb-2"
         >
           <div className="flex flex-col ">
-            {itemLine.allowEdit && (
+            {allowEdit && (
               <div className=" flex flex-wrap gap-x-3 ">
                 <Button size={"xs"}>
                   <TrashIcon size={15} />
@@ -156,7 +145,7 @@ export default function ItemLine({
               nameK={"item_name"}
               label={t("_item.base")}
               name="item_name"
-              allowEdit={itemLine.allowEdit}
+              allowEdit={allowEdit}
               form={form}
               onValueChange={onItemPriceChange}
               onSelect={(e) => {
@@ -165,18 +154,23 @@ export default function ItemLine({
                 form.setValue("item_price_id", e.id);
                 form.setValue("rate", formatAmount(e.rate));
               }}
-              onCustomDisplay={(e)=>{
+              onCustomDisplay={(e) => {
                 return (
                   <div className="flex flex-col">
                     <div className="flex font-medium space-x-1">
                       <span>{e.item_name}</span>
-                      <span className=" uppercase">{" "}{e.uuid.slice(0,5)}</span>
+                      <span className=" uppercase"> {e.uuid.slice(0, 5)}</span>
                     </div>
                     <div className="flexspace-x-1">
-                      {e.price_list_name}: {formatCurrency(e.rate,e.price_list_currency,i18n.language)}
+                      {e.price_list_name}:{" "}
+                      {formatCurrency(
+                        e.rate,
+                        e.price_list_currency,
+                        i18n.language
+                      )}
                     </div>
                   </div>
-                )
+                );
               }}
             />
 
@@ -192,32 +186,32 @@ export default function ItemLine({
               {t("f.and", { o: t("form.quantity"), p: t("form.rate") })}
             </Typography>
 
-            {itemLine.itemLineType != ItemLineType.ITEM_LINE_RECEIPT && (
+            {formValues.lineType != itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) && (
               <CustomFormFieldInput
                 label={t("form.quantity")}
                 control={form.control}
                 required={true}
-                allowEdit={itemLine.allowEdit}
+                allowEdit={allowEdit}
                 inputType="input"
                 name={"quantity"}
               />
             )}
 
-            {itemLine.itemLineType == ItemLineType.ITEM_LINE_RECEIPT && (
+            {formValues.lineType == itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) && (
               <>
                 <CustomFormFieldInput
                   required={true}
                   name="lineItemReceipt.acceptedQuantity"
                   label={t("f.accepted", { o: t("form.quantity") })}
                   control={form.control}
-                  allowEdit={itemLine.allowEdit}
+                  allowEdit={allowEdit}
                   inputType="input"
                 />
                 <CustomFormFieldInput
                   name="lineItemReceipt.rejectedQuantity"
                   label={t("f.rejected", { o: t("form.quantity") })}
                   control={form.control}
-                  allowEdit={itemLine.allowEdit}
+                  allowEdit={allowEdit}
                   inputType="input"
                 />
               </>
@@ -228,7 +222,7 @@ export default function ItemLine({
               control={form.control}
               required={true}
               name={"rate"}
-              allowEdit={itemLine.allowEdit}
+              allowEdit={allowEdit}
               inputType="input"
             />
 
@@ -240,7 +234,7 @@ export default function ItemLine({
               inputType="input"
             />
 
-            {itemLine.itemLineType == ItemLineType.ITEM_LINE_RECEIPT && (
+            {formValues.lineType == itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) && (
               <>
                 <Typography variant="subtitle2" className=" col-span-full">
                   {t("_warehouse.base")}
@@ -251,7 +245,7 @@ export default function ItemLine({
                   label={t("f.accepted", { o: t("_warehouse.base") })}
                   name="lineItemReceipt.acceptedWarehouseName"
                   form={form}
-                  allowEdit={itemLine.allowEdit}
+                  allowEdit={allowEdit}
                   onValueChange={onWarehouseChange}
                   onSelect={(e) => {
                     form.setValue("lineItemReceipt.acceptedWarehouse", e.id);
@@ -269,7 +263,7 @@ export default function ItemLine({
                   label={t("f.rejected", { o: t("_warehouse.base") })}
                   name="lineItemReceipt.rejectedWarehouseName"
                   form={form}
-                  allowEdit={itemLine.allowEdit}
+                  allowEdit={allowEdit}
                   onValueChange={onWarehouseChange}
                   onSelect={(e) => {
                     form.setValue("lineItemReceipt.rejectedWarehouse", e.id);
@@ -289,43 +283,29 @@ export default function ItemLine({
   );
 }
 
+interface Payload {
+  title?: string;
+  allowEdit: boolean;
+  currency: string;
+  docPartyType?: string;
+  docPartyID?: number;
+  line: z.infer<typeof lineItemSchema>;
+  onEditLineItem?: (e: z.infer<typeof lineItemSchema>) => void;
+}
+
 interface ItemLineEditStore {
   open: boolean;
-  title?: string;
-  allowEdit?: boolean;
-  currency?: string;
-  partyType?: string;
-  itemLineType?: ItemLineType;
-
+  payload?: Payload;
   // lineItemReceipt?: z.infer<typeof lineItemReceipt>;
-  onEditItemForm?: (e: z.infer<typeof lineItemSchema>) => void;
   onOpenChange: (e: boolean) => void;
-  onOpenDialog: (opts: {
-    title?: string;
-    allowEdit?: boolean;
-    line?: z.infer<typeof lineItemSchema>;
-
-    // lineItemReceipt?: z.infer<typeof lineItemReceipt>;
-    currency?: string;
-    partyType: string;
-    itemLineType: ItemLineType;
-    onEditItemForm?: (e: z.infer<typeof lineItemSchema>) => void;
-  }) => void;
-  line?: z.infer<typeof lineItemSchema>;
+  onOpenDialog: (opts: Payload) => void;
 }
 export const useItemLine = create<ItemLineEditStore>((set) => ({
   open: false,
   onOpenDialog: (opts) =>
     set((state) => ({
       open: true,
-      title: opts.title,
-      allowEdit: opts.allowEdit,
-      line: opts.line,
-      currency: opts.currency,
-      partyType: opts.partyType,
-      itemLineType: opts.itemLineType,
-      // lineItemReceipt: opts.lineItemReceipt,
-      onEditItemForm: opts.onEditItemForm,
+      payload: opts,
     })),
   onOpenChange: (e) =>
     set((state) => ({

@@ -8,7 +8,7 @@ import { taxAndChargesColumns } from "../../../table/columns/accounting/tax-and-
 import { Typography } from "@/components/typography";
 import { useTranslation } from "react-i18next";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
-import TaxAndChargeLine, { useTaxAndCharge } from "./tax-and-charge-line";
+import { useTaxAndCharge } from "./tax-and-charge-line";
 import DisplayTextValue from "../../../display/DisplayTextValue";
 import { formatCurrencyAmount } from "~/util/format/formatCurrency";
 import { useTaxAndCharges } from "./use-tax-charges";
@@ -29,12 +29,14 @@ export default function TaxAndChargesLines({
   showTotal = true,
   allowCreate = true,
   form,
+  docPartyType,
 }: {
   onChange?: (e: z.infer<typeof taxAndChargeSchema>[]) => void;
   currency: string;
   allowEdit?: boolean;
   allowCreate?: boolean;
   docPartyID?: number;
+  docPartyType?: string;
   showTotal?: boolean;
   form?: UseFormReturn<any, any, undefined>;
 }) {
@@ -49,12 +51,11 @@ export default function TaxAndChargesLines({
     total,
     updateFromItems,
   } = useTaxAndCharges();
-  const { total: netTotal } = useLineItems();
   const shared = {
     currency: currency,
     allowEdit: allowEdit,
-    netTotal: netTotal,
     docPartyID: docPartyID,
+    docPartyType:docPartyType,
   };
   const [metaOptions] = useTableRowActions({
     ...(allowCreate && {

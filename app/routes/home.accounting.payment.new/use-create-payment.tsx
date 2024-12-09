@@ -7,6 +7,7 @@ interface Payload {
     
     partyType?:string
     partyName?:string
+    partyID?:number
     paymentType?:string
     partyUuid?:string
     partyReference?:number

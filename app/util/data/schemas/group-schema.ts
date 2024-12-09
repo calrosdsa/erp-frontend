@@ -13,16 +13,16 @@ export const groupSchema = z.object({
 
 export const createGroupSchema = z.object({
   name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
-  is_group: z.boolean().default(false),
-  parentName:z.string().optional(),
-  parentID: z.number().optional(),
+  // is_group: z.boolean().default(false),
+  // parentName:z.string().optional(),
+  // parentID: z.number().optional(),
   party_type_code: z.string(),
-  enabled: z.boolean(),
+  // enabled: z.boolean(),
 });
 
 export const editGroupSchema = z.object({
+  id:z.number(),
   name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
-  groupID:z.number(),
   partyTypeGroup:z.string(),
 });
 
