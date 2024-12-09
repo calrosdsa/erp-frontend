@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { routes } from "~/util/route";
 import { NavItem } from "~/types";
 import StockEntryInfo from "./tab/stock-entry-info";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { stateFromJSON } from "~/gen/common";
 import { z } from "zod";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
@@ -21,7 +21,7 @@ import { Entity } from "~/types/enums";
 import { GlobalState } from "~/types/app";
 import { ButtonToolbar } from "~/types/actions";
 import { useStatus } from "~/util/hooks/data/useStatus";
-import { format } from "date-fns";
+import { format, toZonedTime } from "date-fns-tz";
 
 export default function StockEntryDetailClient() {
   const { stockEntry, associatedActions } = useLoaderData<typeof loader>();
@@ -36,6 +36,7 @@ export default function StockEntryDetailClient() {
     actions: associatedActions && associatedActions[Entity.GENERAL_LEDGER],
     roleActions: roleActions,
   });
+
   const { isSubmitted } = useStatus({
     status: stateFromJSON(stockEntry?.status),
   });
@@ -55,6 +56,15 @@ export default function StockEntryDetailClient() {
       href: toRoute("info"),
     },
   ];
+
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "STATE",
+    },
+    [fetcher.state]
+  );
+
   setUpToolbar(() => {
     let view: ButtonToolbar[] = [];
     if (isSubmitted && gLPermission?.view) {
@@ -73,6 +83,22 @@ export default function StockEntryDetailClient() {
           },
         });
       }
+      view.push({
+        label: t("stockLedger"),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: r.stockLedger,
+              routePrefix: [r.stockM],
+              q: {
+                fromDate:format(toZonedTime(stockEntry?.posting_date || "","UTC"),"yyyy-MM-dd"),
+                toDate:format(toZonedTime(stockEntry?.posting_date || "","UTC"),"yyyy-MM-dd"),
+                voucherNo:stockEntry?.code,
+              },
+            })
+          );
+        },
+      });
     return {
       titleToolbar: `${t("stockEntry")}(${stockEntry?.code})`,
       status: stateFromJSON(stockEntry?.status),

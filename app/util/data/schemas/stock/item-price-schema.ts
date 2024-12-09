@@ -7,20 +7,28 @@ export const createItemPriceSchema = z.object({
     rate:  z.coerce.number(),
     itemQuantity: z.coerce.number(),
 
-    itemName:z.string(),
-    itemUuid:z.string(),
+    item:z.string(),
     itemID:z.number(),
     
-    priceListUuid:z.string().optional(),
-    priceListName:z.string().optional(),
-    priceListID:z.number().optional(),
+    priceList:z.string(),
+    priceListID:z.number(),
 
-    taxName:z.string().optional(),
-    taxUuid:z.string().optional(),
-    taxID:z.number().optional(),
-
-    uomName:z.string().optional(),
-    uomID:z.number().optional()
-    // plugins:z.array(pluginObjectSchema).optional()
+    uom:z.string(),
+    uomID:z.number()
 })
 
+
+export const editItemPriceSchema = z.object({
+    id:z.number(),
+    rate:  z.coerce.number(),
+    itemQuantity: z.coerce.number(),
+
+    item:z.string(),
+    itemID:z.number(),
+    
+    priceList:z.string(),
+    priceListID:z.number(),
+
+    uom:z.string(),
+    uomID:z.number()
+})

@@ -82,7 +82,7 @@ export default function SelectForm<
                 <SelectTrigger
                   className={cn(
                     "h-9",
-                    !allowEdit && "disabled:opacity-100 disabled:cursor-default"
+                    !allowEdit && "disabled:opacity-100 disabled:cursor-default bg-secondary"
                   )}
                 >
                   <SelectValue placeholder={placeholder} />

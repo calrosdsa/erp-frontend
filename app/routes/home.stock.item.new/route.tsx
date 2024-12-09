@@ -1,5 +1,5 @@
-import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
-import CreateItemClient from "./new-item.client";
+import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import NewItemClient from "./new-item.client";
 import apiClient from "~/apiclient";
 import { routes } from "~/util/route";
 import { components } from "~/sdk";
@@ -42,9 +42,18 @@ export const action = async({request}:ActionFunctionArgs)=>{
     })
 }
 
-export default function CreateItem(){
+export const loader = async({request}:LoaderFunctionArgs) =>{
+    const client = apiClient({request})
+    const res = await client.GET("/stock/item/actions")
+    return json({
+        actions:res.data?.actions,
+        entityActions:res.data?.associated_actions,
+    })
+}
+
+export default function NewItem(){
 
     return (
-        <CreateItemClient/>
+        <NewItemClient/>
     )
 }

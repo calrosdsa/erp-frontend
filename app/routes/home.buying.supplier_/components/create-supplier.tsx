@@ -9,7 +9,7 @@ import CustomForm from "@/components/custom/form/CustomForm";
 import { createSupplierSchema } from "~/util/data/schemas/buying/supplier-schema";
 import { z } from "zod";
 import { routes } from "~/util/route";
-import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
+import { GroupAutocompleteForm, useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
@@ -28,15 +28,9 @@ export const CreateSupplier = ({
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
   const { toast } = useToast();
-  const [groupDebounceFetcher, onChangeGroupName] = useGroupDebounceFetcher({
-    partyType: PartyType.supplierGroup,
-  });
+  
   const createGroup = useCreateGroup();
-  const [groupPermission] = usePermission({
-    actions: groupDebounceFetcher.data?.actions,
-    roleActions: globalState.roleActions,
-  });
-  const d = groupDebounceFetcher.data?.groups || [];
+  
   const r = routes;
   useEffect(() => {
     if (fetcher.data?.error) {
@@ -98,24 +92,34 @@ export const CreateSupplier = ({
         ]}
         renderCustomInputs={(form) => {
           return (
-            <>
-              <FormAutocomplete
-                form={form}
-                label={t("group")}
-                data={groupDebounceFetcher.data?.groups || []}
-                onValueChange={(e) => onChangeGroupName(e)}
-                name="groupName"
-                nameK={"name"}
-                onSelect={(v) => {
-                  form.setValue("groupID", v.id);
-                }}
-                {...(groupPermission?.create && {
-                  addNew: () =>
-                    createGroup.openDialog({
-                      partyType: PartyType.supplierGroup,
-                    }),
-                })}
-              />
+            <> 
+            <GroupAutocompleteForm
+            control={form.control}
+            label={t("group")}
+            name="groupName"
+            isGroup={false}
+            partyType={r.itemGroup}
+            onSelect={(e) => {
+              form.setValue("groupID", e.id);
+            }}
+          />
+            {/* <FormAutocomplete
+              form={form}
+              label={t("group")}
+              data={groupDebounceFetcher.data?.groups || []}
+              onValueChange={(e) => onChangeGroupName(e)}
+              name="groupName"
+              nameK={"name"}
+              onSelect={(v) => {
+                form.setValue("groupID", v.id);
+              }}
+              {...(groupPermission?.create && {
+                addNew: () =>
+                  createGroup.openDialog({
+                    partyType: PartyType.supplierGroup,
+                  }),
+              })}
+            /> */}
             </>
           );
         }}

@@ -12,7 +12,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     searchParams.get("fromDate") || format(new Date(), "yyyy-MM-dd");
   const toDate =
     searchParams.get("toDate") ||
-    format(new Date().toLocaleDateString(), "yyyy-MM-dd");
+    format(new Date(), "yyyy-MM-dd");
   const voucherNo = searchParams.get("voucherNo");
   console.log(fromDate, toDate);
   const res = await client.GET("/accounting/report/general", {

@@ -81,7 +81,7 @@ export default function AddItemPrice({
         defaultValues={
           {
             itemUuid: itemUuid,
-            itemName:"",
+            item:"",
           } as z.infer<typeof createItemPriceSchema>
         }
         formItemsData={[

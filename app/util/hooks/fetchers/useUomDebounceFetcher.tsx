@@ -5,7 +5,39 @@ import { components } from "~/sdk"
 import { PartyType } from "~/types/enums"
 import { routes } from "~/util/route"
 import { usePermission } from "../useActions"
+import { Control } from "react-hook-form"
+import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 
+export const UomAutocompleteForm = ({
+    allowEdit =true,
+    required,
+    control,
+    label,
+    onSelect,
+    name
+}:{
+    allowEdit?: boolean;
+    control?: Control<any, any>;
+    label?: string;
+    name?:string
+    required?:boolean;
+    onSelect: (e: components["schemas"]["UOMDto"]) => void;
+  }) =>{
+  const [fetcherDebounce, onChange] = useUomDebounceFetcher();
+  return (
+    <FormAutocomplete
+      data={fetcherDebounce.data?.uoms || []}
+      onValueChange={onChange}
+      label={label}
+      name={name || "uom"}
+      nameK="name"
+      required={required}
+      control={control}
+      allowEdit={allowEdit}
+      onSelect={onSelect}
+    />
+  );
+}
 
 export const useUomDebounceFetcher = () =>{
     const r = routes

@@ -59,8 +59,8 @@ export default function CreatePurchaseInvoiceClient() {
       currency: payload?.currency || companyDefaults?.currency,
       lines: lineItemsStore.lines,
       taxLines: taxLinesStore.lines,
-      postingTime: format(new Date(), "HH:mm:ss"),
       postingDate: new Date(),
+      postingTime: format(new Date(), "HH:mm:ss"),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 
       costCenterID: payload?.costCenterID,

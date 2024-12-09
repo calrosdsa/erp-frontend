@@ -1,40 +1,76 @@
 import { z } from "zod";
-import { ItemLineType, StockEntryType, stockEntryTypeToJSON } from "~/gen/common";
+import {
+  ItemLineType,
+  StockEntryType,
+  stockEntryTypeToJSON,
+} from "~/gen/common";
 import { lineItemSchema, lineItemStockEntry } from "./line-item-schema";
 
-
-export const createStockEntrySchema = z.object({
+export const createStockEntrySchema = z
+  .object({
     postingDate: z.date(),
-
+    postingTime: z.string(),
+    tz: z.string(),
     currency: z.string(),
-      // priceListID: z.number(),
+    // priceListID: z.number(),
     // priceListName:z.string(),
 
-    stockEntryType:z.enum([
-        stockEntryTypeToJSON(StockEntryType.MATERIAL_RECEIPT),
-        stockEntryTypeToJSON(StockEntryType.MATERIAL_TRANSFER),
-        stockEntryTypeToJSON(StockEntryType.MATERIAL_ISSUE),
-    ]),
+    entryType: z.string(),
 
-    sourceWarehouseName:z.string().optional(),
-    sourceWarehouse:z.number().optional(),
-    targetWarehouseName:z.string().optional(),
-    targetWarehouse:z.number().optional(),
+    sourceWarehouse: z.string().optional(),
+    sourceWarehouseID: z.number().optional(),
+    targetWarehouse: z.string(),
+    targetWarehouseID: z.number().optional(),
 
-    lines: z.array(lineItemSchema),
-}).superRefine((data,ctx)=>{
-    data.lines = data.lines.map((t,i)=>{
-      if(t.lineType == ItemLineType.ITEM_LINE_STOCK_ENTRY){
-        const lineReceipt:z.infer<typeof lineItemStockEntry> =  {
-          sourceWarehouse: t.lineItemStockEntry?.sourceWarehouse || data.sourceWarehouse,
-          sourceWarehouseName: t.lineItemStockEntry?.sourceWarehouseName || data.sourceWarehouseName,
-          targetWarehouse: t.lineItemStockEntry?.targetWarehouse || data.targetWarehouse,
-          targetWarehouseName: t.lineItemStockEntry?.targetWarehouseName || data.targetWarehouseName,
-        }
-        t.lineItemStockEntry = lineReceipt
-      }
-      return t
-    })
+    projectName:z.string().optional(),
+    projectID:z.number().optional(),
+
+    costCenterName:z.string().optional(),
+    costCenterID:z.number().optional(),
+
+    items: z.array(lineItemSchema),
   })
-  // E
-  ;
+  .superRefine((data, ctx) => {
+    if (data.items.length == 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        params: {
+          i18n: { key: "custom.required" },
+        },
+        path: ["items"],
+      });
+    }
+    data.items = data.items.map((t, i) => {
+      if (t.lineType == ItemLineType.ITEM_LINE_STOCK_ENTRY) {
+        const lineReceipt: z.infer<typeof lineItemStockEntry> = {
+          sourceWarehouse:
+            t.lineItemStockEntry?.sourceWarehouse || data.sourceWarehouseID,
+          sourceWarehouseName:
+            t.lineItemStockEntry?.sourceWarehouseName || data.sourceWarehouse,
+          targetWarehouse:
+            t.lineItemStockEntry?.targetWarehouse || data.targetWarehouseID,
+          targetWarehouseName:
+            t.lineItemStockEntry?.targetWarehouseName || data.targetWarehouse,
+        };
+        t.lineItemStockEntry = lineReceipt;
+      }
+      return t;
+    });
+  });
+// E
+
+export const editStockEntrySchema = z.object({
+  id: z.number(),
+  postingDate: z.date(),
+  postingTime: z.string(),
+  tz: z.string(),
+  currency: z.string(),
+  // priceListID: z.number(),
+  // priceListName:z.string(),
+  projectName: z.string().optional(),
+  projectID: z.number().optional(),
+
+  costCenterName: z.string().optional(),
+  costCenterID: z.number().optional(),
+  entryType: z.string(),
+});

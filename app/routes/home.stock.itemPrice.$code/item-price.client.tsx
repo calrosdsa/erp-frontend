@@ -1,6 +1,6 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react"
 import { loader } from "./route"
-import ItemPriceInfo from "./components/ItemPriceInfo"
+import ItemPriceInfo from "./components/Item-price-info"
 import { PluginApp } from "~/types/enums"
 import { useTranslation } from "react-i18next"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"

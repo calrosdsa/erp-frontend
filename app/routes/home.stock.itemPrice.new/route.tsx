@@ -4,12 +4,6 @@ import NewItemPriceClient from "./new-item-price.client";
 import { z } from "zod";
 import { createItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { components } from "~/sdk";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useNavigate } from "@remix-run/react";
 
 type ActionData = {
@@ -27,20 +21,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const d = data.createItemPrice;
       const res = await client.POST("/stock/item/item-price", {
         body: {
-          itemQuantity: d.itemQuantity,
+          item_quantity: d.itemQuantity,
           item_id: d.itemID,
-          item_uuid: d.itemUuid,
           price_list_id: d.priceListID,
-          price_list_uuid: d.priceListUuid,
+          uom_id:d.uomID,
           rate: d.rate,
-          tax_id: d.taxID,
-          tax_uuid: d.taxUuid,
         },
       });
       message = res.data?.message;
       error = res.error?.detail;
       itemPrice = res.data?.result;
-      console.log(res.error);
     }
   }
   return json({

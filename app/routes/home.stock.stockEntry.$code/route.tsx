@@ -12,10 +12,15 @@ import { FetchResponse } from "openapi-fetch";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
+import { editStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-schema";
+import { formatRFC3339 } from "date-fns";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { LOAD_ACTION } from "~/constant";
 
 type ActionData = {
   action: string;
   updateStatusWithEvent: z.infer<typeof updateStatusWithEventSchema>;
+  editData:z.infer<typeof editStockEntrySchema>
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -23,6 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  let actionRes = LOAD_ACTION
   switch (data.action) {
     case "update-status-with-event": {
       const res = await client.PUT("/stock-entry/update-status", {
@@ -33,12 +39,46 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       console.log("ORDER ", res.error);
       break;
     }
+    case "edit":{
+      const d = data.editData
+      const res = await client.PUT("/stock-entry",{
+        body:{
+          id:d.id,
+          entry_type: d.entryType,
+          posting_date: formatRFC3339(d.postingDate),
+          posting_time: d.postingTime,
+          tz: d.tz,
+          currency: d.currency,
+          project:d.projectID,
+          cost_center:d.costCenterID,
+        }
+      })
+      message = res.data?.message
+      error = res.error?.detail
+      actionRes = ""
+      break;
+    }
   }
   return json({
     message,
     error,
+    action:actionRes,
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult
+}:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
@@ -91,6 +131,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     activities: res.data?.result.activities,
     connections: resConnections,
     lineItems: lineItemRes,
+    actions:res.data?.actions,
     associatedActions:res.data?.associated_actions
   });
 };

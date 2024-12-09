@@ -9,7 +9,7 @@ import { createGroupSchema } from "~/util/data/schemas/group-schema";
 import { z } from "zod";
 import { routes } from "~/util/route";
 import { useEffect } from "react";
-import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
+import { GroupAutocompleteForm, useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 
@@ -55,7 +55,7 @@ export const CreateGroup = ({
         fetcher={fetcher}
         defaultValues={
           {
-            party_type_code: partyTypeToJSON(createGroup.partyType),
+            party_type_code:createGroup.partyType,
             enabled:true
           } as z.infer<typeof createGroupSchema>
         }
@@ -68,7 +68,10 @@ export const CreateGroup = ({
             {
               method: "POST",
               encType: "application/json",
-              action: r.toGroupByParty(partyTypeToJSON(createGroup.partyType)),
+              action: r.toRoute({
+                main:createGroup.partyType,
+                routePrefix:[r.group]
+              }),
             }
           );
         }}
@@ -78,6 +81,7 @@ export const CreateGroup = ({
             label: t("form.name"),
             typeForm: "input",
             type: "string",
+            required:true
           },
           {
             name: "is_group",
@@ -91,7 +95,19 @@ export const CreateGroup = ({
         renderCustomInputs={(form) => {
           return (
             <>
-              <FormAutocomplete
+              <GroupAutocompleteForm
+              control={form.control}
+              label={t("group")}
+              name="groupName"
+              // roleActions={roleActions}
+              // actions={entityActions && entityActions[Entity.ITEM_GROUP]}
+              isGroup={true}
+              partyType={r.itemGroup}
+              onSelect={(e) => {
+                form.setValue("parentID", e.id);
+              }}
+            />
+              {/* <FormAutocomplete
                 form={form}
                 onValueChange={onGroupChange}
                 name="parentName"
@@ -101,7 +117,7 @@ export const CreateGroup = ({
                 onSelect={(e) => {
                   form.setValue("parentID", e.id);
                 }}
-              />
+              /> */}
             </>
           );
         }}
@@ -113,8 +129,8 @@ export const CreateGroup = ({
 interface CreateGroupStore {
   open: boolean;
   onOpenChange: (e: boolean) => void;
-  openDialog: (opts: { partyType: PartyType }) => void;
-  partyType: PartyType;
+  openDialog: (opts: { partyType: string }) => void;
+  partyType: string;
 }
 export const useCreateGroup = create<CreateGroupStore>((set) => ({
   open: false,
@@ -123,5 +139,5 @@ export const useCreateGroup = create<CreateGroupStore>((set) => ({
          open: true, partyType: opts.partyType 
         })),
   onOpenChange: (e) => set((state) => ({ open: e })),
-  partyType: PartyType.UNRECOGNIZED,
+  partyType: "",
 }));

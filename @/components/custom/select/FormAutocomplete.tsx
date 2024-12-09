@@ -93,9 +93,11 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                       "disabled:opacity-100 disabled:cursor-default bg-secondary"
                   )}
                 >
-                  {field.value || "Select item"}
+                  <span>
+                  {field.value || ""}
+                  </span>
 
-                  {field.value && allowEdit ? (
+                  {field.value && allowEdit && !required ? (
                     <>
                       <IconButton
                         icon={XIcon}
@@ -103,14 +105,16 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                         className="ml-2 h-6 w-6 shrink-0 opacity-50 "
                         onClick={(e) => {
                           e.stopPropagation();
-                          field.onChange("");
+                          field.onChange(null);
                           setOpen(false);
                           // form.setValue(name, "");
                         }}
                       />
                     </>
                   ) : (
-                    <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
+                    allowEdit && (
+                      <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
+                    )
                   )}
                 </Button>
               </FormControl>

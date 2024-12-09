@@ -29,19 +29,25 @@ import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseD
 import ItemLineForm from "@/components/custom/shared/item/item-line-form";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { GlobalState } from "~/types/app";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef } from "react";
 import LineItems from "@/components/custom/shared/item/line-items";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
+import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
+import { format } from "date-fns";
+import { use } from "i18next";
+import { useFormErrorToast } from "~/util/hooks/ui/use-form-error-toast";
+import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
+import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 
 export default function NewStockEntryClient() {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const { companyDefaults } = useOutletContext<GlobalState>();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  // const [priceListFetcher, onPriceListChange] = usePriceListDebounceFetcher();
-  const [currencyDebounceFetcher, onCurrencyChange] =
-    useCurrencyDebounceFetcher();
   const navigate = useNavigate();
   const r = routes;
   const lineItemsStore = useLineItems();
@@ -58,11 +64,14 @@ export default function NewStockEntryClient() {
   const form = useForm<z.infer<typeof createStockEntrySchema>>({
     resolver: zodResolver(createStockEntrySchema),
     defaultValues: {
-      lines: [],
+      items: [],
       currency: companyDefaults?.currency,
+      postingDate: new Date(),
+      postingTime: format(new Date(), "HH:mm:ss"),
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   });
-  const formValues = form.getValues()
+  const formValues = form.getValues();
   const onSubmit = (e: z.infer<typeof createStockEntrySchema>) => {
     fetcher.submit(
       {
@@ -75,6 +84,14 @@ export default function NewStockEntryClient() {
       }
     );
   };
+
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
   setUpToolbar(() => {
     return {
@@ -107,48 +124,41 @@ export default function NewStockEntryClient() {
     [fetcher.data]
   );
 
+  useFormErrorToast(form.formState.errors);
+
   useEffect(() => {
-    lineItemsStore.onLines(formValues.lines);
-  }, [formValues.lines]);
+    lineItemsStore.onLines(formValues.items);
+  }, [formValues.items]);
   return (
     <FormLayout>
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
-            <CustomFormDate
-              control={form.control}
-              name="postingDate"
-              label={t("form.date")}
-            />
             <SelectForm
               form={form}
               data={entryTypes}
               label={t("form.entryType")}
               keyName={"name"}
               keyValue={"value"}
-              name="stockEntryType"
+              name="entryType"
             />
+            <CustomFormDate
+              control={form.control}
+              name="postingDate"
+              label={t("form.date")}
+            />
+            <CustomFormTime
+              control={form.control}
+              name="postingTime"
+              label={t("form.postingTime")}
+              description={formValues.tz}
+            />
+
             <Separator className=" col-span-full" />
 
-            <AccordationLayout
-              title={t("form.currency")}
-              containerClassName=" col-span-full"
-              className="create-grid"
-            >
-              <FormAutocomplete
-                data={currencyDebounceFetcher.data?.currencies || []}
-                form={form}
-                name="currency"
-                required={true}
-                nameK={"code"}
-                onValueChange={onCurrencyChange}
-                label={t("form.currency")}
-                onSelect={(v) => {
-                  form.setValue("currency", v.code);
-                  form.trigger("currency");
-                }}
-              />
-            </AccordationLayout>
+            <CurrencyAndPriceList form={form} />
+
+            <AccountingDimensionForm form={form} />
 
             <AccordationLayout
               title={t("warehouse")}
@@ -159,38 +169,36 @@ export default function NewStockEntryClient() {
               <FormAutocomplete
                 onValueChange={onSourceWarehouseChange}
                 form={form}
-                name="sourceWarehouseName"
+                name="sourceWarehouse"
                 nameK={"name"}
                 label={t("f.source", { o: t("warehouse") })}
                 data={sourceWarehouse.data?.warehouses || []}
                 onSelect={(e) => {
-                  form.setValue("sourceWarehouse", e.id);
+                  form.setValue("sourceWarehouseID", e.id);
                 }}
               />
               <FormAutocomplete
                 onValueChange={onTargetWarehouseChange}
                 form={form}
-                name="targetWarehouseName"
+                name="targetWarehouse"
                 nameK={"name"}
                 label={t("f.target", { o: t("warehouse") })}
                 data={targetWarehouse.data?.warehouses || []}
                 onSelect={(e) => {
-                  form.setValue("targetWarehouse", e.id);
+                  form.setValue("targetWarehouseID", e.id);
                 }}
               />
             </AccordationLayout>
 
             <LineItems
-                onChange={(e) => {
-                  form.setValue("lines", e);
-                  form.trigger("lines");
-                }}
-                itemLineType={ItemLineType.ITEM_LINE_STOCK_ENTRY}
-                partyType={r.stockEntry}
-                currency={formValues.currency}
-              />
-
-          
+              onChange={(e) => {
+                form.setValue("items", e);
+                form.trigger("items");
+              }}
+              itemLineType={ItemLineType.ITEM_LINE_STOCK_ENTRY}
+              partyType={r.stockEntry}
+              currency={formValues.currency}
+            />
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

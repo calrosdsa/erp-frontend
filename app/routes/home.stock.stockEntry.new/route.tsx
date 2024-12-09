@@ -24,13 +24,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "create-stock-entry": {
       const d = data.createStockEntry;
       console.log(format(d.postingDate, "yyyy-MM-dd"));
-      const lines = d.lines.map((t) => lineItemSchemaToLineData(t));
+      const lines = d.items.map((t) => lineItemSchemaToLineData(t));
       const res = await client.POST("/stock-entry", {
         body: {
           stock_entry: {
-            entry_type: d.stockEntryType,
+            entry_type: d.entryType,
             posting_date: formatRFC3339(d.postingDate),
+            posting_time: d.postingTime,
+            tz: d.tz,
             currency: d.currency,
+            project:d.projectID,
+            cost_center:d.costCenterID,
           },
           items: {
             lines: lines,
@@ -40,7 +44,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       console.log(res.error);
       message = res.data?.message;
       error = res.error?.detail;
-      stockEntry = res.data?.result
+      stockEntry = res.data?.result;
       break;
     }
   }

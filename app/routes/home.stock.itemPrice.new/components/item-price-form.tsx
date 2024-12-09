@@ -19,27 +19,24 @@ import { create } from "zustand";
 import { routes } from "~/util/route";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { components } from "~/sdk";
-import { useItemDebounceFetcher } from "~/util/hooks/fetchers/useItemDebounceFetcher";
+import {
+  ItemAutocompleteForm,
+  useItemDebounceFetcher,
+} from "~/util/hooks/fetchers/useItemDebounceFetcher";
 import { useTaxDebounceFetcher } from "~/util/hooks/fetchers/useTaxDebounceFetcher";
-import { usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
+import { PriceListAutocompleteForm, usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
 import { useForm, UseFormReturn } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import FormLayout from "@/components/custom/form/FormLayout";
-import { Form } from "@/components/ui/form";
 import { usePermission } from "~/util/hooks/useActions";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import AmountInput from "@/components/custom/input/AmountInput";
 import { Input } from "@/components/ui/input";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Typography } from "@/components/typography";
 import { Separator } from "@/components/ui/separator";
-import { useUomDebounceFetcher } from "~/util/hooks/fetchers/useUomDebounceFetcher";
+import { UomAutocompleteForm, useUomDebounceFetcher } from "~/util/hooks/fetchers/useUomDebounceFetcher";
 import { action, loader } from "../route";
-import { SerializeFrom } from "@remix-run/node";
-import { cn } from "@/lib/utils";
 import { useCreatePriceList } from "~/routes/home.stock.priceList_/components/add-price-list";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
 export default function ItemPriceForm({
   form,
@@ -55,32 +52,14 @@ export default function ItemPriceForm({
 
   const r = routes;
   const navigate = useNavigate();
-  const [itemsDebounceFetcher, onItemNameChange] = useItemDebounceFetcher();
-
-  const [taxesDebounceFetcher, onTaxNameChange] = useTaxDebounceFetcher();
-  const [priceListDebounceFetcher, onPriceListNameChange] =
-    usePriceListDebounceFetcher();
   const loaderFetcher = useFetcher<typeof loader>();
   const associatedActions =
     data.associatedActions || loaderFetcher.data?.associatedActions;
 
-  const [taxesPermission] = usePermission({
-    actions: associatedActions && associatedActions[PartyType.tax],
-    roleActions: globalState.roleActions,
-  });
   const [priceListPermission] = usePermission({
     actions: associatedActions && associatedActions[PartyType.priceList],
     roleActions: globalState.roleActions,
   });
-  const [uomsDebounceFetcher, onUomNameChange] = useUomDebounceFetcher();
-
-  const createTax = useCreateTax();
-  const createPriceList = useCreatePriceList();
-  const [selectedPriceList, setSelectedPriceList] = useState<
-    components["schemas"]["PriceListDto"] | undefined
-  >();
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
   const loadData = () => {
     if (associatedActions == undefined) {
       console.log("LOAD DATA...");
@@ -106,24 +85,20 @@ export default function ItemPriceForm({
       <Typography variant="title2" className=" col-span-full">
         {t("f.and", { o: t("form.quantity"), p: t("form.rate") })}
       </Typography>
-      <CustomFormField
+      <CustomFormFieldInput
         name="rate"
         required={true}
         label={t("form.rate")}
-        form={form}
-        children={(field) => {
-          return <AmountInput field={field} type="number" currency="" />;
-        }}
+        control={form.control}
+        inputType="input"
       />
 
-      <CustomFormField
+      <CustomFormFieldInput
         name="itemQuantity"
         label={t("form.itemQuantity")}
         required={true}
-        form={form}
-        children={(field) => {
-          return <Input {...field} type="number" />;
-        }}
+        control={form.control}
+        inputType="input"
       />
 
       <Separator className=" col-span-full" />
@@ -131,33 +106,20 @@ export default function ItemPriceForm({
         {t("item")}
       </Typography>
 
-      <FormAutocomplete
-        form={form}
-        data={itemsDebounceFetcher.data?.items || []}
-        label={t("items")}
+      <ItemAutocompleteForm
+        control={form.control}
+        label={t("item")}
         required={true}
-        nameK={"name"}
-        // addNew={()=>{
-        //   createTax.onOpenChange(true)
-        // }}
-        onSelect={(v) => {
-          form.setValue("itemUuid", v.uuid);
-          form.setValue("itemID", v.id);
+        onSelect={(e) => {
+          form.setValue("itemID", e.id);
         }}
-        onValueChange={onItemNameChange}
-        name="itemName"
       />
-
-      <FormAutocomplete
-        form={form}
-        data={uomsDebounceFetcher.data?.uoms || []}
+      <UomAutocompleteForm
+        control={form.control}
         label={t("form.uom")}
-        nameK={"name"}
-        onValueChange={onUomNameChange}
-        onSelect={(v) => {
-          form.setValue("uomID", v.id);
+        onSelect={(e) => {
+          form.setValue("uomID", e.id);
         }}
-        name="uomName"
       />
 
       {priceListPermission?.view && priceListPermission.create && (
@@ -166,69 +128,17 @@ export default function ItemPriceForm({
           <Typography variant="title2" className=" col-span-full">
             {t("priceList")}
           </Typography>
-          <FormAutocomplete
-            form={form}
-            data={priceListDebounceFetcher.data?.priceLists || []}
-            required={true}
-            label={t("priceList")}
-            nameK={"name"}
-            addNew={() => {
-              createPriceList.onOpenChange(true);
-            }}
-            onSelect={(v) => {
-              setSelectedPriceList(v);
-              form.setValue("priceListUuid", v.uuid);
-              form.setValue("priceListID", v.id);
-            }}
-            onValueChange={onPriceListNameChange}
-            name="priceListName"
+          <PriceListAutocompleteForm
+          control={form.control}
+          label={t("priceList")}
+          required={true}
+          onSelect={(e)=>{
+            form.setValue("priceListID",e.id)
+          }}
           />
+          
         </>
       )}
-
-      {taxesPermission?.view && taxesPermission.create && (
-        <FormAutocomplete
-          form={form}
-          data={taxesDebounceFetcher.data?.taxes || []}
-          label={t("taxes")}
-          nameK={"name"}
-          addNew={() => {
-            createTax.onOpenChange(true);
-          }}
-          onSelect={(v) => {
-            form.setValue("taxUuid", v.uuid);
-            form.setValue("taxID", v.id);
-          }}
-          onValueChange={onTaxNameChange}
-          name="taxName"
-        />
-      )}
-
-      {/* {selectedPriceList != undefined && (
-              <div className="col-span-full">
-                <div className="flex flex-wrap gap-3">
-                  <h3 className="font-semibold">
-                    {t("form.currency")}: {selectedPriceList.currency}
-                  </h3>
-                  <div className="flex items-center gap-1">
-                    {selectedPriceList.is_buying ? (
-                      <SquareCheckIcon />
-                    ) : (
-                      <SquareIcon />
-                    )}
-                    <h3 className="font-medium">{t("form.buying")}</h3>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {selectedPriceList.is_selling ? (
-                      <SquareCheckIcon />
-                    ) : (
-                      <SquareIcon />
-                    )}
-                    <h3 className="font-medium">{t("form.selling")}</h3>
-                  </div>
-                </div>
-              </div>
-            )} */}
     </>
   );
 }

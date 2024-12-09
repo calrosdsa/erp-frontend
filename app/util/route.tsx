@@ -112,6 +112,7 @@ class Routes {
   purchaseInvoice = "purchaseInvoice";
   purchaseOrder = "purchaseOrder";
   supplierQuotation = "supplierQuotation";
+  itemGroup  = "itemGroup";
 
   defaultTab = {
     tab: "info",

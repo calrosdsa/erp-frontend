@@ -18,6 +18,10 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { useEditFields } from "~/util/hooks/useEditFields";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import { UomAutocompleteForm } from "~/util/hooks/fetchers/useUomDebounceFetcher";
+import { GroupAutocompleteForm } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
+import { routes } from "~/util/route";
 
 type EditItemType = z.infer<typeof editItemSchema>;
 export default function ItemInfoTab() {
@@ -25,15 +29,20 @@ export default function ItemInfoTab() {
   const { item, actions } = useLoaderData<typeof loader>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { roleActions } = useOutletContext<GlobalState>();
+  const r = routes
   const [permission] = usePermission({ roleActions, actions });
   const fetcher = useFetcher<typeof action>();
-  const defaultValues = {
-    name: item?.name,
-    itemID: item?.id,
-  } as EditItemType;
+  const allowEdit = permission.edit
   const { form, hasChanged, updateRef } = useEditFields<EditItemType>({
     schema: editItemSchema,
-    defaultValues: defaultValues,
+    defaultValues: {
+      id: item?.id,
+      name: item?.name,
+      uomName:item?.uom_name,
+      uomID:item?.uom_id,
+      groupID:item?.group_id,
+      groupName:item?.group_name
+    },
   });
   const onSubmit = (e: EditItemType) => {
     fetcher.submit(
@@ -81,34 +90,38 @@ export default function ItemInfoTab() {
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
           <div className="info-grid">
-            <CustomFormField
-              form={form}
+          <CustomFormFieldInput
+              control={form.control}
               name="name"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    value={field.value}
-                    inputType="input"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      form.trigger("name");
-                    }}
-                    title={t("form.name")}
-                    readOnly={!permission?.edit}
-                  />
-                );
+              label={t("form.name")}
+              inputType="input"
+              allowEdit={allowEdit}
+            />
+
+              <UomAutocompleteForm
+              control={form.control}
+              label={t("form.uom")}
+              name="uomName"
+              allowEdit={allowEdit}
+              onSelect={(e) => {
+                form.setValue("uomID", e.id);
               }}
             />
 
-            <DisplayTextValue title={t("form.code")} value={item?.code} />
-
-            <DisplayTextValue
-              title={t("form.item-group")}
-              value={item?.group_name}
-              to=""
+            <GroupAutocompleteForm
+              control={form.control}
+              label={t("group")}
+              name="groupName"
+              allowEdit={allowEdit}
+              // roleActions={roleActions}
+              // actions={entityActions && entityActions[Entity.ITEM_GROUP]}
+              isGroup={false}
+              partyType={r.itemGroup}
+              onSelect={(e) => {
+                form.setValue("groupID", e.id);
+              }}
             />
 
-            <DisplayTextValue title={t("form.uom")} value={item?.uom_name} />
           </div>
         </fetcher.Form>
       </Form>

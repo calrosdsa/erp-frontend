@@ -7,9 +7,6 @@
 
   "show": "Mostrar",
   "hide": "Ocultar",
-  "_group": {
-    "base": "Grupo"
-  },
   "_company": {
     "base": "Empresa",
     "companies": "Empresas"
@@ -124,7 +121,7 @@
     "partyType": "Tipo de Parte",
     "partyName": "Nombre de la Parte",
     "save": "Guardar",
-    "uom": "UM",
+    "uom": "Unidad de Medida",
     "city": "Ciudad",
     "company": "Empresa",
     "province": "Provincia",
@@ -189,7 +186,9 @@
     "incomingRate": "Tasa de Entrada",
     "averageRate": "Tasa Promedio",
     "valuationRate": "Tasa de Valoración",
-    "balanceValue": "Valor de Saldo"
+    "balanceValue": "Valor de Saldo",
+    "items":"Articulos",
+    "targetWarehouse":"Almacen de destino"
   },
   "accounts": "Cuentas",
   "_selling": {
@@ -378,6 +377,7 @@
   "cashEntry": "Entrada de efectivo",
 
   "order":"Orden",
+  "group":"Group",
   "quotation":"Cotización",
   "salesQuotation":"Cotización de Venta",
 

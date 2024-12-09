@@ -7,10 +7,7 @@ import {
 import apiClient from "~/apiclient";
 import CurrencyExchangeDetailClient from "./currency-exchange-detail.client";
 import { handleError } from "~/util/api/handle-status-code";
-import { FetchResponse } from "openapi-fetch";
 import { z } from "zod";
-import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charges-template-schema";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { editCurrencyExchangeSchema } from "~/util/data/schemas/core/currency-exchange-schema";
 
 type ActionData = {

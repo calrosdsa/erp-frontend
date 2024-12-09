@@ -2202,7 +2202,8 @@ export interface paths {
         };
         /** Stock Entries */
         get: operations["stock-entries"];
-        put?: never;
+        /** Edit Stock Entry */
+        put: operations["edit-stock-entry"];
         /** Create Stock Entry */
         post: operations["create-stock-entry"];
         delete?: never;
@@ -2301,6 +2302,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Item Actions */
+        get: operations["item-actions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/item-attribute": {
         parameters: {
             query?: never;
@@ -2366,8 +2384,8 @@ export interface paths {
          * @description Retrieve Item Prices
          */
         get: operations["get-item-prices"];
-        /** Update item price */
-        put: operations["update-item-price"];
+        /** Edit item price */
+        put: operations["edit-item-price"];
         /** Create item price */
         post: operations["create-item-price"];
         delete?: never;
@@ -3350,7 +3368,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: int32 */
+            /** Format: double */
             exchange_rate: number;
             for_buying: boolean;
             for_selling: boolean;
@@ -3426,31 +3444,22 @@ export interface components {
             lines: components["schemas"]["LineItemData"][];
             update_stock?: boolean;
         };
-        CreateItemPriceBody: {
+        CreateItemPriceRequestBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: int32 */
-            itemQuantity: number;
             /** Format: int64 */
             item_id: number;
-            item_uuid: string;
+            /** Format: int32 */
+            item_quantity: number;
             /** Format: int64 */
-            price_list_id?: number | null;
-            price_list_uuid?: string | null;
+            price_list_id: number;
             /** Format: double */
             rate: number;
             /** Format: int64 */
-            tax_id?: number | null;
-            tax_uuid?: string | null;
-            /** Format: int64 */
-            uom_id?: number | null;
-            /** Format: date-time */
-            validFrom?: string | null;
-            /** Format: date-time */
-            validUpTo?: string | null;
+            uom_id: number;
         };
         CreateItemRequestBody: {
             /**
@@ -3684,12 +3693,6 @@ export interface components {
             readonly $schema?: string;
             name: string;
         };
-        CreateStockEntry: {
-            currency: string;
-            entry_type: string;
-            /** Format: date-time */
-            posting_date: string;
-        };
         CreateStockEntryBody: {
             /**
              * Format: uri
@@ -3697,7 +3700,7 @@ export interface components {
              */
             readonly $schema?: string;
             items: components["schemas"]["CreateItemLines"];
-            stock_entry?: components["schemas"]["CreateStockEntry"];
+            stock_entry?: components["schemas"]["StockEntryData"];
         };
         CreateSupplierRequestBody: {
             /**
@@ -3884,7 +3887,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: int32 */
+            /** Format: double */
             exchange_rate: number;
             for_buying: boolean;
             for_selling: boolean;
@@ -3956,15 +3959,38 @@ export interface components {
             total_amount: number;
             tz: string;
         };
-        EditItemBody: {
+        EditItemPriceRequestBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             /** Format: int64 */
+            id: number;
+            /** Format: int64 */
             item_id: number;
+            /** Format: int32 */
+            item_quantity: number;
+            /** Format: int64 */
+            price_list_id: number;
+            /** Format: double */
+            rate: number;
+            /** Format: int64 */
+            uom_id: number;
+        };
+        EditItemRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            group_id: number;
+            /** Format: int64 */
+            id: number;
             name: string;
+            /** Format: int64 */
+            uom_id: number;
         };
         EditOrderRequestBody: {
             /**
@@ -4046,6 +4072,25 @@ export interface components {
             actionSelecteds: components["schemas"]["ActionSelected"][];
             entityName: string;
             role_uuid: string;
+        };
+        EditStockEntryRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            cost_center?: number;
+            currency: string;
+            entry_type: string;
+            /** Format: int64 */
+            id: number;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            project?: number;
+            tz: string;
         };
         EditTaxLineRequestBody: {
             /**
@@ -5038,6 +5083,8 @@ export interface components {
             code: string;
             /** Format: date-time */
             created_at: string;
+            /** Format: int64 */
+            group_id: number;
             group_name: string;
             group_uuid: string;
             /** Format: int64 */
@@ -5045,6 +5092,8 @@ export interface components {
             item_type: string;
             name: string;
             uom_code: string;
+            /** Format: int64 */
+            uom_id: number;
             uom_name: string;
             uuid: string;
         };
@@ -5056,6 +5105,8 @@ export interface components {
             id: number;
             item_type: string;
             name: string;
+            /** Format: int64 */
+            uom_id: number;
             uuid: string;
         };
         ItemLineDto: {
@@ -5074,34 +5125,6 @@ export interface components {
             rate: number;
             uom: string;
         };
-        ItemPrice: {
-            /** Format: int64 */
-            company_id: number;
-            /** Format: date-time */
-            created_at: string;
-            deleted_at: components["schemas"]["DeletedAt"];
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            item_id: number;
-            /** Format: int32 */
-            item_quantity: number;
-            /** Format: int64 */
-            price_list_id: number | null;
-            /** Format: int32 */
-            rate: number;
-            /** Format: int64 */
-            tax_id: number | null;
-            /** Format: int64 */
-            unit_of_measure_id: number;
-            /** Format: date-time */
-            updated_at: string | null;
-            uuid: string;
-            /** Format: date-time */
-            valid_from: string | null;
-            /** Format: date-time */
-            valid_up_to: string | null;
-        };
         ItemPriceDto: {
             code: string;
             /** Format: date-time */
@@ -5109,25 +5132,23 @@ export interface components {
             /** Format: int64 */
             id: number;
             item_code: string;
+            /** Format: int64 */
+            item_id: number;
             item_name: string;
             /** Format: int32 */
             item_quantity: number;
             item_uuid: string;
             price_list_currency: string;
+            /** Format: int64 */
+            price_list_id: number;
             price_list_name: string;
             price_list_uuid: string;
             /** Format: int32 */
             rate: number;
-            tax_name: string;
-            tax_uuid: string;
-            /** Format: double */
-            tax_value: number;
             uom: string;
+            /** Format: int64 */
+            uom_id: number;
             uuid: string;
-            /** Format: date-time */
-            valid_from?: string | null;
-            /** Format: date-time */
-            valid_up_to?: string | null;
         };
         ItemVariantDto: {
             attibute_abbreviation: string;
@@ -6857,14 +6878,36 @@ export interface components {
             warehouse_name: string;
             warehouse_uuid: string;
         };
+        StockEntryData: {
+            /** Format: int64 */
+            cost_center?: number;
+            currency: string;
+            entry_type: string;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            project?: number;
+            tz: string;
+        };
         StockEntryDto: {
             code: string;
+            cost_center: string;
+            /** Format: int64 */
+            cost_center_id: number;
+            cost_center_uuid: string;
             currency: string;
             entry_type: string;
             /** Format: int64 */
             id: number;
             posting_date: string;
+            posting_time: string;
+            project: string;
+            /** Format: int64 */
+            project_id: number;
+            project_uuid: string;
             status: string;
+            tz: string;
         };
         StockLedgerEntryDto: {
             /** Format: int32 */
@@ -7082,14 +7125,6 @@ export interface components {
             /** Format: int32 */
             ordinal: number;
             value: string;
-        };
-        UpsertItemPriceRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            itemPrice: components["schemas"]["ItemPrice"];
         };
         UserDto: {
             /** Format: date-time */
@@ -13149,6 +13184,39 @@ export interface operations {
             };
         };
     };
+    "edit-stock-entry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditStockEntryRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-stock-entry": {
         parameters: {
             query?: never;
@@ -13383,7 +13451,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditItemBody"];
+                "application/json": components["schemas"]["EditItemRequestBody"];
             };
         };
         responses: {
@@ -13430,6 +13498,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseItemDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "item-actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataInterface {}Body"];
                 };
             };
             /** @description Error */
@@ -13674,19 +13771,16 @@ export interface operations {
             };
         };
     };
-    "update-item-price": {
+    "edit-item-price": {
         parameters: {
             query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpsertItemPriceRequestBody"];
+                "application/json": components["schemas"]["EditItemPriceRequestBody"];
             };
         };
         responses: {
@@ -13722,7 +13816,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateItemPriceBody"];
+                "application/json": components["schemas"]["CreateItemPriceRequestBody"];
             };
         };
         responses: {

@@ -17,6 +17,10 @@ export const createItemSchema = z.object({
 });
 
 export const editItemSchema = z.object({
-  name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
-  itemID:z.number(),
+  id:z.number(),
+  name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+  uomName: z.string(),
+  groupName:z.string(),
+  groupID:z.number(),
+  uomID:z.number()
 });
