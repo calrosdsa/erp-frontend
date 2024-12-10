@@ -105,11 +105,14 @@ class Routes {
   costCenter = "costCenter";
   chargesTemplate = "chargesTemplate";
   currencyExchange = "currencyExchange";
+  salesRecord = "salesRecord";
+  purchaseRecord = "purchaseRecord";
   stockEntry = "stockEntry";
   project = "project";
   serialNo = "serialNo";
   batchBundle = "batchBundle";
   saleInvoice = "saleInvoice";
+  invoicing = "invoicing";
   purchaseInvoice = "purchaseInvoice";
   purchaseOrder = "purchaseOrder";
   supplierQuotation = "supplierQuotation";

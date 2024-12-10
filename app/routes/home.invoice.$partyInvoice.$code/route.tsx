@@ -112,6 +112,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             query: {
               line_type: itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER),
               id: res.data?.result.entity.invoice.id.toString(),
+              update_stock:res.data.result.entity.invoice.update_stock.toString(),
             },
           },
         });

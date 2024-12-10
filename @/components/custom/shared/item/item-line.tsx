@@ -9,20 +9,35 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { create } from "zustand";
 import { DEFAULT_CURRENCY } from "~/constant";
-import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
+import {
+  lineItemSchema,
+  schemaToLineItemData,
+} from "~/util/data/schemas/stock/line-item-schema";
 import { useItemPriceForOrders } from "~/util/hooks/fetchers/useItemPriceForOrder";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import { formatAmount, formatCurrency } from "~/util/format/formatCurrency";
 import { action } from "~/routes/api.itemline/route";
 import { routes } from "~/util/route";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { ItemLineType, itemLineTypeToJSON, PartyType, partyTypeToJSON } from "~/gen/common";
-import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
+import {
+  ItemLineType,
+  itemLineTypeToJSON,
+  PartyType,
+  partyTypeToJSON,
+} from "~/gen/common";
+import {
+  useWarehouseDebounceFetcher,
+  WarehouseAutocompleteForm,
+} from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse";
 import { Typography } from "@/components/typography";
 import CustomFormFieldInput from "../../form/CustomFormInput";
+import { useTotal } from "../document/use-total";
+import { components } from "~/sdk";
+import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
+import { mapToTaxAndChargeLineDto } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
 export default function ItemLine({
   open,
@@ -40,8 +55,10 @@ export default function ItemLine({
     docPartyID,
     currency,
     allowEdit,
-    onEditLineItem,
+    onEdit,
+    onDelete,
     title,
+    updateStock,
   } = itemLine.payload as Payload;
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
@@ -52,6 +69,7 @@ export default function ItemLine({
       ...line,
     },
   });
+  const confirmationDialog = useConfirmationDialog();
   const [itemPriceDebounceFetcher, onItemPriceChange] = useItemPriceForOrders({
     isBuying:
       docPartyType == partyTypeToJSON(PartyType.purchaseOrder) ||
@@ -63,38 +81,93 @@ export default function ItemLine({
       docPartyType == partyTypeToJSON(PartyType.deliveryNote),
     currency: currency || DEFAULT_CURRENCY,
   });
-
-  const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
-    isGroup: false,
-  });
-  const [permissionWarehouse] = usePermission({
-    roleActions: globalState.roleActions,
-    actions: warehouseFetcher.data?.actions,
-  });
-  const createWareHouse = useCreateWareHouse();
   const formValues = form.getValues();
-  const onSubmit = (values: z.infer<typeof lineItemSchema>) => {
-    if (values.itemLineID) {
-      const lineItemData = {
+  const { getTotalAndQuantity,taxLines } = useTotal();
+  const submitTaxLine = (
+    actionType: "edit-line-item" | "add-line-item",
+    lineItem: z.infer<typeof lineItemSchema>
+  ) => {
+    const lineItemData = schemaToLineItemData(lineItem, {
+      updateStock: updateStock,
+    });
+    const [totalAmount, totalQuantity, totalAmountItems] = getTotalAndQuantity(
+      actionType,
+      lineItem
+    );
+    const baseBody = {
+      doc_party_id: docPartyID ?? 0,
+      doc_party_type: docPartyType ?? "",
+      update_stock: updateStock || false,
+      total_amount: totalAmount,
+      total_items: totalQuantity,
+      total_amount_items: totalAmountItems,
+      line_item_data: lineItemData,
+      charges:taxLines.map(t=> mapToTaxAndChargeLineDto(t)),
+    };
 
+    const submitData =
+      actionType === "edit-line-item"
+        ? {
+            id: lineItem.itemLineID ?? 0,
+            ...baseBody,
+          }
+        : {
+            ...baseBody,
+          };
+
+    fetcher.submit(
+      {
+        action: actionType,
+        [actionType === "edit-line-item" ? "editData" : "addData"]: submitData,
+      },
+      {
+        encType: "application/json",
+        action: r.apiItemLine,
+        method: "POST",
       }
-      fetcher.submit(
-        {
-          action: "edit-line-item",
-          editLineItem: values,
+    );
+  };
+
+  const onSubmit = (data: z.infer<typeof lineItemSchema>) => {
+    if (data.itemLineID) {
+      submitTaxLine("edit-line-item", data);
+    } else if (docPartyID) {
+      submitTaxLine("add-line-item", data);
+    } else if (onEdit) {
+      onEdit(data);
+      onOpenChange(false);
+    }
+  };
+
+  const deleteTaxLine = () => {
+    if (formValues.itemLineID) {
+      const [totalAmount, totalQuantity, totalAmountItems] =
+        getTotalAndQuantity("delete-line-item", formValues);
+      const body: components["schemas"]["DeleteLineItemRequestBody"] = {
+        id: formValues.itemLineID,
+        doc_party_id: docPartyID ?? 0,
+        doc_party_type: docPartyType ?? "",
+        total_amount_items: totalAmountItems,
+        total_amount: totalAmount,
+        total_items: totalQuantity,
+        charges:taxLines.map(t=> mapToTaxAndChargeLineDto(t)),
+      };
+      confirmationDialog.onOpenDialog({
+        onConfirm: () => {
+          fetcher.submit(
+            { action: "delete-line-item", deleteData: body },
+            {
+              encType: "application/json",
+              action: r.apiItemLine,
+              method: "POST",
+            }
+          );
         },
-        {
-          method: "POST",
-          action: r.apiItemLine,
-          encType: "application/json",
-        }
-      );
-    } else {
-      if (onEditLineItem) {
-        onEditLineItem(values);
-        onOpenChange(false);
-      }
-      console.log("VALUES", values);
+        title: "Eliminar línea de artículos",
+      });
+    } else if (onDelete) {
+      onDelete();
+      onOpenChange(false);
     }
   };
 
@@ -117,7 +190,8 @@ export default function ItemLine({
       className=" max-w-2xl "
     >
       <Form {...form}>
-        {JSON.stringify(form.formState.errors)}
+        {/* {JSON.stringify(form.formState.errors)} */}
+        {/* {JSON.stringify(formValues)} */}
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
           className="px-2 pb-2"
@@ -125,9 +199,14 @@ export default function ItemLine({
           <div className="flex flex-col ">
             {allowEdit && (
               <div className=" flex flex-wrap gap-x-3 ">
-                <Button size={"xs"}>
+                {onDelete && (
+                  <Button size="xs" type="button" onClick={deleteTaxLine}>
+                    <TrashIcon size={15} />
+                  </Button>
+                )}
+                {/* <Button size={"xs"}>
                   <TrashIcon size={15} />
-                </Button>
+                </Button> */}
                 <Button
                   type="submit"
                   size={"xs"}
@@ -186,30 +265,34 @@ export default function ItemLine({
               {t("f.and", { o: t("form.quantity"), p: t("form.rate") })}
             </Typography>
 
-            {formValues.lineType != itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) && (
-              <CustomFormFieldInput
-                label={t("form.quantity")}
-                control={form.control}
-                required={true}
-                allowEdit={allowEdit}
-                inputType="input"
-                name={"quantity"}
-              />
-            )}
+            {formValues.lineType !=
+              itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) &&
+              !updateStock && (
+                <CustomFormFieldInput
+                  label={t("form.quantity")}
+                  control={form.control}
+                  required={true}
+                  allowEdit={allowEdit}
+                  inputType="input"
+                  name={"quantity"}
+                />
+              )}
 
-            {formValues.lineType == itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) && (
+            {(formValues.lineType ==
+              itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) ||
+              updateStock) && (
               <>
                 <CustomFormFieldInput
                   required={true}
                   name="lineItemReceipt.acceptedQuantity"
-                  label={t("f.accepted", { o: t("form.quantity") })}
+                  label={"Cantidad Aceptada"}
                   control={form.control}
                   allowEdit={allowEdit}
                   inputType="input"
                 />
                 <CustomFormFieldInput
                   name="lineItemReceipt.rejectedQuantity"
-                  label={t("f.rejected", { o: t("form.quantity") })}
+                  label={"Cantidad Rechazada"}
                   control={form.control}
                   allowEdit={allowEdit}
                   inputType="input"
@@ -234,45 +317,32 @@ export default function ItemLine({
               inputType="input"
             />
 
-            {formValues.lineType == itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) && (
+            {(formValues.lineType ==
+              itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) ||
+              updateStock) && (
               <>
                 <Typography variant="subtitle2" className=" col-span-full">
                   {t("_warehouse.base")}
                 </Typography>
-                <FormAutocomplete
-                  data={warehouseFetcher.data?.warehouses || []}
-                  nameK={"name"}
-                  label={t("f.accepted", { o: t("_warehouse.base") })}
-                  name="lineItemReceipt.acceptedWarehouseName"
-                  form={form}
+                <WarehouseAutocompleteForm
                   allowEdit={allowEdit}
-                  onValueChange={onWarehouseChange}
+                  control={form.control}
+                  label={"Almacén Aceptado"}
+                  name="lineItemReceipt.acceptedWarehouse"
                   onSelect={(e) => {
-                    form.setValue("lineItemReceipt.acceptedWarehouse", e.id);
+                    form.setValue("lineItemReceipt.acceptedWarehouseID", e.id);
                   }}
-                  {...(permissionWarehouse?.create && {
-                    addNew: () => {
-                      createWareHouse.openDialog({});
-                    },
-                  })}
+                  isGroup={false}
                 />
-
-                <FormAutocomplete
-                  data={warehouseFetcher.data?.warehouses || []}
-                  nameK={"name"}
-                  label={t("f.rejected", { o: t("_warehouse.base") })}
-                  name="lineItemReceipt.rejectedWarehouseName"
-                  form={form}
+                <WarehouseAutocompleteForm
                   allowEdit={allowEdit}
-                  onValueChange={onWarehouseChange}
+                  name="lineItemReceipt.rejectedWarehouse"
+                  label={"Almacén Rechazado"}
+                  control={form.control}
                   onSelect={(e) => {
-                    form.setValue("lineItemReceipt.rejectedWarehouse", e.id);
+                    form.setValue("lineItemReceipt.rejectedWarehouseID", e.id);
                   }}
-                  {...(permissionWarehouse?.create && {
-                    addNew: () => {
-                      createWareHouse.openDialog({});
-                    },
-                  })}
+                  isGroup={false}
                 />
               </>
             )}
@@ -289,8 +359,10 @@ interface Payload {
   currency: string;
   docPartyType?: string;
   docPartyID?: number;
+  updateStock?: boolean;
   line: z.infer<typeof lineItemSchema>;
-  onEditLineItem?: (e: z.infer<typeof lineItemSchema>) => void;
+  onEdit?: (e: z.infer<typeof lineItemSchema>) => void;
+  onDelete?: () => void;
 }
 
 interface ItemLineEditStore {

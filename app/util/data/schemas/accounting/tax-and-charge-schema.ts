@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { TaxChargeLineType, taxChargeLineTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
-import { formatAmount } from "~/util/format/formatCurrency";
-
+import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
+type TaxAndCharge = z.infer<typeof taxAndChargeSchema>;
 export const taxAndChargeSchema = z.object({
   taxLineID: z.number().optional(),
   type: z.enum([
@@ -17,7 +17,7 @@ export const taxAndChargeSchema = z.object({
 });
 
 export const mapToTaxAndChargeData = (
-  line: z.infer<typeof taxAndChargeSchema>
+  line: TaxAndCharge
 ): components["schemas"]["TaxAndChargeLineData"] => {
   return {
     type: line.type,
@@ -26,6 +26,21 @@ export const mapToTaxAndChargeData = (
     amount: Number(line.amount),
     is_deducted: line.isDeducted,
   };
+};
+export const mapToTaxAndChargeLineDto = (
+  line: TaxAndCharge
+): components["schemas"]["TaxAndChargeLineDto"] => {
+  const taxLineDto: components["schemas"]["TaxAndChargeLineDto"] = {
+    account_head: line.accountHeadName,
+    account_head_id: line.accountHead,
+    account_head_uuid: "",
+    amount: formatAmountToInt(line.amount) || 0,
+    id: line.taxLineID || 0,
+    is_deducted: line.isDeducted,
+    tax_rate: line.taxRate || 0,
+    type: line.type,
+  };
+  return taxLineDto;
 };
 
 export const toTaxAndChargeLineSchema = (

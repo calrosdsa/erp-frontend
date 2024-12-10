@@ -46,10 +46,10 @@ export const createInvoiceSchema = z
       if (data.acceptedWarehouseName && data.acceptedWarehouseID) {
         data.lines = data.lines.map((t, i) => {
           const receiptLineItem: z.infer<typeof lineItemReceipt> = {
-            acceptedWarehouse:t.lineItemReceipt?.acceptedWarehouse || data.acceptedWarehouseID,
-            acceptedWarehouseName:t.lineItemReceipt?.acceptedWarehouseName || data.acceptedWarehouseName,
-            rejectedWarehouse:t.lineItemReceipt?.rejectedWarehouse || data.rejectedWarehouseID,
-            rejectedWarehouseName:t.lineItemReceipt?.rejectedWarehouseName || data.rejectedWarehouseName,
+            acceptedWarehouseID:t.lineItemReceipt?.acceptedWarehouseID || data.acceptedWarehouseID,
+            acceptedWarehouse:t.lineItemReceipt?.acceptedWarehouse || data.acceptedWarehouseName,
+            rejectedWarehouseID:t.lineItemReceipt?.rejectedWarehouseID || data.rejectedWarehouseID,
+            rejectedWarehouse:t.lineItemReceipt?.rejectedWarehouse || data.rejectedWarehouseName,
             acceptedQuantity:t.lineItemReceipt?.acceptedQuantity || t.quantity || 0,
             rejectedQuantity:t.lineItemReceipt?.rejectedQuantity || 0,
           };

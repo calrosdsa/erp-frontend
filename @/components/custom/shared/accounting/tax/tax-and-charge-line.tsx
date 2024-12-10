@@ -218,7 +218,7 @@ export default function TaxAndChargeLine({ open, onOpenChange, payload }: TaxAnd
   return (
     <DrawerLayout onOpenChange={onOpenChange} open={open} className="max-w-2xl">
       <Form {...form}>
-        {JSON.stringify(form.getValues())}
+        {/* {JSON.stringify(form.getValues())} */}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)} className="px-2 pb-2">
           {payload?.allowEdit && (
             <div className="flex flex-wrap gap-x-3 mb-4">

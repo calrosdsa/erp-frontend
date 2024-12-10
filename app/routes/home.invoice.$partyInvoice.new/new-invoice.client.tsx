@@ -18,7 +18,7 @@ import { GlobalState } from "~/types/app";
 import { action } from "./route";
 import { createInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
-import { ItemLineType } from "~/gen/common";
+import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
@@ -133,6 +133,7 @@ export default function CreatePurchaseInvoiceClient() {
 
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
+    taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.taxLines]);
 
   useEffect(() => {
@@ -178,8 +179,8 @@ export default function CreatePurchaseInvoiceClient() {
                     form.trigger("lines");
                   }}
                   allowEdit={true}
-                  itemLineType={ItemLineType.ITEM_LINE_INVOICE}
-                  partyType={partyInvoice}
+                  lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
+                  docPartyType={partyInvoice}
                   currency={formValues.currency}
                   complement={
                     <UpdateStock

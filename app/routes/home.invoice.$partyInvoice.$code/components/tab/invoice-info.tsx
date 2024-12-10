@@ -11,7 +11,13 @@ import {
   useParams,
 } from "@remix-run/react";
 import { action, loader } from "../../route";
-import { ItemLineType, State, stateFromJSON, stateToJSON } from "~/gen/common";
+import {
+  ItemLineType,
+  itemLineTypeToJSON,
+  State,
+  stateFromJSON,
+  stateToJSON,
+} from "~/gen/common";
 import { Typography } from "@/components/typography";
 import { GlobalState } from "~/types/app";
 import LineItems from "@/components/custom/shared/item/line-items";
@@ -171,15 +177,17 @@ export default function InvoiceInfoTab() {
           <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
 
           <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-
+          {JSON.stringify(invoice?.update_stock)}
           <LineItemsDisplay
             currency={invoice?.currency || companyDefaults?.currency || ""}
             status={invoice?.status || ""}
             lineItems={lineItems}
-            partyType={invoiceParty}
+            docPartyType={invoiceParty}
+            docPartyID={invoice?.id}
             allowCreate={allowCreate}
+            updateStock={invoice?.update_stock}
             allowEdit={allowEdit}
-            itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
+            lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
           />
           {invoice && (
             <>

@@ -784,6 +784,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/currency-exchange/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Currency Exchange */
+        put: operations["update-status-currency-exchange"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/customer": {
         parameters: {
             query?: never;
@@ -1681,6 +1698,59 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/purchase-record": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Purchase Records */
+        get: operations["purchase-records"];
+        /** Edit Purchase Record */
+        put: operations["edit-purchase-record"];
+        /** Create Purchase Record */
+        post: operations["create-purchase-record"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/purchase-record/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Purchase Record */
+        get: operations["purchase-record"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/purchase-record/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Purchase Record */
+        put: operations["update-status-purchase-record"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/purchase/order/": {
         parameters: {
             query?: never;
@@ -2139,6 +2209,59 @@ export interface paths {
         /** Get role definitions */
         get: operations["get role definitions"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sales-record": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Sales Records */
+        get: operations["sales-records"];
+        /** Edit Sales Record */
+        put: operations["edit-sales-record"];
+        /** Create Sales Record */
+        post: operations["create-sales-record"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sales-record/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Sales Record */
+        get: operations["sales-record"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sales-record/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Sales Record */
+        put: operations["update-status-sales-record"];
         post?: never;
         delete?: never;
         options?: never;
@@ -2918,12 +3041,15 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            charges?: components["schemas"]["TaxAndChargeLineDto"][];
             /** Format: int64 */
             doc_party_id?: number;
             doc_party_type?: string;
             line_item_data: components["schemas"]["LineItemData"];
             /** Format: double */
             total_amount?: number;
+            /** Format: double */
+            total_amount_items?: number;
             /** Format: int32 */
             total_items?: number;
             update_stock?: boolean;
@@ -3644,6 +3770,52 @@ export interface components {
             party_type: string;
             party_uuid: string;
         };
+        CreatePurchaseRecordRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            authorization_code: string;
+            /** Format: int32 */
+            cf_base_amount: number;
+            consolidation_status: string;
+            control_code: string;
+            /** Format: int32 */
+            discounts_bonus_rebates_subject_to_vat: number;
+            dui_dim_no: string;
+            /** Format: int32 */
+            exempt_amounts: number;
+            /** Format: int32 */
+            gift_card_amount: number;
+            /** Format: int32 */
+            ice_amount: number;
+            /** Format: int32 */
+            iehd_amount: number;
+            /** Format: date-time */
+            invoice_dui_dim_date: string;
+            invoice_no: string;
+            /** Format: int32 */
+            ipj_amount: number;
+            /** Format: int32 */
+            other_not_subject_to_tax_credit: number;
+            purchase_type: string;
+            /** Format: int32 */
+            subtotal: number;
+            supplier_business_name: string;
+            /** Format: int64 */
+            supplier_id: number;
+            supplier_nit: string;
+            /** Format: int32 */
+            tax_credit: number;
+            /** Format: int32 */
+            tax_rates: number;
+            /** Format: int32 */
+            total_purchase_amount: number;
+            with_tax_credit_right: string;
+            /** Format: int32 */
+            zero_rate_taxable_purchases_amount: number;
+        };
         CreateQuotationBody: {
             /**
              * Format: uri
@@ -3680,6 +3852,53 @@ export interface components {
              */
             readonly $schema?: string;
             name: string;
+        };
+        CreateSalesRecordRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            authorization_code: string;
+            /** Format: int32 */
+            base_amount_for_tax_debit: number;
+            consolidation_status: string;
+            control_code: string;
+            /** Format: int64 */
+            customer_id: number;
+            customer_nit_ci: string;
+            /** Format: int32 */
+            discounts_bonus_and_rebates_subject_to_vat: number;
+            /** Format: int32 */
+            exports_and_exempt_operations: number;
+            /** Format: int32 */
+            gift_card_amount: number;
+            /** Format: int32 */
+            ice_amount: number;
+            /** Format: int32 */
+            iehd_amount: number;
+            /** Format: date-time */
+            invoice_date: string;
+            invoice_no: string;
+            /** Format: int32 */
+            ipj_amount: number;
+            name_or_business_name: string;
+            /** Format: int32 */
+            other_not_subject_to_vat: number;
+            sale_type: string;
+            state: string;
+            /** Format: int32 */
+            subtotal: number;
+            supplement: string;
+            /** Format: int32 */
+            tax_debit: number;
+            /** Format: int32 */
+            tax_rates: number;
+            /** Format: int32 */
+            total_sale_amount: number;
+            with_tax_credit_right: boolean;
+            /** Format: int32 */
+            zero_rate_taxable_sales: number;
         };
         CreateStockEntryBody: {
             /**
@@ -3810,15 +4029,19 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            charges?: components["schemas"]["TaxAndChargeLineDto"][];
             /** Format: int64 */
             doc_party_id?: number;
             doc_party_type?: string;
             /** Format: int32 */
             id: number;
             /** Format: double */
-            total_amount: number;
+            total_amount?: number;
+            /** Format: double */
+            total_amount_items?: number;
             /** Format: int32 */
             total_items: number;
+            update_stock?: boolean;
         };
         DeleteTaxLineRequestBody: {
             /**
@@ -4034,27 +4257,20 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            delivery_line_item?: components["schemas"]["DeliveryLineItemData"];
+            charges?: components["schemas"]["TaxAndChargeLineDto"][];
             /** Format: int64 */
             doc_party_id?: number;
             doc_party_type?: string;
             /** Format: int32 */
             id: number;
-            /** Format: int32 */
-            item_line_reference?: number;
-            /** Format: int64 */
-            item_price_id: number;
-            line_receipt?: components["schemas"]["LineItemReceiptData"];
-            line_stock_entry?: components["schemas"]["LineItemStockEntryData"];
-            line_type: string;
-            /** Format: int32 */
-            quantity: number;
+            line_item_data: components["schemas"]["LineItemData"];
             /** Format: double */
-            rate: number;
+            total_amount?: number;
             /** Format: double */
-            total_amount: number;
+            total_amount_items?: number;
             /** Format: int32 */
             total_items: number;
+            update_stock?: boolean;
         };
         EditOrderRequestBody: {
             /**
@@ -4118,6 +4334,54 @@ export interface components {
             isSelling: boolean;
             name: string;
         };
+        EditPurchaseRecordRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            authorization_code: string;
+            /** Format: int32 */
+            cf_base_amount: number;
+            consolidation_status: string;
+            control_code: string;
+            /** Format: int32 */
+            discounts_bonus_rebates_subject_to_vat: number;
+            dui_dim_no: string;
+            /** Format: int32 */
+            exempt_amounts: number;
+            /** Format: int32 */
+            gift_card_amount: number;
+            /** Format: int32 */
+            ice_amount: number;
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            iehd_amount: number;
+            /** Format: date-time */
+            invoice_dui_dim_date: string;
+            invoice_no: string;
+            /** Format: int32 */
+            ipj_amount: number;
+            /** Format: int32 */
+            other_not_subject_to_tax_credit: number;
+            purchase_type: string;
+            /** Format: int32 */
+            subtotal: number;
+            supplier_business_name: string;
+            /** Format: int64 */
+            supplier_id: number;
+            supplier_nit: string;
+            /** Format: int32 */
+            tax_credit: number;
+            /** Format: int32 */
+            tax_rates: number;
+            /** Format: int32 */
+            total_purchase_amount: number;
+            with_tax_credit_right: string;
+            /** Format: int32 */
+            zero_rate_taxable_purchases_amount: number;
+        };
         EditQuotationRequestBody: {
             /**
              * Format: uri
@@ -4175,6 +4439,55 @@ export interface components {
             actionSelecteds: components["schemas"]["ActionSelected"][];
             entityName: string;
             role_uuid: string;
+        };
+        EditSalesRecordRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            authorization_code: string;
+            /** Format: int32 */
+            base_amount_for_tax_debit: number;
+            consolidation_status: string;
+            control_code: string;
+            /** Format: int64 */
+            customer_id: number;
+            customer_nit_ci: string;
+            /** Format: int32 */
+            discounts_bonus_and_rebates_subject_to_vat: number;
+            /** Format: int32 */
+            exports_and_exempt_operations: number;
+            /** Format: int32 */
+            gift_card_amount: number;
+            /** Format: int32 */
+            ice_amount: number;
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            iehd_amount: number;
+            /** Format: date-time */
+            invoice_date: string;
+            invoice_no: string;
+            /** Format: int32 */
+            ipj_amount: number;
+            name_or_business_name: string;
+            /** Format: int32 */
+            other_not_subject_to_vat: number;
+            sale_type: string;
+            state: string;
+            /** Format: int32 */
+            subtotal: number;
+            supplement: string;
+            /** Format: int32 */
+            tax_debit: number;
+            /** Format: int32 */
+            tax_rates: number;
+            /** Format: int32 */
+            total_sale_amount: number;
+            with_tax_credit_right: boolean;
+            /** Format: int32 */
+            zero_rate_taxable_sales: number;
         };
         EditStockEntryRequestBody: {
             /**
@@ -4885,6 +5198,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityProjectDto"];
         };
+        EntityResponseResultEntityPurchaseRecordDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityPurchaseRecordDto"];
+        };
         EntityResponseResultEntityQuotationDetailDtoBody: {
             /**
              * Format: uri
@@ -4936,6 +5262,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityRoleTemplateDto"];
+        };
+        EntityResponseResultEntitySalesRecordDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntitySalesRecordDto"];
         };
         EntityResponseResultEntitySerialNoDtoBody: {
             /**
@@ -5180,6 +5519,7 @@ export interface components {
             /** Format: int32 */
             total: number;
             tz: string;
+            update_stock: boolean;
         };
         ItemAttributeDto: {
             /** Format: date-time */
@@ -5396,6 +5736,8 @@ export interface components {
             /** Format: int32 */
             accepted_quantity: number;
             accepted_warehouse: string;
+            /** Format: int64 */
+            accepted_warehouse_id: number;
             /** Format: int32 */
             id: number;
             item_code: string;
@@ -5410,6 +5752,8 @@ export interface components {
             /** Format: int32 */
             rejected_quantity: number;
             rejected_warehouse?: string;
+            /** Format: int64 */
+            rejected_warehouse_id?: number;
             uom: string;
         };
         LineItemReceiptData: {
@@ -5720,6 +6064,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListProjectDto"];
         };
+        PaginationResponsePaginationResultListPurchaseRecordDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListPurchaseRecordDto"];
+        };
         PaginationResponsePaginationResultListQuotationDtoBody: {
             /**
              * Format: uri
@@ -5764,6 +6117,15 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListRoleTemplateDto"];
+        };
+        PaginationResponsePaginationResultListSalesRecordDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListSalesRecordDto"];
         };
         PaginationResponsePaginationResultListSerialNoDtoBody: {
             /**
@@ -5959,6 +6321,11 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListPurchaseRecordDto: {
+            results: components["schemas"]["PurchaseRecordDto"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListQuotationDto: {
             results: components["schemas"]["QuotationDto"][];
             /** Format: int64 */
@@ -5981,6 +6348,11 @@ export interface components {
         };
         PaginationResultListRoleTemplateDto: {
             results: components["schemas"]["RoleTemplateDto"][];
+            /** Format: int64 */
+            total: number;
+        };
+        PaginationResultListSalesRecordDto: {
+            results: components["schemas"]["SalesRecordDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -6246,6 +6618,52 @@ export interface components {
             id: number;
             name: string;
             status: string;
+        };
+        PurchaseRecordDto: {
+            authorization_code: string;
+            /** Format: int32 */
+            cf_base_amount: number;
+            consolidation_status: string;
+            control_code: string;
+            /** Format: int32 */
+            discounts_bonus_rebates_subject_to_vat: number;
+            dui_dim_no: string;
+            /** Format: int32 */
+            exempt_amounts: number;
+            /** Format: int32 */
+            gift_card_amount: number;
+            /** Format: int32 */
+            ice_amount: number;
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            iehd_amount: number;
+            /** Format: date-time */
+            invoice_dui_dim_date: string;
+            invoice_no: string;
+            /** Format: int32 */
+            ipj_amount: number;
+            /** Format: int32 */
+            other_not_subject_to_tax_credit: number;
+            purchase_type: string;
+            /** Format: int32 */
+            subtotal: number;
+            supplier: string;
+            supplier_business_name: string;
+            /** Format: int64 */
+            supplier_id: number;
+            supplier_nit: string;
+            supplier_uuid: string;
+            /** Format: int32 */
+            tax_credit: number;
+            /** Format: int32 */
+            tax_rates: number;
+            /** Format: int32 */
+            total_purchase_amount: number;
+            uuid: string;
+            with_tax_credit_right: string;
+            /** Format: int32 */
+            zero_rate_taxable_purchases_amount: number;
         };
         QuotationData: {
             /** Format: int64 */
@@ -6672,6 +7090,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ProjectDto"];
         };
+        ResponseDataPurchaseRecordDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["PurchaseRecordDto"];
+        };
         ResponseDataQuotationDtoBody: {
             /**
              * Format: uri
@@ -6697,6 +7128,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ReceiptDto"];
+        };
+        ResponseDataSalesRecordDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["SalesRecordDto"];
         };
         ResponseDataStockEntryDtoBody: {
             /**
@@ -6908,6 +7352,12 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["ProjectDto"];
         };
+        ResultEntityPurchaseRecordDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["PurchaseRecordDto"];
+        };
         ResultEntityQuotationDetailDto: {
             activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
@@ -6931,6 +7381,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["RoleTemplateDto"];
+        };
+        ResultEntitySalesRecordDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["SalesRecordDto"];
         };
         ResultEntitySerialNoDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -6984,6 +7440,53 @@ export interface components {
             /** Format: int64 */
             id: number;
             name: string;
+        };
+        SalesRecordDto: {
+            authorization_code: string;
+            /** Format: int32 */
+            base_amount_for_tax_debit: number;
+            consolidation_status: string;
+            control_code: string;
+            /** Format: int64 */
+            customer_id: number;
+            customer_name: string;
+            customer_nit_ci: string;
+            customer_uuid: string;
+            /** Format: int32 */
+            discounts_bonus_and_rebates_subject_to_vat: number;
+            /** Format: int32 */
+            exports_and_exempt_operations: number;
+            /** Format: int32 */
+            gift_card_amount: number;
+            /** Format: int32 */
+            ice_amount: number;
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            iehd_amount: number;
+            /** Format: date-time */
+            invoice_date: string;
+            invoice_no: string;
+            /** Format: int32 */
+            ipj_amount: number;
+            name_or_business_name: string;
+            /** Format: int32 */
+            other_not_subject_to_vat: number;
+            sale_type: string;
+            state: string;
+            /** Format: int32 */
+            subtotal: number;
+            supplement: string;
+            /** Format: int32 */
+            tax_debit: number;
+            /** Format: int32 */
+            tax_rates: number;
+            /** Format: int32 */
+            total_sale_amount: number;
+            uuid: string;
+            with_tax_credit_right: boolean;
+            /** Format: int32 */
+            zero_rate_taxable_sales: number;
         };
         SerialNoDto: {
             created_at: string;
@@ -7258,7 +7761,7 @@ export interface components {
             readonly $schema?: string;
             profile: components["schemas"]["EditableProfileFields"];
         };
-        UpdateStateWithEventBody: {
+        UpdateStatusWithEventBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -9506,6 +10009,42 @@ export interface operations {
             };
         };
     };
+    "update-status-currency-exchange": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get customers": {
         parameters: {
             query: {
@@ -10171,7 +10710,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {
@@ -10243,6 +10782,7 @@ export interface operations {
         parameters: {
             query?: {
                 line_type?: string;
+                update_stock?: string;
                 id?: string;
             };
             header?: never;
@@ -10499,7 +11039,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {
@@ -10861,7 +11401,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {
@@ -11695,7 +12235,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {
@@ -12120,6 +12660,189 @@ export interface operations {
             };
         };
     };
+    "purchase-records": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                status?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListPurchaseRecordDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-purchase-record": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditPurchaseRecordRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-purchase-record": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePurchaseRecordRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataPurchaseRecordDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "purchase-record": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityPurchaseRecordDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-purchase-record": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create purchase order": {
         parameters: {
             query?: never;
@@ -12270,7 +12993,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {
@@ -12455,7 +13178,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {
@@ -12784,7 +13507,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {
@@ -13068,7 +13791,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {
@@ -13306,6 +14029,189 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListRoleActionDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "sales-records": {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                status?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListSalesRecordDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-sales-record": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditSalesRecordRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-sales-record": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSalesRecordRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataSalesRecordDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "sales-record": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntitySalesRecordDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-sales-record": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -13592,7 +14498,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStateWithEventBody"];
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {

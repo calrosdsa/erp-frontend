@@ -20,7 +20,7 @@ export const WarehouseAutocompleteForm = ({
     roleActions,
   }: {
     allowEdit?: boolean;
-    control?: Control<any, any>;
+    control: Control<any, any>;
     label?: string;
     name?: string;
     onSelect: (e: components["schemas"]["WareHouseDto"]) => void;

@@ -45,15 +45,15 @@ export const createReceiptSchema = z
         const lineReceipt: z.infer<typeof lineItemReceipt> = {
           acceptedQuantity: t.lineItemReceipt?.acceptedQuantity || 0,
           rejectedQuantity: t.lineItemReceipt?.rejectedQuantity || 0,
+          acceptedWarehouseID:
+            t.lineItemReceipt?.acceptedWarehouseID || data.acceptedWarehouseID,
           acceptedWarehouse:
-            t.lineItemReceipt?.acceptedWarehouse || data.acceptedWarehouseID,
-          acceptedWarehouseName:
-            t.lineItemReceipt?.acceptedWarehouseName ||
+            t.lineItemReceipt?.acceptedWarehouse ||
             data.acceptedWarehouseName,
+          rejectedWarehouseID:
+            t.lineItemReceipt?.rejectedWarehouseID || data.rejectedWarehouseID,
           rejectedWarehouse:
-            t.lineItemReceipt?.rejectedWarehouse || data.rejectedWarehouseID,
-          rejectedWarehouseName:
-            t.lineItemReceipt?.rejectedWarehouseName ||
+            t.lineItemReceipt?.rejectedWarehouse ||
             data.rejectedWarehouseName,
         };
         t.lineItemReceipt = lineReceipt;

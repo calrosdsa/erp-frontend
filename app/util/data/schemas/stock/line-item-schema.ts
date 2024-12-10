@@ -9,41 +9,40 @@ import { validateNumber, validateStringNumber } from "../base/base-schema";
 import { components } from "~/sdk";
 import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 
-export const itemPriceDtoSchema = z.object({
-  code: z.string().optional(),
-  uuid: z.string(),
-  rate: z.number(),
-  item_quantity: z.number().optional(),
-  item_name: z.string().optional(),
-  item_code: z.string().optional(),
-  item_uuid: z.string().optional(),
-  uom: z.string().optional(),
-  tax_name: z.string().optional(),
-  tax_uuid: z.string().optional(),
-  tax_value: z.number().optional(),
-});
 
-export const itemLineDtoSchema = z.object({
-  id: z.number(),
-  rate: z.number(),
-  quantity: z.number(),
-  line_type: z.string(),
-  //ITEM
-  item_name: z.string(),
-  item_code: z.string(),
-  item_uuid: z.string(),
-  //UOM
-  uom: z.string(),
-});
+type LineItem = z.infer<typeof lineItemSchema>
+
+export const lineItemDefault = (opts:{
+  lineType:string,
+  updateStock?:boolean
+}):LineItem=>{
+  const line:LineItem = {
+    rate: 0,
+    lineType: opts.lineType,
+    uom: "",
+    item_name: "",
+    item_code: "",
+    item_price_id: 0
+  }
+  const lineType = itemLineTypeFromJSON(opts.lineType);
+  if (lineType == ItemLineType.ITEM_LINE_RECEIPT || opts.updateStock) {
+    line.lineItemReceipt = {
+      acceptedQuantity: 0,
+      rejectedQuantity: 0,
+    };
+  }
+  return line
+}
 
 export const toLineItemSchema = (
   line: components["schemas"]["LineItemDto"],
   opts: {
     to?: string;
     partyType?: string;
+    updateStock?: boolean;
   }
-): z.infer<typeof lineItemSchema> => {
-  const lineItem: z.infer<typeof lineItemSchema> = {
+): LineItem => {
+  const lineItem: LineItem = {
     itemLineID: line.id,
     amount: formatAmount(line.quantity * line.rate),
     lineType: line.line_type,
@@ -59,51 +58,63 @@ export const toLineItemSchema = (
     uom: line.uom,
     party_type: opts.partyType,
   };
-  switch (itemLineTypeFromJSON(opts.to)) {
-    case ItemLineType.ITEM_LINE_RECEIPT: {
-      lineItem.lineItemReceipt = {
-        acceptedQuantity: line.quantity,
-        rejectedQuantity: 0,
-        acceptedWarehouse: 0,
-        acceptedWarehouseName: "",
-      };
-      break;
-    }
+  const lineType = itemLineTypeFromJSON(opts.to);
+
+  if (lineType == ItemLineType.ITEM_LINE_RECEIPT || opts.updateStock) {
+    lineItem.lineItemReceipt = {
+      acceptedQuantity: line.accepted_quantity,
+      rejectedQuantity: line.rejected_quantity,
+      acceptedWarehouseID: line.accepted_warehouse_id,
+      acceptedWarehouse: line.accepted_warehouse,
+      rejectedWarehouse: line.rejected_warehouse,
+      rejectedWarehouseID: line.rejected_warehouse_id,
+    };
   }
   return lineItem;
 };
 
 export const schemaToLineItemData = (
-  line: z.infer<typeof lineItemSchema>
+  line: LineItem,
+  opts: {
+    updateStock?: boolean;
+  }
 ): components["schemas"]["LineItemData"] => {
-  const itemLineDto: components["schemas"]["LineItemData"] = {
-    id: line.itemLineID,
-    item_code: line.item_code,
-    item_name: line.item_name,
-    uom: line.uom,
+  const lineItemData: components["schemas"]["LineItemData"] = {
     item_price_id: line.item_price_id,
-    // item_price_uuid: line.item_price_uuid,
-    // item_uuid: line.item_uuid,
-    line_type: itemLineTypeToJSON(Number(line.lineType)),
-    quantity: Number(line.quantity),
+    line_type: line.lineType,
+    quantity: line.quantity || 0,
     rate: line.rate,
-
-    accepted_quantity: Number(line.lineItemReceipt?.acceptedQuantity),
-    rejected_quantity: Number(line.lineItemReceipt?.rejectedQuantity),
-    accepted_warehouse: line.lineItemReceipt?.acceptedWarehouseName || "",
-    rejected_warehouse: line.lineItemReceipt?.rejectedWarehouseName || "",
   };
-
-  return itemLineDto;
+  const lineType = itemLineTypeFromJSON(line.lineType);
+  if (lineType == ItemLineType.ITEM_LINE_RECEIPT || opts.updateStock) {
+    lineItemData.line_receipt = {
+      accepted_warehouse: line.lineItemReceipt?.acceptedWarehouseID,
+      rejected_warehouse: line.lineItemReceipt?.rejectedWarehouseID,
+      accepted_quantity: line.lineItemReceipt?.acceptedQuantity || 0,
+      rejected_quantity: line.lineItemReceipt?.rejectedQuantity || 0,
+    };
+  }
+  if (lineType == ItemLineType.ITEM_LINE_STOCK_ENTRY) {
+    lineItemData.line_stock_entry = {
+      source_warehouse: line.lineItemStockEntry?.sourceWarehouse,
+      target_warehouse: line.lineItemStockEntry?.targetWarehouse,
+    };
+  }
+  if (lineType == ItemLineType.DELIVERY_LINE_ITEM || opts.updateStock) {
+    lineItemData.delivery_line_item = {
+      source_warehouse: line.lineItemStockEntry?.sourceWarehouse || 0,
+    };
+  }
+  return lineItemData;
 };
 
 export const lineItemReceipt = z.object({
   acceptedQuantity: z.coerce.number().gt(0),
   rejectedQuantity: z.coerce.number(),
-  acceptedWarehouse: z.number().optional(),
-  acceptedWarehouseName: z.string().optional(),
-  rejectedWarehouse: z.number().optional(),
-  rejectedWarehouseName: z.string().optional(),
+  acceptedWarehouseID: z.number().optional(),
+  acceptedWarehouse: z.string().optional(),
+  rejectedWarehouseID: z.number().optional(),
+  rejectedWarehouse: z.string().optional(),
 });
 
 export const lineItemStockEntry = z.object({
@@ -142,29 +153,24 @@ export const lineItemSchema = z
     party_type: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    switch (itemLineTypeFromJSON(data.lineType)) {
-      case ItemLineType.ITEM_LINE_INVOICE:
-      case ItemLineType.ITEM_LINE_ORDER: {
-        if (data.quantity == undefined && data.quantity == "") {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            params: {
-              i18n: { key: "custom.required" },
-            },
-            path: ["quantity"],
-          });
-        } else {
-          data.amount = Number(data.quantity) * data.rate;
-        }
-        break;
+    const lineType = itemLineTypeFromJSON(data.lineType);
+    if (ItemLineType.ITEM_LINE_ORDER == lineType) {
+      if (data.quantity == undefined && data.quantity == "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          params: {
+            i18n: { key: "custom.required" },
+          },
+          path: ["quantity"],
+        });
+      } else {
+        data.amount = Number(data.quantity) * data.rate;
       }
-      case ItemLineType.ITEM_LINE_RECEIPT: {
-        if (data.lineItemReceipt != undefined) {
-          data.quantity =
-            data.lineItemReceipt.acceptedQuantity +
-            data.lineItemReceipt.rejectedQuantity;
-        }
-        break;
-      }
+    }
+    
+    if (data.lineItemReceipt != undefined) {
+      data.quantity =
+        data.lineItemReceipt.acceptedQuantity +
+        data.lineItemReceipt.rejectedQuantity;
     }
   });

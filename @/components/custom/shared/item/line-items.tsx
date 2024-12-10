@@ -18,7 +18,7 @@ import { formatCurrencyAmount, sumTotal } from "~/util/format/formatCurrency";
 import { useTotal } from "~/util/hooks/data/useTotal";
 import { useLineItems } from "./use-line-items";
 import { z } from "zod";
-import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
+import { lineItemDefault, lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import DisplayTextValue from "../../display/DisplayTextValue";
 import { Separator } from "@/components/ui/separator";
 
@@ -32,6 +32,7 @@ export default function LineItems({
   allowCreate = true,
   onChange,
   complement,
+  updateStock,
 }: {
   onChange?: (e: z.infer<typeof lineItemSchema>[]) => void;
   status?: string;
@@ -42,6 +43,7 @@ export default function LineItems({
   allowCreate?: boolean;
   lineType: string;
   complement?: JSX.Element;
+  updateStock?:boolean
 }) {
   const { t, i18n } = useTranslation("common");
   const { total, lines: lineItems, totalQuantity } = useLineItems();
@@ -51,26 +53,20 @@ export default function LineItems({
     docPartyType: docPartyType,
     docPartyID:docPartyID,
     allowEdit: allowEdit,
+    updateStock:updateStock,
   };
   const [metaOptions] = useTableRowActions({
     ...(allowCreate && {
       onAddRow: () => {
         itemLine.onOpenDialog({
           ...shared,
-          onEditLineItem: (e) => {
+          onEdit: (e) => {
             const lines = [...lineItems, e];
             if (onChange) {
               onChange(lines);
             }
           },
-          line: {
-            rate: 0,
-            lineType: "",
-            uom: "",
-            item_name: "",
-            item_code: "",
-            item_price_id: 0
-          }
+          line:lineItemDefault({lineType:lineType,updateStock:updateStock}),
         });
       },
     }),
@@ -80,7 +76,7 @@ export default function LineItems({
         itemLine.onOpenDialog({
           ...shared,
           line: f,
-          onEditLineItem: (e) => {
+          onEdit: (e) => {
             const lines = lineItems.map((t, idx) => {
               if (idx == rowIndex) {
                 t = e;
@@ -89,6 +85,12 @@ export default function LineItems({
             });
             if (onChange) {
               onChange(lines);
+            }
+          },
+          onDelete: () => {
+            const f = lineItems.filter((t, idx) => idx != rowIndex);
+            if (onChange) {
+              onChange(f);
             }
           },
         });

@@ -64,6 +64,7 @@ enum PartyType {
     supplierQuotation = 38;
     salesQuotation = 39;
     chargesTemplate = 40;
+    currencyExchange = 41;
 }
 
 enum PianoPartyType {
@@ -109,6 +110,7 @@ enum EventState {
     APPROVED_EVENT = 3; //used to transition from any state to APPROVED
     COMPLETED_EVENT = 4; //used to transition from any state to APPROVED
     ENABLED_EVENT = 5;
+    DISABLED_EVENT = 6;
 }
 
 

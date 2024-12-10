@@ -10,6 +10,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
+import { useResetDocument } from "@/components/custom/shared/document/reset-data";
 
 
 export default function ReceiptsClient(){
@@ -23,15 +24,12 @@ export default function ReceiptsClient(){
         actions:actions,
         roleActions:globalState.roleActions
     })
-    const lineItems = useLineItems()
-    const taxAndCharges = useTaxAndCharges()
-
+    const { resetDocument } = useResetDocument()
     setUpToolbar(()=>{
         return {
             ...(permission?.create && {
                 addNew:()=>{
-                    lineItems.reset()
-                    taxAndCharges.reset()
+                    resetDocument()
                     navigate(r.toCreateReceipt(partyTypeFromJSON(params.partyReceipt)))
                 }
             }) 

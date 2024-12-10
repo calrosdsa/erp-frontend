@@ -169,6 +169,7 @@ export default function OrderInfoTab() {
             lineItems={lineItems}
             lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
             docPartyType={partyOrder}
+            docPartyID={order?.id}
             allowEdit={allowEdit}
             allowCreate={allowCreate}
           />

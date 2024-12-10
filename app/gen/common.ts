@@ -142,6 +142,7 @@ export enum PartyType {
   supplierQuotation = 38,
   salesQuotation = 39,
   chargesTemplate = 40,
+  currencyExchange = 41,
   UNRECOGNIZED = -1,
 }
 
@@ -270,6 +271,9 @@ export function partyTypeFromJSON(object: any): PartyType {
     case 40:
     case "chargesTemplate":
       return PartyType.chargesTemplate;
+    case 41:
+    case "currencyExchange":
+      return PartyType.currencyExchange;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -361,6 +365,8 @@ export function partyTypeToJSON(object: PartyType): string {
       return "salesQuotation";
     case PartyType.chargesTemplate:
       return "chargesTemplate";
+    case PartyType.currencyExchange:
+      return "currencyExchange";
     case PartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -609,6 +615,7 @@ export enum EventState {
   /** COMPLETED_EVENT - used to transition from any state to APPROVED */
   COMPLETED_EVENT = 4,
   ENABLED_EVENT = 5,
+  DISABLED_EVENT = 6,
   UNRECOGNIZED = -1,
 }
 
@@ -632,6 +639,9 @@ export function eventStateFromJSON(object: any): EventState {
     case 5:
     case "ENABLED_EVENT":
       return EventState.ENABLED_EVENT;
+    case 6:
+    case "DISABLED_EVENT":
+      return EventState.DISABLED_EVENT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -653,6 +663,8 @@ export function eventStateToJSON(object: EventState): string {
       return "COMPLETED_EVENT";
     case EventState.ENABLED_EVENT:
       return "ENABLED_EVENT";
+    case EventState.DISABLED_EVENT:
+      return "DISABLED_EVENT";
     case EventState.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

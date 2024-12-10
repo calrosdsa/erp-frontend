@@ -14,6 +14,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
+import { useResetDocument } from "@/components/custom/shared/document/reset-data";
 
 export default function InvoicesClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -27,15 +28,16 @@ export default function InvoicesClient() {
   const navigate = useNavigate();
   const { t } = useTranslation("common");
   const r = routes;
+  const {resetDocument} = useResetDocument()
   const lineItemStore = useLineItems();
+
   const tacStore = useTaxAndCharges();
   setUpToolbar(() => {
     return {
       titleToolbar: t(partyInvoice),
       ...(permission?.create && {
         addNew: () => {
-          lineItemStore.reset()
-          tacStore.reset()
+          resetDocument()
           navigate(
             r.toRoute({
               routePrefix: ["invoice"],

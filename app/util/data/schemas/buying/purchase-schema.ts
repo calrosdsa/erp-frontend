@@ -61,8 +61,8 @@ export const lineItemSchemaToLineData = (
     line.line_receipt = {
       accepted_quantity:Number(d.lineItemReceipt?.acceptedQuantity),
       rejected_quantity:Number(d.lineItemReceipt?.rejectedQuantity),
-      accepted_warehouse:d.lineItemReceipt?.acceptedWarehouse,
-      rejected_warehouse:d.lineItemReceipt?.rejectedWarehouse,
+      accepted_warehouse:d.lineItemReceipt?.acceptedWarehouseID,
+      rejected_warehouse:d.lineItemReceipt?.rejectedWarehouseID,
     }
   }
   if(d.lineItemStockEntry) {

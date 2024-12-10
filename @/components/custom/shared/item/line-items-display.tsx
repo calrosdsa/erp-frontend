@@ -21,6 +21,7 @@ export default function LineItemsDisplay({
   lineType,
   allowEdit = true,
   allowCreate = true,
+  updateStock,
 }: {
   lineItems: any;
   status: string;
@@ -30,6 +31,7 @@ export default function LineItemsDisplay({
   lineType: string;
   allowEdit?: boolean;
   allowCreate?: boolean;
+  updateStock?:boolean;
 }) {
   const { t } = useTranslation("common");
   return (
@@ -44,6 +46,7 @@ export default function LineItemsDisplay({
               lines.map((t) =>
                 toLineItemSchema(t, {
                   partyType: docPartyType,
+                  updateStock:updateStock
                 })
               )
             );
@@ -59,6 +62,7 @@ export default function LineItemsDisplay({
               currency={currency}
               allowCreate={allowCreate}
               allowEdit={allowEdit}
+              updateStock={updateStock}
             />
           );
         }}

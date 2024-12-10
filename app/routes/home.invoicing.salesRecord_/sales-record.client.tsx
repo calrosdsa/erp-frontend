@@ -5,13 +5,13 @@ import { costCenterColumns } from "@/components/custom/table/columns/accounting/
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import { journalEntryColumns } from "@/components/custom/table/columns/accounting/journal-entry-columns";
-import { stockEntryColumns } from "@/components/custom/table/columns/stock/stock-entry-columns";
+import { chargesTemplateColumns } from "@/components/custom/table/columns/accounting/charges-templates-columns";
 import { routes } from "~/util/route";
-import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
-import { useResetDocument } from "@/components/custom/shared/document/reset-data";
+import { currencyExchangeColumns } from "@/components/custom/table/columns/core/currency-exchange-columns";
+import { salesRecordColumn } from "@/components/custom/table/columns/invoicing/sales-records.columns";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-export default function StockEntryClient() {
+export default function SalesRecordClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const [permission] = usePermission({
@@ -20,16 +20,13 @@ export default function StockEntryClient() {
   });
   const navigate = useNavigate()
   const r = routes
-  const { resetItems } = useResetDocument()
   setUpToolbar(() => {
     return {
       ...(permission?.create && {
         addNew: () => {
-          resetItems()
           navigate(r.toRoute({
-            main:r.stockEntry,
-            routePrefix:[r.stockM],
-            routeSufix:["new"]
+            main:r.salesRecord,
+            routeSufix:["new"],
           }))
         },
       }),
@@ -37,13 +34,16 @@ export default function StockEntryClient() {
   }, [permission]);
   return (
     <>
+      <ScrollArea className="w-full rounded-md border">
       <DataTable
         paginationOptions={{
           rowCount: paginationResult?.total,
         }}
         data={paginationResult?.results || []}
-        columns={stockEntryColumns({})}
-      />
+        columns={salesRecordColumn({})}
+        />
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
     </>
   );
 }

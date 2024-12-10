@@ -9,7 +9,7 @@ type ActionData = {
   action: string;
   editData: components["schemas"]["EditLineItemRequestBody"];
   deleteData: components["schemas"]["DeleteLineItemRequestBody"];
-  createData: components["schemas"]["AddLineItemRequestBody"];
+  addData: components["schemas"]["AddLineItemRequestBody"];
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
@@ -21,7 +21,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const d = data.editData;
       console.log("ADD DATA", d);
       const res = await client.POST("/item-line", {
-        body: data.createData,
+        body: data.addData,
       });
       message = res.data?.message;
       error = res.error?.detail;
