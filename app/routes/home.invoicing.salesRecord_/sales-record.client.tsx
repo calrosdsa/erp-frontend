@@ -10,6 +10,7 @@ import { routes } from "~/util/route";
 import { currencyExchangeColumns } from "@/components/custom/table/columns/core/currency-exchange-columns";
 import { salesRecordColumn } from "@/components/custom/table/columns/invoicing/sales-records.columns";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function SalesRecordClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -18,32 +19,34 @@ export default function SalesRecordClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
-  const navigate = useNavigate()
-  const r = routes
+  const navigate = useNavigate();
+  const r = routes;
   setUpToolbar(() => {
     return {
       ...(permission?.create && {
         addNew: () => {
-          navigate(r.toRoute({
-            main:r.salesRecord,
-            routeSufix:["new"],
-          }))
+          navigate(
+            r.toRoute({
+              main: r.salesRecord,
+              routePrefix:[r.invoicing],
+              routeSufix: ["new"],
+            })
+          );
         },
       }),
     };
   }, [permission]);
   return (
     <>
-      <ScrollArea className="w-full rounded-md border">
-      <DataTable
-        paginationOptions={{
-          rowCount: paginationResult?.total,
-        }}
-        data={paginationResult?.results || []}
-        columns={salesRecordColumn({})}
-        />
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+    <div className=" relative w-full">
+            <DataTable
+              paginationOptions={{
+                rowCount: paginationResult?.total,
+              }}
+              data={paginationResult?.results || []}
+              columns={salesRecordColumn({})}
+              />
+              </div>
     </>
   );
 }

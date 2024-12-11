@@ -160,7 +160,6 @@ export default function HomeLayout({
               gap-1
             "
             >
-              <div className="flex align-center"></div>
 
               <ToolBar title={getRouteName()} />
 

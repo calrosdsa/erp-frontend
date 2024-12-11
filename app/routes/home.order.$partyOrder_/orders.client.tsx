@@ -56,6 +56,9 @@ export default function OrdersClient() {
         columns={orderColumns({
           orderPartyType: partyOrder,
         })}
+        paginationOptions={{
+          rowCount: paginationResult?.total,
+        }}
       />
     </div>
   );

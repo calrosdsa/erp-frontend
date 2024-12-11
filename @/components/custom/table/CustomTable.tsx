@@ -30,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DataTablePagination } from "./DataTablePagination"
@@ -40,6 +40,9 @@ import { useTranslation } from "react-i18next"
 import DataTableEditFooter from "./data-table-edit-footer"
 import { useSearchParams } from "@remix-run/react"
 import { create } from "zustand"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { TableVirtuoso } from "react-virtuoso"
+import React from "react"
 
 export interface PaginationOptions {
   rowCount?: number
@@ -81,7 +84,8 @@ export function DataTable<TData, TValue>({
     pageIndex: Number(searchParams.get("page") || DEFAULT_PAGE),
     pageSize: Number(searchParams.get("size") || DEFAULT_SIZE),
   })
-  
+  const [tableWidth, setTableWidth] = useState(0)
+  const tableRef = useRef<HTMLDivElement>(null)
   // Add checkbox column if row selection is enabled
   const columns = useMemo(() => {
     if (!enableRowSelection) return userColumns
@@ -182,71 +186,84 @@ export function DataTable<TData, TValue>({
     }
   }, [rowSelection, table])
 
-  return (
-    <div className="py-3 space-y-4 ">
-      {metaActions != undefined && <DataTableToolbar table={table} />}
-      <div className="rounded-md border h-full 
-      relative w-[90vw] mx-auto md:w-[60vw] lg:w-full xl:w-full overflow-auto"
+  useEffect(() => {
+    const updateTableWidth = () => {
+      if (tableRef.current) {
+        setTableWidth(tableRef.current.offsetWidth)
+      }
+    }
+
+    updateTableWidth()
+    window.addEventListener('resize', updateTableWidth)
+
+    return () => {
+      window.removeEventListener('resize', updateTableWidth)
+    }
+  }, [])
+  const TableComponents = {
+    Table: ({ style, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
+      <Table {...props} style={{ ...style, width: `${tableWidth}px`, tableLayout: 'fixed' }} />
+    ),
+    TableHead: TableHeader,
+    TableRow: TableRow,
+    TableBody: React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
+      ({ style, ...props }, ref) => (
+        <TableBody {...props} ref={ref} style={{ ...style, overflow: 'visible' }} />
+      )
+    ),
+  }
+
+  const fixedHeaderContent = () => {
+    return (
+      <TableRow>
+        {table.getFlatHeaders().map((header) => (
+          <TableHead
+            key={header.id}
+            className="text-xs whitespace-nowrap py-2 px-4"
+            style={{ width: header.getSize() }}
+          >
+            {header.isPlaceholder
+              ? null
+              : flexRender(header.column.columnDef.header, header.getContext())}
+          </TableHead>
+        ))}
+      </TableRow>
+    )
+  }
+
+  const rowContent = (_index: number, row: TData) => {
+    const tableRow = table.getRowModel().rows[_index]
+    return tableRow?.getVisibleCells().map(cell => (
+      <TableCell
+        key={cell.id}
+        style={{
+          width: cell.column.getSize(),
+        }}
+        className="border-r last:border-r-0 p-2 text-xs"
       >
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-xs whitespace-nowrap h-9">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-xs py-2">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-12 text-center"
-                >
-                  Sin resultados
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-          <TableFooter className="w-full">
-            <TableRow>
-              <TableHead colSpan={table.getCenterLeafColumns().length} align="right"
-              className="py-1 h-5">
-                {metaOptions != undefined && (
-                  <DataTableEditFooter table={table} />
-                )}
-                {paginationOptions != undefined && (
-                  <DataTablePagination table={table} />
-                )}
-              </TableHead>
-            </TableRow>
-          </TableFooter>
-        </Table>
+        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      </TableCell>
+    ))
+  }
+
+  return (
+    <div className="py-3 space-y-4 w-full">
+      {metaActions != undefined && <DataTableToolbar table={table} />}
+      <ScrollArea className="rounded-md border">
+        <div ref={tableRef}>
+          <TableVirtuoso
+            style={{ height: '500px', width: '100%' }}
+            data={data}
+            components={TableComponents}
+            fixedHeaderContent={fixedHeaderContent}
+            itemContent={rowContent}
+          />
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <div className="flex justify-between items-center">
+        {metaOptions != undefined && <DataTableEditFooter table={table} />}
+        {paginationOptions != undefined && <DataTablePagination table={table} />}
       </div>
     </div>
   )
