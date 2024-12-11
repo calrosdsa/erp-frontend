@@ -17,7 +17,7 @@ interface TableCellProps<TData> {
 export default function TableCellIndex<TData>({ getValue, row, column, table}:TableCellProps<TData>) {
   
   return (
-    <div className="w-min">
+    <div className="w-full justify-center flex font-semibold">
         <span>{row.index +1}.-</span>
     </div>
   );

@@ -16,7 +16,7 @@ import { routes } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { GlobalState } from "~/types/app";
 import { action } from "./route";
-import { ItemLineType } from "~/gen/common";
+import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
@@ -33,7 +33,10 @@ import AccountingDimensionForm from "@/components/custom/shared/accounting/accou
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { Card } from "@/components/ui/card";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { createReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
 
 export default function NewReceiptClient() {
@@ -52,10 +55,22 @@ export default function NewReceiptClient() {
   const form = useForm<z.infer<typeof createReceiptSchema>>({
     resolver: zodResolver(createReceiptSchema),
     defaultValues: {
-      receiptPartyType:partyReceipt,
+      receiptPartyType: partyReceipt,
       referenceID: payload?.documentRefernceID,
       currency: payload?.currency || companyDefaults?.currency,
-      lines: lineItemsStore.lines,
+      lines: lineItemsStore.lines.map((t) => {
+        t.lineItemReceipt = {
+          acceptedQuantity: t.quantity || 0,
+          rejectedQuantity: 0,
+        };
+        if (partyReceipt == r.purchaseReceipt) {
+          t.lineType = itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT);
+        }
+        if (partyReceipt == r.deliveryNote) {
+          t.lineType = itemLineTypeToJSON(ItemLineType.DELIVERY_LINE_ITEM);
+        }
+        return t;
+      }),
       taxLines: taxLinesStore.lines,
       postingTime: format(new Date(), "HH:mm:ss"),
       postingDate: new Date(),
@@ -133,13 +148,14 @@ export default function NewReceiptClient() {
 
   useEffect(() => {
     lineItemsStore.onLines(formValues.lines);
-    taxLinesStore.updateFromItems(formValues.lines)
+    taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.lines]);
 
   return (
     <div>
       <Card>
         <FormLayout>
+          {/* {JSON.stringify(formValues.lines)} */}
           <Form {...form}>
             <fetcher.Form
               method="post"
@@ -168,24 +184,24 @@ export default function NewReceiptClient() {
 
                 <AccountingDimensionForm form={form} />
 
+
                 <LineItems
                   onChange={(e) => {
                     form.setValue("lines", e);
                     form.trigger("lines");
                   }}
                   allowEdit={true}
-                  itemLineType={ItemLineType.ITEM_LINE_INVOICE}
-                  partyType={partyReceipt}
+                  lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)}
+                  docPartyType={partyReceipt}
                   currency={formValues.currency}
                   complement={
                     <>
-                    
-                    <UpdateStock
-                      form={form}
-                      updateStock={true}
-                      partyType={partyReceipt}
+                      <UpdateStock
+                        form={form}
+                        updateStock={true}
+                        partyType={partyReceipt}
                       />
-                      </>
+                    </>
                   }
                 />
                 <TaxAndChargesLines

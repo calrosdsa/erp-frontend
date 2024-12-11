@@ -8,31 +8,22 @@ import {
   useParams,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
-import { formatMediumDate } from "~/util/format/formatDate";
 import { action, loader } from "../../route";
-import { ItemLineType, State, stateFromJSON, stateToJSON } from "~/gen/common";
+import {
+  ItemLineType,
+  itemLineTypeToJSON,
+  State,
+  stateFromJSON,
+  stateToJSON,
+} from "~/gen/common";
 import { GlobalState } from "~/types/app";
-import LineItems from "@/components/custom/shared/item/line-items";
 import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
-import { useTotal } from "~/util/hooks/data/useTotal";
-import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import LineItemsDisplay from "@/components/custom/shared/item/line-items-display";
 import { Separator } from "@/components/ui/separator";
 import GrandTotal from "@/components/custom/shared/item/grand-total";
 import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  addDays,
-  addHours,
-  format,
-  formatRFC3339,
-  parse,
-  parseISO,
-} from "date-fns";
 import { z } from "zod";
 import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
@@ -45,7 +36,6 @@ import {
   setUpToolbar,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
-import { toZonedTime } from "date-fns-tz";
 import { usePermission } from "~/util/hooks/useActions";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { editReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
@@ -59,10 +49,11 @@ export default function ReceiptInfoTab() {
     useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const params = useParams();
-  const [receiptPerm] = usePermission({roleActions,actions});
+  const [receiptPerm] = usePermission({ roleActions, actions });
   const partyReceipt = params.partyReceipt || "";
   const isDraft = stateFromJSON(receipt?.status) == State.DRAFT;
-  const isDisabled = !isDraft || !receiptPerm?.edit
+  const allowEdit = isDraft && receiptPerm?.edit;
+  const allowCreate = isDraft && receiptPerm.create;
   const documentStore = useDocumentStore();
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: editReceiptSchema,
@@ -81,7 +72,6 @@ export default function ReceiptInfoTab() {
     },
   });
   const formValues = form.getValues();
- 
 
   const onSubmit = (e: EditData) => {
     fetcher.submit(
@@ -107,10 +97,13 @@ export default function ReceiptInfoTab() {
     [hasChanged]
   );
 
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"SAVE"
-  }, [fetcher.state]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
   useDisplayMessage(
     {
@@ -143,36 +136,37 @@ export default function ReceiptInfoTab() {
             party={partyReceipt}
             roleActions={roleActions}
             form={form}
-            allowEdit={isDisabled}
+            allowEdit={allowEdit}
           />
           <CustomFormDate
             control={form.control}
             name="postingDate"
-            allowEdit={isDisabled}
+            allowEdit={allowEdit}
             label={t("form.postingDate")}
           />
           <CustomFormTime
             control={form.control}
             name="postingTime"
             label={t("form.postingTime")}
-            allowEdit={isDisabled}
+            allowEdit={allowEdit}
             description={formValues.tz}
           />
 
-        
-
           <Separator className=" col-span-full" />
 
-          <CurrencyAndPriceList form={form} allowEdit={isDisabled} />
+          <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
 
-          <AccountingDimensionForm form={form} allowEdit={isDisabled} />
+          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
 
           <LineItemsDisplay
             currency={receipt?.currency || companyDefaults?.currency || ""}
             status={receipt?.status || ""}
             lineItems={lineItems}
-            partyType={params.partyReceipt || ""}
-            itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
+            allowCreate={allowCreate}
+            allowEdit={allowEdit}
+            docPartyType={partyReceipt}
+            docPartyID={receipt?.id}
+            lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)}
           />
           {receipt && (
             <>
@@ -181,6 +175,9 @@ export default function ReceiptInfoTab() {
                 status={receipt.status}
                 taxLines={taxLines}
                 docPartyID={receipt.id}
+                docPartyType={partyReceipt}
+                allowCreate={allowCreate}
+                allowEdit={allowEdit}
               />
 
               <GrandTotal currency={receipt.currency} />
@@ -194,7 +191,6 @@ export default function ReceiptInfoTab() {
     </Form>
   );
 }
-
 
 // import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 // import Typography, { subtitle } from "@/components/typography/Typography";
@@ -227,7 +223,6 @@ export default function ReceiptInfoTab() {
 //   const { companyDefaults } = useOutletContext<GlobalState>();
 //   const params = useParams();
 
- 
 //   return (
 //     <div>
 //       <div className=" info-grid">
@@ -254,8 +249,9 @@ export default function ReceiptInfoTab() {
 //         currency={receipt?.currency || companyDefaults?.currency || ""}
 //         status={receipt?.status || ""}
 //         lineItems={lineItems}
-//         partyType={params.partyReceipt || ""}
-//         itemLineType={ItemLineType.ITEM_LINE_RECEIPT}
+// docPartyType={partyReceipt}
+//             docPartyID={invoice?.id}
+//             lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
 //         />
 //       </div>
 //     </div>

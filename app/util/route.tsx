@@ -101,6 +101,8 @@ class Routes {
   salesQuotation = "salesQuotation";
 
   //Party
+  purchaseReceipt = "purchaseReceipt";
+  deliveryNote = "deliveryNote";
   journalEntry = "journalEntry";
   costCenter = "costCenter";
   chargesTemplate = "chargesTemplate";
@@ -116,7 +118,7 @@ class Routes {
   purchaseInvoice = "purchaseInvoice";
   purchaseOrder = "purchaseOrder";
   supplierQuotation = "supplierQuotation";
-  itemGroup  = "itemGroup";
+  itemGroup = "itemGroup";
 
   defaultTab = {
     tab: "info",
@@ -415,9 +417,13 @@ class Routes {
   toPartyDetailPage(name: string, id: string, partyType: string): string {
     switch (partyType) {
       case PartyType[PartyType.customer]:
-        return `${this.customers}/${encodeURIComponent(name)}?id=${id}`;
+        return `${this.base}/${this.sellingM}/${
+          this.customerM
+        }/${encodeURIComponent(name)}?id=${id}&tab=info`;
       case PartyType[PartyType.supplier]:
-        return `${this.suppliers}/${encodeURIComponent(name)}?id=${id}`;
+        return `${this.base}/${this.buyingM}/${
+          this.supplier
+        }/${encodeURIComponent(name)}?id=${id}&tab=info`;
       default:
         return this.base;
     }
@@ -452,7 +458,7 @@ class Routes {
             tab: "info",
           },
         });
-        case this.bookingM:
+      case this.bookingM:
         return this.toRoute({
           main: this.bookingM,
           routeSufix: [voucherCode],

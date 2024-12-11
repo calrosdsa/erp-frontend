@@ -58,7 +58,7 @@ export const toLineItemSchema = (
     uom: line.uom,
     party_type: opts.partyType,
   };
-  const lineType = itemLineTypeFromJSON(opts.to);
+  const lineType = itemLineTypeFromJSON(line.line_type);
 
   if (lineType == ItemLineType.ITEM_LINE_RECEIPT || opts.updateStock) {
     lineItem.lineItemReceipt = {

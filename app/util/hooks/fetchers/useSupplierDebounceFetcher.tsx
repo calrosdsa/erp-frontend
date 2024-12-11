@@ -1,38 +1,41 @@
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { Control } from "react-hook-form";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
 import { components } from "~/sdk";
 import { routes } from "~/util/route";
 import { usePermission } from "../useActions";
+import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier";
+import { Control } from "react-hook-form";
 
-export const CustomerAutoCompleteForm = ({
+export const SupplierAutoCompleteForm = ({
   allowEdit,
   control,
   label,
   onSelect,
   roleActions,
+  required,
 }: {
   allowEdit?: boolean;
   control?: Control<any, any>;
   label?: string;
-  onSelect: (e: components["schemas"]["CustomerDto"]) => void;
+  required?:boolean;
+  onSelect: (e: components["schemas"]["SupplierDto"]) => void;
   roleActions: components["schemas"]["RoleActionDto"][];
 }) => {
-  const [fetcher, onChange] = useCustomerDebounceFetcher();
-  const createCustomer = useCreateCustomer();
+  const [fetcher, onChange] = useSupplierDebounceFetcher();
+  const createCustomer = useCreateSupplier();
   const [permission] = usePermission({
     roleActions,
     actions: fetcher.data?.actions,
   });
   return (
     <FormAutocomplete
-      data={fetcher.data?.customers || []}
+      data={fetcher.data?.suppliers || []}
       onValueChange={onChange}
       label={label}
-      name="customer"
+      required={required}
+      name="supplier"
       nameK="name"
       control={control}
       allowEdit={allowEdit}
@@ -46,11 +49,11 @@ export const CustomerAutoCompleteForm = ({
   );
 };
 
-export const useCustomerDebounceFetcher = () => {
+export const useSupplierDebounceFetcher = () => {
   const r = routes;
   const fetcherDebounce = useDebounceFetcher<{
     actions: components["schemas"]["ActionDto"][];
-    customers: components["schemas"]["CustomerDto"][];
+    suppliers: components["schemas"]["SupplierDto"][];
   }>();
 
   const onChange = (e: string) => {
@@ -64,8 +67,8 @@ export const useCustomerDebounceFetcher = () => {
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         encType: "application/json",
         action: r.toRoute({
-          main: partyTypeToJSON(PartyType.customer),
-          routePrefix: [r.sellingM],
+          main: partyTypeToJSON(PartyType.supplier),
+          routePrefix: [r.buyingM],
         }),
       }
     );

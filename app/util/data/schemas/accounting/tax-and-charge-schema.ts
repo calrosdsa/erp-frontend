@@ -5,10 +5,7 @@ import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 type TaxAndCharge = z.infer<typeof taxAndChargeSchema>;
 export const taxAndChargeSchema = z.object({
   taxLineID: z.number().optional(),
-  type: z.enum([
-    taxChargeLineTypeToJSON(TaxChargeLineType.FIXED_AMOUNT),
-    taxChargeLineTypeToJSON(TaxChargeLineType.ON_NET_TOTAL),
-  ]),
+  type: z.string(),
   accountHeadName: z.string(),
   accountHead: z.number(),
   amount: z.coerce.number().optional(),

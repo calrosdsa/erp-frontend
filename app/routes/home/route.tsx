@@ -16,6 +16,7 @@ import apiClient from "~/apiclient";
 import { GlobalState } from "~/types/app";
 import { ClientOnly } from "remix-utils/client-only";
 import FallBack from "@/components/layout/Fallback";
+import { LOAD_ACTION } from "~/constant";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const data = await request.formData();
@@ -35,7 +36,11 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
 export function shouldRevalidate({
   formMethod,
   defaultShouldRevalidate,
+  actionResult
 }:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
   if (formMethod === "POST") {
     return false;
   }

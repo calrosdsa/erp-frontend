@@ -8,9 +8,7 @@ import { ItemLineType, State, stateToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import LineItems from "./line-items";
 import { useLineItems } from "./use-line-items";
-import {
-  toLineItemSchema,
-} from "~/util/data/schemas/stock/line-item-schema";
+import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 
 export default function LineItemsDisplay({
   lineItems,
@@ -27,11 +25,11 @@ export default function LineItemsDisplay({
   status: string;
   currency: string;
   docPartyType?: string;
-  docPartyID?:number,
+  docPartyID?: number;
   lineType: string;
   allowEdit?: boolean;
   allowCreate?: boolean;
-  updateStock?:boolean;
+  updateStock?: boolean;
 }) {
   const { t } = useTranslation("common");
   return (
@@ -46,7 +44,7 @@ export default function LineItemsDisplay({
               lines.map((t) =>
                 toLineItemSchema(t, {
                   partyType: docPartyType,
-                  updateStock:updateStock
+                  updateStock: updateStock,
                 })
               )
             );
@@ -55,15 +53,15 @@ export default function LineItemsDisplay({
             setPayload();
           }, [lines]);
           return (
-            <LineItems
-              lineType={lineType}
-              docPartyType={docPartyType}
-              docPartyID={docPartyID}
-              currency={currency}
-              allowCreate={allowCreate}
-              allowEdit={allowEdit}
-              updateStock={updateStock}
-            />
+              <LineItems
+                lineType={lineType}
+                docPartyType={docPartyType}
+                docPartyID={docPartyID}
+                currency={currency}
+                allowCreate={allowCreate}
+                allowEdit={allowEdit}
+                updateStock={updateStock}
+              />
           );
         }}
       </Await>

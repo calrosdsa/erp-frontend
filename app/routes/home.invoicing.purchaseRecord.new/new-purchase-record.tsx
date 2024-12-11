@@ -10,60 +10,55 @@ import { routes } from "~/util/route";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { GlobalState } from "~/types/app";
-import { createSalesRecord } from "~/util/data/schemas/invoicing/sales-record-schema";
+import { createPurchaseRecord } from "~/util/data/schemas/invoicing/purchase-record-schema";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
+import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 
-export default function NewSalesRecord() {
+export default function NewPurchaseRecordClient() {
   const fetcher = useFetcher<typeof action>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
   const r = routes;
   const { roleActions } = useOutletContext<GlobalState>();
-  
-  // Default values for the form
-  
 
-  const form = useForm<z.infer<typeof createSalesRecord>>({
-    resolver: zodResolver(createSalesRecord),
-    defaultValues:{
-    invoiceNo: "",
-    invoiceDate:new Date(),
-    authorizationCode: "",
-    customerNitCi: "",
-    supplement: "",
-    nameOrBusinessName: "",
-    totalSaleAmount: 0,
-    iceAmount: 0,
-    iehdAmount: 0,
-    ipjAmount: 0,
-    taxRates: 0,
-    otherNotSubjectToVat: 0,
-    exportsAndExemptOperations: 0,
-    zeroRateTaxableSales: 0,
-    subtotal: 0,
-    discountsBonusAndRebatesSubjectToVat: 0,
-    giftCardAmount: 0,
-    baseAmountForTaxDebit: 0,
-    taxDebit: 0,
-    state: "",
-    controlCode: "",
-    saleType: "",
-    withTaxCreditRight: true,
-    consolidationStatus: "",
+  // Default values for the form
+  const form = useForm<z.infer<typeof createPurchaseRecord>>({
+    resolver: zodResolver(createPurchaseRecord),
+    defaultValues: {
+      authorization_code: "",
+      cf_base_amount: 0,
+      consolidation_status: "",
+      control_code: "",
+      discounts_bonus_rebates_subject_to_vat: 0,
+      dui_dim_no: "",
+      exempt_amounts: 0,
+      gift_card_amount: 0,
+      ice_amount: 0,
+      iehd_amount: 0,
+      ipj_amount: 0,
+      other_not_subject_to_tax_credit: 0,
+      subtotal: 0,
+      tax_credit: 0,
+      tax_rates: 0,
+      with_tax_credit_right: false,
+      zero_rate_taxable_purchases_amount: 0,
     },
   });
 
-  const onSubmit = (values: z.infer<typeof createSalesRecord>) => {
+  const onSubmit = (values: z.infer<typeof createPurchaseRecord>) => {
     console.log(values);
     fetcher.submit(
       {
-        action: "create-sales-record",
-        createSalesRecord: values,
+        action: "create-purchase-record",
+        createPurchaseRecord: values,
       } as any,
       {
         method: "POST",
@@ -96,14 +91,15 @@ export default function NewSalesRecord() {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
       onSuccessMessage: () => {
-        if (fetcher.data?.salesRecord) {
+        if (fetcher.data?.purchaseRecord) {
           navigate(
             r.toRoute({
-              main: r.salesRecord,
-              routeSufix: [fetcher.data.salesRecord.invoice_no],
+              main: r.purchaseRecord,
+              routePrefix: [r.invoicing],
+              routeSufix: [fetcher.data.purchaseRecord.invoice_no],
               q: {
                 tab: "info",
-                id:fetcher.data.salesRecord.uuid,
+                id: fetcher.data.purchaseRecord.uuid,
               },
             })
           );
@@ -124,231 +120,203 @@ export default function NewSalesRecord() {
               className={"gap-y-3 grid p-3"}
             >
               <div className="create-grid">
-
-              <CustomerAutoCompleteForm
-              label={t("customer")}
-              control={form.control}
-              roleActions={roleActions}
-              onSelect={(e)=>{
-                form.setValue("customerID",e.id)
-                form.setValue("nameOrBusinessName",e.name)
-              }}
-              />
-                
-              <CustomFormDate
+                <SupplierAutoCompleteForm
+                  label={t("supplier")}
                   control={form.control}
-                  name="invoiceDate"
-                  label={"FECHA DE LA FACTURA"}
                   required={true}
+                  roleActions={roleActions}
+                  onSelect={(e) => {
+                    form.setValue("supplier_id", e.id);
+                    form.setValue("supplier_business_name", e.name);
+                  }}
                 />
-                {/* Invoice No */}
+                <div className=" col-span-full" />
+
                 <CustomFormFieldInput
-                  label={"Nº DE LA FACTURA"} // Spanish translation
+                  label={"NIT Proveedor"}
                   control={form.control}
-                  name="invoiceNo"
+                  name="supplier_nit"
                   inputType="input"
                   required
                 />
 
                 {/* Authorization Code */}
                 <CustomFormFieldInput
-                  label={"CODIGO DE AUTORIZACIÓN"} // Spanish translation
+                  label={"CÓDIGO DE AUTORIZACIÓN"}
                   control={form.control}
-                  name="authorizationCode"
+                  name="authorization_code"
+                  inputType="input"
+                  required
+                />
+                {/* Invoice No */}
+                <CustomFormFieldInput
+                  label={"Nº DE LA FACTURA"} // Spanish translation
+                  control={form.control}
+                  name="invoice_no"
                   inputType="input"
                   required
                 />
 
-                {/* Customer Nit/Ci */}
+                {/* dui_dim_no */}
                 <CustomFormFieldInput
-                  label={"NIT / CI CLIENTE"} // Spanish translation
+                  label={"Número de DUI/DIM"}
                   control={form.control}
-                  name="customerNitCi"
+                  name="dui_dim_no"
                   inputType="input"
                   required
                 />
 
-                {/* Supplement */}
-                <CustomFormFieldInput
-                  label={"COMPLEMENTO"} // Spanish translation
+                <CustomFormDate
                   control={form.control}
-                  name="supplement"
-                  inputType="input"
+                  name="invoice_dui_dim_date"
+                  label={"FECHA DE LA FACTURA DUI/DIM"}
+                  required={true}
                 />
 
-                {/* Name or Business Name */}
+                {/* Total Purchase Amount */}
                 <CustomFormFieldInput
-                  label={"NOMBRE O RAZON SOCIAL"} // Spanish translation
+                  label={"IMPORTE TOTAL DE LA COMPRA"}
                   control={form.control}
-                  name="nameOrBusinessName"
-                  inputType="input"
-                  required
-                />
-
-                {/* Total Sale Amount */}
-                <CustomFormFieldInput
-                  label={"IMPORTE TOTAL DE LA VENTA"} // Spanish translation
-                  control={form.control}
-                  name="totalSaleAmount"
+                  name="total_purchase_amount"
                   inputType="input"
                   required
                 />
 
-                {/* Ice Amount */}
+                {/* ICE Amount */}
                 <CustomFormFieldInput
-                  label={"IMPORTE ICE"} // Spanish translation
+                  label={"IMPORTE ICE"}
                   control={form.control}
-                  name="iceAmount"
+                  name="ice_amount"
                   inputType="input"
                   required
                 />
 
-                {/* Iehd Amount */}
+                {/* IEHD Amount */}
                 <CustomFormFieldInput
-                  label={"IMPORTE IEHD"} // Spanish translation
+                  label={"IMPORTE IEHD"}
                   control={form.control}
-                  name="iehdAmount"
+                  name="iehd_amount"
                   inputType="input"
                   required
                 />
 
-                {/* Ipj Amount */}
+                {/* IPJ Amount */}
                 <CustomFormFieldInput
-                  label={"IMPORTE IPJ"} // Spanish translation
+                  label={"IMPORTE IPJ"}
                   control={form.control}
-                  name="ipjAmount"
+                  name="ipj_amount"
                   inputType="input"
                   required
                 />
-
                 {/* Tax Rates */}
                 <CustomFormFieldInput
-                  label={"TASAS"} // Spanish translation
+                  label={"Tasas"}
                   control={form.control}
-                  name="taxRates"
+                  name="tax_rates"
                   inputType="input"
                   required
                 />
 
-                {/* Other Not Subject to VAT */}
+                {/* Other Not Subject to Tax Credit */}
                 <CustomFormFieldInput
-                  label={"OTROS NO SUJETOS AL IVA"} // Spanish translation
+                  label={"OTRO NO SUJETO A CRÉDITO FISCAL"}
                   control={form.control}
-                  name="otherNotSubjectToVat"
+                  name="other_not_subject_to_tax_credit"
                   inputType="input"
+                  required
+                />
+                {/* Exempt Amounts */}
+                <CustomFormFieldInput
+                  label={"IMPORTE EXENTO"}
+                  control={form.control}
+                  name="exempt_amounts"
+                  inputType="input"
+                  required
                 />
 
-                {/* Exports and Exempt Operations */}
+                {/* Zero Rate Taxable Purchases Amount */}
                 <CustomFormFieldInput
-                  label={"EXPORTACIONES Y OPERACIONES EXENTAS"} // Spanish translation
+                  label={"IMPORTE DE COMPRAS SUJETAS A TASA CERO"}
                   control={form.control}
-                  name="exportsAndExemptOperations"
+                  name="zero_rate_taxable_purchases_amount"
                   inputType="input"
-                />
-
-                {/* Zero Rate Taxable Sales */}
-                <CustomFormFieldInput
-                  label={"VENTAS GRAVADAS A TASA CERO"} // Spanish translation
-                  control={form.control}
-                  name="zeroRateTaxableSales"
-                  inputType="input"
+                  required
                 />
 
                 {/* Subtotal */}
                 <CustomFormFieldInput
-                  label={"SUBTOTAL"} // Spanish translation
+                  label={"SUBTOTAL"}
                   control={form.control}
                   name="subtotal"
                   inputType="input"
                   required
                 />
 
-                {/* Discounts, Bonus, and Rebates Subject to VAT */}
+                {/* Discounts, Bonus, Rebates Subject to VAT */}
                 <CustomFormFieldInput
-                  label={"DESCUENTOS BONIFICACIONES Y REBAJAS SUJETAS AL IVA"} // Spanish translation
+                  label={"DESCUENTOS, BONOS, REEMBOLSOS SUJETOS A IVA"}
                   control={form.control}
-                  name="discountsBonusAndRebatesSubjectToVat"
+                  name="discounts_bonus_rebates_subject_to_vat"
                   inputType="input"
+                  required
                 />
-
                 {/* Gift Card Amount */}
                 <CustomFormFieldInput
-                  label={"IMPORTE GIFT CARD"} // Spanish translation
+                  label={"IMPORTE GIFT CARD"}
                   control={form.control}
-                  name="giftCardAmount"
-                  inputType="input"
-                />
-
-                {/* Base Amount for Tax Debit */}
-                <CustomFormFieldInput
-                  label={"IMPORTE BASE PARA DEBITO FISCAL"} // Spanish translation
-                  control={form.control}
-                  name="baseAmountForTaxDebit"
+                  name="gift_card_amount"
                   inputType="input"
                   required
                 />
-
-                {/* Tax Debit */}
                 <CustomFormFieldInput
-                  label={"DEBITO FISCAL"} // Spanish translation
+                  label={"IMPORTE BASE CRÉDITO FISCAL"}
                   control={form.control}
-                  name="taxDebit"
+                  name="cf_base_amount"
                   inputType="input"
                   required
                 />
-
-                {/* State */}
+                {/* Tax Credit */}
                 <CustomFormFieldInput
-                  label={"ESTADO"} // Spanish translation
+                  label={"CRÉDITO FISCAL"}
                   control={form.control}
-                  name="state"
+                  name="tax_credit"
                   inputType="input"
                   required
                 />
-
+                {/* Purchase Type */}
+                <CustomFormFieldInput
+                  label={"TIPO DE COMPRA"}
+                  control={form.control}
+                  name="purchase_type"
+                  inputType="input"
+                  required
+                />
                 {/* Control Code */}
                 <CustomFormFieldInput
-                  label={"CODIGO DE CONTROL"} // Spanish translation
+                  label={"CÓDIGO DE CONTROL"}
                   control={form.control}
-                  name="controlCode"
+                  name="control_code"
                   inputType="input"
                   required
                 />
 
-                {/* Sale Type */}
+                {/* Consolidation Status */}
                 <CustomFormFieldInput
-                  label={"TIPO DE VENTA"} // Spanish translation
+                  label={"ESTADO DE CONSOLIDACIÓN"}
                   control={form.control}
-                  name="saleType"
+                  name="consolidation_status"
                   inputType="input"
                   required
                 />
 
                 {/* With Tax Credit Right */}
                 <CustomFormFieldInput
-                  label={"CON DERECHO A CREDITO FISCAL"} // Spanish translation
+                  label={"CON DERECHO A CRÉDITO FISCAL"}
                   control={form.control}
-                  name="withTaxCreditRight"
+                  name="with_tax_credit_right"
                   inputType="check"
                   required
                 />
-
-                {/* Consolidation Status */}
-                <CustomFormFieldInput
-                  label={"ESTADO CONSOLIDACION"} // Spanish translation
-                  control={form.control}
-                  name="consolidationStatus"
-                  inputType="input"
-                  required
-                />
-
-                {/* Customer ID
-                <CustomFormFieldInput
-                  label={t("customerID")} // Spanish translation
-                  control={form.control}
-                  name="customerID"
-                  inputType="input"
-                /> */}
 
                 <input ref={inputRef} type="submit" className="hidden" />
               </div>

@@ -3,7 +3,10 @@ import {
   roleActionColumns,
   roleEntitiesActionColumns,
 } from "@/components/custom/table/columns/user/role-columns";
-import { DataTable } from "@/components/custom/table/CustomTable";
+import {
+  DataTable,
+  useTableSelectionStore,
+} from "@/components/custom/table/CustomTable";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
@@ -39,7 +42,7 @@ export const EditRolePermission = ({
     entityActions?.actions.map((item) => {
       return {
         actionId: item.id,
-        actionName:item.name,
+        actionName: item.name,
         selected:
           roleActions?.map((t) => t.action_id).includes(item.id) || false,
       };
@@ -47,38 +50,60 @@ export const EditRolePermission = ({
   );
   const fetcher = useFetcher<typeof action>();
   const { toast } = useToast();
+  const { setAll } = useTableSelectionStore();
 
   const onSubmit = () => {
     if (!role) return;
     if (!entityActions) return;
-    const body: z.infer<typeof updateRoleActionsSchema> = {
+    const actions = selected.map((t) => t.actionId);
+    const n = entityActions.actions.filter((t) => !actions.includes(t.id));
+    const body: components["schemas"]["EditRolePermissionActionsBody"] = {
       actionSelecteds: selected,
       role_uuid: role.uuid,
-      entityName:entityActions.entity.name,
+      entityName: entityActions.entity.name,
+      entity_actions: {
+        actions: n,
+        entity: entityActions.entity,
+      },
     };
     // console.log(body)
-    fetcher.submit({
-      action:"update-role-actions",
-      updateRoleActions:body
-    },{
-      method:"POST",
-      encType:"application/json"
-    })
+    fetcher.submit(
+      {
+        action: "update-role-actions",
+        updateRoleActions: body,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
   };
 
-  useEffect(()=>{
-    if(fetcher.data?.error){
+  useEffect(() => {
+    let selecteds: string[] = [];
+    entityActions?.actions.map((item, idx) => {
+      const selected =
+        roleActions?.map((t) => t.action_id).includes(item.id) || false;
+      if (selected) {
+        selecteds.push(idx.toString());
+      }
+    });
+    setAll(selecteds);
+  }, []);
+
+  useEffect(() => {
+    if (fetcher.data?.error) {
       toast({
-        title:fetcher.data.error
-      })
+        title: fetcher.data.error,
+      });
     }
-    if(fetcher.data?.message){
+    if (fetcher.data?.message) {
       toast({
-        title:fetcher.data.message
-      })
-      onOpenChange(false)
+        title: fetcher.data.message,
+      });
+      onOpenChange(false);
     }
-  },[fetcher.data])
+  }, [fetcher.data]);
 
   return (
     <DrawerLayout
@@ -87,18 +112,31 @@ export const EditRolePermission = ({
       onOpenChange={onOpenChange}
     >
       <div className="grid gap-y-4">
-        {/* {JSON.stringify(role)} */}
         <DataTable
           data={entityActions?.actions || []}
+          enableRowSelection={true}
+          onSelectionChange={(e) => {
+            const n = e.map((t) => {
+              const d: z.infer<typeof roleActionSelected> = {
+                selected: true,
+                actionId: t.id,
+                actionName: t.name,
+              };
+              return d;
+            });
+            setSelected(n);
+          }}
           columns={roleActionColumns({
-            selected: selected,
-            setSelected: (e) => setSelected(e),
+            // selected: selected,
+            // setSelected: (e) => setSelected(e),
           })}
         />
         <Button
-        onClick={()=>onSubmit()}
-        loading={fetcher.state == "submitting"}
-        >{t("form.submit")}</Button>
+          onClick={() => onSubmit()}
+          loading={fetcher.state == "submitting"}
+        >
+          {t("form.submit")}
+        </Button>
       </div>
     </DrawerLayout>
   );

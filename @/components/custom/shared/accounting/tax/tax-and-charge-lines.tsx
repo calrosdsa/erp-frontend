@@ -62,6 +62,7 @@ export default function TaxAndChargesLines({
       onAddRow: () => {
         taxAndCharge.onOpenDialog({
           ...shared,
+          idx:taxLines.length,
           onEdit: (e) => {
             const lines = [...taxLines, e];
             if (onChange) {
@@ -77,6 +78,7 @@ export default function TaxAndChargesLines({
         taxAndCharge.onOpenDialog({
           ...shared,
           line: f,
+          idx:rowIndex,
           onEdit: (e) => {
             const lines = taxLines.map((t, idx) => {
               if (idx == rowIndex) {

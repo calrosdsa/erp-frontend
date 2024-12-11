@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatMediumDate } from "~/util/format/formatDate";
 import { action, loader } from "../../route";
-import { ItemLineType, State, stateFromJSON, stateToJSON } from "~/gen/common";
+import { ItemLineType, itemLineTypeToJSON, State, stateFromJSON, stateToJSON } from "~/gen/common";
 import { GlobalState } from "~/types/app";
 import LineItems from "@/components/custom/shared/item/line-items";
 import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
@@ -24,16 +24,6 @@ import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breaku
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { useEffect, useRef } from "react";
 import { editQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  addDays,
-  addHours,
-  format,
-  formatRFC3339,
-  parse,
-  parseISO,
-} from "date-fns";
 import { z } from "zod";
 import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
@@ -62,7 +52,8 @@ export default function QuotationInfoTab() {
   const [quotationPerm] = usePermission({roleActions,actions});
   const quotationParty = params.quotationParty || "";
   const isDraft = stateFromJSON(quotation?.status) == State.DRAFT;
-  const isDisabled = !isDraft || !quotationPerm?.edit
+  const allowEdit = isDraft && quotationPerm?.edit
+  const allowCreate = isDraft && quotationPerm?.create;
   const documentStore = useDocumentStore();
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: editQuotationSchema,
@@ -144,41 +135,44 @@ export default function QuotationInfoTab() {
             party={quotationParty}
             roleActions={roleActions}
             form={form}
-            allowEdit={isDisabled}
+            allowEdit={allowEdit}
           />
           <CustomFormDate
             control={form.control}
             name="postingDate"
-            allowEdit={isDisabled}
+            allowEdit={allowEdit}
             label={t("form.postingDate")}
           />
           <CustomFormTime
             control={form.control}
             name="postingTime"
             label={t("form.postingTime")}
-            allowEdit={isDisabled}
+            allowEdit={allowEdit}
             description={formValues.tz}
           />
 
           <CustomFormDate
             control={form.control}
             name="validTill"
-            allowEdit={isDisabled}
+            allowEdit={allowEdit}
             label={t("form.validTill")}
           />
 
           <Separator className=" col-span-full" />
 
-          <CurrencyAndPriceList form={form} allowEdit={isDisabled} />
+          <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
 
-          <AccountingDimensionForm form={form} allowEdit={isDisabled} />
+          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
 
           <LineItemsDisplay
             currency={quotation?.currency || companyDefaults?.currency || ""}
             status={quotation?.status || ""}
             lineItems={lineItems}
-            partyType={params.partyReceipt || ""}
-            itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
+            lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
+            docPartyType={quotationParty}
+            docPartyID={quotation?.id}
+            allowEdit={allowEdit}
+            allowCreate={allowCreate}
           />
           {quotation && (
             <>
@@ -187,6 +181,9 @@ export default function QuotationInfoTab() {
                 status={quotation.status}
                 taxLines={taxLines}
                 docPartyID={quotation.id}
+                docPartyType={quotationParty}
+                allowCreate={allowCreate}
+                allowEdit={allowEdit}
               />
 
               <GrandTotal currency={quotation.currency} />

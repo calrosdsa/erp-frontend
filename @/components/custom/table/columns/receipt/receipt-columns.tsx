@@ -24,7 +24,8 @@ export const receiptColumns = ({
   return [
     {
         header:t("table.no"),
-        cell:TableCellIndex
+        cell:TableCellIndex,
+        size:30,
     },
     {
       accessorKey: "code",

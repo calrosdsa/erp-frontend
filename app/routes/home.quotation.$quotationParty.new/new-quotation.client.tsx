@@ -16,7 +16,7 @@ import { Form } from "@/components/ui/form";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import SelectForm from "@/components/custom/select/SelectForm";
-import { ItemLineType } from "~/gen/common";
+import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { Separator } from "@/components/ui/separator";
 import { GlobalState } from "~/types/app";
 import {
@@ -130,72 +130,73 @@ export default function NewQuotationClient() {
 
   useEffect(() => {
     lineItemsStore.onLines(formValues.lines);
-    taxLinesStore.updateFromItems(formValues.lines)
+    taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.lines]);
   return (
     <div>
+      <Card>
+        <FormLayout>
+          <Form {...form}>
+            <fetcher.Form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className={"gap-y-3 grid p-3"}
+            >
+              <div className="create-grid">
+                <PartyAutocomplete
+                  party={quotationParty}
+                  roleActions={roleActions}
+                  form={form}
+                />
+                <CustomFormDate
+                  control={form.control}
+                  name="postingDate"
+                  label={t("form.postingDate")}
+                />
+                <CustomFormTime
+                  control={form.control}
+                  name="postingTime"
+                  label={t("form.postingTime")}
+                  description={formValues.tz}
+                />
 
-    <Card>
-      <FormLayout>
-        <Form {...form}>
-          <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}
-            className={"gap-y-3 grid p-3"}
+                <CustomFormDate
+                  control={form.control}
+                  name="validTill"
+                  label={t("form.validTill")}
+                />
 
-          >
-            <div className="create-grid">
-              <PartyAutocomplete
-                party={quotationParty}
-                roleActions={roleActions}
-                form={form}
-              />
-              <CustomFormDate
-                control={form.control}
-                name="postingDate"
-                label={t("form.postingDate")}
-              />
-              <CustomFormTime
-                control={form.control}
-                name="postingTime"
-                label={t("form.postingTime")}
-                description={formValues.tz}
-              />
+                <Separator className=" col-span-full" />
 
-              <CustomFormDate
-                control={form.control}
-                name="validTill"
-                label={t("form.validTill")}
-              />
+                <CurrencyAndPriceList form={form} />
 
-              <Separator className=" col-span-full" />
-
-              <CurrencyAndPriceList form={form} />
-
-              <AccountingDimensionForm form={form} />
-              <LineItems
-                onChange={(e) => {
-                  form.setValue("lines", e);
-                  form.trigger("lines");
-                }}
-                allowEdit={true}
-                itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
-                partyType={quotationParty}
-                currency={formValues.currency}
-              />
-              <TaxAndChargesLines
-                onChange={(e) => {
-                  form.setValue("taxLines", e);
-                  form.trigger("taxLines");
-                }}
-                currency={formValues.currency}
-              />
-              <GrandTotal currency={formValues.currency} />
-              <TaxBreakup currency={formValues.currency} />
-            </div>
-            <input ref={inputRef} type="submit" className="hidden" />
-          </fetcher.Form>
-        </Form>
-      </FormLayout>
-    </Card>
+                <AccountingDimensionForm form={form} />
+                <LineItems
+                  onChange={(e) => {
+                    form.setValue("lines", e);
+                    form.trigger("lines");
+                  }}
+                  allowEdit={true}
+                  currency={formValues.currency}
+                  lineType={itemLineTypeToJSON(
+                    ItemLineType.QUOTATION_LINE_ITEM
+                  )}
+                  docPartyType={quotationParty}
+                />
+                <TaxAndChargesLines
+                  onChange={(e) => {
+                    form.setValue("taxLines", e);
+                    form.trigger("taxLines");
+                  }}
+                  currency={formValues.currency}
+                />
+                <GrandTotal currency={formValues.currency} />
+                <TaxBreakup currency={formValues.currency} />
+              </div>
+              <input ref={inputRef} type="submit" className="hidden" />
+            </fetcher.Form>
+          </Form>
+        </FormLayout>
+      </Card>
     </div>
   );
 }

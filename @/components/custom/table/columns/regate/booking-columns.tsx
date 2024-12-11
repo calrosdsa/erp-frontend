@@ -14,6 +14,7 @@ import TableCellProgress from "../../cells/table-cell-progressbar";
 import { format, parseISO } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import TableCellPrice from "../../cells/table-cell-price";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const bookingColumns = (): ColumnDef<
   components["schemas"]["BookingDto"]
@@ -21,9 +22,21 @@ export const bookingColumns = (): ColumnDef<
   const { t, i18n } = useTranslation("common");
   const r = routes;
   return [
+    // {
+    //   id: "select",
+    //   cell: ({ row }) => (
+    //     <Checkbox
+    //       checked={row.getIsSelected()}
+    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+    //       aria-label="Select row"
+    //       className="translate-y-[2px]"
+    //     />
+    //   ),
+    // },
     {
       header: t("table.no"),
       cell: TableCellIndex,
+      size: 30,
     },
     {
       accessorKey: "code",
@@ -107,6 +120,7 @@ export const bookingColumns = (): ColumnDef<
     {
       id: "booking_hours",
       header: "Horas Reservadas",
+      size: 160,
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (

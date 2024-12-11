@@ -3777,43 +3777,43 @@ export interface components {
              */
             readonly $schema?: string;
             authorization_code: string;
-            /** Format: int32 */
+            /** Format: double */
             cf_base_amount: number;
             consolidation_status: string;
             control_code: string;
-            /** Format: int32 */
+            /** Format: double */
             discounts_bonus_rebates_subject_to_vat: number;
             dui_dim_no: string;
-            /** Format: int32 */
+            /** Format: double */
             exempt_amounts: number;
-            /** Format: int32 */
+            /** Format: double */
             gift_card_amount: number;
-            /** Format: int32 */
+            /** Format: double */
             ice_amount: number;
-            /** Format: int32 */
+            /** Format: double */
             iehd_amount: number;
             /** Format: date-time */
             invoice_dui_dim_date: string;
             invoice_no: string;
-            /** Format: int32 */
+            /** Format: double */
             ipj_amount: number;
-            /** Format: int32 */
+            /** Format: double */
             other_not_subject_to_tax_credit: number;
             purchase_type: string;
-            /** Format: int32 */
+            /** Format: double */
             subtotal: number;
             supplier_business_name: string;
             /** Format: int64 */
             supplier_id: number;
             supplier_nit: string;
-            /** Format: int32 */
+            /** Format: double */
             tax_credit: number;
-            /** Format: int32 */
+            /** Format: double */
             tax_rates: number;
-            /** Format: int32 */
+            /** Format: double */
             total_purchase_amount: number;
-            with_tax_credit_right: string;
-            /** Format: int32 */
+            with_tax_credit_right: boolean;
+            /** Format: double */
             zero_rate_taxable_purchases_amount: number;
         };
         CreateQuotationBody: {
@@ -3860,44 +3860,44 @@ export interface components {
              */
             readonly $schema?: string;
             authorization_code: string;
-            /** Format: int32 */
+            /** Format: double */
             base_amount_for_tax_debit: number;
             consolidation_status: string;
             control_code: string;
             /** Format: int64 */
             customer_id: number;
             customer_nit_ci: string;
-            /** Format: int32 */
+            /** Format: double */
             discounts_bonus_and_rebates_subject_to_vat: number;
-            /** Format: int32 */
+            /** Format: double */
             exports_and_exempt_operations: number;
-            /** Format: int32 */
+            /** Format: double */
             gift_card_amount: number;
-            /** Format: int32 */
+            /** Format: double */
             ice_amount: number;
-            /** Format: int32 */
+            /** Format: double */
             iehd_amount: number;
             /** Format: date-time */
             invoice_date: string;
             invoice_no: string;
-            /** Format: int32 */
+            /** Format: double */
             ipj_amount: number;
             name_or_business_name: string;
-            /** Format: int32 */
+            /** Format: double */
             other_not_subject_to_vat: number;
             sale_type: string;
             state: string;
-            /** Format: int32 */
+            /** Format: double */
             subtotal: number;
             supplement: string;
-            /** Format: int32 */
+            /** Format: double */
             tax_debit: number;
-            /** Format: int32 */
+            /** Format: double */
             tax_rates: number;
-            /** Format: int32 */
+            /** Format: double */
             total_sale_amount: number;
             with_tax_credit_right: boolean;
-            /** Format: int32 */
+            /** Format: double */
             zero_rate_taxable_sales: number;
         };
         CreateStockEntryBody: {
@@ -4341,45 +4341,45 @@ export interface components {
              */
             readonly $schema?: string;
             authorization_code: string;
-            /** Format: int32 */
+            /** Format: double */
             cf_base_amount: number;
             consolidation_status: string;
             control_code: string;
-            /** Format: int32 */
+            /** Format: double */
             discounts_bonus_rebates_subject_to_vat: number;
             dui_dim_no: string;
-            /** Format: int32 */
+            /** Format: double */
             exempt_amounts: number;
-            /** Format: int32 */
+            /** Format: double */
             gift_card_amount: number;
-            /** Format: int32 */
+            /** Format: double */
             ice_amount: number;
             /** Format: int64 */
             id: number;
-            /** Format: int32 */
+            /** Format: double */
             iehd_amount: number;
             /** Format: date-time */
             invoice_dui_dim_date: string;
             invoice_no: string;
-            /** Format: int32 */
+            /** Format: double */
             ipj_amount: number;
-            /** Format: int32 */
+            /** Format: double */
             other_not_subject_to_tax_credit: number;
             purchase_type: string;
-            /** Format: int32 */
+            /** Format: double */
             subtotal: number;
             supplier_business_name: string;
             /** Format: int64 */
             supplier_id: number;
             supplier_nit: string;
-            /** Format: int32 */
+            /** Format: double */
             tax_credit: number;
-            /** Format: int32 */
+            /** Format: double */
             tax_rates: number;
-            /** Format: int32 */
+            /** Format: double */
             total_purchase_amount: number;
-            with_tax_credit_right: string;
-            /** Format: int32 */
+            with_tax_credit_right: boolean;
+            /** Format: double */
             zero_rate_taxable_purchases_amount: number;
         };
         EditQuotationRequestBody: {
@@ -4438,6 +4438,7 @@ export interface components {
             readonly $schema?: string;
             actionSelecteds: components["schemas"]["ActionSelected"][];
             entityName: string;
+            entity_actions: components["schemas"]["EntityActionsDto"];
             role_uuid: string;
         };
         EditSalesRecordRequestBody: {
@@ -4447,46 +4448,46 @@ export interface components {
              */
             readonly $schema?: string;
             authorization_code: string;
-            /** Format: int32 */
+            /** Format: double */
             base_amount_for_tax_debit: number;
             consolidation_status: string;
             control_code: string;
             /** Format: int64 */
             customer_id: number;
             customer_nit_ci: string;
-            /** Format: int32 */
+            /** Format: double */
             discounts_bonus_and_rebates_subject_to_vat: number;
-            /** Format: int32 */
+            /** Format: double */
             exports_and_exempt_operations: number;
-            /** Format: int32 */
+            /** Format: double */
             gift_card_amount: number;
-            /** Format: int32 */
+            /** Format: double */
             ice_amount: number;
             /** Format: int64 */
             id: number;
-            /** Format: int32 */
+            /** Format: double */
             iehd_amount: number;
             /** Format: date-time */
             invoice_date: string;
             invoice_no: string;
-            /** Format: int32 */
+            /** Format: double */
             ipj_amount: number;
             name_or_business_name: string;
-            /** Format: int32 */
+            /** Format: double */
             other_not_subject_to_vat: number;
             sale_type: string;
             state: string;
-            /** Format: int32 */
+            /** Format: double */
             subtotal: number;
             supplement: string;
-            /** Format: int32 */
+            /** Format: double */
             tax_debit: number;
-            /** Format: int32 */
+            /** Format: double */
             tax_rates: number;
-            /** Format: int32 */
+            /** Format: double */
             total_sale_amount: number;
             with_tax_credit_right: boolean;
-            /** Format: int32 */
+            /** Format: double */
             zero_rate_taxable_sales: number;
         };
         EditStockEntryRequestBody: {
@@ -6646,6 +6647,7 @@ export interface components {
             /** Format: int32 */
             other_not_subject_to_tax_credit: number;
             purchase_type: string;
+            status: string;
             /** Format: int32 */
             subtotal: number;
             supplier: string;
@@ -6661,7 +6663,7 @@ export interface components {
             /** Format: int32 */
             total_purchase_amount: number;
             uuid: string;
-            with_tax_credit_right: string;
+            with_tax_credit_right: boolean;
             /** Format: int32 */
             zero_rate_taxable_purchases_amount: number;
         };
@@ -7447,9 +7449,9 @@ export interface components {
             base_amount_for_tax_debit: number;
             consolidation_status: string;
             control_code: string;
+            customer: string;
             /** Format: int64 */
             customer_id: number;
-            customer_name: string;
             customer_nit_ci: string;
             customer_uuid: string;
             /** Format: int32 */
@@ -7474,6 +7476,7 @@ export interface components {
             other_not_subject_to_vat: number;
             sale_type: string;
             state: string;
+            status: string;
             /** Format: int32 */
             subtotal: number;
             supplement: string;

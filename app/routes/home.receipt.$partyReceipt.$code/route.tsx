@@ -56,7 +56,7 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
   return json({
     message,
     error,
-    action
+    action:actionRes
   });
 };
 export function shouldRevalidate({

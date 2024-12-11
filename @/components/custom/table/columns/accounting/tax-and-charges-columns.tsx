@@ -15,6 +15,7 @@ export const  taxAndChargesColumns = ({
     const { t, i18n } = useTranslation("common");
     columns.push({
       header:t("table.no"),
+      size:25,
       cell:TableCellIndex
     })
     columns.push({
@@ -49,6 +50,7 @@ export const  taxAndChargesColumns = ({
     columns.push({
         id: "actions",
         cell: DataTableRowActions,
+        size:35,
     })
   
   

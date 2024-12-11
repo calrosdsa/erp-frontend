@@ -125,7 +125,7 @@ export default function ActivityFeed({
               <h2 className="text-xl font-semibold">Actividad</h2>
             </div>
             <div className="space-y-4">
-              {activities.map((activity) => (
+              {activities?.map((activity) => (
                 <div
                   key={activity.id}
                 >

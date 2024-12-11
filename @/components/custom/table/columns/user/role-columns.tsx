@@ -12,6 +12,7 @@ import { z } from "zod";
 import { roleActionSelected } from "~/util/data/schemas/manage/role-schema";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
+import TableCellIndex from "../../cells/table-cell-index";
 
 export const roleEntitiesActionColumns = ({
   roleActions,
@@ -22,6 +23,11 @@ export const roleEntitiesActionColumns = ({
   let columns: ColumnDef<components["schemas"]["EntityActionsDto"]>[] = [];
   const r = routes;
   const { t } = useTranslation("common");
+  columns.push({
+    header: "No.",
+    cell: TableCellIndex,
+    size:30,
+  },);
   columns.push({
     accessorKey: "entity.name",
     header: t("entity"),
@@ -42,11 +48,11 @@ export const roleEntitiesActionColumns = ({
 };
 
 export const roleActionColumns = ({
-  selected,
-  setSelected,
+  // selected,
+  // setSelected,
 }: {
-  selected: z.infer<typeof roleActionSelected>[];
-  setSelected: (e: z.infer<typeof roleActionSelected>[]) => void;
+  // selected: z.infer<typeof roleActionSelected>[];
+  // setSelected: (e: z.infer<typeof roleActionSelected>[]) => void;
 }): ColumnDef<components["schemas"]["ActionDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["ActionDto"]>[] = [];
 
@@ -57,29 +63,29 @@ export const roleActionColumns = ({
     accessorKey: "name",
     header: t("action"),
   });
-  columns.push({
-    id: "select",
-    cell: ({ row }) => {
-      const rowData = row.original
-      return (
-        <Checkbox
-          checked={selected.find((t) => t.actionId == rowData.id)?.selected}
-          onCheckedChange={(value) => {
-            const n = selected.map((t) => {
-              if (t.actionId == rowData.id) {
-                if (typeof value == "boolean") {
-                  t.selected = value;
-                }
-              }
-              return t;
-            });
-            setSelected(n);
-          }}
-          aria-label="Select row"
-        />
-      );
-    },
-  });
+  // columns.push({
+  //   id: "select",
+  //   cell: ({ row }) => {
+  //     const rowData = row.original
+  //     return (
+  //       <Checkbox
+  //         checked={selected.find((t) => t.actionId == rowData.id)?.selected}
+  //         onCheckedChange={(value) => {
+  //           const n = selected.map((t) => {
+  //             if (t.actionId == rowData.id) {
+  //               if (typeof value == "boolean") {
+  //                 t.selected = value;
+  //               }
+  //             }
+  //             return t;
+  //           });
+  //           setSelected(n);
+  //         }}
+  //         aria-label="Select row"
+  //       />
+  //     );
+  //   },
+  // });
   return [...columns];
 };
 
@@ -109,6 +115,11 @@ export const roleColumns = ({}): ColumnDef<
   let columns: ColumnDef<components["schemas"]["RoleDto"]>[] = [];
   const r = routes;
   const { t, i18n } = useTranslation("common");
+  columns.push({
+    header: "No.",
+    cell: TableCellIndex,
+    size:30,
+  })
   columns.push({
     accessorKey: "code",
     header: t("_role.base"),

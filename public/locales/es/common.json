@@ -375,6 +375,7 @@
   "cashEntry": "Entrada de efectivo",
 
   "order":"Orden",
+  "invoicing":"Facturación",
   "group":"Group",
   "quotation":"Cotización",
   "salesQuotation":"Cotización de Venta",
@@ -416,6 +417,8 @@
   "supplierQuotation": "Cotización de Proveedor",
   "chargesTemplate":"Plantilla de Cargos",
   "currencyExchange":"Cambio de Divisas",
+  "salesRecord":"Registro de Ventas",
+  "purchaseRecord":"Registro de Compras",
 
   "accountingLedger": "Libro mayor contable",
   "accountPayable": "Cuentas por pagar",
@@ -426,6 +429,8 @@
 
   "booking": "Reserva",
   "schedule": "Horario",
+
+
 
   "relocationAndMoving": "Reubicación y mudanzas",
 

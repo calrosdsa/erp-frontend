@@ -61,6 +61,8 @@ export enum Entity {
     QUOTATION = 41,
     CHARGES_TEMPLATE = 42,
     CURRENCY_EXCHANGE = 43,
+    PURCHASE_RECORD = 44,
+    SALES_RECORD = 45,
 }
 
 export enum PartyType {

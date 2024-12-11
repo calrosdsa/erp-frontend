@@ -22,6 +22,7 @@ export const invoiceColumns = ({
     {
       header: t("table.no"),
       cell: TableCellIndex,
+      size:20
     },
     {
       accessorKey: "code",
@@ -54,11 +55,7 @@ export const invoiceColumns = ({
           <>
             <TableCellNameNavigation
               {...props}
-              navigate={(name) =>
-                r.toPartyDetail(rowData.party_type, name, {
-                  id: rowData.party_uuid,
-                  tab: "info",
-                })
+              navigate={(name) =>r.toPartyDetailPage(name,rowData.party_uuid,rowData.party_type)
               }
             />
           </>

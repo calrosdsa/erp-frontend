@@ -39,6 +39,9 @@ export default function ReceiptsClient(){
     return (
         <div>
             <DataTable
+            paginationOptions={{
+                rowCount:paginationResult?.total,
+            }}
             
             data={paginationResult?.results || []}
             columns={receiptColumns({

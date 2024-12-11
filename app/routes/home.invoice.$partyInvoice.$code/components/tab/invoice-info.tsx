@@ -182,11 +182,11 @@ export default function InvoiceInfoTab() {
             currency={invoice?.currency || companyDefaults?.currency || ""}
             status={invoice?.status || ""}
             lineItems={lineItems}
+            updateStock={invoice?.update_stock}
+            allowCreate={allowCreate}
+            allowEdit={allowEdit}
             docPartyType={invoiceParty}
             docPartyID={invoice?.id}
-            allowCreate={allowCreate}
-            updateStock={invoice?.update_stock}
-            allowEdit={allowEdit}
             lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
           />
           {invoice && (

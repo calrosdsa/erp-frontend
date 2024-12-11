@@ -28,6 +28,7 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { PianoFormsNav } from "./piano/piano-forms-nav";
 import { ProjectNav } from "./project-nav";
 import { StockNav } from "./stock-nav";
+import { InvoicingNav } from "./invoicing-nav";
 
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
@@ -37,6 +38,10 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const entities = roleActions
     .filter((item) => item.action.name == "view")
     .map((item) => item.action.entity_id);
+
+  const invoicingNav = InvoicingNav({
+    entities: entities,
+  });
 
   const buyingNav = BuyingNav({
     entities: entities,
@@ -196,6 +201,9 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   // if(customerNav.children && customerNav.children.length > 0) {
   //   navItems.push(customerNav)
   // }
+  if (invoicingNav.children && invoicingNav.children.length > 0) {
+    navItems.push(invoicingNav);
+  }
 
   if (buyingNav.children && buyingNav.children.length > 0) {
     navItems.push(buyingNav);

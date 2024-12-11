@@ -65,6 +65,8 @@ enum PartyType {
     salesQuotation = 39;
     chargesTemplate = 40;
     currencyExchange = 41;
+    salesRecord = 42;
+    purchaseRecord = 43;
 }
 
 enum PianoPartyType {
@@ -181,6 +183,8 @@ enum ItemLineType {
 enum TaxChargeLineType {
     ON_NET_TOTAL = 0;
     FIXED_AMOUNT = 1;
+    ON_PREVIOUS_ROW_TOTAL = 2;
+    ON_PREVIOUS_ROW_AMOUNT = 3;
 }
 
 enum BookingType {

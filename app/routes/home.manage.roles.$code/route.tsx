@@ -1,13 +1,14 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import RoleClient from "./role.client";
 import apiClient from "~/apiclient";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE, LOAD_ACTION } from "~/constant";
 import { z } from "zod";
 import { updateRoleActionsSchema } from "~/util/data/schemas/manage/role-schema";
+import { components } from "~/sdk";
 
 type ActionData = {
     action:string
-    updateRoleActions:z.infer<typeof updateRoleActionsSchema>
+    updateRoleActions:components["schemas"]["EditRolePermissionActionsBody"]
 }
 
 export const action = async({request}:LoaderFunctionArgs)=>{
@@ -15,6 +16,7 @@ export const action = async({request}:LoaderFunctionArgs)=>{
     const data = await request.json() as ActionData
     let message:string | undefined = undefined
     let error:string | undefined = undefined
+    let actionRes = LOAD_ACTION
     switch(data.action){
         case "update-role-actions":{
             const res=  await client.POST("/role/permision/actions",{
@@ -27,7 +29,8 @@ export const action = async({request}:LoaderFunctionArgs)=>{
         }
     }
     return json({
-        message,error
+        message,error,
+        action:actionRes,
     })
 }
 

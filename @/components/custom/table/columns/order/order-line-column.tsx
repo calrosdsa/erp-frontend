@@ -24,6 +24,7 @@ export const lineItemsColumns = ({
   const { t, i18n } = useTranslation("common");
   columns.push({
     header: t("table.no"),
+    size:35,
     cell: TableCellIndex,
   });
   columns.push({
@@ -39,12 +40,12 @@ export const lineItemsColumns = ({
   //   header: t("form.uom"),
   // });
 
-  // if(lineType == ItemLineType.ITEM_LINE_ORDER) {
+  if(lineType != itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)) {
   columns.push({
     accessorKey: "quantity",
     header: t("_item.quantity"),
   });
-  // }
+  }
 
   if (lineType == itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)) {
     columns.push({
@@ -96,6 +97,7 @@ export const lineItemsColumns = ({
   columns.push({
     id: "actions",
     cell: DataTableRowActions,
+    size:35
   });
 
   return [...columns];

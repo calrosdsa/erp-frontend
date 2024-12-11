@@ -143,6 +143,8 @@ export enum PartyType {
   salesQuotation = 39,
   chargesTemplate = 40,
   currencyExchange = 41,
+  salesRecord = 42,
+  purchaseRecord = 43,
   UNRECOGNIZED = -1,
 }
 
@@ -274,6 +276,12 @@ export function partyTypeFromJSON(object: any): PartyType {
     case 41:
     case "currencyExchange":
       return PartyType.currencyExchange;
+    case 42:
+    case "salesRecord":
+      return PartyType.salesRecord;
+    case 43:
+    case "purchaseRecord":
+      return PartyType.purchaseRecord;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -367,6 +375,10 @@ export function partyTypeToJSON(object: PartyType): string {
       return "chargesTemplate";
     case PartyType.currencyExchange:
       return "currencyExchange";
+    case PartyType.salesRecord:
+      return "salesRecord";
+    case PartyType.purchaseRecord:
+      return "purchaseRecord";
     case PartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1023,6 +1035,8 @@ export function itemLineTypeToJSON(object: ItemLineType): string {
 export enum TaxChargeLineType {
   ON_NET_TOTAL = 0,
   FIXED_AMOUNT = 1,
+  ON_PREVIOUS_ROW_TOTAL = 2,
+  ON_PREVIOUS_ROW_AMOUNT = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -1034,6 +1048,12 @@ export function taxChargeLineTypeFromJSON(object: any): TaxChargeLineType {
     case 1:
     case "FIXED_AMOUNT":
       return TaxChargeLineType.FIXED_AMOUNT;
+    case 2:
+    case "ON_PREVIOUS_ROW_TOTAL":
+      return TaxChargeLineType.ON_PREVIOUS_ROW_TOTAL;
+    case 3:
+    case "ON_PREVIOUS_ROW_AMOUNT":
+      return TaxChargeLineType.ON_PREVIOUS_ROW_AMOUNT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1047,6 +1067,10 @@ export function taxChargeLineTypeToJSON(object: TaxChargeLineType): string {
       return "ON_NET_TOTAL";
     case TaxChargeLineType.FIXED_AMOUNT:
       return "FIXED_AMOUNT";
+    case TaxChargeLineType.ON_PREVIOUS_ROW_TOTAL:
+      return "ON_PREVIOUS_ROW_TOTAL";
+    case TaxChargeLineType.ON_PREVIOUS_ROW_AMOUNT:
+      return "ON_PREVIOUS_ROW_AMOUNT";
     case TaxChargeLineType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

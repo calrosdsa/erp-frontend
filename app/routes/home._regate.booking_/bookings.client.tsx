@@ -1,4 +1,4 @@
-import { DataTable, useTable } from "@/components/custom/table/CustomTable";
+import { DataTable, useTable, useTableSelectionStore } from "@/components/custom/table/CustomTable";
 import {
   useFetcher,
   useLoaderData,
@@ -38,7 +38,7 @@ export default function BookingsClient() {
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
   const { t } = useTranslation("common");
   const navigate = useNavigate();
-  const {setRowSelection} = useTable()
+  const {clear} = useTableSelectionStore()
   const [selectedBookings, setSelectedBookings] = useState<
     components["schemas"]["BookingDto"][]
   >([]);
@@ -67,7 +67,7 @@ export default function BookingsClient() {
       error: fetcher.data?.error,
       onSuccessMessage:()=>{
         setSelectedBookings([])
-        setRowSelection({})
+        clear()
       }
     },
     [fetcher.data]

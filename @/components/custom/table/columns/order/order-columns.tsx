@@ -22,10 +22,12 @@ export const orderColumns = ({
   columns.push({
     header: t("table.no"),
     cell: TableCellIndex,
+    size:40
   });
   columns.push({
     accessorKey: "code",
     header: t("form.code"),
+    size:80,
     cell: ({ ...props }) => {
       return (
         <TableCellNameNavigation
@@ -47,44 +49,17 @@ export const orderColumns = ({
   columns.push({
     accessorKey: "party_name",
     header: t("form.party"),
+    size:100,
     cell: ({ ...props }) => {
       const rowData = props.row.original;
-
       return (
         <>
-          {rowData.party_type == partyTypeToJSON(PartyType.supplier) && (
             <TableCellNameNavigation
               {...props}
               navigate={(name) =>
-                r.toRoute({
-                  main: rowData.party_type,
-                  routePrefix: [r.buyingM],
-                  routeSufix: [name],
-                  q: {
-                    tab: "info",
-                    id: rowData.party_uuid,
-                  },
-                })
+                r.toPartyDetailPage(name,rowData.party_uuid,rowData.party_type)
               }
             />
-          )}
-
-          {rowData.party_type == partyTypeToJSON(PartyType.customer) && (
-            <TableCellNameNavigation
-              {...props}
-              navigate={(name) =>
-                r.toRoute({
-                  main: rowData.party_type,
-                  routePrefix: [r.sellingM],
-                  routeSufix: [name],
-                  q: {
-                    tab: "info",
-                    id: rowData.party_uuid,
-                  },
-                })
-              }
-            />
-          )}
         </>
       );
     },
@@ -96,6 +71,7 @@ export const orderColumns = ({
   });
   columns.push({
     id: "received",
+    size:80,
     header: t("table.received"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
@@ -111,6 +87,7 @@ export const orderColumns = ({
   columns.push({
     id: "billed",
     header: t("table.billed"),
+    size:80,
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -124,6 +101,7 @@ export const orderColumns = ({
   });
   columns.push({
     accessorKey: "total_amount",
+    size:70,
     header: t("table.total"),
     cell: ({ ...props }) => <TableCellPrice
     {...props} 

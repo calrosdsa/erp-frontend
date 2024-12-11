@@ -60,7 +60,11 @@ export default function CreatePurchaseInvoiceClient() {
       invoicePartyType: partyInvoice,
       referenceID: payload?.documentRefernceID,
       currency: payload?.currency || companyDefaults?.currency,
-      lines: lineItemsStore.lines,
+      lines: lineItemsStore.lines.map((t) => {
+        t.lineType = itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE);
+        return t;
+      }),
+
       taxLines: taxLinesStore.lines,
       postingDate: new Date(),
       postingTime: format(new Date(), "HH:mm:ss"),

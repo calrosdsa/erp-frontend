@@ -14,6 +14,7 @@ import { EventState, State } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { Typography } from "@/components/typography";
 import { cn } from "@/lib/utils";
+import { useConfirmationDialog } from "../drawer/ConfirmationDialog";
 
 export default function ToolBar({ title }: { title: string }) {
   const toolbarState = useToolbar();
@@ -30,6 +31,17 @@ export default function ToolBar({ title }: { title: string }) {
     addNew,
   } = toolbarState.payload;
   const { t } = useTranslation("common");
+  const { onOpenDialog } = useConfirmationDialog();
+  const confirmStatusChange = (event: EventState) => {
+    onOpenDialog({
+      title: "Por favor, confirme antes de continuar con la acción requerida.",
+      onConfirm: () => {
+        if (onChangeState) {
+          onChangeState(event);
+        }
+      },
+    });
+  };
 
   return (
     <div>
@@ -124,9 +136,7 @@ export default function ToolBar({ title }: { title: string }) {
               {status == State.DRAFT && onChangeState && (
                 <Button
                   size={"sm"}
-                  onClick={() =>
-                    onChangeState && onChangeState(EventState.SUBMIT_EVENT)
-                  }
+                  onClick={() => confirmStatusChange(EventState.SUBMIT_EVENT)}
                   className={cn(
                     "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
                     (disabledSave || toolbarState.loading) &&
@@ -146,16 +156,15 @@ export default function ToolBar({ title }: { title: string }) {
                 onChangeState && (
                   <Button
                     size={"sm"}
-                    onClick={() =>
-                      onChangeState && onChangeState(EventState.CANCEL_EVENT)
-                    }
+                    onClick={() => confirmStatusChange(EventState.CANCEL_EVENT)}
                     className={cn(
                       "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
                       (disabledSave || toolbarState.loading) &&
                         "disabled:opacity-50"
                     )}
                     loading={
-                      toolbarState.loading && toolbarState.loadingType == "STATE"
+                      toolbarState.loading &&
+                      toolbarState.loadingType == "STATE"
                     }
                     disabled={toolbarState.loading}
                     variant={"outline"}

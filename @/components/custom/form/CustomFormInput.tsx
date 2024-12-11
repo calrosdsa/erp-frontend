@@ -68,6 +68,7 @@ export default function CustomFormFieldInput({
                 {inputType == "textarea" && (
                   <Textarea
                     {...field}
+                    required={required}
                     className={cn(
                       !allowEdit &&
                         "disabled:opacity-100 disabled:cursor-default bg-secondary"

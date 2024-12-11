@@ -20,7 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let salesRecord: components["schemas"]["SalesRecordDto"] | undefined =
     undefined;
   switch (data.action) {
-    case "create-currency-exchange": {
+    case "create-sales-record": {
       const d = data.createSalesRecord;
       const salesRecordData = mapToSalesRecordData(d)
       const res = await client.POST("/sales-record", {
@@ -28,12 +28,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
          ...salesRecordData
         },
       });
+      console.log(res.data,res.error)
       message = res.data?.message;
       error = res.error?.detail;
       salesRecord = res.data?.result;
       break;
     }
   }
+  
   return json({
     message,
     error,

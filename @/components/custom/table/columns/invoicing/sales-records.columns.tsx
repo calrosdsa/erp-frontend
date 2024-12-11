@@ -5,30 +5,35 @@ import { routes } from "~/util/route";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellStatus from "../../cells/table-cell-status";
+import TableCellPrice from "../../cells/table-cell-price";
 
 export const salesRecordColumn = ({}: {}): ColumnDef<
   components["schemas"]["SalesRecordDto"]
 >[] => {
   const r = routes;
+  const {i18n} = useTranslation()
   return [
     {
       header: "No.",
       cell: TableCellIndex,
+      size:30,
     },
     {
       accessorKey: "invoice_no",
       header: "Número de factura",
       cell: ({ ...props }) => {
+        const rowData = props.row.original
         return (
           <TableCellNameNavigation
             {...props}
             navigate={(name) =>
               r.toRoute({
-                main: r.saleInvoice,
+                main: r.salesRecord,
                 routePrefix: [r.invoicing],
                 routeSufix: [name],
                 q: {
                   tab: "info",
+                  id:rowData.uuid
                 },
               })
             }
@@ -41,12 +46,12 @@ export const salesRecordColumn = ({}: {}): ColumnDef<
       header: "Nombre del cliente",
     },
     {
-      accessorKey: "customer_nit_ci",
-      header: "NIT/CI del cliente",
+      accessorKey: "name_or_business_name",
+      header: "Nombre o razón social",
     },
     {
-      accessorKey: "uuid",
-      header: "UUID",
+      accessorKey: "customer_nit_ci",
+      header: "NIT/CI del cliente",
     },
     {
       accessorKey: "authorization_code",
@@ -55,6 +60,12 @@ export const salesRecordColumn = ({}: {}): ColumnDef<
     {
       accessorKey: "base_amount_for_tax_debit",
       header: "Monto base para débito fiscal",
+      cell:({...props})=>{
+        return <TableCellPrice
+        {...props}
+        i18n={i18n}
+        />
+      }
     },
     {
       accessorKey: "consolidation_status",
@@ -67,31 +78,59 @@ export const salesRecordColumn = ({}: {}): ColumnDef<
     {
       accessorKey: "discounts_bonus_and_rebates_subject_to_vat",
       header: "Descuentos, bonos y rebajas sujetos a IVA",
+      cell:({...props})=>{
+        return <TableCellPrice
+        {...props}
+        i18n={i18n}
+        />
+      }
     },
     {
       accessorKey: "exports_and_exempt_operations",
       header: "Exportaciones y operaciones exentas",
+      
     },
     {
       accessorKey: "gift_card_amount",
       header: "Monto de tarjeta de regalo",
+      cell:({...props})=>{
+        return <TableCellPrice
+        {...props}
+        i18n={i18n}
+        />
+      }
     },
     {
       accessorKey: "ice_amount",
       header: "Monto de ICE",
+      cell:({...props})=>{
+        return <TableCellPrice
+        {...props}
+        i18n={i18n}
+        />
+      }
     },
     {
       accessorKey: "iehd_amount",
       header: "Monto de IEHD",
+      cell:({...props})=>{
+        return <TableCellPrice
+        {...props}
+        i18n={i18n}
+        />
+      }
     },
     {
       accessorKey: "ipj_amount",
       header: "Monto de IPJ",
+      cell:({...props})=>{
+        return <TableCellPrice
+        {...props}
+        i18n={i18n}
+        />
+      }
     },
-    {
-      accessorKey: "name_or_business_name",
-      header: "Nombre o razón social",
-    },
+   
     {
       accessorKey: "other_not_subject_to_vat",
       header: "Otros no sujetos a IVA",
@@ -107,6 +146,12 @@ export const salesRecordColumn = ({}: {}): ColumnDef<
     {
       accessorKey: "subtotal",
       header: "Subtotal",
+      cell:({...props})=>{
+        return <TableCellPrice
+        {...props}
+        i18n={i18n}
+        />
+      }
     },
     {
       accessorKey: "supplement",
@@ -115,14 +160,27 @@ export const salesRecordColumn = ({}: {}): ColumnDef<
     {
       accessorKey: "tax_debit",
       header: "Débito fiscal",
+      cell:({...props})=>{
+        return <TableCellPrice
+        {...props}
+        i18n={i18n}
+        />
+      }
     },
     {
       accessorKey: "tax_rates",
       header: "Tasas de impuesto",
+      
     },
     {
       accessorKey: "total_sale_amount",
       header: "Monto total de la venta",
+      cell:({...props})=>{
+        return <TableCellPrice
+        {...props}
+        i18n={i18n}
+        />
+      }
     },
     {
       accessorKey: "with_tax_credit_right",

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   ColumnDef,
@@ -20,7 +20,7 @@ import {
   Updater,
   useReactTable,
   VisibilityState,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -29,44 +29,72 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { useEffect, useMemo, useRef, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { DataTablePagination } from "./DataTablePagination"
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
-import { DataTableToolbar } from "./data-table-toolbar"
-import { useTranslation } from "react-i18next"
-import DataTableEditFooter from "./data-table-edit-footer"
-import { useSearchParams } from "@remix-run/react"
-import { create } from "zustand"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { TableVirtuoso } from "react-virtuoso"
-import React from "react"
+} from "@/components/ui/table";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DataTablePagination } from "./DataTablePagination";
+import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DataTableToolbar } from "./data-table-toolbar";
+import { useTranslation } from "react-i18next";
+import DataTableEditFooter from "./data-table-edit-footer";
+import { useSearchParams } from "@remix-run/react";
+import { create } from "zustand";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { TableVirtuoso } from "react-virtuoso";
+import React from "react";
 
 export interface PaginationOptions {
-  rowCount?: number
+  rowCount?: number;
 }
 
 export interface ExpandedRowOptions<T> {
-  getSubRows?: (t: T) => T[]
+  getSubRows?: (t: T) => T[];
 }
 
 export interface TableMetaOptions<TData> {
-  meta: TableMeta<TData> | undefined
+  meta: TableMeta<TData> | undefined;
 }
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  hiddenColumns?: VisibilityState
-  paginationOptions?: PaginationOptions
-  expandedOptions?: ExpandedRowOptions<TData>
-  metaOptions?: TableMetaOptions<TData>
-  metaActions?: TableMetaOptions<TData>
-  enableRowSelection?: boolean
-  onSelectionChange?: (selectedRows: TData[]) => void
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  hiddenColumns?: VisibilityState;
+  paginationOptions?: PaginationOptions;
+  expandedOptions?: ExpandedRowOptions<TData>;
+  metaOptions?: TableMetaOptions<TData>;
+  metaActions?: TableMetaOptions<TData>;
+  enableRowSelection?: boolean;
+  onSelectionChange?: (selectedRows: TData[]) => void;
+  maxTableHeight?: number;
 }
+export const useTableSelectionStore = create<{
+  selection: Set<string>;
+  toggle: (id: string) => void;
+  clear: () => void;
+  setAll: (ids: string[]) => void;
+}>((set) => ({
+  selection: new Set(),
+  toggle: (id) =>
+    set((state) => {
+      const newSelection = new Set(state.selection);
+      if (newSelection.has(id)) {
+        newSelection.delete(id);
+      } else {
+        newSelection.add(id);
+      }
+      console.log("SELECTION",newSelection)
+      return { selection: newSelection };
+    }),
+  clear: () => set({ selection: new Set() }),
+  setAll: (ids) => set({ selection: new Set(ids) }),
+}));
+
+const MemoizedRow = React.memo(
+  ({ row, rowContent }: { row: any; rowContent: any }) => {
+    return rowContent(row.index, row.original);
+  }
+);
 
 export function DataTable<TData, TValue>({
   columns: userColumns,
@@ -78,68 +106,71 @@ export function DataTable<TData, TValue>({
   metaActions,
   enableRowSelection = false,
   onSelectionChange,
+  maxTableHeight = 480,
 }: DataTableProps<TData, TValue>) {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
   const [paginationState, setPaginationState] = useState<PaginationState>({
     pageIndex: Number(searchParams.get("page") || DEFAULT_PAGE),
     pageSize: Number(searchParams.get("size") || DEFAULT_SIZE),
-  })
-  const [tableWidth, setTableWidth] = useState(0)
-  const tableRef = useRef<HTMLDivElement>(null)
-  // Add checkbox column if row selection is enabled
+  });
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    hiddenColumns || {}
+  );
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [expanded, setExpanded] = useState<ExpandedState>({});
+
+  const { selection, toggle, clear, setAll } = useTableSelectionStore();
+
   const columns = useMemo(() => {
-    if (!enableRowSelection) return userColumns
+    if (!enableRowSelection) return userColumns;
 
     const selectionColumn: ColumnDef<TData, any> = {
-      id: 'select',
+      id: "select",
       header: ({ table }) => (
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={(value) => {
+            table.toggleAllPageRowsSelected(!!value);
+            const ids = table.getRowModel().rows.map((row) => row.id);
+            value ? setAll(ids) : clear();
+          }}
           aria-label="Select all"
           className="translate-y-[2px]"
         />
       ),
       cell: ({ row }) => (
+        <div className="px-2">
         <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          checked={selection.has(row.id)}
+          onCheckedChange={() => toggle(row.id)}
           aria-label="Select row"
           className="translate-y-[2px]"
-        />
+          />
+          </div>
       ),
-      enableSorting: false,
-      enableHiding: false,
-    }
+      size:50,
+    };
 
-    return [selectionColumn, ...userColumns]
-  }, [userColumns, enableRowSelection])
+    return [selectionColumn, ...userColumns];
+  }, [selection,data]);
 
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    hiddenColumns || {}
-  )
-  const {rowSelection,setRowSelection} = useTable()
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [expanded, setExpanded] = useState<ExpandedState>({})
-
-  const onPaginationChange: OnChangeFn<PaginationState> = (updaterOrValue) => {
-    let newState: PaginationState | undefined = undefined
-    if (paginationOptions == undefined) return
-    if (typeof updaterOrValue === "function") {
-      newState = updaterOrValue(paginationState)
-    } else {
-      newState = updaterOrValue
-    }
-    if (newState != undefined) {
-      setPaginationState(newState)
-      searchParams.set("page", newState.pageIndex.toString())
-      searchParams.set("size", newState.pageSize.toString())
-      setSearchParams(searchParams, {
-        preventScrollReset: true,
-      })
-    }
-  }
+  const onPaginationChange: OnChangeFn<PaginationState> = useCallback(
+    (updaterOrValue) => {
+      if (paginationOptions == undefined) return;
+      const newState =
+        typeof updaterOrValue === "function"
+          ? updaterOrValue(paginationState)
+          : updaterOrValue;
+      if (newState != undefined) {
+        setPaginationState(newState);
+        searchParams.set("page", newState.pageIndex.toString());
+        searchParams.set("size", newState.pageSize.toString());
+        setSearchParams(searchParams, { preventScrollReset: true });
+      }
+    },
+    [paginationOptions, paginationState, searchParams]
+  );
 
   const table = useReactTable({
     data,
@@ -148,12 +179,9 @@ export function DataTable<TData, TValue>({
       pagination: paginationState,
       columnVisibility,
       expanded,
-      rowSelection,
       columnFilters,
       sorting,
     },
-    enableRowSelection,
-    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
@@ -174,52 +202,49 @@ export function DataTable<TData, TValue>({
       ...metaOptions?.meta,
       ...metaActions?.meta,
     },
-  })
+  });
 
-  // Update selected rows when selection changes
   useEffect(() => {
     if (onSelectionChange) {
       const selectedRows = table
-        .getSelectedRowModel()
-        .rows.map((row) => row.original)
-      onSelectionChange(selectedRows)
+        .getRowModel()
+        .rows.filter((row) => selection.has(row.id))
+        .map((row) => row.original);
+      onSelectionChange(selectedRows);
     }
-  }, [rowSelection, table])
+  }, [selection]);
 
-  useEffect(() => {
-    const updateTableWidth = () => {
-      if (tableRef.current) {
-        setTableWidth(tableRef.current.offsetWidth)
-      }
-    }
+  const TableComponents = useMemo(
+    () => ({
+      Table: ({ style, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
+        <Table
+          {...props}
+          style={{ ...style, width: "100%", tableLayout: "fixed" }}
+        />
+      ),
+      TableHead: TableHeader,
+      TableRow: TableRow,
+      TableBody: React.forwardRef<
+        HTMLTableSectionElement,
+        React.HTMLAttributes<HTMLTableSectionElement>
+      >(({ style, ...props }, ref) => (
+        <TableBody
+          {...props}
+          ref={ref}
+          style={{ ...style, overflow: "visible" }}
+        />
+      )),
+    }),
+    []
+  );
 
-    updateTableWidth()
-    window.addEventListener('resize', updateTableWidth)
-
-    return () => {
-      window.removeEventListener('resize', updateTableWidth)
-    }
-  }, [])
-  const TableComponents = {
-    Table: ({ style, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
-      <Table {...props} style={{ ...style, width: `${tableWidth}px`, tableLayout: 'fixed' }} />
-    ),
-    TableHead: TableHeader,
-    TableRow: TableRow,
-    TableBody: React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
-      ({ style, ...props }, ref) => (
-        <TableBody {...props} ref={ref} style={{ ...style, overflow: 'visible' }} />
-      )
-    ),
-  }
-
-  const fixedHeaderContent = () => {
-    return (
+  const fixedHeaderContent = useCallback(
+    () => (
       <TableRow>
         {table.getFlatHeaders().map((header) => (
           <TableHead
             key={header.id}
-            className="text-xs whitespace-nowrap py-2 px-4"
+            className="text-xs whitespace-nowrap py-2 px-4 bg-background sticky top-0 z-10 "
             style={{ width: header.getSize() }}
           >
             {header.isPlaceholder
@@ -228,65 +253,99 @@ export function DataTable<TData, TValue>({
           </TableHead>
         ))}
       </TableRow>
-    )
-  }
+    ),
+    [table]
+  );
 
-  const rowContent = (_index: number, row: TData) => {
-    const tableRow = table.getRowModel().rows[_index]
-    return tableRow?.getVisibleCells().map(cell => (
-      <TableCell
-        key={cell.id}
-        style={{
-          width: cell.column.getSize(),
-        }}
-        className="border-r last:border-r-0 p-2 text-xs"
-      >
-        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-      </TableCell>
-    ))
-  }
-
+  const rowContent = useCallback(
+    (_index: number, row: TData) => {
+      const tableRow = table.getRowModel().rows[_index];
+      return tableRow?.getVisibleCells().map((cell) => (
+        <TableCell
+          key={cell.id}
+          style={{
+            width: cell.column.getSize(),
+            maxWidth: cell.column.getSize(),
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+          className="border-r last:border-r-0 p-2 text-xs"
+        >
+      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </TableCell>
+      ));
+    },
+    [table,selection,data]
+  );
   return (
     <div className="py-3 space-y-4 w-full">
       {metaActions != undefined && <DataTableToolbar table={table} />}
       <ScrollArea className="rounded-md border">
-        <div ref={tableRef}>
+        <div className="w-full">
           <TableVirtuoso
-            style={{ height: '500px', width: '100%' }}
-            data={data}
+            style={{
+              height: `${Math.min(data.length * 44 + 50, maxTableHeight)}px`,
+              width: "100%",
+            }}
+            data={table.getRowModel().rows}
             components={TableComponents}
             fixedHeaderContent={fixedHeaderContent}
-            itemContent={rowContent}
+            itemContent={(index, row) => (
+              <MemoizedRow row={row} rowContent={rowContent} />
+            )}
           />
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <div className="flex justify-between items-center">
         {metaOptions != undefined && <DataTableEditFooter table={table} />}
-        {paginationOptions != undefined && <DataTablePagination table={table} />}
+        {paginationOptions != undefined && (
+          <DataTablePagination table={table} />
+        )}
       </div>
     </div>
-  )
-} 
+  );
+  // return (
+  //   <div className="py-3 space-y-4 w-full">
+  //     {metaActions != undefined && <DataTableToolbar table={table} />}
+  //     <ScrollArea className="rounded-md border">
+  //       <div className="w-full">
+  //         <TableVirtuoso
+  //           style={{ height: `${Math.min(data.length * 44 + 50, maxTableHeight)}px`, width: '100%' }}
+  //           data={data}
+  //           components={TableComponents}
+  //           fixedHeaderContent={fixedHeaderContent}
+  //           itemContent={rowContent}
+  //         />
+  //       </div>
+  //       <ScrollBar orientation="horizontal" />
+  //     </ScrollArea>
+  //     <div className="flex justify-between items-center">
+  //       {metaOptions != undefined && <DataTableEditFooter table={table} />}
+  //       {paginationOptions != undefined && <DataTablePagination table={table} />}
+  //     </div>
+  //   </div>
+  // )
+}
 
 interface TableStore {
-  rowSelection:{}
-  setRowSelection:(updaterOrValue: Updater<RowSelectionState>)=>void
+  rowSelection: {};
+  setRowSelection: (updaterOrValue: Updater<RowSelectionState>) => void;
 }
-export const useTable = create<TableStore>((set)=>({
+export const useTable = create<TableStore>((set) => ({
   //Complete and take row selection from here
   rowSelection: {},
   setRowSelection: (updaterOrValue) => {
-    return set((state)=>{
-      let newState: RowSelectionState | undefined = undefined
+    return set((state) => {
+      let newState: RowSelectionState | undefined = undefined;
       if (typeof updaterOrValue === "function") {
-        newState = updaterOrValue(state.rowSelection)
+        newState = updaterOrValue(state.rowSelection);
       } else {
-        newState = updaterOrValue
+        newState = updaterOrValue;
       }
       return {
-        rowSelection:newState
-      }
-    })
+        rowSelection: newState,
+      };
+    });
   },
-}))
+}));

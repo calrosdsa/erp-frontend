@@ -4,7 +4,11 @@ import { useTaxAndCharges } from "../accounting/tax/use-tax-charges";
 import { useEffect, useMemo } from "react";
 import { taxAndChargeSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 import { z } from "zod";
-import { TaxChargeLineType, taxChargeLineTypeToJSON } from "~/gen/common";
+import {
+  TaxChargeLineType,
+  taxChargeLineTypeFromJSON,
+  taxChargeLineTypeToJSON,
+} from "~/gen/common";
 import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 
 type TaxLine = z.infer<typeof taxAndChargeSchema>;
@@ -16,7 +20,12 @@ interface TotalStore {
 }
 
 interface TotalCalculator {
-  calculateTaxLineAmount: (taxLine: TaxLine, totalItemAmount: number) => number;
+  calculateTaxLineAmount: (
+    taxLine: TaxLine,
+    totalItemAmount: number,
+    idx: number,
+    taxLines:TaxLine[]
+  ) => number;
   calculateTotalFromTaxLines: (
     taxLines: TaxLine[],
     baseTotal: number
@@ -28,13 +37,25 @@ interface TotalCalculator {
 const createTotalCalculator = (): TotalCalculator => ({
   calculateTaxLineAmount: (
     taxLine: TaxLine,
-    totalItemAmount: number
+    totalItemAmount: number,
+    idx: number,
+    taxLines:TaxLine[],
   ): number => {
-    if (
-      taxLine.type === taxChargeLineTypeToJSON(TaxChargeLineType.ON_NET_TOTAL)
-    ) {
-      return totalItemAmount * ((taxLine.taxRate || 1) / 100);
+    const rate = (taxLine.taxRate || 1) / 100;
+    switch (taxChargeLineTypeFromJSON(taxLine.type)) {
+      case TaxChargeLineType.ON_NET_TOTAL:
+        return totalItemAmount * rate;
+      case TaxChargeLineType.ON_PREVIOUS_ROW_AMOUNT:
+        return (taxLines[idx - 1]?.amount || 0) * rate;
+      case TaxChargeLineType.ON_PREVIOUS_ROW_TOTAL:
+        return ((taxLines[idx - 1]?.amount || 0) + totalItemAmount) * rate;
     }
+    // if (
+    //   taxLine.type === taxChargeLineTypeToJSON(TaxChargeLineType.ON_NET_TOTAL)
+    // ) {
+    //   return totalItemAmount * ((taxLine.taxRate || 1) / 100);
+    // }
+
     return Number(taxLine.amount) || 0;
   },
 
@@ -79,9 +100,9 @@ export function useTotal() {
   }, [totalItemAmount, totalTaxAndCharges, setTotal]);
 
   const processTaxLines = (taxLines: TaxLine[]): TaxLine[] => {
-    return taxLines.map((t) => ({
+    return taxLines.map((t, idx) => ({
       ...t,
-      amount: calculator.calculateTaxLineAmount(t, totalItemAmount),
+      amount: calculator.calculateTaxLineAmount(t, totalItemAmount, idx,taxLines),
     }));
   };
 
@@ -89,9 +110,9 @@ export function useTotal() {
     taxLines: TaxLine[],
     amount: number
   ): TaxLine[] => {
-    return taxLines.map((t) => ({
+    return taxLines.map((t, idx) => ({
       ...t,
-      amount: calculator.calculateTaxLineAmount(t, amount),
+      amount: calculator.calculateTaxLineAmount(t, amount, idx,taxLines),
     }));
   };
 
@@ -101,14 +122,54 @@ export function useTotal() {
         t.taxLineID === editedLine.taxLineID ? editedLine : t
       )
     );
+    console.log("UPDATE TAX LINES",updatedTaxLines)
     return calculator.calculateTotalFromTaxLines(
       updatedTaxLines,
       totalItemAmount
     );
   };
 
+  const calculateChargeLineAmount = (
+    type: string,
+    taxRate: number,
+    idx: number
+  ): [number, string] => {
+    const ERROR_MESSAGE = `No se puede seleccionar el tipo de cargo como 'Sobre el total de la fila anterior' o 'Sobre el monto de la fila anterior' para la primera fila.`;
+    const rate = (taxRate || 0) / 100;
+
+    // Check if the taxLines array is empty, as it's used in multiple places
+    const isFirstRow = taxLines.length === 0;
+
+    switch (taxChargeLineTypeFromJSON(type)) {
+      case TaxChargeLineType.ON_NET_TOTAL:
+        const amount = rate * totalItemAmount;
+        return [amount, ""];
+
+      case TaxChargeLineType.ON_PREVIOUS_ROW_TOTAL:
+        if (isFirstRow) {
+          return [0, ERROR_MESSAGE];
+        }
+        const previousRowTotal =
+          (taxLines[idx - 1]?.amount || 0) + totalItemAmount;
+        return [rate * previousRowTotal, ""];
+
+      case TaxChargeLineType.ON_PREVIOUS_ROW_AMOUNT:
+        if (isFirstRow) {
+          return [0, ERROR_MESSAGE];
+        }
+        const previousRowAmount = taxLines[idx - 1]?.amount || 0;
+        return [rate * previousRowAmount, ""];
+    }
+
+    return [0, ""];
+  };
+
   const onAddTaxLine = (newLine: TaxLine): number => {
     const updatedTaxLines = processTaxLines([...taxLines, newLine]);
+    // const totalAmount =  calculator.calculateTotalFromTaxLines(
+    //   updatedTaxLines,
+    //   totalItemAmount
+    // );
     return calculator.calculateTotalFromTaxLines(
       updatedTaxLines,
       totalItemAmount
@@ -201,5 +262,6 @@ export function useTotal() {
     onEditLineItem,
     onDeleteLineItem,
     getTotalAndQuantity,
+    calculateChargeLineAmount,
   };
 }

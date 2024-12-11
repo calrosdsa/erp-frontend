@@ -9,7 +9,7 @@ import DetailLayout from "@/components/layout/detail-layout";
 import { useTranslation } from "react-i18next";
 import { routes } from "~/util/route";
 import { NavItem } from "~/types";
-import CostCenterInfo from "./tab/currency-exchange-info";
+import CostCenterInfo from "./tab/purchase-record-info";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { EventState, State, stateFromJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
@@ -18,9 +18,10 @@ import { ButtonToolbar } from "~/types/actions";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import PurchaseRecordInfo from "./tab/purchase-record-info";
 
-export default function CurrencyExchangeDetailClient() {
-  const { currencyExchange, actions } = useLoaderData<typeof loader>();
+export default function PurchaseRecordDetailClient() {
+  const { purchaseRecord, actions,activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const r = routes;
   const fetcher = useFetcher<typeof action>();
@@ -33,12 +34,12 @@ export default function CurrencyExchangeDetailClient() {
   });
   const toRoute = (tab: string) => {
     return r.toRoute({
-      main: r.currencyExchange,
-      routePrefix: [r.accountingM],
-      routeSufix: [currencyExchange?.name || ""],
+      main: r.purchaseRecord,
+      routePrefix: [r.invoicing],
+      routeSufix: [purchaseRecord?.invoice_no || ""],
       q: {
         tab: tab,
-        id: currencyExchange?.uuid || "",
+        id: purchaseRecord?.uuid || "",
       },
     });
   };
@@ -52,8 +53,8 @@ export default function CurrencyExchangeDetailClient() {
 
   const onChangeState = (e: EventState) => {
     const body: z.infer<typeof updateStatusWithEventSchema> = {
-      current_state: currencyExchange?.status || "",
-      party_id: currencyExchange?.uuid || "",
+      current_state: purchaseRecord?.status || "",
+      party_id: purchaseRecord?.uuid || "",
       events: [e],
     };
     fetcher.submit(
@@ -68,38 +69,32 @@ export default function CurrencyExchangeDetailClient() {
     );
   };
 
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "STATE",
+    },
+    [fetcher.state]
+  );
+
  useDisplayMessage({
     error:fetcher.data?.error,
     success:fetcher.data?.message,
  },[fetcher.data])
 
   setUpToolbar(() => {
-    const state = stateFromJSON(currencyExchange?.status);
-    let actions: ButtonToolbar[] = [];
-    if (permission.edit && state == State.ENABLED) {
-      actions.push({
-        label: "Deshabilitar",
-        onClick: () => {
-          onChangeState(EventState.DISABLED_EVENT);
-        },
-      });
-    }
-    if (permission.edit && state == State.DISABLED) {
-      actions.push({
-        label: "Habilitar Evento",
-        onClick: () => {
-          onChangeState(EventState.ENABLED_EVENT);
-        },
-      });
-    }
+    const state = stateFromJSON(purchaseRecord?.status);
+    
     return {
-      status: stateFromJSON(currencyExchange?.status),
-      actions: actions,
+      status: stateFromJSON(purchaseRecord?.status),
+      titleToolbar:`Nº de la Factura(${purchaseRecord?.invoice_no})`,
+      onChangeState:onChangeState
     };
-  }, [currencyExchange, permission]);
+  }, [purchaseRecord, permission]);
   return (
-    <DetailLayout partyID={currencyExchange?.id} navItems={navItems}>
-      {tab == "info" && <CostCenterInfo />}
+    <DetailLayout partyID={purchaseRecord?.id} navItems={navItems}
+    activities={activities}>
+      {tab == "info" && <PurchaseRecordInfo />}
     </DetailLayout>
   );
 }

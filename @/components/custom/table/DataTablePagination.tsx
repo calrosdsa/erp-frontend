@@ -25,13 +25,13 @@ import { useTranslation } from "react-i18next"
   }: DataTablePaginationProps<TData>) {
     const {t} = useTranslation("common")
     return (
-      <div className="flex items-center justify-between px-2">
-        <div className="flex-1 text-sm text-muted-foreground">
+      <div className="flex items-center justify-between px-2 w-full overflow-auto">
+        <div className="hidden sm:flex flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} {t("f.of")} {" "}
           {table.getFilteredRowModel().rows.length} {t("f.selected",{o:t("_page.row")})}
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
-          <div className="flex items-center space-x-2">
+          <div className="hidden sm:flex items-center space-x-2">
             <p className="text-sm font-medium">{t("_page.rowPerPage")}</p>
             <Select
               value={`${table.getState().pagination.pageSize}`}

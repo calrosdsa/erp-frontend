@@ -9,7 +9,7 @@
   export default function  DetailLayout({
     children,
     navItems,
-    activities,
+    activities = [],
     partyID
   }: {
     children: ReactNode;
