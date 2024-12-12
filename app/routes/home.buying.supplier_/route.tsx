@@ -5,6 +5,7 @@ import SuppliersClient from "./suppliers.client"
 import { z } from "zod"
 import { createSupplierSchema } from "~/util/data/schemas/buying/supplier-schema"
 import { components } from "~/sdk"
+import { mapToContactData } from "~/util/data/schemas/contact/contact-schema"
 
 type ActionData = {
     action:string
@@ -25,9 +26,11 @@ export const action = async({request}:ActionFunctionArgs)=>{
             const d = data.createSupplier
             const res = await client.POST("/supplier",{
                 body:{
-                    group_id:d.groupID,
-                    name:d.name,
-                    enabled:d.enabled
+                    supplier:{
+                        group_id:d.groupID,
+                        name:d.name,
+                    },
+                    contact:mapToContactData(d.contactData)
                 }
             })
             message = res.data?.message

@@ -31,13 +31,8 @@ export default function NewSalesRecord() {
   const form = useForm<z.infer<typeof createSalesRecord>>({
     resolver: zodResolver(createSalesRecord),
     defaultValues:{
-    invoiceNo: "",
     invoiceDate:new Date(),
-    authorizationCode: "",
-    customerNitCi: "",
     supplement: "",
-    nameOrBusinessName: "",
-    totalSaleAmount: 0,
     iceAmount: 0,
     iehdAmount: 0,
     ipjAmount: 0,
@@ -100,6 +95,7 @@ export default function NewSalesRecord() {
           navigate(
             r.toRoute({
               main: r.salesRecord,
+              routePrefix:[r.invoicing],
               routeSufix: [fetcher.data.salesRecord.invoice_no],
               q: {
                 tab: "info",

@@ -25,7 +25,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown, PlusIcon, XIcon } from "lucide-react";
+import { Link } from "@remix-run/react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  ChevronsUpDown,
+  PlusIcon,
+  XIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Control } from "react-hook-form";
 
@@ -37,12 +45,13 @@ interface Props<T extends object, K extends keyof T> {
   control?: Control<any, any>;
   label?: string;
   description?: string;
-  onValueChange: (e: string) => void;
+  onValueChange?: (e: string) => void;
   onSelect?: (v: T) => void;
   className?: string;
   allowEdit?: boolean;
   addNew?: () => void;
   required?: boolean;
+  href?: string;
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
 }
 
@@ -61,6 +70,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   allowEdit = true,
   addNew,
   required,
+  href,
 }: Props<T, K>) {
   const [open, setOpen] = useState(false);
   return (
@@ -75,6 +85,27 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
             </FormLabel>
           )}
           <Popover open={open} onOpenChange={setOpen}>
+              {href && !allowEdit ? (
+              <Button
+                variant="outline"
+                role="combobox"
+                size="sm"
+                type="button"
+                onClick={(e)=>{
+                  e.stopPropagation()
+                }}
+                className={cn(
+                  "justify-between",
+                  !field.value && "text-muted-foreground",
+                  !allowEdit &&
+                    "disabled:opacity-100 disabled:cursor-default bg-secondary"
+                )}
+              >
+                <Link to={href} className="underline">
+                  {field.value}
+                </Link>
+              </Button>
+            ) : (
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
@@ -83,7 +114,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                   size={"sm"}
                   disabled={!allowEdit}
                   onClick={() => {
-                    onValueChange("");
+                    onValueChange?.("");
                     setOpen(!open);
                   }}
                   className={cn(
@@ -93,24 +124,38 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                       "disabled:opacity-100 disabled:cursor-default bg-secondary"
                   )}
                 >
-                  <span>
+                  <span className=" truncate">
                   {field.value || ""}
                   </span>
+                  
 
-                  {field.value && allowEdit && !required ? (
-                    <>
+                  {field.value && field.value != "" && allowEdit && !required ? (
+                    <div className="flex items-center">
+                      {href && (
+                        <div onClick={(e)=>{
+                          e.stopPropagation()
+                        }}>
+                          <Link to={href}>
+                            <IconButton
+                              icon={ArrowRight}
+                              size="sm"
+                              className="ml-1 h-6 w-6 shrink-0 opacity-50 "
+                            />
+                          </Link>
+                        </div>
+                      )}
                       <IconButton
                         icon={XIcon}
                         size="sm"
-                        className="ml-2 h-6 w-6 shrink-0 opacity-50 "
+                        className="ml-1 h-6 w-6 shrink-0 opacity-50 "
                         onClick={(e) => {
                           e.stopPropagation();
-                          field.onChange(null);
+                          field.onChange();
                           setOpen(false);
                           // form.setValue(name, "");
                         }}
                       />
-                    </>
+                    </div>
                   ) : (
                     allowEdit && (
                       <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
@@ -119,12 +164,13 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                 </Button>
               </FormControl>
             </PopoverTrigger>
+              )}
             <PopoverContent className=" ">
               <Command className="max-h-[200px]">
                 <CommandInput
                   placeholder="Buscar..."
                   onValueChange={(e) => {
-                    onValueChange(e);
+                    onValueChange?.(e);
                   }}
                 />
                 <CommandList>
@@ -169,7 +215,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                                 : "opacity-0"
                             )}
                           />
-                          {item[nameK]?.toString() || ""}
+                          {item[nameK]?.toString() || ""} 
                         </CommandItem>
                       )
                     )}

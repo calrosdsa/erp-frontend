@@ -14,6 +14,8 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
+import AccordationLayout from "@/components/layout/accordation-layout";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
 export const CreateSupplier = ({
   open,
@@ -52,11 +54,6 @@ export const CreateSupplier = ({
       <CustomForm
         schema={createSupplierSchema}
         fetcher={fetcher}
-        defaultValues={
-          {
-            enabled: true,
-          } as z.infer<typeof createSupplierSchema>
-        }
         onSubmit={(values: z.infer<typeof createSupplierSchema>) => {
           fetcher.submit(
             {
@@ -79,13 +76,7 @@ export const CreateSupplier = ({
             label: t("form.name"),
             type: "string",
             typeForm: "input",
-          },
-          {
-            name: "enabled",
-            label: t("form.enabled"),
-            type: "boolean",
-            typeForm: "check",
-            description: t("f.enable", { o: t("_supplier.base") }),
+            required:true,
           },
         ]}
         renderCustomInputs={(form) => {
@@ -95,28 +86,27 @@ export const CreateSupplier = ({
             control={form.control}
             label={t("group")}
             isGroup={false}
-            partyType={r.itemGroup}
+            partyType={r.supplierGroup}
             onSelect={(e) => {
               form.setValue("groupID", e.id);
             }}
           />
-            {/* <FormAutocomplete
-              form={form}
-              label={t("group")}
-              data={groupDebounceFetcher.data?.groups || []}
-              onValueChange={(e) => onChangeGroupName(e)}
-              name="groupName"
-              nameK={"name"}
-              onSelect={(v) => {
-                form.setValue("groupID", v.id);
-              }}
-              {...(groupPermission?.create && {
-                addNew: () =>
-                  createGroup.openDialog({
-                    partyType: PartyType.supplierGroup,
-                  }),
-              })}
-            /> */}
+         <AccordationLayout title={t("contact")} className="grid gap-3">
+                <CustomFormFieldInput
+                  label={t("form.phoneNumber")}
+                  name="contactData.phoneNumber"
+                  control={form.control}
+                  inputType="input"
+                  type="tel"
+                />
+                <CustomFormFieldInput
+                  label={t("form.email")}
+                  name="contactData.email"
+                  control={form.control}
+                  inputType="input"
+                  type="email"
+                />
+              </AccordationLayout>
             </>
           );
         }}

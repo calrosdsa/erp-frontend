@@ -8,9 +8,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { action, loader } from "../route";
 import { GlobalState } from "~/types/app";
-import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
-import { DEFAULT_CURRENCY } from "~/constant";
-import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charges-template-schema";
 import { useRef } from "react";
 import { routes } from "~/util/route";
 import { useEditFields } from "~/util/hooks/useEditFields";

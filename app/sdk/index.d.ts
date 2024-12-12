@@ -854,6 +854,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/customer/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Customer */
+        put: operations["update-status-customer"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/delete-collectors": {
         parameters: {
             query?: never;
@@ -2252,6 +2269,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/sales-record/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sales Record Export */
+        post: operations["sales-record-export"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sales-record/update-status": {
         parameters: {
             query?: never;
@@ -2780,7 +2814,8 @@ export interface paths {
         };
         /** Retrieve suppliers */
         get: operations["get suppliers"];
-        put?: never;
+        /** Edit Supplier */
+        put: operations["edit-supplier"];
         /** Create supplier */
         post: operations["create supplier"];
         delete?: never;
@@ -2799,6 +2834,23 @@ export interface paths {
         /** Retrieve supplier */
         get: operations["get supplier"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/supplier/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Supplier */
+        put: operations["update-status-supplier"];
         post?: never;
         delete?: never;
         options?: never;
@@ -3551,13 +3603,7 @@ export interface components {
              */
             readonly $schema?: string;
             contact?: components["schemas"]["ContactData"];
-            customer: components["schemas"]["CreateCustomerData"];
-        };
-        CreateCustomerData: {
-            customer_type: string;
-            /** Format: int64 */
-            group_id?: number | null;
-            name: string;
+            customer: components["schemas"]["CustomerData"];
         };
         CreateEntityRequestBody: {
             /**
@@ -3909,17 +3955,6 @@ export interface components {
             items: components["schemas"]["CreateItemLines"];
             stock_entry?: components["schemas"]["StockEntryData"];
         };
-        CreateSupplierRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            enabled: boolean;
-            /** Format: int64 */
-            group_id: number;
-            name: string;
-        };
         CreateTaxAndChanges: {
             lines: components["schemas"]["TaxAndChargeLineData"][];
         };
@@ -4006,6 +4041,12 @@ export interface components {
             to_currency: string;
             uuid: string;
         };
+        CustomerData: {
+            customer_type: string;
+            /** Format: int64 */
+            group_id?: number | null;
+            name: string;
+        };
         CustomerDto: {
             /** Format: date-time */
             created_at: string;
@@ -4017,6 +4058,7 @@ export interface components {
             /** Format: int64 */
             id: number;
             name: string;
+            status: string;
             uuid: string;
         };
         CustomerType: {
@@ -4138,7 +4180,7 @@ export interface components {
             name: string;
             to_currency: string;
         };
-        EditCustomerBody: {
+        EditCustomerRequestBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -4195,7 +4237,7 @@ export interface components {
             /** Format: int64 */
             project?: number;
             /** Format: int64 */
-            reference?: number | null;
+            reference?: number;
             /** Format: double */
             total_amount: number;
             tz: string;
@@ -4427,7 +4469,7 @@ export interface components {
             /** Format: int64 */
             project?: number;
             /** Format: int64 */
-            reference?: number | null;
+            reference?: number;
             tz: string;
         };
         EditRolePermissionActionsBody: {
@@ -4508,6 +4550,18 @@ export interface components {
             /** Format: int64 */
             project?: number;
             tz: string;
+        };
+        EditSupplierRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            group_id?: number | null;
+            /** Format: int64 */
+            id: number;
+            name: string;
         };
         EditTaxLineRequestBody: {
             /**
@@ -5403,6 +5457,16 @@ export interface components {
             /** Format: int64 */
             total_price: number;
         };
+        ExportDataRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            data: {
+                [key: string]: string | undefined;
+            };
+        };
         GeneralLedgerData: {
             entries: components["schemas"]["GeneralLedgerEntryDto"][];
             opening: components["schemas"]["GeneralLedgerOpening"];
@@ -5477,7 +5541,7 @@ export interface components {
             /** Format: int64 */
             project?: number;
             /** Format: int64 */
-            reference?: number | null;
+            reference?: number;
             /** Format: double */
             total_amount: number;
             tz: string;
@@ -6728,7 +6792,7 @@ export interface components {
             /** Format: int64 */
             project?: number;
             /** Format: int64 */
-            reference?: number | null;
+            reference?: number;
             tz: string;
         };
         ReceiptDetailDto: {
@@ -7646,14 +7710,31 @@ export interface components {
             /** Format: int64 */
             total_paid_amount: number;
         };
+        SupplierBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            contact?: components["schemas"]["ContactData"];
+            supplier: components["schemas"]["SupplierData"];
+        };
+        SupplierData: {
+            /** Format: int64 */
+            group_id?: number | null;
+            name: string;
+        };
         SupplierDto: {
-            /** Format: date-time */
-            created_at: string;
-            enabled: boolean;
-            group?: components["schemas"]["GroupDto"];
+            email: string | null;
+            group: string;
+            /** Format: int64 */
+            group_id: number;
+            group_uuid: string;
             /** Format: int64 */
             id: number;
             name: string;
+            phone_number: string | null;
+            status: string;
             uuid: string;
         };
         TaxAndChargeLineData: {
@@ -10099,7 +10180,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditCustomerBody"];
+                "application/json": components["schemas"]["EditCustomerRequestBody"];
             };
         };
         responses: {
@@ -10217,6 +10298,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityCustomerDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-customer": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -14192,6 +14309,37 @@ export interface operations {
             };
         };
     };
+    "sales-record-export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportDataRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "update-status-sales-record": {
         parameters: {
             query?: never;
@@ -15835,6 +15983,39 @@ export interface operations {
             };
         };
     };
+    "edit-supplier": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditSupplierRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create supplier": {
         parameters: {
             query?: never;
@@ -15847,7 +16028,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateSupplierRequestBody"];
+                "application/json": components["schemas"]["SupplierBody"];
             };
         };
         responses: {
@@ -15897,6 +16078,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntitySupplierDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-supplier": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

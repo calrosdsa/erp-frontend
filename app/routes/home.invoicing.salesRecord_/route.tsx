@@ -8,40 +8,6 @@ import { State, stateToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import SalesRecordClient from "./sales-record.client";
 
-// type ActionData = {
-//   action: string;
-//   query: string;
-// };
-// export const action = async ({ request }: ActionFunctionArgs) => {
-//   const client = apiClient({ request });
-//   const data = (await request.json()) as ActionData;
-//   let message: string | undefined = undefined;
-//   let error: string | undefined = undefined;
-//   let currencyExchanges: components["schemas"]["CurrencyExchangeDto"][] = [];
-//   let actions: components["schemas"]["ActionDto"][] = [];
-//   switch (data.action) {
-//     case "get": {
-//       const res = await client.GET("/currency-exchange", {
-//         params: {
-//           query: {
-//             page: DEFAULT_PAGE,
-//             size: DEFAULT_SIZE,
-//             query: data.query,
-//           },
-//         },
-//       });
-//       console.log(res.data?.pagination_result.results)
-//       currencyExchanges = res.data?.pagination_result.results || [];
-//       actions = res.data?.actions || [];
-//       break;
-//     }
-//   }
-//   return json({
-//     message,
-//     error,
-//     currencyExchanges,
-//   });
-// };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

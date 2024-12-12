@@ -5,7 +5,7 @@ import {
   useOutletContext,
   useParams,
 } from "@remix-run/react";
-import { ItemLineType, State, stateFromJSON, stateToJSON, StockEntryType } from "~/gen/common";
+import { ItemLineType, itemLineTypeToJSON, State, stateFromJSON, stateToJSON, StockEntryType } from "~/gen/common";
 import { GlobalState } from "~/types/app";
 import LineItemsDisplay from "@/components/custom/shared/item/line-items-display";
 import { useEffect, useRef } from "react";
@@ -153,10 +153,11 @@ export default function InvoiceInfoTab() {
             currency={stockEntry?.currency || companyDefaults?.currency || ""}
             status={stockEntry?.status || ""}
             lineItems={lineItems}
-            partyType={invoiceParty}
+            docPartyType={invoiceParty}
+            docPartyID={stockEntry?.id}
             allowCreate={allowCreate}
             allowEdit={allowEdit}
-            itemLineType={ItemLineType.QUOTATION_LINE_ITEM}
+            lineType={itemLineTypeToJSON(ItemLineType.QUOTATION_LINE_ITEM)}
           />
         
 

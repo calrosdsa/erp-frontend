@@ -16,7 +16,6 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
   columns.push({
     accessorKey: "posting_date",
     header: t("form.postingDate"),
-    size: 300,
     cell: ({ ...props }) => {
       return <TableCellDate i18n={i18n} formatDate="medium" {...props} />;
     },
@@ -68,6 +67,13 @@ export const accountPayableColumns = ({}: {}): ColumnDef<
   columns.push({
     accessorKey: "voucher_no",
     header:t("form.voucherNo"),
+    cell:({...props})=>{
+      const rowData = props.row.original
+      return <TableCellNameNavigation
+      {...props}
+      navigate={(name)=>r.toVoucher(rowData.voucher_type,name)}
+      />
+    }
   });
   columns.push({
     accessorKey: "invoiced_amount",

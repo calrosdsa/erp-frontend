@@ -50,23 +50,23 @@ export default function CurrencyExchangeDetailClient() {
     },
   ];
 
-  const onChangeState = (e: EventState) => {
-    const body: z.infer<typeof updateStatusWithEventSchema> = {
-      current_state: currencyExchange?.status || "",
-      party_id: currencyExchange?.uuid || "",
-      events: [e],
+    const onChangeState = (e: EventState) => {
+      const body: z.infer<typeof updateStatusWithEventSchema> = {
+        current_state: currencyExchange?.status || "",
+        party_id: currencyExchange?.uuid || "",
+        events: [e],
+      };
+      fetcher.submit(
+        {
+          action: "update-status",
+          updateStatus: body,
+        },
+        {
+          method: "POST",
+          encType: "application/json",
+        }
+      );
     };
-    fetcher.submit(
-      {
-        action: "update-status",
-        updateStatus: body,
-      },
-      {
-        method: "POST",
-        encType: "application/json",
-      }
-    );
-  };
 
  useDisplayMessage({
     error:fetcher.data?.error,

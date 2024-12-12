@@ -1,73 +1,81 @@
-import { Checkbox } from "@/components/ui/checkbox";
+import React from 'react'
+import { Control, FieldValues, Path, UseFormRegister } from 'react-hook-form'
+import { cn } from "@/lib/utils"
 import {
-  FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
+  FormControl,
+  FormDescription,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { Control,  } from "react-hook-form";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
 
-interface Props {
-  label?: string;
-  control?: Control<any, any>;
-  name: string;
-  description?: string;
-  inputType: "input" | "textarea" | "check";
-  required?: boolean;
-  className?: string;
-  allowEdit?: boolean;
-  onChange?:()=>void
-  onBlur?:()=>void
+interface Props<TFieldValues extends FieldValues> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name'> {
+  label?: string
+  control: Control<TFieldValues>
+  name: Path<TFieldValues>
+  description?: string
+  inputType: "input" | "textarea" | "check"
+  required?: boolean
+  allowEdit?: boolean
+  register?: UseFormRegister<TFieldValues>
 }
-export default function CustomFormFieldInput({
+
+export default function CustomFormFieldInput<TFieldValues extends FieldValues>({
   label,
   description,
   name,
   required = false,
-  allowEdit= true,
-  className = "",
+  allowEdit = true,
+  className,
   inputType,
   control,
+  register,
   onChange,
-  onBlur
-}: Props) {
+  onBlur,
+  ...props
+}: Props<TFieldValues>) {
   return (
-    <div className={cn("", className)}>
+    <div className={className}>
       <FormField
         control={control}
         name={name}
         render={({ field }) => (
           <FormItem className="flex flex-col">
             {label != undefined && (
-              <FormLabel className=" text-xs">
+              <FormLabel className="text-xs">
                 {label} {required && " *"}
               </FormLabel>
             )}
             <FormControl>
               <>
-                {inputType == "input" && (
+                {inputType === "input" && (
                   <Input
+                    {...field}
+                    {...props}
                     disabled={!allowEdit}
                     className={cn(
                       !allowEdit &&
                         "disabled:opacity-100 disabled:cursor-default bg-secondary"
                     )}
-                    {...field}
-                    onBlur={()=>{
-                      if(onBlur){
-                        onBlur()
-                      }
+                    type={props.type}
+                    onBlur={(e) => {
+                      field.onBlur()
+                      onBlur?.(e)
+                    }}
+                    onChange={(e) => {
+                      field.onChange(e)
+                      onChange?.(e)
                     }}
                   />
                 )}
-                {inputType == "textarea" && (
+                {inputType === "textarea" && (
                   <Textarea
                     {...field}
+                    {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
                     required={required}
                     className={cn(
                       !allowEdit &&
@@ -76,22 +84,19 @@ export default function CustomFormFieldInput({
                     disabled={!allowEdit}
                   />
                 )}
-                {inputType == "check" && (
+                {inputType === "check" && (
                   <div className="h-8 items-center flex">
                     <Checkbox
                       {...field}
                       className={cn(
-                        "",
                         !allowEdit &&
                           "disabled:opacity-100 disabled:cursor-default bg-secondary"
                       )}
                       disabled={!allowEdit}
                       checked={field.value}
-                      onCheckedChange={(e) => {
-                        field.onChange(e);
-                        if(onChange){
-                          onChange()
-                        }
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked)
+                        onChange?.(checked as any)
                       }}
                     />
                   </div>
@@ -104,5 +109,5 @@ export default function CustomFormFieldInput({
         )}
       />
     </div>
-  );
+  )
 }

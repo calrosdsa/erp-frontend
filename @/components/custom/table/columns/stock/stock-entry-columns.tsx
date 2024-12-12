@@ -15,6 +15,7 @@ export const stockEntryColumns = ({}: {}): ColumnDef<
     {
       header: t("table.no"),
       cell: TableCellIndex,
+      size:30
     },
     {
       accessorKey: "code",

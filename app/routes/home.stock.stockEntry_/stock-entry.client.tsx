@@ -10,6 +10,8 @@ import { stockEntryColumns } from "@/components/custom/table/columns/stock/stock
 import { routes } from "~/util/route";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
+import { ButtonToolbar } from "~/types/actions";
+import { stateFromJSON } from "~/gen/common";
 
 export default function StockEntryClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -21,7 +23,9 @@ export default function StockEntryClient() {
   const navigate = useNavigate()
   const r = routes
   const { resetItems } = useResetDocument()
+  
   setUpToolbar(() => {
+    
     return {
       ...(permission?.create && {
         addNew: () => {

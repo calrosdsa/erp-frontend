@@ -13,23 +13,32 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { editCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
 import { z } from "zod";
 import { routes } from "~/util/route";
-import {
-  ShouldRevalidateFunction,
-  ShouldRevalidateFunctionArgs,
-} from "@remix-run/react";
+import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { LOAD_ACTION } from "~/constant";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
   editCustomer: z.infer<typeof editCustomerSchema>;
+  updateStatus: z.infer<typeof updateStatusWithEventSchema>;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
   const r = routes;
+  let actionRes = LOAD_ACTION
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   switch (data.action) {
+    case "update-status": {
+      const res = await client.PUT("/customer/update-status", {
+        body: data.updateStatus,
+      });
+      message = res.data?.message;
+      error = res.error?.detail;
+      break;
+    }
     case "edit-customer": {
       const d = data.editCustomer;
       const res = await client.PUT("/customer", {
@@ -37,7 +46,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           name: d.name,
           customer_type: d.customerType,
           customer: d.customerID,
-          group_id:d.groupID,
+          group_id: d.groupID,
         },
       });
       error = res.error?.detail;
@@ -48,8 +57,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({
     error,
     message,
+    action:actionRes,
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult
+}:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

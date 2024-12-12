@@ -17,6 +17,7 @@ import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import SelectForm from "@/components/custom/select/SelectForm";
 import {
   ItemLineType,
+  itemLineTypeToJSON,
   PartyType,
   partyTypeToJSON,
   StockEntryType,
@@ -26,8 +27,6 @@ import { createStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-sc
 import AccordationLayout from "@/components/layout/accordation-layout";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
-import ItemLineForm from "@/components/custom/shared/item/item-line-form";
-import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { GlobalState } from "~/types/app";
 import {
   setUpToolbar,
@@ -171,7 +170,7 @@ export default function NewStockEntryClient() {
                 form={form}
                 name="sourceWarehouse"
                 nameK={"name"}
-                label={t("f.source", { o: t("warehouse") })}
+                label={"Origen"}
                 data={sourceWarehouse.data?.warehouses || []}
                 onSelect={(e) => {
                   form.setValue("sourceWarehouseID", e.id);
@@ -182,7 +181,7 @@ export default function NewStockEntryClient() {
                 form={form}
                 name="targetWarehouse"
                 nameK={"name"}
-                label={t("f.target", { o: t("warehouse") })}
+                label={"Destino"}
                 data={targetWarehouse.data?.warehouses || []}
                 onSelect={(e) => {
                   form.setValue("targetWarehouseID", e.id);
@@ -195,8 +194,9 @@ export default function NewStockEntryClient() {
                 form.setValue("items", e);
                 form.trigger("items");
               }}
-              itemLineType={ItemLineType.ITEM_LINE_STOCK_ENTRY}
-              partyType={r.stockEntry}
+              lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_STOCK_ENTRY)}
+              docPartyType={r.stockEntry}
+              allowEdit={true}
               currency={formValues.currency}
             />
           </div>

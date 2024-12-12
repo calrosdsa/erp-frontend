@@ -17,6 +17,7 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import AccordationLayout from "@/components/layout/accordation-layout";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { Input } from "@/components/ui/input";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
 export const CreateCustomer = ({
   open,
@@ -122,28 +123,26 @@ export const CreateCustomer = ({
                 label={t("group")}
                 roleActions={globalState.roleActions}
                 isGroup={false}
-                partyType={r.itemGroup}
+                partyType={r.customerGroup}
                 onSelect={(e) => {
                   form.setValue("groupID", e.id);
                 }}
               />
 
               <AccordationLayout title={t("contact")} className="grid gap-3">
-                <CustomFormField
+                <CustomFormFieldInput
                   label={t("form.phoneNumber")}
                   name="contactData.phoneNumber"
-                  form={form}
-                  children={(field) => {
-                    return <Input {...field} type="tel" />;
-                  }}
+                  control={form.control}
+                  inputType="input"
+                  type="tel"
                 />
-                <CustomFormField
+                <CustomFormFieldInput
                   label={t("form.email")}
                   name="contactData.email"
-                  form={form}
-                  children={(field) => {
-                    return <Input {...field} type="email" />;
-                  }}
+                  control={form.control}
+                  inputType="input"
+                  type="email"
                 />
               </AccordationLayout>
             </>

@@ -41,7 +41,6 @@ export const createStockEntrySchema = z
       });
     }
     data.items = data.items.map((t, i) => {
-      if (t.lineType == ItemLineType.ITEM_LINE_STOCK_ENTRY) {
         const lineReceipt: z.infer<typeof lineItemStockEntry> = {
           sourceWarehouse:
             t.lineItemStockEntry?.sourceWarehouse || data.sourceWarehouseID,
@@ -53,7 +52,6 @@ export const createStockEntrySchema = z
             t.lineItemStockEntry?.targetWarehouseName || data.targetWarehouse,
         };
         t.lineItemStockEntry = lineReceipt;
-      }
       return t;
     });
   });

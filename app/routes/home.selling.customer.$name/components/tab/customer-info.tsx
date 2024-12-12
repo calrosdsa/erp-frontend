@@ -5,19 +5,14 @@ import {
   useLoaderData,
   useNavigate,
   useOutletContext,
-  useSearchParams,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { formatLongDate } from "~/util/format/formatDate";
-import { PartyType } from "~/gen/common";
 import { routes } from "~/util/route";
 import { PartyAddresses } from "~/routes/home.party/components/party-addresses";
 import { PartyContacts } from "~/routes/home.party/components/party-contacts";
 import { editCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
 
 import { z } from "zod";
-import CustomFormField from "@/components/custom/form/CustomFormField";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
@@ -26,11 +21,12 @@ import { useRef } from "react";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
+import { GroupAutocompleteForm } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 import { useEditFields } from "~/util/hooks/useEditFields";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 type EditCustomerType = z.infer<typeof editCustomerSchema>;
 export default function CustomerInfo() {
   const { customer, addresses, contacts, actions } =
@@ -41,26 +37,25 @@ export default function CustomerInfo() {
     roleActions: roleActions,
     actions: actions,
   });
-  const [groupDebounceFetcher,onGroupNameChange] = useGroupDebounceFetcher({
-    partyType:PartyType.customerGroup
-})
-
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
   const r = routes;
-  const defaultValues = {
-    name: customer?.name || "",
-    customerType: customer?.customer_type,
-    customerID: customer?.id,
-    groupID: customer?.group_id || undefined,
-    groupName:customer?.group_name ||undefined,
-  } as EditCustomerType;
   const { form, hasChanged, updateRef } = useEditFields<EditCustomerType>({
     schema: editCustomerSchema,
-    defaultValues: defaultValues,
+    defaultValues: {
+      name: customer?.name || "",
+      customerType: t(customer?.customer_type || ""),
+      customerTypeValue: customer?.customer_type,
+      customerID: customer?.id,
+      groupID: customer?.group_id,
+      groupName: customer?.group_name,
+      groupUUID: customer?.group_uuid,
+    },
   });
+  const formValues = form.getValues();
+  const allowEdit = permission.edit || false;
 
   const onSubmit = (e: EditCustomerType) => {
     fetcher.submit(
@@ -74,11 +69,13 @@ export default function CustomerInfo() {
       }
     );
   };
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"SAVE"
-  }, [fetcher.state]);
-
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
   setUpToolbar(
     (opts) => {
@@ -112,81 +109,57 @@ export default function CustomerInfo() {
                 {t("_customer.info")}
               </Typography>
 
-              <CustomFormField
+              <CustomFormFieldInput
                 name="name"
                 control={form.control}
-                children={(field) => {
-                  return (
-                    <DisplayTextValue
-                    inputType="input"
-                      value={field.value}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        form.trigger("name");
-                      }}
-                      title={t("form.name")}
-                      readOnly={!permission?.edit}
-                    />
-                  );
-                }}
-              />
-              <CustomFormField
-                name="customerType"
-                control={form.control}
-                children={(field) => {
-                  return (
-                    <DisplayTextValue
-                      value={field.value}
-                      inputType="select"
-                      field={field}
-                      selectOptions={
-                        [
-                          { name: t("individual"), value: "individual" },
-                          { name: t("company"), value: "company" },
-                        ] as SelectItem[]
-                      }
-                      selectNameKey="name"
-                      onSelect={(e) => {
-                        field.onChange(e.name);
-                        form.trigger("customerType");
-                      }}
-                      title={t("form.type")}
-                      readOnly={!permission?.edit}
-                    />
-                  );
-                }}
+                inputType="input"
+                label={t("form.name")}
+                allowEdit={allowEdit}
               />
 
-             
-            
-                 <CustomFormField
-                name="groupName"
+              <FormAutocomplete
                 control={form.control}
-                children={(field) => {
-                  return (
-                    <DisplayTextValue
-                      value={field.value}
-                      inputType="select"
-                      field={field}
-                      selectOptions={groupDebounceFetcher.data?.groups || []}
-                      selectNameKey="name"
-                      onSelect={(e) => {
-                        console.log("GROUP",e)
-                        form.setValue("groupID",e.id);
-                        form.trigger("groupID");
-                      }}
-                      onValueChange={onGroupNameChange}
-                      title={t("customerGroup")}
-                      readOnly={!permission?.edit}
-                    />
-                  );
+                data={
+                  [
+                    { name: t("individual"), value: "individual" },
+                    { name: t("company"), value: "company" },
+                  ] as SelectItem[]
+                }
+                onValueChange={() => {}}
+                label={t("form.type")}
+                nameK={"name"}
+                name="customerType"
+                onSelect={(e) => {
+                  form.setValue("customerTypeValue", e.value);
                 }}
+                allowEdit={allowEdit}
               />
-              {/* <DisplayTextValue
-                value={customer?.group_name}
-                title={t("_group.base")}
-                to={r.toGroupsByParty(PartyType.customerGroup)}
-              /> */}
+
+              <GroupAutocompleteForm
+                name="groupName"
+                label={t("group")}
+                href={
+                  formValues.groupUUID
+                    ? r.toRoute({
+                        main: r.customerGroup,
+                        routePrefix: [r.group],
+                        routeSufix: [formValues.groupName || ""],
+                        q: {
+                          tab: "info",
+                          id: formValues.groupUUID,
+                        },
+                      })
+                    : undefined
+                }
+                control={form.control}
+                partyType={r.customerGroup}
+                isGroup={false}
+                onSelect={(e) => {
+                  form.setValue("groupID", e.id);
+                  form.setValue("groupUUID", e.uuid);
+                }}
+                allowEdit={allowEdit}
+              />
             </div>
             <input className="hidden" type="submit" ref={inputRef} />
           </fetcher.Form>

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { useForm, FieldValues, UseFormReturn, DefaultValues } from "react-hook-form";
+import { useForm, FieldValues, UseFormReturn, DefaultValues, Path } from "react-hook-form";
 import { z } from "zod";
 import { isEqual } from 'lodash';
 
@@ -24,7 +24,6 @@ export function useEditFields<T extends FieldValues>({
 }: UseEditFieldsProps<T>): UseEditFieldsReturn<T> {
   const form = useForm<T>({
     resolver: zodResolver(schema),
-    defaultValues,
   });
 
   const [hasChanged, setHasChanged] = useState(false);
@@ -40,6 +39,12 @@ export function useEditFields<T extends FieldValues>({
     previousValuesRef.current = newValues;
     validateIfDataHasChanged();
   }, [validateIfDataHasChanged]);
+
+  useEffect(() => {
+    Object.entries(defaultValues).forEach(([key, value]) => {
+      form.setValue(key as keyof T as Path<T>, value as T[keyof T],)
+    })
+  }, [])
 
   useEffect(() => {
     const subscription = form.watch(() => {

@@ -119,6 +119,9 @@ class Routes {
   purchaseOrder = "purchaseOrder";
   supplierQuotation = "supplierQuotation";
   itemGroup = "itemGroup";
+  customerGroup = "customerGroup";
+  supplierGroup = "supplierGroup";
+
 
   defaultTab = {
     tab: "info",

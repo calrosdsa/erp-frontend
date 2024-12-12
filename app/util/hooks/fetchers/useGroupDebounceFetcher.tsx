@@ -18,6 +18,7 @@ export const GroupAutocompleteForm = ({
   isGroup,
   partyType,
   roleActions,
+  href,
 }: {
   allowEdit?: boolean;
   control?: Control<any, any>;
@@ -26,6 +27,7 @@ export const GroupAutocompleteForm = ({
   onSelect: (e: components["schemas"]["GroupDto"]) => void;
   isGroup: boolean;
   partyType: string;
+  href?:string
   roleActions?: components["schemas"]["RoleActionDto"][];
 }) => {
   const [fetcherDebounce, onChange] = useGroupDebounceFetcher({
@@ -45,6 +47,7 @@ export const GroupAutocompleteForm = ({
       label={label}
       name={name || "group"}
       nameK="name"
+      href={href}
       control={control}
       allowEdit={allowEdit}
       onSelect={onSelect}

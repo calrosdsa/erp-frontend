@@ -2,29 +2,29 @@ import { ActionFunctionArgs } from "@remix-run/node";
 import { endOfMonth, formatRFC3339, startOfMonth } from "date-fns";
 import { z } from "zod";
 import apiClient from "~/apiclient";
+import { paths } from "~/sdk";
 import { exportDataSchema } from "~/util/data/schemas/exporter/exporter-schema";
 import type {
-    PathsWithMethod,
-  } from "openapi-typescript-helpers";
-import { paths } from "~/sdk";
+  PathsWithMethod,
+} from "openapi-typescript-helpers";
 type ActionData = {
-    exportData:z.infer<typeof exportDataSchema>
+  path:string
+  data:string
 }
 export const action = async ({ request }: ActionFunctionArgs) => {
     const client = apiClient({ request });
     const data = await request.json() as ActionData
     const url = new URL(request.url)
-    console.log("ACTION T")
+    console.log("ACTION T",data)
     const searchParams = url.searchParams
     console.log(searchParams.get("type"))
     try {
-      console.log(data.exportData)
-      const d=  data.exportData
-      const response = await client.POST(d.path as PathsWithMethod<paths, "post">, {
+      const response = await client.POST(data.path as PathsWithMethod<paths, "post">, {
         parseAs: "stream",
         body: {
-          from_date: formatRFC3339(d.fromDate),
-          to_date: formatRFC3339(d.toDate),
+          data:JSON.parse(data.data),
+        //   from_date: formatRFC3339(d.fromDate),
+        //   to_date: formatRFC3339(d.toDate),
         },
       });
   
