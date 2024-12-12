@@ -266,6 +266,7 @@ export function DataTable<TData, TValue>({
           style={{
             width: cell.column.getSize(),
             maxWidth: cell.column.getSize(),
+            height:43,
             overflow: "hidden",
             textOverflow: "ellipsis",
           }}
@@ -284,7 +285,7 @@ export function DataTable<TData, TValue>({
         <div className="w-full">
           <TableVirtuoso
             style={{
-              height: `${Math.min(data.length * 44 + 50, maxTableHeight)}px`,
+              height: `${Math.min(data.length * 43 + 52, maxTableHeight)}px`,
               width: "100%",
             }}
             data={table.getRowModel().rows}

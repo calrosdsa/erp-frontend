@@ -24,7 +24,7 @@ export const lineItemsColumns = ({
   const { t, i18n } = useTranslation("common");
   columns.push({
     header: t("table.no"),
-    size:35,
+    size:30,
     cell: TableCellIndex,
   });
   columns.push({

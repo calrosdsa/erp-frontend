@@ -15,6 +15,7 @@ export const projectColumns = ({}: {}): ColumnDef<
     {
       header: t("table.no"),
       cell: TableCellIndex,
+      size:30,
     },
     {
       accessorKey: "name",
