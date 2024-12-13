@@ -24,9 +24,9 @@ export default function TableCellNameNavigation<TData>({ getValue, row, column, 
           <div className="">
           <Link to={navigate(nameR)}>
             <Typography className=" text-primary font-semibold text-xs underline cursor-pointer
-             whitespace-nowrap">
-              {name ? name :
-              typeof  nameR == "string" ? nameR : ""}
+             whitespace-nowrap truncate">
+              {name ? name  :
+              typeof  nameR == "string" ? nameR  : ""}
             </Typography>
           </Link>
         </div>

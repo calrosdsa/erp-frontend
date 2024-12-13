@@ -9,16 +9,13 @@ import { routes } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
 import TableCellIndex from "../../cells/table-cell-index";
+import TableCellStatus from "../../cells/table-cell-status";
+import TableCellTranslate from "../../cells/table-cell-translate";
 
 export const accountColumns = (): ColumnDef<components["schemas"]["LedgerDto"]>[] => {
   const { t, i18n } = useTranslation("common");
   const r = routes;
   return [
-    {
-        id:"no",
-        header:t("table.no"),
-        cell:TableCellIndex
-    },
     {
       accessorKey: "name",
       header: t("form.name"),
@@ -41,10 +38,16 @@ export const accountColumns = (): ColumnDef<components["schemas"]["LedgerDto"]>[
       }
     },
     {
+      accessorKey:"status",
+      header:t("form.status"),
+      cell:TableCellStatus
+    },
+    {
       accessorKey: "created_at",
       header: t("table.createdAt"),
       cell: ({ ...props }) => <TableCellDate
       {...props}
+      formatDate="medium"
       i18n={i18n}
       />
     },

@@ -38,7 +38,7 @@ export function shouldRevalidate({
   defaultShouldRevalidate,
   actionResult
 }:ShouldRevalidateFunctionArgs) {
-  if (actionResult?.action == LOAD_ACTION) {
+  if (actionResult?.actionRoot == LOAD_ACTION) {
     return defaultShouldRevalidate;
   }
   if (formMethod === "POST") {

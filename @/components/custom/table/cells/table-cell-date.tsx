@@ -24,13 +24,13 @@ export default function TableCellDate<TData>({
   column,
   table,
   i18n,
-  formatDate = "long",
+  formatDate = "medium",
 }: TableCellProps<TData>) {
   const initialValue = getValue();
   return (
     <>
     {typeof initialValue == "string" && 
-    <div className=" whitespace-nowrap">
+    <div className=" whitespace-nowrap truncate">
         {formatDate == "long" && (
           formatLongDate(initialValue, i18n.language)
         )}

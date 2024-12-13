@@ -8,7 +8,6 @@ let i18next = new RemixI18Next({
 		supportedLanguages: i18n.supportedLngs,
 		fallbackLanguage: i18n.fallbackLng,
 	},
-	
 	// This is the configuration for i18next used
 	// when translating messages server-side only
 	i18next: {

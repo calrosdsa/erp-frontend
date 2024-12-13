@@ -42,6 +42,7 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
                 customer_id:searchParams.get("party") || "",
                 order:searchParams.get("order") || DEFAULT_ORDER,
                 column:searchParams.get("column") || DEFAULT_COLUMN,
+                status:searchParams.get("status") || ""
             }
         }
     })

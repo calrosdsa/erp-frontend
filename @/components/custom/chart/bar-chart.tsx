@@ -95,8 +95,8 @@ export default function BarChartComponent({
   return (
     <div className={cn(className, "")}>
       <Card>
-        <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-          <div className="flex flex-1 flex-col justify-center gap-1 px-4 py-3 sm:py-4">
+        <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 ">
+          <div className="flex flex-1 flex-col justify-center gap-1 px-4 py-3">
             {title && 
             <div className="flex items-center space-x-3">
               {to ?
@@ -115,14 +115,14 @@ export default function BarChartComponent({
               const chart = key as keyof typeof chartConfig;
               return (
                 <Button
-                  variant={"ghost"}
+                  variant={"none"}
                   key={chart}
                   data-active={activeCharts.includes(chart)}
                   className={cn(
-                    `relative  flex flex-1 flex-col justify-center gap-1 border-t h-20
+                    `relative  flex flex-1 flex-col justify-center gap-1 border-t h-14  
                   text-left even:border-l sm:border-l 
                   sm:border-t-0`,
-                    activeCharts.includes(chart) && "bg-muted"
+                    activeCharts.includes(chart) ? "bg-muted" : "bg-background"
                   )}
                   onClick={() => {
                     if (activeCharts.includes(chart)) {

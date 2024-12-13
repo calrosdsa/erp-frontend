@@ -29,8 +29,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const d = data.editItem;
       const res = await client.PUT("/stock/item", {
         body: {
-          item_id: d.itemID,
+          id: d.id,
           name: d.name,
+          group_id: d.groupID,
+          uom_id: d.uomID
         },
       });
       error = res.error?.detail;

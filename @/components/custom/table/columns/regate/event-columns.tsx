@@ -17,11 +17,6 @@ export const eventBookingsColumns = (): ColumnDef<components["schemas"]["EventBo
   const r = routes;
   return [
     {
-       header:t("table.no"),
-       cell:TableCellIndex,
-       size:30
-    },
-    {
         accessorKey: "name",
         header: t("form.name"),
         cell:({...props})=>{

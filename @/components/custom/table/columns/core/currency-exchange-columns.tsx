@@ -14,10 +14,6 @@ export const currencyExchangeColumns = ({}: {}): ColumnDef<
   const { t, i18n } = useTranslation("common");
   return [
     {
-      header: t("table.no"),
-      cell: TableCellIndex,
-    },
-    {
       accessorKey: "name",
       header: t("form.name"),
       cell: ({ ...props }) => {

@@ -24,11 +24,6 @@ export const roleEntitiesActionColumns = ({
   const r = routes;
   const { t } = useTranslation("common");
   columns.push({
-    header: "No.",
-    cell: TableCellIndex,
-    size:30,
-  },);
-  columns.push({
     accessorKey: "entity.name",
     header: t("entity"),
     id: "entityName",
@@ -36,6 +31,7 @@ export const roleEntitiesActionColumns = ({
   columns.push({
     accessorKey: "actions",
     header: t("action"),
+    size:250,
     cell: ({ ...props }) => (
       <TableCellEntityActions {...props} roleActions={roleActionsIds} />
     ),

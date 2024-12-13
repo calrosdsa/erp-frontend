@@ -1,4 +1,7 @@
-import { DataTable, useTableSelectionStore } from "@/components/custom/table/CustomTable";
+import {
+  DataTable,
+  useTableSelectionStore,
+} from "@/components/custom/table/CustomTable";
 import {
   useFetcher,
   useLoaderData,
@@ -24,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { State, stateToJSON } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { GenericActionsDropdown } from "./components/actions-dropdown";
+import CustomSelect from "@/components/custom/select/custom-select";
 
 export default function BookingsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -38,7 +42,7 @@ export default function BookingsClient() {
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
   const { t } = useTranslation("common");
   const navigate = useNavigate();
-  const {clear,selectedRowsData} = useTableSelectionStore()
+  const { clear, selectedRowsData } = useTableSelectionStore();
   // const [selectedBookings, setSelectedBookings] = useState<
   //   components["schemas"]["BookingDto"][]
   // >([]);
@@ -65,10 +69,10 @@ export default function BookingsClient() {
     {
       success: fetcher.data?.message,
       error: fetcher.data?.error,
-      onSuccessMessage:()=>{
+      onSuccessMessage: () => {
         // setSelectedBookings([])
-        clear()
-      }
+        clear();
+      },
     },
     [fetcher.data]
   );
@@ -93,6 +97,38 @@ export default function BookingsClient() {
       filterOptions={() => {
         return (
           <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
+            <GenericActionsDropdown
+              selectedItems={selectedRowsData}
+              actions={[
+                {
+                  label: "Completar",
+                  onClick: () => onActions(State.COMPLETED),
+                  isEnabled: (bookings) =>
+                    bookings.every(
+                      (booking) =>
+                        booking.status === "UNPAID" ||
+                        booking.status === "PARTIALLY_PAID"
+                    ),
+                },
+                {
+                  label: "Cancelar",
+                  onClick: () => onActions(State.CANCELLED),
+                  isEnabled: (bookings) =>
+                    bookings.some((booking) =>
+                      ["UNPAID", "PARTIALLY_PAID", "COMPLETED"].includes(
+                        booking.status
+                      )
+                    ),
+                },
+                {
+                  label: "Eliminar",
+                  onClick: () => onActions(State.DELETED),
+                  isEnabled: (bookings) =>
+                    bookings.every((booking) => booking.status === "CANCELLED"),
+                },
+              ]}
+            />
+
             <AutocompleteSearch
               data={customerFetcher.data?.customers || []}
               nameK={"name"}
@@ -121,31 +157,22 @@ export default function BookingsClient() {
               queryName="courtName"
               queryValue="court"
             />
-            <GenericActionsDropdown
-              selectedItems={selectedRowsData}
-              actions={ [
-                {
-                  label: "Completar",
-                  onClick: () => onActions(State.COMPLETED),
-                  isEnabled: (bookings) => bookings.every(
-                    booking => booking.status === "UNPAID" || booking.status === "PARTIALLY_PAID"
-                  ),
-                },
-                {
-                  label: "Cancelar",
-                  onClick: () => onActions(State.CANCELLED),
-                  isEnabled: (bookings) => bookings.some(booking =>
-                    ["UNPAID", "PARTIALLY_PAID", "COMPLETED"].includes(booking.status)
-                  ),
-                },
-                {
-                  label: "Eliminar",
-                  onClick: () => onActions(State.DELETED),
-                  isEnabled: (bookings) => bookings.every(
-                    booking => booking.status === "CANCELLED"
-                  ),
-                },
-              ]}
+
+            <AutocompleteSearch
+              data={
+                [
+                  { name: "Completado", value: "COMPLETED" },
+                  { name: "Cancelado", value: "CANCELLED" },
+                  { name: "Pagado Parcialmente", value: "PARTIALLY_PAID" },
+                  { name: "No pagado", value: "UNPAID" },
+                ] as SelectItem[]
+              }
+              nameK={"name"}
+              valueK={"value"}
+              onValueChange={() => {}}
+              placeholder="Estado"
+              queryName="status_name"
+              queryValue="status"
             />
           </div>
         );

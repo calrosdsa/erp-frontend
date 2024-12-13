@@ -40,7 +40,7 @@ export default function TableCellPrice<TData>({
     return formatCurrency(amount, currency, i18n.language)
   }
   return (
-    <div className=" whitespace-nowrap">
+    <div className=" whitespace-nowrap truncate">
       {price != undefined
         ? format(price)
         : typeof initialValue == "number" &&

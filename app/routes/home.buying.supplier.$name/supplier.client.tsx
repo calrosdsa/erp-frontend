@@ -22,7 +22,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";
 
 export default function SupplierClient() {
-  const { supplier, actions, addresses, contacts } =
+  const { supplier, actions, activities} =
     useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
@@ -142,7 +142,8 @@ export default function SupplierClient() {
     };
   }, [supplier,permission]);
   return (
-    <DetailLayout navItems={navItems} partyID={supplier?.id}>
+    <DetailLayout navItems={navItems} partyID={supplier?.id} 
+    activities={activities}>
       {tab == "info" && <SupplierInfo />}
     </DetailLayout>
   );

@@ -1,5 +1,4 @@
 import IconButton from "@/components/custom-ui/icon-button";
-import { Icons } from "@/components/icons";
 import Typography, { sm, xs } from "@/components/typography/Typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +9,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import {
   FormControl,
   FormDescription,
@@ -34,7 +32,7 @@ import {
   PlusIcon,
   XIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Control } from "react-hook-form";
 
 interface Props<T extends object, K extends keyof T> {
@@ -84,7 +82,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
               {label} {required && "*"}
             </FormLabel>
           )}
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={open} onOpenChange={setOpen} modal={true}>
               {href && !allowEdit ? (
               <Button
                 variant="outline"
@@ -165,8 +163,8 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
               </FormControl>
             </PopoverTrigger>
               )}
-            <PopoverContent className=" ">
-              <Command className="max-h-[200px]">
+            <PopoverContent className="">
+              <Command className="max-h-[150px] sm:max-h-[200px]">
                 <CommandInput
                   placeholder="Buscar..."
                   onValueChange={(e) => {

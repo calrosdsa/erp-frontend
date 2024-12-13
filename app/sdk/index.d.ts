@@ -2113,6 +2113,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/regate/event/delete-in-batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Event Batch */
+        delete: operations["delete-event-batch"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/regate/event/detail/{id}": {
         parameters: {
             query?: never;
@@ -4065,6 +4082,14 @@ export interface components {
             code: string;
             name: string;
         };
+        DeleteEventBatchRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            event_ids: number[];
+        };
         DeleteLineItemRequestBody: {
             /**
              * Format: uri
@@ -4914,6 +4939,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityCompanyDto"];
+        };
+        EntityResponseResultEntityContactDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityContactDto"];
         };
         EntityResponseResultEntityCostCenterDtoBody: {
             /**
@@ -7261,6 +7299,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CompanyDto"];
+        };
+        ResultEntityContactDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["ContactDto"];
         };
         ResultEntityCostCenterDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -11907,7 +11951,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseDataContactDtoBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityContactDtoBody"];
                 };
             };
             /** @description Error */
@@ -13847,6 +13891,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataEventBookingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-event-batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteEventBatchRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

@@ -20,14 +20,8 @@ export const orderColumns = ({
   const { t, i18n } = useTranslation("common");
 
   columns.push({
-    header: t("table.no"),
-    cell: TableCellIndex,
-    size:40
-  });
-  columns.push({
     accessorKey: "code",
     header: t("form.code"),
-    size:80,
     cell: ({ ...props }) => {
       return (
         <TableCellNameNavigation
@@ -49,7 +43,6 @@ export const orderColumns = ({
   columns.push({
     accessorKey: "party_name",
     header: t("form.party"),
-    size:100,
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -71,7 +64,6 @@ export const orderColumns = ({
   });
   columns.push({
     id: "received",
-    size:80,
     header: t("table.received"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
@@ -87,7 +79,6 @@ export const orderColumns = ({
   columns.push({
     id: "billed",
     header: t("table.billed"),
-    size:80,
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
@@ -101,7 +92,6 @@ export const orderColumns = ({
   });
   columns.push({
     accessorKey: "total_amount",
-    size:70,
     header: t("table.total"),
     cell: ({ ...props }) => <TableCellPrice
     {...props} 

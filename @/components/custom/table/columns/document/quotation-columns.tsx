@@ -15,10 +15,6 @@ export const quotationColumns = ({quotationType}:{
   const { t, i18n } = useTranslation("common");
   const r = routes;
   columns.push({
-    header: t("table.no"),
-    cell: TableCellIndex,
-  });
-  columns.push({
     accessorKey: "code",
     header: t("form.code"),
     cell: ({ ...props }) => {
@@ -51,7 +47,7 @@ export const quotationColumns = ({quotationType}:{
           <TableCellNameNavigation
             {...props}
             navigate={(name) =>
-              r.toPartyReference(rowData.party_type, name, {
+              r.toParty(rowData.party_type, name, {
                 tab: "info",
                 id: rowData.party_uuid,
               })

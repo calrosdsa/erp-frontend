@@ -20,11 +20,6 @@ export const invoiceColumns = ({
   const r = routes;
   return [
     {
-      header: t("table.no"),
-      cell: TableCellIndex,
-      size:20
-    },
-    {
       accessorKey: "code",
       header: t("form.code"),
       cell: ({ ...props }) => {

@@ -19,21 +19,21 @@ export default function AddressesClient(){
     const r = routes
     const navigate = useNavigate()
     setUpToolbar(()=>{
-        return {}
-    },[])
+        return {
+            ...(permission?.create && {
+                addNew:()=>{
+                    navigate(r.createAddress)
+                }
+            })
+        }
+    },[permission])
     return (
         <div>
             <DataTable
             data={paginationResult?.results || []}
             columns={addressColumns()}
-            metaActions={{
-                meta:{
-                    ...(permission?.create && {
-                        addNew:()=>{
-                            navigate(r.createAddress)
-                        }
-                    })
-                }
+            paginationOptions={{
+                rowCount:paginationResult?.total
             }}
             />
         </div>

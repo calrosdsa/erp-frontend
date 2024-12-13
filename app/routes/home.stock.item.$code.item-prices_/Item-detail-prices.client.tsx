@@ -2,7 +2,7 @@ import Typography, { title } from "@/components/typography/Typography";
 import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { itemPriceColumns } from "@/components/custom/table/columns/stock/itemPriceColumns";
+import { itemPriceColumns } from "@/components/custom/table/columns/stock/item-price-columns";
 import useActionRow from "~/util/hooks/useActionRow";
 import { ItemGlobalState } from "~/types/app";
 import { loader } from "./route";

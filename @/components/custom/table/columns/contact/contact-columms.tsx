@@ -16,10 +16,6 @@ export const contactColumns = (): ColumnDef<components["schemas"]["ContactDto"]>
   const r = routes;
   return [
     {
-      header:t("table.no"),
-      cell:TableCellIndex
-    },
-    {
       accessorKey: "given_name",
       header: t("form.name"),
       cell:({...props})=>{

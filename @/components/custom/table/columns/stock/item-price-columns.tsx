@@ -19,11 +19,7 @@ export const itemPriceColumns = ({
   const { t, i18n } = useTranslation("common");
   let columns: ColumnDef<components["schemas"]["ItemPriceDto"]>[] = [];
   const r = routes;
-  columns.push({
-    id: "index",
-    cell: TableCellIndex,
-  });
-
+  
   if (includeItem) {
     columns.push({
       accessorKey: "item_name",

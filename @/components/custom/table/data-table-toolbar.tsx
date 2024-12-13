@@ -26,7 +26,7 @@ export function DataTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         {tableMeta?.addNew != undefined &&
-        <Button className="mr-auto space-x-2  h-8 flex" variant={"outline"}
+        <Button type="button" className="mr-auto space-x-2  h-8 flex" variant={"outline"}
         onClick={()=>{
           tableMeta.addNew()  
         }}>
@@ -62,6 +62,7 @@ export function DataTableToolbar<TData>({
         {isFiltered && (
           <Button
             variant="ghost"
+            type={"button"}
             onClick={() => table.resetColumnFilters()}
             className="h-8 px-2 lg:px-3"
           >

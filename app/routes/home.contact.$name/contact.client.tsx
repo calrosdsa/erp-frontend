@@ -13,9 +13,10 @@ import { PartyReferences } from "../home.party/components/party-references";
 import DetailLayout from "@/components/layout/detail-layout";
 import { routes } from "~/util/route";
 import { ContactInfo } from "./tab/contact-info";
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function ContactClient() {
-  const { contact, actions } = useLoaderData<typeof loader>();
+  const { contact, actions, activities } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info"
   const globalState = useOutletContext<GlobalState>();
@@ -41,16 +42,19 @@ export default function ContactClient() {
       title: t("info"),
       href: toRoute("info"),
     },
-    // {
-    //   title: t("connections"),
-    //   href: toRoute("connections"),
-    // },
   ];
+
+  setUpToolbar(()=>{
+    return {
+
+    }
+  },[])
 
   return (
   <DetailLayout 
   navItems={navItems}
   partyID={contact?.id}
+  activities={activities}
   >
     {tab == "info" && 
     <ContactInfo/>

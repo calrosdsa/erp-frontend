@@ -159,15 +159,15 @@ class Routes {
     let url = `${this.base}/${encodeURIComponent(partyType)}/new-${partyType}`;
     return this.baseRoute(url, q);
   }
-  toParty(
-    partyType: string,
-    q?: {
-      [x: string]: string | undefined;
-    }
-  ): string {
-    let url = `${this.base}/${encodeURIComponent(partyType)}`;
-    return this.baseRoute(url, q);
-  }
+  // toParty(
+  //   partyType: string,
+  //   q?: {
+  //     [x: string]: string | undefined;
+  //   }
+  // ): string {
+  //   let url = `${this.base}/${encodeURIComponent(partyType)}`;
+  //   return this.baseRoute(url, q);
+  // }
   toRoute(opts: {
     main: string;
     routePrefix?: string[];
@@ -224,7 +224,7 @@ class Routes {
     return `${this.groups}/${partyType}`;
   }
 
-  toPartyReference(
+  toParty(
     partyType: string,
     name: string,
     q?: Record<string, string | undefined>

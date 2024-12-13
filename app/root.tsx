@@ -45,6 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const themeSession = await getThemeSession(request);
 
   let _locale = await i18next.getLocale(request);
+  console.log("LOCALE",_locale)
   if (session.has("locale")) {
     const locale = session.get("locale") || _locale;
     return json({

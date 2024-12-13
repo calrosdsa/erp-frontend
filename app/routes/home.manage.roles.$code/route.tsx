@@ -30,7 +30,7 @@ export const action = async({request}:LoaderFunctionArgs)=>{
     }
     return json({
         message,error,
-        action:actionRes,
+        actionRoot:actionRes,
     })
 }
 

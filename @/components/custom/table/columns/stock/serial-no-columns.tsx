@@ -16,11 +16,6 @@ export const serialNoSumaryColumns = ({}: {}): ColumnDef<
   const { t, i18n } = useTranslation("common");
   return [
     {
-      header: t("table.no"),
-      cell: TableCellIndex,
-      size: 40,
-    },
-    {
       header: t("form.postingDate"),
       accessorKey: "posting_date",
       cell: ({ ...props }) => {
@@ -153,10 +148,7 @@ export const serialNoColumns = ({}: {}): ColumnDef<
   const r = routes;
   const { t, i18n } = useTranslation("common");
   return [
-    {
-      header: t("table.no"),
-      cell: TableCellIndex,
-    },
+    
     {
       accessorKey: "serial_no",
       header: t("serialNo"),

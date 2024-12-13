@@ -73,7 +73,8 @@ export default function AccountInfo() {
       ) // Filter to get only numeric values (enum values)
       .map((key) => {
         return {
-          name: t(AccountType[Number(key)] || ""), // Translate enum name
+          // name: t(AccountType[Number(key)] || ""), // Translate enum name
+          name: AccountType[Number(key)], // Translate enum name
           value: AccountType[Number(key)] || "", // Use the numeric value of the enum
         } as unknown as SelectItem;
       });
@@ -149,7 +150,6 @@ export default function AccountInfo() {
 
   return (
     <FormLayout>
-      {/* {JSON.stringify(account)} */}
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="info-grid">

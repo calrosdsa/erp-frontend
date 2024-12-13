@@ -13,10 +13,6 @@ export const batchBundleColumns = ({}: {}): ColumnDef<
   const { t, i18n } = useTranslation("common");
   return [
     {
-      header: t("table.no"),
-      cell: TableCellIndex,
-    },
-    {
       accessorKey: "batch_bundle_no",
       header: t("batchBundle"),
       cell: ({ ...props }) => {

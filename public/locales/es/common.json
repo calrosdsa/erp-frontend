@@ -99,7 +99,7 @@
     "code": "Código",
     "fullName": "Nombre Completo",
     "familyName": "Apellido",
-    "givenName": "Primer Nombre",
+    "givenName": "Nombre",
     "phoneNumber": "Número de Teléfono",
     "amount": "Monto",
     "type": "Tipo",
@@ -460,6 +460,10 @@
   "PARTIALLY_PAID":"PAGADO PARCIALMENTE",
   "ACTIVE":"ACTIVO",
   "ENABLED":"HABILITADO",
+  "TO_RECEIVE_AND_BILL":"POR RECIBIR Y FACTURAR",
+  "TO_RECEIVE":"POR RECIBIR",
+  "TO_BILL":"POR FACTURAR",
+
 
   "regate": {
     "schedule": "Horario",

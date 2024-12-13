@@ -13,7 +13,7 @@ import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 
 export default function NewBookingClient() {
   const fetcher = useFetcher<typeof action>({ key: "booking-data" });
-  const { payload, resetPayload } = useNewBooking();
+  const { payload } = useNewBooking();
 
   const onBookingPayload = () => {
     if (payload) {
@@ -65,8 +65,6 @@ export default function NewBookingClient() {
       )
     }
 
-      {/* </Wizard> */}
-    
     </>
   );
 }

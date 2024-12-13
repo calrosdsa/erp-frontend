@@ -21,9 +21,9 @@ export const createContactSchema = z.object({
 
 export const editContactSchema = z.object({
   givenName: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
-  familyName: z.string().optional(),
-  email: z.string().email().optional(),
-  phoneNumber: z.string().optional(),
+  familyName: z.string().optional().nullable(),
+  email: z.string().email().optional().nullable(),
+  phoneNumber: z.string().optional().nullable(),
   partyID:z.number(),
 });
 

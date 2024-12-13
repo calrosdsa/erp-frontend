@@ -51,6 +51,7 @@ export default function SalesRecordClient() {
   return (
     <>
     <div className=" relative w-full">
+    
             <DataTable
               paginationOptions={{
                 rowCount: paginationResult?.total,

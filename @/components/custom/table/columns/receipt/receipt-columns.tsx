@@ -23,11 +23,6 @@ export const receiptColumns = ({
   const r = routes;
   return [
     {
-        header:t("table.no"),
-        cell:TableCellIndex,
-        size:30,
-    },
-    {
       accessorKey: "code",
       header: t("form.code"),
       cell: ({ ...props }) => {

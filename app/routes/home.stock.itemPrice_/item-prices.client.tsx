@@ -7,7 +7,7 @@ import {
 } from "@remix-run/react";
 import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { itemPriceColumns } from "@/components/custom/table/columns/stock/itemPriceColumns";
+import { itemPriceColumns } from "@/components/custom/table/columns/stock/item-price-columns";
 import { useAddItemPrice } from "./components/add-item-price";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app";

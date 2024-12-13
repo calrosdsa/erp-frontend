@@ -42,7 +42,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
                         paid_to_id: d.accountPaidToID,
                     },
                     tax_and_charges: {
-                        lines: taxLines
+                        lines: []
                     },
                     payment_references:paymentReferences
                 }

@@ -187,6 +187,10 @@ export default function NewQuotationClient() {
                     form.setValue("taxLines", e);
                     form.trigger("taxLines");
                   }}
+                  docPartyType={quotationParty}
+                  allowCreate={true}
+                  allowEdit={true}
+                  form={form}
                   currency={formValues.currency}
                 />
                 <GrandTotal currency={formValues.currency} />

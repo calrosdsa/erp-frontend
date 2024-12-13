@@ -50,7 +50,7 @@ export const EditRolePermission = ({
   );
   const fetcher = useFetcher<typeof action>();
   const { toast } = useToast();
-  const { setAll } = useTableSelectionStore();
+  const { selection,setAll} = useTableSelectionStore();
 
   const onSubmit = () => {
     if (!role) return;
@@ -80,15 +80,18 @@ export const EditRolePermission = ({
   };
 
   useEffect(() => {
-    let selecteds: string[] = [];
-    entityActions?.actions.map((item, idx) => {
-      const selected =
+    setTimeout(()=>{
+
+      let selecteds: string[] = [];
+      entityActions?.actions.map((item, idx) => {
+        const selected =
         roleActions?.map((t) => t.action_id).includes(item.id) || false;
       if (selected) {
         selecteds.push(idx.toString());
       }
     });
     setAll(selecteds);
+  },100)
   }, []);
 
   useEffect(() => {

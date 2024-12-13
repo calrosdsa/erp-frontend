@@ -19,10 +19,7 @@ export const journalEntryColumns = ({}: {}): ColumnDef<
   const r = routes;
   const { t, i18n } = useTranslation("common");
   return [
-    {
-      header: t("table.no"),
-      cell: TableCellIndex,
-    },
+  
     {
       accessorKey: "code",
       header: t("form.code"),

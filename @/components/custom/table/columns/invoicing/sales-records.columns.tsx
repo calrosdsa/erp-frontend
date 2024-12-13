@@ -14,11 +14,6 @@ export const salesRecordColumn = ({}: {}): ColumnDef<
   const {i18n} = useTranslation()
   return [
     {
-      header: "No.",
-      cell: TableCellIndex,
-      size:30,
-    },
-    {
       accessorKey: "invoice_no",
       header: "Número de factura",
       cell: ({ ...props }) => {

@@ -29,6 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       error = res.error?.detail;
       message = res.data?.message;
+      console.log(res.error)
       break;
     }
   }
@@ -51,7 +52,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
   handleError(res.error);
   return json({
-    contact: res.data?.result,
+    contact: res.data?.result.entity,
+    activities:res.data?.result.activities,
     actions: res.data?.actions,
   });
 };

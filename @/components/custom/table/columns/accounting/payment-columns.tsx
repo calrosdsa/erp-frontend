@@ -23,10 +23,6 @@ export const paymentColumns = (): ColumnDef<
   const r = routes;
   return [
     {
-      header: t("table.no"),
-      cell: TableCellIndex,
-    },
-    {
       accessorKey: "code",
       header: t("form.code"),
       cell: ({ ...props }) => {

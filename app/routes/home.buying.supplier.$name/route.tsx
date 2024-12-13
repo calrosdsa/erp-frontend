@@ -80,6 +80,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     actions: res.data?.actions,
     addresses: res.data?.result.addresses,
     contacts: res.data?.result.contacts,
+    activities:res.data?.result.activities,
   });
 };
 

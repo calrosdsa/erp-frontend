@@ -43,10 +43,6 @@ interface BookingDisplayProps {
   bookings?: components["schemas"]["BookingData"][];
   onCourtSelect?: (courtId: number, bookingId: string) => void;
   removeBooking?: (idx: number) => void;
-  // onEditBooking?: (
-  //   b: components["schemas"]["BookingData"],
-  //   idx: number
-  // ) => void;
 }
 
 export default function BookingDisplay({

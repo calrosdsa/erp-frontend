@@ -187,9 +187,9 @@ export default function CreatePurchaseOrdersClient() {
                   }}
                   docPartyType={partyOrder}
                   currency={formValues.currency}
-                  form={form}
                   allowCreate={true}
                   allowEdit={true}
+                  form={form}
                 />
                 <GrandTotal currency={formValues.currency} />
                 <TaxBreakup currency={formValues.currency} />

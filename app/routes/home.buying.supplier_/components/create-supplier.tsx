@@ -87,6 +87,7 @@ export const CreateSupplier = ({
             label={t("group")}
             isGroup={false}
             partyType={r.supplierGroup}
+            roleActions={globalState.roleActions}
             onSelect={(e) => {
               form.setValue("groupID", e.id);
             }}

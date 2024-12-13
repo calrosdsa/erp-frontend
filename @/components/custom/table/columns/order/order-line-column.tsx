@@ -22,11 +22,7 @@ export const lineItemsColumns = ({
   let columns: ColumnDef<z.infer<typeof lineItemSchema>>[] = [];
   const r = routes;
   const { t, i18n } = useTranslation("common");
-  columns.push({
-    header: t("table.no"),
-    size:30,
-    cell: TableCellIndex,
-  });
+  
   columns.push({
     accessorKey: "item_code",
     header: t("_item.code"),
@@ -97,7 +93,7 @@ export const lineItemsColumns = ({
   columns.push({
     id: "actions",
     cell: DataTableRowActions,
-    size:35
+    size:35,
   });
 
   return [...columns];

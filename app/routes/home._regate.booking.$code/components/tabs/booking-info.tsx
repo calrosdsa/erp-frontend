@@ -92,6 +92,34 @@ export const BookingInfo = () => {
             </div>
           </div>
 
+        
+
+          <div className="flex-1 px-4 sm:border-r mt-4 sm:mt-0">
+            <div className="flex items-center mb-2">
+              <DollarSign className="mr-2 h-4 w-4" />
+              <div className="text-sm font-medium">Monto Pagado</div>
+            </div>
+            <Badge variant="outline" className="flex items-center w-min">
+              {formatCurrency(booking?.paid, DEFAULT_CURRENCY, i18n.language)}
+            </Badge>
+          </div>
+
+          <div className="flex-1 px-4 sm:border-r mt-4 sm:mt-0">
+            <div className="flex items-center mb-2">
+              <DollarSign className="mr-2 h-4 w-4" />
+              <div className="text-sm font-medium">Saldo</div>
+            </div>
+            <Badge variant="outline" className="flex items-center w-min">
+              {formatCurrency(
+                (booking?.total_price || 0) -
+                  (booking?.discount || 0) -
+                  (booking?.paid || 0),
+                DEFAULT_CURRENCY,
+                i18n.language
+              )}
+            </Badge>
+          </div>
+
           {booking?.discount != null && (
             <div className="flex-1 px-4 sm:border-r mt-4 sm:mt-0">
               <div className="flex items-center mb-2">
@@ -107,16 +135,6 @@ export const BookingInfo = () => {
               </Badge>
             </div>
           )}
-
-          <div className="flex-1 px-4 sm:border-r mt-4 sm:mt-0">
-            <div className="flex items-center mb-2">
-              <DollarSign className="mr-2 h-4 w-4" />
-              <div className="text-sm font-medium">Monto Pagado</div>
-            </div>
-            <Badge variant="outline" className="flex items-center w-min">
-              {formatCurrency(booking?.paid, DEFAULT_CURRENCY, i18n.language)}
-            </Badge>
-          </div>
 
           <div className="flex-1 px-4 sm:border-r mt-4 sm:mt-0">
             <div className="flex items-center mb-2">

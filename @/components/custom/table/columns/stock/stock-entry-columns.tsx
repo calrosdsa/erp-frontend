@@ -12,11 +12,7 @@ export const stockEntryColumns = ({}: {}): ColumnDef<
   const r = routes;
   const { t, i18n } = useTranslation("common");
   return [
-    {
-      header: t("table.no"),
-      cell: TableCellIndex,
-      size:30
-    },
+  
     {
       accessorKey: "code",
       header: t("form.code"),

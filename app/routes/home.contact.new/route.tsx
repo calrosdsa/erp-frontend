@@ -32,7 +32,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           party_reference: d.partyReferenceId,
         },
       });
-      console.log(res.data,res.error)
+      console.log(res.data, res.error);
       if (res.data) {
         const contact = res.data.result;
         return redirect(

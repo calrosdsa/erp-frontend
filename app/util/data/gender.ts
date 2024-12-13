@@ -17,10 +17,10 @@ export const getGenders = ():Gender[] =>{
         //     name:t("gender.transgender"),
         //     code:"TRANSGENDER"
         // },
-        {
-            name:t("gender.noBinary"),
-            code:"NO_BINARY"
-        },
+        // {
+        //     name:t("gender.noBinary"),
+        //     code:"NO_BINARY"
+        // },
     ]
 }
 // export const genders:Gender[] = [

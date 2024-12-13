@@ -31,7 +31,7 @@ export default function TableCellEntityActions<TData>({ getValue, row, column, t
     parseActions()
   },[initialValue])
   return (
-    <div className=" flex-wrap gap-x-3 space-x-2">
+    <div className=" whitespace-nowrap gap-x-3 space-x-2">
         {typeof initialValue != "undefined" &&
         (initialValue as components["schemas"]["ActionDto"][] || []).map((item,idx)=>{
             return (

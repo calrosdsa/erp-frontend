@@ -33,14 +33,15 @@ export const bookingColumns = (): ColumnDef<
     //     />
     //   ),
     // },
-    {
-      header: t("table.no"),
-      cell: TableCellIndex,
-      size: 30,
-    },
+    // {
+    //   header: t("table.no"),
+    //   cell: TableCellIndex,
+    //   size: 30,
+    // },
     {
       accessorKey: "code",
       header: t("form.code"),
+      size:75,
       cell: ({ ...props }) => {
         return (
           <TableCellNameNavigation
@@ -53,6 +54,7 @@ export const bookingColumns = (): ColumnDef<
     {
       accessorKey: "party_name",
       header: t("_customer.base"),
+      size:100,
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
@@ -80,10 +82,13 @@ export const bookingColumns = (): ColumnDef<
       accessorKey: "status",
       header: t("form.status"),
       cell: TableCellStatus,
+      size: 180,
     },
+    
     {
       accessorKey: "total_price",
       header: t("form.amount"),
+      size:90,
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
@@ -96,8 +101,24 @@ export const bookingColumns = (): ColumnDef<
       },
     },
     {
+      accessorKey: "total_price",
+      header: "Saldo",
+      size:90,
+      cell: ({ ...props }) => {
+        const rowData = props.row.original;
+        return (
+          <TableCellPrice
+            i18n={i18n}
+            price={(rowData.total_price - rowData.discount)-rowData.paid}
+            {...props}
+          />
+        );
+      },
+    },
+    {
       id: "received",
       header: "Pagado",
+      size:90,
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
@@ -112,7 +133,8 @@ export const bookingColumns = (): ColumnDef<
     },
     {
       accessorKey: "start_date",
-      header: "Fecha de la reserva",
+      header: "Fecha",
+      size:80,
       cell: ({ ...props }) => (
         <TableCellDate {...props} i18n={i18n} formatDate="medium" />
       ),
@@ -124,7 +146,7 @@ export const bookingColumns = (): ColumnDef<
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex whitespace-nowrap gap-2">
             <Badge variant="outline" className="flex items-center">
               {format(parseISO(rowData.start_date), "p")}
             </Badge>

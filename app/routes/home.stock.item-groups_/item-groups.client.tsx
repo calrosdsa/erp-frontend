@@ -5,7 +5,7 @@ import { groupColumns } from "@/components/custom/table/columns/group/group-colu
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { PartyType } from "~/types/enums";
-import { useCreateGroup } from "../home.groups.$party_/components/create-group";
+import { useCreateGroup } from "../home.group.$party_/components/create-group";
 
 export default function SupplierGroupsClient() {
   const globalState = useOutletContext<GlobalState>();

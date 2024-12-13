@@ -6,6 +6,7 @@ import { routes } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
+import TableCellStatus from "../../cells/table-cell-status";
 
 export const supplierColumns = ({}:{
 }):ColumnDef<components["schemas"]["SupplierDto"]>[] =>{
@@ -36,6 +37,12 @@ export const supplierColumns = ({}:{
             )
     }
     });
+    columns.push({
+        accessorKey: "status",
+        header: t("form.status"),
+        cell: TableCellStatus,
+    })
+
     columns.push({
         accessorKey: "created_at",
         header:t("table.createdAt"),

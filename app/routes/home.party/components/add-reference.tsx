@@ -99,6 +99,7 @@ export const AddReference = ({
             partyId:partyId
         } as z.infer<typeof addPartyReferencesSchema>}
         onSubmit={(values: z.infer<typeof addPartyReferencesSchema>) => {
+          console.log("ONSUBMIT",values)
            fetcher.submit({
             action:"add-party-reference",
             addPartyReference:values

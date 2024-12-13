@@ -18,6 +18,7 @@ import CustomFormField from "@/components/custom/form/CustomFormField";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useEditFields } from "~/util/hooks/useEditFields";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
 type EditContactType = z.infer<typeof editContactSchema>;
 export const ContactInfo = () => {
@@ -27,17 +28,17 @@ export const ContactInfo = () => {
   const { roleActions } = useOutletContext<GlobalState>();
   const [permission] = usePermission({ roleActions, actions });
   const fetcher = useFetcher<typeof action>();
-  const defaultValues = {
-    givenName: contact?.given_name || "",
-    familyName: contact?.family_name,
-    partyID: contact?.id,
-    email: contact?.email,
-    phoneNumber: contact?.phone_number,
-  } as EditContactType;
   const { form, hasChanged, updateRef } = useEditFields<EditContactType>({
     schema: editContactSchema,
-    defaultValues: defaultValues,
+    defaultValues: {
+      givenName: contact?.given_name || "",
+      familyName: contact?.family_name,
+      partyID: contact?.id,
+      email: contact?.email,
+      phoneNumber: contact?.phone_number,
+    },
   });
+  const allowEdit = permission.edit;
   const onSubmit = (e: EditContactType) => {
     console.log("DATA", e);
     fetcher.submit(
@@ -87,75 +88,37 @@ export const ContactInfo = () => {
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
           <div className="info-grid">
-            <CustomFormField
-              form={form}
+            <CustomFormFieldInput
               name="givenName"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    value={field.value}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      form.trigger("givenName");
-                    }}
-                    title={t("form.givenName")}
-                    readOnly={!permission?.edit}
-                  />
-                );
-              }}
+              control={form.control}
+              inputType="input"
+              label={t("form.givenName")}
+              allowEdit={allowEdit}
             />
-
-            <CustomFormField
-              form={form}
+            <CustomFormFieldInput
               name="familyName"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    value={field.value}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      form.trigger("familyName");
-                    }}
-                    title={t("form.familyName")}
-                    readOnly={!permission?.edit}
-                  />
-                );
-              }}
+              control={form.control}
+              inputType="input"
+              label={t("form.familyName")}
+              allowEdit={allowEdit}
             />
 
-            <CustomFormField
-              form={form}
+            <CustomFormFieldInput
               name="email"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    value={field.value}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      form.trigger("email");
-                    }}
-                    title={t("form.email")}
-                    readOnly={!permission?.edit}
-                  />
-                );
-              }}
+              control={form.control}
+              inputType="input"
+              type="email"
+              label={t("form.name")}
+              allowEdit={allowEdit}
             />
-            <CustomFormField
-              form={form}
+
+            <CustomFormFieldInput
               name="phoneNumber"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    value={field.value}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      form.trigger("phoneNumber");
-                    }}
-                    title={t("form.phoneNumber")}
-                    readOnly={!permission?.edit}
-                  />
-                );
-              }}
+              control={form.control}
+              inputType="input"
+              type="tel"
+              label={t("form.name")}
+              allowEdit={allowEdit}
             />
 
             {/*            

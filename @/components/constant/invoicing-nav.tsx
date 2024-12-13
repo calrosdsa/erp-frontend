@@ -38,8 +38,8 @@ export const InvoicingNav = ({ entities }: {
     icon: CreditCardIcon,
     href: r.toRoute({
       main:r.salesRecord,
-      routeSufix:[r.invoicing],
-      routePrefix:[r.buyingM],
+      // routeSufix:[r.invoicing],
+      routePrefix:[r.invoicing],
     }),
     isChildren: true,
     children: invoicingChildrens,
