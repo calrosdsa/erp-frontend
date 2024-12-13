@@ -43,6 +43,7 @@ import { create } from "zustand";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { TableVirtuoso } from "react-virtuoso";
 import React from "react";
+import { useUnmount } from "usehooks-ts";
 
 export interface PaginationOptions {
   rowCount?: number;
@@ -70,10 +71,13 @@ interface DataTableProps<TData, TValue> {
 }
 export const useTableSelectionStore = create<{
   selection: Set<string>;
+  selectedRowsData:any[],
   toggle: (id: string) => void;
   clear: () => void;
   setAll: (ids: string[]) => void;
+  setSelectedRowsData: (data: any[]) => void;
 }>((set) => ({
+  selectedRowsData:[],
   selection: new Set(),
   toggle: (id) =>
     set((state) => {
@@ -83,11 +87,11 @@ export const useTableSelectionStore = create<{
       } else {
         newSelection.add(id);
       }
-      console.log("SELECTION",newSelection)
       return { selection: newSelection };
     }),
-  clear: () => set({ selection: new Set() }),
-  setAll: (ids) => set({ selection: new Set(ids) }),
+  clear: () => set({ selection: new Set(),selectedRowsData:[] }),
+  setAll: (ids) => set({ selection: new Set(ids)}),
+  setSelectedRowsData:(e)=>set({selectedRowsData:e}),
 }));
 
 const MemoizedRow = React.memo(
@@ -120,7 +124,7 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [expanded, setExpanded] = useState<ExpandedState>({});
 
-  const { selection, toggle, clear, setAll } = useTableSelectionStore();
+  const { selection, toggle, clear, setAll,setSelectedRowsData } = useTableSelectionStore();
 
   const columns = useMemo(() => {
     if (!enableRowSelection) return userColumns;
@@ -154,6 +158,7 @@ export function DataTable<TData, TValue>({
 
     return [selectionColumn, ...userColumns];
   }, [selection,data]);
+
 
   const onPaginationChange: OnChangeFn<PaginationState> = useCallback(
     (updaterOrValue) => {
@@ -205,14 +210,18 @@ export function DataTable<TData, TValue>({
   });
 
   useEffect(() => {
-    if (onSelectionChange) {
       const selectedRows = table
         .getRowModel()
         .rows.filter((row) => selection.has(row.id))
         .map((row) => row.original);
-      onSelectionChange(selectedRows);
-    }
+      onSelectionChange?.(selectedRows);
+      setSelectedRowsData(selectedRows)
   }, [selection]);
+
+  useUnmount(()=>{
+    console.log("CLEAR UNMOUNT")
+    clear()
+  })
 
   const TableComponents = useMemo(
     () => ({

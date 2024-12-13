@@ -19,6 +19,7 @@ export const eventBookingsColumns = (): ColumnDef<components["schemas"]["EventBo
     {
        header:t("table.no"),
        cell:TableCellIndex,
+       size:30
     },
     {
         accessorKey: "name",

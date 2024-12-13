@@ -1,4 +1,4 @@
-import { DataTable, useTable, useTableSelectionStore } from "@/components/custom/table/CustomTable";
+import { DataTable, useTableSelectionStore } from "@/components/custom/table/CustomTable";
 import {
   useFetcher,
   useLoaderData,
@@ -23,7 +23,7 @@ import { components } from "~/sdk";
 import { Button } from "@/components/ui/button";
 import { State, stateToJSON } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { BookingActionsDropdown } from "./components/booking-actions-dropdown";
+import { GenericActionsDropdown } from "./components/actions-dropdown";
 
 export default function BookingsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -38,15 +38,15 @@ export default function BookingsClient() {
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
   const { t } = useTranslation("common");
   const navigate = useNavigate();
-  const {clear} = useTableSelectionStore()
-  const [selectedBookings, setSelectedBookings] = useState<
-    components["schemas"]["BookingDto"][]
-  >([]);
+  const {clear,selectedRowsData} = useTableSelectionStore()
+  // const [selectedBookings, setSelectedBookings] = useState<
+  //   components["schemas"]["BookingDto"][]
+  // >([]);
   const r = routes;
 
   const onActions = (state: State) => {
     const body: components["schemas"]["UpdateBookingBatchRequestBody"] = {
-      booking_ids: selectedBookings.map((t) => t.id),
+      booking_ids: selectedRowsData.map((t) => t.id),
       target_state: stateToJSON(state),
     };
     fetcher.submit(
@@ -66,7 +66,7 @@ export default function BookingsClient() {
       success: fetcher.data?.message,
       error: fetcher.data?.error,
       onSuccessMessage:()=>{
-        setSelectedBookings([])
+        // setSelectedBookings([])
         clear()
       }
     },
@@ -121,11 +121,31 @@ export default function BookingsClient() {
               queryName="courtName"
               queryValue="court"
             />
-            <BookingActionsDropdown
-              selectedBookings={selectedBookings}
-              onComplete={onActions}
-              onCancel={onActions}
-              onDelete={onActions}
+            <GenericActionsDropdown
+              selectedItems={selectedRowsData}
+              actions={ [
+                {
+                  label: "Completar",
+                  onClick: () => onActions(State.COMPLETED),
+                  isEnabled: (bookings) => bookings.every(
+                    booking => booking.status === "UNPAID" || booking.status === "PARTIALLY_PAID"
+                  ),
+                },
+                {
+                  label: "Cancelar",
+                  onClick: () => onActions(State.CANCELLED),
+                  isEnabled: (bookings) => bookings.some(booking =>
+                    ["UNPAID", "PARTIALLY_PAID", "COMPLETED"].includes(booking.status)
+                  ),
+                },
+                {
+                  label: "Eliminar",
+                  onClick: () => onActions(State.DELETED),
+                  isEnabled: (bookings) => bookings.every(
+                    booking => booking.status === "CANCELLED"
+                  ),
+                },
+              ]}
             />
           </div>
         );
@@ -138,9 +158,6 @@ export default function BookingsClient() {
           created_at: false,
         }}
         enableRowSelection={true}
-        onSelectionChange={(e) => {
-          setSelectedBookings(e);
-        }}
         paginationOptions={{
           rowCount: paginationResult?.total,
         }}
