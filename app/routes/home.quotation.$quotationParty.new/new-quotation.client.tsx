@@ -38,6 +38,8 @@ import CurrencyAndPriceList from "@/components/custom/shared/document/currency-a
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { Card } from "@/components/ui/card";
+import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import useEditableTable from "~/util/hooks/useEditableTable";
 
 export default function NewQuotationClient() {
   const { t } = useTranslation("common");
@@ -165,9 +167,16 @@ export default function NewQuotationClient() {
                   label={t("form.validTill")}
                 />
 
+                <CurrencyAutocompleteForm
+                    control={form.control}
+                    name="currency"
+                    label={t("form.currency")}
+                    onSelect={()=>{}}
+                />
+
                 <Separator className=" col-span-full" />
 
-                <CurrencyAndPriceList form={form} />
+                {/* <CurrencyAndPriceList form={form} /> */}
 
                 <AccountingDimensionForm form={form} />
                 <LineItems
@@ -181,6 +190,7 @@ export default function NewQuotationClient() {
                     ItemLineType.QUOTATION_LINE_ITEM
                   )}
                   docPartyType={quotationParty}
+                  isNew={true}
                 />
                 <TaxAndChargesLines
                   onChange={(e) => {

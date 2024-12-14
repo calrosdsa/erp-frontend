@@ -80,9 +80,9 @@ export default function UpdateStock({
             onSelect={(v) => {
               form.setValue("acceptedWarehouseID", v.id);
             }}
-            label={t("f.accepted", { o: t("warehouse") })}
+            label={t("warehouse")}
           />
-          <FormAutocomplete
+          {/* <FormAutocomplete
             control={form.control}
             data={rejectedWarehouse.data?.warehouses || []}
             name="rejectedWarehouseName"
@@ -92,7 +92,7 @@ export default function UpdateStock({
               form.setValue("rejectedWarehouseID", v.id);
             }}
             label={t("f.rejected", { o: t("warehouse") })}
-          />
+          /> */}
         </>
       )}
     </>

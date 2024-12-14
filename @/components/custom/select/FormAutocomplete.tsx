@@ -73,7 +73,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   const [open, setOpen] = useState(false);
   return (
     <FormField
-      control={control || form.control}
+      control={control || (form && form.control)}
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col w-full ">

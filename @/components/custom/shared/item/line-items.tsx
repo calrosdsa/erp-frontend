@@ -14,13 +14,23 @@ import {
 } from "../../table/columns/order/order-line-column";
 import { DEFAULT_CURRENCY } from "~/constant";
 import OrderSumary from "../../display/order-sumary";
-import { formatCurrencyAmount, sumTotal } from "~/util/format/formatCurrency";
+import {
+  formatAmount,
+  formatCurrencyAmount,
+  sumTotal,
+} from "~/util/format/formatCurrency";
 import { useTotal } from "~/util/hooks/data/useTotal";
 import { useLineItems } from "./use-line-items";
 import { z } from "zod";
-import { lineItemDefault, lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
+import {
+  LineItemType,
+  lineItemDefault,
+  lineItemSchema,
+} from "~/util/data/schemas/stock/line-item-schema";
 import DisplayTextValue from "../../display/DisplayTextValue";
 import { Separator } from "@/components/ui/separator";
+import { PriceAutocompleteForm } from "~/util/hooks/fetchers/useItemPriceForOrder";
+import useEditableTable from "~/util/hooks/useEditableTable";
 
 export default function LineItems({
   status,
@@ -33,17 +43,19 @@ export default function LineItems({
   onChange,
   complement,
   updateStock,
+  isNew,
 }: {
   onChange?: (e: z.infer<typeof lineItemSchema>[]) => void;
   status?: string;
   currency: string;
   docPartyType?: string;
-  docPartyID?:number;
+  docPartyID?: number;
   allowEdit?: boolean;
   allowCreate?: boolean;
   lineType: string;
   complement?: JSX.Element;
-  updateStock?:boolean
+  updateStock?: boolean;
+  isNew?: boolean;
 }) {
   const { t, i18n } = useTranslation("common");
   const { total, lines: lineItems, totalQuantity } = useLineItems();
@@ -51,10 +63,11 @@ export default function LineItems({
   const shared = {
     currency: currency,
     docPartyType: docPartyType,
-    docPartyID:docPartyID,
+    docPartyID: docPartyID,
     allowEdit: allowEdit,
-    updateStock:updateStock,
+    updateStock: updateStock,
   };
+
   const [metaOptions] = useTableRowActions({
     ...(allowCreate && {
       onAddRow: () => {
@@ -66,7 +79,10 @@ export default function LineItems({
               onChange(lines);
             }
           },
-          line:lineItemDefault({lineType:lineType,updateStock:updateStock}),
+          line: lineItemDefault({
+            lineType: lineType,
+            updateStock: updateStock,
+          }),
         });
       },
     }),
@@ -114,8 +130,32 @@ export default function LineItems({
       </Typography>
 
       {complement}
+
+      <div className=" col-span-full create-grid">
+        {isNew && (
+          <PriceAutocompleteForm
+            allowEdit={allowEdit}
+            label={t("item")}
+            onSelect={(e) => {
+              const line = lineItemDefault({
+                lineType: lineType,
+                updateStock: updateStock,
+              });
+              line.item_name = e.item_name;
+              line.quantity = 0;
+              line.item_code = e.item_code;
+              line.rate = formatAmount(e.rate);
+              line.item_price_id = e.id;
+              line.uom = e.uom;
+              onChange?.([...lineItems, line]);
+            }}
+            lang={i18n.language}
+            docPartyType={docPartyType || ""}
+          />
+        )}
+      </div>
+
       <div className=" col-span-full">
-        {/* {JSON.stringify(lineItems)} */}
         <DataTable
           data={lineItems}
           columns={lineItemsColumns({
@@ -125,6 +165,18 @@ export default function LineItems({
           metaOptions={{
             meta: {
               ...metaOptions,
+              ...(isNew && {
+                updateCell: (row: number, column: string, value: string) => {
+                  console.log(row, column, value);
+                  const lines = lineItems.map((t, idx) => {
+                    if (idx == row) {
+                      (t as any)[column] = value;
+                    }
+                    return t;
+                  });
+                  onChange?.(lines);
+                },
+              }),
             },
           }}
         />

@@ -38,6 +38,7 @@ import {
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { createReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
+import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 
 export default function NewReceiptClient() {
   const fetcher = useFetcher<typeof action>();
@@ -179,11 +180,21 @@ export default function NewReceiptClient() {
                   label={t("form.postingTime")}
                   description={formValues.tz}
                 />
+                <CurrencyAutocompleteForm
+                  control={form.control}
+                  name="currency"
+                  label={t("form.currency")}
+                  onSelect={() => {}}
+                />
+                <UpdateStock
+                  form={form}
+                  updateStock={true}
+                  partyType={partyReceipt}
+                />
 
-                <CurrencyAndPriceList form={form} />
+                {/* <CurrencyAndPriceList form={form} /> */}
 
                 <AccountingDimensionForm form={form} />
-
 
                 <LineItems
                   onChange={(e) => {
@@ -194,15 +205,15 @@ export default function NewReceiptClient() {
                   lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)}
                   docPartyType={partyReceipt}
                   currency={formValues.currency}
-                  complement={
-                    <>
-                      <UpdateStock
-                        form={form}
-                        updateStock={true}
-                        partyType={partyReceipt}
-                      />
-                    </>
-                  }
+                  // complement={
+                  //   <>
+                  //     <UpdateStock
+                  //       form={form}
+                  //       updateStock={true}
+                  //       partyType={partyReceipt}
+                  //     />
+                  //   </>
+                  // }
                 />
                 <TaxAndChargesLines
                   onChange={(e) => {

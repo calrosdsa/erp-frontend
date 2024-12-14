@@ -11,6 +11,8 @@ import { formatTax, getTaxPorcent } from "~/util/format/formatCurrency";
 import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { DataTableRowActions } from "../../data-table-row-actions";
+import { Input } from "@/components/ui/input";
+import TableCell from "../../cells/table-cell";
 
 export const lineItemsColumns = ({
   currency,
@@ -40,6 +42,10 @@ export const lineItemsColumns = ({
   columns.push({
     accessorKey: "quantity",
     header: t("_item.quantity"),
+    cell:TableCell,
+    meta:{
+      type:"number",
+    }
   });
   }
 
@@ -57,18 +63,10 @@ export const lineItemsColumns = ({
   columns.push({
     accessorKey: "rate",
     header: t("form.rate"),
-    cell: ({ ...props }) => {
-      return currency ? (
-        <TableCellPrice
-          {...props}
-          currency={currency}
-          i18n={i18n}
-          isAmount={true}
-        />
-      ) : (
-        "-"
-      );
-    },
+    cell: TableCell,
+    meta:{
+      type:"number",
+    }
   });
 
   columns.push({

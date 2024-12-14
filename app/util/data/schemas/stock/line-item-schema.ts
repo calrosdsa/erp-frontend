@@ -10,13 +10,13 @@ import { components } from "~/sdk";
 import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 
 
-type LineItem = z.infer<typeof lineItemSchema>
+export type LineItemType = z.infer<typeof lineItemSchema>
 
 export const lineItemDefault = (opts:{
   lineType:string,
   updateStock?:boolean
-}):LineItem=>{
-  const line:LineItem = {
+}):LineItemType=>{
+  const line:LineItemType = {
     rate: 0,
     lineType: opts.lineType,
     uom: "",
@@ -41,8 +41,8 @@ export const toLineItemSchema = (
     partyType?: string;
     updateStock?: boolean;
   }
-): LineItem => {
-  const lineItem: LineItem = {
+): LineItemType => {
+  const lineItem: LineItemType = {
     itemLineID: line.id,
     amount: formatAmount(line.quantity * line.rate),
     lineType: line.line_type,
@@ -74,7 +74,7 @@ export const toLineItemSchema = (
 };
 
 export const schemaToLineItemData = (
-  line: LineItem,
+  line: LineItemType,
   opts: {
     updateStock?: boolean;
   }

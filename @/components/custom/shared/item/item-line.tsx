@@ -13,7 +13,7 @@ import {
   lineItemSchema,
   schemaToLineItemData,
 } from "~/util/data/schemas/stock/line-item-schema";
-import { useItemPriceForOrders } from "~/util/hooks/fetchers/useItemPriceForOrder";
+import { PriceAutocompleteForm, useItemPriceForOrders } from "~/util/hooks/fetchers/useItemPriceForOrder";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import { formatAmount, formatCurrency } from "~/util/format/formatCurrency";
 import { action } from "~/routes/api.itemline/route";
@@ -219,39 +219,20 @@ export default function ItemLine({
           </div>
 
           <div className="grid sm:grid-cols-2 gap-3 pt-2">
-            <FormAutocomplete
-              data={itemPriceDebounceFetcher.data?.itemPriceForOrders || []}
-              nameK={"item_name"}
-              label={t("_item.base")}
-              name="item_name"
-              allowEdit={allowEdit}
-              form={form}
-              onValueChange={onItemPriceChange}
-              onSelect={(e) => {
-                form.setValue("item_code", e.item_code);
-                form.setValue("uom", e.uom);
-                form.setValue("item_price_id", e.id);
-                form.setValue("rate", formatAmount(e.rate));
-              }}
-              onCustomDisplay={(e) => {
-                return (
-                  <div className="flex flex-col">
-                    <div className="flex font-medium space-x-1">
-                      <span>{e.item_name}</span>
-                      <span className=" uppercase"> {e.uuid.slice(0, 5)}</span>
-                    </div>
-                    <div className="flexspace-x-1">
-                      {e.price_list_name}:{" "}
-                      {formatCurrency(
-                        e.rate,
-                        e.price_list_currency,
-                        i18n.language
-                      )}
-                    </div>
-                  </div>
-                );
-              }}
-            />
+          <PriceAutocompleteForm
+           allowEdit={allowEdit}
+           control={form.control}
+           label={t("item")}
+           onSelect={(e)=>{
+            form.setValue("item_code", e.item_code);
+            form.setValue("uom", e.uom);
+            form.setValue("item_price_id", e.id);
+            form.setValue("rate", formatAmount(e.rate));
+           }}
+           lang={i18n.language}
+           docPartyType={docPartyType || ""}
+           />
+        
 
             <CustomFormFieldInput
               label={t("_item.code")}

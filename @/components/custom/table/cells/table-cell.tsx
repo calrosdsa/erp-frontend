@@ -18,7 +18,7 @@ export default function TableCell<TData>({ getValue, row, column, table }:TableC
   const columnMeta:any = column.columnDef.meta;
   const tableMeta:any = table.options.meta;
   const [value, setValue] = useState(initialValue);
-//   const [validationMessage, setValidationMessage] = useState("");
+  //   const [validationMessage, setValidationMessage] = useState("");
 
   useEffect(() => {
     setValue(initialValue);
@@ -26,13 +26,13 @@ export default function TableCell<TData>({ getValue, row, column, table }:TableC
 
   const onBlur = (e: ChangeEvent<HTMLInputElement>) => {
     // displayValidationMessage(e);
-    tableMeta?.updateData(row.index, column.id, value, e.target.validity.valid);
+    tableMeta?.updateCell(row.index, column.id, value, e.target.validity.valid);
   };
 
   const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     // displayValidationMessage(e);
     setValue(e.target.value);
-    tableMeta?.updateData(row.index, column.id, e.target.value, e.target.validity.valid);
+    tableMeta?.updateCell(row.index, column.id, e.target.value, e.target.validity.valid);
   };
 
 //   const displayValidationMessage = <
@@ -56,14 +56,18 @@ export default function TableCell<TData>({ getValue, row, column, table }:TableC
 //     }
 //   };
 
-  if (tableMeta?.editedRows.includes(row.index)) {
+  // if (tableMeta?.editedRows.includes(row.index)) {
+  if (tableMeta?.updateCell) {
     return <Input
     value={value}
     onChange={(e) => setValue(e.target.value)}
     onBlur={onBlur}
+    className="h-[28px] bg-background"
+    placeholder={columnMeta?.type}
     type={columnMeta?.type || "text"}
     required={columnMeta?.required}
     pattern={columnMeta?.pattern}
+    min={0}
     // title={"validationMessage"}
   />
     // return columnMeta?.type === "select" ? (
