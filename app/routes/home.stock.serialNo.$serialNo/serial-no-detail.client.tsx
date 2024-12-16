@@ -68,6 +68,7 @@ export default function SerialNoClientDetail(){
         partyID={serialNo?.id}
         navItems={navItems}
         >
+            {/* {JSON.stringify(serialNo)} */}
             {tab == "info" && 
             <SerialNoInfo/>
             }

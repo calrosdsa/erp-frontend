@@ -222,6 +222,7 @@ export default function ItemLine({
           <PriceAutocompleteForm
            allowEdit={allowEdit}
            control={form.control}
+           currency={currency}
            label={t("item")}
            onSelect={(e)=>{
             form.setValue("item_code", e.item_code);
@@ -246,9 +247,9 @@ export default function ItemLine({
               {t("f.and", { o: t("form.quantity"), p: t("form.rate") })}
             </Typography>
 
-            {formValues.lineType !=
+            {/* {formValues.lineType !=
               itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) &&
-              !updateStock && (
+              !updateStock && ( */}
                 <CustomFormFieldInput
                   label={t("form.quantity")}
                   control={form.control}
@@ -257,9 +258,9 @@ export default function ItemLine({
                   inputType="input"
                   name={"quantity"}
                 />
-              )}
+              {/* )} */}
 
-            {(formValues.lineType ==
+            {/* {(formValues.lineType ==
               itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) ||
               updateStock) && (
               <>
@@ -279,7 +280,7 @@ export default function ItemLine({
                   inputType="input"
                 />
               </>
-            )}
+            )} */}
 
             <CustomFormFieldInput
               label={t("form.rate")}
@@ -297,6 +298,35 @@ export default function ItemLine({
               allowEdit={false}
               inputType="input"
             />
+            {(formValues.lineType ==
+              itemLineTypeToJSON(ItemLineType.DELIVERY_LINE_ITEM) ||
+              updateStock) && (
+              <>
+                <Typography variant="subtitle2" className=" col-span-full">
+                  {t("warehouse")}
+                </Typography>
+                <WarehouseAutocompleteForm
+                  allowEdit={allowEdit}
+                  control={form.control}
+                  label={t("warehouse")}
+                  name="deliveryLineItem.sourceWarehouse"
+                  onSelect={(e) => {
+                    form.setValue("deliveryLineItem.sourceWarehouseID", e.id);
+                  }}
+                  isGroup={false}
+                />
+                {/* <WarehouseAutocompleteForm
+                  allowEdit={allowEdit}
+                  name="lineItemReceipt.rejectedWarehouse"
+                  label={"Almacén Rechazado"}
+                  control={form.control}
+                  onSelect={(e) => {
+                    form.setValue("lineItemReceipt.rejectedWarehouseID", e.id);
+                  }}
+                  isGroup={false}
+                /> */}
+              </>
+            )}
 
             {(formValues.lineType ==
               itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT) ||
@@ -308,14 +338,14 @@ export default function ItemLine({
                 <WarehouseAutocompleteForm
                   allowEdit={allowEdit}
                   control={form.control}
-                  label={"Almacén Aceptado"}
+                  label={t("warehouse")}
                   name="lineItemReceipt.acceptedWarehouse"
                   onSelect={(e) => {
                     form.setValue("lineItemReceipt.acceptedWarehouseID", e.id);
                   }}
                   isGroup={false}
                 />
-                <WarehouseAutocompleteForm
+                {/* <WarehouseAutocompleteForm
                   allowEdit={allowEdit}
                   name="lineItemReceipt.rejectedWarehouse"
                   label={"Almacén Rechazado"}
@@ -324,7 +354,7 @@ export default function ItemLine({
                     form.setValue("lineItemReceipt.rejectedWarehouseID", e.id);
                   }}
                   isGroup={false}
-                />
+                /> */}
               </>
             )}
           </div>

@@ -186,6 +186,7 @@ export default function CreatePurchaseInvoiceClient() {
                   lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
                   docPartyType={partyInvoice}
                   currency={formValues.currency}
+                  isNew={true}
                   complement={
                     <UpdateStock
                       form={form}

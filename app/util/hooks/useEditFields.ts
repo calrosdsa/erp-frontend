@@ -24,6 +24,7 @@ export function useEditFields<T extends FieldValues>({
 }: UseEditFieldsProps<T>): UseEditFieldsReturn<T> {
   const form = useForm<T>({
     resolver: zodResolver(schema),
+    // defaultValues:defaultValues,
   });
 
   const [hasChanged, setHasChanged] = useState(false);

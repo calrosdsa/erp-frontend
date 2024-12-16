@@ -17,7 +17,7 @@ export const CurrencyAutocompleteForm = ({
     control?: Control<any, any>;
     label?: string;
     name?:string
-    onSelect: (e: components["schemas"]["CurrencyDto"]) => void;
+    onSelect?: (e: components["schemas"]["CurrencyDto"]) => void;
   }) =>{
   const [currencyFetcher, onChange] = useCurrencyDebounceFetcher();
   return (

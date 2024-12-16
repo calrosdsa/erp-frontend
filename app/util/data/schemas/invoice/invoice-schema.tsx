@@ -69,8 +69,8 @@ export const createInvoiceSchema = z
       if (data.sourceWarehouse && data.sourceWarehouseName) {
         data.lines = data.lines.map((t, i) => {
           const deliveryLine: z.infer<typeof deliveryLineItem> = {
-            sourceWarehouse: data.sourceWarehouse,
-            sourceWarehouseName: data.sourceWarehouseName,
+            sourceWarehouseID: data.sourceWarehouse,
+            sourceWarehouse: data.sourceWarehouseName,
           };
           t.deliveryLineItem = deliveryLine;
           return t;

@@ -37,7 +37,7 @@ export const AddPriceList =({open,onOpenChange}:{
         <DrawerLayout
         open={open}
         onOpenChange={onOpenChange}
-        title={t("price-list")}
+        title={t("priceList")}
         >
             <CustomForm
             onSubmit={(values:z.infer<typeof createPriceListSchema>)=>{
@@ -53,6 +53,10 @@ export const AddPriceList =({open,onOpenChange}:{
                     encType:"application/json"
                 })
             }}
+            defaultValues={{
+                isBuying:false,
+                isSelling:false
+            } as z.infer<typeof createPriceListSchema>}
             schema={createPriceListSchema}
             fetcher={fetcher}
             formItemsData={[

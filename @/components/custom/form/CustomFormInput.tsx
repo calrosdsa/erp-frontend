@@ -12,13 +12,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
+import RichTextEditor from '@/components/custom-ui/rich-text/editor'
 
 interface Props<TFieldValues extends FieldValues> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name'> {
   label?: string
-  control: Control<TFieldValues>
+  control?: Control<TFieldValues>
   name: Path<TFieldValues>
   description?: string
-  inputType: "input" | "textarea" | "check"
+  inputType: "input" | "textarea" | "check" | "richtext"
   required?: boolean
   allowEdit?: boolean
   register?: UseFormRegister<TFieldValues>
@@ -41,7 +42,7 @@ export default function CustomFormFieldInput<TFieldValues extends FieldValues>({
   return (
     <div className={className}>
       <FormField
-        control={control}
+        control={control || undefined}
         name={name}
         render={({ field }) => (
           <FormItem className="flex flex-col">
@@ -84,6 +85,13 @@ export default function CustomFormFieldInput<TFieldValues extends FieldValues>({
                     disabled={!allowEdit}
                   />
                 )}
+                {inputType == "richtext" && (
+                  <RichTextEditor 
+                  {...field} 
+                  allowEdit={allowEdit}                  
+                  />
+                )
+                }
                 {inputType === "check" && (
                   <div className="h-8 items-center flex">
                     <Checkbox
@@ -104,7 +112,7 @@ export default function CustomFormFieldInput<TFieldValues extends FieldValues>({
               </>
             </FormControl>
             {description && <FormDescription>{description}</FormDescription>}
-            <FormMessage />
+            <FormMessage className='text-xs'/>
           </FormItem>
         )}
       />

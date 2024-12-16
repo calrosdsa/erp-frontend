@@ -76,7 +76,7 @@ export default function ToolBar({ title }: { title: string }) {
                       key={idx}
                       size={"sm"}
                       variant="ghost"
-                      className="justify-start"
+                      className="justify-between flex "
                       onClick={() => item.onClick()}
                     >
                       {item.label}

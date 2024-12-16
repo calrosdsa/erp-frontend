@@ -4,7 +4,7 @@ import apiClient from "~/apiclient";
 import { routes } from "~/util/route";
 import { components } from "~/sdk";
 import { z } from "zod";
-import { createItemSchema } from "~/util/data/schemas/stock/item-schemas";
+import { createItemSchema, mapToItemPriceLine } from "~/util/data/schemas/stock/item-schemas";
 import { uomDtoSchemaToUomDto } from "~/util/data/schemas/setting/uom-schema";
 import { groupSchemaToGroupDto } from "~/util/data/schemas/group-schema";
 
@@ -19,18 +19,26 @@ export const action = async({request}:ActionFunctionArgs)=>{
     let message:string | undefined = undefined
     let error:string | undefined = undefined 
     let item:components["schemas"]["ItemDto"] | undefined =  undefined
-    const r = routes
     switch(data.action) {
         case "create-item":{
             const d = data.createItem
-            console.log("DATA",d)
+            // console.log("DATA NAME",d.name)
+            // console.log("DATA",typeof d.itemPriceLines)
+            const itemPriceLines = d.itemPriceLines.map(t=>mapToItemPriceLine(t))
+            // console.log("DATA",itemPriceLines)
             const res = await client.POST("/stock/item",{
                 body:{
-                    name:d.name,
-                    uom_id:d.uomID,
-                    group_id:d.groupID,
+                    item:{
+                        name:d.name,
+                        uom_id:d.uomID,
+                        group_id:d.groupID,
+                        description:d.description,
+                        maintain_stock:d.maintainStock,
+                    },
+                    item_price_lines:itemPriceLines
                 }
             })
+            console.log(res.error)
             message = res.data?.message
             error = res.error?.detail
             item = res.data?.result

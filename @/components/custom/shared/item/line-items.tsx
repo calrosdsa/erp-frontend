@@ -131,11 +131,12 @@ export default function LineItems({
 
       {complement}
 
-      <div className=" col-span-full create-grid">
-        {isNew && (
+      {isNew && (
+        <div className=" col-span-full create-grid">
           <PriceAutocompleteForm
             allowEdit={allowEdit}
             label={t("item")}
+            currency={currency}
             onSelect={(e) => {
               const line = lineItemDefault({
                 lineType: lineType,
@@ -152,8 +153,8 @@ export default function LineItems({
             lang={i18n.language}
             docPartyType={docPartyType || ""}
           />
-        )}
-      </div>
+        </div>
+      )}
 
       <div className=" col-span-full">
         <DataTable
@@ -169,6 +170,7 @@ export default function LineItems({
                 updateCell: (row: number, column: string, value: string) => {
                   console.log(row, column, value);
                   const lines = lineItems.map((t, idx) => {
+                    // if(t.)
                     if (idx == row) {
                       (t as any)[column] = value;
                     }

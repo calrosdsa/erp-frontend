@@ -177,7 +177,6 @@ export default function InvoiceInfoTab() {
           <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
 
           <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-          {JSON.stringify(invoice?.update_stock)}
           <LineItemsDisplay
             currency={invoice?.currency || companyDefaults?.currency || ""}
             status={invoice?.status || ""}

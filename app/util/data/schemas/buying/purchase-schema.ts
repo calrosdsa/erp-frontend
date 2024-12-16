@@ -52,9 +52,9 @@ export const lineItemSchemaToLineData = (
     line_type:d.lineType,
     item_line_reference:d.itemLineReference,
   }
-  if(d.deliveryLineItem?.sourceWarehouse){
+  if(d.deliveryLineItem?.sourceWarehouseID){
     line.delivery_line_item = {
-      source_warehouse:d.deliveryLineItem.sourceWarehouse,
+      source_warehouse:d.deliveryLineItem.sourceWarehouseID,
     }
   }
   if(d.lineItemReceipt){

@@ -171,14 +171,11 @@ export default function NewQuotationClient() {
                     control={form.control}
                     name="currency"
                     label={t("form.currency")}
-                    onSelect={()=>{}}
                 />
 
                 <Separator className=" col-span-full" />
 
                 {/* <CurrencyAndPriceList form={form} /> */}
-
-                <AccountingDimensionForm form={form} />
                 <LineItems
                   onChange={(e) => {
                     form.setValue("lines", e);
@@ -205,6 +202,9 @@ export default function NewQuotationClient() {
                 />
                 <GrandTotal currency={formValues.currency} />
                 <TaxBreakup currency={formValues.currency} />
+                
+                <AccountingDimensionForm form={form} />
+
               </div>
               <input ref={inputRef} type="submit" className="hidden" />
             </fetcher.Form>

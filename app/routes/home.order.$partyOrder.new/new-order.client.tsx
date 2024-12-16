@@ -12,13 +12,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import { CurrencyAutocompleteForm, useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { routes } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { action } from "./route";
 import { GlobalState } from "~/types/app";
-import { ItemLineType, itemLineTypeToJSON, PartyType, partyTypeFromJSON } from "~/gen/common";
+import {
+  ItemLineType,
+  itemLineTypeToJSON,
+  PartyType,
+  partyTypeFromJSON,
+} from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef } from "react";
@@ -155,18 +160,13 @@ export default function CreatePurchaseOrdersClient() {
                   name="deliveryDate"
                   label={t("form.deliveryDate")}
                 />
-                {/* <FormAutocomplete
-                data={currencyDebounceFetcher.data?.currencies || []}
-                control={form.control}
-                name="currency"
-                disabled={false}
-                required={true}
-                nameK={"code"}
-                onValueChange={onCurrencyChange}
-                label={t("form.currency")}
-              /> */}
+                <CurrencyAutocompleteForm
+                  control={form.control}
+                  name="currency"
+                  label={t("form.currency")}
+                />
 
-                <CurrencyAndPriceList form={form} />
+                {/* <CurrencyAndPriceList form={form} /> */}
 
                 <AccountingDimensionForm form={form} />
 
@@ -178,6 +178,7 @@ export default function CreatePurchaseOrdersClient() {
                   allowEdit={true}
                   lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
                   docPartyType={partyOrder}
+                  isNew={true}
                   currency={formValues.currency}
                 />
                 <TaxAndChargesLines

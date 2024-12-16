@@ -117,6 +117,7 @@ class Routes {
   invoicing = "invoicing";
   purchaseInvoice = "purchaseInvoice";
   purchaseOrder = "purchaseOrder";
+  saleOrder = "saleOrder";
   supplierQuotation = "supplierQuotation";
   itemGroup = "itemGroup";
   customerGroup = "customerGroup";

@@ -80,6 +80,29 @@ export const itemPriceColumns = ({
     },
   });
 
+
+  columns.push({
+    accessorKey: "price_list_name",
+    header: t("priceList"),
+    cell: ({ ...props }) => {
+      const rowData =props.row.original
+      return (
+        <TableCellNameNavigation
+        {...props}
+        navigate={(e)=>r.toRoute({
+          main:r.priceList,
+          routePrefix:[r.stockM],
+          routeSufix:[e],
+          q:{
+            tab:"info",
+            id:rowData.price_list_uuid
+          }
+        })}
+        />
+      );
+    },
+  });
+
   return columns;
   // {
   //   accessorKey: "Code",

@@ -60,7 +60,7 @@ export default function PaymentCreateClient() {
       partyReference: createPayment.payload?.partyReference,
       partyReferences: createPayment.payload?.partyReferences || [],
       postingDate: new Date(),
-      taxLines: taxLinesStore.lines,
+      taxLines: [],
     },
   });
   const formValues = form.getValues();
@@ -149,6 +149,7 @@ export default function PaymentCreateClient() {
   }, [formValues.partyType, paymentAccounts]);
 
   useEffect(() => {
+    taxLinesStore.reset()
     setUpPaymentTypes();
     fetchInitialData();
     setUpToolbar();
@@ -186,6 +187,8 @@ export default function PaymentCreateClient() {
             onSubmit={form.handleSubmit(onSubmit)}
             className={cn("", "gap-y-3 grid p-3")}
           >
+            {/* {JSON.stringify(form.formState.errors)} */}
+            {/* {JSON.stringify(createPayment.payload)} */}
             <div className="create-grid">
               <Typography className=" col-span-full" variant="title2">
                 {t("_payment.type")}

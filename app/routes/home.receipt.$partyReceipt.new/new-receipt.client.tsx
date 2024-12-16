@@ -202,6 +202,7 @@ export default function NewReceiptClient() {
                     form.trigger("lines");
                   }}
                   allowEdit={true}
+                  isNew={true}
                   lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)}
                   docPartyType={partyReceipt}
                   currency={formValues.currency}

@@ -89,6 +89,18 @@ export default function QuotationDetailClient() {
         }
       })
     }
+    if(soPermission?.create && allowActions ){
+      actions.push({
+        label:"Crear Orden de Venta",
+        onClick:()=>{
+          navigate(r.toRoute({
+            main:r.saleOrder,
+            routePrefix:[r.orderM],
+            routeSufix:["new"]
+          }))
+        }
+      })
+    }
     if(qPermission?.create && allowActions ){
       actions.push({
         label:"Crear  Cotización",
@@ -124,7 +136,7 @@ export default function QuotationDetailClient() {
         );
       },
     };
-  }, [quotation,poPermission,soPermission,qPermission]);
+  }, [quotation,poPermission,soPermission,qPermission,t]);
 
   useLoadingTypeToolbar({
     loading:fetcher.state == "submitting",

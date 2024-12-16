@@ -70,6 +70,12 @@ export const toLineItemSchema = (
       rejectedWarehouseID: line.rejected_warehouse_id,
     };
   }
+  if(lineType == ItemLineType.DELIVERY_LINE_ITEM || opts.updateStock) {
+    lineItem.deliveryLineItem = {
+      sourceWarehouseID:line.source_warehouse_id,
+      sourceWarehouse:line.source_warehouse,
+    }
+  }
   return lineItem;
 };
 
@@ -125,8 +131,8 @@ export const lineItemStockEntry = z.object({
 });
 
 export const deliveryLineItem = z.object({
-  sourceWarehouse: z.number().optional(),
-  sourceWarehouseName: z.string().optional(),
+  sourceWarehouseID: z.number().optional(),
+  sourceWarehouse: z.string().optional(),
 });
 
 export const lineItemSchema = z
@@ -153,24 +159,24 @@ export const lineItemSchema = z
     party_type: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    const lineType = itemLineTypeFromJSON(data.lineType);
-    if (ItemLineType.ITEM_LINE_ORDER == lineType) {
-      if (data.quantity == undefined && data.quantity == "") {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          params: {
-            i18n: { key: "custom.required" },
-          },
-          path: ["quantity"],
-        });
-      } else {
-        data.amount = Number(data.quantity) * data.rate;
-      }
-    }
+    // const lineType = itemLineTypeFromJSON(data.lineType);
+    // if (ItemLineType.ITEM_LINE_ORDER == lineType) {
+    //   if (data.quantity == undefined && data.quantity == "") {
+    //     ctx.addIssue({
+    //       code: z.ZodIssueCode.custom,
+    //       params: {
+    //         i18n: { key: "custom.required" },
+    //       },
+    //       path: ["quantity"],
+    //     });
+    //   } else {
+    //     data.amount = Number(data.quantity) * data.rate;
+    //   }
+    // }
     
-    if (data.lineItemReceipt != undefined) {
-      data.quantity =
-        data.lineItemReceipt.acceptedQuantity +
-        data.lineItemReceipt.rejectedQuantity;
-    }
+    // if (data.lineItemReceipt != undefined) {
+    //   data.quantity =
+    //     data.lineItemReceipt.acceptedQuantity +
+    //     data.lineItemReceipt.rejectedQuantity;
+    // }
   });

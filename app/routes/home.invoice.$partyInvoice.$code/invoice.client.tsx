@@ -134,10 +134,12 @@ export default function InvoiceDetailClient() {
         onClick: () => {
           const total = invoice?.total || 0
           const outstanding = total - Number(totals?.paid);
+          
           createPayment.setData({
             amount: outstanding,
             partyUuid: invoice?.party_uuid,
             partyType: invoice?.party_type,
+            partyID:invoice?.party_id,
             partyName: invoice?.party_name,
             partyReference: invoice?.id,
             paymentType: getPaymentType(partyInvoice),

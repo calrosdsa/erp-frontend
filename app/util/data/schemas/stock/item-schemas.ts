@@ -2,19 +2,27 @@ import { z } from "zod";
 import { uomSchema } from "../setting/uom-schema";
 import { groupSchema } from "../group-schema";
 import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
+import { components } from "~/sdk";
 
+export const itemPriceLine = z.object({
+  rate:z.coerce.number(),
+  itemQuantity:z.coerce.number(),
+  priceList:z.string().min(1),
+  priceListID:z.number(),
+  uom:z.string(),
+  uomID:z.number(),
+})
 export const createItemSchema = z.object({
-  name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
-  // rate: z.number().min(0).optional(),
-  // itemQuantity: z.number().min(0).optional(),
-  
+  name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),  
   uomName: z.string(),
   groupName:z.string(),
   groupID:z.number(),
-  uomID:z.number()
-  // priceListName:z.string().optional(),
-  // pluginList:z.array(z.string()).optional(),
+  uomID:z.number(),
+  itemPriceLines:z.array(itemPriceLine),
+  description:z.string().optional(),
+  maintainStock:z.boolean(),
 });
+
 
 export const editItemSchema = z.object({
   id:z.number(),
@@ -22,5 +30,18 @@ export const editItemSchema = z.object({
   uomName: z.string(),
   groupName:z.string(),
   groupID:z.number(),
-  uomID:z.number()
+  uomID:z.number(),
+  description:z.string().optional().nullable(),
+  maintainStock:z.boolean(),
 });
+
+
+export const mapToItemPriceLine = (d:z.infer<typeof itemPriceLine>)=>{
+  const itemPrice:components["schemas"]["ItemPriceLine"] ={
+    item_quantity: d.itemQuantity,
+    price_list_id: d.priceListID,
+    rate: d.rate,
+    uom_id: d.uomID
+  }
+  return itemPrice
+}

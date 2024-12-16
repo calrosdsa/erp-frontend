@@ -32,7 +32,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           id: d.id,
           name: d.name,
           group_id: d.groupID,
-          uom_id: d.uomID
+          uom_id: d.uomID,
+          maintain_stock:d.maintainStock,
+          description:d.description,
         },
       });
       error = res.error?.detail;
@@ -58,8 +60,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       },
     },
   });
-  console.log(res.data, res.error);
-  
   return json({
     item: res.data?.result.entity,
     activities: res.data?.result.activities,

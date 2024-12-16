@@ -1,8 +1,5 @@
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import Typography, { title } from "@/components/typography/Typography";
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
 import { action, loader } from "../../route";
 import { useRef } from "react";
 import { GlobalState } from "~/types/app";
@@ -16,7 +13,6 @@ import {
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
-import CustomFormField from "@/components/custom/form/CustomFormField";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { UomAutocompleteForm } from "~/util/hooks/fetchers/useUomDebounceFetcher";
@@ -29,21 +25,24 @@ export default function ItemInfoTab() {
   const { item, actions } = useLoaderData<typeof loader>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { roleActions } = useOutletContext<GlobalState>();
-  const r = routes
+  const r = routes;
   const [permission] = usePermission({ roleActions, actions });
   const fetcher = useFetcher<typeof action>();
-  const allowEdit = permission.edit
+  const allowEdit = permission.edit;
   const { form, hasChanged, updateRef } = useEditFields<EditItemType>({
     schema: editItemSchema,
     defaultValues: {
       id: item?.id,
       name: item?.name,
-      uomName:item?.uom_name,
-      uomID:item?.uom_id,
-      groupID:item?.group_id,
-      groupName:item?.group_name
+      uomName: item?.uom_name,
+      uomID: item?.uom_id,
+      groupID: item?.group_id,
+      groupName: item?.group_name,
+      maintainStock: item?.maintain_stock,
+      description: item?.description,
     },
   });
+  // const formValue = form.getValues();
   const onSubmit = (e: EditItemType) => {
     fetcher.submit(
       {
@@ -90,7 +89,7 @@ export default function ItemInfoTab() {
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
           <div className="info-grid">
-          <CustomFormFieldInput
+            <CustomFormFieldInput
               control={form.control}
               name="name"
               label={t("form.name")}
@@ -98,7 +97,7 @@ export default function ItemInfoTab() {
               allowEdit={allowEdit}
             />
 
-              <UomAutocompleteForm
+            <UomAutocompleteForm
               control={form.control}
               label={t("form.uom")}
               name="uomName"
@@ -113,8 +112,6 @@ export default function ItemInfoTab() {
               label={t("group")}
               name="groupName"
               allowEdit={allowEdit}
-              // roleActions={roleActions}
-              // actions={entityActions && entityActions[Entity.ITEM_GROUP]}
               isGroup={false}
               partyType={r.itemGroup}
               onSelect={(e) => {
@@ -122,6 +119,24 @@ export default function ItemInfoTab() {
               }}
             />
 
+            <CustomFormFieldInput
+              control={form.control}
+              name="maintainStock"
+              label={"Mantener en Stock"}
+              inputType="check"
+              allowEdit={true}
+            />
+            {form.watch("description") && (
+              <CustomFormFieldInput
+                className=" col-span-full"
+                control={form.control}
+                name="description"
+                required={false}
+                label={t("form.description")}
+                inputType="richtext"
+                allowEdit={true}
+              />
+            )}
           </div>
         </fetcher.Form>
       </Form>

@@ -35,8 +35,8 @@ export default function WareHouseClient() {
   ];
 
   setUpToolbar(()=>{
-    let actions: ButtonToolbar[] = [];
-    actions.push({
+    let views: ButtonToolbar[] = [];
+    views.push({
       label: t("stockBalance"),
       onClick: () => {
         navigate(
@@ -54,7 +54,7 @@ export default function WareHouseClient() {
       },
     });
     return {
-      actions:actions
+      view:views
     }
   },[])
   return (

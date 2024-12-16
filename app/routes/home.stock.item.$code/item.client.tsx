@@ -19,6 +19,8 @@ import { ButtonToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
 import ItemDashboardTab from "./components/dashobard/item-dashboard";
 import { endOfMonth, format, startOfMonth } from "date-fns";
+import { Entity } from "~/types/enums";
+import { useItemPriceStore } from "../home.stock.itemPrice.new/use-item-price-store";
 
 export default function ItemDetailClient() {
   const r = routes;
@@ -27,11 +29,12 @@ export default function ItemDetailClient() {
   const { item, activities, associatedActions } =
     useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const [itemPricePermission] = usePermission({
+  const [itemPricePerm] = usePermission({
     roleActions: globalState.roleActions,
-    actions: associatedActions && associatedActions[PartyType.itemPrice],
+    actions: associatedActions && associatedActions[Entity.ITEM_PRICE],
   });
   const { t } = useTranslation("common");
+  const itemPriceStore = useItemPriceStore();
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
   const tabNavItems = [
@@ -98,11 +101,17 @@ export default function ItemDetailClient() {
       },
     });
     let actions: ButtonToolbar[] = [];
-    if (itemPricePermission?.view) {
+    if (itemPricePerm?.view) {
       actions.push({
         label: t("itemPrice"),
         Icon: PlusIcon,
         onClick: () => {
+          itemPriceStore.onPayload({
+            item: item?.name,
+            itemID: item?.id,
+            uom: item?.uom_name,
+            uomID: item?.uom_id,
+          });
           navigate(
             r.toRoute({
               main: partyTypeToJSON(PartyType.itemPrice),
@@ -117,7 +126,7 @@ export default function ItemDetailClient() {
       actions: actions,
       view: view,
     };
-  }, [itemPricePermission]);
+  }, [itemPricePerm]);
 
   return (
     <DetailLayout

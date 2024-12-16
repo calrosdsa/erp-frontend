@@ -25,7 +25,7 @@ export default function TableCellStatus<TData>({ getValue, row, column, table}:T
   return (
     <div className="flex justify-center">
         {typeof initialValue == "string" &&(
-            <Badge variant={"outline"} className="">{t(initialValue)}</Badge>
+            <Badge variant={"outline"} className=" whitespace-nowrap">{t(initialValue)}</Badge>
         )
         }
     </div>

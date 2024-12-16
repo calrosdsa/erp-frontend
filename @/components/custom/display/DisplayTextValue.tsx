@@ -212,7 +212,7 @@ export default function   DisplayTextValue<T extends object, K extends keyof T>(
   return (
     <div className={cn(className,"flex flex-col space-y-1")}>
       <Typography variant="label" className="text-xs">{title}</Typography>
-      <div className="bg-accent rounded-md p-[3px] shadow-sm flex justify-between items-center ">
+      <div className="bg-accent rounded-md p-[3px] shadow-sm flex justify-between items-center border border-input h-9 ">
         {renderValue()}
         {isEditable && (
           <Button variant="ghost" size="icon" className="h-6 w-6 ml-2" onClick={toggleEdit}>

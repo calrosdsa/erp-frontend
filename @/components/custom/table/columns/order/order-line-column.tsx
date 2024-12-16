@@ -38,7 +38,7 @@ export const lineItemsColumns = ({
   //   header: t("form.uom"),
   // });
 
-  if(lineType != itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)) {
+  // if(lineType != itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)) {
   columns.push({
     accessorKey: "quantity",
     header: t("_item.quantity"),
@@ -47,18 +47,26 @@ export const lineItemsColumns = ({
       type:"number",
     }
   });
-  }
+  // }
 
-  if (lineType == itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)) {
-    columns.push({
-      accessorKey: "lineItemReceipt.acceptedQuantity",
-      header: t("f.accepted", { o: t("form.quantity") }),
-    });
-    columns.push({
-      accessorKey: "lineItemReceipt.rejectedQuantity",
-      header: t("f.rejected", { o: t("form.quantity") }),
-    });
-  }
+  // if (lineType == itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)) {
+  //   columns.push({
+  //     accessorKey: "lineItemReceipt.acceptedQuantity",
+  //     header: t("f.accepted", { o: t("form.quantity") }),
+  //     cell: TableCell,
+  //     meta:{
+  //       type:"number",
+  //     }
+  //   });
+  //   columns.push({
+  //     accessorKey: "lineItemReceipt.rejectedQuantity",
+  //     header: t("f.rejected", { o: t("form.quantity") }),
+  //     cell: TableCell,
+  //     meta:{
+  //       type:"number",
+  //     }
+  //   });
+  // }
 
   columns.push({
     accessorKey: "rate",

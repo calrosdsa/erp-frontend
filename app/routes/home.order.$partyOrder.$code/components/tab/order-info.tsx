@@ -36,6 +36,7 @@ import CurrencyAndPriceList from "@/components/custom/shared/document/currency-a
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
+import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 
 type EditData = z.infer<typeof editOrderSchema>;
 export default function OrderInfoTab() {
@@ -158,10 +159,15 @@ export default function OrderInfoTab() {
             label={t("form.deliveryDate")}
             allowEdit={allowEdit}
           />
+          <CurrencyAutocompleteForm
+            control={form.control}
+            name="currency"
+            label={t("form.currency")}
+            allowEdit={allowEdit}
+          />
           <Separator className=" col-span-full" />
 
-          <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
-          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
+          {/* <CurrencyAndPriceList form={form} allowEdit={allowEdit} /> */}
 
           <LineItemsDisplay
             currency={order?.currency || companyDefaults?.currency || ""}
@@ -190,6 +196,7 @@ export default function OrderInfoTab() {
               <TaxBreakup currency={order.currency} />
             </>
           )}
+          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
         </div>
         <input className="hidden" type="submit" ref={inputRef} />
       </fetcher.Form>

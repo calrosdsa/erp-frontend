@@ -1,11 +1,21 @@
-import { ActionFunctionArgs, defer, json, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  defer,
+  json,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
 import ReceiptDetailClient from "./receipt.client";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
-import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
+import {
+  ItemLineType,
+  itemLineTypeToJSON,
+  PartyType,
+  partyTypeToJSON,
+} from "~/gen/common";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
 import { editReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
@@ -14,14 +24,14 @@ import { formatRFC3339 } from "date-fns";
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
-  editData:z.infer<typeof editReceiptSchema>
+  editData: z.infer<typeof editReceiptSchema>;
 };
-export const action = async ({ request,params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
-  let actionRes = LOAD_ACTION
+  let actionRes = LOAD_ACTION;
   switch (data.action) {
     case "update-state-with-event": {
       const res = await client.PUT("/receipt/update-state", {
@@ -32,10 +42,10 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
       console.log(res.error);
       break;
     }
-    case "edit":{
-      const d = data.editData
-      const res = await client.PUT("/receipt",{
-        body:{
+    case "edit": {
+      const d = data.editData;
+      const res = await client.PUT("/receipt", {
+        body: {
           party_id: d.partyID,
           party_receipt: params.partyReceipt || "",
           posting_date: formatRFC3339(d.postingDate),
@@ -44,26 +54,26 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
           project: d.projectID,
           cost_center: d.costCenterID,
           currency: d.currency,
-          id: d.id
-        }
-      })
-      message = res.data?.message
-      error = res.error?.detail
-      actionRes = ""
-      break
+          id: d.id,
+        },
+      });
+      message = res.data?.message;
+      error = res.error?.detail;
+      actionRes = "";
+      break;
     }
   }
   return json({
     message,
     error,
-    action:actionRes
+    action: actionRes,
   });
 };
 export function shouldRevalidate({
   formMethod,
   defaultShouldRevalidate,
-  actionResult
-}:ShouldRevalidateFunctionArgs) {
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
   if (actionResult?.action == LOAD_ACTION) {
     return defaultShouldRevalidate;
   }
@@ -72,7 +82,6 @@ export function shouldRevalidate({
   }
   return defaultShouldRevalidate;
 }
-
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
@@ -113,21 +122,26 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         break;
       }
       case "info": {
-        lineItemRes = client.GET("/item-line", {
+        lineItemRes =  client.GET("/item-line", {
           params: {
             query: {
-              line_type: itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT),
+              line_type:
+                params.partyReceipt ==
+                partyTypeToJSON(PartyType.purchaseReceipt)
+                  ? itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)
+                  : itemLineTypeToJSON(ItemLineType.DELIVERY_LINE_ITEM),
               id: res.data?.result.entity.receipt.id.toString(),
             },
           },
         });
-        taxLinesRes = client.GET("/taxes-and-charges",{
-          params:{
-            query:{
-              id:res.data.result.entity.receipt.id.toString(),
-            }
-          }
-        })
+        taxLinesRes = client.GET("/taxes-and-charges", {
+          params: {
+            query: {
+              id: res.data.result.entity.receipt.id.toString(),
+            },
+          },
+        });
+        // console.log("ITEM LINES", lineItemResd.error, lineItemResd.data);
         break;
       }
     }
@@ -140,7 +154,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     connections: resConnections,
     activities: res.data?.result.activities,
     lineItems: lineItemRes,
-    taxLines:taxLinesRes,
+    taxLines: taxLinesRes,
   });
 };
 

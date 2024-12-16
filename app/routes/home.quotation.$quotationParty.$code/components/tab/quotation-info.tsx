@@ -1,17 +1,18 @@
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import Typography, { subtitle } from "@/components/typography/Typography";
 import {
-  Await,
   useFetcher,
   useLoaderData,
   useOutletContext,
   useParams,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { components } from "~/sdk";
-import { formatMediumDate } from "~/util/format/formatDate";
 import { action, loader } from "../../route";
-import { ItemLineType, itemLineTypeToJSON, State, stateFromJSON, stateToJSON } from "~/gen/common";
+import {
+  ItemLineType,
+  itemLineTypeToJSON,
+  State,
+  stateFromJSON,
+  stateToJSON,
+} from "~/gen/common";
 import { GlobalState } from "~/types/app";
 import LineItems from "@/components/custom/shared/item/line-items";
 import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
@@ -39,6 +40,7 @@ import {
 import { toZonedTime } from "date-fns-tz";
 import { usePermission } from "~/util/hooks/useActions";
 import { useEditFields } from "~/util/hooks/useEditFields";
+import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 
 type EditData = z.infer<typeof editQuotationSchema>;
 export default function QuotationInfoTab() {
@@ -49,10 +51,10 @@ export default function QuotationInfoTab() {
     useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const params = useParams();
-  const [quotationPerm] = usePermission({roleActions,actions});
+  const [quotationPerm] = usePermission({ roleActions, actions });
   const quotationParty = params.quotationParty || "";
   const isDraft = stateFromJSON(quotation?.status) == State.DRAFT;
-  const allowEdit = isDraft && quotationPerm?.edit
+  const allowEdit = isDraft && quotationPerm?.edit;
   const allowCreate = isDraft && quotationPerm?.create;
   const documentStore = useDocumentStore();
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
@@ -73,7 +75,6 @@ export default function QuotationInfoTab() {
     },
   });
   const formValues = form.getValues();
- 
 
   const onSubmit = (e: EditData) => {
     fetcher.submit(
@@ -99,10 +100,13 @@ export default function QuotationInfoTab() {
     [hasChanged]
   );
 
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"SAVE"
-  }, [fetcher.state]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
   useDisplayMessage(
     {
@@ -157,10 +161,15 @@ export default function QuotationInfoTab() {
             allowEdit={allowEdit}
             label={t("form.validTill")}
           />
-
+          <CurrencyAutocompleteForm
+            control={form.control}
+            name="currency"
+            label={t("form.currency")}
+            allowEdit={allowEdit}
+          />
           <Separator className=" col-span-full" />
 
-          <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
+          {/* <CurrencyAndPriceList form={form} allowEdit={allowEdit} /> */}
 
           <AccountingDimensionForm form={form} allowEdit={allowEdit} />
 

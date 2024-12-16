@@ -82,7 +82,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
               {label} {required && "*"}
             </FormLabel>
           )}
-          <Popover open={open} onOpenChange={setOpen} modal={true}>
+          <Popover open={open} onOpenChange={setOpen} modal={false}>
               {href && !allowEdit ? (
               <Button
                 variant="outline"
@@ -237,7 +237,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
             </PopoverContent>
           </Popover>
           {description && <FormDescription>{description}</FormDescription>}
-          <FormMessage />
+          <FormMessage className="text-xs"/>
         </FormItem>
       )}
     />

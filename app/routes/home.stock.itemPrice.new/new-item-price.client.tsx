@@ -18,15 +18,23 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { GlobalState } from "~/types/app";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useItemPriceStore } from "./use-item-price-store";
 
 export default function NewItemPriceClient({}: {}) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
   const globalState = useOutletContext<GlobalState>();
   const navigate = useNavigate();
+  const {payload} = useItemPriceStore()
   const form = useForm<z.infer<typeof createItemPriceSchema>>({
     resolver: zodResolver(createItemPriceSchema),
-    defaultValues: {},
+    defaultValues: {
+      itemQuantity:1,
+      item:payload?.item,
+      itemID:payload?.itemID,
+      uom:payload?.uom,
+      uomID:payload?.uomID,
+    },
   });
   const r = routes;
   const onSubmit = (values: z.infer<typeof createItemPriceSchema>) => {

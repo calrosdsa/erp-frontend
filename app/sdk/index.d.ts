@@ -3667,6 +3667,15 @@ export interface components {
             name: string;
             values: components["schemas"]["ItemAttributeValueDto"][];
         };
+        CreateItemData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            item: components["schemas"]["ItemData"];
+            item_price_lines: components["schemas"]["ItemPriceLine"][];
+        };
         CreateItemLines: {
             lines: components["schemas"]["LineItemData"][];
             update_stock?: boolean;
@@ -3685,18 +3694,6 @@ export interface components {
             price_list_id: number;
             /** Format: double */
             rate: number;
-            /** Format: int64 */
-            uom_id: number;
-        };
-        CreateItemRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            group_id: number;
-            name: string;
             /** Format: int64 */
             uom_id: number;
         };
@@ -4292,10 +4289,12 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            description?: string | null;
             /** Format: int64 */
             group_id: number;
             /** Format: int64 */
             id: number;
+            maintain_stock: boolean;
             name: string;
             /** Format: int64 */
             uom_id: number;
@@ -5643,10 +5642,20 @@ export interface components {
             ordinal: number;
             value: string;
         };
+        ItemData: {
+            description?: string | null;
+            /** Format: int64 */
+            group_id: number;
+            maintain_stock: boolean;
+            name: string;
+            /** Format: int64 */
+            uom_id: number;
+        };
         ItemDetailDto: {
             code: string;
             /** Format: date-time */
             created_at: string;
+            description: string | null;
             /** Format: int64 */
             group_id: number;
             group_name: string;
@@ -5654,6 +5663,7 @@ export interface components {
             /** Format: int64 */
             id: number;
             item_type: string;
+            maintain_stock: boolean;
             name: string;
             uom_code: string;
             /** Format: int64 */
@@ -5713,6 +5723,16 @@ export interface components {
             /** Format: int64 */
             uom_id: number;
             uuid: string;
+        };
+        ItemPriceLine: {
+            /** Format: int32 */
+            item_quantity: number;
+            /** Format: int64 */
+            price_list_id: number;
+            /** Format: double */
+            rate: number;
+            /** Format: int64 */
+            uom_id: number;
         };
         ItemVariantDto: {
             attibute_abbreviation: string;
@@ -5857,6 +5877,9 @@ export interface components {
             rejected_warehouse?: string;
             /** Format: int64 */
             rejected_warehouse_id?: number;
+            source_warehouse: string;
+            /** Format: int64 */
+            source_warehouse_id: number;
             uom: string;
         };
         LineItemReceiptData: {
@@ -7607,6 +7630,8 @@ export interface components {
             item_name: string;
             serial_no: string;
             status: string;
+            warehouse: string;
+            warehouse_uuid: string;
         };
         SerialNoTransactionDto: {
             batch_bundle_no: string;
@@ -7769,6 +7794,7 @@ export interface components {
             name: string;
         };
         SupplierDto: {
+            created_at: string;
             email: string | null;
             group: string;
             /** Format: int64 */
@@ -14912,7 +14938,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateItemRequestBody"];
+                "application/json": components["schemas"]["CreateItemData"];
             };
         };
         responses: {

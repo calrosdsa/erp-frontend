@@ -59,6 +59,7 @@ export default function InvoicesClient() {
         paginationOptions={{
           rowCount: paginationResult?.total,
         }}
+        // enableRowSelection={true}
       />
     </div>
   );
