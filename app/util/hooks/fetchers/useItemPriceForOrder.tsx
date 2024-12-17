@@ -31,11 +31,13 @@ export const PriceAutocompleteForm = ({
     isBuying:
       docPartyType == partyTypeToJSON(PartyType.purchaseOrder) ||
       docPartyType == partyTypeToJSON(PartyType.purchaseReceipt) ||
-      docPartyType == partyTypeToJSON(PartyType.purchaseInvoice),
+      docPartyType == partyTypeToJSON(PartyType.purchaseInvoice) ||
+      docPartyType == partyTypeToJSON(PartyType.supplierQuotation),
     isSelling:
       docPartyType == partyTypeToJSON(PartyType.saleOrder) ||
       docPartyType == partyTypeToJSON(PartyType.saleInvoice) ||
-      docPartyType == partyTypeToJSON(PartyType.deliveryNote),
+      docPartyType == partyTypeToJSON(PartyType.deliveryNote) ||
+      docPartyType == partyTypeToJSON(PartyType.salesQuotation),
     currency: currency || DEFAULT_CURRENCY,
   });
   return (

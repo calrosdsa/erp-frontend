@@ -43,6 +43,7 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import Editor from "@/components/custom-ui/rich-text/editor";
 import Viewer from "@/components/custom-ui/rich-text/viewer";
 import RichTextEditor from "@/components/custom-ui/rich-text/editor";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function NewItemClient() {
   const fetcher = useFetcher<typeof action>();
@@ -58,7 +59,6 @@ export default function NewItemClient() {
     defaultValues: {
       name: "",
       itemPriceLines: [],
-      description: "HELLO DEC",
     },
   });
   const formValues = form.getValues();
@@ -123,129 +123,187 @@ export default function NewItemClient() {
     <Card>
       <FormLayout className=" p-3">
         <Form {...form}>
+          {JSON.stringify(form.formState.errors)}
           <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="create-grid">
-              <CustomFormFieldInput
-                control={form.control}
-                name="name"
-                label={"Nombre/PN"}
-                inputType="input"
-              />
-              <UomAutocompleteForm
-                control={form.control}
-                label={t("form.uom")}
-                name="uomName"
-                onSelect={(e) => {
-                  form.setValue("uomID", e.id);
-                }}
-              />
-              <GroupAutocompleteForm
-                control={form.control}
-                label={t("group")}
-                name="groupName"
-                roleActions={roleActions}
-                isGroup={false}
-                partyType={r.itemGroup}
-                onSelect={(e) => {
-                  form.setValue("groupID", e.id);
-                }}
-              />
-               <CustomFormFieldInput
-                control={form.control}
-                name="maintainStock"
-                label={"Mantener en Stock"}
-                inputType="check"
-                allowEdit={true}
-              />
-
-              <CustomFormFieldInput
-                className=" col-span-full"
-                control={form.control}
-                name="description"
-                required={false}
-                label={t("form.description")}
-                inputType="richtext"
-                allowEdit={true}
-              />
-
-             
-              
-
-              <Typography variant="subtitle2" className="col-span-full mt-4">
-                {t("itemPrice")}
-              </Typography>
-
-              {fields.map((field, index) => (
-                <div
-                  key={field.id}
-                  className="col-span-full grid lg:grid-cols-6 gap-4  overflow-auto w-full px-1 items-end border-b pb-1"
-                >
+            <Tabs defaultValue="item">
+              <TabsList>
+                <TabsTrigger value="item">Item</TabsTrigger>
+                <TabsTrigger value="inventory">Inventario</TabsTrigger>
+              </TabsList>
+              <TabsContent value="item">
+                <div className="create-grid">
                   <CustomFormFieldInput
                     control={form.control}
-                    name={`itemPriceLines.${index}.rate`}
-                    label={t("form.rate")}
+                    name="name"
+                    label={"Nombre"}
                     inputType="input"
-                    type="number"
                   />
                   <CustomFormFieldInput
                     control={form.control}
-                    name={`itemPriceLines.${index}.itemQuantity`}
-                    label={t("form.quantity")}
+                    name="code"
+                    label={"Código / NP"}
                     inputType="input"
-                    type="number"
-                  />
-                  <PriceListAutocompleteForm
-                    control={form.control}
-                    label={t("priceList")}
-                    name={`itemPriceLines.${index}.priceList`}
-                    onSelect={(e) => {
-                      form.setValue(
-                        `itemPriceLines.${index}.priceListID`,
-                        e.id
-                      );
-                    }}
                   />
                   <UomAutocompleteForm
                     control={form.control}
                     label={t("form.uom")}
-                    name={`itemPriceLines.${index}.uom`}
+                    name="uomName"
                     onSelect={(e) => {
-                      form.setValue(`itemPriceLines.${index}.uomID`, e.id);
+                      form.setValue("uomID", e.id);
                     }}
                   />
-                  <Button
-                    type="button"
-                    onClick={() => remove(index)}
-                    variant={"ghost"}
-                  >
-                    <TrashIcon />
-                    <span>Remover</span>
-                  </Button>
-                </div>
-              ))}
-              <div className=" col-span-full">
-                <Button
-                  type="button"
-                  onClick={() =>
-                    append({
-                      rate: 0,
-                      itemQuantity: 1,
-                      priceList: "",
-                      priceListID: 0,
-                      uom: formValues.uomName,
-                      uomID: formValues.uomID,
-                    })
-                  }
-                  className="col-span-full mt-2 w-min"
-                  variant={"ghost"}
-                >
-                  <PlusIcon />
-                  <span>Agregar Precio</span>
-                </Button>
-              </div>
+                  <GroupAutocompleteForm
+                    control={form.control}
+                    label={t("group")}
+                    name="groupName"
+                    roleActions={roleActions}
+                    isGroup={false}
+                    partyType={r.itemGroup}
+                    onSelect={(e) => {
+                      form.setValue("groupID", e.id);
+                    }}
+                  />
+                  <CustomFormFieldInput
+                    control={form.control}
+                    name="maintainStock"
+                    label={"Mantener en Stock"}
+                    inputType="check"
+                    allowEdit={true}
+                  />
 
-              <input ref={inputRef} type="submit" className="hidden" />
-            </div>
+                  <CustomFormFieldInput
+                    className=" col-span-full"
+                    control={form.control}
+                    name="description"
+                    required={false}
+                    label={t("form.description")}
+                    inputType="richtext"
+                    allowEdit={true}
+                  />
+
+                  <Typography
+                    variant="subtitle2"
+                    className="col-span-full mt-4"
+                  >
+                    {t("itemPrice")}
+                  </Typography>
+
+                  {fields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="col-span-full grid lg:grid-cols-6 gap-4  overflow-auto w-full px-1 items-end border-b pb-1"
+                    >
+                      <CustomFormFieldInput
+                        control={form.control}
+                        name={`itemPriceLines.${index}.rate`}
+                        label={t("form.rate")}
+                        inputType="input"
+                        type="number"
+                      />
+                      <CustomFormFieldInput
+                        control={form.control}
+                        name={`itemPriceLines.${index}.itemQuantity`}
+                        label={t("form.quantity")}
+                        inputType="input"
+                        type="number"
+                      />
+                      <PriceListAutocompleteForm
+                        control={form.control}
+                        label={t("priceList")}
+                        name={`itemPriceLines.${index}.priceList`}
+                        onSelect={(e) => {
+                          form.setValue(
+                            `itemPriceLines.${index}.priceListID`,
+                            e.id
+                          );
+                        }}
+                      />
+                      <UomAutocompleteForm
+                        control={form.control}
+                        label={t("form.uom")}
+                        name={`itemPriceLines.${index}.uom`}
+                        onSelect={(e) => {
+                          form.setValue(`itemPriceLines.${index}.uomID`, e.id);
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        onClick={() => remove(index)}
+                        variant={"ghost"}
+                      >
+                        <TrashIcon />
+                        <span>Remover</span>
+                      </Button>
+                    </div>
+                  ))}
+                  <div className=" col-span-full">
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        append({
+                          rate: 0,
+                          itemQuantity: 1,
+                          priceList: "",
+                          priceListID: 0,
+                          uom: formValues.uomName,
+                          uomID: formValues.uomID,
+                        })
+                      }
+                      className="col-span-full mt-2 w-min"
+                      variant={"ghost"}
+                    >
+                      <PlusIcon />
+                      <span>Agregar Precio</span>
+                    </Button>
+                  </div>
+
+                  <input ref={inputRef} type="submit" className="hidden" />
+                </div>
+              </TabsContent>
+              <TabsContent value="inventory">
+                <div className=" create-grid">
+                  <CustomFormFieldInput
+                    control={form.control}
+                    name="itemInventory.shelfLifeInDays"
+                    label={"Vida útil en días"}
+                    inputType="input"
+                  />
+                  <CustomFormFieldInput
+                    control={form.control}
+                    name="itemInventory.warrantyPeriodInDays"
+                    label={"Periodo de garantía en días"}
+                    inputType="input"
+                  />
+
+                  <UomAutocompleteForm
+                    control={form.control}
+                    label={"Unidad de medida de peso"}
+                    name="itemInventory.weightUom"
+                    onSelect={(e) => {
+                      form.setValue("itemInventory.weightUomID", e.id);
+                    }}
+                  />
+                  <CustomFormFieldInput
+                    control={form.control}
+                    name="itemInventory.wightPerUnit"
+                    label={"Peso por unidad"}
+                    inputType="input"
+                  />
+                  <CustomFormFieldInput
+                    control={form.control}
+                    name="itemInventory.hasSerialNo"
+                    label={"Tiene número de serie"}
+                    inputType="check"
+                  />
+                  <CustomFormFieldInput
+                    control={form.control}
+                    name="itemInventory.serialNoTemplate"
+                    label={"Serie de números de serie"}
+                    inputType="input"
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
           </fetcher.Form>
         </Form>
       </FormLayout>

@@ -15,9 +15,10 @@ import { useTranslation } from "react-i18next";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
+import DataLayout from "@/components/layout/data-layout";
 
 export default function InvoicesClient() {
-  const { paginationResult, actions } = useLoaderData<typeof loader>();
+  const { results, actions } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const params = useParams();
   const [permission] = usePermission({
@@ -28,7 +29,7 @@ export default function InvoicesClient() {
   const navigate = useNavigate();
   const { t } = useTranslation("common");
   const r = routes;
-  const {resetDocument} = useResetDocument()
+  const { resetDocument } = useResetDocument();
   const lineItemStore = useLineItems();
 
   const tacStore = useTaxAndCharges();
@@ -37,7 +38,7 @@ export default function InvoicesClient() {
       titleToolbar: t(partyInvoice),
       ...(permission?.create && {
         addNew: () => {
-          resetDocument()
+          resetDocument();
           navigate(
             r.toRoute({
               routePrefix: ["invoice"],
@@ -50,17 +51,24 @@ export default function InvoicesClient() {
     };
   }, [permission]);
   return (
-    <div>
+    <DataLayout
+      orderOptions={[
+        { name: "Fecha de Creación", value: "created_at" },
+        // { name: "Fecha de Facture", value: "invoice_date" },
+        { name: t("form.status"), value: "status" },
+      ]}
+    >
       <DataTable
-        data={paginationResult?.results || []}
+        data={results || []}
         columns={invoiceColumns({
           partyType: params.partyInvoice || "",
         })}
-        paginationOptions={{
-          rowCount: paginationResult?.total,
-        }}
+        enableSizeSelection={true}
+        // paginationOptions={{
+        //   rowCount: paginationResult?.total,
+        // }}
         // enableRowSelection={true}
       />
-    </div>
+    </DataLayout>
   );
 }

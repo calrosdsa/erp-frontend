@@ -38,6 +38,7 @@ import { format } from "date-fns";
 import { Entity } from "~/types/enums";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
+import { useNewSalesRecord } from "../home.invoicing.salesRecord.new/use-new-sales-record";
 
 export default function InvoiceDetailClient() {
   const { invoice, activities, associatedActions, totals } =
@@ -63,12 +64,24 @@ export default function InvoiceDetailClient() {
     actions: associatedActions && associatedActions[Entity.SERIAL_NO],
     roleActions: roleActions,
   });
-  const createPayment = useCreatePayment();
-  const { enabledOrder } = useStatus({
-    status: stateFromJSON(invoice?.status),
+
+  const [stockLedgerPerm] = usePermission({
+    actions: associatedActions && associatedActions[Entity.STOCK_LEDGER],
+    roleActions: roleActions,
   });
+  const [salesRecordPerm] = usePermission({
+    actions: associatedActions && associatedActions[Entity.SALES_RECORD],
+    roleActions,
+  });
+  const [purchaseRecordPerm] = usePermission({
+    actions: associatedActions && associatedActions[Entity.PURCHASE_RECORD],
+    roleActions,
+  });
+
+  const createPayment = useCreatePayment();
   const { total } = useLineItems();
   const { total: totalTaxAndCharges } = useTaxAndCharges();
+  const newSalesRecord = useNewSalesRecord()
 
   const navItems = [
     {
@@ -110,6 +123,8 @@ export default function InvoiceDetailClient() {
     let actions: ButtonToolbar[] = [];
     let view: ButtonToolbar[] = [];
     const status = stateFromJSON(invoice?.status);
+    const active = status != State.DRAFT && status != State.CANCELLED;
+    const activeInventory = active && invoice?.update_stock;
     if (gLPermission?.view) {
       view.push({
         label: t("accountingLedger"),
@@ -128,18 +143,18 @@ export default function InvoiceDetailClient() {
         },
       });
     }
-    if (paymentPermission?.create && enabledOrder && status != State.PAID) {
+    if (paymentPermission?.create && active) {
       actions.push({
         label: t("_payment.base"),
         onClick: () => {
-          const total = invoice?.total || 0
+          const total = invoice?.total || 0;
           const outstanding = total - Number(totals?.paid);
-          
+
           createPayment.setData({
             amount: outstanding,
             partyUuid: invoice?.party_uuid,
             partyType: invoice?.party_type,
-            partyID:invoice?.party_id,
+            partyID: invoice?.party_id,
             partyName: invoice?.party_name,
             partyReference: invoice?.id,
             paymentType: getPaymentType(partyInvoice),
@@ -165,7 +180,7 @@ export default function InvoiceDetailClient() {
         Icon: PlusIcon,
       });
     }
-    if (serialNoPermission?.view && status != State.DRAFT) {
+    if (serialNoPermission?.view && activeInventory) {
       view.push({
         label: t("serialNoSumary"),
         onClick: () => {
@@ -175,11 +190,48 @@ export default function InvoiceDetailClient() {
               routePrefix: [r.stockM],
               q: {
                 voucherNo: invoice?.code || "",
-                fromDate: format(
-                  new Date(invoice?.created_at || ""),
-                  "yyyy-MM-dd"
-                ),
+                fromDate: format(invoice?.posting_date || "", "yyyy-MM-dd"),
               },
+            })
+          );
+        },
+      });
+    }
+
+    if (stockLedgerPerm?.view && activeInventory) {
+      view.push({
+        label: t("stockLedger"),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: r.stockLedger,
+              routePrefix: [r.stockM],
+              q: {
+                fromDate: format(invoice?.posting_date || "", "yyyy-MM-dd"),
+                toDate: format(invoice?.posting_date || "", "yyyy-MM-dd"),
+                voucherNo: invoice?.code,
+              },
+            })
+          );
+        },
+      });
+    }
+    if (salesRecordPerm?.view && active) {
+      actions.push({
+        label: t("salesRecord"),
+        Icon:PlusIcon,
+        onClick: () => {
+          newSalesRecord.onPayload({
+            partyID:invoice?.party_id,
+            party:invoice?.party_name,
+            invoiceCode:invoice?.code,
+            invoiceID:invoice?.id
+          })
+          navigate(
+            r.toRoute({
+              main: r.salesRecord,
+              routePrefix: [r.invoicing],
+              routeSufix:["new"]
             })
           );
         },
@@ -216,6 +268,9 @@ export default function InvoiceDetailClient() {
     serialNoPermission,
     total,
     totalTaxAndCharges,
+    stockLedgerPerm,
+    salesRecordPerm,
+    purchaseRecordPerm,
   ]);
 
   useLoadingTypeToolbar(

@@ -16,6 +16,9 @@ import { GlobalState } from "~/types/app";
 import { createSalesRecord } from "~/util/data/schemas/invoicing/sales-record-schema";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
+import { useNewSalesRecord } from "./use-new-sales-record";
+import { Separator } from "@/components/ui/separator";
+import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
 
 export default function NewSalesRecord() {
   const fetcher = useFetcher<typeof action>();
@@ -24,13 +27,17 @@ export default function NewSalesRecord() {
   const navigate = useNavigate();
   const r = routes;
   const { roleActions } = useOutletContext<GlobalState>();
-  
+  const {payload} = useNewSalesRecord()
   // Default values for the form
   
 
   const form = useForm<z.infer<typeof createSalesRecord>>({
     resolver: zodResolver(createSalesRecord),
     defaultValues:{
+    customerID:payload?.partyID,
+    customer:payload?.party,
+    invoiceID:payload?.invoiceID,
+    invoiceCode:payload?.invoiceCode,
     invoiceDate:new Date(),
     supplement: "",
     iceAmount: 0,
@@ -121,6 +128,14 @@ export default function NewSalesRecord() {
             >
               <div className="create-grid">
 
+                <InvoiceAutocompleteForm
+                label={t("saleInvoice")}
+                partyType={r.saleInvoice}
+                control={form.control}
+                onSelect={(e)=>{
+                  form.setValue("invoiceID",e.id)
+                }}
+                />
               <CustomerAutoCompleteForm
               label={t("customer")}
               control={form.control}
@@ -130,6 +145,8 @@ export default function NewSalesRecord() {
                 form.setValue("nameOrBusinessName",e.name)
               }}
               />
+
+              <Separator className=" col-span-full"/>
                 
               <CustomFormDate
                   control={form.control}

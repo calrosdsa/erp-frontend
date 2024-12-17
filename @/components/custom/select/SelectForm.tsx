@@ -81,7 +81,6 @@ export default function SelectForm<
               <FormControl>
                 <SelectTrigger
                   className={cn(
-                    "h-9",
                     !allowEdit && "disabled:opacity-100 disabled:cursor-default bg-secondary"
                   )}
                 >

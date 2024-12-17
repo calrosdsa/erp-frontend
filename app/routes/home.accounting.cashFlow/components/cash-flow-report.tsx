@@ -45,11 +45,11 @@ export const CashFlowReport: React.FC<CashFlowReportProps> = ({ data }) => {
   }
 
   const calculateSectionTotal = (section: Record<string, CashFlowEntry[]>) => {
-    return Object.values(section).flat().reduce((sum, entry) => sum + entry.amount, 0)
+    return Object.values(section).flat().reduce((sum, entry) => sum + entry.amount, 0) 
   }
 
   const calculateGrandTotal = () => {
-    return Object.values(groupedData).reduce((sum, section) => sum + calculateSectionTotal(section), 0)
+    return Object.values(groupedData).reduce((sum, section) => sum + (calculateSectionTotal(section)), 0)
   }
 
   return (

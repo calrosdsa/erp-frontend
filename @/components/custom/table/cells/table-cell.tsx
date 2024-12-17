@@ -62,38 +62,15 @@ export default function TableCell<TData>({ getValue, row, column, table }:TableC
     value={value}
     onChange={(e) => setValue(e.target.value)}
     onBlur={onBlur}
+    step={".01"}
     className="h-[28px] bg-background"
-    placeholder={columnMeta?.type}
+    // placeholder={columnMeta?.type}
     type={columnMeta?.type || "text"}
     required={columnMeta?.required}
-    pattern={columnMeta?.pattern}
+    // pattern={columnMeta?.pattern}
     min={0}
     // title={"validationMessage"}
   />
-    // return columnMeta?.type === "select" ? (
-    //   <select
-    //     onChange={onSelectChange}
-    //     value={initialValue}
-    //     required={columnMeta?.required}
-    //     // title={validationMessage}
-    //   >
-    //     {columnMeta?.options?.map((option: Option) => (
-    //       <option key={option.value} value={option.value}>
-    //         {option.label}
-    //       </option>
-    //     ))}
-    //   </select>
-    // ) : (
-    //   <input
-    //     value={value}
-    //     onChange={(e) => setValue(e.target.value)}
-    //     onBlur={onBlur}
-    //     type={columnMeta?.type || "text"}
-    //     required={columnMeta?.required}
-    //     pattern={columnMeta?.pattern}
-    //     // title={validationMessage}
-    //   />
-    // );
   }
   return <span>{value}</span>;
 };

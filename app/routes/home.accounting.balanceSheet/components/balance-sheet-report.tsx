@@ -54,7 +54,7 @@ export const BalanceSheetReport: React.FC<BalanceSheetProps> = ({ data }) => {
   };
 
   const calculateNetAmount = (entry: BalanceSheetEntry) => {
-    return entry.debit - entry.credit;
+    return (entry.debit - entry.credit) / 100;
   };
 
   const calculateGroupTotal = (group: Record<string, BalanceSheetEntry[]>) => {

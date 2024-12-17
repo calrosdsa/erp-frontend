@@ -24,14 +24,18 @@ import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 import { editSalesRecord } from "~/util/data/schemas/invoicing/sales-record-schema";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
+import { Separator } from "@radix-ui/react-select";
+import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
+import { routes } from "~/util/route";
 type EditData = z.infer<typeof editSalesRecord>;
-export default function CurrencyExchangeInfo() {
+export default function SalesRecordInfo() {
   const { t } = useTranslation("common");
   const { salesRecord, actions } = useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const [permission] = usePermission({ actions, roleActions });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
+  const r = routes
 
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: editSalesRecord,
@@ -69,6 +73,8 @@ export default function CurrencyExchangeInfo() {
       consolidationStatus: salesRecord?.consolidation_status,
       customer: salesRecord?.customer,
       customerID: salesRecord?.customer_id,
+      invoiceCode: salesRecord?.invoice_code,
+      invoiceID: salesRecord?.invoice_id,
     },
   });
   const allowEdit = permission?.edit || false;
@@ -118,8 +124,18 @@ export default function CurrencyExchangeInfo() {
   return (
     <FormLayout>
       <Form {...form}>
+        {/* {JSON.stringify(form.getValues())} */}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
+
+            <InvoiceAutocompleteForm
+              label={t("saleInvoice")}
+              partyType={r.saleInvoice}
+              control={form.control}
+              onSelect={(e) => {
+                form.setValue("invoiceID", e.id);
+              }}
+            />
             <CustomerAutoCompleteForm
               label={t("customer")}
               control={form.control}
@@ -130,7 +146,7 @@ export default function CurrencyExchangeInfo() {
                 form.setValue("nameOrBusinessName", e.name);
               }}
             />
-
+            <Separator className=" col-span-full"/>
             <CustomFormDate
               control={form.control}
               name="invoiceDate"

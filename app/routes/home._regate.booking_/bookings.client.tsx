@@ -16,7 +16,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { routes } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import PaginationLayout from "@/components/layout/pagination-layout";
+import DataLayout from "@/components/layout/data-layout";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
@@ -89,12 +89,12 @@ export default function BookingsClient() {
   }, [permission]);
 
   return (
-    <PaginationLayout
+    <DataLayout
       orderOptions={[
         { name: t("table.createdAt"), value: "created_at" },
         { name: t("form.status"), value: "status" },
       ]}
-      filterOptions={() => {
+      fixedFilters={() => {
         return (
           <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
             <GenericActionsDropdown
@@ -189,6 +189,6 @@ export default function BookingsClient() {
           rowCount: paginationResult?.total,
         }}
       />
-    </PaginationLayout>
+    </DataLayout>
   );
 }

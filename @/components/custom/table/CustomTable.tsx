@@ -66,6 +66,7 @@ interface DataTableProps<TData, TValue> {
   metaOptions?: TableMetaOptions<TData>;
   metaActions?: TableMetaOptions<TData>;
   enableRowSelection?: boolean;
+  enableSizeSelection?: boolean;
   onSelectionChange?: (selectedRows: TData[]) => void;
   maxTableHeight?: number;
 }
@@ -106,6 +107,7 @@ export function DataTable<TData, TValue>({
   metaOptions,
   metaActions,
   enableRowSelection = false,
+  enableSizeSelection = false,
   onSelectionChange,
   maxTableHeight = 480,
 }: DataTableProps<TData, TValue>) {
@@ -120,8 +122,6 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [expanded, setExpanded] = useState<ExpandedState>({});
-  const tableRef = useRef<HTMLDivElement>(null);
-  const [tableWidth, setTableWidth] = useState(0);
   const { selection, toggle, clear, setAll, setSelectedRowsData } =
     useTableSelectionStore();
 
@@ -160,7 +160,7 @@ export function DataTable<TData, TValue>({
 
   const onPaginationChange: OnChangeFn<PaginationState> = useCallback(
     (updaterOrValue) => {
-      if (paginationOptions == undefined) return;
+      // if (paginationOptions == undefined) return;
       const newState =
         typeof updaterOrValue === "function"
           ? updaterOrValue(paginationState)
@@ -216,7 +216,6 @@ export function DataTable<TData, TValue>({
     setSelectedRowsData(selectedRows);
   }, [selection, table]);
 
-
   const TableComponents = useMemo(
     () => ({
       Table: ({ style, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
@@ -233,15 +232,16 @@ export function DataTable<TData, TValue>({
 
   const fixedHeaderContent = useCallback(
     () => (
-      <div className=" bg-muted z-10" >
+      <div className=" bg-muted z-10">
         {table.getFlatHeaders().map((header) => (
           <TableHead
             key={header.id}
-            className="text-xs bg-muted whitespace-nowrap "
+            className="text-xs bg-muted whitespace-nowrap truncate "
             style={{
               width: header.getSize(),
               maxWidth: header.getSize(),
               minWidth: header.getSize(),
+              height: 41,
             }}
           >
             {header.isPlaceholder
@@ -264,7 +264,7 @@ export function DataTable<TData, TValue>({
             width: cell.column.getSize(),
             maxWidth: cell.column.getSize(),
             minWidth: cell.column.getSize(),
-            height: 43,
+            height: 41,
             overflow: "hidden",
             textOverflow: "ellipsis",
           }}
@@ -280,36 +280,32 @@ export function DataTable<TData, TValue>({
   return (
     <div className="py-3 space-y-4 w-full">
       {metaActions != undefined && <DataTableToolbar table={table} />}
-      <div className="rounded-md border w-full" >
-          <div
-            // ref={tableRef}
-            className="relative"
+      <div className="rounded-md border w-full">
+        <div
+          // ref={tableRef}
+          className="relative"
+          style={{
+            height: `${Math.min(data.length * 43 + 48, maxTableHeight)}px`,
+          }}
+        >
+          <TableVirtuoso
             style={{
-              height: `${Math.min(data.length * 45 + 48, maxTableHeight)}px`,
+              height: "100%",
+              width: "100%",
             }}
-            >
-            
-
-            <TableVirtuoso
-              style={{
-                height: "100%",
-                width:"100%"
-              }}
-              data={table.getRowModel().rows}
-              components={TableComponents}
-              itemContent={(index, row) => (
-                <MemoizedRow row={row} rowContent={rowContent} />
-              )}
-              fixedHeaderContent={fixedHeaderContent}
-            />
-          </div>
-          {/* <ScrollBar orientation="horizontal" /> */}
+            data={table.getRowModel().rows}
+            components={TableComponents}
+            itemContent={(index, row) => (
+              <MemoizedRow row={row} rowContent={rowContent} />
+            )}
+            fixedHeaderContent={fixedHeaderContent}
+          />
+        </div>
+        {/* <ScrollBar orientation="horizontal" /> */}
       </div>
       <div className="flex justify-between items-center">
         {metaOptions != undefined && <DataTableEditFooter table={table} />}
-        {paginationOptions != undefined && (
-          <DataTablePagination table={table} />
-        )}
+        {enableSizeSelection && <DataTablePagination table={table} />}
       </div>
     </div>
   );
@@ -317,6 +313,8 @@ export function DataTable<TData, TValue>({
 
 const MemoizedRow = React.memo(
   ({ row, rowContent }: { row: any; rowContent: any }) => (
-    <TableRow className=" border-0">{rowContent(row.index, row.original)}</TableRow>
+    <TableRow className=" border-0">
+      {rowContent(row.index, row.original)}
+    </TableRow>
   )
 );

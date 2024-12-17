@@ -59,6 +59,7 @@ export default function OrdersClient() {
         paginationOptions={{
           rowCount: paginationResult?.total,
         }}
+        enableSizeSelection={true}
       />
     </div>
   );

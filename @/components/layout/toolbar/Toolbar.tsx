@@ -63,6 +63,7 @@ export default function ToolBar({ title }: { title: string }) {
               <PopoverTrigger asChild>
                 <Button
                   size={"sm"}
+                  variant={"outline"}
                   className=" flex space-x-1 h-8 rounded-lg px-3"
                 >
                   <span>{t("actions.base")}</span>
@@ -100,7 +101,7 @@ export default function ToolBar({ title }: { title: string }) {
                   <ChevronsUpDown className="h-4 w-4" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-56">
+              <PopoverContent >
                 <div className="flex flex-col space-y-1">
                   {view.map((item, idx) => (
                     <Button
@@ -109,7 +110,9 @@ export default function ToolBar({ title }: { title: string }) {
                       className="justify-start"
                       onClick={() => item.onClick()}
                     >
+                      <span className=" whitespace-normal">
                       {item.label}
+                      </span>
                       {item.Icon && <item.Icon className="h-3 w-3 ml-2" />}
                     </Button>
                   ))}
@@ -215,6 +218,7 @@ export default function ToolBar({ title }: { title: string }) {
                   addNew();
                 }
               }}
+              variant={"secondary"}
               className=" flex space-x-1  rounded-lg px-3  justify-center"
             >
               <PlusIcon />

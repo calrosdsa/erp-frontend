@@ -3,6 +3,7 @@ import { uomSchema } from "../setting/uom-schema";
 import { groupSchema } from "../group-schema";
 import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 import { components } from "~/sdk";
+import { itemInventory } from "./item-inventory-schema";
 
 export const itemPriceLine = z.object({
   rate:z.coerce.number(),
@@ -14,6 +15,7 @@ export const itemPriceLine = z.object({
 })
 export const createItemSchema = z.object({
   name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),  
+  code:z.string().min(DEFAULT_MIN_LENGTH),
   uomName: z.string(),
   groupName:z.string(),
   groupID:z.number(),
@@ -21,12 +23,15 @@ export const createItemSchema = z.object({
   itemPriceLines:z.array(itemPriceLine),
   description:z.string().optional(),
   maintainStock:z.boolean(),
+
+  itemInventory:itemInventory.optional(),
 });
 
 
 export const editItemSchema = z.object({
   id:z.number(),
   name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
+  code:z.string().min(DEFAULT_MIN_LENGTH),
   uomName: z.string(),
   groupName:z.string(),
   groupID:z.number(),

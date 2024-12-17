@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { loader } from "./route";
 import { movingFormColumns } from "@/components/custom/table/columns/piano/moving-form-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import PaginationLayout from "@/components/layout/pagination-layout";
+import DataLayout from "@/components/layout/data-layout";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
@@ -36,7 +36,7 @@ export default function MovingForms() {
   }, []);
 
   return (
-    <PaginationLayout
+    <DataLayout
       orderOptions={[
         { name: t("table.createdAt"), value: "created_at" },
         { name: t("form.email"), value: "email" },
@@ -51,6 +51,6 @@ export default function MovingForms() {
         }}
         columns={movingFormColumns({})}
       />
-    </PaginationLayout>
+    </DataLayout>
   );
 }

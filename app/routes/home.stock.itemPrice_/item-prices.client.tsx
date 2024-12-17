@@ -51,6 +51,7 @@ export default function ItemPricesClient() {
         paginationOptions={{
           rowCount: paginationResult?.total || 0,
         }}
+        enableSizeSelection={true}
         hiddenColumns={{
           Currency: false,
           Rate: true,

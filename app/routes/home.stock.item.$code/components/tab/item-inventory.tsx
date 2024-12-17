@@ -18,11 +18,12 @@ import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { UomAutocompleteForm } from "~/util/hooks/fetchers/useUomDebounceFetcher";
 import { GroupAutocompleteForm } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 import { routes } from "~/util/route";
+import { editItemInventory } from "~/util/data/schemas/stock/item-inventory-schema";
 
-type EditItemType = z.infer<typeof editItemSchema>;
-export default function ItemInfoTab() {
+type EditItemType = z.infer<typeof editItemInventory>;
+export default function ItemInventory() {
   const { t } = useTranslation("common");
-  const { item, actions } = useLoaderData<typeof loader>();
+  const { inventory, actions,item } = useLoaderData<typeof loader>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { roleActions } = useOutletContext<GlobalState>();
   const r = routes;
@@ -30,25 +31,24 @@ export default function ItemInfoTab() {
   const fetcher = useFetcher<typeof action>();
   const allowEdit = permission.edit;
   const { form, hasChanged, updateRef } = useEditFields<EditItemType>({
-    schema: editItemSchema,
+    schema: editItemInventory,
     defaultValues: {
-      id: item?.id,
-      name: item?.name,
-      code: item?.code,
-      uomName: item?.uom_name,
-      uomID: item?.uom_id,
-      groupID: item?.group_id,
-      groupName: item?.group_name,
-      maintainStock: item?.maintain_stock,
-      description: item?.description,
+      itemID:item?.id,
+      shelfLifeInDays: inventory?.shelf_life_in_days,
+      warrantyPeriodInDays: inventory?.warranty_period_in_days,
+      weightUom: inventory?.weight_uom,
+      weightUomID: inventory?.weight_uom_id,
+      hasSerialNo: inventory?.has_serial_no,
+      serialNoTemplate: inventory?.serial_no_template,
+      wightPerUnit: inventory?.weight_per_unit,
     },
   });
   // const formValue = form.getValues();
   const onSubmit = (e: EditItemType) => {
     fetcher.submit(
       {
-        action: "edit-item",
-        editItem: e,
+        action: "edit-inventory",
+        editInventory: e,
       },
       {
         method: "POST",
@@ -92,58 +92,49 @@ export default function ItemInfoTab() {
           <div className="info-grid">
             <CustomFormFieldInput
               control={form.control}
-              name="name"
-              label={t("form.name")}
+              name="shelfLifeInDays"
+              label={"Vida útil en días"}
               inputType="input"
               allowEdit={allowEdit}
             />
             <CustomFormFieldInput
               control={form.control}
-              name="code"
-              label={"Código / NP"}
+              name="warrantyPeriodInDays"
+              label={"Periodo de garantía en días"}
               inputType="input"
+              allowEdit={allowEdit}
             />
 
             <UomAutocompleteForm
               control={form.control}
-              label={t("form.uom")}
-              name="uomName"
+              label={"Unidad de medida de peso"}
+              name="weightUom"
               allowEdit={allowEdit}
               onSelect={(e) => {
-                form.setValue("uomID", e.id);
+                form.setValue("weightUomID", e.id);
               }}
             />
-
-            <GroupAutocompleteForm
-              control={form.control}
-              label={t("group")}
-              name="groupName"
-              allowEdit={allowEdit}
-              isGroup={false}
-              partyType={r.itemGroup}
-              onSelect={(e) => {
-                form.setValue("groupID", e.id);
-              }}
-            />
-
             <CustomFormFieldInput
               control={form.control}
-              name="maintainStock"
-              label={"Mantener en Stock"}
+              name="wightPerUnit"
+              label={"Peso por unidad"}
+              inputType="input"
+              allowEdit={allowEdit}
+            />
+            <CustomFormFieldInput
+              control={form.control}
+              name="hasSerialNo"
+              label={"Tiene número de serie"}
               inputType="check"
               allowEdit={allowEdit}
             />
-            {form.watch("id") && (
-              <CustomFormFieldInput
-                className=" col-span-full"
-                control={form.control}
-                name="description"
-                required={false}
-                label={t("form.description")}
-                inputType="richtext"
-                allowEdit={allowEdit}
-              />
-            )}
+            <CustomFormFieldInput
+              control={form.control}
+              name="serialNoTemplate"
+              label={"Serie de números de serie"}
+              inputType="input"
+              allowEdit={allowEdit}
+            />
           </div>
         </fetcher.Form>
       </Form>

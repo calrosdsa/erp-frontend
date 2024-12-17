@@ -21,6 +21,7 @@ import ItemDashboardTab from "./components/dashobard/item-dashboard";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { Entity } from "~/types/enums";
 import { useItemPriceStore } from "../home.stock.itemPrice.new/use-item-price-store";
+import ItemInventory from "./components/tab/item-inventory";
 
 export default function ItemDetailClient() {
   const r = routes;
@@ -46,22 +47,23 @@ export default function ItemDetailClient() {
         routeSufix: [item?.name || ""],
         q: {
           tab: "info",
-          id: item?.uuid,
+          id: item?.code,
         },
       }),
     },
-    // {
-    //   title: t("dashboard"),
-    //   href: r.toRoute({
-    //     main: partyTypeToJSON(PartyType.item),
-    //     routePrefix: [r.stockM],
-    //     routeSufix: [item?.name || ""],
-    //     q: {
-    //       tab: "dashboard",
-    //       id: item?.uuid,
-    //     },
-    //   }),
-    // },
+    {
+      title:"Inventario",
+      href: r.toRoute({
+        main: partyTypeToJSON(PartyType.item),
+        routePrefix: [r.stockM],
+        routeSufix: [item?.name || ""],
+        q: {
+          tab: "inventory",
+          id: item?.code,
+        },
+      }),
+    },
+
   ];
 
   setUpToolbar(() => {
@@ -135,6 +137,7 @@ export default function ItemDetailClient() {
       partyID={item?.id}
     >
       {tab == "info" && <ItemInfoTab />}
+      {tab == "inventory" && <ItemInventory />}
       {tab == "dashboard" && <ItemDashboardTab />}
     </DetailLayout>
   );

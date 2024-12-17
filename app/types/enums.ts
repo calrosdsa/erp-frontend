@@ -63,6 +63,7 @@ export enum Entity {
     CURRENCY_EXCHANGE = 43,
     PURCHASE_RECORD = 44,
     SALES_RECORD = 45,
+    STOCK_LEDGER = 46,
 }
 
 export enum PartyType {

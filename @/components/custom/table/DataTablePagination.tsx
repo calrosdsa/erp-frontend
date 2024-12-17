@@ -43,7 +43,7 @@ import { useTranslation } from "react-i18next"
                 <SelectValue placeholder={table.getState().pagination.pageSize} />
               </SelectTrigger>
               <SelectContent side="top">
-                {[5,10, 20, 30, 40, 50].map((pageSize) => (
+                {[10, 20, 50,500,1000].map((pageSize) => (
                   <SelectItem key={pageSize} value={`${pageSize}`}>
                     {pageSize}
                   </SelectItem>
@@ -51,7 +51,7 @@ import { useTranslation } from "react-i18next"
               </SelectContent>
             </Select>
           </div>
-          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+          {/* <div className="flex w-[100px] items-center justify-center text-sm font-medium">
             {t("_page.base")} {table.getState().pagination.pageIndex + 1} {t("f.of")} {" "}
             {table.getPageCount()}
           </div>
@@ -94,7 +94,7 @@ import { useTranslation } from "react-i18next"
               <span className="sr-only">Go to last page</span>
               <DoubleArrowRightIcon className="h-4 w-4" />
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     )

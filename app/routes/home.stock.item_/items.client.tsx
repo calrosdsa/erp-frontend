@@ -50,9 +50,7 @@ const ItemsClient = () => {
         <DataTable
           data={paginationResult?.results || []}
           columns={itemColumns()}
-          paginationOptions={{
-            rowCount: paginationResult?.total || 0,
-          }}
+          enableSizeSelection={true}
         />
       </div>
     </div>

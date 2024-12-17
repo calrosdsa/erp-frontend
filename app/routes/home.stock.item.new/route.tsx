@@ -34,8 +34,17 @@ export const action = async({request}:ActionFunctionArgs)=>{
                         group_id:d.groupID,
                         description:d.description,
                         maintain_stock:d.maintainStock,
+                        item_code:d.code,
                     },
-                    item_price_lines:itemPriceLines
+                    item_price_lines:itemPriceLines,
+                    item_inventory:{
+                        has_serial_no: d.itemInventory?.hasSerialNo,
+                        serial_no_template: d.itemInventory?.serialNoTemplate,
+                        shelf_life_in_days: d.itemInventory?.shelfLifeInDays,
+                        warranty_period_in_days: d.itemInventory?.warrantyPeriodInDays,
+                        weight_uom_id: d.itemInventory?.weightUomID,
+                        wight_per_unit: d.itemInventory?.wightPerUnit
+                    }
                 }
             })
             console.log(res.error)

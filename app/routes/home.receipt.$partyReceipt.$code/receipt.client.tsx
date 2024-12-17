@@ -12,32 +12,48 @@ import { usePermission } from "~/util/hooks/useActions";
 import ReceiptInfoTab from "./components/tab/receipt-info";
 import { useTranslation } from "react-i18next";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
-import { stateFromJSON } from "~/gen/common";
+import { State, stateFromJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
 import ReceiptConnectionsTab from "./components/tab/receipt-connections";
 import { format } from "date-fns";
 import { ButtonToolbar } from "~/types/actions";
+import { Entity } from "~/types/enums";
 
 export default function ReceiptDetailClient() {
-  const { receipt, actions, activities } =
+  const { receipt, actions, activities, associatedActions } =
     useLoaderData<typeof loader>();
-  const globalState = useOutletContext<GlobalState>();
+  const { roleActions } = useOutletContext<GlobalState>();
   const { t, i18n } = useTranslation("common");
 
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
-  const toolbar = useToolbar();
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
   const navigate = useNavigate();
   const r = routes;
+  const [gLPermission] = usePermission({
+    actions: associatedActions && associatedActions[Entity.GENERAL_LEDGER],
+    roleActions: roleActions,
+  });
+  const [serialNoPermission] = usePermission({
+    actions: associatedActions && associatedActions[Entity.SERIAL_NO],
+    roleActions: roleActions,
+  });
+
+  const [stockLedgerPerm] = usePermission({
+    actions: associatedActions && associatedActions[Entity.STOCK_LEDGER],
+    roleActions: roleActions,
+  });
 
   const navItems = [
     {
@@ -55,46 +71,71 @@ export default function ReceiptDetailClient() {
   ];
 
   setUpToolbar(() => {
-    let actions: ButtonToolbar[] = [];
-    actions.push({
-      label: t("accountingLedger"),
-      onClick: () => {
-        navigate(
-          r.toRoute({
-            main: "generalLedger",
-            routePrefix: [r.accountingM],
-            q: {
-              fromDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
-              toDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
-              voucherNo: receipt?.code,
-            },
-          })
-        );
-      },
-    });
+    let view: ButtonToolbar[] = [];
+    const status = stateFromJSON(receipt?.status);
+    const active = status != State.DRAFT && status != State.CANCELLED;
+    if (gLPermission.view && active) {
+      view.push({
+        label: t("accountingLedger"),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: "generalLedger",
+              routePrefix: [r.accountingM],
+              q: {
+                fromDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
+                toDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
+                voucherNo: receipt?.code,
+              },
+            })
+          );
+        },
+      });
+    }
+    if (stockLedgerPerm.view && active) {
+      view.push({
+        label: t("stockLedger"),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: r.stockLedger,
+              routePrefix: [r.stockM],
+              q: {
+                fromDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
+                toDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
+                voucherNo: receipt?.code,
+              },
+            })
+          );
+        },
+      });
+    }
 
-    actions.push({
-      label: t("stockLedger"),
-      onClick: () => {
-        navigate(
-          r.toRoute({
-            main: r.stockLedger,
-            routePrefix: [r.stockM],
-            q: {
-              fromDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
-              toDate: format(receipt?.created_at || "", "yyyy-MM-dd"),
-              voucherNo: receipt?.code,
-            },
-          })
-        );
-      },
-    });
-
+    if (serialNoPermission?.view && active) {
+      view.push({
+        label: t("serialNoSumary"),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: r.serialNoResume,
+              routePrefix: [r.stockM],
+              q: {
+                voucherNo: receipt?.code || "",
+                fromDate: format(
+                  receipt?.posting_date || "",
+                  "yyyy-MM-dd"
+                ),
+              },
+            })
+          );
+        },
+      });
+    }
 
     return {
       titleToolbar: `${t("_receipt.base")}(${receipt?.code})`,
       status: stateFromJSON(receipt?.status),
-      actions: actions,
+      view: view,
       onChangeState: (e) => {
         const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: receipt?.status || "",
@@ -114,14 +155,15 @@ export default function ReceiptDetailClient() {
         );
       },
     };
-  }, [receipt]);
+  }, [receipt,gLPermission,stockLedgerPerm,serialNoPermission]);
 
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"STATE"
-  }, [fetcher.state]);
-
-  
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "STATE",
+    },
+    [fetcher.state]
+  );
 
   useDisplayMessage(
     {
@@ -130,7 +172,6 @@ export default function ReceiptDetailClient() {
     },
     [fetcher.data]
   );
-
 
   return (
     <DetailLayout

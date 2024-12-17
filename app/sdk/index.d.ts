@@ -2497,6 +2497,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/inventory-setting": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** edit-item-inventory-setting */
+        put: operations["edit-item-inventory-setting"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/item/inventory-setting/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** item-inventory-setting */
+        get: operations["item-inventory-setting"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/item-attribute": {
         parameters: {
             query?: never;
@@ -3674,6 +3708,7 @@ export interface components {
              */
             readonly $schema?: string;
             item: components["schemas"]["ItemData"];
+            item_inventory: components["schemas"]["ItemInventoryData"];
             item_price_lines: components["schemas"]["ItemPriceLine"][];
         };
         CreateItemLines: {
@@ -3854,6 +3889,8 @@ export interface components {
             iehd_amount: number;
             /** Format: date-time */
             invoice_dui_dim_date: string;
+            /** Format: int64 */
+            invoice_id: number;
             invoice_no: string;
             /** Format: double */
             ipj_amount: number;
@@ -3939,6 +3976,8 @@ export interface components {
             iehd_amount: number;
             /** Format: date-time */
             invoice_date: string;
+            /** Format: int64 */
+            invoice_id: number;
             invoice_no: string;
             /** Format: double */
             ipj_amount: number;
@@ -4294,6 +4333,7 @@ export interface components {
             group_id: number;
             /** Format: int64 */
             id: number;
+            item_code: string;
             maintain_stock: boolean;
             name: string;
             /** Format: int64 */
@@ -4426,6 +4466,8 @@ export interface components {
             iehd_amount: number;
             /** Format: date-time */
             invoice_dui_dim_date: string;
+            /** Format: int64 */
+            invoice_id: number;
             invoice_no: string;
             /** Format: double */
             ipj_amount: number;
@@ -4535,6 +4577,8 @@ export interface components {
             iehd_amount: number;
             /** Format: date-time */
             invoice_date: string;
+            /** Format: int64 */
+            invoice_id: number;
             invoice_no: string;
             /** Format: double */
             ipj_amount: number;
@@ -5504,6 +5548,13 @@ export interface components {
                 [key: string]: string | undefined;
             };
         };
+        FilterOptionDto: {
+            name: string;
+            operators: string[];
+            options: string[];
+            param: string;
+            type: string;
+        };
         GeneralLedgerData: {
             entries: components["schemas"]["GeneralLedgerEntryDto"][];
             opening: components["schemas"]["GeneralLedgerOpening"];
@@ -5646,6 +5697,7 @@ export interface components {
             description?: string | null;
             /** Format: int64 */
             group_id: number;
+            item_code: string;
             maintain_stock: boolean;
             name: string;
             /** Format: int64 */
@@ -5682,6 +5734,38 @@ export interface components {
             /** Format: int64 */
             uom_id: number;
             uuid: string;
+        };
+        ItemInventoryData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            has_serial_no?: boolean | null;
+            /** Format: int64 */
+            item_id?: number;
+            serial_no_template?: string | null;
+            /** Format: int32 */
+            shelf_life_in_days?: number | null;
+            /** Format: int32 */
+            warranty_period_in_days?: number | null;
+            /** Format: int64 */
+            weight_uom_id?: number | null;
+            /** Format: int32 */
+            wight_per_unit?: number | null;
+        };
+        ItemInventoryDto: {
+            has_serial_no: boolean | null;
+            serial_no_template: string | null;
+            /** Format: int32 */
+            shelf_life_in_days: number | null;
+            /** Format: int32 */
+            warranty_period_in_days: number | null;
+            /** Format: int32 */
+            weight_per_unit: number | null;
+            weight_uom: string | null;
+            /** Format: int64 */
+            weight_uom_id: number | null;
         };
         ItemLineDto: {
             /** Format: int64 */
@@ -6308,206 +6392,247 @@ export interface components {
             pagination_result: components["schemas"]["PaginationResultListWareHouseDto"];
         };
         PaginationResultListAddressDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["AddressDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListBatchBundleDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["BatchBundleDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListBookingDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["BookingDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListChargesTemplateDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ChargesTemplateDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListCompanyDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["CompanyDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListContactDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ContactDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListCostCenterDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["CostCenterDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListCourtDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["CourtDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListCurrencyDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["CurrencyDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListCurrencyExchangeDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["CurrencyExchangeDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListCustomerDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["CustomerDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListEntityDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["EntityDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListEventBookingDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["EventBookingDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListGroupDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["GroupDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListInvoiceDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["InvoiceDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListItemAttributeDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ItemAttributeDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListItemDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ItemDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListItemPriceDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ItemPriceDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListItemVariantDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ItemVariantDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListJournalEntryDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["JournalEntryDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListLedgerDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["LedgerDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListOrderDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["OrderDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListPartyReferenceDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["PartyReferenceDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListPaymentDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["PaymentDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListPianoForm: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["PianoForm"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListPriceListDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["PriceListDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListProfileL: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ProfileL"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListProjectDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ProjectDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListPurchaseRecordDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["PurchaseRecordDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListQuotationDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["QuotationDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListReceiptDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ReceiptDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListRoleActionDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["RoleActionDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListRoleDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["RoleDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListRoleTemplateDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["RoleTemplateDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListSalesRecordDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["SalesRecordDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListSerialNoDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["SerialNoDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListStockEntryDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["StockEntryDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListStockLevelDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["StockLevelDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListSupplierDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["SupplierDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListTaxDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["TaxDto"][];
             /** Format: int64 */
             total: number;
         };
         PaginationResultListWareHouseDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["WareHouseDto"][];
             /** Format: int64 */
             total: number;
@@ -6764,8 +6889,11 @@ export interface components {
             id: number;
             /** Format: int32 */
             iehd_amount: number;
+            invoice_code: string;
             /** Format: date-time */
             invoice_dui_dim_date: string;
+            /** Format: int64 */
+            invoice_id: number;
             invoice_no: string;
             /** Format: int32 */
             ipj_amount: number;
@@ -7021,6 +7149,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["InvoiceDto"];
+        };
+        ResponseDataItemInventoryDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ItemInventoryDto"];
         };
         ResponseDataItemPriceDtoBody: {
             /**
@@ -7597,8 +7738,11 @@ export interface components {
             id: number;
             /** Format: int32 */
             iehd_amount: number;
+            invoice_code: string;
             /** Format: date-time */
             invoice_date: string;
+            /** Format: int64 */
+            invoice_id: number;
             invoice_no: string;
             /** Format: int32 */
             ipj_amount: number;
@@ -14277,11 +14421,10 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                invoice_date?: string;
+                invoice_id?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -14566,6 +14709,8 @@ export interface operations {
                 voucher_code?: string;
                 serial_no?: string;
                 batch_bundle_no?: string;
+                item_id?: string;
+                warehouse_id?: string;
             };
             header?: never;
             path?: never;
@@ -14978,6 +15123,78 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataInterface {}Body"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-item-inventory-setting": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ItemInventoryData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "item-inventory-setting": {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataItemInventoryDtoBody"];
                 };
             };
             /** @description Error */

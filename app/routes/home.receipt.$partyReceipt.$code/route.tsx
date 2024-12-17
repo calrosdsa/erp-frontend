@@ -151,6 +151,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     receiptDetail: res.data?.result.entity,
     receipt: res.data?.result.entity.receipt,
     actions: res.data?.actions,
+    associatedActions: res.data?.associated_actions,
     connections: resConnections,
     activities: res.data?.result.activities,
     lineItems: lineItemRes,

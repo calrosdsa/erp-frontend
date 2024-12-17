@@ -28,6 +28,8 @@ export const createSalesRecord = z.object({
     consolidationStatus: z.string(),
     customer:z.string(),
     customerID: z.coerce.number(), // Assumes `int64` maps to `bigint` in JavaScript/TypeScript
+    invoiceID:z.number(),
+    invoiceCode:z.string()
   });
 
 
@@ -59,6 +61,8 @@ export const createSalesRecord = z.object({
     consolidationStatus: z.string(),
     customer:z.string(),
     customerID: z.coerce.number(), // Assumes `int64` maps to `bigint` in JavaScript/TypeScript
+    invoiceID:z.number(),
+    invoiceCode:z.string(),
   });
 
 
@@ -89,5 +93,6 @@ export const createSalesRecord = z.object({
       total_sale_amount: data.totalSaleAmount,
       with_tax_credit_right: data.withTaxCreditRight,
       zero_rate_taxable_sales: data.zeroRateTaxableSales,
+      invoice_id:data.invoiceID,
     };
   }

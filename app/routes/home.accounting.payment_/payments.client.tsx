@@ -7,7 +7,7 @@ import { GlobalState } from "~/types/app";
 import { routes } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import PaginationLayout from "@/components/layout/pagination-layout";
+import DataLayout from "@/components/layout/data-layout";
 import { useTranslation } from "react-i18next";
 
 export default function PaymentsClient() {
@@ -36,12 +36,12 @@ export default function PaymentsClient() {
     };
   }, [permission]);
   return (
-    <PaginationLayout 
+    <DataLayout 
     orderOptions={[
         {name:t("table.createdAt"),value:"created_at"},
         {name:t("form.status"),value:"status"},
     ]}
-    filterOptions={()=>{
+    fixedFilters={()=>{
         return (
         <></>
     )
@@ -54,6 +54,6 @@ export default function PaymentsClient() {
         }}
         data={paginationResult?.results || []}
       />
-    </PaginationLayout>
+    </DataLayout>
   );
 }
