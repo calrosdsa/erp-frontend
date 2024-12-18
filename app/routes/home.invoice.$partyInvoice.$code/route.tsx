@@ -18,30 +18,30 @@ import { LOAD_ACTION } from "~/constant";
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
-  editData:z.infer<typeof editInvoiceSchema>;
+  editData: z.infer<typeof editInvoiceSchema>;
 };
 
-export const action = async ({ request,params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
-  let actionRes = LOAD_ACTION
+  let actionRes = LOAD_ACTION;
   switch (data.action) {
     case "update-status-with-event": {
-      console.log("UPDATE STATUS",data)
+      console.log("UPDATE STATUS", data);
       const res = await client.PUT("/invoice/update-state", {
         body: data.updateStateWithEvent,
       });
       message = res.data?.message;
       error = res.error?.detail;
-      console.log("ERROR",res.error)
+      console.log("ERROR", res.error);
       break;
     }
-    case "edit":{
-      const d = data.editData
-      const res = await client.PUT("/invoice",{
-        body:{
+    case "edit": {
+      const d = data.editData;
+      const res = await client.PUT("/invoice", {
+        body: {
           party_id: d.partyID,
           invoice_party_type: params.partyInvoice || "",
           due_date: d.dueDate ? formatRFC3339(d.dueDate) : undefined,
@@ -52,27 +52,27 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
           cost_center: d.costCenterID,
           currency: d.currency,
           id: d.id,
-          total_amount:0,
-        }
-      })
-      message = res.data?.message
-      error = res.error?.detail
-      actionRes = ""
-      break
+          total_amount: 0,
+        },
+      });
+      message = res.data?.message;
+      error = res.error?.detail;
+      actionRes = "";
+      break;
     }
   }
   return json({
     message,
     error,
-    action:actionRes,
+    action: actionRes,
   });
 };
 
 export function shouldRevalidate({
   formMethod,
   defaultShouldRevalidate,
-  actionResult
-}:ShouldRevalidateFunctionArgs) {
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
   if (actionResult?.action == LOAD_ACTION) {
     return defaultShouldRevalidate;
   }
@@ -112,17 +112,18 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             query: {
               line_type: itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER),
               id: res.data?.result.entity.invoice.id.toString(),
-              update_stock:res.data.result.entity.invoice.update_stock.toString(),
+              update_stock:
+                res.data.result.entity.invoice.update_stock.toString(),
             },
           },
         });
-        taxLinesRes = client.GET("/taxes-and-charges",{
-          params:{
-            query:{
-              id:res.data.result.entity.invoice.id.toString(),
-            }
-          }
-        })
+        taxLinesRes = client.GET("/taxes-and-charges", {
+          params: {
+            query: {
+              id: res.data.result.entity.invoice.id.toString(),
+            },
+          },
+        });
         break;
       }
       case "connections": {
@@ -148,9 +149,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     associatedActions: res.data?.associated_actions,
     activities: res.data?.result.activities,
     totals: res.data?.result.entity.totals,
-    lineItems:lineItemRes,
-    taxLines:taxLinesRes,
-
+    lineItems: lineItemRes,
+    taxLines: taxLinesRes,
   });
 };
 export default function InvoiceDetail() {

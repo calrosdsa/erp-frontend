@@ -4297,6 +4297,7 @@ export interface components {
             posting_time: string;
             /** Format: int64 */
             project?: number;
+            record_no?: string;
             /** Format: int64 */
             reference?: number;
             /** Format: double */
@@ -5628,6 +5629,7 @@ export interface components {
             posting_time: string;
             /** Format: int64 */
             project?: number;
+            record_no?: string;
             /** Format: int64 */
             reference?: number;
             /** Format: double */
@@ -5668,6 +5670,7 @@ export interface components {
             /** Format: int64 */
             project_id: number;
             project_uuid: string;
+            record_no: string;
             status: string;
             /** Format: int32 */
             total: number;
@@ -11080,11 +11083,11 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                due_date?: string;
+                posting_date?: string;
+                party_id?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path: {
                 party: string;
             };

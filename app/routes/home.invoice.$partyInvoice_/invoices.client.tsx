@@ -16,6 +16,8 @@ import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
 import DataLayout from "@/components/layout/data-layout";
+import { State, stateToJSON } from "~/gen/common";
+import { PartySearch } from "../home.order.$partyOrder.new/components/party-autocomplete";
 
 export default function InvoicesClient() {
   const { results, actions } = useLoaderData<typeof loader>();
@@ -52,11 +54,42 @@ export default function InvoicesClient() {
   }, [permission]);
   return (
     <DataLayout
+    filterOptions={[
+      {
+        name: "Estado",
+        operators: ["=","!="],
+        options: [stateToJSON(State.DRAFT),stateToJSON(State.PAID),stateToJSON(State.UNPAID),stateToJSON(State.CANCELLED)],
+        param: "status",
+        type: "string",
+      },
+      {
+        name: "Fecha de Vencimiento",
+        options:[],
+        operators: ["=","!=",">","<",">=","<=","between","in"],
+        param: "due_date",
+        type: "date",
+      },
+      {
+        name: "Fecha de Publicacion",
+        options:[],
+        operators: ["=","!=",">","<",">=","<=","between","in"],
+        param: "posting_date",
+        type: "date",
+      },
+    ]}
       orderOptions={[
         { name: "Fecha de Creación", value: "created_at" },
-        // { name: "Fecha de Facture", value: "invoice_date" },
         { name: t("form.status"), value: "status" },
       ]}
+      fixedFilters={()=>{
+        return (
+          <>
+          <PartySearch
+          party={partyInvoice}
+          />
+          </>
+        )
+      }}
     >
       <DataTable
         data={results || []}

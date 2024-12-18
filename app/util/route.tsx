@@ -435,6 +435,24 @@ class Routes {
 
   toVoucher(voucherType: string, voucherCode: string): string {
     switch (voucherType) {
+      case this.purchaseReceipt:
+        return this.toRoute({
+          main: this.purchaseReceipt,
+          routePrefix: [this.receiptM],
+          routeSufix: [voucherCode],
+          q: {
+            tab: "info",
+          },
+        });
+      case this.deliveryNote:
+        return this.toRoute({
+          main: this.deliveryNote,
+          routePrefix: [this.receiptM],
+          routeSufix: [voucherCode],
+          q: {
+            tab: "info",
+          },
+        });
       case this.saleInvoice:
         return this.toRoute({
           main: this.saleInvoice,

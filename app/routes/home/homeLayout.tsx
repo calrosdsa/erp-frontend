@@ -94,7 +94,7 @@ export default function HomeLayout({
               <div className="flex items-center gap-2 px-4">
                 <SidebarTrigger className="-ml-1" />
                 <Separator orientation="vertical" className="mr-2 h-4" />
-                <Breadcrumb aria-label="breadcrumbs">
+                {/* <Breadcrumb aria-label="breadcrumbs">
                   <BreadcrumbList>
                     <BreadcrumbItem key="home">
                       <BreadcrumbLink asChild>
@@ -140,7 +140,7 @@ export default function HomeLayout({
                       </>
                     )}
                   </BreadcrumbList>
-                </Breadcrumb>
+                </Breadcrumb> */}
               </div>
               <div className="flex items-center space-x-2 pr-3">
                 <ThemeToggle />

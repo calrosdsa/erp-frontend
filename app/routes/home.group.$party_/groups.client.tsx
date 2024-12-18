@@ -37,7 +37,7 @@ export default function GroupsClient() {
       <DataTable
         data={paginationResult?.results || []}
         columns={groupColumns({ party: params.party || "" })}
-       
+        enableSizeSelection={true}       
       />
     </div>
   );

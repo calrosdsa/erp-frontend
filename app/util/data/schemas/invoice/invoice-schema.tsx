@@ -19,6 +19,7 @@ export const createInvoiceSchema = z
     postingTime: z.string(),
     tz:z.string(),
     currency: z.string(),
+    // recordNo:z.string().optional(),
 
     updateStock: z.boolean().optional(),
 
@@ -99,6 +100,7 @@ export const createInvoiceSchema = z
     tz:z.string(),
     dueDate: z.date().optional(),
     currency: z.string(),
+    // recordNo:z.string().optional(),
   
     projectName:z.string().optional(),
     projectID:z.number().optional(),

@@ -32,6 +32,8 @@ export default function SuppliersClient (){
             <DataTable
             data={paginationResult?.results || []}
             columns={supplierColumns({})}
+            enableSizeSelection={true}
+            
             />
         </div>
     )

@@ -43,6 +43,7 @@ import { Separator } from "@/components/ui/separator";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import { Form } from "@/components/ui/form";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
 type EditData = z.infer<typeof editInvoiceSchema>;
 export default function InvoiceInfoTab() {
@@ -171,6 +172,14 @@ export default function InvoiceInfoTab() {
             allowEdit={allowEdit}
             label={t("form.dueDate")}
           />
+
+          {/* <CustomFormFieldInput
+            control={form.control}
+            name="recordNo"
+            label={"Numero de Registro"}
+            inputType="input"
+            allowEdit={allowEdit} 
+          /> */}
 
           <Separator className=" col-span-full" />
 

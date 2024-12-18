@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import {
   ArrowDownWideNarrow,
   ArrowUpWideNarrow,
@@ -41,6 +41,7 @@ import {
 import { Calendar } from "../ui/calendar";
 import IconButton from "../custom-ui/icon-button";
 import { DateRange } from "react-day-picker";
+import { toZonedTime } from "date-fns-tz";
 
 type FilterOption = components["schemas"]["FilterOptionDto"];
 type SelectItem = { name: string; value: string };
@@ -60,7 +61,7 @@ const FilterSelectorValue: React.FC<{
 
   useEffect(() => {
     if (filterOption.type === "date") {
-      setDates(current.value.map((t) => new Date(t)));
+      setDates(current.value.map((t) => parse(t,"yyyy-MM-dd",new Date()) ));
     }
   }, [current.value, filterOption.type]);
 
@@ -83,7 +84,7 @@ const FilterSelectorValue: React.FC<{
     }
 
     setDates(updatedDates);
-    onChange(updatedDates.map((d) => d.toISOString()));
+    onChange(updatedDates.map((d) => format(d, "yyyy-MM-dd")));
   };
 
   if (filterOption.type === "date") {
@@ -91,7 +92,7 @@ const FilterSelectorValue: React.FC<{
       <>
         <Input
           className="flex space-x-2 truncate w-32"
-          value={dates.map((t) => format(t, "yyyy-MM-dd")).join(",")}
+          value={dates?.map((t) => format(t, "yyyy-MM-dd")).join(",")}
           readOnly
         />
         <Popover>
@@ -101,8 +102,10 @@ const FilterSelectorValue: React.FC<{
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
+            {/* {JSON.stringify(dates)} */}
             {current.operator == "in" && (
               <Calendar
+              
                 mode={"multiple"}
                 // selected={new Date()}
                 selected={dates}
@@ -223,9 +226,38 @@ const FilterPopoverContent: React.FC<{
       setFilters((prevFilters) => [...prevFilters, newFilter]);
     }
   };
+  const tOperator = (o: string) => {
+    switch (o) {
+      case "=": {
+        return "Igual a";
+      }
+      case "!=": {
+        return "No igual a";
+      }
+      case "between": {
+        return "Entre";
+      }
+      case ">": {
+        return "Mayor que";
+      }
+      case "<": {
+        return "Menor que";
+      }
+      case "in":{
+        return "En"
+      }
+      case "<=":{
+        return "Menor o igual que"
+      }
+      case ">=":{
+        return "Mayor o igual que"
+      }
+    }
+    return o;
+  };
 
   return (
-    <Card className="w-[400px]">
+    <Card className="">
       <CardHeader>
         <CardTitle>Filtros</CardTitle>
       </CardHeader>
@@ -262,13 +294,13 @@ const FilterPopoverContent: React.FC<{
                   handleFilterChange(idx, "operator", value)
                 }
               >
-                <SelectTrigger className="w-[50px]">
+                <SelectTrigger className="w-[100px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {filterOption.operators.map((operator, operatorIdx) => (
                     <SelectItem key={operatorIdx} value={operator}>
-                      {operator}
+                      {tOperator(operator)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -330,7 +362,6 @@ const DataLayout: React.FC<{
   return (
     <div className="h-full flex flex-col pt-1">
       <div className="grid gap-3 xl:flex xl:justify-between">
-        <div>{fixedFilters && fixedFilters()}</div>
         <div className="flex space-x-2">
           {filterOptions.length > 0 && (
             <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
@@ -340,7 +371,7 @@ const DataLayout: React.FC<{
                   Filtros
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-96 p-0">
+              <PopoverContent className="sm:w-[500px] p-0">
                 <FilterPopoverContent
                   filterOptions={filterOptions}
                   onApplyFilters={handleApplyFilters}
@@ -349,7 +380,10 @@ const DataLayout: React.FC<{
               </PopoverContent>
             </Popover>
           )}
-
+          {fixedFilters && fixedFilters()}
+        </div>
+        {/* <div></div> */}
+        <div className="flex space-x-2">
           {orderOptions.length > 0 && (
             <DropdownMenu>
               <div className="flex items-center">

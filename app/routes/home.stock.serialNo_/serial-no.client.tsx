@@ -26,6 +26,7 @@ export default function SerialNoClient() {
         }}
         data={paginationResult?.results || []}
         columns={serialNoColumns({})}
+        enableSizeSelection={true}
       />
     </>
   );

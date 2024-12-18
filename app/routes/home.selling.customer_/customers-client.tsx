@@ -32,6 +32,7 @@ export default function CustomersClient() {
     <div>
       <DataTable
         data={paginationResult?.results || []}
+        enableSizeSelection={true}
         columns={customerColumns({})}
       />
     </div>

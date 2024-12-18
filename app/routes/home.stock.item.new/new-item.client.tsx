@@ -58,6 +58,7 @@ export default function NewItemClient() {
     resolver: zodResolver(createItemSchema),
     defaultValues: {
       name: "",
+      maintainStock:false,
       itemPriceLines: [],
     },
   });
@@ -123,7 +124,7 @@ export default function NewItemClient() {
     <Card>
       <FormLayout className=" p-3">
         <Form {...form}>
-          {JSON.stringify(form.formState.errors)}
+          {/* {JSON.stringify(form.formState.errors)} */}
           <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
             <Tabs defaultValue="item">
               <TabsList>

@@ -22,6 +22,7 @@ export default function BatchBundle() {
         paginationOptions={{
           rowCount: paginationResult?.total,
         }}
+        enableSizeSelection={true}
         data={paginationResult?.results || []}
         columns={batchBundleColumns({})}
       />

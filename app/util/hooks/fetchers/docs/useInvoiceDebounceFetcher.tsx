@@ -36,8 +36,11 @@ export const InvoiceAutocompleteForm = ({
       onCustomDisplay={(e) => {
         return (
           <div className="flex flex-col">
-            <span className=" font-medium">{e.code}</span>
-            <span>{e.party_name}</span>
+            <span className=" font-medium">
+              {e.record_no && `${e.record_no}-`}
+              {e.code}
+            </span>
+            <span>{e.party_type}</span>
           </div>
         );
       }}
@@ -69,7 +72,10 @@ export const InvoiceSearch = ({
         return (
           <div className="flex flex-col">
             <span className=" font-medium">{e.code}</span>
-            <span>{e.party_name}</span>
+            <span>
+              {e.record_no && `${e.record_no}-`}
+              {e.party_name}
+            </span>
           </div>
         );
       }}
@@ -86,19 +92,19 @@ export const useInvoiceFetcher = ({ partyType }: { partyType: string }) => {
 
   const onChange = (e: string) => {
     fetcherDebounce.submit(
-      {},
       {
-        method: "GET",
-        encType: "application/x-www-form-urlencoded",
+        getData: {
+          query: e,
+        },
+        action: "get",
+      },
+      {
+        method: "POST",
+        encType: "application/json",
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         action: r.toRoute({
           main: partyType,
           routePrefix: [r.invoiceM],
-          q: {
-            size: "10",
-            page: DEFAULT_PAGE,
-            query: e,
-          },
         }),
       }
     );

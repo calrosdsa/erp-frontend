@@ -39,6 +39,7 @@ import {
   setUpToolbar,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
@@ -172,6 +173,18 @@ export default function CreatePurchaseInvoiceClient() {
                   label={t("form.postingTime")}
                   description={formValues.tz}
                 />
+                <CustomFormDate
+                  control={form.control}
+                  name="dueDate"
+                  label={t("form.dueDate")}
+                />
+
+                {/* <CustomFormFieldInput
+                  control={form.control}
+                  name="recordNo"
+                  label={"Numero de Registro"}
+                  inputType="input"
+                /> */}
 
                 <CurrencyAndPriceList form={form} />
 

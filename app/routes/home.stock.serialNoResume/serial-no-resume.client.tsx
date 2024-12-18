@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import StockLedgerHeader from "../home.stock.stockLedger/components/stock-ledger-header";
 import SerialNumberResumeHeader from "./components/serial-no-resume-header";
 import { useTranslation } from "react-i18next";
+import { DataTable } from "@/components/custom/table/CustomTable";
 
 export default function SerialNoResumeClient() {
   const { serialNoSumaryEntries } = useLoaderData<typeof loader>();
@@ -23,7 +24,7 @@ export default function SerialNoResumeClient() {
           <SerialNumberResumeHeader />
         </CardHeader>
         <CardContent className="px-2 py-3">
-          <ResizableVirtualizedTable
+          <DataTable
             data={serialNoSumaryEntries}
             columns={serialNoSumaryColumns({})}
           />

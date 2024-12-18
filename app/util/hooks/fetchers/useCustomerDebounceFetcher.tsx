@@ -7,6 +7,7 @@ import { useCreateCustomer } from "~/routes/home.selling.customer_/components/cr
 import { components } from "~/sdk";
 import { routes } from "~/util/route";
 import { usePermission } from "../useActions";
+import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 
 export const CustomerAutoCompleteForm = ({
   allowEdit,
@@ -42,6 +43,22 @@ export const CustomerAutoCompleteForm = ({
           createCustomer.openDialog({});
         },
       })}
+    />
+  );
+};
+
+export const CustomerSearch = ({ placeholder }: { placeholder: string }) => {
+  const [fetcher, onChange] = useCustomerDebounceFetcher();
+  return (
+    <AutocompleteSearch
+      data={fetcher.data?.customers || []}
+      onValueChange={onChange}
+      nameK={"name"}
+      valueK={"id"}
+      placeholder={placeholder}
+      queryName="partyName"
+      queryValue="party"
+      onSelect={() => {}}
     />
   );
 };

@@ -8,19 +8,25 @@ import { useCreateCustomer } from "~/routes/home.selling.customer_/components/cr
 import { components } from "~/sdk";
 import { GlobalState } from "~/types/app";
 import { createOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
-import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-import { useSupplierDebounceFetcher } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
+import {
+  CustomerSearch,
+  useCustomerDebounceFetcher,
+} from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
+import {
+  SupplierSearch,
+  useSupplierDebounceFetcher,
+} from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
 
 export default function PartyAutocomplete({
   party,
   form,
   roleActions,
-  allowEdit
+  allowEdit,
 }: {
   party: string;
   form: UseFormReturn<any>;
-  allowEdit?:boolean
+  allowEdit?: boolean;
   roleActions: components["schemas"]["RoleActionDto"][];
 }) {
   const { t } = useTranslation("common");
@@ -42,9 +48,8 @@ export default function PartyAutocomplete({
     <>
       {(party == partyTypeToJSON(PartyType.purchaseOrder) ||
         party == partyTypeToJSON(PartyType.purchaseInvoice) ||
-        party == partyTypeToJSON(PartyType.purchaseReceipt) || 
-        party == partyTypeToJSON(PartyType.supplierQuotation) 
-      ) && (
+        party == partyTypeToJSON(PartyType.purchaseReceipt) ||
+        party == partyTypeToJSON(PartyType.supplierQuotation)) && (
         <FormAutocomplete
           required={true}
           data={supplierDebounceFetcher.data?.suppliers || []}
@@ -58,7 +63,7 @@ export default function PartyAutocomplete({
             // form.setValue("partyUuid", v.uuid);
             form.setValue("partyID", v.id);
             // form.setValue("partyType", partyTypeToJSON(PartyType.supplier));
-            form.trigger("partyID")
+            form.trigger("partyID");
           }}
           {...(supplierPermission?.create && {
             addNew: () => {
@@ -69,10 +74,9 @@ export default function PartyAutocomplete({
       )}
 
       {(party == partyTypeToJSON(PartyType.saleOrder) ||
-        party == partyTypeToJSON(PartyType.saleInvoice) || 
+        party == partyTypeToJSON(PartyType.saleInvoice) ||
         party == partyTypeToJSON(PartyType.deliveryNote) ||
-        party == partyTypeToJSON(PartyType.salesQuotation) 
-      ) && (
+        party == partyTypeToJSON(PartyType.salesQuotation)) && (
         <FormAutocomplete
           required={true}
           data={customerFetcher.data?.customers || []}
@@ -86,7 +90,7 @@ export default function PartyAutocomplete({
             // form.setValue("partyUuid", v.uuid);
             form.setValue("partyID", v.id);
             // form.setValue("partyType", partyTypeToJSON(PartyType.customer));
-            form.trigger("partyID")
+            form.trigger("partyID");
           }}
           {...(customerPermission?.create && {
             addNew: () => {
@@ -98,3 +102,25 @@ export default function PartyAutocomplete({
     </>
   );
 }
+
+export const PartySearch = ({ party }: { party: string }) => {
+  const { t } = useTranslation("common");
+
+  return (
+    <>
+      {(party == partyTypeToJSON(PartyType.purchaseOrder) ||
+        party == partyTypeToJSON(PartyType.purchaseInvoice) ||
+        party == partyTypeToJSON(PartyType.purchaseReceipt) ||
+        party == partyTypeToJSON(PartyType.supplierQuotation)) && (
+        <SupplierSearch placeholder={t("supplier")} />
+      )}
+
+      {(party == partyTypeToJSON(PartyType.saleOrder) ||
+        party == partyTypeToJSON(PartyType.saleInvoice) ||
+        party == partyTypeToJSON(PartyType.deliveryNote) ||
+        party == partyTypeToJSON(PartyType.salesQuotation)) && (
+        <CustomerSearch placeholder={t("customer")} />
+      )}
+    </>
+  );
+};

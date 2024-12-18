@@ -7,6 +7,7 @@ import { routes } from "~/util/route";
 import { usePermission } from "../useActions";
 import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier";
 import { Control } from "react-hook-form";
+import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 
 export const SupplierAutoCompleteForm = ({
   allowEdit,
@@ -45,6 +46,22 @@ export const SupplierAutoCompleteForm = ({
           createCustomer.openDialog({});
         },
       })}
+    />
+  );
+};
+
+export const SupplierSearch = ({ placeholder }: { placeholder: string }) => {
+  const [fetcher, onChange] = useSupplierDebounceFetcher();
+  return (
+    <AutocompleteSearch
+      data={fetcher.data?.suppliers || []}
+      onValueChange={onChange}
+      nameK={"name"}
+      valueK={"id"}
+      placeholder={placeholder}
+      queryName="partyName"
+      queryValue="party"
+      onSelect={() => {}}
     />
   );
 };

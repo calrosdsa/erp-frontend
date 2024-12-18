@@ -69,10 +69,10 @@ export default function SalesRecordClient() {
         fixedFilters={() => {
           return (
             <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
-              {/* <InvoiceSearch
+              <InvoiceSearch
               partyType={r.saleInvoice}
               placeholder={t("saleInvoice")}
-              /> */}
+              />
             </div>
           );
         }}

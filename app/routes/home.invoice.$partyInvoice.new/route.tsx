@@ -35,6 +35,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             due_date: d.due_date?.toString(),
             posting_date: formatRFC3339(d.postingDate),
             posting_time: d.postingTime,
+            // record_no:d.recordNo,
             tz: d.tz,
             project: d.projectID,
             cost_center: d.costCenterID,
