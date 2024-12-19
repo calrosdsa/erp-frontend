@@ -1239,6 +1239,59 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/module": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Modules */
+        get: operations["modules"];
+        /** Edit module */
+        put: operations["edit-module"];
+        /** Create Module */
+        post: operations["create-module"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/module/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Module */
+        get: operations["module"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/module/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status module */
+        put: operations["update-status-module"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order": {
         parameters: {
             query?: never;
@@ -3754,6 +3807,16 @@ export interface components {
             /** Format: date-time */
             posting_date: string;
         };
+        CreateModuleRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            href: string;
+            icon: string;
+            label: string;
+        };
         CreateOrder: {
             /** Format: int64 */
             cost_center?: number;
@@ -4378,6 +4441,18 @@ export interface components {
             /** Format: int32 */
             total_items: number;
             update_stock?: boolean;
+        };
+        EditModuleRequestDataBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            href: string;
+            icon: string;
+            /** Format: int64 */
+            id: number;
+            label: string;
         };
         EditOrderRequestBody: {
             /**
@@ -5244,6 +5319,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityListPartyTypeDto"];
         };
+        EntityResponseResultEntityModuleDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityModuleDetailDto"];
+        };
         EntityResponseResultEntityOrderDetailDtoBody: {
             /**
              * Format: uri
@@ -5984,6 +6072,24 @@ export interface components {
             source_warehouse?: number;
             /** Format: int64 */
             target_warehouse?: number;
+        };
+        ModuleDetailDto: {
+            module: components["schemas"]["ModuleDto"];
+            sections: components["schemas"]["ModuleSectionDto"][];
+        };
+        ModuleDto: {
+            href: string;
+            icon: string;
+            /** Format: int64 */
+            id: number;
+            label: string;
+        };
+        ModuleSectionDto: {
+            href: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            section_name: string;
         };
         OrderDetailDto: {
             acc_dimensions: components["schemas"]["AccountingDimensionDto"];
@@ -7257,6 +7363,19 @@ export interface components {
             message: string;
             result: components["schemas"]["LineItemDto"][];
         };
+        ResponseDataListModuleDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ModuleDto"][];
+        };
         ResponseDataListPartyConnectionsBody: {
             /**
              * Format: uri
@@ -7321,6 +7440,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["TreeEntryDto"][];
+        };
+        ResponseDataModuleDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ModuleDto"];
         };
         ResponseDataPaymentAccountsDtoBody: {
             /**
@@ -7586,6 +7718,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PartyTypeDto"][];
+        };
+        ResultEntityModuleDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["ModuleDetailDto"];
         };
         ResultEntityOrderDetailDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -11608,6 +11746,189 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataListTreeEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    modules: {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                status?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListModuleDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-module": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditModuleRequestDataBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-module": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateModuleRequestBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataModuleDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    module: {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityModuleDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-module": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

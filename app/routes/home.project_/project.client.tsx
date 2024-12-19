@@ -39,6 +39,7 @@ export default function ProjectClient() {
         }}
         data={paginationResult?.results || []}
         columns={projectColumns({})}
+        enableSizeSelection={true}
       />
     </>
   );

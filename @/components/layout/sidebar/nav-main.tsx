@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { BoxIcon, ChevronRight, type LucideIcon } from "lucide-react";
 
 import {
   Collapsible,
@@ -20,22 +20,24 @@ import {
 } from "@/components/ui/sidebar";
 import { NavItem } from "~/types";
 import { Link } from "@remix-run/react";
+import { components } from "~/sdk";
 
-export function NavMain({ items }: { items: NavItem[] }) {
+export function NavMain({ items }: { items: components["schemas"]["ModuleDto"][] }) {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <Collapsible key={item.title} asChild defaultOpen={item.defaultOpen || false}>
+          <Collapsible key={item.label} asChild>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
+              <SidebarMenuButton asChild tooltip={item.label}>
                 <Link to={item.href}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  {/* {item.icon && <item.icon />} */}
+                  <BoxIcon/>
+                  <span>{item.label}</span>
                 </Link>
               </SidebarMenuButton>
-              {item.children?.length ? (
+              {/* {item.children?.length ? (
                 <>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuAction className="data-[state=open]:rotate-90">
@@ -57,7 +59,7 @@ export function NavMain({ items }: { items: NavItem[] }) {
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </>
-              ) : null}
+              ) : null} */}
             </SidebarMenuItem>
           </Collapsible>
         ))}

@@ -37,6 +37,7 @@ export default function CompaniesClient() {
         hiddenColumns={{
           code: false,
         }}
+        enableSizeSelection={true}
         // expandedOptions={{
         //   getSubRows: (row) => row.CompanyDepartments,
         // }}

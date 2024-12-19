@@ -187,8 +187,6 @@ export default function PaymentCreateClient() {
             onSubmit={form.handleSubmit(onSubmit)}
             className={cn("", "gap-y-3 grid p-3")}
           >
-            {/* {JSON.stringify(form.formState.errors)} */}
-            {/* {JSON.stringify(createPayment.payload)} */}
             <div className="create-grid">
               <Typography className=" col-span-full" variant="title2">
                 {t("_payment.type")}

@@ -15,6 +15,7 @@ class Routes {
   apiItemLine = this.api + "/itemline";
   apiTaxAndChargeLine = this.api + "/taxAndChargeLine";
   base = "/home";
+  app = "app"
   party = this.base + "/party";
 
   address = this.base + "/address";
@@ -127,6 +128,10 @@ class Routes {
   defaultTab = {
     tab: "info",
   };
+
+  to(href:string): string{
+    return `${this.base}/${href}`
+  }
 
   toModuleParty(
     module: string,

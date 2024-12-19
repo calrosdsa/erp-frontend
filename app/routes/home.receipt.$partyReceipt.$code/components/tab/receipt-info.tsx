@@ -164,8 +164,6 @@ export default function ReceiptInfoTab() {
 
           <Separator className=" col-span-full" />
 
-          {/* <CurrencyAndPriceList form={form} allowEdit={allowEdit} /> */}
-
           <AccountingDimensionForm form={form} allowEdit={allowEdit} />
           <LineItemsDisplay
             currency={receipt?.currency || companyDefaults?.currency || ""}

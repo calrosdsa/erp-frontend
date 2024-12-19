@@ -45,6 +45,7 @@ export default function PurchaseRecordClient() {
                 rowCount: paginationResult?.total,
               }}
               data={paginationResult?.results || []}
+              enableSizeSelection={true}
               columns={purchaseRecordColumn({})}
               />
               </div>

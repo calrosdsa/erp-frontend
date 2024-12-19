@@ -31,7 +31,6 @@ import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import UpdateStock from "@/components/custom/shared/document/update-stock";
-import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { Card } from "@/components/ui/card";
 import {
   setUpToolbar,
@@ -45,7 +44,6 @@ export default function NewReceiptClient() {
   const { roleActions, companyDefaults } = useOutletContext<GlobalState>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { t, i18n } = useTranslation("common");
-  const toolbar = useToolbar();
   const navigate = useNavigate();
   const r = routes;
   const lineItemsStore = useLineItems();
@@ -192,7 +190,6 @@ export default function NewReceiptClient() {
                   partyType={partyReceipt}
                 />
 
-                {/* <CurrencyAndPriceList form={form} /> */}
 
                 <AccountingDimensionForm form={form} />
 

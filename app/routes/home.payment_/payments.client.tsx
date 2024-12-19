@@ -27,7 +27,6 @@ export default function PaymentsClient() {
           navigate(
             r.toRoute({
               main: partyTypeToJSON(PartyType.payment),
-              routePrefix: [r.accountingM],
               routeSufix: ["new"],
             })
           );
@@ -52,6 +51,7 @@ export default function PaymentsClient() {
         paginationOptions={{
           rowCount: paginationResult?.total,
         }}
+        enableSizeSelection={true}
         data={paginationResult?.results || []}
       />
     </DataLayout>

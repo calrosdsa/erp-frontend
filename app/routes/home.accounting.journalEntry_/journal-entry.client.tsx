@@ -37,6 +37,7 @@ export default function JournalEntryClient() {
         }}
         data={paginationResult?.results || []}
         columns={journalEntryColumns({})}
+        enableSizeSelection={true}
       />
     </>
   );

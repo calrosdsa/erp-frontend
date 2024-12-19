@@ -29,6 +29,7 @@ export default function PriceListsClient() {
       <DataTable
         columns={pricelistItemColums()}
         data={paginationResult?.results || []}
+        enableSizeSelection={true}
       />
     </>
   );

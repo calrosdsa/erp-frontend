@@ -6,20 +6,11 @@ import {
   SessionDefaultDrawer,
   useSessionDefaults,
 } from "./components/SessionDefaults";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { HomeIcon } from "lucide-react";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useUnmount } from "usehooks-ts";
-import { Typography } from "@/components/typography";
 import {
   SidebarInset,
   SidebarProvider,
@@ -29,10 +20,6 @@ import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 
-type RouteItem = {
-  name: string;
-  link: string;
-};
 
 export default function HomeLayout({
   children,

@@ -38,6 +38,7 @@ export default function CurrencyExchangeClient() {
         }}
         data={paginationResult?.results || []}
         columns={currencyExchangeColumns({})}
+        enableSizeSelection={true}
       />
     </>
   );

@@ -1,5 +1,5 @@
 import { Outlet, ShouldRevalidateFunctionArgs, useLoaderData } from "@remix-run/react";
-import HomeLayout from "./appLayout";
+import HomeLayout from "./homeLayout";
 import {
   ActionFunctionArgs,
   json,
@@ -16,7 +16,7 @@ import apiClient from "~/apiclient";
 import { GlobalState } from "~/types/app";
 import { ClientOnly } from "remix-utils/client-only";
 import FallBack from "@/components/layout/Fallback";
-import { DEFAULT_PAGE, LOAD_ACTION } from "~/constant";
+import { LOAD_ACTION } from "~/constant";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const data = await request.formData();
@@ -50,14 +50,12 @@ export function shouldRevalidate({
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   console.log("API URL CONTEXT", context);
-  
   const session = await getSession(request.headers.get("Cookie"));
   if (!session.has("access_token")) {
     // Redirect to the home page if they are already signed in.
     return redirect("/signin");
   }
-  const client = apiClient({request})
-  const res = await client.GET("/account");
+  const res = await apiClient({ request }).GET("/account");
   if (res.error) {
     if ((res.error.status = 401)) {
       return redirect("/signin", {
@@ -67,16 +65,8 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
       });
     }
   }
-  const modulesRes = await client.GET("/module",{
-    params:{
-      query:{
-        page:DEFAULT_PAGE,
-        size:"100"
-      }
-    }
-  })
   const sessionData = session.data as SessionData;
-  console.log(modulesRes.data,modulesRes.error);
+  // console.log(res.data?.company_defaults);
   return json(
     {
       data: res.data,
@@ -87,7 +77,6 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
       company: res.data?.company,
       roleActions: res.data?.role_actions,
       companyDefaults: res.data?.company_defaults,
-      modules:modulesRes.data?.result
       // activeCompany: res.data?.user.UserRelation.Company,
     },
     {

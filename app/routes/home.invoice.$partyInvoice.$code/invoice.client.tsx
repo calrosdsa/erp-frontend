@@ -32,13 +32,13 @@ import { ButtonToolbar } from "~/types/actions";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { PlusIcon } from "lucide-react";
-import { useCreatePayment } from "../home.accounting.payment.new/use-create-payment";
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { format } from "date-fns";
 import { Entity } from "~/types/enums";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useNewSalesRecord } from "../home.invoicing.salesRecord.new/use-new-sales-record";
+import { useCreatePayment } from "../home.payment.new/use-create-payment";
 
 export default function InvoiceDetailClient() {
   const { invoice, activities, associatedActions, totals } =
@@ -172,7 +172,6 @@ export default function InvoiceDetailClient() {
           navigate(
             r.toRoute({
               main: partyTypeToJSON(PartyType.payment),
-              routePrefix: [r.accountingM],
               routeSufix: ["new"],
             })
           );

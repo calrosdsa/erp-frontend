@@ -42,7 +42,7 @@ export default function ReceiptsClient(){
             paginationOptions={{
                 rowCount:paginationResult?.total,
             }}
-            
+            enableSizeSelection={true}
             data={paginationResult?.results || []}
             columns={receiptColumns({
                 receiptPartyType:params.partyReceipt || PartyType[PartyType.purchaseReceipt]

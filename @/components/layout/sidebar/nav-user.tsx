@@ -11,8 +11,9 @@ import { components } from "~/sdk";
 import { fullName } from "~/util/convertor/convertor";
 import { Form, Link } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
-import { useSessionDefaults } from "~/routes/home/components/SessionDefaults";
+// import { useSessionDefaults } from "~/routes/home/components/SessionDefaults";
 import { Separator } from "@/components/ui/separator";
+import { useSessionDefaults } from '~/routes/home/components/SessionDefaults';
 
 export function NavUser({
   user,
@@ -78,6 +79,7 @@ export function NavUser({
               <Button
                 variant="outline"
                 className="w-full"
+                type="button"
                 onClick={() => sessionDefaults.onOpenChange(true)}
               >
                 {t("sidebar.sessionDefaults")}

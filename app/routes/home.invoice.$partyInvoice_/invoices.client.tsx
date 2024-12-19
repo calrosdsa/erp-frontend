@@ -32,9 +32,7 @@ export default function InvoicesClient() {
   const { t } = useTranslation("common");
   const r = routes;
   const { resetDocument } = useResetDocument();
-  const lineItemStore = useLineItems();
 
-  const tacStore = useTaxAndCharges();
   setUpToolbar(() => {
     return {
       titleToolbar: t(partyInvoice),

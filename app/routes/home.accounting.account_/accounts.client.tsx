@@ -49,6 +49,7 @@ export default function AccountsClient(){
             <DataTable
             data={paginationResult?.results || []}
             columns={accountColumns()}
+            enableSizeSelection={true}
             paginationOptions={{
                 rowCount:paginationResult?.total
             }}

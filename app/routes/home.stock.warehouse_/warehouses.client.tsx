@@ -50,6 +50,7 @@ export default function WareHousesClient(){
             <DataTable
             data={paginationResult?.results || []}
             columns={warehouseColumns()}
+            enableSizeSelection={true}
             paginationOptions={{
                 rowCount:paginationResult?.total
             }}

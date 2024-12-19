@@ -34,6 +34,7 @@ export default function ContactsClient(){
             paginationOptions={{
                 rowCount:paginationResult?.total
             }}
+            enableSizeSelection={true}
             />
         </div>
     )

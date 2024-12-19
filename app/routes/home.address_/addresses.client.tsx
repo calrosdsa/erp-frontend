@@ -35,6 +35,8 @@ export default function AddressesClient(){
             paginationOptions={{
                 rowCount:paginationResult?.total
             }}
+            enableSizeSelection={true}
+
             />
         </div>
     )

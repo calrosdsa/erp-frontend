@@ -38,6 +38,7 @@ export default function CostCenterClient() {
         }}
         data={paginationResult?.results || []}
         columns={costCenterColumns({})}
+        enableSizeSelection={true}
       />
     </>
   );

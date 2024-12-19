@@ -31,10 +31,12 @@ import { GlobalState } from "~/types/app";
 import { NavItems } from "@/components/constant/side-nav";
 import { Link } from "@remix-run/react";
 import { routes } from "~/util/route";
+import { components } from "~/sdk";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   // Add your custom props here
   data: GlobalState;
+  modules?:components["schemas"]["ModuleDto"][]
 }
 
 export function AppSidebar({ ...props }: AppSidebarProps) {
@@ -73,7 +75,7 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={NavItems({ data: props.data })} />
+        <NavMain items={props.modules || []} />
         {/* <NavProjects projects={data.projects} /> */}
         {/* <NavSecondary items={data.navMain} className="mt-auto" /> */}
       </SidebarContent>
