@@ -21,8 +21,6 @@ import { GlobalState } from "~/types/app";
 import {
   ItemLineType,
   itemLineTypeToJSON,
-  PartyType,
-  partyTypeFromJSON,
 } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";

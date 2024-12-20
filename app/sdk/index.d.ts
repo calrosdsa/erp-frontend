@@ -1733,6 +1733,59 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/pricing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Pricings */
+        get: operations["pricings"];
+        /** Edit Pricing */
+        put: operations["edit-pricing"];
+        /** Create pricing */
+        post: operations["create-pricing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/pricing/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Pricing */
+        get: operations["pricing"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/pricing/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Pricing */
+        put: operations["update-status-pricing"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/project": {
         parameters: {
             query?: never;
@@ -3528,6 +3581,15 @@ export interface components {
             updated_at: string | null;
             uuid: string;
         };
+        CompanyAdminData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            company_modules: components["schemas"]["CompanyModule"][];
+            name: string;
+        };
         CompanyDefaultsDto: {
             currency: string;
         };
@@ -3550,6 +3612,10 @@ export interface components {
             /** Format: int64 */
             entity_id: number;
             entity_name: string;
+        };
+        CompanyModule: {
+            label: string;
+            name: string;
         };
         CompanyPlugins: {
             /** Format: int64 */
@@ -3640,14 +3706,6 @@ export interface components {
             customer_id: number;
             /** Format: int64 */
             event_id?: number;
-        };
-        CreateCompanyAdminRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            name: string;
         };
         CreateCompanyRequestBody: {
             /**
@@ -4515,6 +4573,17 @@ export interface components {
             isBuying: boolean;
             isSelling: boolean;
             name: string;
+        };
+        EditPricingRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            id: number;
+            pricing_charges: components["schemas"]["PricingChargeData"][];
+            pricing_line_items: components["schemas"]["PricingLineItemData"][];
         };
         EditPurchaseRecordRequestBody: {
             /**
@@ -5396,6 +5465,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityPriceListDto"];
+        };
+        EntityResponseResultEntityPricingDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityPricingDetailDto"];
         };
         EntityResponseResultEntityProfileDtoBody: {
             /**
@@ -6365,6 +6447,15 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListPriceListDto"];
         };
+        PaginationResponsePaginationResultListPricingDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            pagination_result: components["schemas"]["PaginationResultListPricingDto"];
+        };
         PaginationResponsePaginationResultListProfileLBody: {
             /**
              * Format: uri
@@ -6656,6 +6747,12 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
+        PaginationResultListPricingDto: {
+            filters: components["schemas"]["FilterOptionDto"][];
+            results: components["schemas"]["PricingDto"][];
+            /** Format: int64 */
+            total: number;
+        };
         PaginationResultListProfileL: {
             filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ProfileL"][];
@@ -6943,6 +7040,90 @@ export interface components {
             is_selling: boolean;
             name: string;
             uuid: string;
+        };
+        PricingChargeData: {
+            name: string;
+            /** Format: int32 */
+            rate: number;
+            type: string;
+        };
+        PricingChargeDto: {
+            name: string;
+            /** Format: int32 */
+            rate: number;
+            type: string;
+        };
+        PricingData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pricing_charges: components["schemas"]["PricingChargeData"][];
+            pricing_line_items: components["schemas"]["PricingLineItemData"][];
+        };
+        PricingDetailDto: {
+            pricing: components["schemas"]["PricingDto"];
+            pricing_charges: components["schemas"]["PricingChargeDto"][];
+            pricing_line_items: components["schemas"]["PricingLineItemDto"][];
+        };
+        PricingDto: {
+            code: string;
+            /** Format: int64 */
+            id: number;
+            status: string;
+        };
+        PricingLineItemData: {
+            description: string | null;
+            /** Format: int32 */
+            fob_id: number | null;
+            /** Format: int32 */
+            freight_id: number | null;
+            /** Format: int32 */
+            importation_id: number | null;
+            /** Format: int32 */
+            margin_id: number | null;
+            part_number: string | null;
+            /** Format: int32 */
+            pl_unit: number | null;
+            /** Format: int32 */
+            quantity: number | null;
+            /** Format: int32 */
+            retention_id: number | null;
+            /** Format: int64 */
+            supplier_id: number | null;
+            /** Format: int32 */
+            taxes_id: number | null;
+            /** Format: int32 */
+            tc_id: number | null;
+            /** Format: int32 */
+            tva_id: number | null;
+        };
+        PricingLineItemDto: {
+            description: string | null;
+            /** Format: int32 */
+            fob_id: number | null;
+            /** Format: int32 */
+            freight_id: number | null;
+            /** Format: int32 */
+            importation_id: number | null;
+            /** Format: int32 */
+            margin_id: number | null;
+            part_number: string | null;
+            /** Format: int32 */
+            pl_unit: number | null;
+            /** Format: int32 */
+            quantity: number | null;
+            /** Format: int32 */
+            retention_id: number | null;
+            /** Format: int64 */
+            supplier_id: number | null;
+            /** Format: int32 */
+            taxes_id: number | null;
+            /** Format: int32 */
+            tc_id: number | null;
+            /** Format: int32 */
+            tva_id: number | null;
         };
         ProfileDto: {
             email: string;
@@ -7480,6 +7661,19 @@ export interface components {
             message: string;
             result: components["schemas"]["PaymentDto"];
         };
+        ResponseDataPricingDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["PricingDto"];
+        };
         ResponseDataProjectDtoBody: {
             /**
              * Format: uri
@@ -7754,6 +7948,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PriceListDto"];
+        };
+        ResultEntityPricingDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["PricingDetailDto"];
         };
         ResultEntityProfileDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -8926,7 +9126,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateCompanyAdminRequestBody"];
+                "application/json": components["schemas"]["CompanyAdminData"];
             };
         };
         responses: {
@@ -13181,6 +13381,189 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UpdateCredentialsPluginRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    pricings: {
+        parameters: {
+            query: {
+                page: string;
+                size: string;
+                enabled?: string;
+                status?: string;
+                is_group?: string;
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginationResponsePaginationResultListPricingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-pricing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditPricingRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-pricing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PricingData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataPricingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    pricing: {
+        parameters: {
+            query?: {
+                query?: string;
+                order?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityPricingDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-pricing": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {

@@ -362,6 +362,9 @@
   "alert": {
     "submit": "Por favor, envía este documento para confirmación."
   },
+
+  "created_at":"Fecha de Creación",
+
   "RECEIVE": "Recibir",
   "PAY": "Pagar",
   "INTERNAL_TRANSFER": "Transferencia interna",
@@ -430,7 +433,6 @@
   "booking": "Reserva",
   "schedule": "Horario",
 
-  
 
   "relocationAndMoving": "Reubicación y mudanzas",
 

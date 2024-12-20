@@ -12,38 +12,22 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  OnChangeFn,
-  PaginationState,
-  RowSelectionState,
-  SortingState,
   TableMeta,
-  Updater,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
 import {
-  Table,
-  TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DataTablePagination } from "./DataTablePagination";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { DataTableToolbar } from "./data-table-toolbar";
-import { useTranslation } from "react-i18next";
-import DataTableEditFooter from "./data-table-edit-footer";
-import { useSearchParams } from "@remix-run/react";
 import { create } from "zustand";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { TableVirtuoso } from "react-virtuoso";
 import React from "react";
-import { useUnmount } from "usehooks-ts";
+import { SettingsIcon } from "lucide-react";
 
 export interface PaginationOptions {
   rowCount?: number;
@@ -61,14 +45,12 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   hiddenColumns?: VisibilityState;
-  paginationOptions?: PaginationOptions;
-  expandedOptions?: ExpandedRowOptions<TData>;
-  metaOptions?: TableMetaOptions<TData>;
-  metaActions?: TableMetaOptions<TData>;
   enableRowSelection?: boolean;
-  enableSizeSelection?: boolean;
   onSelectionChange?: (selectedRows: TData[]) => void;
   maxTableHeight?: number;
+  rowHeight?: number;
+  fixedHeight?: number;
+  metaOptions?: TableMetaOptions<TData>;
 }
 export const useTableSelectionStore = create<{
   selection: Set<string>;
@@ -98,30 +80,16 @@ export const useTableSelectionStore = create<{
   setSelectedRowsData: (e) => set({ selectedRowsData: e }),
 }));
 
-export function DataTable<TData, TValue>({
+export function PricingTable<TData, TValue>({
   columns: userColumns,
   data,
-  hiddenColumns,
-  paginationOptions,
-  expandedOptions,
-  metaOptions,
-  metaActions,
   enableRowSelection = false,
-  enableSizeSelection = false,
   onSelectionChange,
   maxTableHeight = 480,
+  rowHeight: columnHeight = 33.6,
+  fixedHeight,
+  metaOptions,
 }: DataTableProps<TData, TValue>) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [paginationState, setPaginationState] = useState<PaginationState>({
-    pageIndex: Number(searchParams.get("page") || DEFAULT_PAGE),
-    pageSize: Number(searchParams.get("size") || DEFAULT_SIZE),
-  });
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    hiddenColumns || {}
-  );
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [expanded, setExpanded] = useState<ExpandedState>({});
   const { selection, toggle, clear, setAll, setSelectedRowsData } =
     useTableSelectionStore();
 
@@ -158,53 +126,24 @@ export function DataTable<TData, TValue>({
     return [selectionColumn, ...userColumns];
   }, [selection, data, enableRowSelection, userColumns, setAll, clear, toggle]);
 
-  const onPaginationChange: OnChangeFn<PaginationState> = useCallback(
-    (updaterOrValue) => {
-      // if (paginationOptions == undefined) return;
-      const newState =
-        typeof updaterOrValue === "function"
-          ? updaterOrValue(paginationState)
-          : updaterOrValue;
-      if (newState != undefined) {
-        setPaginationState(newState);
-        searchParams.set("page", newState.pageIndex.toString());
-        searchParams.set("size", newState.pageSize.toString());
-        setSearchParams(searchParams, { preventScrollReset: true });
-      }
-    },
-    [paginationOptions, paginationState, searchParams, setSearchParams]
-  );
-
   const table = useReactTable({
     data,
     columns,
-    state: {
-      pagination: paginationState,
-      columnVisibility,
-      expanded,
-      columnFilters,
-      sorting,
-    },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onPaginationChange: onPaginationChange,
-    onExpandedChange: setExpanded,
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getSubRows: expandedOptions?.getSubRows,
+    // getSubRows: expandedOptions?.getSubRows,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    rowCount: Number(paginationOptions?.rowCount),
+    // rowCount: Number(paginationOptions?.rowCount),
     autoResetPageIndex: false,
     manualPagination: true,
-      meta: {
-        ...metaOptions?.meta,
-        ...metaActions?.meta,
-      },
+    meta: {
+      ...metaOptions?.meta,
+    //   ...metaActions?.meta,
+    },
   });
 
   useEffect(() => {
@@ -225,7 +164,7 @@ export function DataTable<TData, TValue>({
         />
       ),
       TableHead: TableHeader,
-      TableRow: TableRow,
+    //   TableRow: TableRow,
     }),
     []
   );
@@ -241,12 +180,15 @@ export function DataTable<TData, TValue>({
               width: header.getSize(),
               maxWidth: header.getSize(),
               minWidth: header.getSize(),
-              height: 41,
+              height: 30,
             }}
           >
+            {/* <div className="flex justify-between"> */}
             {header.isPlaceholder
               ? null
               : flexRender(header.column.columnDef.header, header.getContext())}
+              {/* <SettingsIcon className="h-4 w-4 hidden hover:block"/> */}
+              {/* </div> */}
           </TableHead>
         ))}
       </div>
@@ -264,11 +206,11 @@ export function DataTable<TData, TValue>({
             width: cell.column.getSize(),
             maxWidth: cell.column.getSize(),
             minWidth: cell.column.getSize(),
-            height: 41,
+            height: columnHeight,
             overflow: "hidden",
             textOverflow: "ellipsis",
           }}
-          className="border-r last:border-r-0 p-2 text-xs"
+          className="border-r border-b last:border-r-0 p-2 text-[11px] "
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </TableCell>
@@ -279,13 +221,18 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="py-3 space-y-4 w-full">
-      {metaActions != undefined && <DataTableToolbar table={table} />}
       <div className="rounded-md border w-full">
         <div
           // ref={tableRef}
           className="relative"
           style={{
-            height: `${Math.min(data.length * 43 + 48, maxTableHeight)}px`,
+            height: fixedHeight
+              ? fixedHeight
+              : `${Math.min(
+                  data.length * columnHeight + 48,
+                  maxTableHeight
+                )}px`,
+            // height: `${Math.min(data.`,
           }}
         >
           <TableVirtuoso
@@ -293,7 +240,6 @@ export function DataTable<TData, TValue>({
               height: "100%",
               width: "100%",
             }}
-            
             data={table.getRowModel().rows}
             components={TableComponents}
             itemContent={(index, row) => (
@@ -304,17 +250,13 @@ export function DataTable<TData, TValue>({
         </div>
         {/* <ScrollBar orientation="horizontal" /> */}
       </div>
-      <div className="flex justify-between items-center">
-        {metaOptions != undefined && <DataTableEditFooter table={table} />}
-        {enableSizeSelection && <DataTablePagination table={table} />}
-      </div>
     </div>
   );
 }
 
 const MemoizedRow = React.memo(
   ({ row, rowContent }: { row: any; rowContent: any }) => (
-    <TableRow className=" border-0">
+    <TableRow className=" border-0 hover:bg-transparent">
       {rowContent(row.index, row.original)}
     </TableRow>
   )

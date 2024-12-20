@@ -14,6 +14,7 @@ export default function EntityClient(){
             paginationOptions={{
                 rowCount:paginationResult?.total,
             }}
+            enableSizeSelection={true}
             />
         </div>
     )

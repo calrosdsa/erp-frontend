@@ -1,6 +1,8 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import { Column, Getter, Row, Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 
 type Option = {
   label: string;
@@ -24,7 +26,7 @@ export default function TableCell<TData>({ getValue, row, column, table }:TableC
     setValue(initialValue);
   }, [initialValue]);
 
-  const onBlur = (e: ChangeEvent<HTMLInputElement>) => {
+  const onBlur = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     // displayValidationMessage(e);
     tableMeta?.updateCell(row.index, column.id, value, e.target.validity.valid);
   };
@@ -58,12 +60,23 @@ export default function TableCell<TData>({ getValue, row, column, table }:TableC
 
   // if (tableMeta?.editedRows.includes(row.index)) {
   if (tableMeta?.updateCell) {
+    if(columnMeta?.inputType == "textarea"){
+      return <AutosizeTextarea
+    value={value}
+    onChange={(e) => setValue(e.target.value)}
+    onBlur={onBlur}
+    className=" bg-background text-xs border-none"
+    maxHeight={100}
+    // placeholder={columnMeta?.type}
+    required={columnMeta?.required}
+  />
+    }
     return <Input
     value={value}
     onChange={(e) => setValue(e.target.value)}
     onBlur={onBlur}
     step={".01"}
-    className="h-[28px] bg-background"
+    className="h-full bg-background border-none text-xs "
     // placeholder={columnMeta?.type}
     type={columnMeta?.type || "text"}
     required={columnMeta?.required}

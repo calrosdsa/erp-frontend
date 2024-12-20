@@ -112,6 +112,7 @@ class Routes {
   purchaseRecord = "purchaseRecord";
   stockEntry = "stockEntry";
   project = "project";
+  pricing = "pricing";
   serialNo = "serialNo";
   batchBundle = "batchBundle";
   saleInvoice = "saleInvoice";
