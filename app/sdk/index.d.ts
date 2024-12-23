@@ -7043,15 +7043,13 @@ export interface components {
         };
         PricingChargeData: {
             name: string;
-            /** Format: int32 */
+            /** Format: double */
             rate: number;
-            type: string;
         };
         PricingChargeDto: {
             name: string;
             /** Format: int32 */
             rate: number;
-            type: string;
         };
         PricingData: {
             /**
@@ -7074,56 +7072,51 @@ export interface components {
             status: string;
         };
         PricingLineItemData: {
-            description: string | null;
+            cantidad_fn?: string;
+            cost_alm_fn?: string;
+            cost_zf_fn?: string;
+            description?: string;
+            fob_total_fn?: string;
+            fob_unit_fn?: string;
+            gpl_total_fn?: string;
+            part_number?: string;
             /** Format: int32 */
-            fob_id: number | null;
+            pl_unit?: number;
+            precio_total_fn?: string;
+            precio_total_tc_fn?: string;
+            precio_unitario_fn?: string;
+            precio_unitario_tc_fn?: string;
             /** Format: int32 */
-            freight_id: number | null;
-            /** Format: int32 */
-            importation_id: number | null;
-            /** Format: int32 */
-            margin_id: number | null;
-            part_number: string | null;
-            /** Format: int32 */
-            pl_unit: number | null;
-            /** Format: int32 */
-            quantity: number | null;
-            /** Format: int32 */
-            retention_id: number | null;
+            quantity?: number;
+            retention_fn?: string;
             /** Format: int64 */
-            supplier_id: number | null;
-            /** Format: int32 */
-            taxes_id: number | null;
-            /** Format: int32 */
-            tc_id: number | null;
-            /** Format: int32 */
-            tva_id: number | null;
+            supplier_id?: number;
+            tva_fn?: string;
+            tva_total_fn?: string;
         };
         PricingLineItemDto: {
-            description: string | null;
+            cantidad_fn: string;
+            cost_alm_fn: string;
+            cost_zf_fn: string;
+            description: string;
+            fob_total_fn: string;
+            fob_unit_fn: string;
+            gpl_total_fn: string;
+            part_number: string;
             /** Format: int32 */
-            fob_id: number | null;
+            pl_unit: number;
+            precio_total_fn: string;
+            precio_total_tc_fn: string;
+            precio_unitario_fn: string;
+            precio_unitario_tc_fn: string;
             /** Format: int32 */
-            freight_id: number | null;
-            /** Format: int32 */
-            importation_id: number | null;
-            /** Format: int32 */
-            margin_id: number | null;
-            part_number: string | null;
-            /** Format: int32 */
-            pl_unit: number | null;
-            /** Format: int32 */
-            quantity: number | null;
-            /** Format: int32 */
-            retention_id: number | null;
+            quantity: number;
+            retention_fn: string;
+            supplier: string;
             /** Format: int64 */
-            supplier_id: number | null;
-            /** Format: int32 */
-            taxes_id: number | null;
-            /** Format: int32 */
-            tc_id: number | null;
-            /** Format: int32 */
-            tva_id: number | null;
+            supplier_id: number;
+            tva_fn: string;
+            tva_total_fn: string;
         };
         ProfileDto: {
             email: string;

@@ -23,11 +23,13 @@ export const pricingChargeColumns = ({}: {}): ColumnDef<
       accessorKey: "name",
       header: "Nombre",
       size: 100,
+      cell:TableCell,
     },
     {
       accessorKey: "rate",
       header: "Tasa",
       size: 100,
+      cell:TableCell,
     },
   ];
 };
@@ -38,6 +40,20 @@ export const pricingLineItemColumns = (): ColumnDef<
   const r = routes;
   const { t, i18n } = useTranslation("common");
   return [
+    // {
+    //   id:"no",
+    //   accessorKey:"no",
+    //   cell:TableCellIndex,
+    //   size:50
+    // },
+    {
+      accessorKey:"supplier",
+      header:t("supplier"),
+      cell:TableCell,
+      meta: {
+        inputType: "autocomplete",
+      },
+    },
     {
       accessorKey: "part_number",
       header: "PN",
@@ -56,7 +72,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "quantity",
       header: "Quantity",
-      cell: TableCell,
+      // cell: TableCell,  
     },
     {
       accessorKey: "pl_unit",
@@ -65,69 +81,108 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
 
     {
-      accessorKey: "fob_unit",
+      accessorKey: "fob_unit_fn",
       header: "Fob Unit",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      accessorKey: "retention",
+      accessorKey: "retention_fn",
       header: "Retencion",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-    accessorKey: "cost_zf",
+    accessorKey: "cost_zf_fn",
       header: "Costo ZF",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      accessorKey: "cost_alm",
+      accessorKey: "cost_alm_fn",
       header: "Costo Alm",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      id: "tva",
+      accessorKey: "tva_fn",
       header: "TVA",
       cell: TableCell,
+      // meta:{
+      //   calculate:true
+      // }
     },
     {
-      accessorKey: "cantidad",
+      accessorKey: "cantidad_fn",
       header: "Cantidad",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      accessorKey: "precio_unitario",
+      accessorKey: "precio_unitario_fn",
       header: "Precio Unitario($us)",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      accessorKey: "precio_total",
+      accessorKey: "precio_total_fn",
       header: "Precio Total ($us)",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      accessorKey: "precio_unitario_tc",
+      accessorKey: "precio_unitario_tc_fn",
       header: "Precio Unitario (BS)",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      accessorKey: "precio_total_tc",
+      accessorKey: "precio_total_tc_fn",
       header: "Precio Total (BS)",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      accessorKey: "fob_total",
+      accessorKey: "fob_total_fn",
       header: "Fob Total ($us)",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      accessorKey: "gpl_total",
+      accessorKey: "gpl_total_fn",
       header: "Gpl Total ($us)",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
     {
-      accessorKey: "tva_total",
+      accessorKey: "tva_total_fn",
       header: "Tva Total ($us)",
       cell: TableCell,
+      meta:{
+        calculate:true
+      }
     },
   ];
 };
@@ -163,12 +218,12 @@ export const pricingColumns = ({}: {}): ColumnDef<
       header: t("form.status"),
       cell: TableCellStatus,
     },
-    {
-      accessorKey: "status",
-      header: t("created_at"),
-      cell: ({ ...props }) => {
-        return <TableCellDate i18n={i18n} {...props} />;
-      },
-    },
+    // {
+    //   accessorKey: "",
+    //   header: t("created_at"),
+    //   cell: ({ ...props }) => {
+    //     return <TableCellDate i18n={i18n} {...props} />;
+    //   },
+    // },
   ];
 };

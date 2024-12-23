@@ -88,6 +88,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({
     currencyExchange: res.data?.result.entity,
     actions: res.data?.actions,
+    activities:res.data?.result.activities,
   });
 };
 

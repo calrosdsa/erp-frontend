@@ -76,7 +76,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
       control={control || (form && form.control)}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col w-full ">
+        <FormItem className="flex flex-col w-full  ">
           {label && (
             <FormLabel className="text-xs">
               {label} {required && "*"}
@@ -94,6 +94,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                 }}
                 className={cn(
                   "justify-between",
+                  className,
                   !field.value && "text-muted-foreground",
                   !allowEdit &&
                     "disabled:opacity-100 disabled:cursor-default bg-secondary"
@@ -116,7 +117,8 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                     setOpen(!open);
                   }}
                   className={cn(
-                    "justify-between",
+                    "justify-between font-normal text-sm",
+                    className,
                     !field.value && "text-muted-foreground",
                     !allowEdit &&
                       "disabled:opacity-100 disabled:cursor-default bg-secondary"

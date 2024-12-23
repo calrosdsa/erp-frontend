@@ -44,6 +44,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { TableVirtuoso } from "react-virtuoso";
 import React from "react";
 import { useUnmount } from "usehooks-ts";
+import { cn } from "@/lib/utils";
 
 export interface PaginationOptions {
   rowCount?: number;
@@ -65,6 +66,7 @@ interface DataTableProps<TData, TValue> {
   expandedOptions?: ExpandedRowOptions<TData>;
   metaOptions?: TableMetaOptions<TData>;
   metaActions?: TableMetaOptions<TData>;
+  rowHeight?: number;
   enableRowSelection?: boolean;
   enableSizeSelection?: boolean;
   onSelectionChange?: (selectedRows: TData[]) => void;
@@ -110,6 +112,8 @@ export function DataTable<TData, TValue>({
   enableSizeSelection = false,
   onSelectionChange,
   maxTableHeight = 480,
+  rowHeight = 41,
+
 }: DataTableProps<TData, TValue>) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [paginationState, setPaginationState] = useState<PaginationState>({
@@ -225,7 +229,7 @@ export function DataTable<TData, TValue>({
         />
       ),
       TableHead: TableHeader,
-      TableRow: TableRow,
+      // TableRow:TableRow
     }),
     []
   );
@@ -241,7 +245,7 @@ export function DataTable<TData, TValue>({
               width: header.getSize(),
               maxWidth: header.getSize(),
               minWidth: header.getSize(),
-              height: 41,
+              height: 40,
             }}
           >
             {header.isPlaceholder
@@ -264,11 +268,13 @@ export function DataTable<TData, TValue>({
             width: cell.column.getSize(),
             maxWidth: cell.column.getSize(),
             minWidth: cell.column.getSize(),
-            height: 41,
+            height: rowHeight,
             overflow: "hidden",
             textOverflow: "ellipsis",
           }}
-          className="border-r last:border-r-0 p-2 text-xs"
+          className={cn(
+            "border-r border-b last:border-r-0 p-2 text-xs ",
+          )}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </TableCell>
@@ -278,14 +284,14 @@ export function DataTable<TData, TValue>({
   );
 
   return (
-    <div className="py-3 space-y-4 w-full">
+    <div className="space-y-4 w-full">
       {metaActions != undefined && <DataTableToolbar table={table} />}
       <div className="rounded-md border w-full">
         <div
           // ref={tableRef}
           className="relative"
           style={{
-            height: `${Math.min(data.length * 43 + 48, maxTableHeight)}px`,
+            height: `${Math.min(data.length * rowHeight + 48, maxTableHeight)}px`,
           }}
         >
           <TableVirtuoso
@@ -314,7 +320,7 @@ export function DataTable<TData, TValue>({
 
 const MemoizedRow = React.memo(
   ({ row, rowContent }: { row: any; rowContent: any }) => (
-    <TableRow className=" border-0">
+    <TableRow className=" border-0 hover:bg-transparent">
       {rowContent(row.index, row.original)}
     </TableRow>
   )

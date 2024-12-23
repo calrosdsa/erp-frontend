@@ -16,6 +16,8 @@ export const SupplierAutoCompleteForm = ({
   onSelect,
   roleActions,
   required,
+  className,
+  name,
 }: {
   allowEdit?: boolean;
   control?: Control<any, any>;
@@ -23,6 +25,8 @@ export const SupplierAutoCompleteForm = ({
   required?:boolean;
   onSelect: (e: components["schemas"]["SupplierDto"]) => void;
   roleActions: components["schemas"]["RoleActionDto"][];
+  className?:string
+  name?:string
 }) => {
   const [fetcher, onChange] = useSupplierDebounceFetcher();
   const createCustomer = useCreateSupplier();
@@ -36,9 +40,10 @@ export const SupplierAutoCompleteForm = ({
       onValueChange={onChange}
       label={label}
       required={required}
-      name="supplier"
+      name={name || "supplier"}
       nameK="name"
       control={control}
+      className={className}
       allowEdit={allowEdit}
       onSelect={onSelect}
       {...(permission.create && {

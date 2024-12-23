@@ -20,7 +20,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 export default function CurrencyExchangeDetailClient() {
-  const { currencyExchange, actions } = useLoaderData<typeof loader>();
+  const { currencyExchange, actions,activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const r = routes;
   const fetcher = useFetcher<typeof action>();
@@ -98,7 +98,7 @@ export default function CurrencyExchangeDetailClient() {
     };
   }, [currencyExchange, permission]);
   return (
-    <DetailLayout partyID={currencyExchange?.id} navItems={navItems}>
+    <DetailLayout partyID={currencyExchange?.id} navItems={navItems} activities={activities}>
       {tab == "info" && <CostCenterInfo />}
     </DetailLayout>
   );

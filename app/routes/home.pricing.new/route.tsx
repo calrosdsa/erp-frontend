@@ -37,6 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       message = res.data?.message;
       error = res.error?.detail;
       pricing = res.data?.result
+      console.log("ERROR",res.error)
       break;
     }
   }
