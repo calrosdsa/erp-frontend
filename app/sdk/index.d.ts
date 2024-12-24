@@ -7073,12 +7073,14 @@ export interface components {
         };
         PricingLineItemData: {
             cantidad_fn?: string;
+            color?: string;
             cost_alm_fn?: string;
             cost_zf_fn?: string;
             description?: string;
             fob_total_fn?: string;
             fob_unit_fn?: string;
             gpl_total_fn?: string;
+            is_title?: boolean;
             part_number?: string;
             /** Format: int32 */
             pl_unit?: number;
@@ -7096,12 +7098,14 @@ export interface components {
         };
         PricingLineItemDto: {
             cantidad_fn: string;
+            color: string;
             cost_alm_fn: string;
             cost_zf_fn: string;
             description: string;
             fob_total_fn: string;
             fob_unit_fn: string;
             gpl_total_fn: string;
+            is_title: boolean;
             part_number: string;
             /** Format: int32 */
             pl_unit: number;

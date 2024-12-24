@@ -57,13 +57,13 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "part_number",
       header: "PN",
-      size: 180,
+      size: 160,
       cell: TableCell,
     },
     {
       accessorKey: "description",
       header: "Descripction",
-      size: 300,
+      size: 320,
       cell: TableCell,
       meta: {
         inputType: "textarea",

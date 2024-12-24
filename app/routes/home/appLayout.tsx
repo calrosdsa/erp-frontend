@@ -88,7 +88,7 @@ export default function HomeLayout({
     <>
       <GlobalDialogs globalState={globalState} />
 
-      <div className=" max-w-[1400px] mx-auto">
+      <div className=" max-w-[1500px] mx-auto">
         <SidebarProvider>
           <AppSidebar data={globalState} 
           modules={modules}/>
@@ -166,7 +166,7 @@ export default function HomeLayout({
 
               <ToolBar title={getRouteName()} />
 
-              <div className="h-full  max-w-[1500px">{children}</div>
+              <div className="h-full  max-w-[1500px]">{children}</div>
             </div>
           </SidebarInset>
         </SidebarProvider>

@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useMemo,
   useEffect,
+  FormEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher, useNavigate } from "@remix-run/react";
@@ -44,7 +45,7 @@ import {
 import { DataTable } from "@/components/custom/table/CustomTable";
 import PricingData from "./compoments/pricing-data";
 
-type PricingData = z.infer<typeof pricingDataSchema>;
+type PricingDataType = z.infer<typeof pricingDataSchema>;
 type LineItemType = z.infer<typeof pricingLineItemDataSchema>;
 type PricingChargeType = z.infer<typeof pricingChargeDataSchema>;
 
@@ -69,8 +70,9 @@ export default function NewPricingClient() {
   const navigate = useNavigate();
   const r = routes;
   const inputRef = useRef<HTMLInputElement>(null);
+  // const formRef = useRef<HTMLFormElement | null>(null)
 
-  const form = useForm<PricingData>({
+  const form = useForm<PricingDataType>({
     resolver: zodResolver(pricingDataSchema),
     defaultValues: {
       pricing_charges: defaultPricingCharges,
@@ -78,14 +80,15 @@ export default function NewPricingClient() {
     },
   });
 
-
-
-  const onSubmit = (values: PricingData) => {
-    console.log("onsubmit", values);
-    fetcher.submit(
-      { action: "create", pricingData: values },
-      { method: "POST", encType: "application/json" }
-    );
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    form.handleSubmit((values: PricingDataType) => {
+      console.log("onsubmit", values);
+      fetcher.submit(
+        { action: "create", pricingData: values },
+        { method: "POST", encType: "application/json" }
+      );
+    })(e);
   };
 
   setUpToolbar(
@@ -113,25 +116,19 @@ export default function NewPricingClient() {
     [fetcher.data]
   );
 
-  
-
   return (
     <Card>
-      <FormLayout>
-        <Form {...form}>
-          {/* {JSON.stringify(formValues.pricing_line_items)} */}
-          <fetcher.Form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className={cn("gap-y-3 grid p-3")}
-          >
-            <PricingData
-            form={form}
-            />
-
-            <input ref={inputRef} type="submit" className="hidden" />
-          </fetcher.Form>
-        </Form>
-      </FormLayout>
+      
+      <PricingData
+        form={form}
+        fetcher={fetcher}
+        onSubmit={onSubmit}
+        inputRef={inputRef}
+        defaultValues={{
+          pricing_charges: defaultPricingCharges,
+          pricing_line_items: [],
+        }}
+      />
     </Card>
   );
 }

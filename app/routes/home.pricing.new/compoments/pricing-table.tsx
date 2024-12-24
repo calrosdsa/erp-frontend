@@ -32,11 +32,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { create } from "zustand";
 import { TableVirtuoso } from "react-virtuoso";
 import React from "react";
-import { SettingsIcon } from "lucide-react";
+import { Check, SettingsIcon } from "lucide-react";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { cn } from "@/lib/utils";
@@ -44,6 +49,7 @@ import { Input } from "@/components/ui/input";
 import { FormulaEngine } from "../util/formula";
 import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { Control } from "react-hook-form";
+import PalettePicker from "./palette-picker";
 
 export interface PaginationOptions {
   rowCount?: number;
@@ -82,20 +88,19 @@ export const useTablePricingStore = create<{
   setAll: (ids: string[]) => void;
   // selectedCells:Cell[],
   selectedCells: Set<string>;
-  onChangeCells: (e: Cell) => void;
+  onChangeCells: (id: string) => void;
   clearSelectedCells: () => void;
   setSelectedRowsData: (data: any[]) => void;
 }>((set) => ({
   selectedCells: new Set(),
   onChangeCells: (e) =>
     set((state) => {
-      const cellKey = `${e.column}-${e.row}`; // Generate a unique key for the cell
       const newSelectedCells = new Set(state.selectedCells);
 
-      if (newSelectedCells.has(cellKey)) {
-        newSelectedCells.delete(cellKey); // Remove the cell from the selected set
+      if (newSelectedCells.has(e)) {
+        newSelectedCells.delete(e); // Remove the cell from the selected set
       } else {
-        newSelectedCells.add(cellKey); // Add the cell to the selected set
+        newSelectedCells.add(e); // Add the cell to the selected set
       }
 
       return {
@@ -135,7 +140,7 @@ export function PricingTable<TData, TValue>({
   rowHeight: columnHeight = 33.6,
   fixedHeight,
   metaOptions,
-  control
+  control,
 }: DataTableProps<TData, TValue>) {
   const {
     selection,
@@ -181,7 +186,7 @@ export function PricingTable<TData, TValue>({
     return [selectionColumn, ...userColumns];
   }, [selection, data, enableRowSelection, userColumns, setAll, clear, toggle]);
   const [currentCell, setCurrentCell] = useState<string>("");
-  const formula = new FormulaEngine();
+  const mainInputRef = useRef<HTMLInputElement | null>(null);
   const table = useReactTable({
     data,
     columns,
@@ -257,25 +262,42 @@ export function PricingTable<TData, TValue>({
     ),
     [table]
   );
+  const [mainValue, setMainValue] = useState("");
 
+  const colors = [
+    "#FF6900",
+    "#FCB900",
+    "#7BDCB5",
+    "#00D084",
+    "#8ED1FC",
+    "#0693E3",
+    "#ABB8C3",
+    "#EB144C",
+    "#F78DA7",
+    "#9900EF",
+    "#F22FFF",
+    "#000000",
+  ];
   const rowContent = useCallback(
-    (_index: number, row: TData) => {
+    (_index: number, row: any) => {
       const tableRow = table.getRowModel().rows[_index];
       const tableMeta: any = table.options.meta;
+      const isTitle = row.is_title;
+      const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
       return tableRow?.getVisibleCells().map((cell) => {
         const id = `${cell.column.id}-${cell.row.index}`;
+        const columnMeta: any = cell.column.columnDef.meta;
         const [value, setValue] = useState(cell.getValue() as string);
         const onBlur = (
           e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
         ) => {
           // displayValidationMessage(e);
-          tableMeta?.updateCell(
-            cell.row.index,
-            cell.column.id,
-            value,
-            e.target.validity.valid
-          );
+          tableMeta?.updateCell(cell.row.index, cell.column.id, value);
         };
+        useEffect(() => {
+          setValue(cell.getValue() as string);
+        }, [row]);
 
         return (
           <ContextMenu key={cell.id}>
@@ -294,24 +316,24 @@ export function PricingTable<TData, TValue>({
               }}
               onClick={(e) => {
                 if (e.ctrlKey) {
+                  setCurrentCell("");
                   console.debug("Ctrl+click has just happened!");
-                  onChangeCells({
-                    column: cell.column.id,
-                    value: cell.getValue() as any,
-                    row: cell.row.index,
-                  });
+                  onChangeCells(id);
                   return;
                 }
+                setMainValue((cell.getValue() as string) || "");
                 clearSelectedCells();
                 // if (id != currentCell) {
-                  setCurrentCell(id);
+                setCurrentCell(id);
                 // }
                 e.stopPropagation();
               }}
               className={cn(
-                "border-r border-b last:border-r-0 p-2 text-xs ",
+                "border-r border-b last:border-r-0 p-2 text-xs",
                 selectedCells.has(id) && " bg-muted",
-                currentCell==id && " ring-primary ring-2"
+                currentCell == id && " ring-primary ring-2  ring-inset",
+                isTitle && "h-6 border-r-0"
+                // row.color && `text-[${row.color}]`
               )}
             >
               <ContextMenuTrigger
@@ -322,7 +344,7 @@ export function PricingTable<TData, TValue>({
                   alignItems: "center", // Center content vertically (optional)
                 }}
               >
-                {cell.column.columnDef.meta?.inputType == "autocomplete" ? (
+                {columnMeta?.inputType == "autocomplete" && !isTitle ? (
                   <SupplierAutoCompleteForm
                     className="text-xs h-7"
                     name={`pricing_line_items.${cell.row.index}.${cell.column.id}`}
@@ -339,15 +361,35 @@ export function PricingTable<TData, TValue>({
                   />
                 ) : currentCell == id ? (
                   <Input
-                    className="text-xs h-full m-0 rounded-none border-0 ring-0 outline-none border-none 
-                     focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className={cn(
+                      `text-xs px-0  m-0 rounded-none border-0
+                     focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent h-4`,
+                      isTitle && " font-semibold text-sm"
+                    )}
                     value={value}
                     autoFocus
-                    onChange={(e) => setValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                      }
+                    }}
+                    onChange={(e) => {
+                      setValue(e.target.value);
+                      setMainValue(e.target.value);
+                    }}
                     onBlur={onBlur}
                   />
                 ) : (
-                  <div>
+                  <div
+                    className={cn(
+                      "line-clamp-4 ",
+                      // row.color != "" && " text-cyan-50",
+                      isTitle && "font-semibold text-sm text-center line-clamp-2 leading-3"
+                    )}
+                    style={{
+                      color:row.color,
+                    }}
+                  >
                     {row[cell.column.id?.replace(/_fn$/, "") as keyof any]}
                   </div>
                 )}
@@ -358,14 +400,16 @@ export function PricingTable<TData, TValue>({
                 disabled={cell.row.index == 0}
                 onSelect={() => {
                   tableMeta?.moveRow(cell.row.index, cell.row.index - 1);
+                  setCurrentCell(`${cell.column.id}-${cell.row.index - 1}`);
                 }}
               >
                 Subir Fila
               </ContextMenuItem>
               <ContextMenuItem
-                disabled={cell.row.index == (table.getRowModel().rows.length-1)}
+                disabled={cell.row.index == table.getRowModel().rows.length - 1}
                 onSelect={() => {
                   tableMeta?.moveRow(cell.row.index, cell.row.index + 1);
+                  setCurrentCell(`${cell.column.id}-${cell.row.index + 1}`);
                 }}
               >
                 Bajar Fila
@@ -378,29 +422,116 @@ export function PricingTable<TData, TValue>({
                 Eliminar Fila
               </ContextMenuItem>
               {selectedCells.size > 1 && (
-                <ContextMenuItem
-                  onSelect={() => {
-                    const indexes = Array.from(selectedCells).map((value) => {
-                      return getIndexFromString(value); // Assuming value is a string
-                    });
-                    tableMeta?.removeRow(indexes);
-                  }}
-                >
-                  Eliminar Filas Seleccionadas
-                </ContextMenuItem>
+                <>
+                  <ContextMenuItem
+                    onSelect={() => {
+                      const indexes = Array.from(selectedCells).map((value) => {
+                        return getIndexFromString(value); // Assuming value is a string
+                      });
+                      tableMeta?.removeRow(indexes);
+                    }}
+                  >
+                    Eliminar Filas Seleccionadas
+                  </ContextMenuItem>
+                </>
               )}
+
+              <ContextMenuSub>
+                <ContextMenuSubTrigger inset>
+                  Cambiar Color
+                </ContextMenuSubTrigger>
+                <ContextMenuSubContent className="w-48 hover:bg-background">
+                  <ContextMenuItem className=" flex flex-wrap  gap-3 hover:bg-background">
+                    {colors.map((color) => (
+                      <div
+                        key={color}
+                        className="w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-500 relative"
+                        style={{ backgroundColor: color }}
+                        onClick={() => {
+                          setSelectedColor(color);
+                          tableMeta?.updateCell(cell.row.index, "color", color);
+                        }}
+
+                      >
+                        {selectedColor === color && (
+                          <Check
+                            className="absolute inset-0 m-auto text-white stroke-2"
+                            size={20}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </ContextMenuItem>
+                  {/* <ContextMenuItem>
+                    Save Page As...
+                    <ContextMenuShortcut>⇧⌘S</ContextMenuShortcut>
+                  </ContextMenuItem>
+                  <ContextMenuItem>Create Shortcut...</ContextMenuItem>
+                  <ContextMenuItem>Name Window...</ContextMenuItem>
+                  <ContextMenuSeparator />
+                  <ContextMenuItem>Developer Tools</ContextMenuItem> */}
+                </ContextMenuSubContent>
+              </ContextMenuSub>
             </ContextMenuContent>
           </ContextMenu>
         );
       });
     },
-    [table, selection, data, selectedCells, currentCell]
+    [table, selection, data, selectedCells, currentCell, mainInputRef.current]
   );
+
+  const onBlurMainInput = () => {
+    const tableMeta: any = table.options.meta;
+    const updatedValues = Array.from(selectedCells).map((cellId) => {
+      const [column, rowIndex] = cellId.split("-");
+      return {
+        column,
+        rowIndex: parseInt(rowIndex || "0", 10),
+      };
+    });
+
+    updatedValues.forEach(({ column, rowIndex }) => {
+      // Update the table model or your data state
+      tableMeta?.updateCell(rowIndex, column, mainValue);
+      console.log(`Updating cell at column ${column}, row ${rowIndex}`);
+    });
+  };
+  // useEffect(()=>{
+  //   getCurrentValue()
+  // },[currentCell])
 
   return (
     <div className="space-y-4 w-full">
       {/* {JSON.stringify(Array.from(selectedCells))} */}
       <div className="rounded-md border w-full">
+        <Input
+          ref={mainInputRef}
+          value={mainValue}
+          onChange={(e) => {
+            setMainValue(e.target.value);
+            if (!currentCell) return; // Early return if currentCell is empty
+            const tableMeta: any = table.options.meta;
+            // Destructure the column and row index from the currentCell string
+            const [column, rowIndexStr] = currentCell.split("-");
+            const rowIndex = Number(rowIndexStr);
+
+            // Check if the column and rowIndex are valid
+            if (column && !isNaN(rowIndex)) {
+              console.log("INDEX --", rowIndex, column);
+              // const row = table.getRowModel()?.rows[rowIndex];
+              tableMeta?.updateCell(rowIndex, column, e.target.value);
+            }
+          }}
+          autoFocus
+          onBlur={onBlurMainInput}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+            }
+          }}
+          className="rounded-none border-0
+                     focus-visible:ring-1 focus-visible:ring-offset-0 text-sm  mb-1"
+        />
         <div
           // ref={tableRef}
           className="relative"

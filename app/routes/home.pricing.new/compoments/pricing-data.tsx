@@ -1,4 +1,9 @@
-import { Control, useFieldArray, UseFormReturn } from "react-hook-form";
+import {
+  Control,
+  useFieldArray,
+  useForm,
+  UseFormReturn,
+} from "react-hook-form";
 import { z } from "zod";
 import {
   editPricingSchema,
@@ -7,29 +12,42 @@ import {
   pricingLineItemDataSchema,
 } from "~/util/data/schemas/pricing/pricing-schema";
 import { PricingTable } from "./pricing-table";
-import { pricingChargeColumns, pricingLineItemColumns } from "@/components/custom/table/columns/pricing/pricing-columns";
-import { useCallback, useEffect, useMemo } from "react";
+import {
+  pricingChargeColumns,
+  pricingLineItemColumns,
+} from "@/components/custom/table/columns/pricing/pricing-columns";
+import {
+  FormEvent,
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { Button } from "@/components/ui/button";
-import { FormulaEngine } from "../util/formula";
+import { FormulaEngine, removeFromList } from "../util/formula";
 import { PlusIcon } from "lucide-react";
 import { DataTable } from "@/components/custom/table/CustomTable";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FormLayout from "@/components/custom/form/FormLayout";
+import { Form } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
+import { FetcherWithComponents } from "@remix-run/react";
+import PalettePicker from "./palette-picker";
 
 type EditData = z.infer<typeof pricingDataSchema>;
 type LineItemType = z.infer<typeof pricingLineItemDataSchema>;
 type PricingChargeType = z.infer<typeof pricingChargeDataSchema>;
 
-
-
 const defaultLineItem: LineItemType = {
-  part_number: "SV-4040EX-R12-176T-16-410",
-  description:
-    "Streamvault™ 4040EX Series - 2U 12-Bay Appliance 176TB Raw RAID",
+  part_number: "",
+  description: "",
 
   fob_unit_fn: "pl_unit * (1-descuento)",
   retention_fn: "",
   cost_zf_fn: "fob_unit * (1+flete)",
   cost_alm_fn: "cost_zf * (1+importacion)",
-  tva_fn: "quantity",
+  tva_fn: "",
   cantidad_fn: "quantity",
   precio_unitario_fn: "(cost_alm/(1-margen)+tva)/(1-impuestos)",
   precio_total_fn: "cantidad * precio_unitario",
@@ -39,33 +57,49 @@ const defaultLineItem: LineItemType = {
   gpl_total_fn: "pl_unit * cantidad",
   tva_total_fn: "tva * cantidad",
 
-  pl_unit: 0,
-  quantity: 0,
-  cantidad: 0,
-  tva: 0,
-  fob_unit: 0,
-  retention: 0,
-  cost_zf: 0,
-  cost_alm: 0,
-  precio_unitario: 0,
-  precio_total: 0,
-  precio_unitario_tc: 0,
-  precio_total_tc: 0,
-  fob_total: 0,
-  gpl_total: 0,
-  tva_total: 0,
+  pl_unit: undefined,
+  quantity: undefined,
+  cantidad: undefined,
+  tva: undefined,
+  fob_unit: undefined,
+  retention: undefined,
+  cost_zf: undefined,
+  cost_alm: undefined,
+  precio_unitario: undefined,
+  precio_total: undefined,
+  precio_unitario_tc: undefined,
+  precio_total_tc: undefined,
+  fob_total: undefined,
+  gpl_total: undefined,
+  tva_total: undefined,
+};
+
+const lineItemWithTitle: LineItemType = {
+  is_title: true,
 };
 
 export default function PricingData({
+  fetcher,
+  onSubmit,
+  defaultValues,
+  inputRef,
   form,
 }: {
-  // control?: Control<EditData>
-  form: UseFormReturn<EditData, any, undefined>;
+  fetcher: FetcherWithComponents<any>;
+  form: UseFormReturn<EditData>;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  defaultValues?: EditData;
+  inputRef: MutableRefObject<HTMLInputElement | null>;
 }) {
+  // const form = useForm<EditData>({
+  //   resolver: zodResolver(pricingDataSchema),
+  //   defaultValues: defaultValues,
+  // });
   const {
     fields: lineItems,
     append,
     update,
+    replace,
     remove,
     move,
   } = useFieldArray({
@@ -83,12 +117,13 @@ export default function PricingData({
     control: form.control,
     name: "pricing_charges",
   });
-  const formValues = form.getValues();
+  // const formValues = form.getValues();
   const formula = new FormulaEngine();
 
   const chargesObject = useMemo(() => {
+    console.log("RE RENDER ...");
     const values: Record<string, number> = {};
-    formValues.pricing_charges?.map((item) => {
+    form.getValues().pricing_charges?.map((item) => {
       const formattedName = item.name.replace(/\s+/g, "_").toLowerCase(); // Replace spaces with underscores and convert to lowercase
       values[formattedName] = item.rate;
       // return {
@@ -96,7 +131,7 @@ export default function PricingData({
       // };
     });
     return values;
-  }, [formValues.pricing_charges]);
+  }, [form.getValues().pricing_charges]);
 
   const getValues = useCallback(
     (fn: string, line: LineItemType): Record<string, any> => {
@@ -114,7 +149,7 @@ export default function PricingData({
   );
 
   const updateLines = () => {
-    const lines = formValues.pricing_line_items.map((t) => {
+    const lines = form.getValues().pricing_line_items.map((t) => {
       const updateLine = updateValues(t);
       return updateLine;
     });
@@ -122,47 +157,54 @@ export default function PricingData({
     form.trigger("pricing_line_items");
   };
 
-  const updateValues = useCallback(
-    (line: LineItemType): LineItemType => {
-      // let item = line;
-      Object.entries(line).forEach(([key, value]) => {
-        console.log(key, value);
-        if (key.endsWith("_fn")) {
-          const values = getValues(value as string, line);
-          const result = formula.calculate(value as string, values);
-          // console.log("REPLACE KEY", key.replace(/_fn$/, ""));
-          line[key.replace(/_fn$/, "") as keyof LineItemType ] = result || "";
-        }
-      });
-      return line;
-    },
-    [getValues]
-  );
+  const updateValues = (line: any): LineItemType => {
+    // let item = line;
+    Object.entries(line).forEach(([key, value]) => {
+      console.log(key, value);
+      if (key.endsWith("_fn")) {
+        const values = getValues(value as string, line);
+        const result = formula.calculate(value as string, values);
+        // console.log("REPLACE KEY", key.replace(/_fn$/, ""));
+        line[key.replace(/_fn$/, "") as keyof any] = result || "";
+      }
+    });
+    return line;
+  };
 
   const handleCellUpdate = useCallback(
     (row: number, column: string, value: string) => {
       // update(row,)
-      console.log("UPDARE CELL ", row, column, value);
+      console.log("UPDARE CELL ", row, column, value, lineItems);
 
       form.setValue(`pricing_line_items.${row}.${column}` as any, value);
-      const f = form.getValues().pricing_line_items[row];
+      let updateLines = form.getValues().pricing_line_items;
+      const f = updateLines[row];
       if (f) {
         const n = updateValues(f);
-        update(row, n);
+        updateLines[row] = n;
+        form.setValue("pricing_line_items", updateLines);
+        // form.setValue(`pricing_line_items.${row}` as any, n);
+        // form.trigger(`pricing_line_items.${row}`);
+
+        // update(row, n);
       }
     },
-    [formValues]
+    [form.getValues().pricing_line_items]
   );
 
   const handleChargeUpdate = useCallback(
     (row: number, column: string, value: string) => {
       form.setValue(`pricing_charges.${row}.${column}` as any, value);
-      const f = form.getValues().pricing_charges[row];
+      let updateLines = form.getValues().pricing_charges;
+      console.log("EDITING", row, column, value);
+      const f = updateLines[row];
       if (f) {
-        updateCharge(row, f);
+        updateLines[row] = f;
+        form.setValue("pricing_charges", updateLines);
+        // updateCharge(row, f);
       }
     },
-    [formValues]
+    [form.getValues().pricing_charges]
   );
 
   useEffect(() => {
@@ -172,42 +214,69 @@ export default function PricingData({
 
   return (
     <>
-    {/* {JSON.stringify(lineItems)} */}
-      <PricingTable
-        columns={pricingLineItemColumns()}
-        data={lineItems}
-        // enableRowSelection={true}
-        fixedHeight={400}
-        control={form.control}
-        metaOptions={{
-          meta: {
-            updateCell: handleCellUpdate,
-            removeRow: remove,
-            moveRow: move,
-          },
-        }}
-      />
-      <Button
-        type="button"
-        className=" w-min flex space-x-2 "
-        variant={"outline"}
-        onClick={() => append(defaultLineItem)}
-      >
-        <PlusIcon />
-        <span>Agregar fila</span>
-      </Button>
-      <div className="max-w-[225px]">
-        <DataTable
-          columns={pricingChargeColumns({})}
-          data={form.getValues("pricing_charges")}
-          rowHeight={20}
-          metaOptions={{
-            meta: {
-              updateCell: handleChargeUpdate,
-            },
-          }}
-        />
-      </div>
+      <FormLayout>
+        <Form {...form}>
+          {/* {JSON.stringify(form.getValues().pricing_line_items)} */}
+          <fetcher.Form onSubmit={onSubmit} className={cn("gap-y-3 grid p-3")}>
+            {/* <PalettePicker/> */}
+            <PricingTable
+              columns={pricingLineItemColumns()}
+              data={form.getValues("pricing_line_items")}
+              // enableRowSelection={true}
+              fixedHeight={400}
+              control={form.control}
+              metaOptions={{
+                meta: {
+                  updateCell: handleCellUpdate,
+                  removeRow: (index?: number | number[]) => {
+                    const res = removeFromList(
+                      form.getValues().pricing_line_items,
+                      index
+                    );
+                    form.setValue("pricing_line_items", res);
+                    // remove(index);
+                    // form.trigger("pricing_line_items");
+                  },
+                  moveRow: move,
+                },
+              }}
+            />
+            <div className=" flex space-x-2">
+              <Button
+                type="button"
+                className=" w-min flex space-x-2 "
+                variant={"outline"}
+                onClick={() => append(defaultLineItem)}
+              >
+                <PlusIcon />
+                <span>Agregar fila</span>
+              </Button>
+              <Button
+                type="button"
+                className=" w-min flex space-x-2 "
+                variant={"outline"}
+                onClick={() => append(lineItemWithTitle)}
+              >
+                <PlusIcon />
+                <span>Agregar Titulo</span>
+              </Button>
+            </div>
+            <div className="max-w-[225px]">
+              <DataTable
+                columns={pricingChargeColumns({})}
+                data={form.getValues("pricing_charges")}
+                rowHeight={20}
+                metaOptions={{
+                  meta: {
+                    updateCell: handleChargeUpdate,
+                  },
+                }}
+              />
+            </div>
+            <input ref={inputRef} type="submit" className="hidden" />
+          </fetcher.Form>
+        </Form>
+      </FormLayout>
     </>
   );
 }

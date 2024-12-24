@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { components } from "~/sdk";
+import { isZeroValue } from "~/util";
 import { formatAmount } from "~/util/format/formatCurrency";
 
 export const pricingChargeDataSchema = z.object({
@@ -46,19 +47,22 @@ export const pricingLineItemDataSchema = z.object({
   fob_total: z.coerce.number().optional(),
   gpl_total: z.coerce.number().optional(),
   tva_total: z.coerce.number().optional(),
+
+  is_title: z.boolean().optional(),
+  color: z.string().optional(),
 });
 
 export const columnConfig = z.object({});
 
 export const pricingDataSchema = z.object({
-  id:z.number().optional(),
+  id: z.number().optional(),
   pricing_line_items: z.array(pricingLineItemDataSchema),
   pricing_charges: z.array(pricingChargeDataSchema),
 });
 
 export const editPricingSchema = z.object({
   // id: z.number(),
-  id:z.number().optional(),
+  id: z.number().optional(),
   pricing_line_items: z.array(pricingLineItemDataSchema),
   pricing_charges: z.array(pricingChargeDataSchema),
 });
@@ -72,8 +76,8 @@ export const mapPricingChargeData = (
   };
 };
 
-export const mapPricingChargeDto= (
-  input:components["schemas"]["PricingChargeDto"]
+export const mapPricingChargeDto = (
+  input: components["schemas"]["PricingChargeDto"]
 ): z.infer<typeof pricingChargeDataSchema> => {
   return {
     name: input.name,
@@ -85,26 +89,28 @@ export const mapPricingLineItemData = (
   input: z.infer<typeof pricingLineItemDataSchema>
 ): components["schemas"]["PricingLineItemData"] => {
   const l: components["schemas"]["PricingLineItemData"] = {
-    description: input.description,
-    part_number: input.part_number,
-    pl_unit: input.pl_unit,
-    quantity: input.quantity,
-    supplier_id: input.supplier_id,
-
-    fob_unit_fn: input.fob_unit_fn,
-    retention_fn: input.retention_fn,
-    cost_zf_fn: input.cost_zf_fn,
-    cost_alm_fn: input.cost_alm_fn,
-    tva_fn: input.tva_fn,
-    cantidad_fn: input.cantidad_fn,
-    precio_unitario_fn: input.precio_unitario_fn,
-    precio_total_fn: input.precio_total_fn,
-    precio_unitario_tc_fn: input.precio_unitario_tc_fn,
-    precio_total_tc_fn: input.precio_total_tc_fn,
-    fob_total_fn: input.fob_total_fn,
-    gpl_total_fn: input.gpl_total_fn,
-    tva_total_fn: input.tva_total_fn,
+    description: isZeroValue(input.description),
+    part_number: isZeroValue(input.part_number),
+    pl_unit: isZeroValue(input.pl_unit),
+    quantity: isZeroValue(input.quantity),
+    supplier_id: isZeroValue(input.supplier_id),
+    fob_unit_fn: isZeroValue(input.fob_unit_fn),
+    retention_fn: isZeroValue(input.retention_fn),
+    cost_zf_fn: isZeroValue(input.cost_zf_fn),
+    cost_alm_fn: isZeroValue(input.cost_alm_fn),
+    tva_fn: isZeroValue(input.tva_fn),
+    cantidad_fn: isZeroValue(input.cantidad_fn),
+    precio_unitario_fn: isZeroValue(input.precio_unitario_fn),
+    precio_total_fn: isZeroValue(input.precio_total_fn),
+    precio_unitario_tc_fn: isZeroValue(input.precio_unitario_tc_fn),
+    precio_total_tc_fn: isZeroValue(input.precio_total_tc_fn),
+    fob_total_fn: isZeroValue(input.fob_total_fn),
+    gpl_total_fn: isZeroValue(input.gpl_total_fn),
+    tva_total_fn: isZeroValue(input.tva_total_fn),
+    is_title: isZeroValue(input.is_title),
+    color: isZeroValue(input.color),
   };
+
   return l;
 };
 
@@ -117,7 +123,7 @@ export const mapPricingLineItemDto = (
     pl_unit: input.pl_unit,
     quantity: input.quantity,
     supplier_id: input.supplier_id,
-    supplier:input.supplier,
+    supplier: input.supplier,
 
     fob_unit_fn: input.fob_unit_fn,
     retention_fn: input.retention_fn,
@@ -132,6 +138,8 @@ export const mapPricingLineItemDto = (
     fob_total_fn: input.fob_total_fn,
     gpl_total_fn: input.gpl_total_fn,
     tva_total_fn: input.tva_total_fn,
+    is_title: input.is_title,
+    color: input.color,
   };
   return l;
 };

@@ -13,6 +13,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import PricingInfo from "./components/pricing-info";
+import { useRef } from "react";
 
 
 
@@ -24,6 +25,7 @@ export default function PricingDetailClient(){
     const [searchParams] = useSearchParams();
     const tab = searchParams.get("tab") || "info";
     const { roleActions } = useOutletContext<GlobalState>();
+    // const inputRef = useRef<HTMLInputElement | null>(null)
     const [permission] = usePermission({
       roleActions,
       actions,
@@ -91,13 +93,19 @@ export default function PricingDetailClient(){
       return {
         status: stateFromJSON(pricing?.status),
         actions: actions,
-        onChangeState:onChangeState
+        onChangeState:onChangeState,
+        // onSave:()=>{
+        //   console.log("SUBMIT",inputRef.current)
+        //   inputRef.current?.click()
+        // },
       };
     }, [pricing, permission]);
     return (
       <DetailLayout partyID={pricing?.id} navItems={navItems}
       activities={activities}>
-        {tab == "info" && <PricingInfo />}
+        {tab == "info" && <PricingInfo 
+        // inputRef={inputRef}
+        />}
       </DetailLayout>
     );
 }
