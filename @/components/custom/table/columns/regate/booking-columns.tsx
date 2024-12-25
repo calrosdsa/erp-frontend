@@ -84,6 +84,27 @@ export const bookingColumns = (): ColumnDef<
       cell: TableCellStatus,
       size: 180,
     },
+    {
+      accessorKey: "status",
+      header: t("form.status"),
+      cell: TableCellStatus,
+      size: 180,
+    },  {
+      accessorKey: "status",
+      header: t("form.status"),
+      cell: TableCellStatus,
+      size: 180,
+    },  {
+      accessorKey: "status",
+      header: t("form.status"),
+      cell: TableCellStatus,
+      size: 180,
+    },  {
+      accessorKey: "status",
+      header: t("form.status"),
+      cell: TableCellStatus,
+      size: 180,
+    },
     
     {
       accessorKey: "total_price",

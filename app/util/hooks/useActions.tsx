@@ -5,6 +5,9 @@ import { Permission } from "~/types/permission";
 
 type ActionDto = components["schemas"]["ActionDto"]
 type RoleActionDto = components["schemas"]["RoleActionDto"]
+type Actions =  {
+  [key: string]: components["schemas"]["ActionDto"][] | undefined;
+}
 interface UsePermissionProps {
     actions?: ActionDto[]
     roleActions?: RoleActionDto[]

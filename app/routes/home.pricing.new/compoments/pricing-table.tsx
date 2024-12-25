@@ -384,7 +384,7 @@ export function PricingTable<TData, TValue>({
                     className={cn(
                       "line-clamp-4 ",
                       // row.color != "" && " text-cyan-50",
-                      isTitle && "font-semibold text-sm text-center line-clamp-2 leading-3"
+                      isTitle && "font-semibold  text-center line-clamp-2 leading-3"
                     )}
                     style={{
                       color:row.color,

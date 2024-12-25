@@ -34,6 +34,8 @@ import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { FetcherWithComponents } from "@remix-run/react";
 import PalettePicker from "./palette-picker";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import useTableRowActions from "~/util/hooks/useTableRowActions";
 
 type EditData = z.infer<typeof pricingDataSchema>;
 type LineItemType = z.infer<typeof pricingLineItemDataSchema>;
@@ -119,6 +121,11 @@ export default function PricingData({
   });
   // const formValues = form.getValues();
   const formula = new FormulaEngine();
+  const [rowActions] = useTableRowActions({
+    onDelete(rowIndex) {
+      removeCharge(rowIndex)
+    },   
+  })
 
   const chargesObject = useMemo(() => {
     console.log("RE RENDER ...");
@@ -136,13 +143,13 @@ export default function PricingData({
   const getValues = useCallback(
     (fn: string, line: LineItemType): Record<string, any> => {
       const words = fn.match(/\b[a-zA-Z_]+\b/g);
-      console.log("WORDS", words);
+      // console.log("WORDS", words);
       const record: Record<string, any> = {};
       const d = { ...line, ...chargesObject };
       words?.forEach((w) => {
         record[w] = d[w as keyof LineItemType];
       });
-      console.log(line, words, record);
+      // console.log(line, words, record);
       return record;
     },
     [chargesObject]
@@ -160,7 +167,7 @@ export default function PricingData({
   const updateValues = (line: any): LineItemType => {
     // let item = line;
     Object.entries(line).forEach(([key, value]) => {
-      console.log(key, value);
+      // console.log(key, value);
       if (key.endsWith("_fn")) {
         const values = getValues(value as string, line);
         const result = formula.calculate(value as string, values);
@@ -207,6 +214,30 @@ export default function PricingData({
     [form.getValues().pricing_charges]
   );
 
+  const totals = useMemo(() => {
+    const total = form.getValues().pricing_line_items.reduce(
+      (acc, item: LineItemType) => {
+        acc.fob_total = (acc.fob_total || 0) + (item.fob_total || 0);
+        acc.gpl_total = (acc.gpl_total || 0) + (item.gpl_total || 0);
+        acc.tva_total = (acc.tva_total || 0) + (item.tva_total || 0);
+        acc.precio_total = (acc.precio_total || 0) + (item.precio_total || 0);
+        acc.precio_total_tc =
+          (acc.precio_total_tc || 0) + (item.precio_total_tc || 0);
+        acc.cantidad = (acc.cantidad || 0) + (item.cantidad || 0);
+        return acc;
+      },
+      {
+        fob_total: 0,
+        gpl_total: 0,
+        tva_total: 0,
+        precio_total: 0,
+        precio_total_tc: 0,
+        cantidad: 0,
+      }
+    );
+    return total;
+  }, [form.getValues()]);
+
   useEffect(() => {
     console.log("UPDATE LINES ....");
     updateLines();
@@ -216,7 +247,7 @@ export default function PricingData({
     <>
       <FormLayout>
         <Form {...form}>
-          {/* {JSON.stringify(form.getValues().pricing_line_items)} */}
+          {JSON.stringify(totals)}
           <fetcher.Form onSubmit={onSubmit} className={cn("gap-y-3 grid p-3")}>
             {/* <PalettePicker/> */}
             <PricingTable
@@ -261,18 +292,59 @@ export default function PricingData({
                 <span>Agregar Titulo</span>
               </Button>
             </div>
-            <div className="max-w-[225px]">
-              <DataTable
-                columns={pricingChargeColumns({})}
-                data={form.getValues("pricing_charges")}
-                rowHeight={20}
-                metaOptions={{
-                  meta: {
-                    updateCell: handleChargeUpdate,
-                  },
-                }}
-              />
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <Card className="col-span-full md:col-span-1 lg:col-span-2">
+                <CardHeader>
+                  <CardTitle>Pricing Charges</CardTitle>
+                </CardHeader>
+                <CardContent className=" max-w-[450px]">
+                  <DataTable
+                    columns={pricingChargeColumns({})}
+                    data={form.getValues("pricing_charges")}
+                    metaOptions={{
+                      meta: {
+                        updateCell: handleChargeUpdate,
+                        ...rowActions,
+                      },
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    className=" w-min flex space-x-2 "
+                    variant={"outline"}
+                    onClick={() => appendCharge({name:"",rate:0,})}
+                  >
+                    <PlusIcon />
+                    <span>Agregar fila</span>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Total</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {Object.entries(totals).map(([key, value]) => (
+                      <div
+                        key={key}
+                        className="flex justify-between items-center py-2 border-b last:border-b-0"
+                      >
+                        <span className="font-medium">
+                          {key.replace(/_/g, " ").toUpperCase()}:
+                        </span>
+                        <span className="font-semibold">
+                          {Number(value).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
+
             <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>
         </Form>

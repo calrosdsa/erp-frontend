@@ -64,7 +64,7 @@ export default function ToolBar({ title }: { title: string }) {
                 <Button
                   size={"sm"}
                   variant={"outline"}
-                  className=" flex space-x-1 h-8 rounded-lg px-3"
+                  className=" flex space-x-1 h-8 rounded-lg px-3 bg-muted"
                 >
                   <span>{t("actions.base")}</span>
                   <ChevronsUpDown className="h-4 w-4" />
@@ -77,7 +77,7 @@ export default function ToolBar({ title }: { title: string }) {
                       key={idx}
                       size={"sm"}
                       variant="ghost"
-                      className="justify-between flex "
+                      className="justify-between flex"
                       onClick={() => item.onClick()}
                     >
                       {item.label}

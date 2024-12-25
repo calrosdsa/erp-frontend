@@ -19,6 +19,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useTranslation } from "react-i18next";
 import PricingData from "~/routes/home.pricing.new/compoments/pricing-data";
+import { Entity } from "~/types/enums";
 const defaultPricingCharges = [
   { name: "Flete", rate: 0.07, orderID: 1 },
   { name: "Importacion", rate: 0.13, orderID: 2 },
@@ -40,7 +41,7 @@ export default function PricingInfo({
   const { pricing, pricingCharges, pricingLines, actions } =
     useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
-  const [currencyExchangePerm] = usePermission({ actions, roleActions });
+  const [permission] = usePermission({ actions:actions && actions[Entity.PRICING], roleActions });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
   const { form, hasChanged, updateRef } = useEditFields<EditType>({
@@ -51,7 +52,7 @@ export default function PricingInfo({
       id: pricing?.id,
     },
   });
-  const allowEdit = currencyExchangePerm?.edit || false;
+  const allowEdit = permission?.edit || false;
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     console.log("onsubmit.................-----------------", "121212");
@@ -71,18 +72,6 @@ export default function PricingInfo({
     })(e);
   };
 
-  // const onSubmit = (e: EditType) => {
-  //   fetcher.submit(
-  //     {
-  //       action: "edit",
-  //       editData: e,
-  //     },
-  //     {
-  //       method: "POST",
-  //       encType: "application/json",
-  //     }
-  //   );
-  // };
   useLoadingTypeToolbar(
     {
       loading: fetcher.state == "submitting",
@@ -91,16 +80,17 @@ export default function PricingInfo({
     [fetcher.state]
   );
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => {inputRef.current?.click()},
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  // setUpToolbar(
+  //   (opts) => {
+  //     console.log("TOOL BAR OPTS INFO",opts)
+  //     return {
+  //       ...opts,
+  //       onSave: () => {inputRef.current?.click()},
+  //       // disabledSave: !hasChanged,
+  //     };
+  //   },
+  //   [pricing]
+  // );
 
   useDisplayMessage(
     {

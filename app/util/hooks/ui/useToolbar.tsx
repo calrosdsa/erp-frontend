@@ -28,12 +28,16 @@ interface ToolbarStore {
   setToolbar: (opts: SetupToolbarOpts) => void;
 }
 export const useToolbar = create<ToolbarStore>((set) => ({
-  payload: {},
+  payload: {
+  },
   isMounted: false,
   loading: false,
   setLoading: (opts) => set((state) => ({ loading: opts.loading,loadingType:opts.loadingType })),
   setToolbar: (opts) =>
     set((state) => ({
-      payload: opts,
+      payload: {
+        ...state.payload,
+        ...opts,
+      },
     })),
 }));

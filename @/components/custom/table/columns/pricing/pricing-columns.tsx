@@ -12,6 +12,7 @@ import {
 } from "~/util/data/schemas/pricing/pricing-schema";
 import { z } from "zod";
 import TableCell from "../../cells/table-cell";
+import { DataTableRowActions } from "../../data-table-row-actions";
 
 export const pricingChargeColumns = ({}: {}): ColumnDef<
   z.infer<typeof pricingChargeDataSchema>
@@ -22,15 +23,19 @@ export const pricingChargeColumns = ({}: {}): ColumnDef<
     {
       accessorKey: "name",
       header: "Nombre",
-      size: 100,
       cell:TableCell,
+      
     },
     {
       accessorKey: "rate",
       header: "Tasa",
-      size: 100,
       cell:TableCell,
     },
+    {
+      id: "actions-row",
+      cell: DataTableRowActions,
+      size:50,
+    }
   ];
 };
 

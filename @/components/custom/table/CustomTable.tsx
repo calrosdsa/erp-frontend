@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({
   enableSizeSelection = false,
   onSelectionChange,
   maxTableHeight = 480,
-  rowHeight = 41,
+  rowHeight = 35,
 
 }: DataTableProps<TData, TValue>) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -230,6 +230,11 @@ export function DataTable<TData, TValue>({
       ),
       TableHead: TableHeader,
       // TableRow:TableRow
+      TableRow: ({ children, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
+        <tr {...props} className="border-b">
+          {children}
+        </tr>
+      ),
     }),
     []
   );
@@ -273,7 +278,7 @@ export function DataTable<TData, TValue>({
             textOverflow: "ellipsis",
           }}
           className={cn(
-            "border-r border-b last:border-r-0 p-2 text-xs ",
+            "border-r  last:border-r-0 p-2 text-xs ",
           )}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -320,7 +325,7 @@ export function DataTable<TData, TValue>({
 
 const MemoizedRow = React.memo(
   ({ row, rowContent }: { row: any; rowContent: any }) => (
-    <TableRow className=" border-0 hover:bg-transparent">
+    <TableRow className=" border-0 hover:bg-transparent  w-full">
       {rowContent(row.index, row.original)}
     </TableRow>
   )

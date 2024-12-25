@@ -83,10 +83,11 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
     handleError(res.error)
     return json({
         pricing:res.data?.result.entity.pricing,
-        actions:res.data?.actions,
+        // actions:res.data?.actions,
         activities:res.data?.result.activities,
         pricingLines:res.data?.result.entity.pricing_line_items || [],
         pricingCharges:res.data?.result.entity.pricing_charges || [],
+        actions:res.data?.associated_actions,
     })
 }
 
