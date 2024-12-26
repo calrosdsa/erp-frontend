@@ -1,33 +1,32 @@
 import { DependencyList, useCallback, useEffect } from "react";
 import { LoadingType, SetupToolbarOpts, useToolbar } from "./useToolbar";
 
-export const setUpToolbar = (
-  opts: (opts:SetupToolbarOpts) => SetupToolbarOpts,
-  dependencyList: DependencyList = []
-) => {
-  const toolbar = useToolbar();
-  const setUpToolbar = () => {
-    toolbar.setToolbar(opts(toolbar.payload));
-  };
-  useEffect(() => {
-    setUpToolbar();
-  }, dependencyList);
-};
 
-// export const setLoadingToolbar = (
-//   loading: boolean,
-//   dependencyList: DependencyList = []
-// ) => {
-//   const toolbar = useToolbar();
-//   useEffect(() => {
-//     toolbar.setLoading(loading);
-//   }, dependencyList);
-// };
+
+export const setUpToolbar = (
+  opts: (currentOpts: SetupToolbarOpts) => Partial<SetupToolbarOpts>,
+  dependencies: DependencyList = []
+) => {
+  const { payload, setToolbar, reset } = useToolbar()
+
+  useEffect(() => {
+    const newOpts = opts({})
+    console.log("NEW PAYLOAD",newOpts)
+    setToolbar(newOpts)
+
+
+    return () => {
+      console.log("UNMOUNT...")
+      reset()
+    }
+  }, dependencies)
+}
+
 
 export function useLoadingTypeToolbar(
-  opts:{
-    loadingType: LoadingType,
-    loading: boolean, 
+  opts: {
+    loadingType: LoadingType;
+    loading: boolean;
   },
   dependencyList: DependencyList = []
 ) {
@@ -35,7 +34,7 @@ export function useLoadingTypeToolbar(
 
   const setToolbarLoading = useCallback(() => {
     toolbar.setLoading({
-      ...opts
+      ...opts,
     });
   }, [toolbar, opts]);
 
@@ -45,8 +44,8 @@ export function useLoadingTypeToolbar(
     return () => {
       // Clean up by resetting loading state when the component unmounts
       toolbar.setLoading({
-        loading:false,
-        loadingType:"",
+        loading: false,
+        loadingType: "",
       });
     };
   }, [...dependencyList]);

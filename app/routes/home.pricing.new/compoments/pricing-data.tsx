@@ -32,10 +32,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import { FetcherWithComponents } from "@remix-run/react";
+import { FetcherWithComponents, useOutletContext } from "@remix-run/react";
 import PalettePicker from "./palette-picker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
+import { Separator } from "@/components/ui/separator";
+import { Typography } from "@/components/typography";
+import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
+import { useTranslation } from "react-i18next";
+import { GlobalState } from "~/types/app";
 
 type EditData = z.infer<typeof pricingDataSchema>;
 type LineItemType = z.infer<typeof pricingLineItemDataSchema>;
@@ -93,10 +98,8 @@ export default function PricingData({
   defaultValues?: EditData;
   inputRef: MutableRefObject<HTMLInputElement | null>;
 }) {
-  // const form = useForm<EditData>({
-  //   resolver: zodResolver(pricingDataSchema),
-  //   defaultValues: defaultValues,
-  // });
+  const { t } = useTranslation("common");
+  const {roleActions} = useOutletContext<GlobalState>()
   const {
     fields: lineItems,
     append,
@@ -123,9 +126,9 @@ export default function PricingData({
   const formula = new FormulaEngine();
   const [rowActions] = useTableRowActions({
     onDelete(rowIndex) {
-      removeCharge(rowIndex)
-    },   
-  })
+      removeCharge(rowIndex);
+    },
+  });
 
   const chargesObject = useMemo(() => {
     console.log("RE RENDER ...");
@@ -247,7 +250,6 @@ export default function PricingData({
     <>
       <FormLayout>
         <Form {...form}>
-          {JSON.stringify(totals)}
           <fetcher.Form onSubmit={onSubmit} className={cn("gap-y-3 grid p-3")}>
             {/* <PalettePicker/> */}
             <PricingTable
@@ -256,6 +258,7 @@ export default function PricingData({
               // enableRowSelection={true}
               fixedHeight={400}
               control={form.control}
+              roleActions={roleActions}
               metaOptions={{
                 meta: {
                   updateCell: handleCellUpdate,
@@ -313,7 +316,7 @@ export default function PricingData({
                     type="button"
                     className=" w-min flex space-x-2 "
                     variant={"outline"}
-                    onClick={() => appendCharge({name:"",rate:0,})}
+                    onClick={() => appendCharge({ name: "", rate: 0 })}
                   >
                     <PlusIcon />
                     <span>Agregar fila</span>
@@ -330,9 +333,9 @@ export default function PricingData({
                     {Object.entries(totals).map(([key, value]) => (
                       <div
                         key={key}
-                        className="flex justify-between items-center py-2 border-b last:border-b-0"
+                        className="flex justify-between items-center py-2 border-b last:border-b-0 text-sm"
                       >
-                        <span className="font-medium">
+                        <span className="font-medium ">
                           {key.replace(/_/g, " ").toUpperCase()}:
                         </span>
                         <span className="font-semibold">
@@ -343,6 +346,17 @@ export default function PricingData({
                   </div>
                 </CardContent>
               </Card>
+              <Separator className=" col-span-full" />
+              <div className=" create-grid col-span-full">
+              <CustomerAutoCompleteForm
+                control={form.control}
+                label={t("customer")}
+                roleActions={roleActions}
+                onSelect={(e) => {
+                  form.setValue("customer_id", e.id);
+                }}
+                />
+                </div>
             </div>
 
             <input ref={inputRef} type="submit" className="hidden" />

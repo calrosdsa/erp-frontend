@@ -20,7 +20,7 @@ export const CustomerAutoCompleteForm = ({
   control?: Control<any, any>;
   label?: string;
   onSelect: (e: components["schemas"]["CustomerDto"]) => void;
-  roleActions: components["schemas"]["RoleActionDto"][];
+  roleActions?: components["schemas"]["RoleActionDto"][];
 }) => {
   const [fetcher, onChange] = useCustomerDebounceFetcher();
   const createCustomer = useCreateCustomer();

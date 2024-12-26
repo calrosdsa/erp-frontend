@@ -1769,6 +1769,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/pricing/generate-po": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pricing Generate Po */
+        post: operations["pricing-generate-po"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/pricing/generate-quotation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pricing Generate Quotation */
+        post: operations["pricing-generate-quotation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/pricing/update-status": {
         parameters: {
             query?: never;
@@ -3826,23 +3860,6 @@ export interface components {
             lines: components["schemas"]["LineItemData"][];
             update_stock?: boolean;
         };
-        CreateItemPriceRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            item_id: number;
-            /** Format: int32 */
-            item_quantity: number;
-            /** Format: int64 */
-            price_list_id: number;
-            /** Format: double */
-            rate: number;
-            /** Format: int64 */
-            uom_id: number;
-        };
         CreateItemVariantRequestBody: {
             /**
              * Format: uri
@@ -3950,17 +3967,6 @@ export interface components {
             "rent-piano": string;
             "stairs-dropoff": string;
             "stairs-pickup": string;
-        };
-        CreatePriceListRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            currency: string;
-            isBuying: boolean;
-            isSelling: boolean;
-            name: string;
         };
         CreateProjectRequestBody: {
             /**
@@ -4452,7 +4458,7 @@ export interface components {
             readonly $schema?: string;
             description?: string | null;
             /** Format: int64 */
-            group_id: number;
+            group_id?: number;
             /** Format: int64 */
             id: number;
             item_code: string;
@@ -4580,6 +4586,8 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            /** Format: int64 */
+            customer?: number | null;
             /** Format: int64 */
             id: number;
             pricing_charges: components["schemas"]["PricingChargeData"][];
@@ -5869,7 +5877,7 @@ export interface components {
         ItemData: {
             description?: string | null;
             /** Format: int64 */
-            group_id: number;
+            group_id?: number;
             item_code: string;
             maintain_stock: boolean;
             name: string;
@@ -5955,6 +5963,23 @@ export interface components {
             /** Format: int32 */
             rate: number;
             uom: string;
+        };
+        ItemPriceData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            item_id: number;
+            /** Format: int32 */
+            item_quantity: number;
+            /** Format: int64 */
+            price_list_id: number;
+            /** Format: double */
+            rate: number;
+            /** Format: int64 */
+            uom_id: number;
         };
         ItemPriceDto: {
             code: string;
@@ -7030,6 +7055,17 @@ export interface components {
             readonly $schema?: string;
             plugins: components["schemas"]["PluginApp"][];
         };
+        PriceListData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            currency: string;
+            isBuying: boolean;
+            isSelling: boolean;
+            name: string;
+        };
         PriceListDto: {
             /** Format: date-time */
             created_at: string;
@@ -7057,7 +7093,18 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            /** Format: int64 */
+            customer?: number | null;
             pricing_charges: components["schemas"]["PricingChargeData"][];
+            pricing_line_items: components["schemas"]["PricingLineItemData"][];
+        };
+        PricingDataRequestBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            pricing: components["schemas"]["PricingDto"];
             pricing_line_items: components["schemas"]["PricingLineItemData"][];
         };
         PricingDetailDto: {
@@ -7067,34 +7114,64 @@ export interface components {
         };
         PricingDto: {
             code: string;
+            customer: string;
+            /** Format: int64 */
+            customer_id: number;
+            customer_uuid: string;
             /** Format: int64 */
             id: number;
             status: string;
         };
         PricingLineItemData: {
-            cantidad_fn?: string;
-            color?: string;
-            cost_alm_fn?: string;
-            cost_zf_fn?: string;
-            description?: string;
-            fob_total_fn?: string;
-            fob_unit_fn?: string;
-            gpl_total_fn?: string;
-            is_title?: boolean;
-            part_number?: string;
             /** Format: int32 */
-            pl_unit?: number;
-            precio_total_fn?: string;
-            precio_total_tc_fn?: string;
-            precio_unitario_fn?: string;
-            precio_unitario_tc_fn?: string;
+            cantidad?: number | null;
+            cantidad_fn?: string | null;
+            color?: string | null;
+            /** Format: double */
+            cost_alm?: number | null;
+            cost_alm_fn?: string | null;
+            /** Format: double */
+            cost_zf?: number | null;
+            cost_zf_fn?: string | null;
+            description?: string | null;
+            /** Format: double */
+            fob_total?: number | null;
+            fob_total_fn?: string | null;
+            /** Format: double */
+            fob_unit?: number | null;
+            fob_unit_fn?: string | null;
+            /** Format: double */
+            gpl_total?: number | null;
+            gpl_total_fn?: string | null;
+            is_title?: boolean | null;
+            part_number?: string | null;
+            /** Format: double */
+            pl_unit?: number | null;
+            /** Format: double */
+            precio_total?: number | null;
+            precio_total_fn?: string | null;
+            /** Format: double */
+            precio_total_tc?: number | null;
+            precio_total_tc_fn?: string | null;
+            /** Format: double */
+            precio_unitario?: number | null;
+            precio_unitario_fn?: string | null;
+            /** Format: double */
+            precio_unitario_tc?: number | null;
+            precio_unitario_tc_fn?: string | null;
             /** Format: int32 */
-            quantity?: number;
-            retention_fn?: string;
+            quantity?: number | null;
+            /** Format: double */
+            retention?: number | null;
+            retention_fn?: string | null;
             /** Format: int64 */
-            supplier_id?: number;
-            tva_fn?: string;
-            tva_total_fn?: string;
+            supplier_id?: number | null;
+            /** Format: double */
+            tva?: number | null;
+            tva_fn?: string | null;
+            /** Format: double */
+            tva_total?: number | null;
+            tva_total_fn?: string | null;
         };
         PricingLineItemDto: {
             cantidad_fn: string;
@@ -12292,11 +12369,11 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                delivery_date?: string;
+                posting_date?: string;
+                party_id?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path: {
                 party: string;
             };
@@ -13535,6 +13612,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityPricingDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "pricing-generate-po": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PricingDataRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "pricing-generate-quotation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PricingDataRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -16188,7 +16331,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateItemPriceRequestBody"];
+                "application/json": components["schemas"]["ItemPriceData"];
             };
         };
         responses: {
@@ -16606,7 +16749,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreatePriceListRequestBody"];
+                "application/json": components["schemas"]["PriceListData"];
             };
         };
         responses: {

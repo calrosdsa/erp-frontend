@@ -20,7 +20,7 @@ import { State, stateToJSON } from "~/gen/common";
 import { PartySearch } from "../home.order.$partyOrder.new/components/party-autocomplete";
 
 export default function InvoicesClient() {
-  const { results, actions } = useLoaderData<typeof loader>();
+  const { results, actions, filters } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const params = useParams();
   const [permission] = usePermission({
@@ -52,29 +52,7 @@ export default function InvoicesClient() {
   }, [permission]);
   return (
     <DataLayout
-    filterOptions={[
-      {
-        name: "Estado",
-        operators: ["=","!="],
-        options: [stateToJSON(State.DRAFT),stateToJSON(State.PAID),stateToJSON(State.UNPAID),stateToJSON(State.CANCELLED)],
-        param: "status",
-        type: "string",
-      },
-      {
-        name: "Fecha de Vencimiento",
-        options:[],
-        operators: ["=","!=",">","<",">=","<=","between","in"],
-        param: "due_date",
-        type: "date",
-      },
-      {
-        name: "Fecha de Publicacion",
-        options:[],
-        operators: ["=","!=",">","<",">=","<=","between","in"],
-        param: "posting_date",
-        type: "date",
-      },
-    ]}
+    filterOptions={filters}
       orderOptions={[
         { name: "Fecha de Creación", value: "created_at" },
         { name: t("form.status"), value: "status" },
@@ -89,6 +67,7 @@ export default function InvoicesClient() {
         )
       }}
     >
+      {/* {JSON.stringify(filters)} */}
       <DataTable
         data={results || []}
         columns={invoiceColumns({

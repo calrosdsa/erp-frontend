@@ -50,6 +50,7 @@ import { FormulaEngine } from "../util/formula";
 import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { Control } from "react-hook-form";
 import PalettePicker from "./palette-picker";
+import { components } from "~/sdk";
 
 export interface PaginationOptions {
   rowCount?: number;
@@ -74,6 +75,7 @@ interface DataTableProps<TData, TValue> {
   fixedHeight?: number;
   metaOptions?: TableMetaOptions<TData>;
   control?: Control<any, any>;
+  roleActions?: components["schemas"]["RoleActionDto"][];
 }
 type Cell = {
   column: string;
@@ -141,6 +143,7 @@ export function PricingTable<TData, TValue>({
   fixedHeight,
   metaOptions,
   control,
+  roleActions,
 }: DataTableProps<TData, TValue>) {
   const {
     selection,
@@ -357,7 +360,7 @@ export function PricingTable<TData, TValue>({
                         e.id
                       );
                     }}
-                    roleActions={[]}
+                    roleActions={roleActions}
                   />
                 ) : currentCell == id ? (
                   <Input

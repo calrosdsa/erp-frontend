@@ -146,7 +146,7 @@ export default function ToolBar({ title }: { title: string }) {
                       "disabled:opacity-50"
                   )}
                   loading={
-                    toolbarState.loading && toolbarState.loadingType == "STATE"
+                    toolbarState.loading && toolbarState.loadingType == "SUBMIT"
                   }
                   disabled={toolbarState.loading}
                 >
@@ -161,13 +161,13 @@ export default function ToolBar({ title }: { title: string }) {
                     size={"sm"}
                     onClick={() => confirmStatusChange(EventState.CANCEL_EVENT)}
                     className={cn(
-                      "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
+                      `flex space-x-1 h-8 rounded-lg px-3 justify-center `,
                       (disabledSave || toolbarState.loading) &&
                         "disabled:opacity-50"
                     )}
                     loading={
                       toolbarState.loading &&
-                      toolbarState.loadingType == "STATE"
+                      toolbarState.loadingType == "CANCEL"
                     }
                     disabled={toolbarState.loading}
                     variant={"outline"}

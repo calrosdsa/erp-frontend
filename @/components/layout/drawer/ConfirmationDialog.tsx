@@ -40,7 +40,7 @@ export function ConfirmationDialog({
       <AlertDialogContent className="fixed top-20 left-1/2 -translate-x-1/2 m-auto w-full max-w-sm sm:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2 ">
-            {payload?.title}
+            {payload?.title || "Por favor, confirma antes de proceder con la acción seleccionada."}
           </AlertDialogTitle>
           <AlertDialogDescription>{payload?.description || ""}</AlertDialogDescription>
         </AlertDialogHeader>
@@ -60,7 +60,7 @@ export function ConfirmationDialog({
 }
 
 interface Payload {
-  title: string;
+  title?: string;
   description?: string;
   confirmLabel?: string;
   cancelLabel?: string;

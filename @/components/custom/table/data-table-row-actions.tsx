@@ -23,7 +23,7 @@ export function DataTableRowActions<TData>({ getValue, row, column, table }: Tab
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className="flex h-7 w-7 p-0 data-[state=open]:bg-muted"
+          className="flex h-6 w-6 p-0 data-[state=open]:bg-muted rounded-full"
         >
           <DotsHorizontalIcon className="h-4 w-4" />
           <span className="sr-only">Open menu</span>

@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_COLUMN, DEFAULT_ORDER, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { handleError } from "~/util/api/handle-status-code";
 import InvoicesClient from "./invoices.client";
 import { components } from "~/sdk";
@@ -54,12 +54,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         page: searchParams.get("page") || DEFAULT_PAGE,
         size: searchParams.get("size") || DEFAULT_SIZE,
         query:searchParams.get("query") || "",
-        order:searchParams.get("order") || "",
-        column:searchParams.get("column") || "",
-        status:searchParams.get("status") || "",
-        due_date:searchParams.get("due_date") || "",
-        posting_date:searchParams.get("posting_date") || "",
-        party_id:searchParams.get("party") || "",
+        order: searchParams.get("order") || DEFAULT_ORDER,
+        column: searchParams.get("column") || DEFAULT_COLUMN,
+        status: searchParams.get("status") || "",
+        due_date: searchParams.get("due_date") || "",
+        posting_date: searchParams.get("posting_date") || "",
+        party_id: searchParams.get("party") || "",
       },
       path: {
         party: params.partyInvoice || "",
@@ -67,9 +67,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
+  
   return json({
     results: res.data?.pagination_result.results,
     actions: res.data?.actions,
+    filters:res.data?.pagination_result.filters,
   });
 };
 

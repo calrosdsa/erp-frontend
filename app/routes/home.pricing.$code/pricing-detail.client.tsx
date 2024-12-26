@@ -93,32 +93,9 @@ export default function PricingDetailClient() {
   setUpToolbar(
     (opts) => {
       console.log("TOOL BAR OPTS", opts);
-      const state = stateFromJSON(pricing?.status);
-
-      let actions: ButtonToolbar[] = [];
-      if (poPerm.edit && state == State.SUBMITTED) {
-        actions.push({
-          label: "Generar Orden de Compras",
-          onClick: () => {
-            confirmationDialog.onOpenDialog({
-              title:"",
-              onConfirm:()=>{
-
-              }
-            })
-          },
-        });
-      }
-      if (quoPerm.edit && state == State.SUBMITTED) {
-        actions.push({
-          label: "Generar Cotización de Venta",
-          onClick: () => {
-          },
-        });
-      }
       return {
+        ...opts,
         status: stateFromJSON(pricing?.status),
-        actions: actions,
         onChangeState: onChangeState,
         // onSave:()=>{
         //   console.log("SUBMIT",inputRef.current)
@@ -134,7 +111,6 @@ export default function PricingDetailClient() {
       navItems={navItems}
       activities={activities}
     >
-      {JSON.stringify(permission)}
       {tab == "info" && (
         <PricingInfo
         // inputRef={inputRef}

@@ -93,16 +93,21 @@ export const orderColumns = ({
   columns.push({
     accessorKey: "total_amount",
     header: t("table.total"),
-    cell: ({ ...props }) => <TableCellPrice
-    {...props} 
-    i18n={i18n}
-    
-    />,
+    cell: ({ ...props }) => {
+      const rowData = props.row.original
+      return <TableCellPrice
+      {...props} 
+      i18n={i18n}
+      currency={rowData.currency}
+      
+      />
+    }
   });
   columns.push({
     accessorKey: "created_at",
     header: t("table.createdAt"),
-    cell: ({ ...props }) => <TableCellDate {...props} i18n={i18n} />,
+    cell: ({ ...props }) => <TableCellDate {...props} i18n={i18n} 
+    />,
   });
   // columns.push({
   //     id: "actions-row",

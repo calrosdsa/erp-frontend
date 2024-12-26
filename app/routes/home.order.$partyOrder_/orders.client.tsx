@@ -17,26 +17,30 @@ import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
+import DataLayout from "@/components/layout/data-layout";
+import { PartySearch } from "../home.order.$partyOrder.new/components/party-autocomplete";
+import { useTranslation } from "react-i18next";
 
 export default function OrdersClient() {
-  const { paginationResult, actions } = useLoaderData<typeof loader>();
+  const { paginationResult, actions, filters } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const r = routes;
   const params = useParams();
   const partyOrder = params.partyOrder || "";
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const [permission] = usePermission({
     actions: actions,
     roleActions: globalState.roleActions,
   });
-  const { resetDocument } = useResetDocument()
+  const { resetDocument } = useResetDocument();
 
   setUpToolbar(() => {
     return {
       titleToolbar: undefined,
       ...(permission?.create && {
         addNew: () => {
-          resetDocument()
+          resetDocument();
           navigate(
             r.toRoute({
               main: partyOrder,
@@ -50,7 +54,20 @@ export default function OrdersClient() {
   }, [permission]);
 
   return (
-    <div>
+    <DataLayout
+      filterOptions={filters}
+      orderOptions={[
+        { name: "Fecha de Creación", value: "created_at" },
+        { name: t("form.status"), value: "status" },
+      ]}
+      fixedFilters={() => {
+        return (
+          <>
+            <PartySearch party={partyOrder} />
+          </>
+        );
+      }}
+    >
       <DataTable
         data={paginationResult?.results || []}
         columns={orderColumns({
@@ -61,6 +78,6 @@ export default function OrdersClient() {
         }}
         enableSizeSelection={true}
       />
-    </div>
+    </DataLayout>
   );
 }

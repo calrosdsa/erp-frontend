@@ -103,7 +103,7 @@ export default function TableCell<TData>({
     );
   }
   return (
-    <div
+    <span
       style={{
         display: "flex", // Makes the trigger fill the space
         width: "100%", // Ensure it takes up full width
@@ -116,6 +116,6 @@ export default function TableCell<TData>({
       // }}
     >
       {value}
-    </div>
+    </span>
   );
 }

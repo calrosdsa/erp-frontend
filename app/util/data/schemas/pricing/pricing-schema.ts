@@ -56,6 +56,8 @@ export const columnConfig = z.object({});
 
 export const pricingDataSchema = z.object({
   id: z.number().optional(),
+  customer_id: z.number().optional(),
+  customer: z.string().optional(),
   pricing_line_items: z.array(pricingLineItemDataSchema),
   pricing_charges: z.array(pricingChargeDataSchema),
 });
@@ -63,6 +65,8 @@ export const pricingDataSchema = z.object({
 export const editPricingSchema = z.object({
   // id: z.number(),
   id: z.number().optional(),
+  customer_id: z.number().optional(),
+  customer: z.string().optional(),
   pricing_line_items: z.array(pricingLineItemDataSchema),
   pricing_charges: z.array(pricingChargeDataSchema),
 });
@@ -89,11 +93,25 @@ export const mapPricingLineItemData = (
   input: z.infer<typeof pricingLineItemDataSchema>
 ): components["schemas"]["PricingLineItemData"] => {
   const l: components["schemas"]["PricingLineItemData"] = {
+    supplier_id: isZeroValue(input.supplier_id),
     description: isZeroValue(input.description),
     part_number: isZeroValue(input.part_number),
     pl_unit: isZeroValue(input.pl_unit),
     quantity: isZeroValue(input.quantity),
-    supplier_id: isZeroValue(input.supplier_id),
+    fob_unit: isZeroValue(input.fob_unit),
+    retention: isZeroValue(input.retention),
+    cost_zf: isZeroValue(input.cost_zf),
+    cost_alm: isZeroValue(input.cost_alm),
+    tva: isZeroValue(input.tva),
+    cantidad: isZeroValue(input.cantidad),
+    precio_unitario: isZeroValue(input.precio_unitario),
+    precio_total: isZeroValue(input.precio_total),
+    precio_unitario_tc: isZeroValue(input.precio_unitario_tc),
+    precio_total_tc: isZeroValue(input.precio_total_tc),
+    fob_total: isZeroValue(input.fob_total),
+    gpl_total: isZeroValue(input.gpl_total),
+    tva_total: isZeroValue(input.tva_total),
+
     fob_unit_fn: isZeroValue(input.fob_unit_fn),
     retention_fn: isZeroValue(input.retention_fn),
     cost_zf_fn: isZeroValue(input.cost_zf_fn),
@@ -120,7 +138,7 @@ export const mapPricingLineItemDto = (
   const l: z.infer<typeof pricingLineItemDataSchema> = {
     description: input.description,
     part_number: input.part_number,
-    pl_unit: input.pl_unit,
+    pl_unit: formatAmount(input.pl_unit),
     quantity: input.quantity,
     supplier_id: input.supplier_id,
     supplier: input.supplier,

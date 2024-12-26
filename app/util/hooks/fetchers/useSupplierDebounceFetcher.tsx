@@ -24,12 +24,12 @@ export const SupplierAutoCompleteForm = ({
   label?: string;
   required?:boolean;
   onSelect: (e: components["schemas"]["SupplierDto"]) => void;
-  roleActions: components["schemas"]["RoleActionDto"][];
+  roleActions?: components["schemas"]["RoleActionDto"][];
   className?:string
   name?:string
 }) => {
   const [fetcher, onChange] = useSupplierDebounceFetcher();
-  const createCustomer = useCreateSupplier();
+  const createSupplier = useCreateSupplier();
   const [permission] = usePermission({
     roleActions,
     actions: fetcher.data?.actions,
@@ -48,7 +48,7 @@ export const SupplierAutoCompleteForm = ({
       onSelect={onSelect}
       {...(permission.create && {
         addNew: () => {
-          createCustomer.openDialog({});
+          createSupplier.openDialog({});
         },
       })}
     />

@@ -341,7 +341,7 @@ const DataLayout: React.FC<{
   children: ReactNode;
   fixedFilters?: () => JSX.Element;
   orderOptions?: SelectItem[];
-  filterOptions?: FilterOption[];
+  filterOptions?: FilterOption[] | null;
 }> = ({ children, fixedFilters, orderOptions = [], filterOptions = [] }) => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -358,12 +358,13 @@ const DataLayout: React.FC<{
     setSearchParams(searchParams, { preventScrollReset: true });
     setIsFilterOpen(false);
   };
+  
 
   return (
     <div className="h-full flex flex-col pt-1">
       <div className="grid gap-3 xl:flex xl:justify-between">
         <div className="flex space-x-2">
-          {filterOptions.length > 0 && (
+          {filterOptions != null && filterOptions.length > 0 && (
             <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm">

@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({
   enableSizeSelection = false,
   onSelectionChange,
   maxTableHeight = 480,
-  rowHeight = 35,
+  rowHeight = 44,
 
 }: DataTableProps<TData, TValue>) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -278,9 +278,10 @@ export function DataTable<TData, TValue>({
             textOverflow: "ellipsis",
           }}
           className={cn(
-            "border-r  last:border-r-0 p-2 text-xs ",
+            "border-r  last:border-r-0 p-2 text-xs whitespace-nowrap ",
           )}
         >
+          
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </TableCell>
       ));
@@ -296,7 +297,7 @@ export function DataTable<TData, TValue>({
           // ref={tableRef}
           className="relative"
           style={{
-            height: `${Math.min(data.length * rowHeight + 48, maxTableHeight)}px`,
+            height: `${Math.min((data.length * rowHeight) + 42, maxTableHeight)}px`,
           }}
         >
           <TableVirtuoso
