@@ -15,12 +15,17 @@ import { z } from "zod";
 import TableCellPrice from "../../cells/table-cell-price";
 import TableCellTranslate from "../../cells/table-cell-translate";
 import { paymentReferceSchema } from "~/util/data/schemas/accounting/payment-schema";
+import { i18n } from "i18next";
+import TableCell from "../../cells/table-cell";
+import { DataTableRowActions } from "../../data-table-row-actions";
+import { parties } from "~/util/party";
 
 export const paymentColumns = (): ColumnDef<
   components["schemas"]["PaymentDto"]
 >[] => {
   const { t, i18n } = useTranslation("common");
   const r = routes;
+  const p = parties;
   return [
     {
       accessorKey: "code",
@@ -31,13 +36,20 @@ export const paymentColumns = (): ColumnDef<
           <TableCellNameNavigation
             {...props}
             navigate={(name) =>
-              r.toModulePartyDetail(
-                moduleToJSON(Module.accounting),
-                partyTypeToJSON(PartyType.payment),
-                name,
+              r.toRoute(
                 {
-                  tab: "info",
+                  main: p.payment,
+                  routeSufix: [name],
+                  q: {
+                    tab: "info",
+                  },
                 }
+                // moduleToJSON(Module.accounting),
+                // partyTypeToJSON(PartyType.payment),
+                // name,
+                // {
+                //   tab: "info",
+                // }
               )
             }
           />
@@ -82,63 +94,63 @@ export const paymentColumns = (): ColumnDef<
   ];
 };
 
-export const paymentReferencesColumns = (): ColumnDef<
-  z.infer<typeof paymentReferceSchema>
->[] => {
-  const { t, i18n } = useTranslation("common");
+export const paymentReferencesColumns = ({
+  t,
+  i18n,
+}: {
+  t: TFunction<"common", undefined>;
+  i18n: i18n;
+}): ColumnDef<z.infer<typeof paymentReferceSchema>>[] => {
+  console.log("RE RENDER...");
+  // const { t, i18n } = useTranslation("common");
   const r = routes;
   return [
-    {
-      header: t("table.no"),
-      cell: TableCellIndex,
-    },
+    // {
+    //   header: t("table.no"),
+    //   cell: TableCellIndex,
+    // },
     {
       accessorKey: "partyType",
       header: t("form.type"),
-      cell: ({ ...props }) => <TableCellTranslate {...props} t={t}/>,
-      // cell:({...props})=>{
-      //   const rowData = props.row.original
-      //   return(
-      //     <TableCellNameNavigation
-      //     {...props}
-      //     navigate={(name)=>r.toModulePartyDetail(moduleToJSON(Module.accounting),
-      //       partyTypeToJSON(PartyType.payment),name,{
-      //         tab:"info"
-      //       })}
-      //     />
-      //   )
-      // }
+      cell: ({ ...props }) => <TableCellTranslate {...props} t={t} />,
     },
     {
       accessorKey: "partyName",
       header: t("form.name"),
-      // cell:({...props})=>{
-      //   const rowData = props.row.original
-      //   return(
-      //     <TableCellNameNavigation
-      //     {...props}
-      //     navigate={(name)=>{
-      //       return r.to(name,rowData.party_uuid,rowData.party_type)
-      //   }}
-      //     />
-      //   )
-      // }
+      cell: ({ ...props }) => {
+        const rowData = props.row.original;
+        return (
+          <TableCellNameNavigation
+            {...props}
+            navigate={(name) => r.toVoucher(rowData.partyType, name)}
+          />
+        );
+      },
     },
     {
       accessorKey: "grandTotal",
       header: t("form.total"),
-      cell: ({ ...props }) => <TableCellPrice {...props} i18n={i18n} />,
+      // cell: ({ ...props }) => (
+      //   <TableCellPrice isAmount={true} {...props} i18n={i18n} />
+      // ),
     },
     {
       accessorKey: "outstanding",
       header: t("form.outstandingAmount"),
-      cell: ({ ...props }) => <TableCellPrice {...props} i18n={i18n} />,
+      // cell: ({ ...props }) => (
+      //   <TableCellPrice isAmount={true} {...props} i18n={i18n} />
+      // ),
     },
 
     {
       accessorKey: "allocated",
       header: t("form.allocated"),
-      cell: ({ ...props }) => <TableCellPrice {...props} i18n={i18n} />,
+      cell: TableCell,
+    },
+    {
+      id: "actions-row",
+      cell: DataTableRowActions,
+      size: 50,
     },
   ];
 };

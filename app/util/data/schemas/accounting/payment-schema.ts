@@ -7,9 +7,9 @@ export const paymentReferceSchema = z.object({
   partyID:z.number(),
   partyType: z.string(),
   partyName: z.string(),
-  grandTotal: z.number(),
-  outstanding: z.number(),
-  allocated: z.number(),
+  grandTotal: z.coerce.number(),
+  outstanding: z.coerce.number(),
+  allocated: z.coerce.number(),
 });
 
 export const createPaymentSchema = z.object({
@@ -49,6 +49,7 @@ export const editPayment = z.object({
   postingDate: z.date(),
   amount: z.coerce.number(),
   paymentType: z.string(),
+  paymentTypeT:z.string(),
 
   party: z.string(),
   partyType: z.string(),
@@ -56,11 +57,7 @@ export const editPayment = z.object({
   // partyBankAccount: z.string().optional(),
   // companyBankAccount: z.string().optional(),
   partyReference: z.number().optional(),
-
-  //Party references
-  // partyReferences: z.array(paymentReferceSchema),
-  // taxLines: z.array(taxAndChargeSchema),
-
+  paymentReferences: z.array(paymentReferceSchema),
   //UUID
   accountPaidFromID: z.number().optional(),
   accountPaidFromName: z.string().optional(),

@@ -62,7 +62,6 @@ export default function PurchaseOrderClient() {
     roleActions: globalState.roleActions,
   })
   const { t, i18n } = useTranslation("common");
-  const toolbar = useToolbar();
   const r = routes;
   const navigate = useNavigate();
   const params = useParams();

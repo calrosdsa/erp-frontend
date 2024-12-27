@@ -89,13 +89,7 @@ export default function PricingInfo({
     })(e);
   };
 
-  useLoadingTypeToolbar(
-    {
-      loading: fetcher.state == "submitting",
-      loadingType: "SAVE",
-    },
-    [fetcher.state]
-  );
+ 
 
   const generate = (action:string,pricing:components["schemas"]["PricingDto"])=>{
     const body:components["schemas"]["PricingDataRequestBody"] = {
@@ -158,6 +152,13 @@ export default function PricingInfo({
       },
     },
     [fetcher.data]
+  );
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
   );
 
   return form.getValues().pricing_charges && <PricingData fetcher={fetcher} onSubmit={onSubmit}

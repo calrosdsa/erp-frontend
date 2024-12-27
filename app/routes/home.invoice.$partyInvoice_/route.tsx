@@ -9,6 +9,7 @@ type ActionData = {
   action:string
   getData:{
     query:string
+    partyID?:number
   }
 }
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -24,7 +25,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           query: {
             page: DEFAULT_PAGE,
             size: DEFAULT_SIZE,
-            query:d.query
+            query:d.query,
+            party_id:d.partyID?.toString(),
           },
           path: {
             party: params.partyInvoice || "",

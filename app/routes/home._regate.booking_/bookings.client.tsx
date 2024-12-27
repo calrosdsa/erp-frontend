@@ -28,6 +28,8 @@ import { State, stateToJSON } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { GenericActionsDropdown } from "./components/actions-dropdown";
 import CustomSelect from "@/components/custom/select/custom-select";
+import { ButtonToolbar } from "~/types/actions";
+import { parties } from "~/util/party";
 
 export default function BookingsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -47,7 +49,7 @@ export default function BookingsClient() {
   //   components["schemas"]["BookingDto"][]
   // >([]);
   const r = routes;
-
+  const p = parties
   const onActions = (state: State) => {
     const body: components["schemas"]["UpdateBookingBatchRequestBody"] = {
       booking_ids: selectedRowsData.map((t) => t.id),
@@ -78,8 +80,19 @@ export default function BookingsClient() {
   );
 
   setUpToolbar(() => {
+    let buttons: ButtonToolbar[] = []
+    buttons.push({
+      label:"Calendario",
+      onClick:()=>{
+        navigate(r.toRoute({
+          main:p.booking,
+          routeSufix:["schedule"]
+        }))
+      }
+    })
     return {
       titleToolbar: t("regate._booking.base"),
+      buttons:buttons,
       ...(permission?.create && {
         addNew: () => {
           navigate(r.toCreateBooking());

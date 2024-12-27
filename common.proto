@@ -67,6 +67,8 @@ enum PartyType {
     currencyExchange = 41;
     salesRecord = 42;
     purchaseRecord = 43;
+    module = 44;
+    pricing = 45;
 }
 
 enum PianoPartyType {

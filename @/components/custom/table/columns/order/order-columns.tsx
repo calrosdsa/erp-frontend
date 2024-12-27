@@ -99,7 +99,6 @@ export const orderColumns = ({
       {...props} 
       i18n={i18n}
       currency={rowData.currency}
-      
       />
     }
   });

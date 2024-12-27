@@ -14,15 +14,20 @@ export const InvoiceAutocompleteForm = ({
   onSelect,
   name,
   partyType,
+  partyID,
 }: {
   allowEdit?: boolean;
   control?: Control<any, any>;
   label?: string;
   name?: string;
   partyType: string;
+  partyID?: number;
   onSelect?: (e: components["schemas"]["InvoiceDto"]) => void;
 }) => {
-  const [fetcher, onChange] = useInvoiceFetcher({ partyType });
+  const [fetcher, onChange] = useInvoiceFetcher({ 
+    partyType,
+    partyID:partyID
+   });
   return (
     <FormAutocomplete
       data={fetcher.data?.results || []}
@@ -83,7 +88,13 @@ export const InvoiceSearch = ({
   );
 };
 
-export const useInvoiceFetcher = ({ partyType }: { partyType: string }) => {
+export const useInvoiceFetcher = ({
+  partyType,
+  partyID,
+}: {
+  partyType: string;
+  partyID?: number;
+}) => {
   const r = routes;
   const fetcherDebounce = useDebounceFetcher<{
     actions: components["schemas"]["ActionDto"][];
@@ -95,7 +106,8 @@ export const useInvoiceFetcher = ({ partyType }: { partyType: string }) => {
       {
         getData: {
           query: e,
-        },
+          partyID:partyID,
+        } as any,
         action: "get",
       },
       {

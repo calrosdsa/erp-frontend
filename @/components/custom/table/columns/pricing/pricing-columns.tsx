@@ -81,13 +81,13 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
       accessorKey: "pl_unit",
-      header: "PL Unit",
+      header: "PL_Unit",
       cell: TableCell,
     },
 
     {
       accessorKey: "fob_unit_fn",
-      header: "Fob Unit",
+      header: "Fob_Unit",
       cell: TableCell,
       meta:{
         calculate:true
@@ -103,7 +103,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
     accessorKey: "cost_zf_fn",
-      header: "Costo ZF",
+      header: "Costo_ZF",
       cell: TableCell,
       meta:{
         calculate:true
@@ -111,7 +111,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
       accessorKey: "cost_alm_fn",
-      header: "Costo Alm",
+      header: "Costo_Alm",
       cell: TableCell,
       meta:{
         calculate:true
@@ -135,7 +135,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
       accessorKey: "precio_unitario_fn",
-      header: "Precio Unitario($us)",
+      header: "Precio_Unitario",
       cell: TableCell,
       meta:{
         calculate:true
@@ -143,7 +143,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
       accessorKey: "precio_total_fn",
-      header: "Precio Total ($us)",
+      header: "Precio_Total",
       cell: TableCell,
       meta:{
         calculate:true
@@ -151,7 +151,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
       accessorKey: "precio_unitario_tc_fn",
-      header: "Precio Unitario (BS)",
+      header: "Precio_Unitario_TC",
       cell: TableCell,
       meta:{
         calculate:true
@@ -159,7 +159,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
       accessorKey: "precio_total_tc_fn",
-      header: "Precio Total (BS)",
+      header: "Precio_Total_TC",
       cell: TableCell,
       meta:{
         calculate:true
@@ -167,7 +167,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
       accessorKey: "fob_total_fn",
-      header: "Fob Total ($us)",
+      header: "Fob_Total",
       cell: TableCell,
       meta:{
         calculate:true
@@ -175,7 +175,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
       accessorKey: "gpl_total_fn",
-      header: "Gpl Total ($us)",
+      header: "Gpl_Total",
       cell: TableCell,
       meta:{
         calculate:true
@@ -183,7 +183,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     },
     {
       accessorKey: "tva_total_fn",
-      header: "Tva Total ($us)",
+      header: "Tva_Total",
       cell: TableCell,
       meta:{
         calculate:true

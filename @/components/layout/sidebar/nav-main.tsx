@@ -1,28 +1,43 @@
-"use client";
-
-import { BoxIcon, ChevronRight, type LucideIcon } from "lucide-react";
+import {BoxIcon, CalendarIcon, ChevronRight, ContactIcon, CreditCardIcon, CurrencyIcon, DollarSignIcon, MoveLeftIcon, MoveRightIcon, UsersIcon, WalletIcon, type LucideIcon } from "lucide-react";
 
 import {
   Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { NavItem } from "~/types";
 import { Link } from "@remix-run/react";
 import { components } from "~/sdk";
-
+import { useCallback } from "react";
 export function NavMain({ items }: { items: components["schemas"]["ModuleDto"][] }) {
+  const renderIcon = useCallback((iconType:string):JSX.Element=>{
+    // const d = <ContactIcon/>
+    switch(iconType){
+      case "contact":
+        return <ContactIcon/>
+      case "creditCard":
+        return <CreditCardIcon/>
+      case "currency":
+          return <DollarSignIcon/>
+      case "users":
+        return <UsersIcon/>
+      case "wallet":
+        return <WalletIcon/>
+      case "calendar":
+        return <CalendarIcon/>
+      case "arrowRight":
+        return <MoveRightIcon/>
+      case "arrowLeft":
+        return <MoveLeftIcon/>
+      default:
+        return <BoxIcon/>
+    }
+  },[])
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -33,7 +48,7 @@ export function NavMain({ items }: { items: components["schemas"]["ModuleDto"][]
               <SidebarMenuButton asChild tooltip={item.label}>
                 <Link to={item.href}>
                   {/* {item.icon && <item.icon />} */}
-                  <BoxIcon/>
+                  {renderIcon(item.icon)}
                   <span>{item.label}</span>
                 </Link>
               </SidebarMenuButton>

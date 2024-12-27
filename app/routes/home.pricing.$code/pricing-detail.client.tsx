@@ -22,6 +22,7 @@ import { useRef } from "react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { Entity } from "~/types/enums";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
+import PricingConnections from "./components/pricing-connections";
 
 export default function PricingDetailClient() {
   const { pricing, actions, activities } = useLoaderData<typeof loader>();
@@ -49,7 +50,6 @@ export default function PricingDetailClient() {
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: r.pricing,
-      routePrefix: [r.accountingM],
       routeSufix: [pricing?.code || ""],
       q: {
         tab: tab,
@@ -61,6 +61,10 @@ export default function PricingDetailClient() {
     {
       title: t("info"),
       href: toRoute("info"),
+    },
+    {
+      title: t("connections"),
+      href: toRoute("connections"),
     },
   ];
 
@@ -111,10 +115,12 @@ export default function PricingDetailClient() {
       navItems={navItems}
       activities={activities}
     >
+      {/* {JSON.stringify(pricing)} */}
       {tab == "info" && (
-        <PricingInfo
-        // inputRef={inputRef}
-        />
+        <PricingInfo/>
+      )}
+      {tab == "connections" && (
+        <PricingConnections/>
       )}
     </DetailLayout>
   );

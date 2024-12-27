@@ -67,7 +67,7 @@ export default function InvoicesClient() {
         )
       }}
     >
-      {/* {JSON.stringify(filters)} */}
+      {/* {JSON.stringify(results)} */}
       <DataTable
         data={results || []}
         columns={invoiceColumns({

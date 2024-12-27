@@ -10,6 +10,7 @@ import { useNewBooking } from "./use-new-booking";
 import { components } from "~/sdk";
 import generateBookingData from "./util-new";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function NewBookingClient() {
   const fetcher = useFetcher<typeof action>({ key: "booking-data" });
@@ -35,8 +36,6 @@ export default function NewBookingClient() {
     }
   };
 
-  
-
   useEffect(() => {
     if (payload) {
       onBookingPayload();
@@ -55,16 +54,14 @@ export default function NewBookingClient() {
 
   return (
     <>
-      {fetcher.state == "submitting" ?
-        <LoadingSpinner className="h-[70vh]" size="lg"/>
-      :
-      fetcher.data?.bookingData && fetcher.data.bookingData.length > 0 ? (
-        <CreateBookings data={fetcher.data.bookingData} />
-      ) : (
-        <ValidateBooking />
-      )
-    }
-
+          {fetcher.state == "submitting" ? (
+            <LoadingSpinner className="h-[70vh]" size="lg" />
+          ) : fetcher.data?.bookingData &&
+            fetcher.data.bookingData.length > 0 ? (
+            <CreateBookings data={fetcher.data.bookingData} />
+          ) : (
+            <ValidateBooking />
+          )}
     </>
   );
 }

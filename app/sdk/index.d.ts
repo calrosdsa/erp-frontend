@@ -3906,6 +3906,7 @@ export interface components {
             posting_time: string;
             /** Format: int64 */
             project?: number;
+            references?: number[];
             /** Format: double */
             total_amount?: number;
             tz: string;
@@ -4539,6 +4540,7 @@ export interface components {
             posting_time: string;
             /** Format: int64 */
             project?: number;
+            references?: number[];
             /** Format: double */
             total_amount?: number;
             tz: string;
@@ -4662,6 +4664,7 @@ export interface components {
             /** Format: int64 */
             project?: number;
             quotation_party_type: string;
+            references?: number[];
             tz: string;
             /** Format: date-time */
             valid_till: string;
@@ -5836,6 +5839,8 @@ export interface components {
             id: number;
             /** Format: int32 */
             paid: number;
+            /** Format: int32 */
+            paid_amount: number;
             /** Format: int64 */
             party_id: number;
             party_name: string;
@@ -5852,6 +5857,8 @@ export interface components {
             status: string;
             /** Format: int32 */
             total: number;
+            /** Format: int32 */
+            total_amount: number;
             tz: string;
             update_stock: boolean;
         };
@@ -6871,6 +6878,10 @@ export interface components {
         PartyConnections: {
             /** Format: int32 */
             connections: number;
+            entity: string;
+            href: string;
+            /** Format: int64 */
+            party_id: number;
             party_type: string;
         };
         PartyDto: {
@@ -7296,6 +7307,7 @@ export interface components {
             /** Format: int64 */
             project?: number;
             quotation_party_type: string;
+            references?: number[];
             tz: string;
             /** Format: date-time */
             valid_till: string;
@@ -12372,6 +12384,10 @@ export interface operations {
                 delivery_date?: string;
                 posting_date?: string;
                 party_id?: string;
+                id?: string;
+                pricing?: string;
+                project?: string;
+                cost_center?: string;
             };
             header?: never;
             path: {
@@ -14210,11 +14226,15 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                valid_till?: string;
+                posting_date?: string;
+                party_id?: string;
+                id?: string;
+                project?: string;
+                cost_center?: string;
+                pricing?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path: {
                 party: string;
             };
@@ -14395,11 +14415,10 @@ export interface operations {
                 order?: string;
                 column?: string;
                 parentId?: string;
+                posting_date?: string;
+                party_id?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path: {
                 party: string;
             };

@@ -25,7 +25,7 @@ import {
   useRef,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { FormulaEngine, removeFromList } from "../util/formula";
+import { convertToPascalCase, convertToSnakeCase, FormulaEngine, removeFromList } from "../util/formula";
 import { PlusIcon } from "lucide-react";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -50,19 +50,19 @@ const defaultLineItem: LineItemType = {
   part_number: "",
   description: "",
 
-  fob_unit_fn: "pl_unit * (1-descuento)",
+  fob_unit_fn: "Pl_Unit * (1-Descuento)",
   retention_fn: "",
-  cost_zf_fn: "fob_unit * (1+flete)",
-  cost_alm_fn: "cost_zf * (1+importacion)",
+  cost_zf_fn: "Fob_Unit * (1+Flete)",
+  cost_alm_fn: "Cost_Zf * (1+Importacion)",
   tva_fn: "",
-  cantidad_fn: "quantity",
-  precio_unitario_fn: "(cost_alm/(1-margen)+tva)/(1-impuestos)",
-  precio_total_fn: "cantidad * precio_unitario",
-  precio_unitario_tc_fn: "precio_unitario * tc",
-  precio_total_tc_fn: "precio_unitario_tc * cantidad",
-  fob_total_fn: "fob_unit * cantidad",
-  gpl_total_fn: "pl_unit * cantidad",
-  tva_total_fn: "tva * cantidad",
+  cantidad_fn: "Quantity",
+  precio_unitario_fn: "(Cost_Alm/(1-Margen)+TVA)/(1-Impuestos)",
+  precio_total_fn: "Cantidad * Precio_Unitario",
+  precio_unitario_tc_fn: "Precio_Unitario * TC",
+  precio_total_tc_fn: "Precio_Unitario_TC * Cantidad",
+  fob_total_fn: "Fob_Unit * Cantidad",
+  gpl_total_fn: "Pl_Unit * Cantidad",
+  tva_total_fn: "TVA * Cantidad",
 
   pl_unit: undefined,
   quantity: undefined,
@@ -146,12 +146,14 @@ export default function PricingData({
   const getValues = useCallback(
     (fn: string, line: LineItemType): Record<string, any> => {
       const words = fn.match(/\b[a-zA-Z_]+\b/g);
-      // console.log("WORDS", words);
+      console.log("CHARGE OB", chargesObject);
       const record: Record<string, any> = {};
       const d = { ...line, ...chargesObject };
       words?.forEach((w) => {
-        record[w] = d[w as keyof LineItemType];
+        console.log("SNAKE CASE",convertToSnakeCase(w) )
+        record[w] = d[convertToSnakeCase(w) as keyof LineItemType];
       });
+      console.log("RECORD",record,d)
       // console.log(line, words, record);
       return record;
     },

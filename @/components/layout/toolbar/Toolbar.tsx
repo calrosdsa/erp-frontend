@@ -15,6 +15,7 @@ import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { Typography } from "@/components/typography";
 import { cn } from "@/lib/utils";
 import { useConfirmationDialog } from "../drawer/ConfirmationDialog";
+import { Dialog, DialogOverlay } from "@/components/ui/dialog";
 
 export default function ToolBar({ title }: { title: string }) {
   const toolbarState = useToolbar();
@@ -44,7 +45,15 @@ export default function ToolBar({ title }: { title: string }) {
   };
 
   return (
-    <div>
+    <>
+    <Dialog open={toolbarState.loading}>
+    <DialogOverlay>
+      <div className="  h-screen flex justify-center items-center">
+        <Icons.spinner className=" h-9 w-9 animate-spin text-background"/>
+      </div>
+    </DialogOverlay>
+    
+    </Dialog>
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
         <div className="flex flex-wrap space-x-2 ">
           <Typography variant="title2">
@@ -145,9 +154,9 @@ export default function ToolBar({ title }: { title: string }) {
                     (disabledSave || toolbarState.loading) &&
                       "disabled:opacity-50"
                   )}
-                  loading={
-                    toolbarState.loading && toolbarState.loadingType == "SUBMIT"
-                  }
+                  // loading={
+                  //   toolbarState.loading && toolbarState.loadingType == "SUBMIT"
+                  // }
                   disabled={toolbarState.loading}
                 >
                   {t("form.submit")}
@@ -165,18 +174,14 @@ export default function ToolBar({ title }: { title: string }) {
                       (disabledSave || toolbarState.loading) &&
                         "disabled:opacity-50"
                     )}
-                    loading={
-                      toolbarState.loading &&
-                      toolbarState.loadingType == "CANCEL"
-                    }
+                    // loading={
+                    //   toolbarState.loading &&
+                    //   toolbarState.loadingType == "CANCEL"
+                    // }
                     disabled={toolbarState.loading}
                     variant={"outline"}
                   >
-                    {toolbarState.loading ? (
-                      <Icons.spinner className="h-5 w-5 animate-spin" />
-                    ) : (
-                      t("form.cancel")
-                    )}
+                      {t("form.cancel")} 
                   </Button>
                 )}
             </>
@@ -196,17 +201,13 @@ export default function ToolBar({ title }: { title: string }) {
                 "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
                 (disabledSave || toolbarState.loading) && "disabled:opacity-50"
               )}
-              loading={
-                toolbarState.loading && toolbarState.loadingType == "SAVE"
-              }
+              // loading={
+              //   toolbarState.loading && toolbarState.loadingType == "SAVE"
+              // }
               disabled={disabledSave || toolbarState.loading}
               variant={"outline"}
             >
-              {toolbarState.loading ? (
-                <Icons.spinner className="h-5 w-5 animate-spin" />
-              ) : (
-                t("form.save")
-              )}
+              {t("form.save")}
             </Button>
           )}
 
@@ -219,19 +220,15 @@ export default function ToolBar({ title }: { title: string }) {
                 }
               }}
               variant={"secondary"}
-              className=" flex space-x-1  rounded-lg px-3  justify-center"
+              className=" flex space-x-1  rounded-lg px-3  justify-center "
             >
               <PlusIcon />
-              {toolbarState.loading ? (
-                <Icons.spinner className="h-5 w-5 animate-spin" />
-              ) : (
-                t("form.addNew")
-              )}
+              {t("form.addNew")}
             </Button>
           )}
         </div>
         {status == State.DRAFT && <MessageAlert message="Submit to confirm" />}
       </div>
-    </div>
+    </>
   );
 }

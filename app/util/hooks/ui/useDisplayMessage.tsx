@@ -17,6 +17,7 @@ export const useDisplayMessage = (
   const { toast } = useToast();
 
   useEffect(() => {
+
     if (props.error) {
       toast({
         title: props.error,

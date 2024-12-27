@@ -51,6 +51,7 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
           order_party_type:params.partyOrder || "",
           tz: d.tz,
           delivery_date:d.deliveryDate ? formatRFC3339(d.deliveryDate):undefined,
+          references:[],
         }
       })
       message = res.data?.message

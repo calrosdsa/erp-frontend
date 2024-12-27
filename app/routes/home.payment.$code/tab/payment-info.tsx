@@ -45,10 +45,11 @@ import { LedgerAutocompleteForm } from "~/util/hooks/fetchers/useAccountLedgerDe
 import { Form } from "@/components/ui/form";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { paymentReferencesColumns } from "@/components/custom/table/columns/accounting/payment-columns";
+import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 
 type EditType = z.infer<typeof editPayment>;
 export default function PaymentInfoTab() {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const r = routes;
   const { payment, actions } = useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
@@ -64,12 +65,14 @@ export default function PaymentInfoTab() {
       amount: formatAmount(payment?.amount),
       partyType: payment?.party_type,
       paymentType: payment?.payment_type,
+      paymentTypeT: t(payment?.payment_type || ""),
       party: payment?.party_name,
       partyID: payment?.party_id,
       accountPaidFromID: payment?.paid_from_id,
       accountPaidFromName: payment?.paid_from_name,
       accountPaidToID: payment?.paid_to_id,
       accountPaidToName: payment?.paid_to_name,
+      paymentReferences:[],
     },
   });
   const formValues = form.getValues();
@@ -153,15 +156,31 @@ export default function PaymentInfoTab() {
               allowEdit={allowEdit}
               label={t("form.date")}
             />
+            <FormAutocomplete
+            control={form.control}
+            data={paymentTypes}
+            allowEdit={allowEdit}
+              label={t("form.paymentType")}
+              nameK={"name"}
+              name="paymentTypeT"
+              onSelect={(e)=>{
+                form.setValue("paymentType",e?.value)
+              }}
+              />
+            {/* {formValues.paymentType && 
             <SelectForm
-              control={form.control}
-              data={paymentTypes}
-              allowEdit={allowEdit}
+            control={form.control}
+            data={paymentTypes}
+            allowEdit={allowEdit}
               label={t("form.paymentType")}
               keyName={"name"}
               keyValue={"value"}
               name="paymentType"
-            />
+              onValueChange={(e)=>{
+                // form.setValue("partyType",e?.value)
+              }}
+              />
+            } */}
             <Separator className=" col-span-full" />
 
             <Typography className=" col-span-full" variant="title2">
@@ -254,10 +273,22 @@ export default function PaymentInfoTab() {
                 </Typography>
                 <div className=" col-span-full">
                   <DataTable
-                    columns={paymentReferencesColumns()}
+                    columns={paymentReferencesColumns({
+                      t: t,
+                      i18n: i18n,
+                    })}
                     data={payment.payment_references.map((t) =>
                       mapToPaymentReferenceSchema(t)
                     )}
+                    metaOptions={{
+                      meta: {
+                        updateCell: (
+                          row: number,
+                          column: string,
+                          value: string
+                        ) => {},
+                      },
+                    }}
                   />
                 </div>
               </>

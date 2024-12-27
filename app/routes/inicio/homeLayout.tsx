@@ -1,16 +1,25 @@
 import * as React from "react";
-import { Link, useLocation } from "@remix-run/react";
+import { Link, useLoaderData, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import {
   SessionDefaultDrawer,
   useSessionDefaults,
 } from "./components/SessionDefaults";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { HomeIcon } from "lucide-react";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useUnmount } from "usehooks-ts";
+import { Typography } from "@/components/typography";
 import {
   SidebarInset,
   SidebarProvider,
@@ -19,7 +28,12 @@ import {
 import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { loader } from "./route";
 
+type RouteItem = {
+  name: string;
+  link: string;
+};
 
 export default function HomeLayout({
   children,
@@ -33,6 +47,7 @@ export default function HomeLayout({
   const sessionDefaults = useSessionDefaults();
 
   const [routesName, setRoutesName] = React.useState<string[]>([]);
+  // const {modules} = useLoaderData<typeof loader>()
 
   const toolbar = useToolbar();
 
@@ -73,12 +88,21 @@ export default function HomeLayout({
     <>
       <GlobalDialogs globalState={globalState} />
 
-      <div className=" max-w-[1400px] mx-auto">
+      <div className=" max-w-[1500px] mx-auto">
         <SidebarProvider>
-          <AppSidebar data={globalState} />
+          <AppSidebar data={globalState} 
+          />
           <SidebarInset>
-            <header className="flex h-16 shrink-0 items-center gap-2 justify-between">
-              <div className="flex items-center gap-2 px-4">
+            <header className="shrink-0 items-center gap-2 justify-between sticky top-0 pt-1 bg-background z-20 ">
+              <div className="items-center justify-between  px-2 
+              md:px-6 
+              pb-2 
+              sm:pb-2 
+              md:pb-3 
+              flex 
+              min-w-0 
+              h-custom-dvh 
+              gap-1">
                 <SidebarTrigger className="-ml-1" />
                 <Separator orientation="vertical" className="mr-2 h-4" />
                 {/* <Breadcrumb aria-label="breadcrumbs">
@@ -128,10 +152,23 @@ export default function HomeLayout({
                     )}
                   </BreadcrumbList>
                 </Breadcrumb> */}
-              </div>
               <div className="flex items-center space-x-2 pr-3">
                 <ThemeToggle />
               </div>
+              </div>
+              <div className=" px-2 
+              md:px-6 
+              pb-2 
+              sm:pb-2 
+              md:pb-3 
+              flex 
+              flex-col 
+              min-w-0 
+              h-custom-dvh 
+              gap-1">
+              <ToolBar title={getRouteName()} />
+              </div>
+
             </header>
             <div
               className="
@@ -148,9 +185,8 @@ export default function HomeLayout({
             "
             >
 
-              <ToolBar title={getRouteName()} />
 
-              <div className="h-full  max-w-[1500px">{children}</div>
+              <div className="h-full  max-w-[1500px]">{children}</div>
             </div>
           </SidebarInset>
         </SidebarProvider>

@@ -145,6 +145,8 @@ export enum PartyType {
   currencyExchange = 41,
   salesRecord = 42,
   purchaseRecord = 43,
+  module = 44,
+  pricing = 45,
   UNRECOGNIZED = -1,
 }
 
@@ -282,6 +284,12 @@ export function partyTypeFromJSON(object: any): PartyType {
     case 43:
     case "purchaseRecord":
       return PartyType.purchaseRecord;
+    case 44:
+    case "module":
+      return PartyType.module;
+    case 45:
+    case "pricing":
+      return PartyType.pricing;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -379,6 +387,10 @@ export function partyTypeToJSON(object: PartyType): string {
       return "salesRecord";
     case PartyType.purchaseRecord:
       return "purchaseRecord";
+    case PartyType.module:
+      return "module";
+    case PartyType.pricing:
+      return "pricing";
     case PartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

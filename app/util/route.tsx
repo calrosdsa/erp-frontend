@@ -130,8 +130,9 @@ class Routes {
     tab: "info",
   };
 
-  to(href:string): string{
-    return `${this.base}/${href}`
+  to(href:string, q?: Record<string, string | undefined>): string{
+    return `${this.base}/${this.baseRoute(href,q)}`
+    // return href;
   }
 
   toModuleParty(

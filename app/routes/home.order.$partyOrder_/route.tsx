@@ -26,6 +26,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         delivery_date: searchParams.get("delivery_date") || "",
         posting_date: searchParams.get("posting_date") || "",
         party_id: searchParams.get("party") || "",
+        pricing: searchParams.get("pricing") || "",
       },
       path: {
         party: params.partyOrder || "",

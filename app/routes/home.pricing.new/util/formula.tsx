@@ -61,3 +61,23 @@ interface FormulaCalculator<T extends Record<string, any>> {
   
     return list; // Return the original list if index is invalid
   }
+
+  export const convertToPascalCase = (str: string): string => {
+    return str
+        .split('_')  // Split the string by the underscore
+        .map((word, index) => {
+            if (index === 0) {
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();  // Capitalize the first letter of the first word
+            } else {
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();  // Capitalize the first letter of subsequent words
+            }
+        })
+        .join('_');  // Join the words back with an underscore
+}
+
+export const convertToSnakeCase = (str: string): string =>{
+  return str
+      // .replace(/([A-Z])/g, '_$1')  // Add an underscore before each uppercase letter
+      .toLowerCase();  // Convert the entire string to lowercase
+}
+

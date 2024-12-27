@@ -1,10 +1,12 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { loader } from "./route";
 import Menu from "./components/menu";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { GlobalState } from "~/types/app";
 
 export default function ModuleClient() {
   const { module } = useLoaderData<typeof loader>();
+  const {roleActions} = useOutletContext<GlobalState>()
   setUpToolbar(()=>{
     return {
       titleToolbar:module?.module.label
@@ -12,7 +14,7 @@ export default function ModuleClient() {
   },[module])
   return (
     <div>
-      {module && <Menu data={module} />}
+      {module && <Menu data={module} roleActions={roleActions}/>}
       {/* {JSON.stringify(module)} ASDAS */}
     </div>
   );

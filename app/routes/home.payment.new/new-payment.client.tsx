@@ -9,7 +9,10 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { createPaymentSchema } from "~/util/data/schemas/accounting/payment-schema";
+import {
+  createPaymentSchema,
+  paymentReferceSchema,
+} from "~/util/data/schemas/accounting/payment-schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -19,11 +22,17 @@ import SelectForm from "@/components/custom/select/SelectForm";
 import { PartyType, partyTypeToJSON, PaymentType } from "~/gen/common";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { Separator } from "@/components/ui/separator";
-import { PartyAutocompleteForm, usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
+import {
+  PartyAutocompleteForm,
+  usePartyDebounceFetcher,
+} from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { Input } from "@/components/ui/input";
-import { LedgerAutocompleteForm, useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import {
+  LedgerAutocompleteForm,
+  useAccountLedgerDebounceFetcher,
+} from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { routes } from "~/util/route";
 import { action, loader } from "./route";
@@ -39,12 +48,17 @@ import { Card } from "@/components/ui/card";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
 import { DEFAULT_CURRENCY } from "~/constant";
+import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
+import { parties } from "~/util/party";
+import useTableRowActions from "~/util/hooks/useTableRowActions";
+import { removeFromList } from "../home.pricing.new/util/formula";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 export default function PaymentCreateClient() {
   const { associatedActions, paymentAccounts } = useLoaderData<typeof loader>();
   const fetcherPaymentPartiesType = useFetcher<typeof action>();
   const fetcher = useFetcher<typeof action>();
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const { toast } = useToast();
   const [paymentTypes, setPaymentTypes] = useState<SelectItem[]>([]);
   const createPayment = useCreatePayment();
@@ -63,13 +77,20 @@ export default function PaymentCreateClient() {
       taxLines: [],
     },
   });
+  const [rowActions] = useTableRowActions({
+    onDelete(index) {
+      const res = removeFromList(form.getValues().partyReferences, index);
+      form.setValue("partyReferences", res);
+      form.trigger("partyReferences");
+    },
+  });
   const formValues = form.getValues();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const toolbar = useToolbar();
-  const {companyDefaults} = useOutletContext<GlobalState>();
+  const { companyDefaults } = useOutletContext<GlobalState>();
   const navigate = useNavigate();
   const r = routes;
- 
+  const p = parties;
 
   const onPartyTypeChange = (d: z.infer<typeof createPaymentSchema>) => {
     switch (d.partyType) {
@@ -140,6 +161,20 @@ export default function PaymentCreateClient() {
     });
   };
 
+  const updateAmountFromReferences = () => {
+    const totalAllocated = formValues.partyReferences.reduce(
+      (prev, curr) => prev + Number(curr.allocated),
+      0
+    );
+    form.setValue("amount", totalAllocated);
+    console.log("TOTAL ALLOCATED", typeof totalAllocated);
+    form.trigger("amount");
+  };
+
+  useEffect(()=>{
+    updateAmountFromReferences()
+  },[formValues.partyReferences])
+
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
   }, [formValues.taxLines]);
@@ -149,42 +184,36 @@ export default function PaymentCreateClient() {
   }, [formValues.partyType, paymentAccounts]);
 
   useEffect(() => {
-    taxLinesStore.reset()
+    taxLinesStore.reset();
     setUpPaymentTypes();
     fetchInitialData();
     setUpToolbar();
   }, []);
 
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
 
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
+  useDisplayMessage({
+    success:fetcher.data?.message,
+    error:fetcher.data?.error,
+    onSuccessMessage:()=>{
       navigate(
         r.toRoute({
           main: partyTypeToJSON(PartyType.payment),
-          routePrefix: [r.accountingM],
-          routeSufix: [fetcher.data.payment?.code || ""],
+          routeSufix: [fetcher.data?.payment?.code || ""],
           q: {
             tab: "info",
           },
         })
       );
     }
-  }, [fetcher.data]);
+  },[fetcher.data])
+
+
   return (
     <Card>
       <FormLayout>
         <Form {...form}>
           <fetcher.Form
             method="post"
-            
             onSubmit={form.handleSubmit(onSubmit)}
             className={cn("", "gap-y-3 grid p-3")}
           >
@@ -217,7 +246,7 @@ export default function PaymentCreateClient() {
                 label={t("form.partyType")}
                 keyName={"name"}
                 onValueChange={() => {
-                  form.trigger("partyType")
+                  form.trigger("partyType");
                 }}
                 keyValue={"code"}
                 name="partyType"
@@ -226,14 +255,13 @@ export default function PaymentCreateClient() {
               {formValues.partyType && (
                 <div>
                   <PartyAutocompleteForm
-                  control={form.control}
-                  label={t("form.party")}
-                  partyType={formValues.partyType}
-                  onSelect={(e)=>{
-                    form.setValue("partyID",e.id)
-                  }}
+                    control={form.control}
+                    label={t("form.party")}
+                    partyType={formValues.partyType}
+                    onSelect={(e) => {
+                      form.setValue("partyID", e.id);
+                    }}
                   />
-                
                 </div>
               )}
               <Separator className=" col-span-full" />
@@ -253,26 +281,6 @@ export default function PaymentCreateClient() {
                       onChange={(e) => {
                         field.onChange(e);
                       }}
-                      onBlur={() => {
-                        //Distribute among the references
-                        const values = form.getValues();
-                        let total = formatAmountToInt(values.amount);
-                        if (values.partyReferences.length > 0) {
-                          const n = values.partyReferences.map((t) => {
-                            if (total >= t.outstanding) {
-                              t.allocated = Number(t.outstanding);
-                              total = total - t.outstanding;
-                            } else {
-                              t.allocated = Number(total);
-                              total = 0;
-                            }
-                            return t;
-                          });
-                          console.log("ALLOCATED", n);
-                          form.setValue("partyReferences", n);
-                          form.trigger("partyReferences");
-                        }
-                      }}
                     />
                   );
                 }}
@@ -280,7 +288,9 @@ export default function PaymentCreateClient() {
 
               <Separator className=" col-span-full" />
               <AccordationLayout
-                open={!formValues.accountPaidFromID || !formValues.accountPaidToID}
+                open={
+                  !formValues.accountPaidFromID || !formValues.accountPaidToID
+                }
                 title={t("accounts")}
                 containerClassName=" col-span-full"
                 className="create-grid"
@@ -301,18 +311,58 @@ export default function PaymentCreateClient() {
                     form.setValue("accountPaidToID", e.id);
                   }}
                 />
-                
               </AccordationLayout>
-              {formValues.partyReferences.length > 0 && (
+              {(formValues.partyType && formValues.partyID) && (
                 <>
                   <Separator className=" col-span-full" />
                   <Typography className=" col-span-full" variant="title2">
                     {t("table.reference")}
                   </Typography>
+
+                  <InvoiceAutocompleteForm
+                    label="Facturas"
+                    partyType={p.paymentParties[formValues.partyType] || ""}
+                    partyID={formValues.partyID}
+                    onSelect={(e) => {
+                      const n: z.infer<typeof paymentReferceSchema> = {
+                        partyID: e.id,
+                        partyType: p.paymentParties[formValues.partyType] || "",
+                        partyName: e.code,
+                        grandTotal: formatAmount(e.total_amount),
+                        outstanding: formatAmount(
+                          e.total_amount - e.paid_amount
+                        ),
+                        allocated: formatAmount(
+                          e.total_amount - e.paid_amount
+                        ),
+                      };
+                      const nl = [...formValues.partyReferences, n];
+                      form.setValue("partyReferences", nl);
+                      form.trigger("partyReferences");
+                    }}
+                  />
+                  {/* {JSON.stringify(formValues)} */}
                   <div className=" col-span-full">
                     <DataTable
-                      data={form.getValues().partyReferences}
-                      columns={paymentReferencesColumns()}
+                      data={formValues.partyReferences}
+                      columns={paymentReferencesColumns({ t, i18n })}
+                      metaOptions={{
+                        meta: {
+                          updateCell: (
+                            row: number,
+                            column: string,
+                            value: string
+                          ) => {
+                            form.setValue(
+                              `partyReferences.${row}.${column}` as any,
+                              value
+                            );
+                            form.trigger(`partyReferences`);
+                            updateAmountFromReferences();
+                          },
+                          ...rowActions,
+                        },
+                      }}
                     />
                   </div>
                 </>

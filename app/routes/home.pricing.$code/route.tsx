@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, defer, json, LoaderFunctionArgs } from "@remix-run/node";
 import PricingDetailClient from "./pricing-detail.client";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
@@ -12,6 +12,8 @@ import {
 } from "~/util/data/schemas/pricing/pricing-schema";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { components } from "~/sdk";
+import { FetchResponse } from "openapi-fetch";
+import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 
 type ActionData = {
   action: string;
@@ -95,6 +97,11 @@ export function shouldRevalidate({
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
+  const tab = searchParams.get("tab");
+  let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
+    undefined;
   const res = await client.GET("/pricing/detail/{id}", {
     params: {
       path: {
@@ -103,13 +110,33 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
-  return json({
+  if (res.data) {
+    switch (tab) {
+      case "connections": {
+        resConnections = client.GET("/party/connections/{id}", {
+          params: {
+            path: {
+              id: res.data.result.entity.pricing.id.toString(),
+            },
+            query: {
+              party: partyTypeToJSON(PartyType.pricing) || "",
+            },
+          },
+        });
+        console.log("RES Connection...")
+        break;
+      }
+    }
+  }
+  
+  return defer({
     pricing: res.data?.result.entity.pricing,
     // actions:res.data?.actions,
     activities: res.data?.result.activities,
     pricingLines: res.data?.result.entity.pricing_line_items || [],
     pricingCharges: res.data?.result.entity.pricing_charges || [],
     actions: res.data?.associated_actions,
+    connections:resConnections,
   });
 };
 
