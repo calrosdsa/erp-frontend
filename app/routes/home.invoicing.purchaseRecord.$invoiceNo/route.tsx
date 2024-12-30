@@ -13,13 +13,13 @@ import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import {
-  mapToSalesRecordData,
-} from "~/util/data/schemas/invoicing/sales-record-schema";
-import { editPurchaseRecord, mapToPurchaseRecordData } from "~/util/data/schemas/invoicing/purchase-record-schema";
+  purchaseRecordDataSchema,
+  mapToPurchaseRecordData,
+} from "~/util/data/schemas/invoicing/purchase-record-schema";
 
 type ActionData = {
   action: string;
-  editData: z.infer<typeof editPurchaseRecord>;
+  purchaseRecordData: z.infer<typeof purchaseRecordDataSchema>;
   updateStatus: z.infer<typeof updateStatusWithEventSchema>;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -38,14 +38,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "edit": {
-      const d = data.editData;
+      const d = data.purchaseRecordData;
       const purchaseRecordData = mapToPurchaseRecordData(d);
       const res = await client.PUT("/purchase-record", {
-        body: {
-          id: d.id,
-          ...purchaseRecordData,
-          
-        },
+        body: purchaseRecordData,
       });
       error = res.error?.detail;
       message = res.data?.message;
@@ -76,7 +72,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  console.log("ID",searchParams.get("id"))
+  console.log("ID", searchParams.get("id"));
   const res = await client.GET("/purchase-record/detail/{id}", {
     params: {
       path: {

@@ -21,6 +21,8 @@ import { useExporter } from "~/util/hooks/ui/useExporter";
 import DataLayout from "@/components/layout/data-layout";
 import { useTranslation } from "react-i18next";
 import { InvoiceSearch } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
+import { SupplierSearch } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
+import { CustomerSearch } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 
 export default function SalesRecordClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -31,7 +33,7 @@ export default function SalesRecordClient() {
   });
   const navigate = useNavigate();
   const r = routes;
-  const { exportD } = useExporter();
+  const { exportExcel } = useExporter();
   const { t } = useTranslation("common");
 
   setUpToolbar(() => {
@@ -39,7 +41,7 @@ export default function SalesRecordClient() {
     actions.push({
       label: "Export Data",
       onClick: () => {
-        exportD("/sales-record/export");
+        exportExcel("/sales-record/export");
       },
     });
     return {
@@ -72,6 +74,9 @@ export default function SalesRecordClient() {
               <InvoiceSearch
               partyType={r.saleInvoice}
               placeholder={t("saleInvoice")}
+              />
+              <CustomerSearch
+              placeholder={t("customer")}
               />
             </div>
           );

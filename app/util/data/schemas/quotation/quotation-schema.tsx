@@ -13,10 +13,10 @@ export const createQuotationSchema = z
     validTill:z.date(),
     currency: z.string(),
 
-    projectName:z.string().optional(),
+    project:z.string().optional(),
     projectID:z.number().optional(),
 
-    costCenterName:z.string().optional(),
+    costCenter:z.string().optional(),
     costCenterID:z.number().optional(),
 
     lines: z.array(lineItemSchema),

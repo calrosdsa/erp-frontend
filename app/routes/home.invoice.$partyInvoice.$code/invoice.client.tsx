@@ -39,6 +39,8 @@ import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useNewSalesRecord } from "../home.invoicing.salesRecord.new/use-new-sales-record";
 import { useCreatePayment } from "../home.payment.new/use-create-payment";
+import { parties } from "~/util/party";
+import { usePurchaseRecordStore } from "../home.invoicing.purchaseRecord.new/purchase-record-store";
 
 export default function InvoiceDetailClient() {
   const { invoice, activities, associatedActions, totals } =
@@ -51,6 +53,7 @@ export default function InvoiceDetailClient() {
   const { roleActions } = useOutletContext<GlobalState>();
   const tab = searchParams.get("tab");
   const r = routes;
+  const p = parties;
   const navigate = useNavigate();
   const [paymentPermission] = usePermission({
     actions: associatedActions && associatedActions[Entity.PAYMENT],
@@ -81,8 +84,8 @@ export default function InvoiceDetailClient() {
   const createPayment = useCreatePayment();
   const { total } = useLineItems();
   const { total: totalTaxAndCharges } = useTaxAndCharges();
-  const newSalesRecord = useNewSalesRecord()
-
+  const newSalesRecord = useNewSalesRecord();
+  const purchaseRecordStore = usePurchaseRecordStore();
   const navItems = [
     {
       title: t("info"),
@@ -158,7 +161,7 @@ export default function InvoiceDetailClient() {
             partyName: invoice?.party_name,
             partyReference: invoice?.id,
             paymentType: getPaymentType(partyInvoice),
-            partyReferences: [
+            paymentReferences: [
               {
                 partyType: partyInvoice,
                 partyName: invoice?.code || "",
@@ -218,19 +221,40 @@ export default function InvoiceDetailClient() {
     if (salesRecordPerm?.view && active) {
       actions.push({
         label: t("salesRecord"),
-        Icon:PlusIcon,
+        Icon: PlusIcon,
         onClick: () => {
           newSalesRecord.onPayload({
-            partyID:invoice?.party_id,
-            party:invoice?.party_name,
-            invoiceCode:invoice?.code,
-            invoiceID:invoice?.id
-          })
+            partyID: invoice?.party_id,
+            party: invoice?.party_name,
+            invoiceCode: invoice?.code,
+            invoiceID: invoice?.id,
+          });
           navigate(
             r.toRoute({
               main: r.salesRecord,
               routePrefix: [r.invoicing],
-              routeSufix:["new"]
+              routeSufix: ["new"],
+            })
+          );
+        },
+      });
+    }
+    if (purchaseRecordPerm?.view && active) {
+      actions.push({
+        label: t("purchaseRecord"),
+        Icon: PlusIcon,
+        onClick: () => {
+          purchaseRecordStore.setPayload({
+            supplierID: invoice?.party_id,
+            supplier: invoice?.party_name,
+            invoiceCode: invoice?.code,
+            invoiceID: invoice?.id,
+          });
+          navigate(
+            r.toRoute({
+              main: p.purchaseRecord,
+              routePrefix: [r.invoicing],
+              routeSufix: ["new"],
             })
           );
         },
@@ -293,6 +317,7 @@ export default function InvoiceDetailClient() {
       partyID={invoice?.id}
       activities={activities}
     >
+      {/* {JSON.stringify(purchaseRecordPerm)} */}
       {tab == "info" && <InvoiceInfoTab />}
       {tab == "connections" && <InvoiceConnectionsTab />}
     </DetailLayout>

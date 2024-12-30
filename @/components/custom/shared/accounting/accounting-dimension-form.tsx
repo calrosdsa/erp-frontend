@@ -24,7 +24,7 @@ export default function AccountingDimensionForm({
       <FormAutocomplete
         data={projectsFetcher.data?.projects || []}
         form={form}
-        name="projectName"
+        name="project"
         nameK={"name"}
         allowEdit={allowEdit}
         onValueChange={onProjectChange}
@@ -36,7 +36,7 @@ export default function AccountingDimensionForm({
       <FormAutocomplete
         data={costCenterFetcher.data?.costCenters || []}
         form={form}
-        name="costCenterName"
+        name="costCenter"
         nameK={"name"}
         onValueChange={onCostCenterChange}
         allowEdit={allowEdit}

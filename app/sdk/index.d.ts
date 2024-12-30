@@ -1891,6 +1891,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/purchase-record/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Purchase Record Export */
+        post: operations["purchase-record-export"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/purchase-record/update-status": {
         parameters: {
             query?: never;
@@ -3993,54 +4010,6 @@ export interface components {
             party_type: string;
             party_uuid: string;
         };
-        CreatePurchaseRecordRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            authorization_code: string;
-            /** Format: double */
-            cf_base_amount: number;
-            consolidation_status: string;
-            control_code: string;
-            /** Format: double */
-            discounts_bonus_rebates_subject_to_vat: number;
-            dui_dim_no: string;
-            /** Format: double */
-            exempt_amounts: number;
-            /** Format: double */
-            gift_card_amount: number;
-            /** Format: double */
-            ice_amount: number;
-            /** Format: double */
-            iehd_amount: number;
-            /** Format: date-time */
-            invoice_dui_dim_date: string;
-            /** Format: int64 */
-            invoice_id: number;
-            invoice_no: string;
-            /** Format: double */
-            ipj_amount: number;
-            /** Format: double */
-            other_not_subject_to_tax_credit: number;
-            purchase_type: string;
-            /** Format: double */
-            subtotal: number;
-            supplier_business_name: string;
-            /** Format: int64 */
-            supplier_id: number;
-            supplier_nit: string;
-            /** Format: double */
-            tax_credit: number;
-            /** Format: double */
-            tax_rates: number;
-            /** Format: double */
-            total_purchase_amount: number;
-            with_tax_credit_right: boolean;
-            /** Format: double */
-            zero_rate_taxable_purchases_amount: number;
-        };
         CreateQuotationBody: {
             /**
              * Format: uri
@@ -4077,55 +4046,6 @@ export interface components {
              */
             readonly $schema?: string;
             name: string;
-        };
-        CreateSalesRecordRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            authorization_code: string;
-            /** Format: double */
-            base_amount_for_tax_debit: number;
-            consolidation_status: string;
-            control_code: string;
-            /** Format: int64 */
-            customer_id: number;
-            customer_nit_ci: string;
-            /** Format: double */
-            discounts_bonus_and_rebates_subject_to_vat: number;
-            /** Format: double */
-            exports_and_exempt_operations: number;
-            /** Format: double */
-            gift_card_amount: number;
-            /** Format: double */
-            ice_amount: number;
-            /** Format: double */
-            iehd_amount: number;
-            /** Format: date-time */
-            invoice_date: string;
-            /** Format: int64 */
-            invoice_id: number;
-            invoice_no: string;
-            /** Format: double */
-            ipj_amount: number;
-            name_or_business_name: string;
-            /** Format: double */
-            other_not_subject_to_vat: number;
-            sale_type: string;
-            state: string;
-            /** Format: double */
-            subtotal: number;
-            supplement: string;
-            /** Format: double */
-            tax_debit: number;
-            /** Format: double */
-            tax_rates: number;
-            /** Format: double */
-            total_sale_amount: number;
-            with_tax_credit_right: boolean;
-            /** Format: double */
-            zero_rate_taxable_sales: number;
         };
         CreateStockEntryBody: {
             /**
@@ -4563,6 +4483,7 @@ export interface components {
             paid_to_id?: number;
             /** Format: int64 */
             party_id: number;
+            payment_references?: components["schemas"]["CreatePaymentReference"][];
             payment_type: string;
             /** Format: date-time */
             posting_date: string;
@@ -4594,56 +4515,6 @@ export interface components {
             id: number;
             pricing_charges: components["schemas"]["PricingChargeData"][];
             pricing_line_items: components["schemas"]["PricingLineItemData"][];
-        };
-        EditPurchaseRecordRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            authorization_code: string;
-            /** Format: double */
-            cf_base_amount: number;
-            consolidation_status: string;
-            control_code: string;
-            /** Format: double */
-            discounts_bonus_rebates_subject_to_vat: number;
-            dui_dim_no: string;
-            /** Format: double */
-            exempt_amounts: number;
-            /** Format: double */
-            gift_card_amount: number;
-            /** Format: double */
-            ice_amount: number;
-            /** Format: int64 */
-            id: number;
-            /** Format: double */
-            iehd_amount: number;
-            /** Format: date-time */
-            invoice_dui_dim_date: string;
-            /** Format: int64 */
-            invoice_id: number;
-            invoice_no: string;
-            /** Format: double */
-            ipj_amount: number;
-            /** Format: double */
-            other_not_subject_to_tax_credit: number;
-            purchase_type: string;
-            /** Format: double */
-            subtotal: number;
-            supplier_business_name: string;
-            /** Format: int64 */
-            supplier_id: number;
-            supplier_nit: string;
-            /** Format: double */
-            tax_credit: number;
-            /** Format: double */
-            tax_rates: number;
-            /** Format: double */
-            total_purchase_amount: number;
-            with_tax_credit_right: boolean;
-            /** Format: double */
-            zero_rate_taxable_purchases_amount: number;
         };
         EditQuotationRequestBody: {
             /**
@@ -4704,57 +4575,6 @@ export interface components {
             entityName: string;
             entity_actions: components["schemas"]["EntityActionsDto"];
             role_uuid: string;
-        };
-        EditSalesRecordRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            authorization_code: string;
-            /** Format: double */
-            base_amount_for_tax_debit: number;
-            consolidation_status: string;
-            control_code: string;
-            /** Format: int64 */
-            customer_id: number;
-            customer_nit_ci: string;
-            /** Format: double */
-            discounts_bonus_and_rebates_subject_to_vat: number;
-            /** Format: double */
-            exports_and_exempt_operations: number;
-            /** Format: double */
-            gift_card_amount: number;
-            /** Format: double */
-            ice_amount: number;
-            /** Format: int64 */
-            id: number;
-            /** Format: double */
-            iehd_amount: number;
-            /** Format: date-time */
-            invoice_date: string;
-            /** Format: int64 */
-            invoice_id: number;
-            invoice_no: string;
-            /** Format: double */
-            ipj_amount: number;
-            name_or_business_name: string;
-            /** Format: double */
-            other_not_subject_to_vat: number;
-            sale_type: string;
-            state: string;
-            /** Format: double */
-            subtotal: number;
-            supplement: string;
-            /** Format: double */
-            tax_debit: number;
-            /** Format: double */
-            tax_rates: number;
-            /** Format: double */
-            total_sale_amount: number;
-            with_tax_credit_right: boolean;
-            /** Format: double */
-            zero_rate_taxable_sales: number;
         };
         EditStockEntryRequestBody: {
             /**
@@ -6944,6 +6764,10 @@ export interface components {
             amount: number;
             code: string;
             company_bank_account: string | null;
+            cost_center: string;
+            /** Format: int64 */
+            cost_center_id: number;
+            cost_center_uuid: string;
             /** Format: date-time */
             created_at: string;
             /** Format: int64 */
@@ -6967,6 +6791,10 @@ export interface components {
             payment_type: string;
             /** Format: date-time */
             posting_date: string;
+            project: string;
+            /** Format: int64 */
+            project_id: number;
+            project_uuid: string;
             status: string;
         };
         PaymentDto: {
@@ -6975,6 +6803,10 @@ export interface components {
             amount: number;
             code: string;
             company_bank_account: string | null;
+            cost_center: string;
+            /** Format: int64 */
+            cost_center_id: number;
+            cost_center_uuid: string;
             /** Format: date-time */
             created_at: string;
             /** Format: int64 */
@@ -6987,6 +6819,10 @@ export interface components {
             payment_type: string;
             /** Format: date-time */
             posting_date: string;
+            project: string;
+            /** Format: int64 */
+            project_id: number;
+            project_uuid: string;
             status: string;
         };
         PaymentReferenceDto: {
@@ -7244,6 +7080,56 @@ export interface components {
             id: number;
             name: string;
             status: string;
+        };
+        PurchaseRecordData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            authorization_code: string;
+            /** Format: double */
+            cf_base_amount: number;
+            consolidation_status: string;
+            control_code: string;
+            /** Format: double */
+            discounts_bonus_rebates_subject_to_vat: number;
+            dui_dim_no: string;
+            /** Format: double */
+            exempt_amounts: number;
+            /** Format: double */
+            gift_card_amount: number;
+            /** Format: double */
+            ice_amount: number;
+            /** Format: int64 */
+            id?: number;
+            /** Format: double */
+            iehd_amount: number;
+            /** Format: date-time */
+            invoice_dui_dim_date: string;
+            /** Format: int64 */
+            invoice_id: number;
+            invoice_no: string;
+            /** Format: double */
+            ipj_amount: number;
+            /** Format: double */
+            other_not_subject_to_tax_credit: number;
+            purchase_type: string;
+            /** Format: double */
+            subtotal: number;
+            supplier_business_name: string;
+            /** Format: int64 */
+            supplier_id: number;
+            supplier_nit: string;
+            /** Format: double */
+            tax_credit: number;
+            /** Format: double */
+            tax_rates: number;
+            /** Format: double */
+            total_purchase_amount: number;
+            with_tax_credit_right: boolean;
+            /** Format: double */
+            zero_rate_taxable_purchases_amount: number;
         };
         PurchaseRecordDto: {
             authorization_code: string;
@@ -8142,6 +8028,57 @@ export interface components {
             id: number;
             name: string;
         };
+        SalesRecordData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            authorization_code: string;
+            /** Format: double */
+            base_amount_for_tax_debit: number;
+            consolidation_status: string;
+            control_code: string;
+            /** Format: int64 */
+            customer_id: number;
+            customer_nit_ci: string;
+            /** Format: double */
+            discounts_bonus_and_rebates_subject_to_vat: number;
+            /** Format: double */
+            exports_and_exempt_operations: number;
+            /** Format: double */
+            gift_card_amount: number;
+            /** Format: double */
+            ice_amount: number;
+            /** Format: int64 */
+            id?: number;
+            /** Format: double */
+            iehd_amount: number;
+            /** Format: date-time */
+            invoice_date: string;
+            /** Format: int64 */
+            invoice_id: number;
+            invoice_no: string;
+            /** Format: double */
+            ipj_amount: number;
+            name_or_business_name: string;
+            /** Format: double */
+            other_not_subject_to_vat: number;
+            sale_type: string;
+            state: string;
+            /** Format: double */
+            subtotal: number;
+            supplement: string;
+            /** Format: double */
+            tax_debit: number;
+            /** Format: double */
+            tax_rates: number;
+            /** Format: double */
+            total_sale_amount: number;
+            with_tax_credit_right: boolean;
+            /** Format: double */
+            zero_rate_taxable_sales: number;
+        };
         SalesRecordDto: {
             authorization_code: string;
             /** Format: int32 */
@@ -8956,7 +8893,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9029,7 +8966,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9170,7 +9107,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9240,7 +9177,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9412,7 +9349,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9515,7 +9452,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9559,7 +9496,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9629,7 +9566,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9706,7 +9643,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9743,7 +9680,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9787,7 +9724,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -9890,7 +9827,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10033,7 +9970,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10108,7 +10045,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10183,7 +10120,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10253,7 +10190,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10297,7 +10234,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10436,7 +10373,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10475,7 +10412,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10554,7 +10491,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10596,7 +10533,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10699,7 +10636,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10779,7 +10716,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -10917,7 +10854,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -11322,7 +11259,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -11504,7 +11441,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 due_date?: string;
@@ -11683,7 +11620,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -11753,7 +11690,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -11833,7 +11770,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 is_credit_balance?: string;
@@ -11938,7 +11875,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -12054,7 +11991,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -12157,7 +12094,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -12378,7 +12315,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 delivery_date?: string;
@@ -12426,7 +12363,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -12499,7 +12436,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -12611,7 +12548,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -12714,7 +12651,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -12753,7 +12690,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -12797,7 +12734,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -12939,7 +12876,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 invoice_id?: string;
@@ -13072,7 +13009,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -13216,7 +13153,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -13322,7 +13259,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -13503,7 +13440,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -13606,7 +13543,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -13752,7 +13689,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -13822,7 +13759,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -13866,14 +13803,14 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
+                invoice_date?: string;
+                invoice_id?: string;
+                supplier_id?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -13908,7 +13845,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditPurchaseRecordRequestBody"];
+                "application/json": components["schemas"]["PurchaseRecordData"];
             };
         };
         responses: {
@@ -13941,7 +13878,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreatePurchaseRecordRequestBody"];
+                "application/json": components["schemas"]["PurchaseRecordData"];
             };
         };
         responses: {
@@ -13969,7 +13906,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -13992,6 +13929,37 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityPurchaseRecordDtoBody"];
                 };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "purchase-record-export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportDataRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Error */
             default: {
@@ -14223,7 +14191,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 valid_till?: string;
@@ -14412,7 +14380,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 posting_date?: string;
@@ -14458,7 +14426,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -14561,7 +14529,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -14841,7 +14809,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -14977,7 +14945,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -15057,7 +15025,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -15130,7 +15098,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -15242,7 +15210,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -15284,11 +15252,12 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 invoice_date?: string;
                 invoice_id?: string;
+                customer_id?: string;
             };
             header?: never;
             path?: never;
@@ -15325,7 +15294,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditSalesRecordRequestBody"];
+                "application/json": components["schemas"]["SalesRecordData"];
             };
         };
         responses: {
@@ -15358,7 +15327,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateSalesRecordRequestBody"];
+                "application/json": components["schemas"]["SalesRecordData"];
             };
         };
         responses: {
@@ -15386,7 +15355,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -15497,7 +15466,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 serial_no?: string;
@@ -15532,7 +15501,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -15613,7 +15582,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -15716,7 +15685,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -15871,7 +15840,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16039,7 +16008,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16083,7 +16052,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16228,7 +16197,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16272,7 +16241,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16407,7 +16376,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16446,7 +16415,7 @@ export interface operations {
         parameters: {
             query: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 currency: string;
@@ -16604,7 +16573,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16646,7 +16615,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16683,7 +16652,7 @@ export interface operations {
         parameters: {
             query: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
                 page: string;
@@ -16796,7 +16765,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16840,7 +16809,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16913,7 +16882,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -16957,7 +16926,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -17063,7 +17032,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -17136,7 +17105,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -17242,7 +17211,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -17447,7 +17416,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -17525,7 +17494,7 @@ export interface operations {
                 status?: string;
                 is_group?: string;
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };
@@ -17598,7 +17567,7 @@ export interface operations {
         parameters: {
             query?: {
                 query?: string;
-                order?: string;
+                orientation?: string;
                 column?: string;
                 parentId?: string;
             };

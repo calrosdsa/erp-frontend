@@ -14,6 +14,7 @@ export const SupplierAutoCompleteForm = ({
   control,
   label,
   onSelect,
+  onClear,
   roleActions,
   required,
   className,
@@ -24,6 +25,7 @@ export const SupplierAutoCompleteForm = ({
   label?: string;
   required?:boolean;
   onSelect: (e: components["schemas"]["SupplierDto"]) => void;
+  onClear?:()=>void,
   roleActions?: components["schemas"]["RoleActionDto"][];
   className?:string
   name?:string
@@ -44,6 +46,7 @@ export const SupplierAutoCompleteForm = ({
       nameK="name"
       control={control}
       className={className}
+      onClear={onClear}
       allowEdit={allowEdit}
       onSelect={onSelect}
       {...(permission.create && {

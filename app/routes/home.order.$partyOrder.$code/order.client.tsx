@@ -114,7 +114,7 @@ export default function PurchaseOrderClient() {
         return "";
     }
   };
-  setUpToolbar(() => {
+  setUpToolbar((opts) => {
     console.log("SET UP TOOLBAR...")
     const actions: ButtonToolbar[] = [];
     const status = stateFromJSON(order?.status);
@@ -193,6 +193,7 @@ export default function PurchaseOrderClient() {
       });
     }
     return {
+      ...opts,
       actions: actions,
       titleToolbar: `${t("_order.base")}(${order?.code})`,
       status: stateFromJSON(order?.status),

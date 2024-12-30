@@ -14,10 +14,10 @@ export const createOrderSchema = z.object({
   deliveryDate: z.date().optional(),
   currency: z.string(),
 
-  projectName:z.string().optional(),
+  project:z.string().optional(),
   projectID:z.number().optional(),
 
-  costCenterName:z.string().optional(),
+  costCenter:z.string().optional(),
   costCenterID:z.number().optional(),
   lines: z.array(lineItemSchema),
   taxLines:z.array(taxAndChargeSchema)

@@ -52,6 +52,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       query: {
         page: searchParams.get("page") || DEFAULT_PAGE,
         size: searchParams.get("size") || DEFAULT_SIZE,
+        invoice_date: searchParams.get("invoice_date") || undefined,
+        order: searchParams.get("order") || "",
+        column: searchParams.get("column") || "",
+        invoice_id: searchParams.get("invoice") || "",
+        supplier_id: searchParams.get("party") || "",
       },
     },
   });

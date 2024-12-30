@@ -65,9 +65,9 @@ export default function CreatePurchaseOrdersClient() {
       taxLines: taxLinesStore.lines,
 
       costCenterID: payload?.costCenterID,
-      costCenterName: payload?.costCenterName,
+      costCenter: payload?.costCenterName,
       projectID: payload?.projectID,
-      projectName: payload?.projectName,
+      project: payload?.projectName,
       partyID: payload?.partyID,
       partyName: payload?.partyName,
     },

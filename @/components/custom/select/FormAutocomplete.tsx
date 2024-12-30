@@ -45,6 +45,7 @@ interface Props<T extends object, K extends keyof T> {
   description?: string;
   onValueChange?: (e: string) => void;
   onSelect?: (v: T) => void;
+  onClear?: () => void;
   className?: string;
   allowEdit?: boolean;
   addNew?: () => void;
@@ -63,6 +64,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   name,
   onValueChange,
   onSelect,
+  onClear,
   onCustomDisplay,
   className,
   allowEdit = true,
@@ -83,14 +85,14 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
             </FormLabel>
           )}
           <Popover open={open} onOpenChange={setOpen} modal={false}>
-              {href && !allowEdit ? (
+            {href && !allowEdit ? (
               <Button
                 variant="outline"
                 role="combobox"
                 size="sm"
                 type="button"
-                onClick={(e)=>{
-                  e.stopPropagation()
+                onClick={(e) => {
+                  e.stopPropagation();
                 }}
                 className={cn(
                   "justify-between",
@@ -105,66 +107,69 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                 </Link>
               </Button>
             ) : (
-            <PopoverTrigger asChild>
-              <FormControl>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  size={"sm"}
-                  disabled={!allowEdit}
-                  onClick={() => {
-                    onValueChange?.("");
-                    setOpen(!open);
-                  }}
-                  className={cn(
-                    "justify-between font-normal text-sm",
-                    className,
-                    !field.value && "text-muted-foreground",
-                    !allowEdit &&
-                      "disabled:opacity-100 disabled:cursor-default bg-secondary"
-                  )}
-                >
-                  <span className=" truncate">
-                  {field.value || ""}
-                  </span>
-                  
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    size={"sm"}
+                    disabled={!allowEdit}
+                    onClick={() => {
+                      onValueChange?.("");
+                      setOpen(!open);
+                    }}
+                    className={cn(
+                      "justify-between font-normal text-sm",
+                      className,
+                      !field.value && "text-muted-foreground",
+                      !allowEdit &&
+                        "disabled:opacity-100 disabled:cursor-default bg-secondary"
+                    )}
+                  >
+                    <span className=" truncate">{field.value || ""}</span>
 
-                  {field.value && field.value != "" && allowEdit && !required ? (
-                    <div className="flex items-center">
-                      {href && (
-                        <div onClick={(e)=>{
-                          e.stopPropagation()
-                        }}>
-                          <Link to={href}>
-                            <IconButton
-                              icon={ArrowRight}
-                              size="sm"
-                              className="ml-1 h-6 w-6 shrink-0 opacity-50 "
-                            />
-                          </Link>
-                        </div>
-                      )}
-                      <IconButton
-                        icon={XIcon}
-                        size="sm"
-                        className="ml-1 h-6 w-6 shrink-0 opacity-50 "
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          field.onChange();
-                          setOpen(false);
-                          // form.setValue(name, "");
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    allowEdit && (
-                      <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
-                    )
-                  )}
-                </Button>
-              </FormControl>
-            </PopoverTrigger>
-              )}
+                    {field.value &&
+                    field.value != "" &&
+                    allowEdit &&
+                    !required ? (
+                      <div className="flex items-center">
+                        {href && (
+                          <div
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            <Link to={href}>
+                              <IconButton
+                                icon={ArrowRight}
+                                size="sm"
+                                className="ml-1 h-6 w-6 shrink-0 opacity-50 "
+                              />
+                            </Link>
+                          </div>
+                        )}
+                        <IconButton
+                          icon={XIcon}
+                          size="sm"
+                          className="ml-1 h-6 w-6 shrink-0 opacity-50 "
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            field.onChange();
+                            onClear?.();
+                            setOpen(false);
+                            // form.setValue(name, "");
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      allowEdit && (
+                        <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
+                      )
+                    )}
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+            )}
             <PopoverContent className="">
               <Command className="max-h-[150px] sm:max-h-[200px]">
                 <CommandInput
@@ -215,7 +220,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
                                 : "opacity-0"
                             )}
                           />
-                          {item[nameK]?.toString() || ""} 
+                          {item[nameK]?.toString() || ""}
                         </CommandItem>
                       )
                     )}
@@ -239,7 +244,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
             </PopoverContent>
           </Popover>
           {description && <FormDescription>{description}</FormDescription>}
-          <FormMessage className="text-xs"/>
+          <FormMessage className="text-xs" />
         </FormItem>
       )}
     />

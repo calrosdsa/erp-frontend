@@ -6,11 +6,11 @@ import { createChargesTemplateSchema } from "~/util/data/schemas/accounting/char
 import { mapToTaxAndChargeData } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 import NewCurrencyExchangeClient from "./new-sales-record";
 import { createCurrencyExchangeSchema } from "~/util/data/schemas/core/currency-exchange-schema";
-import { createSalesRecord, mapToSalesRecordData } from "~/util/data/schemas/invoicing/sales-record-schema";
+import { mapToSalesRecordData, salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-record-schema";
 
 type ActionData = {
   action: string;
-  createSalesRecord: z.infer<typeof createSalesRecord>;
+  salesRecordData: z.infer<typeof salesRecordDataSchema>;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
@@ -21,12 +21,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     undefined;
   switch (data.action) {
     case "create-sales-record": {
-      const d = data.createSalesRecord;
+      const d = data.salesRecordData;
       const salesRecordData = mapToSalesRecordData(d)
       const res = await client.POST("/sales-record", {
-        body: {
-         ...salesRecordData
-        },
+        body: salesRecordData,
       });
       console.log(res.data,res.error)
       message = res.data?.message;

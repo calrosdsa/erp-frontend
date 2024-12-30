@@ -6,13 +6,13 @@ import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schem
 import { z } from "zod";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
-import { editPayment } from "~/util/data/schemas/accounting/payment-schema";
+import { partyReferencesToDto, paymentDataSchema } from "~/util/data/schemas/accounting/payment-schema";
 import { formatRFC3339 } from "date-fns";
 
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
-  editData: z.infer<typeof editPayment>;
+  editData: z.infer<typeof paymentDataSchema>;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -24,13 +24,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (data.action) {
     case "edit": {
       const d = data.editData;
+      const paymentReferences = d.paymentReferences?.map((t) =>
+        partyReferencesToDto(t)
+      );
+
       const res = await client.PUT("/payment", {
         body: {
-          id: d.id,
+          id: d.id || 0,
           amount: d.amount,
           payment_type: d.paymentType,
           posting_date: formatRFC3339(d.postingDate),
-        //   payment_references: paymentReferences,
+          payment_references: paymentReferences,
           party_id: d.partyID,
           // party_reference:d.partyReference,
           paid_from_id: d.accountPaidFromID,

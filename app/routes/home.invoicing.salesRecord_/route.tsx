@@ -18,6 +18,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         order:searchParams.get("order") || "",
         column:searchParams.get("column") || "",
         invoice_id:searchParams.get("invoice") || "",
+        customer_id:searchParams.get("party") || ""
       },
     },
   });

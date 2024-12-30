@@ -37,6 +37,7 @@ import { useEditFields } from "~/util/hooks/useEditFields";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 type EditData = z.infer<typeof editOrderSchema>;
 export default function OrderInfoTab() {
@@ -71,6 +72,7 @@ export default function OrderInfoTab() {
   const isDraft = stateFromJSON(order?.status) == State.DRAFT;
   const allowEdit = isDraft && orderPerm?.edit;
   const allowCreate = isDraft && orderPerm.create;
+  const toolbar = useToolbar()
   const { companyDefaults } = useOutletContext<GlobalState>();
   const documentStore = useDocumentStore();
 
@@ -95,16 +97,23 @@ export default function OrderInfoTab() {
     [fetcher.state]
   );
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  useEffect(()=>{
+    toolbar.setToolbar({
+      onSave: () => inputRef.current?.click(),
+      disabledSave: !hasChanged,
+    })
+  },[hasChanged])
+
+  // setUpToolbar(
+  //   (opts) => {
+  //     return {
+  //       ...opts,
+  //       onSave: () => inputRef.current?.click(),
+  //       disabledSave: !hasChanged,
+  //     };
+  //   },
+  //   [hasChanged]
+  // );
 
   useDisplayMessage(
     {

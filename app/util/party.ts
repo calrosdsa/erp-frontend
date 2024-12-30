@@ -1,20 +1,46 @@
 class Parties {
-    customer = "customer"
-    supplier = "supplier"
-    purchaseInvoice = "purchaseInvoice"
-    saleInvoice = "saleInvoice"
-    payment = "payment"
+  customer = "customer";
+  supplier = "supplier";
+  purchaseInvoice = "purchaseInvoice";
+  saleInvoice = "saleInvoice";
+  payment = "payment";
 
-    //Regate
-    booking = "booking"
-    invoicePaties = {
-        [this.customer]:this.saleInvoice,
-        [this.supplier]:this.purchaseInvoice,
-    }
+  purchaseReceipt = "purchaseReceipt";
+  deliveryNote = "deliveryNote";
+  journalEntry = "journalEntry";
+  costCenter = "costCenter";
+  chargesTemplate = "chargesTemplate";
+  currencyExchange = "currencyExchange";
+  salesRecord = "salesRecord";
+  purchaseRecord = "purchaseRecord";
+  stockEntry = "stockEntry";
+  project = "project";
+  pricing = "pricing";
+  serialNo = "serialNo";
+  batchBundle = "batchBundle";
+  invoicing = "invoicing";
+  purchaseOrder = "purchaseOrder";
+  saleOrder = "saleOrder";
+  supplierQuotation = "supplierQuotation";
+  itemGroup = "itemGroup";
+  customerGroup = "customerGroup";
+  supplierGroup = "supplierGroup";
 
-    paymentParties = {
-        ...this.invoicePaties,
-    }
+  //Regate
+  booking = "booking";
+  invoicePaties = {
+    [this.customer]: this.saleInvoice,
+    [this.supplier]: this.purchaseInvoice,
+  };
+
+  paymentParties = {
+    ...this.invoicePaties,
+  };
+
+  customerOption: SelectItem = { value: this.customer, name: "Cliente" };
+  supplierOption: SelectItem = { value: this.supplier, name: "Proveedor" };
+
+  paymentOptions: SelectItem[] = [this.customerOption, this.supplierOption];
 }
 
 export const parties = new Parties();

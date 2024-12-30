@@ -10,6 +10,7 @@ import {
   ListFilterIcon,
   PlusIcon,
   TrashIcon,
+  XIcon,
 } from "lucide-react";
 
 import { components } from "~/sdk";
@@ -42,6 +43,9 @@ import { Calendar } from "../ui/calendar";
 import IconButton from "../custom-ui/icon-button";
 import { DateRange } from "react-day-picker";
 import { toZonedTime } from "date-fns-tz";
+import { Badge } from "../ui/badge";
+import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
+import { AutoComplete } from "../custom/select/Autocomplete";
 
 type FilterOption = components["schemas"]["FilterOptionDto"];
 type SelectItem = { name: string; value: string };
@@ -61,7 +65,7 @@ const FilterSelectorValue: React.FC<{
 
   useEffect(() => {
     if (filterOption.type === "date") {
-      setDates(current.value.map((t) => parse(t,"yyyy-MM-dd",new Date()) ));
+      setDates(current.value.map((t) => parse(t, "yyyy-MM-dd", new Date())));
     }
   }, [current.value, filterOption.type]);
 
@@ -105,7 +109,6 @@ const FilterSelectorValue: React.FC<{
             {/* {JSON.stringify(dates)} */}
             {current.operator == "in" && (
               <Calendar
-              
                 mode={"multiple"}
                 // selected={new Date()}
                 selected={dates}
@@ -166,6 +169,15 @@ const FilterSelectorValue: React.FC<{
       </Select>
     );
   }
+  if (filterOption.type === "string" ) {
+    return (
+      <Input
+      className="w-min"
+      onChange={(e)=>onChange([e.target.value])}
+      // value={current.value[0]}
+      />
+    );
+  }
 
   return null;
 };
@@ -173,33 +185,19 @@ const FilterSelectorValue: React.FC<{
 const FilterPopoverContent: React.FC<{
   filterOptions: FilterOption[];
   onApplyFilters: (filters: FilterData[]) => void;
+  filters: FilterData[];
+  setFilters: React.Dispatch<React.SetStateAction<FilterData[]>>;
   setSearchParams: ReturnType<typeof useSearchParams>[1];
-}> = ({ filterOptions, onApplyFilters, setSearchParams }) => {
-  const [filters, setFilters] = useState<FilterData[]>([]);
+}> = ({
+  filterOptions,
+  onApplyFilters,
+  setSearchParams,
+  filters,
+  setFilters,
+}) => {
+  // const [filters, setFilters] = useState<FilterData[]>([]);
   const { t } = useTranslation("common");
   const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    const filterDataList: FilterData[] = [];
-
-    params.forEach((value, key) => {
-      try {
-        const values = JSON.parse(decodeURIComponent(value));
-        if (Array.isArray(values) && values.length >= 2) {
-          filterDataList.push({
-            param: key,
-            operator: values[0],
-            value: values.slice(1),
-          });
-        }
-      } catch (error) {
-        console.error("Error parsing filter value:", error);
-      }
-    });
-
-    setFilters(filterDataList);
-  }, [searchParams]);
 
   const handleFilterChange = (
     index: number,
@@ -243,14 +241,14 @@ const FilterPopoverContent: React.FC<{
       case "<": {
         return "Menor que";
       }
-      case "in":{
-        return "En"
+      case "in": {
+        return "En";
       }
-      case "<=":{
-        return "Menor o igual que"
+      case "<=": {
+        return "Menor o igual que";
       }
-      case ">=":{
-        return "Mayor o igual que"
+      case ">=": {
+        return "Mayor o igual que";
       }
     }
     return o;
@@ -344,6 +342,7 @@ const DataLayout: React.FC<{
   filterOptions?: FilterOption[] | null;
 }> = ({ children, fixedFilters, orderOptions = [], filterOptions = [] }) => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const [filters, setFilters] = useState<FilterData[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation("common");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -358,22 +357,74 @@ const DataLayout: React.FC<{
     setSearchParams(searchParams, { preventScrollReset: true });
     setIsFilterOpen(false);
   };
-  
+
+  const clearFilter = () => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    filters.forEach((filter) => {
+      newSearchParams.delete(filter.param)
+    })
+    setFilters([])
+    setSearchParams(newSearchParams, { preventScrollReset: true })
+    
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    const filterDataList: FilterData[] = [];
+
+    params.forEach((value, key) => {
+      try {
+        const values = JSON.parse(decodeURIComponent(value));
+        if (Array.isArray(values) && values.length >= 2) {
+          filterDataList.push({
+            param: key,
+            operator: values[0],
+            value: values.slice(1),
+          });
+        }
+      } catch (error) {
+        console.error("Error parsing filter value:", error);
+      }
+    });
+
+    setFilters(filterDataList);
+  }, [searchParams]);
 
   return (
     <div className="h-full flex flex-col pt-1">
       <div className="grid gap-3 xl:flex xl:justify-between">
-        <div className="flex space-x-2">
+        <div className="flex space-x-1">
           {filterOptions != null && filterOptions.length > 0 && (
             <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <ListFilterIcon className="mr-2 h-4 w-4" />
-                  Filtros
-                </Button>
-              </PopoverTrigger>
+              <div className="flex space-x-1 items-center">
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <ListFilterIcon className="mr-1 h-4 w-4" />
+                    <span>Filtros</span>
+                    {filters.length > 0 && (
+                      <Badge
+                        variant={"outline"}
+                        className=" flex items-center justify-center w-5 h-5"
+                      >
+                        {filters.length}
+                      </Badge>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                {filters.length > 0 && (
+                  <Button
+                    variant={"ghost"}
+                    className=" rounded-full"
+                    onClick={clearFilter}
+                  >
+                    <XIcon />
+                  </Button>
+                )}
+              </div>
               <PopoverContent className="sm:w-[500px] p-0">
                 <FilterPopoverContent
+                  filters={filters}
+                  setFilters={setFilters}
                   filterOptions={filterOptions}
                   onApplyFilters={handleApplyFilters}
                   setSearchParams={setSearchParams}
@@ -393,19 +444,19 @@ const DataLayout: React.FC<{
                   className="rounded-r-none"
                   size="sm"
                   onClick={() => {
-                    const order = searchParams.get("order");
+                    const order = searchParams.get("orientation");
                     // if (orderOptions.length > 0 && orderOptions[0]) {
                     //   searchParams.set("column", orderOptions[0].value);
                     //   searchParams.set("columnName", orderOptions[0].name);
                     // }
                     searchParams.set(
-                      "order",
+                      "orientation",
                       order === DEFAULT_ORDER ? "asc" : DEFAULT_ORDER
                     );
                     setSearchParams(searchParams, { preventScrollReset: true });
                   }}
                 >
-                  {searchParams.get("order") === DEFAULT_ORDER ? (
+                  {searchParams.get("orientation") === DEFAULT_ORDER ? (
                     <ArrowDownWideNarrow size={13} />
                   ) : (
                     <ArrowUpWideNarrow size={13} />

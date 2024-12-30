@@ -33,7 +33,7 @@ export const InvoiceAutocompleteForm = ({
       data={fetcher.data?.results || []}
       onValueChange={onChange}
       label={label}
-      name={name || "invoiceCode"}
+      name={name || "invoice"}
       nameK="code"
       control={control}
       allowEdit={allowEdit}
@@ -70,12 +70,12 @@ export const InvoiceSearch = ({
       nameK={"code"}
       valueK={"id"}
       placeholder={placeholder}
-      queryName="invoiceName"
+      queryName="invoice_code"
       queryValue="invoice"
       onSelect={() => {}}
       onCustomDisplay={(e) => {
         return (
-          <div className="flex flex-col">
+          <div className="flex flex-col text-xs">
             <span className=" font-medium">{e.code}</span>
             <span>
               {e.record_no && `${e.record_no}-`}

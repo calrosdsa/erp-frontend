@@ -46,14 +46,13 @@ export default function ToolBar({ title }: { title: string }) {
 
   return (
     <>
-    <Dialog open={toolbarState.loading}>
-    <DialogOverlay>
-      <div className="  h-screen flex justify-center items-center">
-        <Icons.spinner className=" h-9 w-9 animate-spin text-background"/>
-      </div>
-    </DialogOverlay>
-    
-    </Dialog>
+      <Dialog open={toolbarState.loading}>
+        <DialogOverlay>
+          <div className="  h-screen flex justify-center items-center">
+            <Icons.spinner className=" h-9 w-9 animate-spin text-background" />
+          </div>
+        </DialogOverlay>
+      </Dialog>
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
         <div className="flex flex-wrap space-x-2 ">
           <Typography variant="title2">
@@ -110,7 +109,7 @@ export default function ToolBar({ title }: { title: string }) {
                   <ChevronsUpDown className="h-4 w-4" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent >
+              <PopoverContent>
                 <div className="flex flex-col space-y-1">
                   {view.map((item, idx) => (
                     <Button
@@ -119,9 +118,7 @@ export default function ToolBar({ title }: { title: string }) {
                       className="justify-start"
                       onClick={() => item.onClick()}
                     >
-                      <span className=" whitespace-normal">
-                      {item.label}
-                      </span>
+                      <span className=" whitespace-normal">{item.label}</span>
                       {item.Icon && <item.Icon className="h-3 w-3 ml-2" />}
                     </Button>
                   ))}
@@ -181,13 +178,13 @@ export default function ToolBar({ title }: { title: string }) {
                     disabled={toolbarState.loading}
                     variant={"outline"}
                   >
-                      {t("form.cancel")} 
+                    {t("form.cancel")}
                   </Button>
                 )}
             </>
           )}
 
-          {onSave && (
+          {(onSave && !disabledSave) && (
             <Button
               size={"sm"}
               onClick={() => {
@@ -207,7 +204,7 @@ export default function ToolBar({ title }: { title: string }) {
               disabled={disabledSave || toolbarState.loading}
               variant={"outline"}
             >
-              {t("form.save")}
+              {t("form.save")} 
             </Button>
           )}
 

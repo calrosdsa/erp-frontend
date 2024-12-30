@@ -26,7 +26,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const d = data.createPurchaseInvoice;
       const lines = d.lines.map((t) => lineItemSchemaToLineData(t));
       const taxLines = d.taxLines.map((t) => mapToTaxAndChargeData(t));
-      console.log("TAX LINES", taxLines);
+      console.log("PARTY INVOICE", params.partyInvoice);
       const res = await client.POST("/invoice", {
         body: {
           invoice: {

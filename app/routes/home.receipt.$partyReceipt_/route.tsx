@@ -15,7 +15,7 @@ export const loader = async({request,params}:LoaderFunctionArgs)=>{
                 page: searchParams.get("page") || DEFAULT_PAGE,
                 size: searchParams.get("size") || DEFAULT_SIZE,
                 query: searchParams.get("query") || "",
-                order: searchParams.get("order") || DEFAULT_ORDER,
+                orientation: searchParams.get("orientation") || DEFAULT_ORDER,
                 column: searchParams.get("column") || DEFAULT_COLUMN,
                 status: searchParams.get("status") || "",
                 posting_date: searchParams.get("posting_date") || "",

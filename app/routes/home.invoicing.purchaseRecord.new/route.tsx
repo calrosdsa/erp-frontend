@@ -2,12 +2,12 @@ import { ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import apiClient from "~/apiclient";
 import { components } from "~/sdk";
-import { createPurchaseRecord, mapToPurchaseRecordData } from "~/util/data/schemas/invoicing/purchase-record-schema";
+import { mapToPurchaseRecordData, purchaseRecordDataSchema } from "~/util/data/schemas/invoicing/purchase-record-schema";
 import NewPurchaseRecordClient from "./new-purchase-record";
 
 type ActionData = {
   action: string;
-  createPurchaseRecord: z.infer<typeof createPurchaseRecord>;
+  purchaseRecordData: z.infer<typeof purchaseRecordDataSchema>;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
@@ -18,7 +18,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     undefined;
   switch (data.action) {
     case "create-purchase-record": {
-      const d = data.createPurchaseRecord;
+      const d = data.purchaseRecordData;
       const purchaseRecordData = mapToPurchaseRecordData(d)
       const res = await client.POST("/purchase-record", {
         body: {

@@ -23,7 +23,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const res = await client.GET("/invoice/{party}", {
         params: {
           query: {
-            page: DEFAULT_PAGE,
+            page: "10",
             size: DEFAULT_SIZE,
             query:d.query,
             party_id:d.partyID?.toString(),
@@ -56,7 +56,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         page: searchParams.get("page") || DEFAULT_PAGE,
         size: searchParams.get("size") || DEFAULT_SIZE,
         query:searchParams.get("query") || "",
-        order: searchParams.get("order") || DEFAULT_ORDER,
+        orientation: searchParams.get("orientation") || DEFAULT_ORDER,
         column: searchParams.get("column") || DEFAULT_COLUMN,
         status: searchParams.get("status") || "",
         due_date: searchParams.get("due_date") || "",

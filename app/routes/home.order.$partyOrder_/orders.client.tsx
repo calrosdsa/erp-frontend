@@ -20,6 +20,8 @@ import { useResetDocument } from "@/components/custom/shared/document/reset-data
 import DataLayout from "@/components/layout/data-layout";
 import { PartySearch } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useTranslation } from "react-i18next";
+import { AutoComplete } from "@/components/custom/select/Autocomplete";
+import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 
 export default function OrdersClient() {
   const { paginationResult, actions, filters } = useLoaderData<typeof loader>();
@@ -53,6 +55,12 @@ export default function OrdersClient() {
     };
   }, [permission]);
 
+  const mockItems = [
+    { value: "1", label: "Item 1" },
+    { value: "2", label: "Item 2" },
+  ];
+
+  const [customerFetcher,onCustomerChange] = useCustomerDebounceFetcher() 
   return (
     <DataLayout
       filterOptions={filters}
@@ -68,6 +76,18 @@ export default function OrdersClient() {
         );
       }}
     >
+      <AutoComplete
+      items={customerFetcher.data?.customers.map(t=>{
+        return {
+          value:t,
+          label:t.name,
+        }
+      }) || []}
+      selectedValue={undefined}
+      onSelectedValueChange={()=>{}}
+      onSearchValueChange={onCustomerChange}
+      searchValue=""
+      />
       <DataTable
         data={paginationResult?.results || []}
         columns={orderColumns({

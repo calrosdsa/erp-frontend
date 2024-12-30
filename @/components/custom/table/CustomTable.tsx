@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({
   enableSizeSelection = false,
   onSelectionChange,
   maxTableHeight = 480,
-  rowHeight = 44,
+  rowHeight = 41,
 
 }: DataTableProps<TData, TValue>) {
   const [searchParams, setSearchParams] = useSearchParams();

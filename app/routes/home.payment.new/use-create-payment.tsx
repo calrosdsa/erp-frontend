@@ -1,26 +1,46 @@
-import { z } from "zod";
-import { create } from "zustand";
-import { paymentReferceSchema } from "~/util/data/schemas/accounting/payment-schema";
+import { z } from "zod"
+import { create } from "zustand"
+import { paymentReferceSchema } from "~/util/data/schemas/accounting/payment-schema"
+import { formatAmount } from "~/util/format/formatCurrency"
 
+// Define the PaymentReference type based on the Zod schema
+type PaymentReference = z.infer<typeof paymentReferceSchema>
+
+// Define the Payload interface with more specific types
 interface Payload {
-    amount:number
-    
-    partyType?:string
-    partyName?:string
-    partyID?:number
-    paymentType?:string
-    partyUuid?:string
-    partyReference?:number
-    partyReferences:z.infer<typeof paymentReferceSchema>[]
+  amount: number
+  partyType?: string
+  partyName?: string
+  partyID?: number
+  paymentType?: string
+  partyUuid?: string
+  partyReference?: number
+  paymentReferences: PaymentReference[]
 }
 
+// Define the store interface
 interface CreatePaymentStore {
-    payload?:Payload
-    setData:(payload:Payload)=>void
+  payload: Payload | null
+  setData: (payload: Payload) => void
 }
 
-export const useCreatePayment = create<CreatePaymentStore>((set)=>({
-    setData:(e)=>set((state)=>({
-        payload:e
+// Helper function to format payment reference amounts
+const formatPaymentReference = (reference: PaymentReference): PaymentReference => ({
+  ...reference,
+  allocated: formatAmount(reference.allocated),
+  outstanding: formatAmount(reference.outstanding),
+  grandTotal: formatAmount(reference.grandTotal),
+})
+
+// Create the Zustand store
+export const useCreatePayment = create<CreatePaymentStore>((set) => ({
+  payload: null,
+  setData: (newPayload) => {
+    set((state) => ({
+      payload: {
+        ...newPayload,
+        paymentReferences: newPayload.paymentReferences.map(formatPaymentReference),
+      },
     }))
+  },
 }))

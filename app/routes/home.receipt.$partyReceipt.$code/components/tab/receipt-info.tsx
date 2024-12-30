@@ -42,6 +42,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { editReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 type EditData = z.infer<typeof editReceiptSchema>;
 export default function ReceiptInfoTab() {
@@ -58,6 +59,7 @@ export default function ReceiptInfoTab() {
   const allowEdit = isDraft && receiptPerm?.edit;
   const allowCreate = isDraft && receiptPerm.create;
   const documentStore = useDocumentStore();
+  const toolbar = useToolbar()
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: editReceiptSchema,
     defaultValues: {
@@ -89,16 +91,14 @@ export default function ReceiptInfoTab() {
     );
   };
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  useEffect(()=>{
+    toolbar.setToolbar({
+      onSave: () => inputRef.current?.click(),
+      disabledSave: !hasChanged,
+    })
+  },[hasChanged])
+
+  
 
   useLoadingTypeToolbar(
     {

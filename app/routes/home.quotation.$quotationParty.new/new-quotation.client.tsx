@@ -67,9 +67,9 @@ export default function NewQuotationClient() {
 
       currency: payload?.currency || companyDefaults?.currency,
       costCenterID: payload?.costCenterID,
-      costCenterName: payload?.costCenterName,
+      costCenter: payload?.costCenterName,
       projectID: payload?.projectID,
-      projectName: payload?.projectName,
+      project: payload?.projectName,
     },
   });
   const formValues = form.getValues();

@@ -32,7 +32,8 @@ export function useEditFields<T extends FieldValues>({
 
   const validateIfDataHasChanged = useCallback(() => {
     const currentValues = form.getValues();
-    const hasChanges = isEqual(currentValues, previousValuesRef.current);
+    // const hasChanges = isEqual(currentValues, previousValuesRef.current);
+    const hasChanges = JSON.stringify(currentValues) == JSON.stringify(previousValuesRef.current);
     setHasChanged(!hasChanges);
   }, [form]);
 

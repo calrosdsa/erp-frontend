@@ -2,14 +2,14 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import PaymentCreateClient from "./new-payment.client";
 import apiClient from "~/apiclient";
 import { z } from "zod";
-import { createPaymentSchema, partyReferencesToDto } from "~/util/data/schemas/accounting/payment-schema";
+import { partyReferencesToDto, paymentDataSchema } from "~/util/data/schemas/accounting/payment-schema";
 import { components } from "~/sdk";
 import { formatRFC3339 } from "date-fns";
 import { mapToTaxAndChargeData } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
 type ActionData = {
     action:string
-    createPayment:z.infer<typeof createPaymentSchema>
+    createPayment:z.infer<typeof paymentDataSchema>
 }
 
 export const action = async({request}:ActionFunctionArgs)=>{
@@ -29,7 +29,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
         case "create-payment":{
             const d = data.createPayment
             const taxLines = d.taxLines.map((t) => mapToTaxAndChargeData(t));
-            const paymentReferences = d.partyReferences.map((t)=>partyReferencesToDto(t))
+            const paymentReferences = d.paymentReferences.map((t)=>partyReferencesToDto(t))
             const res = await client.POST("/payment",{
                 body:{
                     payment: {
@@ -40,6 +40,8 @@ export const action = async({request}:ActionFunctionArgs)=>{
                         // party_reference:d.partyReference,
                         paid_from_id: d.accountPaidFromID,
                         paid_to_id: d.accountPaidToID,
+                        project:d.projectID,
+                        cost_center:d.costCenterID
                     },
                     tax_and_charges: {
                         lines: []

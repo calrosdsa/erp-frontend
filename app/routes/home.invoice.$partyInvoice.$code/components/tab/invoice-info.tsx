@@ -44,6 +44,7 @@ import CurrencyAndPriceList from "@/components/custom/shared/document/currency-a
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import { Form } from "@/components/ui/form";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
 type EditData = z.infer<typeof editInvoiceSchema>;
 export default function InvoiceInfoTab() {
@@ -66,7 +67,7 @@ export default function InvoiceInfoTab() {
   const allowCreate = isDraft && invoicePerm.create;
   const isDisabled = !isDraft || !invoicePerm?.edit;
   const documentStore = useDocumentStore();
-
+  const toolbar = useToolbar()
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: editInvoiceSchema,
     defaultValues: {
@@ -99,16 +100,13 @@ export default function InvoiceInfoTab() {
     );
   };
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  useEffect(()=>{
+    toolbar.setToolbar({
+      onSave: () => inputRef.current?.click(),
+      disabledSave: !hasChanged,
+    })
+  },[hasChanged])
+
 
   useLoadingTypeToolbar(
     {

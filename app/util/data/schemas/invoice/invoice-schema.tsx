@@ -32,10 +32,10 @@ export const createInvoiceSchema = z
     rejectedWarehouseID: z.number().optional(),
     rejectedWarehouseName: z.string().optional(),
 
-    projectName:z.string().optional(),
+    project:z.string().optional(),
     projectID:z.number().optional(),
 
-    costCenterName:z.string().optional(),
+    costCenter:z.string().optional(),
     costCenterID:z.number().optional(),
 
     lines: z.array(lineItemSchema),

@@ -137,7 +137,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
-        // console.log(resConnection.data,resConnection.error)
         break;
       }
     }
