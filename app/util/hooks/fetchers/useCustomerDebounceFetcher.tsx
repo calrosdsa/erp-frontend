@@ -87,5 +87,5 @@ export const useCustomerDebounceFetcher = () => {
       }
     );
   };
-  return [fetcherDebounce, onChange] as const;
+  return [fetcherDebounce, onChange,fetcherDebounce.state == "submitting"] as const;
 };

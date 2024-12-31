@@ -28,8 +28,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const pricingCharges = data.pricingData.pricing_charges.map((t) =>
         mapPricingChargeData(t)
       );
+      const d = data.pricingData
       const res = await client.POST("/pricing", {
         body: {
+          id:d.id || 0,
+          pricing_data:{
+
+          },
+          project:d.projectID,
+          cost_center:d.costCenterID,
           pricing_charges: pricingCharges,
           pricing_line_items: pricingLineItems,
         },

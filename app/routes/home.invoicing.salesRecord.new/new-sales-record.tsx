@@ -18,7 +18,7 @@ import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { useNewSalesRecord } from "./use-new-sales-record";
 import { Separator } from "@/components/ui/separator";
-import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
+import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import SalesRecordData from "./sales-record-data";
 
 export default function NewSalesRecord() {

@@ -76,7 +76,7 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
     }
   })
   const sessionData = session.data as SessionData;
-  console.log(modulesRes.data,modulesRes.error);
+  // console.log(modulesRes.data,modulesRes.error);
   return json(
     {
       data: res.data,

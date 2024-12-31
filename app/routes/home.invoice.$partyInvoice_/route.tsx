@@ -1,16 +1,14 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
-import { DEFAULT_COLUMN, DEFAULT_ORDER, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_COLUMN, DEFAULT_ORDER, DEFAULT_PAGE, DEFAULT_SIZE, LOAD_ACTION } from "~/constant";
 import { handleError } from "~/util/api/handle-status-code";
 import InvoicesClient from "./invoices.client";
-import { components } from "~/sdk";
+import { components, operations } from "~/sdk";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action:string
-  getData:{
-    query:string
-    partyID?:number
-  }
+  query:operations["invoices"]["parameters"]["query"]
 }
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const client = apiClient({ request });
@@ -19,15 +17,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   let actions:components["schemas"]["ActionDto"][] = []
   switch (data.action) {
     case "get": {
-      const d = data.getData
       const res = await client.GET("/invoice/{party}", {
         params: {
-          query: {
-            page: "10",
-            size: DEFAULT_SIZE,
-            query:d.query,
-            party_id:d.partyID?.toString(),
-          },
+          query: data.query,
           path: {
             party: params.partyInvoice || "",
           },
@@ -45,6 +37,21 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   });
 };
 
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult
+}:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
+
+
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
@@ -53,15 +60,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const res = await client.GET("/invoice/{party}", {
     params: {
       query: {
-        page: searchParams.get("page") || DEFAULT_PAGE,
         size: searchParams.get("size") || DEFAULT_SIZE,
-        query:searchParams.get("query") || "",
+        code:searchParams.get("code") || "",
         orientation: searchParams.get("orientation") || DEFAULT_ORDER,
         column: searchParams.get("column") || DEFAULT_COLUMN,
         status: searchParams.get("status") || "",
         due_date: searchParams.get("due_date") || "",
         posting_date: searchParams.get("posting_date") || "",
         party_id: searchParams.get("party") || "",
+        order_id:searchParams.get("order_id") || "",
       },
       path: {
         party: params.partyInvoice || "",

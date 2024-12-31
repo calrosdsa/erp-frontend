@@ -24,11 +24,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { PopoverAnchor } from "@radix-ui/react-popover";
 import { useSearchParams } from "@remix-run/react";
 import { Check, ChevronsUpDown, PlusIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_PAGE } from "~/constant";
+import { Command as CommandPrimitive } from "cmdk";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TooltipLayout } from "@/components/layout/tooltip-layout";
 
 interface Props<T extends object, K extends keyof T, V extends keyof T> {
   placeholder?: string;
@@ -36,7 +41,7 @@ interface Props<T extends object, K extends keyof T, V extends keyof T> {
   nameK: K;
   valueK: V;
   label?: string;
-  onValueChange: (e: string) => void;
+  onValueChange?: (e: string) => void;
   onSelect?: (v: T) => void;
   className?: string;
   addNew?: () => void;
@@ -44,6 +49,7 @@ interface Props<T extends object, K extends keyof T, V extends keyof T> {
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
   queryValue: string;
   queryName: string;
+  isLoading?:boolean
 }
 
 export default function AutocompleteSearch<
@@ -61,127 +67,138 @@ export default function AutocompleteSearch<
   onCustomDisplay,
   className,
   addNew,
+  isLoading,
   placeholder,
 }: Props<T, K, V>) {
-  const { t } = useTranslation("common");
+  const [open, setOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [value, setValue] = useState<string | undefined>(
-    searchParams.get(queryName) || ""
-  );
+  const [query,setQuery] = useState<string>(searchParams.get(queryName) || "")
+  const [selected,setSelected] = useState(query)
+  const reset = () => {
+    // onSelect?.(undefined);
+    onValueChange?.("");
+  };
+  const onInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if(query == ""){
+      setSelected("")
+      searchParams.delete(queryValue);
+      searchParams.delete(queryName);
+      setSearchParams(searchParams,{
+        preventScrollReset:true,
+      })
+    }
+  };
 
   const onSelectItem = (item: T) => {
-    setValue(item[nameK] as string);
-    if (onSelect) {
-      onSelect(item);
-    }
-    searchParams.set(queryName, item[nameK] as string);
-    searchParams.set(queryValue, item[valueK] as string);
-    searchParams.set("page", DEFAULT_PAGE);
-    setSearchParams(searchParams, {
-      preventScrollReset: true,
-    });
-  };
+      setQuery(item[nameK] as string);
+      setSelected(item[nameK] as string)
+      // if (onSelect) {
+      //   onSelect(item);
+      // }
+      searchParams.set(queryName, item[nameK] as string);
+      searchParams.set(queryValue, item[valueK] as string);
+      setSearchParams(searchParams, {
+        preventScrollReset: true,
+      });
+      setOpen(false)
+    };
+
+    // useEffect(()=>{
+    //   console.log("search params",searchParams,searchParams.get(queryName))
+    //   setQuery(searchParams.get(queryName) || "")
+    // },[])
+
+  // const onSelectItem = (inputValue: string) => {
+  //   console.log("Input value",inputValue)
+  //   if (inputValue === selectedValue) {
+  //     reset();
+  //   } else {
+  //     // onSelectedValueChange(inputValue as T);
+  //     setQuery(inputValue ?? "");
+  //   }
+  //   setOpen(false);
+  // };
+
+  const onQueryChange = (e:string) =>{
+    onValueChange?.(e)
+    setQuery(e)
+  }
+
   return (
-    <div>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            size={"sm"}
-            onClick={() => onValueChange("")}
-            className={cn(
-              "justify-between w-full  sm:min-w-32",
-              !value && "text-muted-foreground"
-            )}
-          >
-            {value || placeholder}
-            {/* {field.value
-                    ? data
-                        .find((item) => item[nameK] === field.value)
-                        ?.[nameK]?.toString()
-                    : "Select item"} */}
-            {value ? (
-              <>
-                <IconButton
-                  icon={XIcon}
-                  size="sm"
-                  className="ml-2 h-6 w-6 shrink-0 opacity-50 "
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setValue("");
-                    searchParams.delete(queryValue);
-                    searchParams.delete(queryName);
-                    searchParams.set("page", DEFAULT_PAGE);
-                    setSearchParams(searchParams, {
-                      preventScrollReset: true,
-                    });
-                  }}
-                />
-              </>
-            ) : (
-              <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <Command>
-            <CommandInput
-              placeholder="Buscar..."
-              onValueChange={(e) => {
-                onValueChange(e);
+    <div className="flex items-center w-32">
+      <Popover open={open} onOpenChange={setOpen}>
+        <Command shouldFilter={false}>
+            <TooltipLayout content={placeholder}>
+          <PopoverAnchor asChild>
+            <CommandPrimitive.Input
+              asChild
+              value={query}
+              onValueChange={onQueryChange}
+              onKeyDown={(e) => setOpen(e.key !== "Escape")}
+              onMouseDown={() => setOpen((open) => !!query || !open)}
+              onFocus={() => {
+                setOpen(true)
+                if (query == "") {
+                  onValueChange?.(query)
+                }
               }}
-            />
-            <CommandList>
-              <CommandEmpty>No se encontraron resultados.</CommandEmpty>
-              <CommandGroup>
-                {data.map((item, idx) =>
-                  onCustomDisplay ? (
+              onBlur={onInputBlur}
+            >
+              <Input placeholder={placeholder} />
+            </CommandPrimitive.Input>
+          </PopoverAnchor>
+              </TooltipLayout>
+          {!open && <CommandList aria-hidden="true" className="hidden" />}
+          <PopoverContent
+            asChild
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            onInteractOutside={(e) => {
+              if (
+                e.target instanceof Element &&
+                e.target.hasAttribute("cmdk-input")
+              ) {
+                e.preventDefault();
+              }
+            }}
+            className="w-[--radix-popover-trigger-width] p-0"
+          >
+            <CommandList >
+              {isLoading && (
+                <CommandPrimitive.Loading>
+                  <div className="p-1">
+                    <Skeleton className="h-6 w-full" />
+                  </div>
+                </CommandPrimitive.Loading>
+              )}
+              {data.length > 0 && !isLoading ? (
+                <CommandGroup >
+                  {data?.map((option,idx) => (
                     <CommandItem
-                      value={(item[nameK] as string) || ""}
-                      key={idx}
-                      onSelect={() => {
-                        onSelectItem(item);
-                      }}
-                    >
-                      {onCustomDisplay(item, idx)}
-                    </CommandItem>
-                  ) : (
-                    <CommandItem
-                      value={(item[nameK] as string) || ""}
-                      key={idx}
-                      onSelect={() => {
-                        onSelectItem(item);
-                      }}
+                      key={(option[nameK] as string) || ""}
+                      value={(option[nameK] as string) || ""}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onSelect={()=>onSelectItem(option)}
                     >
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          item[nameK] === value ? "opacity-100" : "opacity-0"
+                          selected === option[nameK] 
+                            ? "opacity-100"
+                            : "opacity-0"
                         )}
                       />
-                      {item[nameK]?.toString() || ""}
+                      {onCustomDisplay ? onCustomDisplay(option,idx) : option[nameK]?.toString() || ""}
+                      {/* {option[nameK]?.toString() || ""} */}
                     </CommandItem>
-                  )
-                )}
-              </CommandGroup>
+                  ))}
+                </CommandGroup>
+              ) : null}
+              {/* {!isLoading ? (
+                <CommandEmpty>{emptyMessage ?? "No data."}</CommandEmpty>
+              ) : null} */}
             </CommandList>
-          </Command>
-          <div className="pt-2 px-1">
-            {addNew && (
-              <Button
-                onClick={() => {
-                  addNew();
-                }}
-                size={"sm"}
-                className=" space-x-2 flex"
-              >
-                <Typography fontSize={xs}>{t("form.addNew")}</Typography>
-                <PlusIcon size={15} />
-              </Button>
-            )}
-          </div>
-        </PopoverContent>
+          </PopoverContent>
+        </Command>
       </Popover>
     </div>
   );

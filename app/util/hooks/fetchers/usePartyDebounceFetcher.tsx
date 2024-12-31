@@ -1,8 +1,10 @@
+import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { Control } from "react-hook-form";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { components } from "~/sdk";
+import { parties } from "~/util/party";
 import { routes } from "~/util/route";
 
 
@@ -37,6 +39,34 @@ export const PartyAutocompleteForm =({
   );
 }
 
+
+export const PartySearch = ({partyType}:{
+  partyType:string
+})=>{
+  const [fetcher, onChange] = usePartyDebounceFetcher({partyType});
+  return <AutocompleteSearch
+    data={fetcher.data?.parties || []}
+    nameK={"name"}
+    onValueChange={onChange}
+    valueK={"id"} 
+    placeholder="Parte"
+    queryValue={"party_id"}
+    queryName={"party_name"}
+  />
+}
+
+
+export const PartyTypeSearch = ()=>{
+  const p = parties
+  return <AutocompleteSearch
+    data={p.paymentOptions}
+    nameK={"name"}
+    valueK={"value"} 
+    placeholder="Tipo de Parte"
+    queryValue={"party_type"}
+    queryName={"party_type_name"}
+  />
+}
 
 export const usePartyDebounceFetcher = ({
   partyType,

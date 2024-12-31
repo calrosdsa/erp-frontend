@@ -21,7 +21,8 @@ export default function PricingConnections() {
                 <Connections
                     data={d?.result || []}
                     q={{
-                      pricing:pricing?.id.toString(),
+                      pricing_id:pricing?.id.toString(),
+                      pricing_code:pricing?.code,
                     }}
                     />
               </div>

@@ -422,6 +422,7 @@
   "currencyExchange":"Cambio de Divisas",
   "salesRecord":"Registro de Ventas",
   "purchaseRecord":"Registro de Compras",
+  "pricing":"Pricing",
 
   "accountingLedger": "Libro mayor contable",
   "accountPayable": "Cuentas por pagar",

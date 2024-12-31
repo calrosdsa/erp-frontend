@@ -12,7 +12,7 @@ import { salesRecordColumn } from "@/components/custom/table/columns/invoicing/s
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { purchaseRecordColumn } from "@/components/custom/table/columns/invoicing/purchase-record-columns";
-import { InvoiceSearch } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
+import { InvoiceSearch } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { useTranslation } from "react-i18next";
 import DataLayout from "@/components/layout/data-layout";
 import { parties } from "~/util/party";

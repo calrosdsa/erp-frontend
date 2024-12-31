@@ -1054,7 +1054,7 @@ export interface paths {
          * Get Invoice
          * @description Get invoice
          */
-        get: operations["get invoice"];
+        get: operations["invoice"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1088,7 +1088,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get Invoices */
-        get: operations["get invoices"];
+        get: operations["invoices"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1303,7 +1303,7 @@ export interface paths {
         /** Edit Order */
         put: operations["edit-order"];
         /** Create Order */
-        post: operations["create order"];
+        post: operations["create-order"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1318,7 +1318,7 @@ export interface paths {
             cookie?: never;
         };
         /** Retrieve order */
-        get: operations["get order"];
+        get: operations["order"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1352,7 +1352,7 @@ export interface paths {
             cookie?: never;
         };
         /** Retrieve orders */
-        get: operations["get orders"];
+        get: operations["orders"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4503,19 +4503,6 @@ export interface components {
             isSelling: boolean;
             name: string;
         };
-        EditPricingRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            customer?: number | null;
-            /** Format: int64 */
-            id: number;
-            pricing_charges: components["schemas"]["PricingChargeData"][];
-            pricing_line_items: components["schemas"]["PricingLineItemData"][];
-        };
         EditQuotationRequestBody: {
             /**
              * Format: uri
@@ -5555,6 +5542,7 @@ export interface components {
             operators: string[];
             options: string[];
             param: string;
+            party_type: string;
             type: string;
         };
         GeneralLedgerData: {
@@ -6941,9 +6929,18 @@ export interface components {
              */
             readonly $schema?: string;
             /** Format: int64 */
+            cost_center?: number;
+            /** Format: int64 */
             customer?: number | null;
+            /** Format: int64 */
+            id?: number;
             pricing_charges: components["schemas"]["PricingChargeData"][];
+            pricing_data: {
+                [key: string]: unknown;
+            };
             pricing_line_items: components["schemas"]["PricingLineItemData"][];
+            /** Format: int64 */
+            project?: number;
         };
         PricingDataRequestBody: {
             /**
@@ -8887,7 +8884,7 @@ export interface operations {
     "get-taxes": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -9101,7 +9098,7 @@ export interface operations {
     "a-companies": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -9343,7 +9340,7 @@ export interface operations {
     entities: {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -9490,7 +9487,7 @@ export interface operations {
     "role-templates": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -9637,7 +9634,7 @@ export interface operations {
     "batch-bundles": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -9718,7 +9715,7 @@ export interface operations {
     "charges-templates": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -10039,7 +10036,7 @@ export interface operations {
     "user-companies": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -10114,7 +10111,7 @@ export interface operations {
     "cost-centers": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -10228,7 +10225,7 @@ export interface operations {
     "get courts": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -10485,7 +10482,7 @@ export interface operations {
     "get currencies": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -10527,7 +10524,7 @@ export interface operations {
     "currency-exchanges": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -10710,7 +10707,7 @@ export interface operations {
     "get customers": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -11253,7 +11250,7 @@ export interface operations {
     "get groups by party code": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -11360,7 +11357,7 @@ export interface operations {
             };
         };
     };
-    "get invoice": {
+    invoice: {
         parameters: {
             query: {
                 party: string;
@@ -11432,10 +11429,10 @@ export interface operations {
             };
         };
     };
-    "get invoices": {
+    invoices: {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -11447,6 +11444,10 @@ export interface operations {
                 due_date?: string;
                 posting_date?: string;
                 party_id?: string;
+                code?: string;
+                project_id?: string;
+                cost_center_id?: string;
+                order_id?: string;
             };
             header?: never;
             path: {
@@ -11614,7 +11615,7 @@ export interface operations {
     "journal-entries": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -11764,7 +11765,7 @@ export interface operations {
     "get-acconts": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -11985,7 +11986,7 @@ export interface operations {
     modules: {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -12198,7 +12199,7 @@ export interface operations {
             };
         };
     };
-    "create order": {
+    "create-order": {
         parameters: {
             query?: never;
             header?: {
@@ -12234,7 +12235,7 @@ export interface operations {
             };
         };
     };
-    "get order": {
+    order: {
         parameters: {
             query: {
                 party: string;
@@ -12306,10 +12307,10 @@ export interface operations {
             };
         };
     };
-    "get orders": {
+    orders: {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -12318,13 +12319,14 @@ export interface operations {
                 orientation?: string;
                 column?: string;
                 parentId?: string;
+                code?: string;
                 delivery_date?: string;
                 posting_date?: string;
                 party_id?: string;
                 id?: string;
-                pricing?: string;
-                project?: string;
-                cost_center?: string;
+                pricing_id?: string;
+                project_id?: string;
+                cost_center_id?: string;
             };
             header?: never;
             path: {
@@ -12357,7 +12359,7 @@ export interface operations {
     "get addresses": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -12542,7 +12544,7 @@ export interface operations {
     "get contacts": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -12728,7 +12730,7 @@ export interface operations {
     "get party references": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -12870,7 +12872,7 @@ export interface operations {
     "get-payments": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -12880,6 +12882,13 @@ export interface operations {
                 column?: string;
                 parentId?: string;
                 invoice_id?: string;
+                posting_date?: string;
+                payment_type?: string;
+                amount?: string;
+                code?: string;
+                party_id?: string;
+                account_paid_from_id?: string;
+                account_paid_to_id?: string;
             };
             header?: {
                 Authorization?: string;
@@ -13147,7 +13156,7 @@ export interface operations {
     "get piano forms": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -13434,7 +13443,7 @@ export interface operations {
     pricings: {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -13443,11 +13452,10 @@ export interface operations {
                 orientation?: string;
                 column?: string;
                 parentId?: string;
+                id?: string;
+                code?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -13482,7 +13490,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditPricingRequestBody"];
+                "application/json": components["schemas"]["PricingData"];
             };
         };
         responses: {
@@ -13683,7 +13691,7 @@ export interface operations {
     projects: {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -13797,7 +13805,7 @@ export interface operations {
     "purchase-records": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -14185,7 +14193,7 @@ export interface operations {
     quotations: {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -14198,9 +14206,9 @@ export interface operations {
                 posting_date?: string;
                 party_id?: string;
                 id?: string;
-                project?: string;
-                cost_center?: string;
-                pricing?: string;
+                project_id?: string;
+                cost_center_id?: string;
+                pricing_id?: string;
             };
             header?: never;
             path: {
@@ -14374,7 +14382,7 @@ export interface operations {
     "get-receipts": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -14420,7 +14428,7 @@ export interface operations {
                 event_id?: string;
                 customer_id?: string;
                 court_id?: string;
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -14803,7 +14811,7 @@ export interface operations {
     "get-event-bookings": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -15019,7 +15027,7 @@ export interface operations {
     "get roles": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -15204,7 +15212,7 @@ export interface operations {
     "get role definitions": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -15246,7 +15254,7 @@ export interface operations {
     "sales-records": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -15460,7 +15468,7 @@ export interface operations {
     "serial-nos": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -15576,7 +15584,7 @@ export interface operations {
     "stock-entries": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -15834,7 +15842,7 @@ export interface operations {
     "get-items": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -16046,7 +16054,7 @@ export interface operations {
     "item-attributes": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -16235,7 +16243,7 @@ export interface operations {
     "get-item-prices": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -16455,7 +16463,7 @@ export interface operations {
     "get-list-by-item": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -16567,7 +16575,7 @@ export interface operations {
     "get-item-stock-levels": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -16609,7 +16617,7 @@ export interface operations {
     "get-warehouse-stock-levels": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -16655,7 +16663,7 @@ export interface operations {
                 orientation?: string;
                 column?: string;
                 parentId?: string;
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -16803,7 +16811,7 @@ export interface operations {
     "get-variant-from-item": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -16920,7 +16928,7 @@ export interface operations {
     "get-warehouses": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -17099,7 +17107,7 @@ export interface operations {
     "get suppliers": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;
@@ -17488,7 +17496,7 @@ export interface operations {
     "get company user profiles": {
         parameters: {
             query: {
-                page: string;
+                page?: string;
                 size: string;
                 enabled?: string;
                 status?: string;

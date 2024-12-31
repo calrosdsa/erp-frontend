@@ -32,7 +32,7 @@ export default function PricingClient() {
     };
   }, [permission]);
   return (
-    <>
+    <>  
       <DataTable
         data={data?.results || []}
         columns={pricingColumns({})}

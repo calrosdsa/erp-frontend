@@ -1,9 +1,9 @@
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import { Control } from "react-hook-form";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { DEFAULT_DEBOUNCE_TIME, DEFAULT_PAGE } from "~/constant";
+import { DEFAULT_DEBOUNCE_TIME, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { components } from "~/sdk";
+import { components, operations } from "~/sdk";
 import { routes } from "~/util/route";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 
@@ -56,9 +56,13 @@ export const InvoiceAutocompleteForm = ({
 export const InvoiceSearch = ({
   placeholder,
   partyType,
+  queryName,
+  queryValue,
 }: {
   placeholder: string;
   partyType: string;
+  queryName?:string;
+  queryValue?:string;
 }) => {
   const [invoiceFetcher, onInvoiceFetcher] = useInvoiceFetcher({
     partyType,
@@ -70,17 +74,14 @@ export const InvoiceSearch = ({
       nameK={"code"}
       valueK={"id"}
       placeholder={placeholder}
-      queryName="invoice_code"
-      queryValue="invoice"
+      queryName={queryName || "invoice_code"}
+      queryValue={queryValue || "invoice_id"}
       onSelect={() => {}}
       onCustomDisplay={(e) => {
         return (
           <div className="flex flex-col text-xs">
             <span className=" font-medium">{e.code}</span>
-            <span>
-              {e.record_no && `${e.record_no}-`}
-              {e.party_name}
-            </span>
+            <span>{e.party_name}</span>
           </div>
         );
       }}
@@ -104,10 +105,11 @@ export const useInvoiceFetcher = ({
   const onChange = (e: string) => {
     fetcherDebounce.submit(
       {
-        getData: {
-          query: e,
-          partyID:partyID,
-        } as any,
+        query: {
+          size:DEFAULT_SIZE,
+          code:`["like","${e}"]`,
+          party_id:partyID,
+        } as operations["invoices"]["parameters"]["query"],
         action: "get",
       },
       {

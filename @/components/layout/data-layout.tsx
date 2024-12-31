@@ -45,7 +45,8 @@ import { DateRange } from "react-day-picker";
 import { toZonedTime } from "date-fns-tz";
 import { Badge } from "../ui/badge";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-import { AutoComplete } from "../custom/select/Autocomplete";
+import { PricingSearch } from "~/util/hooks/fetchers/pricing/use-pricing-fetcher";
+import AutoCompleteByParty from "../custom/select/autocomple-by-party";
 
 type FilterOption = components["schemas"]["FilterOptionDto"];
 type SelectItem = { name: string; value: string };
@@ -169,12 +170,15 @@ const FilterSelectorValue: React.FC<{
       </Select>
     );
   }
-  if (filterOption.type === "string" ) {
+  if (filterOption.type === "string" && filterOption.party_type != "") {
+    return <AutoCompleteByParty partyType={filterOption.party_type} />;
+  }
+  if (filterOption.type === "string") {
     return (
       <Input
-      className="w-min"
-      onChange={(e)=>onChange([e.target.value])}
-      // value={current.value[0]}
+        className="w-min"
+        onChange={(e) => onChange([e.target.value])}
+        // value={current.value[0]}
       />
     );
   }
@@ -316,7 +320,12 @@ const FilterPopoverContent: React.FC<{
                   const newFilters = filters.filter((_, i) => i !== idx);
                   setFilters(newFilters);
                   searchParams.delete(filter.param);
-                  setSearchParams(searchParams, { preventScrollReset: true });
+                  const newParams = deleteRelatedQuery(
+                    filter.param,
+                    filterOption.party_type,
+                    searchParams
+                  );
+                  setSearchParams(newParams, { preventScrollReset: true });
                 }}
               >
                 <TrashIcon />
@@ -359,36 +368,52 @@ const DataLayout: React.FC<{
   };
 
   const clearFilter = () => {
-    const newSearchParams = new URLSearchParams(searchParams)
+    let newSearchParams = new URLSearchParams(searchParams);
     filters.forEach((filter) => {
-      newSearchParams.delete(filter.param)
-    })
-    setFilters([])
-    setSearchParams(newSearchParams, { preventScrollReset: true })
-    
+      const filterOption = filterOptions?.find((t) => t.param == filter.param);
+      newSearchParams.delete(filter.param);
+      if (filterOption) {
+        newSearchParams = deleteRelatedQuery(
+          filter.param,
+          filterOption.party_type,
+          newSearchParams
+        );
+      }
+    });
+    setFilters([]);
+    setSearchParams(newSearchParams, { preventScrollReset: true });
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    const filterDataList: FilterData[] = [];
+    if(filterOptions?.length == 0 ){
+      return
+    }
 
-    params.forEach((value, key) => {
-      try {
-        const values = JSON.parse(decodeURIComponent(value));
-        if (Array.isArray(values) && values.length >= 2) {
-          filterDataList.push({
-            param: key,
-            operator: values[0],
-            value: values.slice(1),
-          });
+    const filterParams = new Set(filterOptions?.map((option) => option.param));
+    const filterDataList = Array.from(searchParams.entries())
+      .filter(([key]) => filterParams.has(key))
+      .map(([key, value]): FilterData => {
+        try {
+          const parsedValue = JSON.parse(decodeURIComponent(value));
+          if (Array.isArray(parsedValue) && parsedValue.length >= 2) {
+            return {
+              param: key,
+              operator: parsedValue[0],
+              value: parsedValue.slice(1),
+            };
+          }
+        } catch (error) {
+          console.warn(`Failed to parse filter value for ${key}:`, error);
         }
-      } catch (error) {
-        console.error("Error parsing filter value:", error);
-      }
-    });
 
+        return {
+          param: key,
+          operator: "=",
+          value: [value],
+        };
+      });
     setFilters(filterDataList);
-  }, [searchParams]);
+  }, [filterOptions]);
 
   return (
     <div className="h-full flex flex-col pt-1">
@@ -432,6 +457,7 @@ const DataLayout: React.FC<{
               </PopoverContent>
             </Popover>
           )}
+          {/* {JSON.stringify(filters)} */}
           {fixedFilters && fixedFilters()}
         </div>
         {/* <div></div> */}
@@ -501,89 +527,31 @@ const DataLayout: React.FC<{
 
 export default DataLayout;
 
-// const FilterSelectorValue = ({
-//   filterOption,
-//   current,
-// }: {
-//   filterOption: FilterOption;
-//   current: FilterData;
-// }) => {
-//   const [dates, setDates] = useState<Date[]>([]);
+const deleteRelatedQuery = (
+  param: string,
+  partyType: string,
+  searchParams: URLSearchParams
+): URLSearchParams => {
+  if (partyType != "") {
+    const word = param;
+    const cleanedWord = word.includes("_") ? word.split("_")[0] : word;
+    const escapedWord = cleanedWord?.replace(
+      /[.*+?^=!:${}()|\[\]\/\\]/g,
+      "\\$&"
+    );
 
-//   const loadData = () => {
-//     switch (filterOption.type) {
-//       case "date": {
-//         setDates(current.value.map((t) => new Date(t)));
-//         break;
-//       }
-//     }
-//   };
-//   useEffect(() => {
-//     loadData();
-//   }, []);
-//   return (
-//     <>
-//       {filterOption.type == "date" && (
-//         <>
-//           <Input
-//             className="flex space-x-2 truncate   w-32"
-//             value={dates.map((t) => format(t, "yyyy-MM-dd")).join(",")}
-//           />
-//           <Popover>
-//             <PopoverTrigger asChild>
-//               <Button size={"sm"} variant={"ghost"}>
-//                 <CalendarIcon />
-//               </Button>
-//             </PopoverTrigger>
-//             <PopoverContent className="w-auto p-0">
-//               {current.operator == "in" && (
-//                 <Calendar
-//                   mode={"multiple"}
-//                   // selected={new Date()}
-//                   selected={dates}
-//                   // onSelect={(e) => e && setDates([...dates,e])}
-//                   onSelect={(e) => e && setDates(e)}
-//                   initialFocus
-//                 />
-//               )}
-//               {current.operator == "between" && (
-//                 <Calendar
-//                   mode={"range"}
-//                   // selected={new Date()}
-//                   selected={{
-//                     from: dates.length > 0 ? dates[0] : undefined,
-//                     to: dates.length > 1 ? dates[1] : undefined,
-//                   }}
-//                   // onSelect={(e) => e && setDates([...dates,e])}
-//                   onSelect={(e) => {
-//                     if (e?.to && e?.from) {
-//                       setDates([e.from, e.to]);
-//                     }
-//                   }}
-//                   initialFocus
-//                 />
-//               )}
-//               {current.operator != "between" && current.operator != "in" && (
-//                 <Calendar
-//                   mode={"single"}
-//                   selected={dates.length > 0 ? dates[0] : new Date()}
-//                   // selected={dates}
-//                   onSelect={(e) => e && setDates([e])}
-//                   initialFocus
-//                 />
-//               )}
-//             </PopoverContent>
-//           </Popover>
-//         </>
-//       )}
-//     </>
-//   );
-// };
+    // Create the regex pattern dynamically
+    const pattern = `^${escapedWord}(_.*)?$`;
 
-// interface FilterData {
-//   param: string;
-//   operator: string;
-//   value: any[];
-// }
-
-// // Function to process all query search params and return a list of FilterData objects
+    // Return the constructed regex
+    const regExpr = new RegExp(pattern);
+    console.log("HAS PARTY TYPE", regExpr);
+    searchParams.forEach((v, k) => {
+      console.log("TEST", k, regExpr.test(k));
+      if (regExpr.test(k)) {
+        searchParams.delete(k);
+      }
+    });
+  }
+  return searchParams;
+};

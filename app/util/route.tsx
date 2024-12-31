@@ -5,8 +5,10 @@ import {
   partyTypeFromJSON,
   partyTypeToJSON,
 } from "~/gen/common";
+import { parties } from "./party";
 
 class Routes {
+  parties = parties
   signin = "/signin";
   api = "/api";
   apiData = this.api + "/data";

@@ -1,25 +1,14 @@
 import * as React from "react";
-import { Link, useLoaderData, useLocation } from "@remix-run/react";
+import { useLoaderData, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import {
-  SessionDefaultDrawer,
   useSessionDefaults,
 } from "./components/SessionDefaults";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { HomeIcon } from "lucide-react";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { useUnmount } from "usehooks-ts";
-import { Typography } from "@/components/typography";
 import {
   SidebarInset,
   SidebarProvider,

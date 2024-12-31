@@ -20,7 +20,7 @@ import { ButtonToolbar } from "~/types/actions";
 import { useExporter } from "~/util/hooks/ui/useExporter";
 import DataLayout from "@/components/layout/data-layout";
 import { useTranslation } from "react-i18next";
-import { InvoiceSearch } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
+import { InvoiceSearch } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { SupplierSearch } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { CustomerSearch } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 

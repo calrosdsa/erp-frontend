@@ -6,7 +6,6 @@ import {
 } from "react-hook-form";
 import { z } from "zod";
 import {
-  editPricingSchema,
   pricingChargeDataSchema,
   pricingDataSchema,
   pricingLineItemDataSchema,
@@ -25,7 +24,12 @@ import {
   useRef,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { convertToPascalCase, convertToSnakeCase, FormulaEngine, removeFromList } from "../util/formula";
+import {
+  convertToPascalCase,
+  convertToSnakeCase,
+  FormulaEngine,
+  removeFromList,
+} from "../util/formula";
 import { PlusIcon } from "lucide-react";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,6 +45,7 @@ import { Typography } from "@/components/typography";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
+import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 
 type EditData = z.infer<typeof pricingDataSchema>;
 type LineItemType = z.infer<typeof pricingLineItemDataSchema>;
@@ -99,7 +104,7 @@ export default function PricingData({
   inputRef: MutableRefObject<HTMLInputElement | null>;
 }) {
   const { t } = useTranslation("common");
-  const {roleActions} = useOutletContext<GlobalState>()
+  const { roleActions } = useOutletContext<GlobalState>();
   const {
     fields: lineItems,
     append,
@@ -150,10 +155,10 @@ export default function PricingData({
       const record: Record<string, any> = {};
       const d = { ...line, ...chargesObject };
       words?.forEach((w) => {
-        console.log("SNAKE CASE",convertToSnakeCase(w) )
+        console.log("SNAKE CASE", convertToSnakeCase(w));
         record[w] = d[convertToSnakeCase(w) as keyof LineItemType];
       });
-      console.log("RECORD",record,d)
+      console.log("RECORD", record, d);
       // console.log(line, words, record);
       return record;
     },
@@ -350,15 +355,17 @@ export default function PricingData({
               </Card>
               <Separator className=" col-span-full" />
               <div className=" create-grid col-span-full">
-              <CustomerAutoCompleteForm
-                control={form.control}
-                label={t("customer")}
-                roleActions={roleActions}
-                onSelect={(e) => {
-                  form.setValue("customer_id", e.id);
-                }}
+                <CustomerAutoCompleteForm
+                  control={form.control}
+                  label={t("customer")}
+                  roleActions={roleActions}
+                  onSelect={(e) => {
+                    form.setValue("customer_id", e.id);
+                  }}
                 />
-                </div>
+
+                <AccountingDimensionForm form={form} />
+              </div>
             </div>
 
             <input ref={inputRef} type="submit" className="hidden" />

@@ -11,15 +11,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const res = await client.GET("/quotation/{party}", {
     params: {
       query: {
-        page: searchParams.get("page") || DEFAULT_PAGE,
         size: searchParams.get("size") || DEFAULT_SIZE,
         code: searchParams.get("code") || "",
-        order: searchParams.get("order") || DEFAULT_ORDER,
+        orientation: searchParams.get("orientation") || DEFAULT_ORDER,
         column: searchParams.get("column") || DEFAULT_COLUMN,
         status: searchParams.get("status") || "",
         valid_till: searchParams.get("valid_till") || "",
         posting_date: searchParams.get("posting_date") || "",
         party_id: searchParams.get("party") || "",
+        pricing_id: searchParams.get("pricing_id") || "",
       },
       path: {
         party: params.quotationParty || "",

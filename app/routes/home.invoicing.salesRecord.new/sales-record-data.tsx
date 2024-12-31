@@ -27,7 +27,7 @@ import {
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
-import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
+import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { Separator } from "@/components/ui/separator";
 import Supplier from "../home.buying.supplier.$name/route";
 import { salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-record-schema";

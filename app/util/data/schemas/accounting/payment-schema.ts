@@ -97,9 +97,11 @@ export const paymentDataSchema = z.object({
   costCenterID: z.number().optional(),
 });
 
+
 export const partyReferencesToDto = (
   d: z.infer<typeof paymentReferceSchema>
 ): components["schemas"]["CreatePaymentReference"] => {
+  
   return {
     party_code: d.partyName,
     party_id: d.partyID,

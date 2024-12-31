@@ -1,13 +1,17 @@
 import FallBack from "@/components/layout/Fallback";
-import { Await, useLoaderData } from "@remix-run/react";
+import { Await, useLoaderData, useParams } from "@remix-run/react";
 import { Suspense } from "react";
 // import { Connection, ConnectionModule } from "~/types/connections";
 import { components } from "~/sdk";
 import { loader } from "../../route";
 import Connections from "@/components/layout/connections";
+import { parties } from "~/util/party";
 
 export default function InvoiceConnectionsTab() {
   const { connections, invoice } = useLoaderData<typeof loader>();
+  const params = useParams()
+  const partyInvoice = params.partyInvoice ||""
+  const p = parties
   return (
     <>
       <Suspense fallback={<FallBack />}>
@@ -20,8 +24,14 @@ export default function InvoiceConnectionsTab() {
                 <Connections
                     data={d.result || []}
                     q={{
-                      invoice:invoice?.id.toString(),
-                      invoice_code:invoice?.code,
+                      ...(partyInvoice == p.purchaseInvoice && {
+                        pi_id:invoice?.id.toString(),
+                        pi_code:invoice?.code,
+                      }),
+                      ...(partyInvoice == p.saleInvoice && {
+                        si_id:invoice?.id.toString(),
+                        si_code:invoice?.code,
+                      })
                     }}
                     />
               </div>

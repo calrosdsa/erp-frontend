@@ -10,19 +10,11 @@ import { orderColumns } from "@/components/custom/table/columns/order/order-colu
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { routes } from "~/util/route";
-import ProgressBarWithTooltip from "@/components/custom-ui/progress-bar-with-tooltip";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { partyTypeFromJSON } from "~/gen/common";
-import { useLineItems } from "@/components/custom/shared/item/use-line-items";
-import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
-import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
 import DataLayout from "@/components/layout/data-layout";
 import { PartySearch } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useTranslation } from "react-i18next";
-import { AutoComplete } from "@/components/custom/select/Autocomplete";
-import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-
 export default function OrdersClient() {
   const { paginationResult, actions, filters } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
@@ -54,13 +46,6 @@ export default function OrdersClient() {
       }),
     };
   }, [permission]);
-
-  const mockItems = [
-    { value: "1", label: "Item 1" },
-    { value: "2", label: "Item 2" },
-  ];
-
-  const [customerFetcher,onCustomerChange] = useCustomerDebounceFetcher() 
   return (
     <DataLayout
       filterOptions={filters}
@@ -76,18 +61,6 @@ export default function OrdersClient() {
         );
       }}
     >
-      <AutoComplete
-      items={customerFetcher.data?.customers.map(t=>{
-        return {
-          value:t,
-          label:t.name,
-        }
-      }) || []}
-      selectedValue={undefined}
-      onSelectedValueChange={()=>{}}
-      onSearchValueChange={onCustomerChange}
-      searchValue=""
-      />
       <DataTable
         data={paginationResult?.results || []}
         columns={orderColumns({

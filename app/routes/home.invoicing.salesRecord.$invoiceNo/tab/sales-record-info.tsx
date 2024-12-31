@@ -25,7 +25,7 @@ import { salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-recor
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { Separator } from "@radix-ui/react-select";
-import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
+import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { routes } from "~/util/route";
 import SalesRecordData from "~/routes/home.invoicing.salesRecord.new/sales-record-data";
 type EditData = z.infer<typeof salesRecordDataSchema>;

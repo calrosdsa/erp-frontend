@@ -50,6 +50,8 @@ export const pricingLineItemDataSchema = z.object({
 
   is_title: z.boolean().optional(),
   color: z.string().optional(),
+
+  
 });
 
 export const columnConfig = z.object({});
@@ -60,16 +62,22 @@ export const pricingDataSchema = z.object({
   customer: z.string().optional(),
   pricing_line_items: z.array(pricingLineItemDataSchema),
   pricing_charges: z.array(pricingChargeDataSchema),
+  
+  project: z.string().optional(),
+  projectID: z.number().optional(),
+
+  costCenter: z.string().optional(),
+  costCenterID: z.number().optional(),
 });
 
-export const editPricingSchema = z.object({
-  // id: z.number(),
-  id: z.number().optional(),
-  customer_id: z.number().optional(),
-  customer: z.string().optional(),
-  pricing_line_items: z.array(pricingLineItemDataSchema),
-  pricing_charges: z.array(pricingChargeDataSchema),
-});
+// export const editPricingSchema = z.object({
+//   // id: z.number(),
+//   id: z.number().optional(),
+//   customer_id: z.number().optional(),
+//   customer: z.string().optional(),
+//   pricing_line_items: z.array(pricingLineItemDataSchema),
+//   pricing_charges: z.array(pricingChargeDataSchema),
+// });
 
 export const mapPricingChargeData = (
   input: z.infer<typeof pricingChargeDataSchema>

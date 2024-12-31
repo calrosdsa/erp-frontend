@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, defer, json, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  defer,
+  json,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
 import PricingDetailClient from "./pricing-detail.client";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
@@ -6,9 +11,9 @@ import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
 import { z } from "zod";
 import {
-  editPricingSchema,
   mapPricingChargeData,
   mapPricingLineItemData,
+  pricingDataSchema,
 } from "~/util/data/schemas/pricing/pricing-schema";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { components } from "~/sdk";
@@ -17,7 +22,7 @@ import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 
 type ActionData = {
   action: string;
-  editData: z.infer<typeof editPricingSchema>;
+  editData: z.infer<typeof pricingDataSchema>;
   updateStatus: z.infer<typeof updateStatusWithEventSchema>;
   pricingData: components["schemas"]["PricingDataRequestBody"];
 };
@@ -64,8 +69,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       );
       const res = await client.PUT("/pricing", {
         body: {
+          pricing_data: {
+            customer_id: d.customer_id,
+            project_id: null,
+            cost_center_id: d.costCenterID,
+          },
           id: d.id || 0,
           customer: d.customer_id,
+          project: d.projectID,
+          cost_center: d.costCenterID,
           pricing_charges: pricingCharges,
           pricing_line_items: pricingLineItems,
         },
@@ -123,12 +135,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
-        console.log("RES Connection...")
+        console.log("RES Connection...");
         break;
       }
     }
   }
-  
+
   return defer({
     pricing: res.data?.result.entity.pricing,
     // actions:res.data?.actions,
@@ -136,7 +148,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     pricingLines: res.data?.result.entity.pricing_line_items || [],
     pricingCharges: res.data?.result.entity.pricing_charges || [],
     actions: res.data?.associated_actions,
-    connections:resConnections,
+    connections: resConnections,
   });
 };
 

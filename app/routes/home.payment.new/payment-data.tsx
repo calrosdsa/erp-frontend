@@ -39,7 +39,6 @@ import CustomFormField from "@/components/custom/form/CustomFormField";
 import { Input } from "@/components/ui/input";
 import AccordationLayout from "@/components/layout/accordation-layout";
 import { LedgerAutocompleteForm } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
-import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/useInvoiceDebounceFetcher";
 import { formatAmount } from "~/util/format/formatCurrency";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { paymentReferencesColumns } from "@/components/custom/table/columns/accounting/payment-columns";
@@ -47,6 +46,7 @@ import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-an
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { Form } from "@/components/ui/form";
+import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 
 type PaymentDataType = z.infer<typeof paymentDataSchema>;
 export default function PaymentData({

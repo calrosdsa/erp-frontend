@@ -20,7 +20,8 @@ export default function OrderConnectionsTab() {
                 <Connections
                     data={d.result || []}
                     q={{
-                      order:order?.code,
+                      order_code:order?.code,
+                      order_id:order?.id.toString(),
                     }}
                     />
               </div>

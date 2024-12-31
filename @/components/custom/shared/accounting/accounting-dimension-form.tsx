@@ -19,6 +19,7 @@ export default function AccountingDimensionForm({
     <AccordationLayout
       title={"Dimensiones Contables"}
       containerClassName=" col-span-full"
+      open={true}
       className="create-grid"
     >
       <FormAutocomplete
