@@ -36,6 +36,7 @@ export default function QuotationsClient() {
 
   setUpToolbar(() => {
     return {
+      titleToolbar:t(quotationParty),
       ...(permission?.create && {
         addNew: () => {
           resetDocument();

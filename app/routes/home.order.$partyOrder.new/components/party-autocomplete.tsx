@@ -1,5 +1,6 @@
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { UseFormReturn } from "react-hook-form";
+import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField";
+import { Control, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
@@ -7,7 +8,7 @@ import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/cre
 import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
 import { components } from "~/sdk";
 import { GlobalState } from "~/types/app";
-import { createOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
+import { orderDataSchema } from "~/util/data/schemas/buying/order-schema";
 import {
   CustomerSearch,
   useCustomerDebounceFetcher,
@@ -92,6 +93,79 @@ export default function PartyAutocomplete({
             // form.setValue("partyType", partyTypeToJSON(PartyType.customer));
             form.trigger("partyID");
           }}
+          {...(customerPermission?.create && {
+            addNew: () => {
+              createCustomer.openDialog({});
+            },
+          })}
+        />
+      )}
+    </>
+  );
+}
+
+export const PartyAutocompleteField= ({
+  party,
+  control,
+  roleActions,
+  allowEdit,
+}: {
+  party: string;
+  control: Control<any,any>;
+  allowEdit?: boolean;
+  roleActions: components["schemas"]["RoleActionDto"][];
+}) => {
+  const { t } = useTranslation("common");
+  const [supplierDebounceFetcher, onSupplierChange] =
+    useSupplierDebounceFetcher();
+  const [customerFetcher, onCustomerChange] = useCustomerDebounceFetcher();
+  const [customerPermission] = usePermission({
+    actions: customerFetcher.data?.actions,
+    roleActions: roleActions,
+  });
+  const createCustomer = useCreateCustomer();
+  const [supplierPermission] = usePermission({
+    actions: supplierDebounceFetcher.data?.actions,
+    roleActions: roleActions,
+  });
+  const createSupplier = useCreateSupplier();
+
+  return (
+    <>
+      {(party == partyTypeToJSON(PartyType.purchaseOrder) ||
+        party == partyTypeToJSON(PartyType.purchaseInvoice) ||
+        party == partyTypeToJSON(PartyType.purchaseReceipt) ||
+        party == partyTypeToJSON(PartyType.supplierQuotation)) && (
+        <FormAutocompleteField
+          required={true}
+          data={supplierDebounceFetcher.data?.suppliers || []}
+          control={control}
+          name="party"
+          nameK={"name"}
+          allowEdit={allowEdit}
+          onValueChange={onSupplierChange}
+          label={t("supplier")}
+          {...(supplierPermission?.create && {
+            addNew: () => {
+              createSupplier.openDialog({});
+            },
+          })}
+        />
+      )}
+
+      {(party == partyTypeToJSON(PartyType.saleOrder) ||
+        party == partyTypeToJSON(PartyType.saleInvoice) ||
+        party == partyTypeToJSON(PartyType.deliveryNote) ||
+        party == partyTypeToJSON(PartyType.salesQuotation)) && (
+        <FormAutocompleteField
+          required={true}
+          data={customerFetcher.data?.customers || []}
+          control={control}
+          name="party"
+          nameK={"name"}
+          onValueChange={onCustomerChange}
+          label={t("customer")}
+          allowEdit={allowEdit}
           {...(customerPermission?.create && {
             addNew: () => {
               createCustomer.openDialog({});

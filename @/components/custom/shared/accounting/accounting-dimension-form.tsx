@@ -4,13 +4,14 @@ import { useTranslation } from "react-i18next";
 import { useCostCenterFetcher } from "~/util/hooks/fetchers/accounting/useCostCenterFetcher";
 import { useProjectFetcher } from "~/util/hooks/fetchers/accounting/useProjectFetcher";
 import FormAutocomplete from "../../select/FormAutocomplete";
+import FormAutocompleteField from "../../select/FormAutocompleteField";
 
 export default function AccountingDimensionForm({
   form,
-  allowEdit
+  allowEdit,
 }: {
   form: UseFormReturn<any, any, undefined>;
-  allowEdit?:boolean
+  allowEdit?: boolean;
 }) {
   const { t } = useTranslation("common");
   const [projectsFetcher, onProjectChange] = useProjectFetcher();
@@ -22,7 +23,7 @@ export default function AccountingDimensionForm({
       open={true}
       className="create-grid"
     >
-      <FormAutocomplete
+      <FormAutocompleteField
         data={projectsFetcher.data?.projects || []}
         form={form}
         name="project"
@@ -30,11 +31,8 @@ export default function AccountingDimensionForm({
         allowEdit={allowEdit}
         onValueChange={onProjectChange}
         label={t("project")}
-        onSelect={(v) => {
-          form.setValue("projectID", v.id);
-        }}
       />
-      <FormAutocomplete
+      <FormAutocompleteField
         data={costCenterFetcher.data?.costCenters || []}
         form={form}
         name="costCenter"
@@ -42,9 +40,6 @@ export default function AccountingDimensionForm({
         onValueChange={onCostCenterChange}
         allowEdit={allowEdit}
         label={t("costCenter")}
-        onSelect={(v) => {
-          form.setValue("costCenterID", v.id);
-        }}
       />
     </AccordationLayout>
   );

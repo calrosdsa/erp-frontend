@@ -10,7 +10,7 @@ export const setUpToolbar = (
   const { payload, setToolbar, reset } = useToolbar()
 
   useEffect(() => {
-    const newOpts = opts({})
+    const newOpts = opts(payload)
     console.log("NEW PAYLOAD",newOpts)
     setToolbar(newOpts)
 

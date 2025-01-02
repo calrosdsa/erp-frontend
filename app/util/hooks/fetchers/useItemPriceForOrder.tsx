@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_CURRENCY, DEFAULT_DEBOUNCE_TIME } from "~/constant"
-import { components } from "~/sdk"
+import { components, operations } from "~/sdk"
 import { routes } from "~/util/route"
 import { usePermission } from "../useActions"
 import { PartyType, partyTypeToJSON } from "~/gen/common"
@@ -17,7 +17,8 @@ export const PriceAutocompleteForm = ({
     onSelect,
     docPartyType,
     currency,
-    lang
+    lang,
+    priceListID,
 }:{
     allowEdit?: boolean;
     control?: Control<any, any>;
@@ -26,6 +27,7 @@ export const PriceAutocompleteForm = ({
     docPartyType:string;
     currency?:string,
     lang:string
+    priceListID?:number
   }) =>{
   const [fetcher, onChange] = useItemPriceForOrders({
     isBuying:
@@ -39,8 +41,11 @@ export const PriceAutocompleteForm = ({
       docPartyType == partyTypeToJSON(PartyType.deliveryNote) ||
       docPartyType == partyTypeToJSON(PartyType.salesQuotation),
     currency: currency || DEFAULT_CURRENCY,
+    priceListID:priceListID,
   });
   return (
+    <>
+    {/* {JSON.stringify(fetcher.data?.itemPriceForOrders)} */}
     <FormAutocomplete
     data={fetcher.data?.itemPriceForOrders || []}
     nameK={"item_name"}
@@ -57,6 +62,7 @@ export const PriceAutocompleteForm = ({
             <span>{e.item_name}</span>
             <span className=" uppercase"> {e.uuid.slice(0, 5)}</span>
           </div>
+          {e.price_list_name &&
           <div className="flexspace-x-1">
             {e.price_list_name}:{" "}
             {formatCurrency(
@@ -65,17 +71,21 @@ export const PriceAutocompleteForm = ({
               lang
             )}
           </div>
+          }
         </div>
       );
     }}
   />
+    </>
+
   );
 }
 
-export const useItemPriceForOrders = ({isSelling,isBuying,currency}:{
+export const useItemPriceForOrders = ({isSelling,isBuying,currency,priceListID}:{
     isSelling?:boolean
     isBuying?:boolean
     currency:string
+    priceListID?:number
 }) =>{
     const r = routes
     const debounceFetcher = useDebounceFetcher<{
@@ -84,12 +94,16 @@ export const useItemPriceForOrders = ({isSelling,isBuying,currency}:{
     }>()
 
     const onChange = (e:string)=>{
+      const d = {
+        query:e,
+        currency:currency,
+        is_buying:isBuying || false,
+        is_selling:isSelling || false,  
+        price_list_id:priceListID?.toString(),
+      } as operations["get-item-prices-for-order"]["parameters"]["query"]
         debounceFetcher.submit({
             action:"item-price-for-orders",
-            query:e,
-            currency:currency,
-            isBuying:isBuying || false,
-            isSelling:isSelling || false,
+            queryItemPriceForOrders:d,
         },{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,

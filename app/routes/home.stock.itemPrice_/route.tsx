@@ -4,7 +4,7 @@ import ItemPricesClient from "./item-prices.client";
 import { DEFAULT_ENABLED, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { createItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { z } from "zod";
-import { components } from "~/sdk";
+import { components, operations } from "~/sdk";
 import { handleError } from "~/util/api/handle-status-code";
 import { Outlet } from "@remix-run/react";
 
@@ -15,6 +15,7 @@ type ActionData = {
   currency:string
   isSelling:boolean
   isBuying:boolean
+  queryItemPriceForOrders:operations["get-item-prices-for-order"]["parameters"]["query"]
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
@@ -29,13 +30,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       console.log(data)
       const res = await client.GET("/stock/item/item-price/order",{
         params:{
-          query:{
-            query:data.query || "",
-            enabled:DEFAULT_ENABLED,
-            currency:data.currency,
-            isSelling:data.isSelling,
-            isBuying:data.isBuying,
-          }
+          query:data.queryItemPriceForOrders
         }
       })
       itemPriceForOrders = res.data?.result.entity || []
@@ -59,15 +54,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       console.log("DATA",d)
       const res = await client.POST("/stock/item/item-price", {
         body: {
-            itemQuantity: d.itemQuantity,
-            rate: d.rate,
-            item_uuid:d.itemUuid,
-            item_id:d.itemID,
-            tax_uuid:d.taxUuid,
-            tax_id:d.taxID,
-            price_list_uuid:d.priceListUuid,
-            price_list_id:d.priceListID,
-
+          item_quantity: d.itemQuantity,
+          rate: d.rate,
+          item_id: d.itemID,
+          price_list_id: d.priceListID,
+          uom_id: d.uomID
         },
       });
       message = res.data?.message

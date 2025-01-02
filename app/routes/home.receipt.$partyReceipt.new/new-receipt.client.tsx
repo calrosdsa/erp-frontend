@@ -36,7 +36,7 @@ import {
   setUpToolbar,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
-import { createReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
+import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 
 export default function NewReceiptClient() {
@@ -51,8 +51,8 @@ export default function NewReceiptClient() {
   const { payload } = useDocumentStore();
   const params = useParams();
   const partyReceipt = params.partyReceipt || "";
-  const form = useForm<z.infer<typeof createReceiptSchema>>({
-    resolver: zodResolver(createReceiptSchema),
+  const form = useForm<z.infer<typeof receiptDataSchema>>({
+    resolver: zodResolver(receiptDataSchema),
     defaultValues: {
       receiptPartyType: partyReceipt,
       referenceID: payload?.documentRefernceID,
@@ -86,7 +86,7 @@ export default function NewReceiptClient() {
   });
   const formValues = form.getValues();
 
-  const onSubmit = (values: z.infer<typeof createReceiptSchema>) => {
+  const onSubmit = (values: z.infer<typeof receiptDataSchema>) => {
     console.log(values);
     fetcher.submit(
       {

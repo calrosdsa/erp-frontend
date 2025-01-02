@@ -4,7 +4,7 @@ import apiClient from "~/apiclient";
 import { createJournalEntrySchema } from "~/util/data/schemas/accounting/journal-entry-schema";
 import NewStockEntryClient from "./new-stock-entry.client";
 import { createStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-schema";
-import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/purchase-schema";
+import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/order-schema";
 import { format, formatRFC3339 } from "date-fns";
 import { components } from "~/sdk";
 

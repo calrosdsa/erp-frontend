@@ -93,14 +93,12 @@ const lineItemWithTitle: LineItemType = {
 export default function PricingData({
   fetcher,
   onSubmit,
-  defaultValues,
   inputRef,
   form,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<EditData>;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  defaultValues?: EditData;
   inputRef: MutableRefObject<HTMLInputElement | null>;
 }) {
   const { t } = useTranslation("common");
@@ -358,12 +356,9 @@ export default function PricingData({
                 <CustomerAutoCompleteForm
                   control={form.control}
                   label={t("customer")}
-                  roleActions={roleActions}
-                  onSelect={(e) => {
-                    form.setValue("customer_id", e.id);
-                  }}
+                  roleActions={roleActions}                  
+                  name="customer"
                 />
-
                 <AccountingDimensionForm form={form} />
               </div>
             </div>

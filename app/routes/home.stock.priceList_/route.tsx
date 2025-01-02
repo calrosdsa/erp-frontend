@@ -4,12 +4,12 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { createPriceListSchema } from "~/util/data/schemas/stock/price-list-schema";
-import { components } from "~/sdk";
+import { components, operations } from "~/sdk";
 import { handleError } from "~/util/api/handle-status-code";
 
 type PriceListAction = {
   action: string;
-  query: string;
+  query: operations["get-price-lists"]["parameters"]["query"];
   page?: string;
   size?: string;
   createPriceList: z.infer<typeof createPriceListSchema>;
@@ -33,11 +33,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "get": {
       const res = await client.GET("/stock/item/price-list", {
         params: {
-          query: {
-            query: data.query,
-            page: data.page || DEFAULT_PAGE,
-            size: data.size || DEFAULT_SIZE,
-          },
+          query: data.query,
         },
       });
       if (res.data != undefined) {

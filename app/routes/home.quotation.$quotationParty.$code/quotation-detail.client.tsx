@@ -74,7 +74,7 @@ export default function QuotationDetailClient() {
     },
   ];
 
-  setUpToolbar(() => {
+  setUpToolbar((opts) => {
     let actions: ButtonToolbar[] = [];
     console.log("SET UP TOOLBAR...")
     if(poPermission?.create && allowActions ){
@@ -114,6 +114,7 @@ export default function QuotationDetailClient() {
       })
     }
     return {
+      // ...opts,
       titleToolbar: `${t(quotationParty)}(${quotation?.code})`,
       status: stateFromJSON(quotation?.status),
       actions: actions,

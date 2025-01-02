@@ -6,8 +6,9 @@ import CustomFormField from "../../form/CustomFormField";
 import { CustomCheckbox } from "../../input/CustomCheckBox";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import { useTranslation } from "react-i18next";
-import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
+import { useWarehouseDebounceFetcher, WarehouseAutocompleteFormField } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { useMemo } from "react";
+import FormAutocompleteField from "../../select/FormAutocompleteField";
 
 interface UpdateStockProps {
   form: UseFormReturn<any>;
@@ -31,13 +32,6 @@ export default function UpdateStock({
     partyType === partyTypeToJSON(PartyType.purchaseReceipt);
   const isDeliveryNote = partyType === partyTypeToJSON(PartyType.deliveryNote);
 
-  const [warehouseFetcher, onWarehouseChange] = useWarehouseDebounceFetcher({
-    isGroup: false,
-  });
-  const [acceptedWarehouse, onAcceptedWarehouseChange] =
-    useWarehouseDebounceFetcher({ isGroup: false });
-  const [rejectedWarehouse, onRejectedWarehouseChange] =
-    useWarehouseDebounceFetcher({ isGroup: false });
 
   return (
     <>
@@ -56,22 +50,21 @@ export default function UpdateStock({
         </CustomFormField>
       )}
       {((updateStock && isSaleInvoice) || isDeliveryNote) && (
-        <FormAutocomplete
+        <WarehouseAutocompleteFormField
           control={form.control}
-          data={warehouseFetcher.data?.warehouses || []}
-          name="sourceWarehouseName"
-          nameK="name"
-          onValueChange={onWarehouseChange}
-          onSelect={(v) => {
-            form.setValue("sourceWarehouse", v.id);
-          }}
           label={t("f.source", { o: t("_warehouse.base") })}
+          isGroup={false}
         />
       )}
 
       {((updateStock && isPurchaseInvoice) || isPurchaseReceipt) && (
         <>
-          <FormAutocomplete
+        <WarehouseAutocompleteFormField
+          control={form.control}
+          label={t("warehouse")}
+          isGroup={false}
+        />
+          {/* <FormAutocomplete
             control={form.control}
             data={acceptedWarehouse.data?.warehouses || []}
             name="acceptedWarehouseName"
@@ -81,7 +74,7 @@ export default function UpdateStock({
               form.setValue("acceptedWarehouseID", v.id);
             }}
             label={t("warehouse")}
-          />
+          /> */}
           {/* <FormAutocomplete
             control={form.control}
             data={rejectedWarehouse.data?.warehouses || []}

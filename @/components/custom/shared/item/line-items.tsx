@@ -44,6 +44,7 @@ export default function LineItems({
   complement,
   updateStock,
   isNew,
+  priceListID,
 }: {
   onChange?: (e: z.infer<typeof lineItemSchema>[]) => void;
   status?: string;
@@ -56,6 +57,7 @@ export default function LineItems({
   complement?: JSX.Element;
   updateStock?: boolean;
   isNew?: boolean;
+  priceListID?:number
 }) {
   const { t, i18n } = useTranslation("common");
   const { total, lines: lineItems, totalQuantity } = useLineItems();
@@ -150,6 +152,7 @@ export default function LineItems({
               line.uom = e.uom;
               onChange?.([...lineItems, line]);
             }}
+            priceListID={priceListID}
             lang={i18n.language}
             docPartyType={docPartyType || ""}
           />
@@ -172,7 +175,12 @@ export default function LineItems({
                   const lines = lineItems.map((t, idx) => {
                     // if(t.)
                     if (idx == row) {
-                      (t as any)[column] = value;
+                      const val  = (t as any)[column]
+                      if(typeof val == "number") {
+                        (t as any)[column] = Number(value) || 0 ;
+                      }else{
+                        (t as any)[column] = value;
+                      }
                     }
                     return t;
                   });

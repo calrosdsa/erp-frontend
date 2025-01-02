@@ -13,6 +13,7 @@ import { z } from "zod";
 import {
   mapPricingChargeData,
   mapPricingLineItemData,
+  mapToPricingData,
   pricingDataSchema,
 } from "~/util/data/schemas/pricing/pricing-schema";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
@@ -60,27 +61,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "edit": {
-      const d = data.editData;
-      const pricingLineItems = d.pricing_line_items.map((t) =>
-        mapPricingLineItemData(t)
-      );
-      const pricingCharges = d.pricing_charges.map((t) =>
-        mapPricingChargeData(t)
-      );
       const res = await client.PUT("/pricing", {
-        body: {
-          pricing_data: {
-            customer_id: d.customer_id,
-            project_id: null,
-            cost_center_id: d.costCenterID,
-          },
-          id: d.id || 0,
-          customer: d.customer_id,
-          project: d.projectID,
-          cost_center: d.costCenterID,
-          pricing_charges: pricingCharges,
-          pricing_line_items: pricingLineItems,
-        },
+        body: mapToPricingData(data.editData)
       });
       error = res.error?.detail;
       message = res.data?.message;

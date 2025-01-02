@@ -7,42 +7,26 @@ import {
 import { useTranslation } from "react-i18next";
 import { action, loader } from "../../route";
 import {
-  ItemLineType,
-  itemLineTypeToJSON,
   State,
   stateFromJSON,
-  stateToJSON,
 } from "~/gen/common";
 import { GlobalState } from "~/types/app";
-import LineItems from "@/components/custom/shared/item/line-items";
-import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
-import { useTotal } from "~/util/hooks/data/useTotal";
-import { useLineItems } from "@/components/custom/shared/item/use-line-items";
-import LineItemsDisplay from "@/components/custom/shared/item/line-items-display";
-import { Separator } from "@/components/ui/separator";
-import GrandTotal from "@/components/custom/shared/item/grand-total";
-import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { useEffect, useRef } from "react";
-import { editQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
+import { quotationDataSchema } from "~/util/data/schemas/quotation/quotation-schema";
 import { z } from "zod";
-import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
-import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
-import { Form } from "@/components/ui/form";
-import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
-import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
-  setUpToolbar,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
-import { toZonedTime } from "date-fns-tz";
 import { usePermission } from "~/util/hooks/useActions";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import { QuotationData } from "~/routes/home.quotation.$quotationParty.new/quotation-data";
+import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
-type EditData = z.infer<typeof editQuotationSchema>;
+type EditData = z.infer<typeof quotationDataSchema>;
 export default function QuotationInfoTab() {
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
@@ -51,36 +35,56 @@ export default function QuotationInfoTab() {
     useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const params = useParams();
+  const toolbar = useToolbar()
   const [quotationPerm] = usePermission({ roleActions, actions });
   const quotationParty = params.quotationParty || "";
   const isDraft = stateFromJSON(quotation?.status) == State.DRAFT;
   const allowEdit = isDraft && quotationPerm?.edit;
   const allowCreate = isDraft && quotationPerm?.create;
   const documentStore = useDocumentStore();
-  const { form, hasChanged, updateRef } = useEditFields<EditData>({
-    schema: editQuotationSchema,
+  const { form, hasChanged, updateRef,previousValues } = useEditFields<EditData>({
+    schema: quotationDataSchema,
     defaultValues: {
       id: quotation?.id,
-      partyID: quotation?.party_id,
-      partyName: quotation?.party_name,
-      currency: quotation?.currency,
+      party: {
+        id: quotation?.party_id,
+        name: quotation?.party_name,
+        uuid:quotation?.party_uuid,
+      },
+      currency: quotation?.currency || companyDefaults?.currency,
       postingTime: quotation?.posting_time,
       postingDate: new Date(quotation?.posting_date || ""),
       validTill: new Date(quotation?.valid_till || new Date()),
       tz: quotation?.tz,
-      projectID: quotation?.project_id,
-      projectName: quotation?.project,
-      costCenterID: quotation?.cost_center_id,
-      costCenterName: quotation?.cost_center,
+      project: {
+        id: quotation?.project_id,
+        name: quotation?.project,
+        uuid: quotation?.project_uuid,
+      },
+      costCenter: {
+        id: quotation?.cost_center_id,
+        name: quotation?.cost_center,
+        uuid: quotation?.cost_center_uuid,
+      },
+      priceList:{
+        id:quotation?.price_list_id,
+        name:quotation?.price_list,
+        uuid:quotation?.price_list_uuid,
+      },
+      taxLines:taxLines.map(t=>toTaxAndChargeLineSchema(t)),
+      lines: lineItems.map((t) =>
+        toLineItemSchema(t, {
+          partyType: quotationParty,
+        })
+      ),
     },
   });
-  const formValues = form.getValues();
 
   const onSubmit = (e: EditData) => {
     fetcher.submit(
       {
         action: "edit",
-        editData: e as any,
+        quotationData: e as any,
       },
       {
         method: "POST",
@@ -89,16 +93,15 @@ export default function QuotationInfoTab() {
     );
   };
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  useEffect(()=>{
+    console.log("HAS CHANGE",hasChanged)
+    toolbar.setToolbar({
+      onSave: () => inputRef.current?.click(),
+        // disabledSave: !hasChanged,
+    })
+  },[quotation])
+
+  
 
   useLoadingTypeToolbar(
     {
@@ -125,6 +128,8 @@ export default function QuotationInfoTab() {
       documentRefernceID: quotation?.id,
       partyName: quotation?.party_name,
       currency: quotation?.currency,
+      priceListID:quotation?.price_list_id,
+      priceListName:quotation?.price_list,
       projectID: quotation?.project_id,
       projectName: quotation?.project,
       costCenterID: quotation?.cost_center_id,
@@ -132,77 +137,18 @@ export default function QuotationInfoTab() {
     });
   }, [quotation]);
   return (
-    <Form {...form}>
-      <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className=" info-grid">
-          <PartyAutocomplete
-            party={quotationParty}
-            roleActions={roleActions}
-            form={form}
-            allowEdit={allowEdit}
-          />
-          <CustomFormDate
-            control={form.control}
-            name="postingDate"
-            allowEdit={allowEdit}
-            label={t("form.postingDate")}
-          />
-          <CustomFormTime
-            control={form.control}
-            name="postingTime"
-            label={t("form.postingTime")}
-            allowEdit={allowEdit}
-            description={formValues.tz}
-          />
-
-          <CustomFormDate
-            control={form.control}
-            name="validTill"
-            allowEdit={allowEdit}
-            label={t("form.validTill")}
-          />
-          <CurrencyAutocompleteForm
-            control={form.control}
-            name="currency"
-            label={t("form.currency")}
-            allowEdit={allowEdit}
-          />
-          <Separator className=" col-span-full" />
-
-          {/* <CurrencyAndPriceList form={form} allowEdit={allowEdit} /> */}
-
-          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-
-          <LineItemsDisplay
-            currency={quotation?.currency || companyDefaults?.currency || ""}
-            status={quotation?.status || ""}
-            lineItems={lineItems}
-            lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
-            docPartyType={quotationParty}
-            docPartyID={quotation?.id}
-            allowEdit={allowEdit}
-            allowCreate={allowCreate}
-          />
-          {quotation && (
-            <>
-              <TaxAndCharges
-                currency={quotation.currency}
-                status={quotation.status}
-                taxLines={taxLines}
-                docPartyID={quotation.id}
-                docPartyType={quotationParty}
-                allowCreate={allowCreate}
-                allowEdit={allowEdit}
-              />
-
-              <GrandTotal currency={quotation.currency} />
-
-              <TaxBreakup currency={quotation.currency} />
-            </>
-          )}
-        </div>
-        <input className="hidden" type="submit" ref={inputRef} />
-      </fetcher.Form>
-    </Form>
+    <>
+    {/* {JSON.stringify(previousValues.lines)}
+    <br />
+    {JSON.stringify(form.getValues().lines)} */}
+   <QuotationData
+   form={form}
+   inputRef={inputRef}
+   onSubmit={onSubmit}
+   fetcher={fetcher}
+   allowEdit={allowEdit}
+   allowCreate={allowCreate}
+   />
+   </>
   );
 }

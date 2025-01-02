@@ -16,7 +16,7 @@ import { routes } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { GlobalState } from "~/types/app";
 import { action } from "./route";
-import { createInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
+import { invoiceDataSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
@@ -40,6 +40,7 @@ import {
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import { InvoiceData } from "./invoice-data";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
@@ -55,11 +56,11 @@ export default function CreatePurchaseInvoiceClient() {
   const { payload } = useDocumentStore();
   const params = useParams();
   const partyInvoice = params.partyInvoice || "";
-  const form = useForm<z.infer<typeof createInvoiceSchema>>({
-    resolver: zodResolver(createInvoiceSchema),
+  const form = useForm<z.infer<typeof invoiceDataSchema>>({
+    resolver: zodResolver(invoiceDataSchema),
     defaultValues: {
       invoicePartyType: partyInvoice,
-      referenceID: payload?.documentRefernceID,
+      docReferenceID: payload?.documentRefernceID,
       currency: payload?.currency || companyDefaults?.currency,
       lines: lineItemsStore.lines.map((t) => {
         t.lineType = itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE);
@@ -71,22 +72,32 @@ export default function CreatePurchaseInvoiceClient() {
       postingTime: format(new Date(), "HH:mm:ss"),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 
-      costCenterID: payload?.costCenterID,
-      costCenter: payload?.costCenterName,
-      projectID: payload?.projectID,
-      project: payload?.projectName,
-      partyID: payload?.partyID,
-      partyName: payload?.partyName,
+      party:{
+        id:payload?.partyID,
+        name:payload?.partyName,
+      },
+      priceList:{
+        id:payload?.priceListID,
+        name:payload?.priceListName,
+      },
+      costCenter:{
+        name:payload?.costCenterName,
+        id:payload?.costCenterID,
+      },
+      project: {
+        name:payload?.projectName,
+        id:payload?.projectID,
+      },
     },
   });
   const formValues = form.getValues();
 
-  const onSubmit = (values: z.infer<typeof createInvoiceSchema>) => {
+  const onSubmit = (values: z.infer<typeof invoiceDataSchema>) => {
     console.log(values);
     fetcher.submit(
       {
         action: "create-invoice",
-        createPurchaseInvoice: values,
+        invoiceData: values,
       } as any,
       {
         method: "POST",
@@ -149,85 +160,12 @@ export default function CreatePurchaseInvoiceClient() {
   return (
     <div>
       <Card>
-        <FormLayout>
-          <Form {...form}>
-            <fetcher.Form
-              method="post"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className={cn("", "gap-y-3 grid p-3")}
-            >
-              <div className="create-grid">
-                <PartyAutocomplete
-                  party={partyInvoice}
-                  roleActions={roleActions}
-                  form={form}
-                />
-                <CustomFormDate
-                  control={form.control}
-                  name="postingDate"
-                  label={t("form.postingDate")}
-                />
-                <CustomFormTime
-                  control={form.control}
-                  name="postingTime"
-                  label={t("form.postingTime")}
-                  description={formValues.tz}
-                />
-                <CustomFormDate
-                  control={form.control}
-                  name="dueDate"
-                  label={t("form.dueDate")}
-                />
-
-                {/* <CustomFormFieldInput
-                  control={form.control}
-                  name="recordNo"
-                  label={"Numero de Registro"}
-                  inputType="input"
-                /> */}
-
-                <CurrencyAndPriceList form={form} />
-
-                <AccountingDimensionForm form={form} />
-
-                <LineItems
-                  onChange={(e) => {
-                    form.setValue("lines", e);
-                    form.trigger("lines");
-                  }}
-                  allowEdit={true}
-                  lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
-                  docPartyType={partyInvoice}
-                  currency={formValues.currency}
-                  isNew={true}
-                  complement={
-                    <UpdateStock
-                      form={form}
-                      updateStock={formValues.updateStock}
-                      partyType={partyInvoice}
-                      isInvoice={true}
-                    />
-                  }
-                />
-                <TaxAndChargesLines
-                  onChange={(e) => {
-                    form.setValue("taxLines", e);
-                    form.trigger("taxLines");
-                  }}
-                  docPartyType={partyInvoice}
-                  form={form}
-                  currency={formValues.currency}
-                  allowCreate={true}
-                  allowEdit={true}
-                />
-                <GrandTotal currency={formValues.currency} />
-                <TaxBreakup currency={formValues.currency} />
-              </div>
-
-              <input ref={inputRef} type="submit" className="hidden" />
-            </fetcher.Form>
-          </Form>
-        </FormLayout>
+          <InvoiceData
+          form={form}
+          onSubmit={onSubmit}
+          fetcher={fetcher}
+          inputRef={inputRef}
+          />
       </Card>
     </div>
   );

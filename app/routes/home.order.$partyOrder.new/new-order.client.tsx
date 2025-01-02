@@ -5,7 +5,7 @@ import {
   useParams,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { createOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
+import { orderDataSchema } from "~/util/data/schemas/buying/order-schema";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
@@ -39,6 +39,7 @@ import { useDocumentStore } from "@/components/custom/shared/document/use-docume
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import { Card } from "@/components/ui/card";
+import { OrderData } from "./order-data";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
@@ -53,32 +54,42 @@ export default function CreatePurchaseOrdersClient() {
   const taxLinesStore = useTaxAndCharges();
   const { payload } = useDocumentStore();
 
-  const form = useForm<z.infer<typeof createOrderSchema>>({
-    resolver: zodResolver(createOrderSchema),
+  const form = useForm<z.infer<typeof orderDataSchema>>({
+    resolver: zodResolver(orderDataSchema),
     defaultValues: {
       currency: companyDefaults?.currency,
       postingTime: format(new Date(), "HH:mm:ss"),
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 
+      party:{
+        id:payload?.partyID,
+        name:payload?.partyName,
+      },
+      priceList:{
+        id:payload?.priceListID,
+        name:payload?.priceListName,
+      },
+      costCenter:{
+        name:payload?.costCenterName,
+        id:payload?.costCenterID,
+      },
+      project: {
+        name:payload?.projectName,
+        id:payload?.projectID,
+      },
+
       lines: lineItemsStore.lines,
       taxLines: taxLinesStore.lines,
-
-      costCenterID: payload?.costCenterID,
-      costCenter: payload?.costCenterName,
-      projectID: payload?.projectID,
-      project: payload?.projectName,
-      partyID: payload?.partyID,
-      partyName: payload?.partyName,
     },
   });
   const formValues = form.getValues();
 
-  const onSubmit = (values: z.infer<typeof createOrderSchema>) => {
+  const onSubmit = (values: z.infer<typeof orderDataSchema>) => {
     fetcher.submit(
       {
         action: "create-order",
-        createPurchaseOrder: values,
+        orderData: values,
       } as any,
       {
         method: "POST",
@@ -128,76 +139,12 @@ export default function CreatePurchaseOrdersClient() {
   return (
     <div>
       <Card>
-        <FormLayout>
-          <Form {...form}>
-            <fetcher.Form
-              method="post"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className={cn("", "gap-y-3 grid p-3")}
-            >
-              <div className="create-grid">
-                <PartyAutocomplete
-                  party={partyOrder}
-                  roleActions={roleActions}
-                  form={form}
-                />
-                <CustomFormDate
-                  control={form.control}
-                  name="postingDate"
-                  label={t("form.postingDate")}
-                />
-                <CustomFormTime
-                  control={form.control}
-                  name="postingTime"
-                  label={t("form.postingTime")}
-                  description={formValues.tz}
-                />
-
-                <CustomFormDate
-                  control={form.control}
-                  name="deliveryDate"
-                  label={t("form.deliveryDate")}
-                />
-                <CurrencyAutocompleteForm
-                  control={form.control}
-                  name="currency"
-                  label={t("form.currency")}
-                />
-
-                {/* <CurrencyAndPriceList form={form} /> */}
-
-                <AccountingDimensionForm form={form} />
-
-                <LineItems
-                  onChange={(e) => {
-                    form.setValue("lines", e);
-                    form.trigger("lines");
-                  }}
-                  allowEdit={true}
-                  lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
-                  docPartyType={partyOrder}
-                  isNew={true}
-                  currency={formValues.currency}
-                />
-                <TaxAndChargesLines
-                  onChange={(e) => {
-                    form.setValue("taxLines", e);
-                    form.trigger("taxLines");
-                  }}
-                  docPartyType={partyOrder}
-                  currency={formValues.currency}
-                  allowCreate={true}
-                  allowEdit={true}
-                  form={form}
-                />
-                <GrandTotal currency={formValues.currency} />
-                <TaxBreakup currency={formValues.currency} />
-              </div>
-
-              <input ref={inputRef} type="submit" className="hidden" />
-            </fetcher.Form>
-          </Form>
-        </FormLayout>
+        <OrderData
+        form={form}
+        fetcher={fetcher}
+        onSubmit={onSubmit}
+        inputRef={inputRef}
+        />
       </Card>
     </div>
   );

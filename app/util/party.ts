@@ -22,6 +22,8 @@ class Parties {
   purchaseOrder = "purchaseOrder";
   saleOrder = "saleOrder";
   supplierQuotation = "supplierQuotation";
+  salesQuotation = "salesQuotation"
+  
   itemGroup = "itemGroup";
   customerGroup = "customerGroup";
   supplierGroup = "supplierGroup";

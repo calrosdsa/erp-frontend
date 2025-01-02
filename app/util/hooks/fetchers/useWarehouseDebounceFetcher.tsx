@@ -8,6 +8,53 @@ import { routes } from "~/util/route"
 import { usePermission } from "../useActions"
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
+import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField"
+
+
+
+export const WarehouseAutocompleteFormField = ({
+  allowEdit = true,
+  control,
+  label,
+  onSelect,
+  name,
+  isGroup,
+  roleActions,
+}: {
+  allowEdit?: boolean;
+  control: Control<any, any>;
+  label?: string;
+  name?: string;
+  onSelect?: (e: components["schemas"]["WareHouseDto"]) => void;
+  isGroup: boolean;
+  roleActions?: components["schemas"]["RoleActionDto"][];
+}) => {
+  const [fetcherDebounce, onChange] = useWarehouseDebounceFetcher({
+    isGroup,
+  });
+  const [permission] = usePermission({
+    actions:fetcherDebounce.data?.actions,
+    roleActions,
+  });
+  const createWareHouse = useCreateWareHouse();
+
+  return (
+    <FormAutocompleteField
+      data={fetcherDebounce.data?.warehouses || []}
+      onValueChange={onChange}
+      label={label}
+      name={name || "warehouse"}
+      nameK="name"
+      control={control}
+      allowEdit={allowEdit}
+      onSelect={onSelect}
+      {...(permission?.create && {
+        addNew: () =>
+          createWareHouse.openDialog({}),
+      })}
+    />
+  );
+};
 
 
 export const WarehouseAutocompleteForm = ({

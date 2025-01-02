@@ -12,13 +12,18 @@ import { z } from "zod";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { FetchResponse } from "openapi-fetch";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
-import { editInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
+import {
+  editInvoiceSchema,
+  invoiceDataSchema,
+  mapToInvoiceBody,
+} from "~/util/data/schemas/invoice/invoice-schema";
 import { formatRFC3339 } from "date-fns";
 import { LOAD_ACTION } from "~/constant";
+import { components } from "~/sdk";
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
-  editData: z.infer<typeof editInvoiceSchema>;
+  invoiceData: z.infer<typeof invoiceDataSchema>;
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -39,21 +44,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
     case "edit": {
-      const d = data.editData;
       const res = await client.PUT("/invoice", {
-        body: {
-          party_id: d.partyID,
-          invoice_party_type: params.partyInvoice || "",
-          due_date: d.dueDate ? formatRFC3339(d.dueDate) : undefined,
-          posting_date: formatRFC3339(d.postingDate),
-          posting_time: d.postingTime,
-          tz: d.tz,
-          project: d.projectID,
-          cost_center: d.costCenterID,
-          currency: d.currency,
-          id: d.id,
-          total_amount: 0,
-        },
+        body: mapToInvoiceBody(data.invoiceData),
       });
       message = res.data?.message;
       error = res.error?.detail;
@@ -89,10 +81,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const tab = searchParams.get("tab");
   let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
-  let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
-    undefined;
-  let taxLinesRes: Promise<FetchResponse<any, any, any>> | undefined =
-    undefined;
+  // let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
+  //   undefined;
+  // let taxLinesRes: Promise<FetchResponse<any, any, any>> | undefined =
+  //   undefined;
   const res = await client.GET("/invoice/purchase/{id}", {
     params: {
       path: {
@@ -104,10 +96,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
+  let lineItems: components["schemas"]["LineItemDto"][] = [];
+  let taxLines: components["schemas"]["TaxAndChargeLineDto"][] = [];
   if (res.data) {
     switch (tab) {
       case "info": {
-        lineItemRes = client.GET("/item-line", {
+        const lineItemRes = await client.GET("/item-line", {
           params: {
             query: {
               line_type: itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER),
@@ -117,13 +111,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
-        taxLinesRes = client.GET("/taxes-and-charges", {
+        lineItems = lineItemRes.data?.result || []
+        const taxLinesRes =await client.GET("/taxes-and-charges", {
           params: {
             query: {
               id: res.data.result.entity.invoice.id.toString(),
             },
           },
         });
+        taxLines = taxLinesRes.data?.result || []
         break;
       }
       case "connections": {
@@ -148,8 +144,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     associatedActions: res.data?.associated_actions,
     activities: res.data?.result.activities,
     totals: res.data?.result.entity.totals,
-    lineItems: lineItemRes,
-    taxLines: taxLinesRes,
+    lineItems: lineItems,
+    taxLines: taxLines,
   });
 };
 export default function InvoiceDetail() {

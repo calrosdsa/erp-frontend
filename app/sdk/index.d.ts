@@ -3242,14 +3242,14 @@ export interface components {
             receivable_acct_uuid: string;
         };
         AccountingDimensionDto: {
-            cost_center: string;
+            cost_center: string | null;
             /** Format: int64 */
-            cost_center_id: number;
-            cost_center_uuid: string;
-            project: string;
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
+            project: string | null;
             /** Format: int64 */
-            project_id: number;
-            project_uuid: string;
+            project_id: number | null;
+            project_uuid: string | null;
         };
         ActionDto: {
             /** Format: int64 */
@@ -3844,16 +3844,6 @@ export interface components {
             name: string;
             party_type_code: string;
         };
-        CreateInvoiceBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            invoice: components["schemas"]["InvoiceData"];
-            items: components["schemas"]["CreateItemLines"];
-            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
-        };
         CreateItemAttributeRequestBody: {
             /**
              * Format: uri
@@ -3908,35 +3898,6 @@ export interface components {
             href: string;
             icon: string;
             label: string;
-        };
-        CreateOrder: {
-            /** Format: int64 */
-            cost_center?: number;
-            currency: string;
-            /** Format: date-time */
-            delivery_date?: string | null;
-            order_party_type: string;
-            /** Format: int64 */
-            party_id: number;
-            /** Format: date-time */
-            posting_date: string;
-            posting_time: string;
-            /** Format: int64 */
-            project?: number;
-            references?: number[];
-            /** Format: double */
-            total_amount?: number;
-            tz: string;
-        };
-        CreateOrderBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            items: components["schemas"]["CreateItemLines"];
-            order: components["schemas"]["CreateOrder"];
-            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
         };
         CreatePartyAddressRequestBody: {
             /**
@@ -4010,26 +3971,6 @@ export interface components {
             party_type: string;
             party_uuid: string;
         };
-        CreateQuotationBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            items: components["schemas"]["CreateItemLines"];
-            quotation?: components["schemas"]["QuotationData"];
-            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
-        };
-        CreateReceiptBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            items: components["schemas"]["CreateItemLines"];
-            receipt: components["schemas"]["ReceiptData"];
-            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
-        };
         CreateRoleRequestBody: {
             /**
              * Format: uri
@@ -4046,15 +3987,6 @@ export interface components {
              */
             readonly $schema?: string;
             name: string;
-        };
-        CreateStockEntryBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            items: components["schemas"]["CreateItemLines"];
-            stock_entry?: components["schemas"]["StockEntryData"];
         };
         CreateTaxAndChanges: {
             lines: components["schemas"]["TaxAndChargeLineData"][];
@@ -4324,34 +4256,6 @@ export interface components {
             name: string;
             party_type_code: string;
         };
-        EditInvoiceRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            cost_center?: number;
-            currency: string;
-            /** Format: date-time */
-            due_date?: string | null;
-            /** Format: int64 */
-            id: number;
-            invoice_party_type: string;
-            /** Format: int64 */
-            party_id: number;
-            /** Format: date-time */
-            posting_date: string;
-            posting_time: string;
-            /** Format: int64 */
-            project?: number;
-            record_no?: string;
-            /** Format: int64 */
-            reference?: number;
-            /** Format: double */
-            total_amount: number;
-            tz: string;
-        };
         EditItemPriceRequestBody: {
             /**
              * Format: uri
@@ -4439,32 +4343,6 @@ export interface components {
             id: number;
             label: string;
         };
-        EditOrderRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            cost_center?: number;
-            currency: string;
-            /** Format: date-time */
-            delivery_date?: string | null;
-            /** Format: int64 */
-            id: number;
-            order_party_type: string;
-            /** Format: int64 */
-            party_id: number;
-            /** Format: date-time */
-            posting_date: string;
-            posting_time: string;
-            /** Format: int64 */
-            project?: number;
-            references?: number[];
-            /** Format: double */
-            total_amount?: number;
-            tz: string;
-        };
         EditPaymentRequestBody: {
             /**
              * Format: uri
@@ -4474,7 +4352,7 @@ export interface components {
             /** Format: double */
             amount: number;
             /** Format: int64 */
-            cost_center?: number;
+            cost_center_id?: number | null;
             /** Format: int64 */
             id: number;
             /** Format: int64 */
@@ -4488,7 +4366,7 @@ export interface components {
             /** Format: date-time */
             posting_date: string;
             /** Format: int64 */
-            project?: number;
+            project_id?: number | null;
         };
         EditPriceListRequestBody: {
             /**
@@ -4503,55 +4381,6 @@ export interface components {
             isSelling: boolean;
             name: string;
         };
-        EditQuotationRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            cost_center?: number;
-            currency: string;
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            party_id: number;
-            /** Format: date-time */
-            posting_date: string;
-            posting_time: string;
-            /** Format: int64 */
-            project?: number;
-            quotation_party_type: string;
-            references?: number[];
-            tz: string;
-            /** Format: date-time */
-            valid_till: string;
-        };
-        EditReceiptRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            cost_center?: number;
-            currency: string;
-            /** Format: date-time */
-            due_date?: string | null;
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            party_id: number;
-            party_receipt: string;
-            /** Format: date-time */
-            posting_date: string;
-            posting_time: string;
-            /** Format: int64 */
-            project?: number;
-            /** Format: int64 */
-            reference?: number;
-            tz: string;
-        };
         EditRolePermissionActionsBody: {
             /**
              * Format: uri
@@ -4562,25 +4391,6 @@ export interface components {
             entityName: string;
             entity_actions: components["schemas"]["EntityActionsDto"];
             role_uuid: string;
-        };
-        EditStockEntryRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            cost_center?: number;
-            currency: string;
-            entry_type: string;
-            /** Format: int64 */
-            id: number;
-            /** Format: date-time */
-            posting_date: string;
-            posting_time: string;
-            /** Format: int64 */
-            project?: number;
-            tz: string;
         };
         EditSupplierRequestBody: {
             /**
@@ -5604,26 +5414,24 @@ export interface components {
             parent_uuid: string | null;
             uuid: string;
         };
+        InvoiceBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            invoice: components["schemas"]["InvoiceData"];
+            items: components["schemas"]["CreateItemLines"];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
+        };
         InvoiceData: {
+            fields: components["schemas"]["InvoiceFields"];
             /** Format: int64 */
-            cost_center?: number;
-            currency: string;
-            /** Format: date-time */
-            due_date?: string | null;
+            id?: number;
             invoice_party_type: string;
-            /** Format: int64 */
-            party_id: number;
-            /** Format: date-time */
-            posting_date: string;
-            posting_time: string;
-            /** Format: int64 */
-            project?: number;
             record_no?: string;
-            /** Format: int64 */
-            reference?: number;
             /** Format: double */
             total_amount: number;
-            tz: string;
         };
         InvoiceDetailDto: {
             acct_dimensions: components["schemas"]["AccountingDimensionDto"];
@@ -5632,10 +5440,10 @@ export interface components {
         };
         InvoiceDto: {
             code: string;
-            cost_center: string;
+            cost_center: string | null;
             /** Format: int64 */
-            cost_center_id: number;
-            cost_center_uuid: string;
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
             /** Format: date-time */
             created_at: string;
             currency: string;
@@ -5657,10 +5465,14 @@ export interface components {
             /** Format: date-time */
             posting_date: string;
             posting_time: string;
-            project: string;
+            price_list: string | null;
             /** Format: int64 */
-            project_id: number;
-            project_uuid: string;
+            price_list_id: number | null;
+            price_list_uuid: string | null;
+            project: string | null;
+            /** Format: int64 */
+            project_id: number | null;
+            project_uuid: string | null;
             record_no: string;
             status: string;
             /** Format: int32 */
@@ -5669,6 +5481,31 @@ export interface components {
             total_amount: number;
             tz: string;
             update_stock: boolean;
+            warehouse: string | null;
+            /** Format: int64 */
+            warehouse_id: number | null;
+            warehouse_uuid: string | null;
+        };
+        InvoiceFields: {
+            /** Format: int64 */
+            cost_center_id?: number | null;
+            currency: string;
+            /** Format: int64 */
+            doc_reference_id?: number | null;
+            /** Format: date-time */
+            due_date?: string | null;
+            /** Format: int64 */
+            party_id: number;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            price_list_id?: number | null;
+            /** Format: int64 */
+            project_id?: number | null;
+            tz: string;
+            /** Format: int64 */
+            warehouse_id?: number | null;
         };
         ItemAttributeDto: {
             /** Format: date-time */
@@ -5941,6 +5778,8 @@ export interface components {
         LineItemData: {
             delivery_line_item?: components["schemas"]["DeliveryLineItemData"];
             /** Format: int32 */
+            id?: number;
+            /** Format: int32 */
             item_line_reference?: number;
             /** Format: int64 */
             item_price_id: number;
@@ -6013,6 +5852,25 @@ export interface components {
             name: string;
             section_name: string;
         };
+        OrderBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["CreateItemLines"];
+            order: components["schemas"]["OrderData"];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
+        };
+        OrderData: {
+            fields: components["schemas"]["OrderFields"];
+            /** Format: int64 */
+            id?: number;
+            order_party_type: string;
+            references?: (number | null)[];
+            /** Format: double */
+            total_amount: number;
+        };
         OrderDetailDto: {
             acc_dimensions: components["schemas"]["AccountingDimensionDto"];
             order: components["schemas"]["OrderDto"];
@@ -6021,10 +5879,10 @@ export interface components {
             /** Format: int32 */
             billed_amount: number;
             code: string;
-            cost_center: string;
+            cost_center: string | null;
             /** Format: int64 */
-            cost_center_id: number;
-            cost_center_uuid: string;
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
             /** Format: date-time */
             created_at: string;
             currency: string;
@@ -6040,10 +5898,14 @@ export interface components {
             /** Format: date-time */
             posting_date: string;
             posting_time: string;
-            project: string;
+            price_list: string | null;
             /** Format: int64 */
-            project_id: number;
-            project_uuid: string;
+            price_list_id: number | null;
+            price_list_uuid: string | null;
+            project: string | null;
+            /** Format: int64 */
+            project_id: number | null;
+            project_uuid: string | null;
             /** Format: int32 */
             received_items: number;
             status: string;
@@ -6051,6 +5913,23 @@ export interface components {
             total_amount: number;
             /** Format: int32 */
             total_items: number;
+            tz: string;
+        };
+        OrderFields: {
+            /** Format: int64 */
+            cost_center_id?: number | null;
+            currency: string;
+            /** Format: date-time */
+            delivery_date?: string | null;
+            /** Format: int64 */
+            party_id: number;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            price_list_id?: number | null;
+            /** Format: int64 */
+            project_id?: number | null;
             tz: string;
         };
         PaginationResponsePaginationResultListAddressDtoBody: {
@@ -6723,7 +6602,7 @@ export interface components {
             /** Format: double */
             amount: number;
             /** Format: int64 */
-            cost_center?: number;
+            cost_center_id?: number | null;
             /** Format: int64 */
             paid_from_id?: number;
             /** Format: int64 */
@@ -6734,7 +6613,7 @@ export interface components {
             /** Format: date-time */
             posting_date: string;
             /** Format: int64 */
-            project?: number;
+            project_id?: number | null;
         };
         PaymentDataBody: {
             /**
@@ -6752,10 +6631,10 @@ export interface components {
             amount: number;
             code: string;
             company_bank_account: string | null;
-            cost_center: string;
+            cost_center: string | null;
             /** Format: int64 */
-            cost_center_id: number;
-            cost_center_uuid: string;
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
             /** Format: date-time */
             created_at: string;
             /** Format: int64 */
@@ -6779,10 +6658,10 @@ export interface components {
             payment_type: string;
             /** Format: date-time */
             posting_date: string;
-            project: string;
+            project: string | null;
             /** Format: int64 */
-            project_id: number;
-            project_uuid: string;
+            project_id: number | null;
+            project_uuid: string | null;
             status: string;
         };
         PaymentDto: {
@@ -6791,10 +6670,10 @@ export interface components {
             amount: number;
             code: string;
             company_bank_account: string | null;
-            cost_center: string;
+            cost_center: string | null;
             /** Format: int64 */
-            cost_center_id: number;
-            cost_center_uuid: string;
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
             /** Format: date-time */
             created_at: string;
             /** Format: int64 */
@@ -6807,10 +6686,10 @@ export interface components {
             payment_type: string;
             /** Format: date-time */
             posting_date: string;
-            project: string;
+            project: string | null;
             /** Format: int64 */
-            project_id: number;
-            project_uuid: string;
+            project_id: number | null;
+            project_uuid: string | null;
             status: string;
         };
         PaymentReferenceDto: {
@@ -6928,19 +6807,11 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: int64 */
-            cost_center?: number;
-            /** Format: int64 */
-            customer?: number | null;
+            fields: components["schemas"]["PricingFields"];
             /** Format: int64 */
             id?: number;
             pricing_charges: components["schemas"]["PricingChargeData"][];
-            pricing_data: {
-                [key: string]: unknown;
-            };
             pricing_line_items: components["schemas"]["PricingLineItemData"][];
-            /** Format: int64 */
-            project?: number;
         };
         PricingDataRequestBody: {
             /**
@@ -6958,13 +6829,29 @@ export interface components {
         };
         PricingDto: {
             code: string;
-            customer: string;
+            cost_center: string | null;
             /** Format: int64 */
-            customer_id: number;
-            customer_uuid: string;
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
+            customer: string | null;
+            /** Format: int64 */
+            customer_id: number | null;
+            customer_uuid: string | null;
             /** Format: int64 */
             id: number;
+            project: string | null;
+            /** Format: int64 */
+            project_id: number | null;
+            project_uuid: string | null;
             status: string;
+        };
+        PricingFields: {
+            /** Format: int64 */
+            cost_center_id?: number | null;
+            /** Format: int64 */
+            customer_id?: number | null;
+            /** Format: int64 */
+            project_id?: number | null;
         };
         PricingLineItemData: {
             /** Format: int32 */
@@ -7178,22 +7065,22 @@ export interface components {
             /** Format: int32 */
             zero_rate_taxable_purchases_amount: number;
         };
+        QuotationBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["CreateItemLines"];
+            quotation: components["schemas"]["QuotationData"];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
+        };
         QuotationData: {
+            fields: components["schemas"]["QuotationFields"];
             /** Format: int64 */
-            cost_center?: number;
-            currency: string;
-            /** Format: int64 */
-            party_id: number;
-            /** Format: date-time */
-            posting_date: string;
-            posting_time: string;
-            /** Format: int64 */
-            project?: number;
+            id?: number;
             quotation_party_type: string;
-            references?: number[];
-            tz: string;
-            /** Format: date-time */
-            valid_till: string;
+            references?: (number | null)[];
         };
         QuotationDetailDto: {
             acc_dimensions: components["schemas"]["AccountingDimensionDto"];
@@ -7201,10 +7088,10 @@ export interface components {
         };
         QuotationDto: {
             code: string;
-            cost_center: string;
+            cost_center: string | null;
             /** Format: int64 */
-            cost_center_id: number;
-            cost_center_uuid: string;
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
             currency: string;
             /** Format: int64 */
             id: number;
@@ -7216,32 +7103,51 @@ export interface components {
             /** Format: date-time */
             posting_date: string;
             posting_time: string;
-            project: string;
+            price_list: string | null;
             /** Format: int64 */
-            project_id: number;
-            project_uuid: string;
+            price_list_id: number | null;
+            price_list_uuid: string | null;
+            project: string | null;
+            /** Format: int64 */
+            project_id: number | null;
+            project_uuid: string | null;
             status: string;
             tz: string;
             /** Format: date-time */
             valid_till: string;
         };
-        ReceiptData: {
+        QuotationFields: {
             /** Format: int64 */
-            cost_center?: number;
+            cost_center_id?: number | null;
             currency: string;
-            /** Format: date-time */
-            due_date?: string | null;
             /** Format: int64 */
             party_id: number;
-            party_receipt: string;
             /** Format: date-time */
             posting_date: string;
             posting_time: string;
             /** Format: int64 */
-            project?: number;
+            price_list_id?: number | null;
             /** Format: int64 */
-            reference?: number;
+            project_id?: number | null;
             tz: string;
+            /** Format: date-time */
+            valid_till: string;
+        };
+        ReceiptBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["CreateItemLines"];
+            receipt: components["schemas"]["ReceiptData"];
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
+        };
+        ReceiptData: {
+            fields: components["schemas"]["InvoiceFields"];
+            /** Format: int64 */
+            id: number;
+            receipt_party_type: string;
         };
         ReceiptDetailDto: {
             item_lines: components["schemas"]["ItemLineDto"][];
@@ -7249,10 +7155,10 @@ export interface components {
         };
         ReceiptDto: {
             code: string;
-            cost_center: string;
+            cost_center: string | null;
             /** Format: int64 */
-            cost_center_id: number;
-            cost_center_uuid: string;
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
             /** Format: date-time */
             created_at: string;
             currency: string;
@@ -7266,12 +7172,20 @@ export interface components {
             /** Format: date-time */
             posting_date: string;
             posting_time: string;
-            project: string;
+            price_list: string | null;
             /** Format: int64 */
-            project_id: number;
-            project_uuid: string;
+            price_list_id: number | null;
+            price_list_uuid: string | null;
+            project: string | null;
+            /** Format: int64 */
+            project_id: number | null;
+            project_uuid: string | null;
             status: string;
             tz: string;
+            warehouse: string | null;
+            /** Format: int64 */
+            warehouse_id: number | null;
+            warehouse_uuid: string | null;
         };
         RequestAddPartyReferenceBody: {
             /**
@@ -8201,35 +8115,49 @@ export interface components {
             warehouse_name: string;
             warehouse_uuid: string;
         };
+        StockEntryBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["CreateItemLines"];
+            stock_entry: components["schemas"]["StockEntryData"];
+        };
         StockEntryData: {
+            fields: components["schemas"]["StockEntryFields"];
             /** Format: int64 */
-            cost_center?: number;
-            currency: string;
-            entry_type: string;
-            /** Format: date-time */
-            posting_date: string;
-            posting_time: string;
-            /** Format: int64 */
-            project?: number;
-            tz: string;
+            id: number;
         };
         StockEntryDto: {
             code: string;
-            cost_center: string;
+            cost_center: string | null;
             /** Format: int64 */
-            cost_center_id: number;
-            cost_center_uuid: string;
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
             currency: string;
             entry_type: string;
             /** Format: int64 */
             id: number;
             posting_date: string;
             posting_time: string;
-            project: string;
+            project: string | null;
             /** Format: int64 */
-            project_id: number;
-            project_uuid: string;
+            project_id: number | null;
+            project_uuid: string | null;
             status: string;
+            tz: string;
+        };
+        StockEntryFields: {
+            /** Format: int64 */
+            cost_center_id?: number | null;
+            currency: string;
+            entry_type: string;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            project_id?: number | null;
             tz: string;
         };
         StockLedgerEntryDto: {
@@ -11300,7 +11228,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditInvoiceRequestBody"];
+                "application/json": components["schemas"]["InvoiceBody"];
             };
         };
         responses: {
@@ -11333,7 +11261,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateInvoiceBody"];
+                "application/json": components["schemas"]["InvoiceBody"];
             };
         };
         responses: {
@@ -12175,7 +12103,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditOrderRequestBody"];
+                "application/json": components["schemas"]["OrderBody"];
             };
         };
         responses: {
@@ -12202,16 +12130,13 @@ export interface operations {
     "create-order": {
         parameters: {
             query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateOrderBody"];
+                "application/json": components["schemas"]["OrderBody"];
             };
         };
         responses: {
@@ -14061,7 +13986,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditQuotationRequestBody"];
+                "application/json": components["schemas"]["QuotationBody"];
             };
         };
         responses: {
@@ -14094,7 +14019,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateQuotationBody"];
+                "application/json": components["schemas"]["QuotationBody"];
             };
         };
         responses: {
@@ -14247,7 +14172,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditReceiptRequestBody"];
+                "application/json": components["schemas"]["ReceiptBody"];
             };
         };
         responses: {
@@ -14274,16 +14199,13 @@ export interface operations {
     "create-receipt": {
         parameters: {
             query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateReceiptBody"];
+                "application/json": components["schemas"]["ReceiptBody"];
             };
         };
         responses: {
@@ -15632,7 +15554,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditStockEntryRequestBody"];
+                "application/json": components["schemas"]["StockEntryBody"];
             };
         };
         responses: {
@@ -15665,7 +15587,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateStockEntryBody"];
+                "application/json": components["schemas"]["StockEntryBody"];
             };
         };
         responses: {
@@ -16430,6 +16352,7 @@ export interface operations {
                 isBuying?: boolean;
                 isSelling?: boolean;
                 enabled?: string;
+                price_list_id?: string;
             };
             header?: {
                 Authorization?: string;

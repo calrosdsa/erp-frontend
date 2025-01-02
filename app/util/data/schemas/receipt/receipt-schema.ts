@@ -8,14 +8,15 @@ import {
 } from "../stock/line-item-schema";
 import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
 import { taxAndChargeSchema } from "../accounting/tax-and-charge-schema";
+import { field, fieldNull } from "..";
 
-export const createReceiptSchema = z
+export const receiptDataSchema = z
   .object({
-    partyID: z.number(),
-    partyName: z.string(),
-
+    id:z.number().optional(),
     referenceID: z.number().optional(),
     receiptPartyType: z.string(),
+    party: field.optional(),
+    
     // name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
     postingDate: z.date(),
     postingTime: z.string(),
@@ -30,16 +31,15 @@ export const createReceiptSchema = z
     sourceWarehouse: z.number().optional(),
     sourceWarehouseName: z.string().optional(),
 
-    project: z.string().optional(),
-    projectID: z.number().optional(),
-
-    costCenter: z.string().optional(),
-    costCenterID: z.number().optional(),
+   project: fieldNull,
+    costCenter: fieldNull,
+    priceList: fieldNull,
 
     lines: z.array(lineItemSchema),
     taxLines: z.array(taxAndChargeSchema),
   })
   .superRefine((data, ctx) => {
+
     if (data.acceptedWarehouseName && data.acceptedWarehouseID) {
       data.lines = data.lines.map((t, i) => {
         const lineReceipt: z.infer<typeof lineItemReceipt> = {

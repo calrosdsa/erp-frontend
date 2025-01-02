@@ -3,20 +3,18 @@ import { action, loader } from "../route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { z } from "zod";
 import {
-  editPricingSchema,
   mapPricingChargeDto,
   mapPricingLineItemData,
   mapPricingLineItemDto,
   pricingDataSchema,
 } from "~/util/data/schemas/pricing/pricing-schema";
-import { Form } from "@/components/ui/form";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { FormEvent, MutableRefObject, useRef } from "react";
+import { FormEvent, MutableRefObject, useEffect, useRef } from "react";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useTranslation } from "react-i18next";
@@ -26,6 +24,7 @@ import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDi
 import { State, stateFromJSON } from "~/gen/common";
 import { ButtonToolbar } from "~/types/actions";
 import { components } from "~/sdk";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
 const defaultPricingCharges = [
   { name: "Flete", rate: 0.07, orderID: 1 },
   { name: "Importacion", rate: 0.13, orderID: 2 },
@@ -37,16 +36,18 @@ const defaultPricingCharges = [
   { name: "Descuento", rate: 0.45, orderID: 8 },
 ];
 type EditType = z.infer<typeof pricingDataSchema>;
-export default function PricingInfo({
-  // inputRef  
-}:{
+export default function PricingInfo({}: // inputRef
+{
   // inputRef:MutableRefObject<HTMLInputElement | null>
 }) {
   const { t } = useTranslation("common");
   const { pricing, pricingCharges, pricingLines, actions } =
     useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
-  const [permission] = usePermission({ actions:actions && actions[Entity.PRICING], roleActions });
+  const [permission] = usePermission({
+    actions: actions && actions[Entity.PRICING],
+    roleActions,
+  });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
   const { form, hasChanged, updateRef } = useEditFields<EditType>({
@@ -55,20 +56,34 @@ export default function PricingInfo({
       pricing_charges: pricingCharges.map((t) => mapPricingChargeDto(t)),
       pricing_line_items: pricingLines.map((t) => mapPricingLineItemDto(t)),
       id: pricing?.id,
-      customer:pricing?.customer,
-      customer_id:pricing?.customer_id,
+      customer: {
+        id: pricing?.customer_id,
+        name: pricing?.customer,
+        uuid: pricing?.customer_uuid,
+      },
+      project: {
+        id: pricing?.project_id,
+        name: pricing?.project,
+        uuid: pricing?.project_uuid,
+      },
+      costCenter: {
+        id: pricing?.cost_center_id,
+        name: pricing?.cost_center,
+        uuid: pricing?.cost_center_uuid,
+      },
     },
   });
   const [poPerm] = usePermission({
     roleActions,
-    actions:actions && actions[Entity.PURCHASE_ORDER],
+    actions: actions && actions[Entity.PURCHASE_ORDER],
   });
   const [quoPerm] = usePermission({
     roleActions,
-    actions:actions && actions[Entity.QUOTATION],
+    actions: actions && actions[Entity.QUOTATION],
   });
-  const confirmationDialog = useConfirmationDialog()
-  
+  const confirmationDialog = useConfirmationDialog();
+  const toolbar = useToolbar();
+
   const allowEdit = permission?.edit || false;
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -89,59 +104,28 @@ export default function PricingInfo({
     })(e);
   };
 
- 
-
-  const generate = (action:string,pricing:components["schemas"]["PricingDto"])=>{
-    const body:components["schemas"]["PricingDataRequestBody"] = {
+  const generate = (
+    action: string,
+    pricing: components["schemas"]["PricingDto"]
+  ) => {
+    const body: components["schemas"]["PricingDataRequestBody"] = {
       pricing: pricing,
-      pricing_line_items: form.getValues().pricing_line_items.map(t => mapPricingLineItemData(t)),
-    }
-    console.log("BODY",body)
-    fetcher.submit({
-      action:action,
-      pricingData:body,
-    },{
-      method:"POST",
-      encType:"application/json"
-    })
-  }
-
-  setUpToolbar(
-    (opts) => {
-      const state = stateFromJSON(pricing?.status);
-
-      let actions: ButtonToolbar[] = [];
-      if (poPerm.create && state == State.SUBMITTED && pricing) {
-        actions.push({
-          label: "Generar Orden de Compras",
-          onClick: () => {
-            confirmationDialog.onOpenDialog({
-              onConfirm:()=>{
-                generate("generate-po",pricing)
-              }
-            })
-          },
-        });
+      pricing_line_items: form
+        .getValues()
+        .pricing_line_items.map((t) => mapPricingLineItemData(t)),
+    };
+    console.log("BODY", body);
+    fetcher.submit(
+      {
+        action: action,
+        pricingData: body,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
       }
-      if (quoPerm.create && state == State.SUBMITTED && pricing) {
-        actions.push({
-          label: "Generar Cotización de Venta",
-          onClick: () => {
-            confirmationDialog.onOpenDialog({
-              onConfirm:()=>{
-                generate("generate-quotation",pricing)
-              }
-            })
-          },
-        });
-      }
-      return {
-        onSave: () => {inputRef.current?.click()},
-        actions: actions,
-      };
-    },
-    [pricing]
-  );
+    );
+  };
 
   useDisplayMessage(
     {
@@ -161,13 +145,53 @@ export default function PricingInfo({
     [fetcher.state]
   );
 
-  return form.getValues().pricing_charges && <PricingData fetcher={fetcher} onSubmit={onSubmit}
-  inputRef={inputRef}
-  form={form}
-  defaultValues={{
-    pricing_charges:pricingCharges.map(t=>mapPricingChargeDto(t)),
-    pricing_line_items:pricingLines.map(t=>mapPricingLineItemDto(t))
-  }} />;
+  useEffect(() => {
+    const state = stateFromJSON(pricing?.status);
+
+    let actions: ButtonToolbar[] = [];
+    if (poPerm.create && state == State.SUBMITTED && pricing) {
+      actions.push({
+        label: "Generar Orden de Compras",
+        onClick: () => {
+          confirmationDialog.onOpenDialog({
+            onConfirm: () => {
+              generate("generate-po", pricing);
+            },
+          });
+        },
+      });
+    }
+    if (quoPerm.create && state == State.SUBMITTED && pricing) {
+      actions.push({
+        label: "Generar Cotización de Venta",
+        onClick: () => {
+          confirmationDialog.onOpenDialog({
+            onConfirm: () => {
+              generate("generate-quotation", pricing);
+            },
+          });
+        },
+      });
+    }
+    toolbar.setToolbar({
+      onSave: () => {
+        inputRef.current?.click();
+      },
+      actions: actions,
+      disabledSave: !hasChanged,
+    });
+  }, [hasChanged, pricing]);
+
+  return (
+    <>
+      {form.getValues().pricing_charges && (
+        <PricingData
+          fetcher={fetcher}
+          onSubmit={onSubmit}
+          inputRef={inputRef}
+          form={form}
+        />
+      )}
+    </>
+  );
 }
-
-

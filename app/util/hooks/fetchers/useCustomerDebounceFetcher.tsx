@@ -8,18 +8,23 @@ import { components } from "~/sdk";
 import { routes } from "~/util/route";
 import { usePermission } from "../useActions";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
+import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField";
 
 export const CustomerAutoCompleteForm = ({
   allowEdit,
   control,
   label,
   onSelect,
+  onClear,
   roleActions,
+  name,
 }: {
   allowEdit?: boolean;
   control?: Control<any, any>;
   label?: string;
-  onSelect: (e: components["schemas"]["CustomerDto"]) => void;
+  name?:string;
+  onSelect?: (e: components["schemas"]["CustomerDto"]) => void;
+  onClear?:()=>void
   roleActions?: components["schemas"]["RoleActionDto"][];
 }) => {
   const [fetcher, onChange] = useCustomerDebounceFetcher();
@@ -29,12 +34,13 @@ export const CustomerAutoCompleteForm = ({
     actions: fetcher.data?.actions,
   });
   return (
-    <FormAutocomplete
+    <FormAutocompleteField
       data={fetcher.data?.customers || []}
       onValueChange={onChange}
       label={label}
-      name="customer"
+      name={name || "customer"}
       nameK="name"
+      onClear={onClear}
       control={control}
       allowEdit={allowEdit}
       onSelect={onSelect}

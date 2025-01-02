@@ -20,7 +20,7 @@ import GrandTotal from "@/components/custom/shared/item/grand-total";
 import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
 import { useEffect, useRef } from "react";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
-import { editOrderSchema } from "~/util/data/schemas/buying/purchase-schema";
+import { orderDataSchema } from "~/util/data/schemas/buying/order-schema";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
@@ -38,8 +38,11 @@ import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { OrderData } from "~/routes/home.order.$partyOrder.new/order-data";
+import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
+import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 
-type EditData = z.infer<typeof editOrderSchema>;
+type EditData = z.infer<typeof orderDataSchema>;
 export default function OrderInfoTab() {
   const { order, lineItems, taxLines, actions } =
     useLoaderData<typeof loader>();
@@ -49,38 +52,57 @@ export default function OrderInfoTab() {
   const partyOrder = params.partyOrder || "";
   const fetcher = useFetcher<typeof action>();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { companyDefaults } = useOutletContext<GlobalState>();
   const { form, hasChanged, updateRef, previousValues } =
     useEditFields<EditData>({
-      schema: editOrderSchema,
+      schema: orderDataSchema,
       defaultValues: {
         id: order?.id,
-        partyID: order?.party_id,
-        partyName: order?.party_name,
-        currency: order?.currency,
+        currency: order?.currency || companyDefaults?.currency,
         postingTime: order?.posting_time,
         postingDate: new Date(order?.posting_date || new Date()),
         deliveryDate: new Date(order?.delivery_date || new Date()),
         tz: order?.tz,
-        projectID: order?.project_id,
-        projectName: order?.project,
-        costCenterID: order?.cost_center_id,
-        costCenterName: order?.cost_center,
+        party: {
+          id:order?.party_id,
+          name:order?.party_name,
+          uuid:order?.party_uuid,
+        },
+        project: {
+          id: order?.project_id,
+          name: order?.project,
+          uuid: order?.project_uuid,
+        },
+        costCenter: {
+          id: order?.cost_center_id,
+          name: order?.cost_center,
+          uuid: order?.cost_center_uuid,
+        },
+        priceList: {
+          id: order?.price_list_id,
+          name: order?.price_list,
+          uuid: order?.price_list_uuid,
+        },
+        taxLines: taxLines.map((t) => toTaxAndChargeLineSchema(t)),
+        lines: lineItems.map((t) =>
+          toLineItemSchema(t, {
+            partyType: partyOrder,
+          })
+        ),
       },
     });
-  const formValues = form.getValues();
   const [orderPerm] = usePermission({ roleActions, actions });
   const isDraft = stateFromJSON(order?.status) == State.DRAFT;
   const allowEdit = isDraft && orderPerm?.edit;
   const allowCreate = isDraft && orderPerm.create;
-  const toolbar = useToolbar()
-  const { companyDefaults } = useOutletContext<GlobalState>();
+  const toolbar = useToolbar();
   const documentStore = useDocumentStore();
 
   const onSubmit = (e: EditData) => {
     fetcher.submit(
       {
         action: "edit",
-        editData: e as any,
+        orderData: e as any,
       },
       {
         method: "POST",
@@ -97,12 +119,12 @@ export default function OrderInfoTab() {
     [fetcher.state]
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     toolbar.setToolbar({
       onSave: () => inputRef.current?.click(),
-      disabledSave: !hasChanged,
-    })
-  },[hasChanged])
+      // disabledSave: !hasChanged,
+    });
+  }, []);
 
   // setUpToolbar(
   //   (opts) => {
@@ -132,6 +154,8 @@ export default function OrderInfoTab() {
       documentRefernceID: order?.id,
       partyName: order?.party_name,
       currency: order?.currency,
+      priceListID: order?.price_list_id,
+      priceListName: order?.price_list,
       projectID: order?.project_id,
       projectName: order?.project,
       costCenterID: order?.cost_center_id,
@@ -139,76 +163,13 @@ export default function OrderInfoTab() {
     });
   }, [order]);
   return (
-    <Form {...form}>
-      <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="info-grid">
-          <PartyAutocomplete
-            party={partyOrder}
-            roleActions={roleActions}
-            form={form}
-            allowEdit={allowEdit}
-          />
-
-          <CustomFormDate
-            control={form.control}
-            name="postingDate"
-            label={t("form.postingDate")}
-            allowEdit={allowEdit}
-          />
-          <CustomFormTime
-            control={form.control}
-            name="postingTime"
-            label={t("form.postingTime")}
-            description={formValues.tz}
-            allowEdit={allowEdit}
-          />
-          <CustomFormDate
-            control={form.control}
-            name="deliveryDate"
-            label={t("form.deliveryDate")}
-            allowEdit={allowEdit}
-          />
-          <CurrencyAutocompleteForm
-            control={form.control}
-            name="currency"
-            label={t("form.currency")}
-            allowEdit={allowEdit}
-          />
-          <Separator className=" col-span-full" />
-
-          {/* <CurrencyAndPriceList form={form} allowEdit={allowEdit} /> */}
-
-          <LineItemsDisplay
-            currency={order?.currency || companyDefaults?.currency || ""}
-            status={order?.status || ""}
-            lineItems={lineItems}
-            lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
-            docPartyType={partyOrder}
-            docPartyID={order?.id}
-            allowEdit={allowEdit}
-            allowCreate={allowCreate}
-          />
-          {order && (
-            <>
-              <TaxAndCharges
-                currency={order.currency}
-                status={order.status}
-                taxLines={taxLines}
-                docPartyID={order.id}
-                docPartyType={partyOrder}
-                allowCreate={allowCreate}
-                allowEdit={allowEdit}
-              />
-
-              <GrandTotal currency={order.currency} />
-
-              <TaxBreakup currency={order.currency} />
-            </>
-          )}
-          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-        </div>
-        <input className="hidden" type="submit" ref={inputRef} />
-      </fetcher.Form>
-    </Form>
+    <OrderData
+      form={form}
+      inputRef={inputRef}
+      fetcher={fetcher}
+      onSubmit={onSubmit}
+      allowEdit={allowEdit}
+      allowCreate={allowCreate}
+    />
   );
 }

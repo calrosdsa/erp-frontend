@@ -5,10 +5,12 @@ interface Payload {
   partyID?: number;
   documentRefernceID?: number;
   currency?: string;
-  projectID?: number;
-  projectName?: string;
-  costCenterID?: number;
-  costCenterName?: string;
+  priceListID?: number | null;
+  priceListName?: string | null;
+  projectID?: number | null;
+  projectName?: string | null;
+  costCenterID?: number | null;
+  costCenterName?: string | null;
   docPartyType?: string;
 }
 interface DocumentStore {

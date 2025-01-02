@@ -28,7 +28,7 @@ import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breaku
 import { useEffect, useRef } from "react";
 import { usePermission } from "~/util/hooks/useActions";
 import { z } from "zod";
-import { editInvoiceSchema } from "~/util/data/schemas/invoice/invoice-schema";
+import { invoiceDataSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import {
@@ -45,8 +45,11 @@ import AccountingDimensionForm from "@/components/custom/shared/accounting/accou
 import { Form } from "@/components/ui/form";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
+import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
+import { InvoiceData } from "~/routes/home.invoice.$partyInvoice.new/invoice-data";
 
-type EditData = z.infer<typeof editInvoiceSchema>;
+type EditData = z.infer<typeof invoiceDataSchema>;
 export default function InvoiceInfoTab() {
   // const { t, i18n } = useTranslation("common");
   // const { invoice, lineItems, totals, taxLines } =
@@ -61,28 +64,54 @@ export default function InvoiceInfoTab() {
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const params = useParams();
   const [invoicePerm] = usePermission({ roleActions, actions });
-  const invoiceParty = params.partyInvoice || "";
+  const partyInvoice = params.partyInvoice || "";
   const isDraft = stateFromJSON(invoice?.status) == State.DRAFT;
   const allowEdit = isDraft && invoicePerm?.edit;
   const allowCreate = isDraft && invoicePerm.create;
-  const isDisabled = !isDraft || !invoicePerm?.edit;
   const documentStore = useDocumentStore();
-  const toolbar = useToolbar()
+  const toolbar = useToolbar();
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
-    schema: editInvoiceSchema,
+    schema: invoiceDataSchema,
     defaultValues: {
       id: invoice?.id,
-      partyID: invoice?.party_id,
-      partyName: invoice?.party_name,
       currency: invoice?.currency,
       postingTime: invoice?.posting_time,
       postingDate: new Date(invoice?.posting_date || ""),
       dueDate: new Date(invoice?.due_date || new Date()),
       tz: invoice?.tz,
-      projectID: invoice?.project_id,
-      projectName: invoice?.project,
-      costCenterID: invoice?.cost_center_id,
-      costCenterName: invoice?.cost_center,
+      updateStock:invoice?.update_stock,
+      party: {
+        id: invoice?.party_id,
+        name: invoice?.party_name,
+        uuid: invoice?.party_uuid,
+      },
+      project: {
+        id: invoice?.project_id,
+        name: invoice?.project,
+        uuid: invoice?.project_uuid,
+      },
+      costCenter: {
+        id: invoice?.cost_center_id,
+        name: invoice?.cost_center,
+        uuid: invoice?.cost_center_uuid,
+      },
+      priceList: {
+        id: invoice?.price_list_id,
+        name: invoice?.price_list,
+        uuid: invoice?.price_list_uuid,
+      },
+      warehouse:{
+        id:invoice?.warehouse_id,
+        name:invoice?.warehouse,
+        uuid:invoice?.warehouse_uuid,
+      },
+      taxLines: taxLines.map((t) => toTaxAndChargeLineSchema(t)),
+      lines: lineItems.map((t) =>
+        toLineItemSchema(t, {
+          partyType:partyInvoice,
+          updateStock:invoice?.update_stock,
+        })
+      ),
     },
   });
   const formValues = form.getValues();
@@ -101,12 +130,19 @@ export default function InvoiceInfoTab() {
   };
 
   useEffect(()=>{
+    // console.log("HAS CHANGE",hasChanged)
     toolbar.setToolbar({
       onSave: () => inputRef.current?.click(),
-      disabledSave: !hasChanged,
+        // disabledSave: !hasChanged,
     })
-  },[hasChanged])
+  },[invoice])
 
+  // useEffect(() => {
+  //   toolbar.setToolbar({
+  //     onSave: () => inputRef.current?.click(),
+  //     disabledSave: !hasChanged,
+  //   });
+  // }, [hasChanged]);
 
   useLoadingTypeToolbar(
     {
@@ -141,105 +177,13 @@ export default function InvoiceInfoTab() {
   }, [invoice]);
 
   return (
-    <Form {...form}>
-      <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className=" info-grid">
-          {/* <DisplayTextValue title={t("form.code")} value={invoice?.code} /> */}
-          <PartyAutocomplete
-            party={invoiceParty}
-            roleActions={roleActions}
-            form={form}
-            allowEdit={allowEdit}
-          />
-          <CustomFormDate
-            control={form.control}
-            name="postingDate"
-            allowEdit={allowEdit}
-            label={t("form.postingDate")}
-          />
-          <CustomFormTime
-            control={form.control}
-            name="postingTime"
-            label={t("form.postingTime")}
-            allowEdit={allowEdit}
-            description={formValues.tz}
-          />
-          <CustomFormDate
-            control={form.control}
-            name="dueDate"
-            allowEdit={allowEdit}
-            label={t("form.dueDate")}
-          />
-
-          {/* <CustomFormFieldInput
-            control={form.control}
-            name="recordNo"
-            label={"Numero de Registro"}
-            inputType="input"
-            allowEdit={allowEdit} 
-          /> */}
-
-          <Separator className=" col-span-full" />
-
-          <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
-
-          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-          <LineItemsDisplay
-            currency={invoice?.currency || companyDefaults?.currency || ""}
-            status={invoice?.status || ""}
-            lineItems={lineItems}
-            updateStock={invoice?.update_stock}
-            allowCreate={allowCreate}
-            allowEdit={allowEdit}
-            docPartyType={invoiceParty}
-            docPartyID={invoice?.id}
-            lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
-          />
-          {invoice && (
-            <>
-              <TaxAndCharges
-                currency={invoice.currency}
-                status={invoice.status}
-                taxLines={taxLines}
-                docPartyID={invoice.id}
-                docPartyType={invoiceParty}
-                allowCreate={allowCreate}
-                allowEdit={allowEdit}
-              />
-
-              <GrandTotal currency={invoice.currency} />
-
-              <TaxBreakup currency={invoice.currency} />
-            </>
-          )}
-
-          {totals && invoice && (
-            <>
-              <Typography variant="title1" className=" col-span-full">
-                {t("form.totals")}
-              </Typography>
-
-              <DisplayTextValue
-                title={t("form.paidAmount")}
-                value={formatCurrency(
-                  invoice.paid,
-                  invoice.currency,
-                  i18n.language
-                )}
-              />
-              <DisplayTextValue
-                title={t("form.outstandingAmount")}
-                value={formatCurrency(
-                  invoice.total - invoice.paid,
-                  invoice.currency,
-                  i18n.language
-                )}
-              />
-            </>
-          )}
-        </div>
-        <input className="hidden" type="submit" ref={inputRef} />
-      </fetcher.Form>
-    </Form>
+   <InvoiceData
+   form={form}
+   fetcher={fetcher}
+   allowEdit={allowEdit}
+   allowCreate={allowCreate}
+   inputRef={inputRef}
+   onSubmit={onSubmit}
+   />
   );
 }

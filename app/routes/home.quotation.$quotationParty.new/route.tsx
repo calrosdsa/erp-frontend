@@ -3,15 +3,15 @@ import { z } from "zod";
 import apiClient from "~/apiclient";
 import { createJournalEntrySchema } from "~/util/data/schemas/accounting/journal-entry-schema";
 import NewQuotationClient from "./new-quotation.client";
-import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/purchase-schema";
+import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/order-schema";
 import { format, formatRFC3339 } from "date-fns";
 import { components } from "~/sdk";
-import { createQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
+import { createQuotationSchema, mapToQuotationData, quotationDataSchema } from "~/util/data/schemas/quotation/quotation-schema";
 import { mapToTaxAndChargeData } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
 type ActionData = {
   action: string;
-  createQuotation: z.infer<typeof createQuotationSchema>;
+  quotationData: z.infer<typeof quotationDataSchema>;
 };
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const client = apiClient({ request });
@@ -22,31 +22,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   console.log("ACTION DATA", data);
   switch (data.action) {
     case "create-quotation": {
-      const d = data.createQuotation;
-      // console.log(format(d.postingDate, "yyyy-MM-dd"));
-      const lines = d.lines.map((t) => lineItemSchemaToLineData(t));
-      const taxLines = d.taxLines.map((t) => mapToTaxAndChargeData(t));
-      console.log(taxLines);
       const res = await client.POST("/quotation", {
-        body: {
-          quotation: {
-            quotation_party_type: params.quotationParty || "",
-            valid_till: formatRFC3339(d.validTill),
-            posting_date: formatRFC3339(d.postingDate),
-            posting_time: d.postingTime,
-            tz: d.tz,
-            party_id: d.partyID,
-            currency: d.currency,
-            project: d.projectID,
-            cost_center: d.costCenterID,
-          },
-          items: {
-            lines: lines,
-          },
-          tax_and_charges: {
-            lines: taxLines,
-          },
-        },
+        body:mapToQuotationData(data.quotationData,params.quotationParty || ""),
       });
       console.log(res.error);
       message = res.data?.message;

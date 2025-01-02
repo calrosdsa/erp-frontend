@@ -24,37 +24,39 @@ export function useEditFields<T extends FieldValues>({
 }: UseEditFieldsProps<T>): UseEditFieldsReturn<T> {
   const form = useForm<T>({
     resolver: zodResolver(schema),
-    // defaultValues:defaultValues,
+    defaultValues:defaultValues,
   });
 
   const [hasChanged, setHasChanged] = useState(false);
   const previousValuesRef = useRef<DefaultValues<T>>(defaultValues);
-
-  const validateIfDataHasChanged = useCallback(() => {
-    const currentValues = form.getValues();
-    // const hasChanges = isEqual(currentValues, previousValuesRef.current);
-    const hasChanges = JSON.stringify(currentValues) == JSON.stringify(previousValuesRef.current);
-    setHasChanged(!hasChanges);
-  }, [form]);
+  const validateIfDataHasChanged = useCallback((currentValues:any) => {
+    // const currentValues = form.getValues();
+    // const equal = isEqual(currentValues, previousValuesRef.current);
+    const equal = JSON.stringify(currentValues) == JSON.stringify(previousValuesRef.current);
+    console.log("EQUAL",equal)
+    setHasChanged(!equal);
+  }, []);
 
   const updateRef = useCallback((newValues: DefaultValues<T>) => {
     previousValuesRef.current = newValues;
-    validateIfDataHasChanged();
+    validateIfDataHasChanged(newValues);
   }, [validateIfDataHasChanged]);
 
-  useEffect(() => {
-    Object.entries(defaultValues).forEach(([key, value]) => {
-      form.setValue(key as keyof T as Path<T>, value as T[keyof T],)
-    })
-  }, [])
+  // useEffect(() => {
+  //   Object.entries(defaultValues).forEach(([key, value]) => {
+  //     form.setValue(key as keyof T as Path<T>, value as T[keyof T],)
+  //   })
+  // }, [])
 
-  useEffect(() => {
-    const subscription = form.watch(() => {
-      validateIfDataHasChanged();
-    });
+  // useEffect(() => {
+  //   // const subscription = form.watch(() => {
+  //     validateIfDataHasChanged();
+  //   // });
 
-    return () => subscription.unsubscribe();
-  }, [form, validateIfDataHasChanged]);
+  // }, [allWatchedFormValues, validateIfDataHasChanged]);
+  useEffect(()=>{
+    validateIfDataHasChanged(form.getValues())
+  },[form.getValues()])
 
   return { 
     form, 

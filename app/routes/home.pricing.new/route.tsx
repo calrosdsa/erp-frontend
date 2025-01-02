@@ -4,6 +4,7 @@ import apiClient from "~/apiclient";
 import {
   mapPricingChargeData,
   mapPricingLineItemData,
+  mapToPricingData,
   pricingDataSchema,
 } from "~/util/data/schemas/pricing/pricing-schema";
 import { z } from "zod";
@@ -22,24 +23,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let pricing: components["schemas"]["PricingDto"] | undefined = undefined;
   switch (data.action) {
     case "create": {
-      const pricingLineItems = data.pricingData.pricing_line_items.map((t) =>
-        mapPricingLineItemData(t)
-      );
-      const pricingCharges = data.pricingData.pricing_charges.map((t) =>
-        mapPricingChargeData(t)
-      );
-      const d = data.pricingData
       const res = await client.POST("/pricing", {
-        body: {
-          id:d.id || 0,
-          pricing_data:{
-
-          },
-          project:d.projectID,
-          cost_center:d.costCenterID,
-          pricing_charges: pricingCharges,
-          pricing_line_items: pricingLineItems,
-        },
+        body: mapToPricingData(data.pricingData)
       });
       message = res.data?.message;
       error = res.error?.detail;

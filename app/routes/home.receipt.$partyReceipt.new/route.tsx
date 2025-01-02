@@ -1,16 +1,16 @@
 import { z } from "zod";
 import NewReceiptClient from "./new-receipt.client";
-import { createReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
+import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { components } from "~/sdk";
-import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/purchase-schema";
+import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/order-schema";
 import { formatRFC3339 } from "date-fns";
 import { mapToTaxAndChargeData } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
 type ActionData = {
   action: string;
-  createReceipt: z.infer<typeof createReceiptSchema>;
+  createReceipt: z.infer<typeof receiptDataSchema>;
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { components } from "~/sdk";
 import { isZeroValue } from "~/util";
 import { formatAmount } from "~/util/format/formatCurrency";
+import { field, fieldNull } from "..";
 
 export const pricingChargeDataSchema = z.object({
   name: z.string(),
@@ -50,24 +51,18 @@ export const pricingLineItemDataSchema = z.object({
 
   is_title: z.boolean().optional(),
   color: z.string().optional(),
-
-  
 });
 
 export const columnConfig = z.object({});
 
 export const pricingDataSchema = z.object({
   id: z.number().optional(),
-  customer_id: z.number().optional(),
-  customer: z.string().optional(),
+  customer:fieldNull.optional().nullable(),
   pricing_line_items: z.array(pricingLineItemDataSchema),
   pricing_charges: z.array(pricingChargeDataSchema),
-  
-  project: z.string().optional(),
-  projectID: z.number().optional(),
 
-  costCenter: z.string().optional(),
-  costCenterID: z.number().optional(),
+  project:fieldNull.optional().nullable(),
+  costCenter:fieldNull.optional().nullable(),
 });
 
 // export const editPricingSchema = z.object({
@@ -168,4 +163,24 @@ export const mapPricingLineItemDto = (
     color: input.color,
   };
   return l;
+};
+
+export const mapToPricingData = (
+  e: z.infer<typeof pricingDataSchema>
+): components["schemas"]["PricingData"] => {
+  const pricingLineItems = e.pricing_line_items.map((t) =>
+    mapPricingLineItemData(t)
+  );
+  const pricingCharges = e.pricing_charges.map((t) => mapPricingChargeData(t));
+  const d: components["schemas"]["PricingData"] = {
+    id:e.id,
+    fields: {
+      cost_center_id: e.costCenter?.id,
+      customer_id: e.customer?.id || null,
+      project_id: e.project?.id,
+    },
+    pricing_charges: pricingCharges,
+    pricing_line_items: pricingLineItems,
+  };
+  return d;
 };

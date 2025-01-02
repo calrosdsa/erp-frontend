@@ -11,15 +11,16 @@ import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schem
 import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
-import { editQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
+import { editQuotationSchema, mapToQuotationData, quotationDataSchema } from "~/util/data/schemas/quotation/quotation-schema";
 import { formatRFC3339 } from "date-fns";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
+import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
-  editData: z.infer<typeof editQuotationSchema>;
+  quotationData: z.infer<typeof quotationDataSchema>;
 };
 export const action = async ({ request,params }: ActionFunctionArgs) => {
   const client = apiClient({ request });
@@ -37,22 +38,13 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
       break;
     }
     case "edit": {
-      const d = data.editData
       const res = await client.PUT("/quotation",{
-        body:{
-          id: d.id,
-          currency: d.currency,
-          party_id: d.partyID,
-          posting_date: formatRFC3339(d.postingDate),
-          posting_time: d.postingTime,
-          quotation_party_type:params.quotationParty || "",
-          tz: d.tz,
-          valid_till: formatRFC3339(d.validTill),
-        }
+        body:mapToQuotationData(data.quotationData,params.quotationParty || "")
       })
       message = res.data?.message
       error = res.error?.detail
       console.log(res.error);
+      actionRes =  ""
       break;
     }
   }
@@ -84,10 +76,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const tab = searchParams.get("tab");
   let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
-  let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
-    undefined;
-  let taxLinesRes: Promise<FetchResponse<any, any, any>> | undefined =
-    undefined;
+  console.log("LOADER...")
+  // let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
+  //   undefined;
+  // let taxLinesRes: Promise<FetchResponse<any, any, any>> | undefined =
+  //   undefined;
   const res = await client.GET("/quotation/detail/{id}", {
     params: {
       path: {
@@ -99,7 +92,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
-
+  let lineItems:components["schemas"]["LineItemDto"][] = []
+  let taxLines:components["schemas"]["TaxAndChargeLineDto"][] = []
   if (res.data) {
     switch (tab) {
       case "connections": {
@@ -117,7 +111,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         break;
       }
       case "info": {
-        lineItemRes = client.GET("/item-line", {
+        const lineItemRes =await client.GET("/item-line", {
           params: {
             query: {
               line_type: itemLineTypeToJSON(ItemLineType.QUOTATION_LINE_ITEM),
@@ -125,13 +119,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
-        taxLinesRes = client.GET("/taxes-and-charges", {
+        lineItems = lineItemRes.data?.result || []
+        const taxLinesRes = await client.GET("/taxes-and-charges", {
           params: {
             query: {
               id: res.data.result.entity.quotation.id.toString(),
             },
           },
         });
+        taxLines = taxLinesRes.data?.result || []
         break;
       }
     }
@@ -143,8 +139,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     actions: res.data?.actions,
     connections: resConnections,
     activities: res.data?.result.activities,
-    lineItems: lineItemRes,
-    taxLines: taxLinesRes,
+    lineItems: lineItems,
+    taxLines: taxLines,
     assocActions: res.data?.associated_actions,
   });
 };

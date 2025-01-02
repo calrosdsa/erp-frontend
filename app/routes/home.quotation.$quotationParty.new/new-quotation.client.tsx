@@ -24,22 +24,17 @@ import {
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useMemo, useRef } from "react";
-import { createQuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
+import { createQuotationSchema, quotationDataSchema } from "~/util/data/schemas/quotation/quotation-schema";
 import { addMonths, format, formatRFC3339 } from "date-fns";
-import PartyAutocomplete from "../home.order.$partyOrder.new/components/party-autocomplete";
-import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
-import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
-import LineItems from "@/components/custom/shared/item/line-items";
+
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
-import GrandTotal from "@/components/custom/shared/item/grand-total";
-import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
-import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
-import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { Card } from "@/components/ui/card";
-import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
-import useEditableTable from "~/util/hooks/useEditableTable";
+import { QuotationData } from "./quotation-data";
+
+
+type QuotationDataType = z.infer<typeof quotationDataSchema>
 
 export default function NewQuotationClient() {
   const { t } = useTranslation("common");
@@ -50,34 +45,40 @@ export default function NewQuotationClient() {
   const r = routes;
   const params = useParams();
   const quotationParty = params.quotationParty || "";
-  const { roleActions } = useOutletContext<GlobalState>();
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
   const { payload } = useDocumentStore();
-  const form = useForm<z.infer<typeof createQuotationSchema>>({
-    resolver: zodResolver(createQuotationSchema),
+  const form = useForm<QuotationDataType>({
+    resolver: zodResolver(quotationDataSchema),
     defaultValues: {
       validTill: addMonths(new Date(), 1),
       postingTime: format(new Date(), "HH:mm:ss"),
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      currency: payload?.currency || companyDefaults?.currency,
+      
+      party:{
+        id:payload?.partyID,
+        name:payload?.partyName,
+      },
+      costCenter:{
+        name:payload?.costCenterName,
+        id:payload?.costCenterID,
+      },
+      project: {
+        name:payload?.projectName,
+        id:payload?.projectID,
+      },
 
       lines: lineItemsStore.lines,
       taxLines: taxLinesStore.lines,
-
-      currency: payload?.currency || companyDefaults?.currency,
-      costCenterID: payload?.costCenterID,
-      costCenter: payload?.costCenterName,
-      projectID: payload?.projectID,
-      project: payload?.projectName,
     },
   });
-  const formValues = form.getValues();
 
-  const onSubmit = (e: z.infer<typeof createQuotationSchema>) => {
+  const onSubmit = (e: QuotationDataType) => {
     fetcher.submit(
       {
-        createQuotation: e as any,
+        quotationData: e as any,
         action: "create-quotation",
       },
       {
@@ -126,90 +127,16 @@ export default function NewQuotationClient() {
     [fetcher.data]
   );
 
-  useEffect(() => {
-    taxLinesStore.onLines(formValues.taxLines);
-  }, [formValues.taxLines]);
-
-  useEffect(() => {
-    lineItemsStore.onLines(formValues.lines);
-    taxLinesStore.updateFromItems(formValues.lines);
-  }, [formValues.lines]);
+  
   return (
     <div>
       <Card>
-        <FormLayout>
-          <Form {...form}>
-            <fetcher.Form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className={"gap-y-3 grid p-3"}
-            >
-              <div className="create-grid">
-                <PartyAutocomplete
-                  party={quotationParty}
-                  roleActions={roleActions}
-                  form={form}
-                />
-                <CustomFormDate
-                  control={form.control}
-                  name="postingDate"
-                  label={t("form.postingDate")}
-                />
-                <CustomFormTime
-                  control={form.control}
-                  name="postingTime"
-                  label={t("form.postingTime")}
-                  description={formValues.tz}
-                />
-
-                <CustomFormDate
-                  control={form.control}
-                  name="validTill"
-                  label={t("form.validTill")}
-                />
-
-                <CurrencyAutocompleteForm
-                    control={form.control}
-                    name="currency"
-                    label={t("form.currency")}
-                />
-
-                <Separator className=" col-span-full" />
-
-                {/* <CurrencyAndPriceList form={form} /> */}
-                <LineItems
-                  onChange={(e) => {
-                    form.setValue("lines", e);
-                    form.trigger("lines");
-                  }}
-                  allowEdit={true}
-                  currency={formValues.currency}
-                  lineType={itemLineTypeToJSON(
-                    ItemLineType.QUOTATION_LINE_ITEM
-                  )}
-                  docPartyType={quotationParty}
-                  isNew={true}
-                />
-                <TaxAndChargesLines
-                  onChange={(e) => {
-                    form.setValue("taxLines", e);
-                    form.trigger("taxLines");
-                  }}
-                  docPartyType={quotationParty}
-                  allowCreate={true}
-                  allowEdit={true}
-                  form={form}
-                  currency={formValues.currency}
-                />
-                <GrandTotal currency={formValues.currency} />
-                <TaxBreakup currency={formValues.currency} />
-                
-                <AccountingDimensionForm form={form} />
-
-              </div>
-              <input ref={inputRef} type="submit" className="hidden" />
-            </fetcher.Form>
-          </Form>
-        </FormLayout>
+        <QuotationData
+        form={form}
+        fetcher={fetcher}
+        onSubmit={onSubmit}
+        inputRef={inputRef}
+        />
       </Card>
     </div>
   );
