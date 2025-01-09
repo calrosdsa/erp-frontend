@@ -4,6 +4,7 @@ class Parties {
   purchaseInvoice = "purchaseInvoice";
   saleInvoice = "saleInvoice";
   payment = "payment";
+  ledger = "ledger";
 
   purchaseReceipt = "purchaseReceipt";
   deliveryNote = "deliveryNote";
@@ -27,6 +28,8 @@ class Parties {
   itemGroup = "itemGroup";
   customerGroup = "customerGroup";
   supplierGroup = "supplierGroup";
+
+  accounting = "accounting"
 
   //Regate
   booking = "booking";

@@ -24,10 +24,12 @@ import CurrencyAndPriceList from "@/components/custom/shared/document/currency-a
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import { Form } from "@/components/ui/form";
 import { action, loader } from "../route";
-import { editStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-schema";
 import SelectForm from "@/components/custom/select/SelectForm";
+import { StockEntryData } from "~/routes/home.stock.stockEntry.new/stock-entry-data";
+import { stockEntryDataSchema } from "~/util/data/schemas/stock/stock-entry-schema";
+import { useToolbar } from "~/util/hooks/ui/useToolbar";
 
-type EditData = z.infer<typeof editStockEntrySchema>;
+type EditData = z.infer<typeof stockEntryDataSchema>;
 export default function InvoiceInfoTab() {
   // const { t, i18n } = useTranslation("common");
   // const { invoice, lineItems, totals, taxLines } =
@@ -37,45 +39,41 @@ export default function InvoiceInfoTab() {
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { stockEntry, lineItems, actions} =
+  const { stockEntry, actions} =
     useLoaderData<typeof loader>();
-  const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
-  const params = useParams();
+  const { roleActions } = useOutletContext<GlobalState>();
   const [perm] = usePermission({ roleActions, actions });
-  const invoiceParty = params.partyInvoice || "";
   const isDraft = stateFromJSON(stockEntry?.status) == State.DRAFT;
   const allowEdit = isDraft && perm?.edit;
   const allowCreate = isDraft && perm.create;
-
+  const toolbar = useToolbar()
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
-    schema: editStockEntrySchema,
+    schema: stockEntryDataSchema,
     defaultValues: {
       id: stockEntry?.id,
       currency: stockEntry?.currency,
       postingTime: stockEntry?.posting_time,
       postingDate: new Date(stockEntry?.posting_date || ""),
       tz: stockEntry?.tz,
-      projectID: stockEntry?.project_id,
       entryType:stockEntry?.entry_type,
-      projectName: stockEntry?.project,
-      costCenterID: stockEntry?.cost_center_id,
-      costCenterName: stockEntry?.cost_center,
+      
+      sourceWarehouse: {
+        id: stockEntry?.source_warehouse_id,
+        name: stockEntry?.source_warehouse,
+        uuid: stockEntry?.source_warehouse_uuid,
+      },
+      targetWarehouse: {
+        id: stockEntry?.target_warehouse_id,
+        name: stockEntry?.target_warehouse,
+        uuid: stockEntry?.target_warehouse_uuid,
+      },
     },
   });
-  const formValues = form.getValues();
-
-  const entryTypes: SelectItem[] = [
-    {
-      name: t(StockEntryType[StockEntryType.MATERIAL_RECEIPT]),
-      value: StockEntryType[StockEntryType.MATERIAL_RECEIPT],
-    },
-  ];
-  
   const onSubmit = (e: EditData) => {
     fetcher.submit(
       {
         action: "edit",
-        editData: e as any,
+        stockEntryData: e as any,
       },
       {
         method: "POST",
@@ -84,16 +82,11 @@ export default function InvoiceInfoTab() {
     );
   };
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  useEffect(()=>{
+    toolbar.setToolbar({
+      onSave: () => inputRef.current?.click(),
+    })
+  },[toolbar.isMounted])
 
   useLoadingTypeToolbar(
     {
@@ -114,58 +107,15 @@ export default function InvoiceInfoTab() {
     [fetcher.data]
   );
 
-
-
   return (
-    <Form {...form}>
-      <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className=" info-grid">
-          {/* <DisplayTextValue title={t("form.code")} value={stockEntry?.code} /> */}
-          <SelectForm
-              form={form}
-              data={entryTypes}
-              label={t("form.entryType")}
-              keyName={"name"}
-              keyValue={"value"}
-              name="entryType"
-              allowEdit={allowEdit}
-            />
-          <CustomFormDate
-            control={form.control}
-            name="postingDate"
-            allowEdit={allowEdit}
-            label={t("form.postingDate")}
-          />
-          <CustomFormTime
-            control={form.control}
-            name="postingTime"
-            label={t("form.postingTime")}
-            allowEdit={allowEdit}
-            description={formValues.tz}
-          />
-          <Separator className=" col-span-full" />
-
-          <CurrencyAndPriceList form={form} allowEdit={allowEdit} />
-
-          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-
-          <LineItemsDisplay
-            currency={stockEntry?.currency || companyDefaults?.currency || ""}
-            status={stockEntry?.status || ""}
-            lineItems={lineItems}
-            docPartyType={invoiceParty}
-            docPartyID={stockEntry?.id}
-            allowCreate={allowCreate}
-            allowEdit={allowEdit}
-            lineType={itemLineTypeToJSON(ItemLineType.QUOTATION_LINE_ITEM)}
-          />
-        
-
-         
-        </div>
-        <input className="hidden" type="submit" ref={inputRef} />
-      </fetcher.Form>
-    </Form>
+    <StockEntryData
+    form={form}
+    inputRef={inputRef}
+    onSubmit={onSubmit}
+    fetcher={fetcher}
+    allowCreate={allowCreate}
+    allowEdit={allowEdit}
+    />
   );
 }
 

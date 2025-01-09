@@ -13,29 +13,20 @@ import { routes } from "~/util/route";
 import { action } from "./route";
 import { Form } from "@/components/ui/form";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import SelectForm from "@/components/custom/select/SelectForm";
 import { ItemLineType, itemLineTypeToJSON, StockEntryType } from "~/gen/common";
 import { Separator } from "@/components/ui/separator";
-import { createStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-schema";
-import AccordationLayout from "@/components/layout/accordation-layout";
-import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { useWarehouseDebounceFetcher, WarehouseAutocompleteForm } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
+import { stockEntryDataSchema } from "~/util/data/schemas/stock/stock-entry-schema";
 import { GlobalState } from "~/types/app";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef } from "react";
-import LineItems from "@/components/custom/shared/item/line-items";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
-import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
 import { format } from "date-fns";
 import { useFormErrorToast } from "~/util/hooks/ui/use-form-error-toast";
-import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
-import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
-import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { Card } from "@/components/ui/card";
+import { StockEntryData } from "./stock-entry-data";
 
 export default function NewStockEntryClient() {
   const { t } = useTranslation("common");
@@ -45,14 +36,9 @@ export default function NewStockEntryClient() {
   const navigate = useNavigate();
   const r = routes;
   const lineItemsStore = useLineItems();
-  const entryTypes: SelectItem[] = [
-    {
-      name: t(StockEntryType[StockEntryType.MATERIAL_RECEIPT]),
-      value: StockEntryType[StockEntryType.MATERIAL_RECEIPT],
-    },
-  ];
-  const form = useForm<z.infer<typeof createStockEntrySchema>>({
-    resolver: zodResolver(createStockEntrySchema),
+ 
+  const form = useForm<z.infer<typeof stockEntryDataSchema>>({
+    resolver: zodResolver(stockEntryDataSchema),
     defaultValues: {
       items: [],
       currency: companyDefaults?.currency,
@@ -62,10 +48,10 @@ export default function NewStockEntryClient() {
     },
   });
   const formValues = form.getValues();
-  const onSubmit = (e: z.infer<typeof createStockEntrySchema>) => {
+  const onSubmit = (e: z.infer<typeof stockEntryDataSchema>) => {
     fetcher.submit(
       {
-        createStockEntry: e as any,
+        stockEntryData: e as any,
         action: "create-stock-entry",
       },
       {
@@ -121,107 +107,12 @@ export default function NewStockEntryClient() {
   }, [formValues.items]);
   return (
     <Card>
-      <FormLayout className="p-3">
-        <Form {...form}>
-          <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="create-grid">
-              <SelectForm
-                form={form}
-                data={entryTypes}
-                label={t("form.entryType")}
-                keyName={"name"}
-                keyValue={"value"}
-                name="entryType"
-              />
-              <CustomFormDate
-                control={form.control}
-                name="postingDate"
-                label={t("form.date")}
-              />
-              <CustomFormTime
-                control={form.control}
-                name="postingTime"
-                label={t("form.postingTime")}
-                description={formValues.tz}
-              />
-              <CurrencyAutocompleteForm
-                control={form.control}
-                name="currency"
-                label={t("form.currency")}
-              />
-              {/* <WarehouseAutocompleteForm
-                control={form.control}
-                label={t("warehouse")}
-                name="sourceWarehouse"
-                onSelect={(e) => {
-                  form.setValue("sourceWarehouseID", e.id);
-                }}
-                isGroup={false}
-              /> */}
-              <WarehouseAutocompleteForm
-                control={form.control}
-                label={t("warehouse")}
-                name="targetWarehouse"
-                onSelect={(e) => {
-                  form.setValue("targetWarehouseID", e.id);
-                }}
-                isGroup={false}
-              />
-
-              <Separator className=" col-span-full" />
-
-              {/* <CurrencyAndPriceList form={form} /> */}
-
-              {/* <AccordationLayout
-                title={t("warehouse")}
-                open={true}
-                containerClassName=" col-span-full"
-                className="create-grid"
-              >
-                <FormAutocomplete
-                  onValueChange={onSourceWarehouseChange}
-                  form={form}
-                  name="sourceWarehouse"
-                  nameK={"name"}
-                  label={"Origen"}
-                  data={sourceWarehouse.data?.warehouses || []}
-                  onSelect={(e) => {
-                    form.setValue("sourceWarehouseID", e.id);
-                  }}
-                />
-                <FormAutocomplete
-                  onValueChange={onTargetWarehouseChange}
-                  form={form}
-                  name="targetWarehouse"
-                  nameK={"name"}
-                  label={"Destino"}
-                  data={targetWarehouse.data?.warehouses || []}
-                  onSelect={(e) => {
-                    form.setValue("targetWarehouseID", e.id);
-                  }}
-                />
-              </AccordationLayout> */}
-
-              <LineItems
-                onChange={(e) => {
-                  form.setValue("items", e);
-                  form.trigger("items");
-                }}
-                lineType={itemLineTypeToJSON(
-                  ItemLineType.ITEM_LINE_STOCK_ENTRY
-                )}
-                docPartyType={r.stockEntry}
-                allowEdit={true}
-                currency={formValues.currency}
-                isNew={true}
-              />
-              <AccountingDimensionForm form={form} />
-
-            </div>
-            <input ref={inputRef} type="submit" className="hidden" />
-          </fetcher.Form>
-        </Form>
-      </FormLayout>
+      <StockEntryData
+      form={form}
+      fetcher={fetcher}
+      onSubmit={onSubmit}
+      inputRef={inputRef}
+      />
     </Card>
   );
 }

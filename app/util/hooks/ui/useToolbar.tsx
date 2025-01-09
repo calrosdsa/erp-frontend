@@ -28,6 +28,7 @@ interface ToolbarState {
 interface ToolbarActions {
   setLoading: (opts: { loading: boolean; loadingType: LoadingType }) => void
   setToolbar: (opts: Partial<SetupToolbarOpts>) => void
+  setMounted:(e:boolean)=>void
   reset: () => void
 }
 
@@ -41,6 +42,16 @@ const initialState: ToolbarState = {
 export const useToolbar = create<ToolbarState & ToolbarActions>((set) => ({
   ...initialState,
   setLoading: ({ loading, loadingType }) => set({ loading, loadingType }),
-  setToolbar: (opts) => set((state) => ({ payload: { ...state.payload, ...opts } })),
+  setMounted: (e) => set((state)=>{
+    console.log("IS MOUNTED",state.isMounted)
+  return  { 
+    isMounted:e,
+   }
+  }),
+  setToolbar: (opts) => set((state) => ({ 
+    payload: { 
+    ...state.payload, 
+    ...opts,
+   } })),
   reset: () => set(initialState),
 }))

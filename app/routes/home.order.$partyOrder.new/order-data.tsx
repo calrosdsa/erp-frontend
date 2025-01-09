@@ -73,7 +73,7 @@ export const OrderData = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
-            {/* {JSON.stringify(form.formState.errors)} */}
+            {JSON.stringify(form.formState.errors)}
           <div className="create-grid">
             <PartyAutocompleteField
               party={partyOrder}
@@ -111,8 +111,8 @@ export const OrderData = ({
             <CurrencyAndPriceList
               control={form.control}
               allowEdit={allowEdit}
-              isSelling={partyOrder == p.salesQuotation}
-              isBuying={partyOrder == p.supplierQuotation}
+              isSelling={partyOrder == p.saleOrder}
+              isBuying={partyOrder == p.purchaseOrder}
               
             />
 
@@ -130,7 +130,6 @@ export const OrderData = ({
               lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
               docPartyType={partyOrder}
               priceListID={formValues.priceList?.id || undefined}
-              isNew={true}
             />
             <TaxAndChargesLines
               onChange={(e) => {

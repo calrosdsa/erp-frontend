@@ -1,7 +1,12 @@
 import { z } from "zod";
 import { components } from "~/sdk";
-import { formatAmount } from "~/util/format/formatCurrency";
-import { taxAndChargeSchema } from "./tax-and-charge-schema";
+import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
+import {
+  mapToTaxAndChargeData,
+  taxAndChargeSchema,
+} from "./tax-and-charge-schema";
+import { field, fieldNull } from "..";
+import { formatRFC3339 } from "date-fns";
 
 export const paymentReferceSchema = z.object({
   partyID: z.number(),
@@ -10,63 +15,7 @@ export const paymentReferceSchema = z.object({
   grandTotal: z.coerce.number(),
   outstanding: z.coerce.number(),
   allocated: z.coerce.number(),
-});
-
-export const createPaymentSchema = z
-  .object({
-    postingDate: z.date(),
-    amount: z.coerce.number(),
-    paymentType: z.string(),
-
-    party: z.string(),
-    partyType: z.string(),
-    partyID: z.number(),
-    // partyBankAccount: z.string().optional(),
-    // companyBankAccount: z.string().optional(),
-    partyReference: z.number().optional(),
-
-    //Party references
-    partyReferences: z.array(paymentReferceSchema),
-    taxLines: z.array(taxAndChargeSchema),
-
-    //UUID
-    accountPaidFromID: z.number().optional(),
-    accountPaidToID: z.number().optional(),
-    accountPaidFromName: z.string().optional(),
-    accountPaidToName: z.string().optional(),
-
-    project: z.string().optional(),
-    projectID: z.number().optional(),
-
-    costCenter: z.string().optional(),
-    costCenterID: z.number().optional(),
-  })
-
-export const editPayment = z.object({
-  id: z.number(),
-  postingDate: z.date(),
-  amount: z.coerce.number(),
-  paymentType: z.string(),
-  paymentTypeT: z.string(),
-
-  party: z.string(),
-  partyType: z.string(),
-  partyID: z.number(),
-  // partyBankAccount: z.string().optional(),
-  // companyBankAccount: z.string().optional(),
-  partyReference: z.number().optional(),
-  paymentReferences: z.array(paymentReferceSchema),
-  //UUID
-  accountPaidFromID: z.number().optional(),
-  accountPaidFromName: z.string().optional(),
-  accountPaidToID: z.number().optional(),
-  accountPaidToName: z.string().optional(),
-
-  project: z.string().optional(),
-  projectID: z.number().optional(),
-
-  costCenter: z.string().optional(),
-  costCenterID: z.number().optional(),
+  currency:z.string(),
 });
 
 export const paymentDataSchema = z.object({
@@ -74,40 +23,33 @@ export const paymentDataSchema = z.object({
   postingDate: z.date(),
   amount: z.coerce.number(),
   paymentType: z.string(),
+  partyType:z.string(),
   // paymentTypeT: z.string(),
 
-  party: z.string(),
-  partyType: z.string(),
-  partyID: z.number(),
+  party: field,
   // partyBankAccount: z.string().optional(),
   // companyBankAccount: z.string().optional(),
   partyReference: z.number().optional(),
   paymentReferences: z.array(paymentReferceSchema),
   taxLines: z.array(taxAndChargeSchema),
   //UUID
-  accountPaidFromID: z.number().optional(),
-  accountPaidFromName: z.string().optional(),
-  accountPaidToID: z.number().optional(),
-  accountPaidToName: z.string().optional(),
+  accountPaidFrom: field,
+  accountPaidTo: field,
 
-  project: z.string().optional(),
-  projectID: z.number().optional(),
-
-  costCenter: z.string().optional(),
-  costCenterID: z.number().optional(),
+  project: fieldNull,
+  costCenter: fieldNull,
 });
-
 
 export const partyReferencesToDto = (
   d: z.infer<typeof paymentReferceSchema>
 ): components["schemas"]["CreatePaymentReference"] => {
-  
   return {
     party_code: d.partyName,
     party_id: d.partyID,
     party_type: d.partyType,
     allocated: d.allocated,
     total: d.grandTotal,
+    currency:d.currency,
     outstanding: d.outstanding,
   };
 };
@@ -122,5 +64,31 @@ export const mapToPaymentReferenceSchema = (
     grandTotal: formatAmount(d.total),
     outstanding: formatAmount(d.outstanding),
     allocated: formatAmount(d.allocated),
+    currency:d.currency,
+  };
+};
+
+export const mapToPaymentBody = (
+  e: z.infer<typeof paymentDataSchema>
+): components["schemas"]["PaymentBody"] => {
+  const d: components["schemas"]["PaymentData"] = {
+    id: e.id,
+    fields: {
+      amount:formatAmountToInt(e.amount),
+      cost_center_id: e.costCenter?.id,
+      account_paid_from_id: e.accountPaidFrom.id || 0,
+      account_paid_to_id: e.accountPaidTo.id || 0,
+      party_id: e.party.id || 0,
+      payment_type: e.paymentType,
+      posting_date: formatRFC3339(e.postingDate),
+      project_id: e.project?.id,
+    },
+  };
+  return {
+    payment: d,
+    tax_and_charges: {
+      lines: e.taxLines.map((t) => mapToTaxAndChargeData(t)),
+    },
+    payment_references: e.paymentReferences.map((t) => partyReferencesToDto(t)),
   };
 };

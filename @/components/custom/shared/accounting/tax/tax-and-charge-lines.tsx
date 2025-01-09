@@ -129,7 +129,6 @@ export default function TaxAndChargesLines({
       <Typography variant="subtitle2" className=" col-span-full">
         Impuestos y cargos
       </Typography>
-      {/* {JSON.stringify(taxLines)} */}
       {form && (
         <ChargesTemplateForm
           control={form?.control}

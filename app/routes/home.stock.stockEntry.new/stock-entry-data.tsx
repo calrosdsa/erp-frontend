@@ -8,9 +8,7 @@ import {
 import { MutableRefObject, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import {
-  PartyAutocompleteField,
-} from "../home.order.$partyOrder.new/components/party-autocomplete";
+import { PartyAutocompleteField } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import { Separator } from "@/components/ui/separator";
@@ -21,17 +19,21 @@ import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breaku
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
-import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
+import { ItemLineType, itemLineTypeToJSON, StockEntryType } from "~/gen/common";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { parties } from "~/util/party";
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
+import SelectForm from "@/components/custom/select/SelectForm";
+import { stockEntryDataSchema } from "~/util/data/schemas/stock/stock-entry-schema";
+import { WarehouseAutocompleteFormField } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
+import { Typography } from "@/components/typography";
 
-type Data = z.infer<typeof receiptDataSchema>;
+type Data = z.infer<typeof stockEntryDataSchema>;
 
-export const ReceiptData = ({
+export const StockEntryData = ({
   fetcher,
   onSubmit,
   inputRef,
@@ -47,7 +49,6 @@ export const ReceiptData = ({
   allowCreate?: boolean;
 }) => {
   const params = useParams();
-  const partyReceipt = params.partyReceipt || "";
   const { t } = useTranslation("common");
   const { roleActions } = useOutletContext<GlobalState>();
   const formValues = form.getValues();
@@ -55,15 +56,17 @@ export const ReceiptData = ({
   const taxLinesStore = useTaxAndCharges();
   const p = parties;
 
-  useEffect(() => {
-    taxLinesStore.onLines(formValues.taxLines);
-    taxLinesStore.updateFromItems(formValues.lines);
-  }, [formValues.taxLines]);
+  const entryTypes: SelectItem[] = [
+    {
+      name: t(StockEntryType[StockEntryType.MATERIAL_RECEIPT]),
+      value: StockEntryType[StockEntryType.MATERIAL_RECEIPT],
+    },
+  ];
 
   useEffect(() => {
-    lineItemsStore.onLines(formValues.lines);
-    taxLinesStore.updateFromItems(formValues.lines);
-  }, [formValues.lines]);
+    lineItemsStore.onLines(formValues.items);
+    taxLinesStore.updateFromItems(formValues.items);
+  }, [formValues.items]);
 
   return (
     <FormLayout>
@@ -72,19 +75,22 @@ export const ReceiptData = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
-            {JSON.stringify(form.formState.errors)}
+          {/* {JSON.stringify(form.formState.errors)} */}
           <div className="create-grid">
-            <PartyAutocompleteField
-              party={partyReceipt}
-              roleActions={roleActions}
-              control={form.control}
+            <SelectForm
+              form={form}
+              data={entryTypes}
+              label={t("form.entryType")}
+              keyName={"name"}
+              keyValue={"value"}
+              name="entryType"
               allowEdit={allowEdit}
             />
             <CustomFormDate
               control={form.control}
               name="postingDate"
-              label={t("form.postingDate")}
               allowEdit={allowEdit}
+              label={t("form.postingDate")}
             />
             <CustomFormTime
               control={form.control}
@@ -94,40 +100,38 @@ export const ReceiptData = ({
               description={formValues.tz}
             />
 
-            {/* <CurrencyAutocompleteForm
+            <Separator className=" col-span-full" />
+            <Typography variant="subtitle2" className="col-span-full">
+              Almacenes
+            </Typography>
+            <WarehouseAutocompleteFormField
               control={form.control}
-              name="currency"
-              label={t("form.currency")}
-              allowEdit={allowEdit}
-            /> */}
-            <CurrencyAndPriceList
+              name="sourceWarehouse"
+              label={"Almacen de Origen"}
+              isGroup={false}
+            />
+            <WarehouseAutocompleteFormField
               control={form.control}
-              allowEdit={allowEdit}
-              isSelling={partyReceipt == p.salesQuotation}
-              isBuying={partyReceipt == p.supplierQuotation}
-              
+              name="targetWarehouse"
+              label={"Almacen de Destino"}
+              isGroup={false}
             />
 
-            <Separator className=" col-span-full" />
-
-            
-            <UpdateStock
-                  form={form}
-                  updateStock={true}
-                  allowEdit={allowEdit}
-                  partyType={partyReceipt}
-                />
+            {/* <UpdateStock
+              form={form}
+              updateStock={true}
+              partyType={p}
+            /> */}
             <LineItems
               onChange={(e) => {
-                form.setValue("lines", e);
-                form.trigger("lines");
+                form.setValue("items", e);
+                form.trigger("items");
               }}
               allowEdit={allowEdit}
               allowCreate={allowCreate}
               currency={formValues.currency}
-              lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)}
-              docPartyType={partyReceipt}
-              priceListID={formValues.priceList?.id || undefined}
+              lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_STOCK_ENTRY)}
+              docPartyType={p.stockEntry}
               // complement={
               //   <UpdateStock
               //     form={form}
@@ -135,8 +139,9 @@ export const ReceiptData = ({
               //     partyType={partyReceipt}
               //   />
               // }
+              isNew={true}
             />
-            <TaxAndChargesLines
+            {/* <TaxAndChargesLines
               onChange={(e) => {
                 form.setValue("taxLines", e);
                 form.trigger("taxLines");
@@ -148,7 +153,7 @@ export const ReceiptData = ({
               currency={formValues.currency}
             />
             <GrandTotal currency={formValues.currency} />
-            <TaxBreakup currency={formValues.currency} />
+            <TaxBreakup currency={formValues.currency} /> */}
 
             <AccountingDimensionForm form={form} allowEdit={allowEdit} />
           </div>

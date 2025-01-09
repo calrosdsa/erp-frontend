@@ -33,7 +33,6 @@ export function useEditFields<T extends FieldValues>({
     // const currentValues = form.getValues();
     // const equal = isEqual(currentValues, previousValuesRef.current);
     const equal = JSON.stringify(currentValues) == JSON.stringify(previousValuesRef.current);
-    console.log("EQUAL",equal)
     setHasChanged(!equal);
   }, []);
 

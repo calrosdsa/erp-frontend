@@ -1,27 +1,56 @@
-import { DependencyList, useCallback, useEffect } from "react";
+import { DependencyList, useCallback, useEffect, useLayoutEffect } from "react";
 import { LoadingType, SetupToolbarOpts, useToolbar } from "./useToolbar";
-
-
 
 export const setUpToolbar = (
   opts: (currentOpts: SetupToolbarOpts) => Partial<SetupToolbarOpts>,
   dependencies: DependencyList = []
 ) => {
-  const { payload, setToolbar, reset } = useToolbar()
+  const { payload, isMounted, setToolbar, reset } = useToolbar();
 
   useEffect(() => {
-    const newOpts = opts(payload)
-    console.log("NEW PAYLOAD",newOpts)
-    setToolbar(newOpts)
+      const newOpts = opts(payload);
+      setToolbar(newOpts);
+      return () => {
+        console.log("RESET TOOLBAR...");
+        reset();
+      };
+  }, dependencies);
+};
 
+export const setUpToolbarDetailPage = (
+  opts: (currentOpts: SetupToolbarOpts) => Partial<SetupToolbarOpts>,
+  dependencies: DependencyList = []
+) => {
+  const { payload, isMounted, setToolbar, reset } = useToolbar();
 
-    return () => {
-      console.log("UNMOUNT...")
-      reset()
+  useEffect(() => {
+    if (isMounted) {
+      const newOpts = opts(payload);
+      setToolbar(newOpts);
+      return () => {
+        console.log("RESET TOOLBAR...");
+        reset();
+      };
     }
-  }, dependencies)
-}
+  }, [...dependencies, isMounted]);
+};
 
+export const setUpToolbarTab = (
+  opts: () => Partial<SetupToolbarOpts>,
+  dependencies: DependencyList = []
+) => {
+  const { isMounted, setToolbar, reset, setMounted } = useToolbar();
+
+  useEffect(() => {
+    setMounted(true);
+    const newOpts = opts();
+    setToolbar(newOpts);
+    return () => {
+      console.log("RESET TAB...");
+      setMounted(false);
+    };
+  }, dependencies);
+};
 
 export function useLoadingTypeToolbar(
   opts: {

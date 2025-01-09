@@ -43,7 +43,6 @@ export default function LineItems({
   onChange,
   complement,
   updateStock,
-  isNew,
   priceListID,
 }: {
   onChange?: (e: z.infer<typeof lineItemSchema>[]) => void;
@@ -56,7 +55,6 @@ export default function LineItems({
   lineType: string;
   complement?: JSX.Element;
   updateStock?: boolean;
-  isNew?: boolean;
   priceListID?:number
 }) {
   const { t, i18n } = useTranslation("common");
@@ -133,7 +131,7 @@ export default function LineItems({
 
       {complement}
 
-      {isNew && (
+      {allowCreate && (
         <div className=" col-span-full create-grid">
           <PriceAutocompleteForm
             allowEdit={allowEdit}
@@ -148,8 +146,9 @@ export default function LineItems({
               line.quantity = 0;
               line.item_code = e.item_code;
               line.rate = formatAmount(e.rate);
-              line.item_price_id = e.id;
-              line.uom = e.uom;
+              line.itemID = e.item_id;
+              line.unitOfMeasureID =e.item_price_uom_id || e.item_uom_id,
+              line.uom = e.item_price_uom || e.item_uom;
               onChange?.([...lineItems, line]);
             }}
             priceListID={priceListID}
@@ -169,7 +168,7 @@ export default function LineItems({
           metaOptions={{
             meta: {
               ...metaOptions,
-              ...(isNew && {
+              ...(allowEdit && {
                 updateCell: (row: number, column: string, value: string) => {
                   console.log(row, column, value);
                   const lines = lineItems.map((t, idx) => {

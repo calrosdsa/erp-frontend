@@ -106,6 +106,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/accounting/report/account-balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Account Balance */
+        get: operations["account-balance"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/accounting/report/account-payable": {
         parameters: {
             query?: never;
@@ -3912,6 +3929,7 @@ export interface components {
         CreatePaymentReference: {
             /** Format: double */
             allocated: number;
+            currency: string;
             /** Format: double */
             outstanding: number;
             party_code: string;
@@ -4343,31 +4361,6 @@ export interface components {
             id: number;
             label: string;
         };
-        EditPaymentRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: double */
-            amount: number;
-            /** Format: int64 */
-            cost_center_id?: number | null;
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            paid_from_id?: number;
-            /** Format: int64 */
-            paid_to_id?: number;
-            /** Format: int64 */
-            party_id: number;
-            payment_references?: components["schemas"]["CreatePaymentReference"][];
-            payment_type: string;
-            /** Format: date-time */
-            posting_date: string;
-            /** Format: int64 */
-            project_id?: number | null;
-        };
         EditPriceListRequestBody: {
             /**
              * Format: uri
@@ -4508,6 +4501,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["GeneralLedgerData"];
+        };
+        EntityResponseGeneralLedgerOpeningBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["GeneralLedgerOpening"];
         };
         EntityResponseItemAttributeDtoBody: {
             /**
@@ -5449,6 +5455,8 @@ export interface components {
             currency: string;
             /** Format: date-time */
             date: string;
+            /** Format: int64 */
+            doc_reference_id: number | null;
             /** Format: date-time */
             due_date: string | null;
             /** Format: int64 */
@@ -5643,19 +5651,22 @@ export interface components {
             /** Format: int64 */
             item_id: number;
             item_name: string;
+            item_price_uom: string | null;
+            /** Format: int64 */
+            item_price_uom_id: number | null;
             /** Format: int32 */
             item_quantity: number;
+            item_uom: string;
+            /** Format: int64 */
+            item_uom_id: number;
             item_uuid: string;
             price_list_currency: string;
             /** Format: int64 */
             price_list_id: number;
             price_list_name: string;
             price_list_uuid: string;
-            /** Format: int32 */
-            rate: number;
-            uom: string;
             /** Format: int64 */
-            uom_id: number;
+            rate: number;
             uuid: string;
         };
         ItemPriceLine: {
@@ -5743,14 +5754,19 @@ export interface components {
         LedgerDetailDto: {
             account_root_type: string;
             account_type: string;
+            can_credit: boolean;
+            can_debit: boolean;
             cash_flow_section: string;
             /** Format: date-time */
             created_at: string;
+            currency: string;
             description: string;
             /** Format: int64 */
             id: number;
             is_group: boolean;
             ledger_no: string | null;
+            /** Format: int64 */
+            limit: number;
             name: string;
             parent: string;
             /** Format: int64 */
@@ -5762,14 +5778,19 @@ export interface components {
         LedgerDto: {
             account_root_type: string;
             account_type: string;
+            can_credit: boolean;
+            can_debit: boolean;
             cash_flow_section: string;
             /** Format: date-time */
             created_at: string;
+            currency: string;
             description: string;
             /** Format: int64 */
             id: number;
             is_group: boolean;
             ledger_no: string | null;
+            /** Format: int64 */
+            limit: number;
             name: string;
             report_type: string;
             status: string;
@@ -5779,10 +5800,10 @@ export interface components {
             delivery_line_item?: components["schemas"]["DeliveryLineItemData"];
             /** Format: int32 */
             id?: number;
-            /** Format: int32 */
-            item_line_reference?: number;
             /** Format: int64 */
-            item_price_id: number;
+            item_id: number;
+            /** Format: int32 */
+            item_line_reference_id?: number | null;
             line_receipt?: components["schemas"]["LineItemReceiptData"];
             line_stock_entry?: components["schemas"]["LineItemStockEntryData"];
             line_type: string;
@@ -5790,6 +5811,8 @@ export interface components {
             quantity: number;
             /** Format: double */
             rate: number;
+            /** Format: int64 */
+            unit_of_measure_id: number;
         };
         LineItemDto: {
             /** Format: int32 */
@@ -5800,9 +5823,11 @@ export interface components {
             /** Format: int32 */
             id: number;
             item_code: string;
-            item_name: string;
             /** Format: int64 */
-            item_price_id: number;
+            item_id: number;
+            /** Format: int32 */
+            item_line_reference_id: number | null;
+            item_name: string;
             line_type: string;
             /** Format: int32 */
             quantity: number;
@@ -5816,6 +5841,8 @@ export interface components {
             source_warehouse: string;
             /** Format: int64 */
             source_warehouse_id: number;
+            /** Format: int64 */
+            unit_of_measure_id: number;
             uom: string;
         };
         LineItemReceiptData: {
@@ -6598,24 +6625,7 @@ export interface components {
             /** Format: int64 */
             receivable_acct_id: number;
         };
-        PaymentData: {
-            /** Format: double */
-            amount: number;
-            /** Format: int64 */
-            cost_center_id?: number | null;
-            /** Format: int64 */
-            paid_from_id?: number;
-            /** Format: int64 */
-            paid_to_id?: number;
-            /** Format: int64 */
-            party_id: number;
-            payment_type: string;
-            /** Format: date-time */
-            posting_date: string;
-            /** Format: int64 */
-            project_id?: number | null;
-        };
-        PaymentDataBody: {
+        PaymentBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -6624,6 +6634,11 @@ export interface components {
             payment: components["schemas"]["PaymentData"];
             payment_references: components["schemas"]["CreatePaymentReference"][];
             tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
+        };
+        PaymentData: {
+            fields: components["schemas"]["PaymentFields"];
+            /** Format: int64 */
+            id?: number;
         };
         PaymentDetailDto: {
             PartyBankAccount: string | null;
@@ -6692,9 +6707,27 @@ export interface components {
             project_uuid: string | null;
             status: string;
         };
+        PaymentFields: {
+            /** Format: int64 */
+            account_paid_from_id: number;
+            /** Format: int64 */
+            account_paid_to_id: number;
+            /** Format: int64 */
+            amount: number;
+            /** Format: int64 */
+            cost_center_id?: number | null;
+            /** Format: int64 */
+            party_id: number;
+            payment_type: string;
+            /** Format: date-time */
+            posting_date: string;
+            /** Format: int64 */
+            project_id?: number | null;
+        };
         PaymentReferenceDto: {
             /** Format: int32 */
             allocated: number;
+            currency: string;
             /** Format: int32 */
             outstanding: number;
             party_code: string;
@@ -7144,7 +7177,7 @@ export interface components {
             tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
         };
         ReceiptData: {
-            fields: components["schemas"]["InvoiceFields"];
+            fields: components["schemas"]["ReceiptFields"];
             /** Format: int64 */
             id: number;
             receipt_party_type: string;
@@ -7162,6 +7195,8 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             currency: string;
+            /** Format: int64 */
+            doc_reference_id: number | null;
             /** Format: int64 */
             id: number;
             /** Format: int64 */
@@ -7182,10 +7217,29 @@ export interface components {
             project_uuid: string | null;
             status: string;
             tz: string;
-            warehouse: string | null;
+            warehouse: string;
             /** Format: int64 */
-            warehouse_id: number | null;
-            warehouse_uuid: string | null;
+            warehouse_id: number;
+            warehouse_uuid: string;
+        };
+        ReceiptFields: {
+            /** Format: int64 */
+            cost_center_id?: number | null;
+            currency: string;
+            /** Format: int64 */
+            doc_reference_id: number | null;
+            /** Format: int64 */
+            party_id: number;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            price_list_id?: number | null;
+            /** Format: int64 */
+            project_id?: number | null;
+            tz: string;
+            /** Format: int64 */
+            warehouse_id: number;
         };
         RequestAddPartyReferenceBody: {
             /**
@@ -8127,7 +8181,7 @@ export interface components {
         StockEntryData: {
             fields: components["schemas"]["StockEntryFields"];
             /** Format: int64 */
-            id: number;
+            id?: number;
         };
         StockEntryDto: {
             code: string;
@@ -8145,7 +8199,15 @@ export interface components {
             /** Format: int64 */
             project_id: number | null;
             project_uuid: string | null;
+            source_warehouse: string | null;
+            /** Format: int64 */
+            source_warehouse_id: number | null;
+            source_warehouse_uuid: string | null;
             status: string;
+            target_warehouse: string | null;
+            /** Format: int64 */
+            target_warehouse_id: number | null;
+            target_warehouse_uuid: string | null;
             tz: string;
         };
         StockEntryFields: {
@@ -8158,6 +8220,10 @@ export interface components {
             posting_time: string;
             /** Format: int64 */
             project_id?: number | null;
+            /** Format: int64 */
+            source_warehouse_id?: number | null;
+            /** Format: int64 */
+            target_warehouse_id?: number | null;
             tz: string;
         };
         StockLedgerEntryDto: {
@@ -8609,6 +8675,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SignInResponseBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "account-balance": {
+        parameters: {
+            query?: {
+                id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseGeneralLedgerOpeningBody"];
                 };
             };
             /** @description Error */
@@ -12853,7 +12950,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditPaymentRequestBody"];
+                "application/json": components["schemas"]["PaymentBody"];
             };
         };
         responses: {
@@ -12886,7 +12983,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PaymentDataBody"];
+                "application/json": components["schemas"]["PaymentBody"];
             };
         };
         responses: {

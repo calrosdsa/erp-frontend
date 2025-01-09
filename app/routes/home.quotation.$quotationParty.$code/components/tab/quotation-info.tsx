@@ -93,13 +93,21 @@ export default function QuotationInfoTab() {
     );
   };
 
+  // useEffect(()=>{
+  //   console.log("HAS CHANGE",hasChanged)
+  //   toolbar.setToolbar({
+  //     onSave: () => inputRef.current?.click(),
+  //       // disabledSave: !hasChanged,
+  //   })
+  // },[quotation])
   useEffect(()=>{
-    console.log("HAS CHANGE",hasChanged)
-    toolbar.setToolbar({
-      onSave: () => inputRef.current?.click(),
-        // disabledSave: !hasChanged,
-    })
-  },[quotation])
+    if(allowEdit){
+      console.log("INFO")
+      toolbar.setToolbar({
+        onSave: () => inputRef.current?.click(),
+      })
+    }
+  },[toolbar.isMounted,allowEdit])
 
   
 
@@ -138,6 +146,7 @@ export default function QuotationInfoTab() {
   }, [quotation]);
   return (
     <>
+    {JSON.stringify(toolbar.isMounted)}
     {/* {JSON.stringify(previousValues.lines)}
     <br />
     {JSON.stringify(form.getValues().lines)} */}

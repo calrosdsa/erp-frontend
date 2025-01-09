@@ -98,7 +98,6 @@ export default function PricingDetailClient() {
     (opts) => {
       console.log("TOOL BAR OPTS", opts);
       return {
-        ...opts,
         status: stateFromJSON(pricing?.status),
         onChangeState: onChangeState,
         // onSave:()=>{

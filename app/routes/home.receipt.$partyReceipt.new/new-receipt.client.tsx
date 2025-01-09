@@ -38,6 +38,7 @@ import {
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import { ReceiptData } from "./receipt-data";
 
 export default function NewReceiptClient() {
   const fetcher = useFetcher<typeof action>();
@@ -55,7 +56,7 @@ export default function NewReceiptClient() {
     resolver: zodResolver(receiptDataSchema),
     defaultValues: {
       receiptPartyType: partyReceipt,
-      referenceID: payload?.documentRefernceID,
+      docReferenceID: payload?.documentRefernceID,
       currency: payload?.currency || companyDefaults?.currency,
       lines: lineItemsStore.lines.map((t) => {
         t.lineItemReceipt = {
@@ -68,6 +69,7 @@ export default function NewReceiptClient() {
         if (partyReceipt == r.deliveryNote) {
           t.lineType = itemLineTypeToJSON(ItemLineType.DELIVERY_LINE_ITEM);
         }
+        t.itemLineReferenceID = t.itemLineID
         return t;
       }),
       taxLines: taxLinesStore.lines,
@@ -75,13 +77,26 @@ export default function NewReceiptClient() {
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 
-      costCenterID: payload?.costCenterID,
-      costCenter: payload?.costCenterName,
-      projectID: payload?.projectID,
-      project: payload?.projectName,
+      
+      party:{
+        id:payload?.partyID,
+        name:payload?.partyName,
+      },
+      priceList:{
+        id:payload?.priceListID,
+        name:payload?.priceListName,
+      },
+      costCenter:{
+        name:payload?.costCenterName,
+        id:payload?.costCenterID,
+      },
+      project: {
+        name:payload?.projectName,
+        id:payload?.projectID,
+      },
+      warehouse:{
 
-      partyID: payload?.partyID,
-      partyName: payload?.partyName,
+      },
     },
   });
   const formValues = form.getValues();
@@ -91,7 +106,7 @@ export default function NewReceiptClient() {
     fetcher.submit(
       {
         action: "create-receipt",
-        createReceipt: values,
+        receiptData: values,
       } as any,
       {
         method: "POST",
@@ -152,82 +167,14 @@ export default function NewReceiptClient() {
 
   return (
     <div>
+      {/* {JSON.stringify(payload)} */}
       <Card>
-        <FormLayout>
-          {/* {JSON.stringify(formValues.lines)} */}
-          <Form {...form}>
-            <fetcher.Form
-              method="post"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className={cn("", "gap-y-3 grid p-3")}
-            >
-              <div className="create-grid">
-                <PartyAutocomplete
-                  party={partyReceipt}
-                  roleActions={roleActions}
-                  form={form}
-                />
-                <CustomFormDate
-                  control={form.control}
-                  name="postingDate"
-                  label={t("form.postingDate")}
-                />
-                <CustomFormTime
-                  control={form.control}
-                  name="postingTime"
-                  label={t("form.postingTime")}
-                  description={formValues.tz}
-                />
-                <CurrencyAutocompleteForm
-                  control={form.control}
-                  name="currency"
-                  label={t("form.currency")}
-                  onSelect={() => {}}
-                />
-                <UpdateStock
-                  form={form}
-                  updateStock={true}
-                  partyType={partyReceipt}
-                />
-
-
-                <AccountingDimensionForm form={form} />
-
-                <LineItems
-                  onChange={(e) => {
-                    form.setValue("lines", e);
-                    form.trigger("lines");
-                  }}
-                  allowEdit={true}
-                  isNew={true}
-                  lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)}
-                  docPartyType={partyReceipt}
-                  currency={formValues.currency}
-                  // complement={
-                  //   <>
-                  //     <UpdateStock
-                  //       form={form}
-                  //       updateStock={true}
-                  //       partyType={partyReceipt}
-                  //     />
-                  //   </>
-                  // }
-                />
-                <TaxAndChargesLines
-                  onChange={(e) => {
-                    form.setValue("taxLines", e);
-                    form.trigger("taxLines");
-                  }}
-                  currency={formValues.currency}
-                />
-                <GrandTotal currency={formValues.currency} />
-                <TaxBreakup currency={formValues.currency} />
-              </div>
-
-              <input ref={inputRef} type="submit" className="hidden" />
-            </fetcher.Form>
-          </Form>
-        </FormLayout>
+        <ReceiptData
+        form={form}
+        inputRef={inputRef}
+        onSubmit={onSubmit}
+        fetcher={fetcher}
+        />
       </Card>
     </div>
   );

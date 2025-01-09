@@ -9,12 +9,14 @@ import { useTranslation } from "react-i18next";
 import { useWarehouseDebounceFetcher, WarehouseAutocompleteFormField } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { useMemo } from "react";
 import FormAutocompleteField from "../../select/FormAutocompleteField";
+import CustomFormFieldInput from "../../form/CustomFormInput";
 
 interface UpdateStockProps {
   form: UseFormReturn<any>;
   updateStock?: boolean;
   partyType: string;
   isInvoice?: boolean;
+  allowEdit?:boolean
 }
 
 export default function UpdateStock({
@@ -22,9 +24,9 @@ export default function UpdateStock({
   updateStock,
   partyType,
   isInvoice = false,
+  allowEdit,
 }: UpdateStockProps) {
   const { t } = useTranslation("common");
-
   const isSaleInvoice = partyType === partyTypeToJSON(PartyType.saleInvoice);
   const isPurchaseInvoice =
     partyType === partyTypeToJSON(PartyType.purchaseInvoice);
@@ -38,14 +40,20 @@ export default function UpdateStock({
       {isInvoice && (
         <CustomFormField form={form.control} name="updateStock">
           {(field) => (
-            <CustomCheckbox
-              checked={field.value}
-              onCheckedChange={(e) => {
-                field.onChange(e);
-                form.trigger("updateStock");
-              }}
+            <CustomFormFieldInput
+              allowEdit={allowEdit}
               label={t("form.updateStock")}
+              name="updateStock" 
+              inputType={"check"}
             />
+            // <CustomCheckbox
+            //   checked={field.value}
+            //   allowEdit={allowEdit}
+            //   onCheckedChange={(e) => {
+            //     field.onChange(e);
+            //     form.trigger("updateStock");
+            //   }}
+            // />
           )}
         </CustomFormField>
       )}
@@ -54,6 +62,7 @@ export default function UpdateStock({
           control={form.control}
           label={t("f.source", { o: t("_warehouse.base") })}
           isGroup={false}
+          allowEdit={allowEdit}
         />
       )}
 
@@ -63,6 +72,7 @@ export default function UpdateStock({
           control={form.control}
           label={t("warehouse")}
           isGroup={false}
+          allowEdit={allowEdit}
         />
           {/* <FormAutocomplete
             control={form.control}

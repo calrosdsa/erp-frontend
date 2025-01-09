@@ -107,7 +107,7 @@ export const usePricingFetcher = () => {
         encType: "application/json",
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         action: r.toRoute({
-          main: r.parties.pricing,
+          main: r.p.pricing,
         }),
       }
     );

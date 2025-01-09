@@ -33,6 +33,7 @@ import { useEditFields } from "~/util/hooks/useEditFields";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import {
   setUpToolbar,
+  setUpToolbarTab,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -70,11 +71,14 @@ export default function InvoiceInfoTab() {
   const allowCreate = isDraft && invoicePerm.create;
   const documentStore = useDocumentStore();
   const toolbar = useToolbar();
+  
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: invoiceDataSchema,
     defaultValues: {
       id: invoice?.id,
       currency: invoice?.currency,
+      invoicePartyType:partyInvoice,
+      docReferenceID:invoice?.doc_reference_id,
       postingTime: invoice?.posting_time,
       postingDate: new Date(invoice?.posting_date || ""),
       dueDate: new Date(invoice?.due_date || new Date()),
@@ -116,11 +120,13 @@ export default function InvoiceInfoTab() {
   });
   const formValues = form.getValues();
 
+
   const onSubmit = (e: EditData) => {
+    console.log("ONSUBMIT",e)
     fetcher.submit(
       {
         action: "edit",
-        editData: e as any,
+        invoiceData: e as any,
       },
       {
         method: "POST",
@@ -129,14 +135,17 @@ export default function InvoiceInfoTab() {
     );
   };
 
-  useEffect(()=>{
-    // console.log("HAS CHANGE",hasChanged)
-    toolbar.setToolbar({
-      onSave: () => inputRef.current?.click(),
-        // disabledSave: !hasChanged,
-    })
-  },[invoice])
+  setUpToolbarTab(()=>{
+    console.log("RENDER TAB...")
+    return {
+      onSave: () => {
+        inputRef.current?.click()
+      },
+      disabledSave:!allowEdit,
+    }
+  },[allowEdit])
 
+  
   // useEffect(() => {
   //   toolbar.setToolbar({
   //     onSave: () => inputRef.current?.click(),
@@ -177,6 +186,8 @@ export default function InvoiceInfoTab() {
   }, [invoice]);
 
   return (
+    <>
+    {JSON.stringify(invoice?.total)}
    <InvoiceData
    form={form}
    fetcher={fetcher}
@@ -185,5 +196,6 @@ export default function InvoiceInfoTab() {
    inputRef={inputRef}
    onSubmit={onSubmit}
    />
+   </>
   );
 }

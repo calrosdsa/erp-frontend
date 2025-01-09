@@ -12,15 +12,19 @@ import { FetchResponse } from "openapi-fetch";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
-import { editStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-schema";
 import { formatRFC3339 } from "date-fns";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
+import {
+  mapToStockEntryBody,
+  stockEntryDataSchema,
+} from "~/util/data/schemas/stock/stock-entry-schema";
+import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
   updateStatusWithEvent: z.infer<typeof updateStatusWithEventSchema>;
-  editData:z.infer<typeof editStockEntrySchema>
+  stockEntryData: z.infer<typeof stockEntryDataSchema>;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -28,7 +32,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
-  let actionRes = LOAD_ACTION
+  let actionRes = LOAD_ACTION;
   switch (data.action) {
     case "update-status-with-event": {
       const res = await client.PUT("/stock-entry/update-status", {
@@ -39,38 +43,28 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       console.log("ORDER ", res.error);
       break;
     }
-    case "edit":{
-      const d = data.editData
-      const res = await client.PUT("/stock-entry",{
-        body:{
-          id:d.id,
-          entry_type: d.entryType,
-          posting_date: formatRFC3339(d.postingDate),
-          posting_time: d.postingTime,
-          tz: d.tz,
-          currency: d.currency,
-          project:d.projectID,
-          cost_center:d.costCenterID,
-        }
-      })
-      message = res.data?.message
-      error = res.error?.detail
-      actionRes = ""
+    case "edit": {
+      const res = await client.PUT("/stock-entry", {
+        body: mapToStockEntryBody(data.stockEntryData),
+      });
+      message = res.data?.message;
+      error = res.error?.detail;
+      actionRes = "";
       break;
     }
   }
   return json({
     message,
     error,
-    action:actionRes,
+    action: actionRes,
   });
 };
 
 export function shouldRevalidate({
   formMethod,
   defaultShouldRevalidate,
-  actionResult
-}:ShouldRevalidateFunctionArgs) {
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
   if (actionResult?.action == LOAD_ACTION) {
     return defaultShouldRevalidate;
   }
@@ -87,8 +81,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const tab = searchParams.get("tab") || "info";
   let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
-  let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
-    undefined;
+  // let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
+  //   undefined;
   const res = await client.GET("/stock-entry/detail/{id}", {
     params: {
       path: {
@@ -97,10 +91,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
+  let lineItems: components["schemas"]["LineItemDto"][] = [];
   if (res.data) {
     switch (tab) {
       case "info": {
-        lineItemRes = client.GET("/item-line", {
+        const lineItemRes = await client.GET("/item-line", {
           params: {
             query: {
               line_type: itemLineTypeToJSON(ItemLineType.ITEM_LINE_STOCK_ENTRY),
@@ -108,6 +103,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
+        lineItems = lineItemRes.data?.result || []
         break;
       }
       case "connections": {
@@ -130,9 +126,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     stockEntry: res.data?.result.entity,
     activities: res.data?.result.activities,
     connections: resConnections,
-    lineItems: lineItemRes,
-    actions:res.data?.actions,
-    associatedActions:res.data?.associated_actions
+    lineItems: lineItems,
+    actions: res.data?.actions,
+    associatedActions: res.data?.associated_actions,
   });
 };
 

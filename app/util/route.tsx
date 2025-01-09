@@ -8,7 +8,7 @@ import {
 import { parties } from "./party";
 
 class Routes {
-  parties = parties
+  p = parties
   signin = "/signin";
   api = "/api";
   apiData = this.api + "/data";

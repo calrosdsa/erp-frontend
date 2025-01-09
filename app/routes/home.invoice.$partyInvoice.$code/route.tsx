@@ -32,6 +32,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   let actionRes = LOAD_ACTION;
+  console.log("ON ACTION")
   switch (data.action) {
     case "update-status-with-event": {
       console.log("UPDATE STATUS", data);
@@ -50,6 +51,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       message = res.data?.message;
       error = res.error?.detail;
       actionRes = "";
+      console.log("ON EDIT INVOICE")
       break;
     }
   }

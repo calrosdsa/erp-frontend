@@ -27,6 +27,7 @@ import AccountingDimensionForm from "@/components/custom/shared/accounting/accou
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import {
   setUpToolbar,
+  setUpToolbarTab,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -64,9 +65,9 @@ export default function OrderInfoTab() {
         deliveryDate: new Date(order?.delivery_date || new Date()),
         tz: order?.tz,
         party: {
-          id:order?.party_id,
-          name:order?.party_name,
-          uuid:order?.party_uuid,
+          id: order?.party_id,
+          name: order?.party_name,
+          uuid: order?.party_uuid,
         },
         project: {
           id: order?.project_id,
@@ -99,6 +100,7 @@ export default function OrderInfoTab() {
   const documentStore = useDocumentStore();
 
   const onSubmit = (e: EditData) => {
+    console.log("ONSUBMIT ORDER", e);
     fetcher.submit(
       {
         action: "edit",
@@ -119,23 +121,15 @@ export default function OrderInfoTab() {
     [fetcher.state]
   );
 
-  useEffect(() => {
-    toolbar.setToolbar({
-      onSave: () => inputRef.current?.click(),
-      // disabledSave: !hasChanged,
-    });
-  }, []);
-
-  // setUpToolbar(
-  //   (opts) => {
-  //     return {
-  //       ...opts,
-  //       onSave: () => inputRef.current?.click(),
-  //       disabledSave: !hasChanged,
-  //     };
-  //   },
-  //   [hasChanged]
-  // );
+  setUpToolbarTab(() => {
+    return {
+      onSave: () => {
+        console.log("ON SAVE");
+        inputRef.current?.click();
+      },
+      disabledSave: !allowEdit,
+    };
+  }, [allowEdit,order]);
 
   useDisplayMessage(
     {
@@ -163,13 +157,16 @@ export default function OrderInfoTab() {
     });
   }, [order]);
   return (
-    <OrderData
-      form={form}
-      inputRef={inputRef}
-      fetcher={fetcher}
-      onSubmit={onSubmit}
-      allowEdit={allowEdit}
-      allowCreate={allowCreate}
-    />
+    <>
+      {/* {JSON.stringify(documentStore.payload)} */}
+      <OrderData
+        form={form}
+        inputRef={inputRef}
+        fetcher={fetcher}
+        onSubmit={onSubmit}
+        allowEdit={allowEdit}
+        allowCreate={allowCreate}
+      />
+    </>
   );
 }

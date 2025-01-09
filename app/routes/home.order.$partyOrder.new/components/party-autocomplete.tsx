@@ -18,6 +18,7 @@ import {
   useSupplierDebounceFetcher,
 } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
+import { parties } from "~/util/party";
 
 export default function PartyAutocomplete({
   party,
@@ -123,6 +124,7 @@ export const PartyAutocompleteField= ({
     actions: customerFetcher.data?.actions,
     roleActions: roleActions,
   });
+  const p = parties
   const createCustomer = useCreateCustomer();
   const [supplierPermission] = usePermission({
     actions: supplierDebounceFetcher.data?.actions,
@@ -132,10 +134,11 @@ export const PartyAutocompleteField= ({
 
   return (
     <>
-      {(party == partyTypeToJSON(PartyType.purchaseOrder) ||
-        party == partyTypeToJSON(PartyType.purchaseInvoice) ||
-        party == partyTypeToJSON(PartyType.purchaseReceipt) ||
-        party == partyTypeToJSON(PartyType.supplierQuotation)) && (
+      {(party == p.purchaseOrder ||
+        party == p.purchaseInvoice ||
+        party == p.supplier ||
+        party == p.purchaseReceipt ||
+        party == p.supplierQuotation) && (
         <FormAutocompleteField
           required={true}
           data={supplierDebounceFetcher.data?.suppliers || []}
@@ -153,10 +156,11 @@ export const PartyAutocompleteField= ({
         />
       )}
 
-      {(party == partyTypeToJSON(PartyType.saleOrder) ||
-        party == partyTypeToJSON(PartyType.saleInvoice) ||
-        party == partyTypeToJSON(PartyType.deliveryNote) ||
-        party == partyTypeToJSON(PartyType.salesQuotation)) && (
+      {(party == p.saleOrder ||
+        party == p.saleInvoice ||
+        party == p.deliveryNote ||
+        party == p.customer ||
+        party == p.salesQuotation) && (
         <FormAutocompleteField
           required={true}
           data={customerFetcher.data?.customers || []}

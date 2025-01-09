@@ -33,6 +33,10 @@ export const lineItemsColumns = ({
     accessorKey: "item_name",
     header: t("form.name"),
   });
+  columns.push({
+    accessorKey: "uom",
+    header: t("form.uom"),
+  });
   // columns.push({
   //   accessorKey: "item_price.uom",
   //   header: t("form.uom"),

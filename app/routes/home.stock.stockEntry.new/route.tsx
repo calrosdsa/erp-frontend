@@ -3,14 +3,14 @@ import { z } from "zod";
 import apiClient from "~/apiclient";
 import { createJournalEntrySchema } from "~/util/data/schemas/accounting/journal-entry-schema";
 import NewStockEntryClient from "./new-stock-entry.client";
-import { createStockEntrySchema } from "~/util/data/schemas/stock/stock-entry-schema";
+import { mapToStockEntryBody, stockEntryDataSchema } from "~/util/data/schemas/stock/stock-entry-schema";
 import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/order-schema";
 import { format, formatRFC3339 } from "date-fns";
 import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
-  createStockEntry: z.infer<typeof createStockEntrySchema>;
+  stockEntryData: z.infer<typeof stockEntryDataSchema>;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
@@ -22,26 +22,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   console.log("ACTION DATA", data);
   switch (data.action) {
     case "create-stock-entry": {
-      const d = data.createStockEntry;
-      console.log(format(d.postingDate, "yyyy-MM-dd"));
-      const lines = d.items.map((t) => lineItemSchemaToLineData(t));
       const res = await client.POST("/stock-entry", {
-        body: {
-          stock_entry: {
-            entry_type: d.entryType,
-            posting_date: formatRFC3339(d.postingDate),
-            posting_time: d.postingTime,
-            tz: d.tz,
-            currency: d.currency,
-            project:d.projectID,
-            cost_center:d.costCenterID,
-          },
-          items: {
-            lines: lines,
-          },
-        },
+        body: mapToStockEntryBody(data.stockEntryData),
       });
-      console.log(res.error);
       message = res.data?.message;
       error = res.error?.detail;
       stockEntry = res.data?.result;

@@ -1,9 +1,6 @@
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import {
   FetcherWithComponents,
-  useFetcher,
-  useLoaderData,
-  useNavigate,
   useOutletContext,
 } from "@remix-run/react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
@@ -14,13 +11,10 @@ import {
   paymentReferceSchema,
 } from "~/util/data/schemas/accounting/payment-schema";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
-import { removeFromList } from "../home.pricing.new/util/formula";
 import {
   FormEvent,
   MutableRefObject,
   useEffect,
-  useRef,
-  useState,
 } from "react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { GlobalState } from "~/types/app";
@@ -30,15 +24,13 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { PaymentType } from "~/gen/common";
 import { cn } from "@/lib/utils";
 import { Typography } from "@/components/typography";
-import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import SelectForm from "@/components/custom/select/SelectForm";
 
 import { Separator } from "@/components/ui/separator";
-import { PartyAutocompleteForm } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { Input } from "@/components/ui/input";
 import AccordationLayout from "@/components/layout/accordation-layout";
-import { LedgerAutocompleteForm } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { LedgerAutocompleteForm, LedgerAutocompleteFormField } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { formatAmount } from "~/util/format/formatCurrency";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { paymentReferencesColumns } from "@/components/custom/table/columns/accounting/payment-columns";
@@ -47,6 +39,9 @@ import AccountingDimensionForm from "@/components/custom/shared/accounting/accou
 import { DEFAULT_CURRENCY } from "~/constant";
 import { Form } from "@/components/ui/form";
 import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
+import { PartyAutocompleteField } from "../home.order.$partyOrder.new/components/party-autocomplete";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import CustomFormDate from "@/components/custom/form/CustomFormDate";
 
 type PaymentDataType = z.infer<typeof paymentDataSchema>;
 export default function PaymentData({
@@ -54,13 +49,18 @@ export default function PaymentData({
   onSubmit,
   fetcher,
   inputRef,
+  allowEdit,
+  allowCreate,
 }: {
   form: UseFormReturn<PaymentDataType, any, undefined>;
   onSubmit: (e: PaymentDataType) => void;
   fetcher: FetcherWithComponents<any>;
   inputRef: MutableRefObject<HTMLInputElement | null>;
+  allowEdit?:boolean
+  allowCreate?:boolean
 }) {
   const { t, i18n } = useTranslation("common");
+  const {roleActions} = useOutletContext<GlobalState>()
   const paymentTypes = [
     {
       name: t(PaymentType[PaymentType.PAY]),
@@ -90,10 +90,9 @@ export default function PaymentData({
     },
   });
   const formValues = form.getValues();
-  const toolbar = useToolbar();
   const { companyDefaults } = useOutletContext<GlobalState>();
-  const p = parties;
-
+  // const p = parties;
+  const r = routes
 
   const updateAmountFromReferences = () => {
     const totalAllocated = formValues.paymentReferences.reduce(
@@ -104,6 +103,13 @@ export default function PaymentData({
     console.log("TOTAL ALLOCATED", typeof totalAllocated);
     form.trigger("amount");
   };
+  const getAccountBalance = async()=>{
+    const res = fetch(r.toRoute({
+      main:r.p.ledger,
+      routePrefix:[r.p.accounting],
+
+    }))
+  }
 
   useEffect(() => {
     updateAmountFromReferences();
@@ -134,17 +140,24 @@ export default function PaymentData({
             <Typography className=" col-span-full" variant="subtitle2">
               {t("_payment.type")}
             </Typography>
-            {/* <CustomFormDate
-              control={form.control}
-              name="postingDate"
-              label={t("form.date")}
-            /> */}
+            {!allowEdit && 
+            <CustomFormDate
+            control={form.control}
+            name="postingDate"
+            label={t("form.date")}
+            allowEdit={allowEdit}
+            />
+          }
             <SelectForm
               control={form.control}
               data={paymentTypes}
               label={t("form.paymentType")}
               keyName={"name"}
               keyValue={"value"}
+              allowEdit={allowEdit}
+              onValueChange={()=>{
+                form.trigger("partyType")
+              }}
               name="paymentType"
             />
             <Separator className=" col-span-full" />
@@ -155,7 +168,8 @@ export default function PaymentData({
 
             <SelectForm
               form={form}
-              data={p.paymentOptions}
+              data={r.p.paymentOptions}
+              allowEdit={allowEdit}
               label={t("form.partyType")}
               keyName={"name"}
               onValueChange={() => {
@@ -167,13 +181,11 @@ export default function PaymentData({
 
             {formValues.partyType && (
               <div>
-                <PartyAutocompleteForm
+                <PartyAutocompleteField
                   control={form.control}
-                  label={t("form.party")}
-                  partyType={formValues.partyType}
-                  onSelect={(e) => {
-                    form.setValue("partyID", e.id);
-                  }}
+                  party={formValues.partyType}
+                  allowEdit={allowEdit}
+                  roleActions={roleActions}
                 />
               </div>
             )}
@@ -182,64 +194,53 @@ export default function PaymentData({
               {t("form.amount")}
             </Typography>
 
-            <CustomFormField
-              form={form}
-              label={t("form.paidAmount", { o: "BOB" })}
-              name="amount"
-              children={(field) => {
-                return (
-                  <Input
-                    type="number"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                  />
-                );
-              }}
+            <CustomFormFieldInput
+            allowEdit={allowEdit}
+            label={t("form.paidAmount", { o: "BOB" })}
+            control={form.control}
+            name="amount"
+            inputType="input"
             />
+
 
             <Separator className=" col-span-full" />
             <AccordationLayout
-              open={
-                !formValues.accountPaidFromID || !formValues.accountPaidToID
-              }
+              open={true}
               title={t("accounts")}
               containerClassName=" col-span-full"
               className="create-grid"
             >
-              <LedgerAutocompleteForm
+              <LedgerAutocompleteFormField
                 control={form.control}
                 label={t("_ledger.paidFrom")}
-                name="accountPaidFromName"
-                onSelect={(e) => {
-                  form.setValue("accountPaidFromID", e.id);
-                }}
+                name="accountPaidFrom"
+                allowEdit={allowEdit}
               />
-              <LedgerAutocompleteForm
+              <LedgerAutocompleteFormField
                 control={form.control}
                 label={t("_ledger.paidTo")}
-                name="accountPaidToName"
-                onSelect={(e) => {
-                  form.setValue("accountPaidToID", e.id);
-                }}
+                name="accountPaidTo"
+                allowEdit={allowEdit}
+                
               />
             </AccordationLayout>
-            {formValues.partyType && formValues.partyID && (
+            {formValues.partyType && formValues.party?.id && (
               <>
                 <Separator className=" col-span-full" />
                 <Typography className=" col-span-full" variant="subtitle2">
                   {t("table.reference")}
                 </Typography>
-
+                {allowEdit &&
                 <InvoiceAutocompleteForm
-                  label="Facturas"
-                  partyType={p.paymentParties[formValues.partyType] || ""}
-                  partyID={formValues.partyID}
+                label="Facturas"
+                  partyType={r.p.paymentParties[formValues.partyType] || ""}
+                  partyID={formValues.party.id}
+                  allowEdit={allowEdit}
                   onSelect={(e) => {
                     const n: z.infer<typeof paymentReferceSchema> = {
                       partyID: e.id,
-                      partyType: p.paymentParties[formValues.partyType] || "",
+                      currency:e.currency,
+                      partyType: r.p.paymentParties[formValues.partyType] || "",
                       partyName: e.code,
                       grandTotal: formatAmount(e.total_amount),
                       outstanding: formatAmount(e.total_amount - e.paid_amount),
@@ -249,8 +250,8 @@ export default function PaymentData({
                     form.setValue("paymentReferences", nl);
                     form.trigger("paymentReferences");
                   }}
-                />
-                {/* {JSON.stringify(formValues)} */}
+                  />
+                }
                 <div className=" col-span-full">
                   <DataTable
                     data={formValues.paymentReferences}
@@ -277,18 +278,6 @@ export default function PaymentData({
               </>
             )}
 
-            {/* <Button
-              type="button"
-              className=" w-min flex space-x-2 "
-              variant={"outline"}
-              onClick={() => {
-
-              }}
-            >
-              <PlusIcon />
-              <span>Agregar fila</span>
-            </Button> */}
-
             <TaxAndChargesLines
               onChange={(e) => {
                 form.setValue("taxLines", e);
@@ -296,9 +285,11 @@ export default function PaymentData({
               }}
               currency={companyDefaults?.currency || DEFAULT_CURRENCY}
               showTotal={false}
+              allowCreate={allowCreate}
+              allowEdit={allowEdit}
             />
 
-            <AccountingDimensionForm form={form} />
+            <AccountingDimensionForm form={form} allowEdit={allowEdit} />
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

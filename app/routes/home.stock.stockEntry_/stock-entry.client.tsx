@@ -47,6 +47,7 @@ export default function StockEntryClient() {
         }}
         data={paginationResult?.results || []}
         columns={stockEntryColumns({})}
+        enableSizeSelection={true}
       />
     </>
   );

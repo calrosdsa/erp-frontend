@@ -22,7 +22,8 @@ export const lineItemDefault = (opts:{
     uom: "",
     item_name: "",
     item_code: "",
-    item_price_id: 0
+    itemID: 0,
+    unitOfMeasureID:0,
   }
   const lineType = itemLineTypeFromJSON(opts.lineType);
   if (lineType == ItemLineType.ITEM_LINE_RECEIPT || opts.updateStock) {
@@ -48,10 +49,9 @@ export const toLineItemSchema = (
     lineType: line.line_type,
     rate: formatAmount(line.rate),
     quantity: line.quantity,
-    itemLineReference: line.id,
-
-    item_price_id: line.item_price_id,
-    item_price_rate: line.rate,
+    itemLineReferenceID: line.item_line_reference_id,
+    itemID:line.item_id,
+    unitOfMeasureID:line.unit_of_measure_id,
 
     item_name: line.item_name,
     item_code: line.item_code,
@@ -86,7 +86,8 @@ export const schemaToLineItemData = (
   }
 ): components["schemas"]["LineItemData"] => {
   const lineItemData: components["schemas"]["LineItemData"] = {
-    item_price_id: line.item_price_id,
+    item_id: line.itemID,
+    unit_of_measure_id:line.unitOfMeasureID,
     line_type: line.lineType,
     quantity: line.quantity || 0,
     rate: line.rate,
@@ -140,9 +141,11 @@ export const lineItemSchema = z
     itemLineID: z.number().optional(),
     quantity: z.coerce.number().optional(),
     rate: z.coerce.number(),
+    itemID:z.number(),
+    unitOfMeasureID:z.number(),
 
     lineType: z.string(),
-    itemLineReference: z.number().optional(),
+    itemLineReferenceID: z.number().optional().nullable(),
     lineItemReceipt: lineItemReceipt.optional(),
     lineItemStockEntry: lineItemStockEntry.optional(),
     deliveryLineItem: deliveryLineItem.optional(),
@@ -153,8 +156,6 @@ export const lineItemSchema = z
     item_name: z.string(),
     item_code: z.string(),
 
-    item_price_id: z.number(),
-    item_price_rate: z.number().optional(),
 
     party_type: z.string().optional(),
   })

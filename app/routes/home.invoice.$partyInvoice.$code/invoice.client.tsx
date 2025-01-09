@@ -26,6 +26,7 @@ import InvoiceInfoTab from "./components/tab/invoice-info";
 import InvoiceConnectionsTab from "./components/tab/invoice-connections";
 import {
   setUpToolbar,
+  setUpToolbarDetailPage,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
@@ -122,7 +123,7 @@ export default function InvoiceDetailClient() {
     }
   };
 
-  setUpToolbar(() => {
+  setUpToolbarDetailPage((opts) => {
     let actions: ButtonToolbar[] = [];
     let view: ButtonToolbar[] = [];
     const status = stateFromJSON(invoice?.status);
@@ -152,7 +153,6 @@ export default function InvoiceDetailClient() {
         onClick: () => {
           const total = invoice?.total || 0;
           const outstanding = total - Number(totals?.paid);
-
           createPayment.setData({
             amount: outstanding,
             partyUuid: invoice?.party_uuid,
@@ -161,6 +161,10 @@ export default function InvoiceDetailClient() {
             partyName: invoice?.party_name,
             partyReference: invoice?.id,
             paymentType: getPaymentType(partyInvoice),
+            project:invoice?.project,
+            projectID:invoice?.project_id,
+            costCenter:invoice?.cost_center,
+            costCenterID:invoice?.cost_center_id,
             paymentReferences: [
               {
                 partyType: partyInvoice,
@@ -260,7 +264,9 @@ export default function InvoiceDetailClient() {
         },
       });
     }
+    console.log("RENDER TOOLBAR")
     return {
+      ...opts,
       titleToolbar: `${t("_invoice.base")}(${invoice?.code})`,
       status: stateFromJSON(invoice?.status),
       actions: actions,

@@ -40,11 +40,14 @@ import {
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { editReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
-import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
+import { ReceiptData } from "~/routes/home.receipt.$partyReceipt.new/receipt-data";
+import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
+import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
+import { useToast } from "@/components/ui/use-toast";
 
-type EditData = z.infer<typeof editReceiptSchema>;
+type EditData = z.infer<typeof receiptDataSchema>;
 export default function ReceiptInfoTab() {
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
@@ -59,30 +62,58 @@ export default function ReceiptInfoTab() {
   const allowEdit = isDraft && receiptPerm?.edit;
   const allowCreate = isDraft && receiptPerm.create;
   const documentStore = useDocumentStore();
-  const toolbar = useToolbar()
+  const toolbar = useToolbar();
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
-    schema: editReceiptSchema,
+    schema: receiptDataSchema,
     defaultValues: {
       id: receipt?.id,
-      partyID: receipt?.party_id,
-      partyName: receipt?.party_name,
       currency: receipt?.currency,
       postingTime: receipt?.posting_time,
       postingDate: new Date(receipt?.posting_date || ""),
       tz: receipt?.tz,
-      projectID: receipt?.project_id,
-      projectName: receipt?.project,
-      costCenterID: receipt?.cost_center_id,
-      costCenterName: receipt?.cost_center,
+      docReferenceID: receipt?.doc_reference_id,
+      receiptPartyType: partyReceipt,
+      party: {
+        id: receipt?.party_id,
+        name: receipt?.party_name,
+        uuid: receipt?.party_uuid,
+      },
+      project: {
+        id: receipt?.project_id,
+        name: receipt?.project,
+        uuid: receipt?.project_uuid,
+      },
+      costCenter: {
+        id: receipt?.cost_center_id,
+        name: receipt?.cost_center,
+        uuid: receipt?.cost_center_uuid,
+      },
+      priceList: {
+        id: receipt?.price_list_id,
+        name: receipt?.price_list,
+        uuid: receipt?.price_list_uuid,
+      },
+      warehouse: {
+        id: receipt?.warehouse_id,
+        name: receipt?.warehouse,
+        uuid: receipt?.warehouse_uuid,
+      },
+      taxLines: taxLines.map((t) => toTaxAndChargeLineSchema(t)),
+      lines: lineItems.map((t) =>
+        toLineItemSchema(t, {
+          partyType: partyReceipt,
+        })
+      ),
     },
   });
   const formValues = form.getValues();
 
   const onSubmit = (e: EditData) => {
+    console.log("SUBMIT... DATA");
     fetcher.submit(
       {
         action: "edit",
-        editData: e as any,
+        receiptData: e as any,
       },
       {
         method: "POST",
@@ -91,14 +122,16 @@ export default function ReceiptInfoTab() {
     );
   };
 
-  useEffect(()=>{
-    toolbar.setToolbar({
-      onSave: () => inputRef.current?.click(),
-      disabledSave: !hasChanged,
-    })
-  },[hasChanged])
-
-  
+  useEffect(() => {
+    if (allowEdit) {
+      toolbar.setToolbar({
+        onSave: () => {
+          console.log("ON Save", inputRef.current);
+          inputRef.current?.click();
+        },
+      });
+    }
+  }, [allowEdit,toolbar.isMounted]);
 
   useLoadingTypeToolbar(
     {
@@ -129,76 +162,20 @@ export default function ReceiptInfoTab() {
       projectName: receipt?.project,
       costCenterID: receipt?.cost_center_id,
       costCenterName: receipt?.cost_center,
+      priceListID: receipt?.price_list_id,
+      priceListName: receipt?.price_list,
     });
   }, [receipt]);
   return (
-    <Form {...form}>
-      <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className=" info-grid">
-          <PartyAutocomplete
-            party={partyReceipt}
-            roleActions={roleActions}
-            form={form}
-            allowEdit={allowEdit}
-          />
-          <CustomFormDate
-            control={form.control}
-            name="postingDate"
-            allowEdit={allowEdit}
-            label={t("form.postingDate")}
-          />
-          <CustomFormTime
-            control={form.control}
-            name="postingTime"
-            label={t("form.postingTime")}
-            allowEdit={allowEdit}
-            description={formValues.tz}
-          />
-
-          <CurrencyAutocompleteForm
-            control={form.control}
-            name="currency"
-            label={t("form.currency")}
-            allowEdit={allowEdit}
-          />
-
-          <Separator className=" col-span-full" />
-
-          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-          <LineItemsDisplay
-            currency={receipt?.currency || companyDefaults?.currency || ""}
-            status={receipt?.status || ""}
-            lineItems={lineItems}
-            allowCreate={allowCreate}
-            allowEdit={allowEdit}
-            docPartyType={partyReceipt}
-            docPartyID={receipt?.id}
-            lineType={
-              partyReceipt == partyTypeToJSON(PartyType.purchaseReceipt)
-                ? itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)
-                : itemLineTypeToJSON(ItemLineType.DELIVERY_LINE_ITEM)
-            }
-          />
-          {receipt && (
-            <>
-              <TaxAndCharges
-                currency={receipt.currency}
-                status={receipt.status}
-                taxLines={taxLines}
-                docPartyID={receipt.id}
-                docPartyType={partyReceipt}
-                allowCreate={allowCreate}
-                allowEdit={allowEdit}
-              />
-
-              <GrandTotal currency={receipt.currency} />
-
-              <TaxBreakup currency={receipt.currency} />
-            </>
-          )}
-        </div>
-        <input className="hidden" type="submit" ref={inputRef} />
-      </fetcher.Form>
-    </Form>
+    <>
+      <ReceiptData
+        inputRef={inputRef}
+        form={form}
+        fetcher={fetcher}
+        onSubmit={onSubmit}
+        allowCreate={allowCreate}
+        allowEdit={allowEdit}
+      />
+    </>
   );
 }

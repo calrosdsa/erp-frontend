@@ -6,13 +6,14 @@ import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schem
 import { z } from "zod";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
-import { partyReferencesToDto, paymentDataSchema } from "~/util/data/schemas/accounting/payment-schema";
+import { mapToPaymentBody, partyReferencesToDto, paymentDataSchema } from "~/util/data/schemas/accounting/payment-schema";
 import { formatRFC3339 } from "date-fns";
+import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
-  editData: z.infer<typeof paymentDataSchema>;
+  paymentData: z.infer<typeof paymentDataSchema>;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -23,23 +24,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let actionRes = LOAD_ACTION;
   switch (data.action) {
     case "edit": {
-      const d = data.editData;
-      const paymentReferences = d.paymentReferences?.map((t) =>
-        partyReferencesToDto(t)
-      );
-
       const res = await client.PUT("/payment", {
-        body: {
-          id: d.id || 0,
-          amount: d.amount,
-          payment_type: d.paymentType,
-          posting_date: formatRFC3339(d.postingDate),
-          payment_references: paymentReferences,
-          party_id: d.partyID,
-          // party_reference:d.partyReference,
-          paid_from_id: d.accountPaidFromID,
-          paid_to_id: d.accountPaidToID,
-        },
+        body: mapToPaymentBody(data.paymentData),
       });
       error = res.error?.detail;
       message = res.data?.message;
@@ -78,6 +64,10 @@ export function shouldRevalidate({
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
+  const url = new URL(request.url)
+  const searchParams= url.searchParams
+  const tab = searchParams.get("tab")
+  let taxLines: components["schemas"]["TaxAndChargeLineDto"][] = [];
   const res = await client.GET("/payment/detail/{id}", {
     params: {
       path: {
@@ -86,11 +76,28 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
+  if (res.data) {
+    switch(tab){
+      case "info":{
+        const taxLinesRes = await client.GET("/taxes-and-charges", {
+          params: {
+            query: {
+              id: res.data.result.entity.id.toString(),
+          },
+        },
+      });
+      taxLines = taxLinesRes.data?.result || []
+      break
+    }
+  }
+}
+
   return json({
     payment: res.data?.result.entity,
     actions: res.data?.actions,
     associatedActions: res.data?.associated_actions,
     activities: res.data?.result.activities || [],
+    taxLines:taxLines,
   });
 };
 

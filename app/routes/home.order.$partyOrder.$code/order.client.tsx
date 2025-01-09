@@ -28,7 +28,11 @@ import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schem
 import DetailLayout from "@/components/layout/detail-layout";
 import OrderInfoTab from "./components/tab/order-info";
 import OrderConnectionsTab from "./components/tab/order-connections";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  setUpToolbarDetailPage,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { useCreatePurchaseInvoice } from "../home.invoice.$partyInvoice.new/use-purchase-invoice";
@@ -60,7 +64,7 @@ export default function PurchaseOrderClient() {
   const [deliveryNotePermission] = usePermission({
     actions: associatedActions && associatedActions[Entity.DELIVERY_NOTE],
     roleActions: globalState.roleActions,
-  })
+  });
   const { t, i18n } = useTranslation("common");
   const r = routes;
   const navigate = useNavigate();
@@ -114,114 +118,130 @@ export default function PurchaseOrderClient() {
         return "";
     }
   };
-  setUpToolbar((opts) => {
-    console.log("SET UP TOOLBAR...")
-    const actions: ButtonToolbar[] = [];
-    const status = stateFromJSON(order?.status);
-    if (paymentPermission?.create) {
-      actions.push({
-        label: t("_payment.base"),
-        onClick: () => {
-          navigate(r.toPaymentCreate());
-        },
-        Icon: PlusIcon,
-      });
-    }
-    if (saleInvoicePermission?.create && enabledOrder) {
-      actions.push({
-        label: t("f.sale", { o: t("_invoice.base") }),
-        onClick: () => {
-          navigate(
-            r.toRoute({
-              main: getInvoicePartyType(partyOrder),
-              routePrefix: [r.invoiceM],
-              routeSufix: ["new"],
-            })
-          );
-        },
-        Icon: PlusIcon,
-      });
-    }
-    if (
-      purchaseInvoicePermission?.create &&
-      enabledOrder &&
-      status != State.TO_RECEIVE
-    ) {
-      actions.push({
-        label: t("f.purchase", { o: t("_invoice.base") }),
-        onClick: () => {
-          navigate(
-            r.toRoute({
-              main: getInvoicePartyType(partyOrder),
-              routePrefix: [r.invoiceM],
-              routeSufix: ["new"],
-            })
-          );
-        },
-        Icon: PlusIcon,
-      });
-    }
-    if (receiptPermission?.create && enabledOrder && !toBill) {
-      actions.push({
-        label: t("f.purchase", { o: t("_receipt.base") }),
-        onClick: () => {
-          navigate(
-            r.toRoute({
-              main: partyTypeToJSON(PartyType.purchaseReceipt),
-              routePrefix: [r.receiptM],
-              routeSufix: ["new"],
-            })
-          );
-        },
-        Icon: PlusIcon,
-      });
-    }
-
-    if (deliveryNotePermission?.create && enabledOrder && !toBill) {
-      actions.push({
-        label: t("deliveryNote"),
-        onClick: () => {
-          navigate(
-            r.toRoute({
-              main: partyTypeToJSON(PartyType.deliveryNote),
-              routePrefix: [r.receiptM],
-              routeSufix: ["new"],
-            })
-          );
-        },
-        Icon: PlusIcon,
-      });
-    }
-    return {
-      ...opts,
-      actions: actions,
-      titleToolbar: `${t("_order.base")}(${order?.code})`,
-      status: stateFromJSON(order?.status),
-      onChangeState: (e) => {
-        const body: z.infer<typeof updateStatusWithEventSchema> = {
-          current_state: order?.status || "",
-          party_type: params.partyOrder || "",
-          party_id: order?.code || "",
-          events: [e],
-        };
-        fetcher.submit(
-          {
-            action: "update-status-with-event",
-            updateStatusWithEvent: body,
+  setUpToolbarDetailPage(
+    (opts) => {
+      console.log("SET UP TOOLBAR...");
+      const actions: ButtonToolbar[] = [];
+      const status = stateFromJSON(order?.status);
+      if (paymentPermission?.create) {
+        actions.push({
+          label: t("_payment.base"),
+          onClick: () => {
+            navigate(r.toPaymentCreate());
           },
-          {
-            method: "POST",
-            encType: "application/json",
-          }
-        );
-      },
-    };
-  }, [order,purchaseInvoicePermission, receiptPermission, order,deliveryNotePermission]);
+          Icon: PlusIcon,
+        });
+      }
+      if (
+        saleInvoicePermission?.create &&
+        enabledOrder &&
+        status != State.TO_DELIVER
+      ) {
+        actions.push({
+          label: t("f.sale", { o: t("_invoice.base") }),
+          onClick: () => {
+            navigate(
+              r.toRoute({
+                main: getInvoicePartyType(partyOrder),
+                routePrefix: [r.invoiceM],
+                routeSufix: ["new"],
+              })
+            );
+          },
+          Icon: PlusIcon,
+        });
+      }
+      if (
+        purchaseInvoicePermission?.create &&
+        enabledOrder &&
+        status != State.TO_RECEIVE
+      ) {
+        actions.push({
+          label: t("f.purchase", { o: t("_invoice.base") }),
+          onClick: () => {
+            navigate(
+              r.toRoute({
+                main: getInvoicePartyType(partyOrder),
+                routePrefix: [r.invoiceM],
+                routeSufix: ["new"],
+              })
+            );
+          },
+          Icon: PlusIcon,
+        });
+      }
+      if (receiptPermission?.create && enabledOrder && !toBill) {
+        actions.push({
+          label: t("f.purchase", { o: t("_receipt.base") }),
+          onClick: () => {
+            navigate(
+              r.toRoute({
+                main: partyTypeToJSON(PartyType.purchaseReceipt),
+                routePrefix: [r.receiptM],
+                routeSufix: ["new"],
+              })
+            );
+          },
+          Icon: PlusIcon,
+        });
+      }
 
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"STATE"
-  }, [fetcher.state]);
+      if (deliveryNotePermission?.create && enabledOrder && !toBill) {
+        actions.push({
+          label: t("deliveryNote"),
+          onClick: () => {
+            navigate(
+              r.toRoute({
+                main: partyTypeToJSON(PartyType.deliveryNote),
+                routePrefix: [r.receiptM],
+                routeSufix: ["new"],
+              })
+            );
+          },
+          Icon: PlusIcon,
+        });
+      }
+      return {
+        ...opts,
+        actions: actions,
+        titleToolbar: `${t("_order.base")}(${order?.code})`,
+        status: stateFromJSON(order?.status),
+        onChangeState: (e) => {
+          const body: z.infer<typeof updateStatusWithEventSchema> = {
+            current_state: order?.status || "",
+            party_type: params.partyOrder || "",
+            party_id: order?.code || "",
+            events: [e],
+          };
+          fetcher.submit(
+            {
+              action: "update-status-with-event",
+              updateStatusWithEvent: body,
+            },
+            {
+              method: "POST",
+              encType: "application/json",
+            }
+          );
+        },
+      };
+    },
+    [
+      order,
+      purchaseInvoicePermission,
+      receiptPermission,
+      order,
+      deliveryNotePermission,
+    ]
+  );
+
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "STATE",
+    },
+    [fetcher.state]
+  );
 
   useDisplayMessage(
     {

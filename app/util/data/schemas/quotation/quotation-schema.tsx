@@ -1,50 +1,11 @@
 import { z } from "zod";
 import { lineItemSchema } from "../stock/line-item-schema";
 import { mapToTaxAndChargeData, taxAndChargeSchema } from "../accounting/tax-and-charge-schema";
-import { field, fieldNull } from "..";
+import validateRequiredField, { field, fieldNull } from "..";
 import { components } from "~/sdk";
 import { formatRFC3339 } from "date-fns";
 import { lineItemSchemaToLineData } from "../buying/order-schema";
 
-export const createQuotationSchema = z
-  .object({
-    partyName:z.string(),
-    partyID: z.number(),
-
-    postingDate: z.date(),
-    postingTime: z.string(),
-    tz:z.string(),
-    validTill:z.date(),
-    currency: z.string(),
-
-    project:z.string().optional(),
-    projectID:z.number().optional(),
-
-    costCenter:z.string().optional(),
-    costCenterID:z.number().optional(),
-
-    lines: z.array(lineItemSchema),
-    taxLines: z.array(taxAndChargeSchema),
-  })
-
-  export const editQuotationSchema = z
-  .object({
-    id:z.number(),
-    partyName:z.string(),
-    partyID: z.number(),
-
-    postingDate: z.date(),
-    postingTime: z.string(),
-    tz:z.string(),
-    validTill:z.date(),
-    currency: z.string(),
-
-    projectName:z.string().optional(),
-    projectID:z.number().optional(),
-
-    costCenterName:z.string().optional(),
-    costCenterID:z.number().optional(),
-  })
 
 
   export const quotationDataSchema = z.object({
@@ -65,7 +26,14 @@ export const createQuotationSchema = z
     priceList:fieldNull,
     project:fieldNull,
     costCenter:fieldNull,
-  })
+  }).superRefine((data, ctx) => {
+     validateRequiredField({
+          data: {
+            party: data.party?.id == undefined,
+          },
+          ctx: ctx,
+        });
+  });
 
   export const mapToQuotationData =(
     e:z.infer<typeof quotationDataSchema>,

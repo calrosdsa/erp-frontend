@@ -7,7 +7,45 @@ import { routes } from "~/util/route"
 import { usePermission } from "../useActions"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import { Control } from "react-hook-form"
+import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField"
 
+
+
+export const LedgerAutocompleteFormField = ({
+  allowEdit = true,
+  control,
+  label,
+  name,
+  isGroup = false,
+  roleActions,
+}: {
+  allowEdit?: boolean;
+  control?: Control<any, any>;
+  label?: string;
+  name?: string;
+  isGroup?: boolean;
+  roleActions?: components["schemas"]["RoleActionDto"][];
+}) => {
+  const [fetcherDebounce, onChange] = useAccountLedgerDebounceFetcher({
+    isGroup,
+  });
+  // const [permission] = usePermission({
+  //   actions:fetcherDebounce.data?.actions,
+  //   roleActions,
+  // });
+
+  return (
+    <FormAutocompleteField
+      data={fetcherDebounce.data?.accounts || []}
+      onValueChange={onChange}
+      label={label}
+      name={name || "ledger"}
+      nameK="name"
+      control={control}
+      allowEdit={allowEdit}
+    />
+  );
+};
 
 export const LedgerAutocompleteForm = ({
     allowEdit = true,

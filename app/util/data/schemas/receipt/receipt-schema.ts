@@ -7,31 +7,31 @@ import {
   deliveryLineItem,
 } from "../stock/line-item-schema";
 import { ItemLineType, PartyType, partyTypeToJSON } from "~/gen/common";
-import { taxAndChargeSchema } from "../accounting/tax-and-charge-schema";
-import { field, fieldNull } from "..";
+import {
+  mapToTaxAndChargeData,
+  taxAndChargeSchema,
+} from "../accounting/tax-and-charge-schema";
+import validateRequiredField, { field, fieldNull } from "..";
+import { components } from "~/sdk";
+import { lineItemSchemaToLineData } from "../buying/order-schema";
+import { formatRFC3339 } from "date-fns";
 
 export const receiptDataSchema = z
   .object({
-    id:z.number().optional(),
-    referenceID: z.number().optional(),
+    id: z.number().optional(),
+    docReferenceID: z.number().optional().nullable(),
     receiptPartyType: z.string(),
     party: field.optional(),
-    
+
     // name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
     postingDate: z.date(),
     postingTime: z.string(),
     tz: z.string(),
     currency: z.string(),
 
-    acceptedWarehouseName: z.string().optional(),
-    acceptedWarehouseID: z.number().optional(),
-    rejectedWarehouseName: z.string().optional(),
-    rejectedWarehouseID: z.number().optional(),
+    warehouse: field.optional(),
 
-    sourceWarehouse: z.number().optional(),
-    sourceWarehouseName: z.string().optional(),
-
-   project: fieldNull,
+    project: fieldNull,
     costCenter: fieldNull,
     priceList: fieldNull,
 
@@ -39,75 +39,79 @@ export const receiptDataSchema = z
     taxLines: z.array(taxAndChargeSchema),
   })
   .superRefine((data, ctx) => {
+    validateRequiredField({
+      data: {
+        warehouse: data.warehouse?.id == undefined,
+        party: data.party?.id == undefined,
+      },
+      ctx: ctx,
+    });
 
-    if (data.acceptedWarehouseName && data.acceptedWarehouseID) {
+    if (
+      data.warehouse &&
+      data.receiptPartyType == partyTypeToJSON(PartyType.purchaseReceipt)
+    ) {
       data.lines = data.lines.map((t, i) => {
         const lineReceipt: z.infer<typeof lineItemReceipt> = {
           acceptedQuantity: t.lineItemReceipt?.acceptedQuantity || 0,
           rejectedQuantity: t.lineItemReceipt?.rejectedQuantity || 0,
           acceptedWarehouseID:
-            t.lineItemReceipt?.acceptedWarehouseID || data.acceptedWarehouseID,
+            t.lineItemReceipt?.acceptedWarehouseID || data.warehouse?.id,
           acceptedWarehouse:
-            t.lineItemReceipt?.acceptedWarehouse ||
-            data.acceptedWarehouseName,
-          rejectedWarehouseID:
-            t.lineItemReceipt?.rejectedWarehouseID || data.rejectedWarehouseID,
-          rejectedWarehouse:
-            t.lineItemReceipt?.rejectedWarehouse ||
-            data.rejectedWarehouseName,
+            t.lineItemReceipt?.acceptedWarehouse || data.warehouse?.name,
+          // rejectedWarehouseID:
+          //   t.lineItemReceipt?.rejectedWarehouseID || data.warehouse.id,
+          // rejectedWarehouse:
+          //   t.lineItemReceipt?.rejectedWarehouse || data.ware,
         };
         t.lineItemReceipt = lineReceipt;
         return t;
       });
-    } else if (
-      data.receiptPartyType == partyTypeToJSON(PartyType.purchaseReceipt)
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        params: {
-          i18n: { key: "custom.required" },
-        },
-        path: ["acceptedWarehouseName"],
-      });
     }
 
     //For sale invoice
-    if (data.sourceWarehouse && data.sourceWarehouseName) {
+    if (
+      data.warehouse &&
+      data.receiptPartyType == partyTypeToJSON(PartyType.deliveryNote)
+    ) {
       data.lines = data.lines.map((t, i) => {
         const deliveryLine: z.infer<typeof deliveryLineItem> = {
-          sourceWarehouseID: data.sourceWarehouse,
-          sourceWarehouse: data.sourceWarehouseName,
+          sourceWarehouseID: data.warehouse?.id,
+          sourceWarehouse: data.warehouse?.name,
         };
         t.deliveryLineItem = deliveryLine;
         return t;
-      });
-    } else if (
-      data.receiptPartyType == partyTypeToJSON(PartyType.saleInvoice)
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        params: {
-          i18n: { key: "custom.required" },
-        },
-        path: ["sourceWarehouseName"],
       });
     }
   });
 // E
 
-export const editReceiptSchema = z.object({
-  id: z.number(),
-  partyName: z.string(),
-  partyID: z.number(),
-
-  postingDate: z.date(),
-  postingTime: z.string(),
-  tz: z.string(),
-  currency: z.string(),
-
-  projectName: z.string().optional(),
-  projectID: z.number().optional(),
-
-  costCenterName: z.string().optional(),
-  costCenterID: z.number().optional(),
-});
+export const mapToReceiptData = (
+  e: z.infer<typeof receiptDataSchema>
+): components["schemas"]["ReceiptBody"] => {
+  const d: components["schemas"]["ReceiptData"] = {
+    fields: {
+      cost_center_id: e.costCenter?.id,
+      currency: e.currency,
+      doc_reference_id: e.docReferenceID || null,
+      party_id: e.party?.id || 0,
+      posting_date: formatRFC3339(e.postingDate),
+      posting_time: e.postingTime,
+      price_list_id: e.priceList?.id,
+      project_id: e.project?.id,
+      tz: e.tz,
+      warehouse_id: e.warehouse?.id || 0,
+    },
+    id: e.id || 0,
+    receipt_party_type: e.receiptPartyType,
+  };
+  return {
+    receipt: d,
+    items: {
+      lines: e.lines.map((t) => lineItemSchemaToLineData(t)),
+    },
+    tax_and_charges: {
+      lines: e.taxLines.map((t) => mapToTaxAndChargeData(t)),
+    },
+  };
+};

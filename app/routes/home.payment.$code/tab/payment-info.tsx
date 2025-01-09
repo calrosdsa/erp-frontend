@@ -23,12 +23,13 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import PaymentData from "~/routes/home.payment.new/payment-data";
 import { isEmpty } from "lodash";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
 type PaymentDataSchema = z.infer<typeof paymentDataSchema>;
 export default function PaymentInfoTab() {
   const { t, i18n } = useTranslation("common");
   const r = routes;
-  const { payment, actions } = useLoaderData<typeof loader>();
+  const { payment, actions,taxLines } = useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const [permission] = usePermission({ actions, roleActions });
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -42,27 +43,41 @@ export default function PaymentInfoTab() {
       partyType: payment?.party_type,
       paymentType: payment?.payment_type,
       // paymentTypeT: t(payment?.payment_type || ""),
-      party: payment?.party_name,
-      partyID: payment?.party_id,
-      accountPaidFromID: payment?.paid_from_id,
-      accountPaidFromName: payment?.paid_from_name,
-      accountPaidToID: payment?.paid_to_id,
-      accountPaidToName: payment?.paid_to_name,
+      party:{
+        id:payment?.party_id,
+        name:payment?.party_name,
+      },
+      accountPaidFrom:{
+        id:payment?.paid_from_id,
+        name:payment?.paid_from_name,
+      },
+      accountPaidTo:{
+        id:payment?.paid_to_id,
+        name:payment?.paid_to_name,
+      },
       paymentReferences:
         payment?.payment_references?.map((t) =>
           mapToPaymentReferenceSchema(t)
         ) || [],
-      taxLines: [],
-      project: payment?.project,
-      projectID: payment?.project_id,
-      costCenterID: payment?.cost_center_id,
-      costCenter: payment?.cost_center,
+      taxLines: taxLines.map((t) => toTaxAndChargeLineSchema(t)),
+      project: {
+        id: payment?.project_id,
+        name: payment?.project,
+        uuid: payment?.project_uuid,
+      },
+      costCenter: {
+        id: payment?.cost_center_id,
+        name: payment?.cost_center,
+        uuid: payment?.cost_center_uuid,
+      },
     },
   });
   const formValues = form.getValues();
   const toolbar = useToolbar();
   const allowEdit =
-    permission?.edit || stateFromJSON(payment?.status) == State.DRAFT;
+    permission?.edit && stateFromJSON(payment?.status) == State.DRAFT;
+  const allowCreate =
+    permission?.create && stateFromJSON(payment?.status) == State.DRAFT;
 
   const onSubmit = (e: PaymentDataSchema) => {
     fetcher.submit(
@@ -86,11 +101,13 @@ export default function PaymentInfoTab() {
   );
 
   useEffect(() => {
-    toolbar.setToolbar({
-      onSave: () => inputRef.current?.click(),
-      disabledSave: !hasChanged,
-    });
-  }, [hasChanged]);
+    if(allowEdit) {
+      toolbar.setToolbar({
+        onSave: () => inputRef.current?.click(),
+        disabledSave: !hasChanged,
+      });
+    }
+  }, [permission,toolbar.isMounted  ]);
 
   useDisplayMessage(
     {
@@ -105,14 +122,14 @@ export default function PaymentInfoTab() {
 
   return (
     <>
-      {!isEmpty(formValues) && (
         <PaymentData
           form={form}
           onSubmit={onSubmit}
           inputRef={inputRef}
           fetcher={fetcher}
+          allowEdit={allowEdit}
+          allowCreate={allowCreate}
         />
-      )}
     </>
   );
 }

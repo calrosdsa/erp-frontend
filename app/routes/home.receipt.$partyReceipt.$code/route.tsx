@@ -18,13 +18,14 @@ import {
 } from "~/gen/common";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
-import { editReceiptSchema } from "~/util/data/schemas/receipt/receipt-schema";
 import { formatRFC3339 } from "date-fns";
+import { components } from "~/sdk";
+import { mapToReceiptData, receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
 
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
-  editData: z.infer<typeof editReceiptSchema>;
+  receiptData: z.infer<typeof receiptDataSchema>;
 };
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const client = apiClient({ request });
@@ -43,19 +44,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
     case "edit": {
-      const d = data.editData;
       const res = await client.PUT("/receipt", {
-        body: {
-          party_id: d.partyID,
-          party_receipt: params.partyReceipt || "",
-          posting_date: formatRFC3339(d.postingDate),
-          posting_time: d.postingTime,
-          tz: d.tz,
-          project: d.projectID,
-          cost_center: d.costCenterID,
-          currency: d.currency,
-          id: d.id,
-        },
+        body: mapToReceiptData(data.receiptData),
       });
       message = res.data?.message;
       error = res.error?.detail;
@@ -90,10 +80,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const tab = searchParams.get("tab");
   let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
-  let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
-    undefined;
-  let taxLinesRes: Promise<FetchResponse<any, any, any>> | undefined =
-    undefined;
+  // let lineItemRes: Promise<FetchResponse<any, any, any>> | undefined =
+  //   undefined;
+  // let taxLinesRes: Promise<FetchResponse<any, any, any>> | undefined =
+  //   undefined;
   const res = await client.GET("/receipt/detail/{id}", {
     params: {
       path: {
@@ -105,6 +95,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
+  let lineItems: components["schemas"]["LineItemDto"][] = [];
+  let taxLines: components["schemas"]["TaxAndChargeLineDto"][] = [];
   if (res.data) {
     switch (tab) {
       case "connections": {
@@ -122,7 +114,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         break;
       }
       case "info": {
-        lineItemRes =  client.GET("/item-line", {
+        const lineItemRes =await  client.GET("/item-line", {
           params: {
             query: {
               line_type:
@@ -134,13 +126,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
-        taxLinesRes = client.GET("/taxes-and-charges", {
+        lineItems = lineItemRes.data?.result || []
+        const taxLinesRes = await client.GET("/taxes-and-charges", {
           params: {
             query: {
               id: res.data.result.entity.receipt.id.toString(),
             },
           },
         });
+        taxLines = taxLinesRes.data?.result || []
         // console.log("ITEM LINES", lineItemResd.error, lineItemResd.data);
         break;
       }
@@ -154,8 +148,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     associatedActions: res.data?.associated_actions,
     connections: resConnections,
     activities: res.data?.result.activities,
-    lineItems: lineItemRes,
-    taxLines: taxLinesRes,
+    lineItems: lineItems,
+    taxLines: taxLines,
   });
 };
 

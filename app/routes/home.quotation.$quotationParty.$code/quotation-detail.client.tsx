@@ -137,7 +137,7 @@ export default function QuotationDetailClient() {
         );
       },
     };
-  }, [quotation,poPermission,soPermission,qPermission,t]);
+  }, [quotation,poPermission,soPermission,qPermission]);
 
   useLoadingTypeToolbar({
     loading:fetcher.state == "submitting",
@@ -163,6 +163,7 @@ export default function QuotationDetailClient() {
       partyID={quotation?.id}
       navItems={navItems}
     >
+
       {tab == "info" && <QuotationInfoTab />}
       {tab == "connections" && <QuotationConnections />}
     </DetailLayout>

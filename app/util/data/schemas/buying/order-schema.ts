@@ -6,7 +6,7 @@ import {
   mapToTaxAndChargeData,
   taxAndChargeSchema,
 } from "../accounting/tax-and-charge-schema";
-import { field, fieldNull } from "..";
+import validateRequiredField, { field, fieldNull } from "..";
 import { formatRFC3339 } from "date-fns";
 
 export const orderDataSchema = z.object({
@@ -25,15 +25,12 @@ export const orderDataSchema = z.object({
   lines: z.array(lineItemSchema),
   taxLines: z.array(taxAndChargeSchema),
 }).superRefine((data, ctx) => {
-  if (data.party?.id == undefined) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      params: {
-        i18n: { key: "custom.required" },
-      },
-      path: ["party"],
-    });
-  }
+   validateRequiredField({
+        data: {
+          party: data.party?.id == undefined,
+        },
+        ctx: ctx,
+      });
 });
 
 export const editOrderSchema = z.object({
@@ -60,9 +57,10 @@ export const lineItemSchemaToLineData = (
   const line: components["schemas"]["LineItemData"] = {
     rate: d.rate,
     quantity: Number(d.quantity),
-    item_price_id: Number(d.item_price_id),
+    item_id: d.itemID,
+    unit_of_measure_id:d.unitOfMeasureID,
     line_type: d.lineType,
-    item_line_reference: d.itemLineReference,
+    item_line_reference_id: d.itemLineReferenceID,
   };
   if (d.deliveryLineItem?.sourceWarehouseID) {
     line.delivery_line_item = {

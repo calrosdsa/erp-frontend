@@ -184,7 +184,7 @@ export default function ToolBar({ title }: { title: string }) {
             </>
           )}
 
-          {(onSave) && (
+          {(onSave && !disabledSave) && (
             <Button
               size={"sm"}
               onClick={() => {
@@ -201,10 +201,10 @@ export default function ToolBar({ title }: { title: string }) {
               // loading={
               //   toolbarState.loading && toolbarState.loadingType == "SAVE"
               // }
-              disabled={disabledSave}
+              // disabled={disabledSave}
               variant={"outline"}
             >
-              {t("form.save")} 
+              {t("form.save")}
             </Button>
           )}
 

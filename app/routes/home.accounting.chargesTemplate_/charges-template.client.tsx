@@ -7,6 +7,7 @@ import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { chargesTemplateColumns } from "@/components/custom/table/columns/accounting/charges-templates-columns";
 import { routes } from "~/util/route";
+import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 
 export default function ChargesTemplateClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -17,10 +18,12 @@ export default function ChargesTemplateClient() {
   });
   const navigate = useNavigate()
   const r = routes
+  const {reset} = useTaxAndCharges()
   setUpToolbar(() => {
     return {
       ...(permission?.create && {
         addNew: () => {
+          reset()
           navigate(r.toRoute({
             main:r.chargesTemplate,
             routePrefix:[r.accountingM],

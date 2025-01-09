@@ -6,10 +6,12 @@ import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
 import { z } from "zod";
 import { editAccountLedger } from "~/util/data/schemas/accounting/account-schema";
+import { components, operations } from "~/sdk";
 
 type ActionData = {
   action: string;
   editData: z.infer<typeof editAccountLedger>;
+  accountBalanceQuery: operations["account-balance"]["parameters"]["query"];
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -17,8 +19,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  let balance: components["schemas"]["GeneralLedgerOpening"] | undefined =
+    undefined;
   let actionRes = LOAD_ACTION;
   switch (data.action) {
+    case "account-balance": {
+      const res = await client.GET("/accounting/report/account-balance", {
+        params: {
+          query: data.accountBalanceQuery,
+        },
+      });
+      balance = res.data?.result
+      break;
+    }
     case "edit": {
       const d = data.editData;
       const res = await client.PUT("/ledger", {
@@ -44,6 +57,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     message,
     action: actionRes,
+    balance,
   });
 };
 

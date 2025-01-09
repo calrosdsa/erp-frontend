@@ -21,19 +21,31 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 export default function PaymentCreateClient() {
   const { associatedActions, paymentAccounts } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
-  const { t, i18n } = useTranslation("common");
-  const createPayment = useCreatePayment();
+  const {payload} = useCreatePayment();
+  const toolbar = useToolbar()
   const form = useForm<z.infer<typeof paymentDataSchema>>({
     resolver: zodResolver(paymentDataSchema),
     defaultValues: {
-      amount: formatAmount(createPayment.payload?.amount),
-      paymentType: createPayment.payload?.paymentType,
-      party: createPayment.payload?.partyName,
-      partyID: createPayment.payload?.partyID,
-      partyType: createPayment.payload?.partyType,
-      partyReference: createPayment.payload?.partyReference,
-      paymentReferences: createPayment.payload?.paymentReferences || [],
+      amount: formatAmount(payload?.amount),
+      paymentType: payload?.paymentType,
       postingDate: new Date(),
+      partyType: payload?.partyType,
+
+      party:{
+        id:payload?.partyID,
+        name:payload?.partyName,
+      },
+      costCenter:{
+        name:payload?.costCenter,
+        id:payload?.costCenterID,
+      },
+      project: {
+        name:payload?.project,
+        id:payload?.projectID,
+      },
+      partyReference: payload?.partyReference,
+
+      paymentReferences: payload?.paymentReferences || [],
       taxLines: [],
     },
   });
@@ -47,27 +59,36 @@ export default function PaymentCreateClient() {
   const onPartyTypeChange = (d: z.infer<typeof paymentDataSchema>) => {
     switch (d.partyType) {
       case partyTypeToJSON(PartyType.customer):
-        form.setValue("accountPaidFromID", paymentAccounts?.receivable_acct_id);
-        form.setValue("accountPaidFromName", paymentAccounts?.receivable_acct);
-        form.setValue("accountPaidToID", paymentAccounts?.cash_acct_id);
-        form.setValue("accountPaidToName", paymentAccounts?.cash_acct);
+        form.setValue("accountPaidTo", {
+          id:paymentAccounts?.cash_acct_id,
+          name:paymentAccounts?.cash_acct,
+        });
+        form.setValue("accountPaidFrom", {
+          id:paymentAccounts?.receivable_acct_id,
+          name:paymentAccounts?.receivable_acct,
+        });
         break;
       case partyTypeToJSON(PartyType.supplier):
-        form.setValue("accountPaidToID", paymentAccounts?.payable_acct_id);
-        form.setValue("accountPaidToName", paymentAccounts?.payable_acct);
-        form.setValue("accountPaidFromID", paymentAccounts?.cash_acct_id);
-        form.setValue("accountPaidFromName", paymentAccounts?.cash_acct);
+        form.setValue("accountPaidTo", {
+          id:paymentAccounts?.payable_acct_id,
+          name:paymentAccounts?.payable_acct,
+        });
+        form.setValue("accountPaidFrom", {
+          id:paymentAccounts?.cash_acct_id,
+          name:paymentAccounts?.cash_acct,
+        });
+        
         break;
     }
-    form.trigger("accountPaidFromID");
-    form.trigger("accountPaidToID");
+    
   };
 
   const onSubmit = (values: z.infer<typeof paymentDataSchema>) => {
+    console.log("SUBMIT PAYMENT")
     fetcher.submit(
       {
         action: "create-payment",
-        createPayment: values as any,
+        paymentData: values as any,
       },
       {
         method: "POST",
@@ -84,12 +105,12 @@ export default function PaymentCreateClient() {
   //   });
   // };
 
-  setUpToolbar(() => {
-    return {
+  useEffect(() => {
+    toolbar.setToolbar({
       onSave: () => {
         inputRef.current?.click();
       },
-    };
+    })
   }, []);
 
   useEffect(() => {
@@ -121,6 +142,7 @@ export default function PaymentCreateClient() {
         form={form}
         onSubmit={onSubmit}
         fetcher={fetcher}
+        allowEdit={true}
         inputRef={inputRef}
       />
     </Card>
