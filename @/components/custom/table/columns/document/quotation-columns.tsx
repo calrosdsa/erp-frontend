@@ -66,7 +66,7 @@ export const quotationColumns = ({quotationType}:{
 
   columns.push({
     accessorKey: "posting_date",
-    header: t("table.postingDate"),
+    header: t("form.postingDate"),
     cell: ({ ...props }) => (
       <TableCellDate {...props} i18n={i18n} formatDate="medium" />
     ),

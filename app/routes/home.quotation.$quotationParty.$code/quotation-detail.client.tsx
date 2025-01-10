@@ -17,7 +17,7 @@ import { z } from "zod";
 import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarDetailPage, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
 import QuotationConnections from "./components/tab/quotation-connections";
 import { format } from "date-fns";
@@ -74,7 +74,7 @@ export default function QuotationDetailClient() {
     },
   ];
 
-  setUpToolbar((opts) => {
+  setUpToolbarDetailPage((opts) => {
     let actions: ButtonToolbar[] = [];
     console.log("SET UP TOOLBAR...")
     if(poPermission?.create && allowActions ){

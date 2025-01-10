@@ -22,6 +22,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let balance: components["schemas"]["GeneralLedgerOpening"] | undefined =
     undefined;
   let actionRes = LOAD_ACTION;
+  console.log("DATA",data)
   switch (data.action) {
     case "account-balance": {
       const res = await client.GET("/accounting/report/account-balance", {
@@ -29,6 +30,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           query: data.accountBalanceQuery,
         },
       });
+      console.log("DATA BALANCE",res.data,res.error)
       balance = res.data?.result
       break;
     }
@@ -86,8 +88,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       },
     },
   });
-  handleError(res.error);
 
+  handleError(res.error);
+  
   return json({
     actions: res.data?.actions,
     account: res.data?.result.entity,

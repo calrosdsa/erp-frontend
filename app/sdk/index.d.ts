@@ -6616,12 +6616,15 @@ export interface components {
         };
         PaymentAccountsDto: {
             cash_acct: string;
+            cash_acct_currency: string;
             /** Format: int64 */
             cash_acct_id: number;
             payable_acct: string;
+            payable_acct_currency: string;
             /** Format: int64 */
             payable_acct_id: number;
             receivable_acct: string;
+            receivable_acct_currency: string;
             /** Format: int64 */
             receivable_acct_id: number;
         };

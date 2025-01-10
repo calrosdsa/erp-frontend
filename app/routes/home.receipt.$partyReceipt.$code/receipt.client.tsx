@@ -21,6 +21,7 @@ import DetailLayout from "@/components/layout/detail-layout";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   setUpToolbar,
+  setUpToolbarDetailPage,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { routes } from "~/util/route";
@@ -70,7 +71,7 @@ export default function ReceiptDetailClient() {
     },
   ];
 
-  setUpToolbar(() => {
+  setUpToolbarDetailPage(() => {
     let view: ButtonToolbar[] = [];
     const status = stateFromJSON(receipt?.status);
     const active = status != State.DRAFT && status != State.CANCELLED;

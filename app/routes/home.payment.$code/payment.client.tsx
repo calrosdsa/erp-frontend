@@ -12,6 +12,7 @@ import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schem
 import { z } from "zod";
 import { ButtonToolbar } from "~/types/actions";
 import { format } from "date-fns";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 export default function PaymentDetailClient() {
   const { payment, actions,activities } = useLoaderData<typeof loader>();
@@ -71,6 +72,14 @@ export default function PaymentDetailClient() {
     };
   },[payment])
 
+
+   useDisplayMessage(
+      {
+        error: fetcher.data?.error,
+        success: fetcher.data?.message,
+      },
+      [fetcher.data]
+    );
   return (
     <DetailLayout
     activities={activities}

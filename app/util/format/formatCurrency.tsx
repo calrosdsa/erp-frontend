@@ -40,8 +40,10 @@ export const formatCurrencyAmount = (
   currency: string | undefined,
   language: string
 ): string => {
-  if (input == undefined) {
-    return "";
+  try{
+
+    if (input == undefined) {
+      return "";
   }
   if (currency == undefined) {
     return "";
@@ -53,6 +55,9 @@ export const formatCurrencyAmount = (
     currency: currency,
   }).format(Number(input.toFixed(2)));
   return formatted;
+}catch(err){
+  return ""
+}
 };
 
 export const sumTotal = (values: number[]) => {

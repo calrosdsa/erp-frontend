@@ -136,14 +136,13 @@ export default function InvoiceInfoTab() {
   };
 
   setUpToolbarTab(()=>{
-    console.log("RENDER TAB...")
     return {
       onSave: () => {
         inputRef.current?.click()
       },
       disabledSave:!allowEdit,
     }
-  },[allowEdit])
+  },[allowEdit,invoice])
 
   
   // useEffect(() => {

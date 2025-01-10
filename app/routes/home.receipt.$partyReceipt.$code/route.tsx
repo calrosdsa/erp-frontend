@@ -40,7 +40,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
-      console.log(res.error);
       break;
     }
     case "edit": {

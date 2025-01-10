@@ -17,14 +17,18 @@ export const LedgerAutocompleteFormField = ({
   label,
   name,
   isGroup = false,
+  onSelect,
   roleActions,
+  description,
 }: {
   allowEdit?: boolean;
   control?: Control<any, any>;
   label?: string;
   name?: string;
+  description?:string;
   isGroup?: boolean;
   roleActions?: components["schemas"]["RoleActionDto"][];
+  onSelect?:(e:components["schemas"]["LedgerDto"])=>void
 }) => {
   const [fetcherDebounce, onChange] = useAccountLedgerDebounceFetcher({
     isGroup,
@@ -42,7 +46,9 @@ export const LedgerAutocompleteFormField = ({
       name={name || "ledger"}
       nameK="name"
       control={control}
+      description={description}
       allowEdit={allowEdit}
+      onSelect={onSelect}
     />
   );
 };

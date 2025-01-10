@@ -5,9 +5,14 @@ import { Suspense } from "react";
 import { components } from "~/sdk";
 import { loader } from "../../route";
 import Connections from "@/components/layout/connections";
+import { setUpToolbarTab } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function OrderConnectionsTab() {
   const { connections, order } = useLoaderData<typeof loader>();
+  setUpToolbarTab(() => {
+      return {
+      };
+    }, []);
   return (
     <>
       <Suspense fallback={<FallBack />}>

@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { SquareCheckIcon, SquareIcon } from "lucide-react";
 import { formatLongDate, formatMediumDate } from "~/util/format/formatDate";
 import { i18n } from "i18next";
+import { toZonedTime } from "date-fns-tz";
+import { format } from "date-fns";
 
 type Option = {
   label: string;
@@ -32,10 +34,13 @@ export default function TableCellDate<TData>({
     {typeof initialValue == "string" && 
     <div className=" whitespace-nowrap truncate">
         {formatDate == "long" && (
-          formatLongDate(initialValue, i18n.language)
+          format(toZonedTime(initialValue, "UTC"), "yyyy-MM-dd")
+          // formatLongDate(toZonedTime(initialValue, "UTC"), "yyyy-MM-dd"), i18n.language)
         )}
         {formatDate == "medium" && (
-          formatMediumDate(initialValue, i18n.language)
+          format(toZonedTime(initialValue, "UTC"), "yyyy-MM-dd")
+
+          // formatMediumDate(initialValue, i18n.language)
         )}
         </div>
       }

@@ -36,6 +36,7 @@ import AccountingDimensionForm from "@/components/custom/shared/accounting/accou
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   setUpToolbar,
+  setUpToolbarTab,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
@@ -122,16 +123,15 @@ export default function ReceiptInfoTab() {
     );
   };
 
-  useEffect(() => {
-    if (allowEdit) {
-      toolbar.setToolbar({
-        onSave: () => {
-          console.log("ON Save", inputRef.current);
-          inputRef.current?.click();
-        },
-      });
-    }
-  }, [allowEdit,toolbar.isMounted]);
+  setUpToolbarTab(() => {
+    return {
+      onSave: () => {
+        console.log("ON SAVE");
+        inputRef.current?.click();
+      },
+      disabledSave: !allowEdit,
+    };
+  }, [allowEdit,receipt]);
 
   useLoadingTypeToolbar(
     {

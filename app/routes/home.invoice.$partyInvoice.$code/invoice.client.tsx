@@ -173,6 +173,7 @@ export default function InvoiceDetailClient() {
                 grandTotal: total,
                 outstanding: outstanding,
                 allocated: total - Number(totals?.paid),
+                currency:invoice?.currency || "",
               },
             ],
           });

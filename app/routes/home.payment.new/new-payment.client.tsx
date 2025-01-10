@@ -17,12 +17,13 @@ import { parties } from "~/util/party";
 import PaymentData from "./payment-data";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-
+import { FormService, PartyTypeStrategyFactory, usePaymentData } from "./use-payment-data";
 export default function PaymentCreateClient() {
   const { associatedActions, paymentAccounts } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const {payload} = useCreatePayment();
-  const toolbar = useToolbar()
+  const {i18n} = useTranslation("common")
+  const toolbar = useToolbar()  
   const form = useForm<z.infer<typeof paymentDataSchema>>({
     resolver: zodResolver(paymentDataSchema),
     defaultValues: {
@@ -55,33 +56,70 @@ export default function PaymentCreateClient() {
   const navigate = useNavigate();
   const r = routes;
   const p = parties;
+ const {accountBalanceService} = usePaymentData({
+    form:form,
+    i18n:i18n
+  })
 
-  const onPartyTypeChange = (d: z.infer<typeof paymentDataSchema>) => {
-    switch (d.partyType) {
-      case partyTypeToJSON(PartyType.customer):
-        form.setValue("accountPaidTo", {
-          id:paymentAccounts?.cash_acct_id,
-          name:paymentAccounts?.cash_acct,
-        });
-        form.setValue("accountPaidFrom", {
-          id:paymentAccounts?.receivable_acct_id,
-          name:paymentAccounts?.receivable_acct,
-        });
-        break;
-      case partyTypeToJSON(PartyType.supplier):
-        form.setValue("accountPaidTo", {
-          id:paymentAccounts?.payable_acct_id,
-          name:paymentAccounts?.payable_acct,
-        });
-        form.setValue("accountPaidFrom", {
-          id:paymentAccounts?.cash_acct_id,
-          name:paymentAccounts?.cash_acct,
-        });
+  const formService: FormService = {
+    setValue: (field: any, value: any) => form.setValue(field, value),
+    trigger: (field: any) => form.trigger(field),
+  }
+
+  const onPartyTypeChange = async (data: z.infer<typeof paymentDataSchema>) => {
+    console.log("PAYMENT ACCOUNTS",paymentAccounts)
+    if(paymentAccounts == undefined) return
+    const strategy = PartyTypeStrategyFactory.createStrategy(
+      data.partyType,
+      paymentAccounts,
+      accountBalanceService,
+      formService
+    )
+    await strategy.updateAccounts()
+  }
+
+
+  // const onPartyTypeChange = async(d: z.infer<typeof paymentDataSchema>) => {
+  //   switch (d.partyType) {
+  //     case partyTypeToJSON(PartyType.customer):
+  //       form.setValue("accountPaidTo", {
+  //         id:paymentAccounts?.cash_acct_id,
+  //         name:paymentAccounts?.cash_acct,
+  //       });
+  //       await getAccountBalance(paymentAccounts?.cash_acct,paymentAccounts?.cash_acct_id,(balance)=>{
+  //         form.setValue("accountPaidToBalance",balance?.opening_balance)
+  //       })
+  //       form.setValue("accountPaidFrom", {
+  //         id:paymentAccounts?.receivable_acct_id,
+  //         name:paymentAccounts?.receivable_acct,
+  //       });
+  //       await getAccountBalance(paymentAccounts?.receivable_acct,paymentAccounts?.receivable_acct_id,(balance)=>{
+  //         form.setValue("accountPaidFromBalance",balance?.opening_balance)
+  //       })
+  //       break;
+  //     case partyTypeToJSON(PartyType.supplier):
+  //       form.setValue("accountPaidTo", {
+  //         id:paymentAccounts?.payable_acct_id,
+  //         name:paymentAccounts?.payable_acct,
+  //       });
+  //       await getAccountBalance(paymentAccounts?.payable_acct,paymentAccounts?.payable_acct_id,(balance)=>{
+  //         form.setValue("accountPaidToBalance",balance?.opening_balance)
+  //       })
+  //       form.setValue("accountPaidFrom", {
+  //         id:paymentAccounts?.cash_acct_id,
+  //         name:paymentAccounts?.cash_acct,
+  //       });
+  //       await getAccountBalance(paymentAccounts?.cash_acct,paymentAccounts?.cash_acct_id,(balance)=>{
+  //         form.setValue("accountPaidFromBalance",balance?.opening_balance)
+  //       })
+  //       form.trigger("accountPaidFromBalance")
+  //       form.trigger("accountPaidToBalance")
+
         
-        break;
-    }
+  //       break;
+  //   }
     
-  };
+  // };
 
   const onSubmit = (values: z.infer<typeof paymentDataSchema>) => {
     console.log("SUBMIT PAYMENT")
@@ -115,7 +153,7 @@ export default function PaymentCreateClient() {
 
   useEffect(() => {
     onPartyTypeChange(formValues);
-  }, [formValues.partyType, paymentAccounts]);
+  }, [formValues.partyType]);
 
   useDisplayMessage(
     {

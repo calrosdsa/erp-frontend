@@ -34,7 +34,13 @@ export const paymentDataSchema = z.object({
   taxLines: z.array(taxAndChargeSchema),
   //UUID
   accountPaidFrom: field,
+  accountPaidFromBalance:z.number().optional(),
+  accountPaidFromCurrency:z.string().optional(),
+
   accountPaidTo: field,
+  accountPaidToBalance:z.number().optional(),
+  accountPaidToCurrency:z.string().optional(),
+
 
   project: fieldNull,
   costCenter: fieldNull,

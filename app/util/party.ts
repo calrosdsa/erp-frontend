@@ -5,6 +5,8 @@ class Parties {
   saleInvoice = "saleInvoice";
   payment = "payment";
   ledger = "ledger";
+  
+  accountLedger = "account";
 
   purchaseReceipt = "purchaseReceipt";
   deliveryNote = "deliveryNote";

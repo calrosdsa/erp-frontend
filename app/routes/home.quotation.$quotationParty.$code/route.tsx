@@ -11,7 +11,7 @@ import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schem
 import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
-import { editQuotationSchema, mapToQuotationData, quotationDataSchema } from "~/util/data/schemas/quotation/quotation-schema";
+import { mapToQuotationData, quotationDataSchema } from "~/util/data/schemas/quotation/quotation-schema";
 import { formatRFC3339 } from "date-fns";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
@@ -43,7 +43,6 @@ export const action = async ({ request,params }: ActionFunctionArgs) => {
       })
       message = res.data?.message
       error = res.error?.detail
-      console.log(res.error);
       actionRes =  ""
       break;
     }

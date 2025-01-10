@@ -6,12 +6,19 @@ import { components } from "~/sdk";
 import { loader } from "../../route";
 import Connections from "@/components/layout/connections";
 import { parties } from "~/util/party";
+import { setUpToolbarTab } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function InvoiceConnectionsTab() {
   const { connections, invoice } = useLoaderData<typeof loader>();
   const params = useParams()
   const partyInvoice = params.partyInvoice ||""
   const p = parties
+
+   setUpToolbarTab(()=>{
+      return {
+      }
+    },[])
+  
   return (
     <>
       <Suspense fallback={<FallBack />}>

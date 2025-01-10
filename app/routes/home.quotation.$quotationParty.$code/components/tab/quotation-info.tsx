@@ -17,6 +17,7 @@ import { quotationDataSchema } from "~/util/data/schemas/quotation/quotation-sch
 import { z } from "zod";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
+  setUpToolbarTab,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
@@ -100,14 +101,16 @@ export default function QuotationInfoTab() {
   //       // disabledSave: !hasChanged,
   //   })
   // },[quotation])
-  useEffect(()=>{
-    if(allowEdit){
-      console.log("INFO")
-      toolbar.setToolbar({
-        onSave: () => inputRef.current?.click(),
-      })
-    }
-  },[toolbar.isMounted,allowEdit])
+
+setUpToolbarTab(() => {
+    return {
+      onSave: () => {
+        console.log("ON SAVE");
+        inputRef.current?.click();
+      },
+      disabledSave: !allowEdit,
+    };
+  }, [allowEdit,quotation]);
 
   
 

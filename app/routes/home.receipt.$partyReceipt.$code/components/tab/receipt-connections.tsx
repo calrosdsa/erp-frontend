@@ -5,9 +5,13 @@ import { Suspense } from "react";
 import { components } from "~/sdk";
 import { loader } from "../../route";
 import Connections from "@/components/layout/connections";
+import { setUpToolbarTab } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function ReceiptConnectionsTab() {
   const { connections, receipt } = useLoaderData<typeof loader>();
+  setUpToolbarTab(() => {
+    return {};
+  }, []);
   return (
     <>
       <Suspense fallback={<FallBack />}>
@@ -18,11 +22,11 @@ export default function ReceiptConnectionsTab() {
             return (
               <div>
                 <Connections
-                    data={d.result || []}
-                    q={{
-                      receipt:receipt?.code,
-                    }}
-                    />
+                  data={d.result || []}
+                  q={{
+                    receipt: receipt?.code,
+                  }}
+                />
               </div>
             );
           }}
@@ -31,4 +35,3 @@ export default function ReceiptConnectionsTab() {
     </>
   );
 }
-
