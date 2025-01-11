@@ -15,7 +15,10 @@ import { EventState, State, stateFromJSON } from "~/gen/common";
 import { z } from "zod";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  setUpToolbarDetailPage,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import PricingInfo from "./components/pricing-info";
 import { useRef } from "react";
@@ -35,18 +38,18 @@ export default function PricingDetailClient() {
   // const inputRef = useRef<HTMLInputElement | null>(null)
   const [permission] = usePermission({
     roleActions,
-    actions:actions && actions[Entity.PRICING],
+    actions: actions && actions[Entity.PRICING],
   });
   const [poPerm] = usePermission({
     roleActions,
-    actions:actions && actions[Entity.PURCHASE_ORDER],
+    actions: actions && actions[Entity.PURCHASE_ORDER],
   });
   const [quoPerm] = usePermission({
     roleActions,
-    actions:actions && actions[Entity.QUOTATION],
+    actions: actions && actions[Entity.QUOTATION],
   });
-  const confirmationDialog = useConfirmationDialog()
-  
+  const confirmationDialog = useConfirmationDialog();
+
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: r.pricing,
@@ -94,19 +97,16 @@ export default function PricingDetailClient() {
     [fetcher.data]
   );
 
-  setUpToolbar(
+  setUpToolbarDetailPage(
     (opts) => {
       console.log("TOOL BAR OPTS", opts);
       return {
+        ...opts,
         status: stateFromJSON(pricing?.status),
         onChangeState: onChangeState,
-        // onSave:()=>{
-        //   console.log("SUBMIT",inputRef.current)
-        //   inputRef.current?.click()
-        // },
       };
     },
-    [pricing, permission,poPerm,quoPerm]
+    [pricing, permission, poPerm, quoPerm]
   );
   return (
     <DetailLayout
@@ -115,12 +115,8 @@ export default function PricingDetailClient() {
       activities={activities}
     >
       {/* {JSON.stringify(pricing)} */}
-      {tab == "info" && (
-        <PricingInfo/>
-      )}
-      {tab == "connections" && (
-        <PricingConnections/>
-      )}
+      {tab == "info" && <PricingInfo />}
+      {tab == "connections" && <PricingConnections />}
     </DetailLayout>
   );
 }

@@ -11,6 +11,7 @@ import {
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   setUpToolbar,
+  setUpToolbarTab,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEditFields } from "~/util/hooks/useEditFields";
@@ -144,8 +145,7 @@ export default function PricingInfo({}: // inputRef
     },
     [fetcher.state]
   );
-
-  useEffect(() => {
+  setUpToolbarTab(()=>{
     const state = stateFromJSON(pricing?.status);
 
     let actions: ButtonToolbar[] = [];
@@ -173,14 +173,24 @@ export default function PricingInfo({}: // inputRef
         },
       });
     }
-    toolbar.setToolbar({
+    return {
+      actions: actions,
       onSave: () => {
         inputRef.current?.click();
       },
-      actions: actions,
       disabledSave: !hasChanged,
-    });
-  }, [hasChanged, pricing]);
+    }
+  },[allowEdit,pricing])
+
+  // useEffect(() => {
+   
+  //   toolbar.setToolbar({
+  //     onSave: () => {
+  //       inputRef.current?.click();
+  //     },
+  //     disabledSave: !hasChanged,
+  //   });
+  // }, [hasChanged, pricing]);
 
   return (
     <>

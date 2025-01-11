@@ -5,6 +5,7 @@ class Parties {
   saleInvoice = "saleInvoice";
   payment = "payment";
   ledger = "ledger";
+  module = "module"
   
   accountLedger = "account";
 

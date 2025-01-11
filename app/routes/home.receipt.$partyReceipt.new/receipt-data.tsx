@@ -94,12 +94,6 @@ export const ReceiptData = ({
               description={formValues.tz}
             />
 
-            {/* <CurrencyAutocompleteForm
-              control={form.control}
-              name="currency"
-              label={t("form.currency")}
-              allowEdit={allowEdit}
-            /> */}
             <CurrencyAndPriceList
               control={form.control}
               allowEdit={allowEdit}
