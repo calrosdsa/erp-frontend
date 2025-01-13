@@ -11,7 +11,7 @@ import {
   pricingLineItemDataSchema,
 } from "~/util/data/schemas/pricing/pricing-schema";
 import { z } from "zod";
-import TableCell from "../../cells/table-cell";
+import TableCellEditable from "../../cells/table-cell-editable";
 import { DataTableRowActions } from "../../data-table-row-actions";
 
 export const pricingChargeColumns = ({}: {}): ColumnDef<
@@ -23,13 +23,13 @@ export const pricingChargeColumns = ({}: {}): ColumnDef<
     {
       accessorKey: "name",
       header: "Nombre",
-      cell:TableCell,
+      cell:TableCellEditable,
       
     },
     {
       accessorKey: "rate",
       header: "Tasa",
-      cell:TableCell,
+      cell:TableCellEditable,
     },
     {
       id: "actions-row",
@@ -54,7 +54,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey:"supplier",
       header:t("supplier"),
-      cell:TableCell,
+      cell:TableCellEditable,
       meta: {
         inputType: "autocomplete",
       },
@@ -63,13 +63,13 @@ export const pricingLineItemColumns = (): ColumnDef<
       accessorKey: "part_number",
       header: "PN",
       size: 160,
-      cell: TableCell,
+      cell: TableCellEditable,
     },
     {
       accessorKey: "description",
       header: "Descripction",
       size: 320,
-      cell: TableCell,
+      cell: TableCellEditable,
       meta: {
         inputType: "textarea",
       },
@@ -82,13 +82,13 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "pl_unit",
       header: "PL_Unit",
-      cell: TableCell,
+      cell: TableCellEditable,
     },
 
     {
       accessorKey: "fob_unit_fn",
       header: "Fob_Unit",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -96,7 +96,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "retention_fn",
       header: "Retencion",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -104,7 +104,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
     accessorKey: "cost_zf_fn",
       header: "Costo_ZF",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -112,7 +112,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "cost_alm_fn",
       header: "Costo_Alm",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -120,7 +120,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "tva_fn",
       header: "TVA",
-      cell: TableCell,
+      cell: TableCellEditable,
       // meta:{
       //   calculate:true
       // }
@@ -128,7 +128,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "cantidad_fn",
       header: "Cantidad",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -136,7 +136,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "precio_unitario_fn",
       header: "Precio_Unitario",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -144,7 +144,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "precio_total_fn",
       header: "Precio_Total",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -152,7 +152,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "precio_unitario_tc_fn",
       header: "Precio_Unitario_TC",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -160,7 +160,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "precio_total_tc_fn",
       header: "Precio_Total_TC",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -168,7 +168,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "fob_total_fn",
       header: "Fob_Total",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -176,7 +176,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "gpl_total_fn",
       header: "Gpl_Total",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }
@@ -184,7 +184,7 @@ export const pricingLineItemColumns = (): ColumnDef<
     {
       accessorKey: "tva_total_fn",
       header: "Tva_Total",
-      cell: TableCell,
+      cell: TableCellEditable,
       meta:{
         calculate:true
       }

@@ -1,6 +1,7 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import { DEFAULT_SIZE } from "~/constant"
+import ModulesClient from "./modules.client"
 
 
 export const loader = async({request}:LoaderFunctionArgs) =>{
@@ -16,15 +17,13 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
     })
 
     return json({
-        paginationResult:res.data?.result,
+        results :res.data?.result,
         actions:res.data?.actions,
     })
 }
 
 export default function Module(){
     return (
-        <div>
-            Module ....
-        </div>
+       <ModulesClient/>
     )
 }

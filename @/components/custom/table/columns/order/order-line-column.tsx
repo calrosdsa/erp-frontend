@@ -12,7 +12,7 @@ import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Input } from "@/components/ui/input";
-import TableCell from "../../cells/table-cell";
+import TableCellEditable from "../../cells/table-cell-editable";
 
 export const lineItemsColumns = ({
   currency,
@@ -46,7 +46,7 @@ export const lineItemsColumns = ({
   columns.push({
     accessorKey: "quantity",
     header: t("_item.quantity"),
-    cell:TableCell,
+    cell:TableCellEditable,
     meta:{
       type:"number",
     }
@@ -75,7 +75,7 @@ export const lineItemsColumns = ({
   columns.push({
     accessorKey: "rate",
     header: t("form.rate"),
-    cell: TableCell,
+    cell: TableCellEditable,
     meta:{
       type:"number",
     }

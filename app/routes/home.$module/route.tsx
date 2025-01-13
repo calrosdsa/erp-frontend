@@ -8,7 +8,7 @@ export const loader = async ({ request,params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   const tab = searchParams.get("tab");
-  const res = await client.GET("/module/detail/{id}", {
+  const res = await client.GET("/module/{id}", {
     params: {
       path: {
         id: params.module || "",

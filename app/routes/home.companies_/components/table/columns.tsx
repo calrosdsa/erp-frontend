@@ -16,10 +16,6 @@ export const companyColumns = (): ColumnDef<components["schemas"]["CompanyDto"]>
   const r = routes
   return [
     {
-     header:t("table.no"),
-     cell:TableCellIndex,
-    },
-    {
       header: "Name",
       accessorKey: "name",
       cell:({...props})=>{

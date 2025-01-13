@@ -139,7 +139,6 @@ export const InvoiceData = ({
                   isInvoice={true}
                 />
               }
-              isNew={true}
             />
             <TaxAndChargesLines
               onChange={(e) => {

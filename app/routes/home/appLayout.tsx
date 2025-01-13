@@ -18,6 +18,8 @@ import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { loader } from "./route";
+import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
+import SearchBar from "./components/search-bar";
 
 type RouteItem = {
   name: string;
@@ -134,7 +136,8 @@ export default function HomeLayout({
                   </BreadcrumbList>
                 </Breadcrumb> */}
               </div>
-              <div className="flex items-center space-x-2 pr-3">
+              <div className="flex items-center space-x-4 pr-3">
+                <SearchBar/>
                 <ThemeToggle />
               </div>
             </header>

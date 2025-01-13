@@ -16,7 +16,7 @@ import TableCellPrice from "../../cells/table-cell-price";
 import TableCellTranslate from "../../cells/table-cell-translate";
 import { paymentReferceSchema } from "~/util/data/schemas/accounting/payment-schema";
 import { i18n } from "i18next";
-import TableCell from "../../cells/table-cell";
+import TableCellEditable from "../../cells/table-cell-editable";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { parties } from "~/util/party";
 
@@ -145,7 +145,7 @@ export const paymentReferencesColumns = ({
     {
       accessorKey: "allocated",
       header: t("form.allocated"),
-      cell: TableCell,
+      cell: TableCellEditable,
     },
     {
       id: "actions-row",

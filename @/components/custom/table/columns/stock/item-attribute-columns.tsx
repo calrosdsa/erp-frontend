@@ -2,7 +2,7 @@ import ButtonExpandRow from "@/components/custom/button/ButtonExpandRow";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { CornerDownRight, FolderIcon, FolderOpenIcon } from "lucide-react";
-import TableCell from "../../cells/table-cell";
+import TableCellEditable from "../../cells/table-cell-editable";
 import { useTranslation } from "react-i18next";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Link } from "@remix-run/react";
@@ -70,12 +70,12 @@ export const itemAttributeValuesDtoColumns = (): ColumnDef<
     {
       accessorKey: "value",
       header: t("table.attributeValue"),
-      cell: TableCell,
+      cell: TableCellEditable,
     },
     {
       accessorKey: "abbreviation",
       header: t("table.abbreviation"),
-      cell: TableCell,
+      cell: TableCellEditable,
     },
     {
       id: "actions",

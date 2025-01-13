@@ -78,7 +78,7 @@ export default function FormAutocompleteField<
   const [open, setOpen] = useState(false);
   return (
     <FormField
-      control={control || (form && form.control)}
+      control={control || (form && form?.control)}
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col w-full  ">

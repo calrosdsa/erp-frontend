@@ -1,8 +1,16 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node"
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClientAdmin from "~/apiclientAdmin"
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
 import EntityClient from "./entity.client"
 
+type ActionData = {
+    
+}
+export const action = async({request}:ActionFunctionArgs)=>{
+    return json({
+
+    })
+}
 
 export const loader = async({request}:LoaderFunctionArgs) =>{
     const client = apiClientAdmin({request})

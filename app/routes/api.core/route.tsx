@@ -2,7 +2,7 @@ import { ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import apiClient from "~/apiclient";
 import { LOAD_ACTION } from "~/constant";
-import { components } from "~/sdk";
+import { components, operations } from "~/sdk";
 import {
   createCommentSchema,
   editCommentSchema,
@@ -13,6 +13,7 @@ type ActionData = {
   createComment: z.infer<typeof createCommentSchema>;
   editComment: z.infer<typeof editCommentSchema>;
   activityID:number
+  searchEntitiesQuery:operations["search-entities"]["parameters"]["query"]
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -21,7 +22,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let error: string | undefined = undefined;
   let message: string | undefined = undefined;
   let activities: components["schemas"]["ActivityDto"][] = [];
+  let searchEntities:components["schemas"]["EntityDto"][] = [];
+  console.log(data.action)
   switch (data.action) {
+    case "search-entities":{
+      console.log(data.searchEntitiesQuery)
+      const res = await client.GET("/module/search-entities",{
+        params:{
+          query:data.searchEntitiesQuery,
+        }
+      })
+      searchEntities = res.data?.result || []
+      break;
+    }
     case "delete-comment":{
         const res = await client.DELETE("/activity", {
             params: {
@@ -64,6 +77,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     message,
     activities,
+    searchEntities,
     action:LOAD_ACTION,
   });
 };

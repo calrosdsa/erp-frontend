@@ -15,7 +15,7 @@ interface TableCellProps<TData> {
   table: Table<TData>;
 }
 
-export default function TableCell<TData>({
+export default function TableCellEditable<TData>({
   getValue,
   row,
   column,
@@ -91,7 +91,7 @@ export default function TableCell<TData>({
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
         step={".01"}
-        className="text-xs m-0 rounded-none border-0 h-6"
+        className="text-xs m-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
         // autoFocus
         // placeholder={columnMeta?.type}
         type={columnMeta?.type || "text"}

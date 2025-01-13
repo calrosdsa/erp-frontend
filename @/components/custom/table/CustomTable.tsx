@@ -297,7 +297,8 @@ export function DataTable<TData, TValue>({
           // ref={tableRef}
           className="relative"
           style={{
-            height: `${Math.min((data.length * rowHeight) + 42, maxTableHeight)}px`,
+            // height: `${Math.min((data.length * rowHeight) + 42, maxTableHeight)}px`,
+            height:"60vh"
           }}
         >
           <TableVirtuoso
