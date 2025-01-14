@@ -12,7 +12,7 @@ import { useMemo } from "react";
 import AccountPayableHeader from "./components/account-payable-header";
 import { accountPayableColumns } from "@/components/custom/table/columns/accounting/account-payable-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 
@@ -22,7 +22,7 @@ interface LedgerData {
 
 export default function AccountPayableClient() {
   const { accountPayable } = useLoaderData<typeof loader>();
-  const r = routes
+  const r = route
   const {t} = useTranslation("common")
   const navigate = useNavigate()
   const total =  useMemo(()=>{

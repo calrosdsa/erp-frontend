@@ -6,7 +6,7 @@ import { forgotPasswordSchema } from "~/util/data/schemas/auth/forgot-password-s
 import { action } from "./route";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useEffect } from "react";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
@@ -14,7 +14,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 export default function ForgotPasswordClient(){
     const fetcher = useFetcher<typeof action>()
     const { t } = useTranslation("common")
-    const r = routes
+    const r = route
     useDisplayMessage({
       error:fetcher.data?.error
     },[fetcher.data?.error])

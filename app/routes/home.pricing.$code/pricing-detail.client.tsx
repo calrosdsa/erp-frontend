@@ -7,7 +7,7 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { NavItem } from "~/types";
@@ -30,7 +30,7 @@ import PricingConnections from "./components/pricing-connections";
 export default function PricingDetailClient() {
   const { pricing, actions, activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const fetcher = useFetcher<typeof action>();
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";

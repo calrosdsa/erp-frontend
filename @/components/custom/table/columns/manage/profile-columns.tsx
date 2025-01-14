@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import TableCellText from "../../cells/table-cell-text";
 import { fullName } from "~/util/convertor/convertor";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 
 export const profileColumms = ({}): ColumnDef<
@@ -11,7 +11,7 @@ export const profileColumms = ({}): ColumnDef<
 >[] => {
   let columns: ColumnDef<components["schemas"]["ProfileL"]>[] = [];
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   columns.push({
     id: "fullName",
     header: t("form.fullName"),

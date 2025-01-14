@@ -11,7 +11,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { chargesTemplateColumns } from "@/components/custom/table/columns/accounting/charges-templates-columns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { currencyExchangeColumns } from "@/components/custom/table/columns/core/currency-exchange-columns";
 import { salesRecordColumn } from "@/components/custom/table/columns/invoicing/sales-records.columns";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -32,7 +32,7 @@ export default function SalesRecordClient() {
     roleActions: globalState.roleActions,
   });
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const { exportExcel } = useExporter();
   const { t } = useTranslation("common");
 

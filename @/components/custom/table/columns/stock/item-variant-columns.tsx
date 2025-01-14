@@ -2,14 +2,14 @@ import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 
 export const itemVariantColumns = (): ColumnDef<
   components["schemas"]["ItemVariantDto"]
 >[] => {
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   return [
     {
       header: t("form.code"),

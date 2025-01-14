@@ -6,7 +6,7 @@ import { useCreateWareHouse } from "./components/add-warehouse"
 import { ListTree } from "lucide-react"
 import { usePermission } from "~/util/hooks/useActions"
 import { GlobalState } from "~/types/app"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { useTranslation } from "react-i18next"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 import { ButtonToolbar } from "~/types/actions"
@@ -20,7 +20,7 @@ export default function WareHousesClient(){
         actions:actions,
         roleActions:globalState.roleActions
     })
-    const r = routes
+    const r = route
     const {t} = useTranslation("common")
     const navigate = useNavigate()
     setUpToolbar(()=>{

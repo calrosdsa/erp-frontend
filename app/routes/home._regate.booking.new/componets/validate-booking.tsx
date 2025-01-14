@@ -23,7 +23,7 @@ import { daysWeek } from "~/util/data/day-weeks";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { Input } from "@/components/ui/input";
@@ -46,7 +46,7 @@ export const ValidateBooking = () => {
     actions: courtFetcher.data?.actions,
     roleActions: globalState.roleActions,
   });
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const { t } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);

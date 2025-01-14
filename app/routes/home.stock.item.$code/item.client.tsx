@@ -7,7 +7,7 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { loader } from "./route";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import DetailLayout from "@/components/layout/detail-layout";
@@ -24,7 +24,7 @@ import { useItemPriceStore } from "../home.stock.itemPrice.new/use-item-price-st
 import ItemInventory from "./components/tab/item-inventory";
 
 export default function ItemDetailClient() {
-  const r = routes;
+  const r = route;
   const params = useParams();
   const globalState = useOutletContext<GlobalState>();
   const { item, activities, associatedActions } =

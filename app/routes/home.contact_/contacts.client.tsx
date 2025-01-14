@@ -4,14 +4,14 @@ import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
 import { DataTable } from "@/components/custom/table/CustomTable"
 import { contactColumns } from "@/components/custom/table/columns/contact/contact-columms"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 
 export default function ContactsClient(){
     const { paginationResult,actions } = useLoaderData<typeof loader>()
     const  globalState = useOutletContext<GlobalState>()
-    const r = routes
+    const r = route
     const navigate = useNavigate()
     const [permission] = usePermission({
         actions:actions,

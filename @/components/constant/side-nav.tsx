@@ -13,7 +13,7 @@ import { SessionData } from "~/sessions";
 import { NavItem } from "~/types";
 import { Entity, Role } from "~/types/enums";
 import { title } from "../typography/Typography";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { GlobalState } from "~/types/app";
 import { useMemo } from "react";
 import { BuyingNav } from "./buying-nav";
@@ -33,7 +33,7 @@ import { InvoicingNav } from "./invoicing-nav";
 export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   const { t } = useTranslation("common");
   let navItems: NavItem[] = [];
-  const r = routes;
+  const r = route;
   const { user, role, roleActions } = data;
   const entities = roleActions
     .filter((item) => item.action.name == "view")

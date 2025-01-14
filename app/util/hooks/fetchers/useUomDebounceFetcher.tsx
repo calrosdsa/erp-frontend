@@ -3,7 +3,7 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
 import { components } from "~/sdk"
 import { PartyType } from "~/types/enums"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { usePermission } from "../useActions"
 import { Control } from "react-hook-form"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
@@ -40,7 +40,7 @@ export const UomAutocompleteForm = ({
 }
 
 export const useUomDebounceFetcher = () =>{
-    const r = routes
+    const r = route
     const debounceFetcher = useDebounceFetcher<{
         // actions:components["schemas"]["ActionDto"][],
         uoms:components["schemas"]["UOMDto"][],

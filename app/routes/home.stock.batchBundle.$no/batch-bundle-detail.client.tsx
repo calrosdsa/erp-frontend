@@ -7,7 +7,7 @@ import {
 import { loader } from "./route";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import BatchBundleInfo from "./tab/project-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -20,7 +20,7 @@ import { stateFromJSON } from "~/gen/common";
 export default function BatchBundleDetailClient() {
   const { batchBundle, actions } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
   const { roleActions } = useOutletContext<GlobalState>();

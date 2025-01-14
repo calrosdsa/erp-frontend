@@ -9,7 +9,7 @@ import { orderDataSchema } from "~/util/data/schemas/buying/order-schema";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { action } from "./route";
 import { GlobalState } from "~/types/app";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -30,7 +30,7 @@ export default function CreatePurchaseOrdersClient() {
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
   const { payload } = useDocumentStore();

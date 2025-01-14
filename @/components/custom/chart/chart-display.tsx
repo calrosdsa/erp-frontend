@@ -6,7 +6,7 @@ import { Link, useNavigate } from "@remix-run/react"
 import { MoreVertical } from "lucide-react"
 import { ReactNode } from "react"
 import { ChartType } from "~/gen/common"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 
 
 export default function ChartDisplay({
@@ -17,7 +17,7 @@ export default function ChartDisplay({
     description?:string
     chartType:ChartType
 }){
-    const r = routes
+    const r = route
     const navigate = useNavigate()
     return (
         <Card className="w-full">

@@ -51,4 +51,4 @@ class Parties {
   paymentOptions: SelectItem[] = [this.customerOption, this.supplierOption];
 }
 
-export const parties = new Parties();
+export const party = new Parties();

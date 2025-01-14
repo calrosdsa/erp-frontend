@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import NewItemClient from "./new-item.client";
 import apiClient from "~/apiclient";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import { z } from "zod";
 import { createItemSchema, mapToItemPriceLine } from "~/util/data/schemas/stock/item-schemas";

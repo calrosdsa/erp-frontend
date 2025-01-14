@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import TableCellDate from "../../cells/table-cell-date";
 import i18n from "~/i18n";
 import TableCellNavigate from "../../cells/table-cell-navigate";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellEntityActions from "../../cells/table-cell-entity-actions";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,7 +21,7 @@ export const roleEntitiesActionColumns = ({
 }): ColumnDef<components["schemas"]["EntityActionsDto"]>[] => {
   let roleActionsIds = roleActions.map((item) => item.action_id);
   let columns: ColumnDef<components["schemas"]["EntityActionsDto"]>[] = [];
-  const r = routes;
+  const r = route;
   const { t } = useTranslation("common");
   columns.push({
     accessorKey: "entity.name",
@@ -52,7 +52,7 @@ export const roleActionColumns = ({
 }): ColumnDef<components["schemas"]["ActionDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["ActionDto"]>[] = [];
 
-  const r = routes;
+  const r = route;
   const { t } = useTranslation("common");
 
   columns.push({
@@ -89,7 +89,7 @@ export const roleDefinitionColumns = ({}): ColumnDef<
   components["schemas"]["RoleActionDto"]
 >[] => {
   let columns: ColumnDef<components["schemas"]["RoleActionDto"]>[] = [];
-  const r = routes;
+  const r = route;
   const { t } = useTranslation("common");
   columns.push({
     accessorKey: "Action.Entity.Name",
@@ -109,7 +109,7 @@ export const roleColumns = ({}): ColumnDef<
   components["schemas"]["RoleDto"]
 >[] => {
   let columns: ColumnDef<components["schemas"]["RoleDto"]>[] = [];
-  const r = routes;
+  const r = route;
   const { t, i18n } = useTranslation("common");
   columns.push({
     header: "No.",

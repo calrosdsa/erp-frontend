@@ -2,7 +2,7 @@ import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
 import { action, loader } from "./route";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import JournalEntryInfo from "./tab/journal-entry-info";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -14,7 +14,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 export default function JournalEntryDetailClient() {
   const { journalEntry } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const [searchParams] = useSearchParams();
   const fetcher = useFetcher<typeof action>();
   const tab = searchParams.get("tab") || "info";

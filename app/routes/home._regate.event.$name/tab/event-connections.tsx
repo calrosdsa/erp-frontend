@@ -7,7 +7,7 @@ import { Connection, ConnectionModule } from "~/types/connections";
 import { loader } from "../route";
 import { components } from "~/sdk";
 import { RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 
 export default function EventConnectionsTab() {
@@ -45,7 +45,7 @@ const eventConnections = ({data,event}:{
   const { t } = useTranslation("common");
   let res: ConnectionModule[] = [];
   let connections:Connection[] = []
-  const r = routes
+  const r = route
   const navigate = useNavigate()
   connections.push({
     entity: regatePartyTypeToJSON(RegatePartyType.booking),

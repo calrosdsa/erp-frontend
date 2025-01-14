@@ -4,14 +4,14 @@ import BookingScheduleClient from "./booking-schedule.client";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { FetchResponse } from "openapi-fetch";
 import { endOfMonth, endOfWeek, formatRFC3339, startOfMonth, startOfWeek, startOfYear } from "date-fns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  const r = routes;
+  const r = route;
   let court = searchParams.get("court") || "";
   let courtName = searchParams.get("courtName") || "";
   let date = new Date(searchParams.get("date") || new Date());

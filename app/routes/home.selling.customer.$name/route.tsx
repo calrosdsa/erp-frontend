@@ -12,7 +12,7 @@ import { handleError } from "~/util/api/handle-status-code";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { editCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
 import { z } from "zod";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { LOAD_ACTION } from "~/constant";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
@@ -26,7 +26,7 @@ type ActionData = {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
-  const r = routes;
+  const r = route;
   let actionRes = LOAD_ACTION
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
@@ -81,7 +81,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const searchParams = url.searchParams;
   const tab = searchParams.get("tab");
   console.log("NAME -----", params.name);
-  const r = routes;
+  const r = route;
   let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
   const res = await client.GET("/customer/detail/{id}", {

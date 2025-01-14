@@ -1,4 +1,4 @@
-import { DependencyList, useCallback, useEffect, useLayoutEffect } from "react";
+import { DependencyList, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { LoadingType, SetupToolbarOpts, useToolbar } from "./useToolbar";
 
 export const setUpToolbar = (
@@ -52,33 +52,44 @@ export const setUpToolbarTab = (
   }, dependencies);
 };
 
+type ToolbarState = {
+  loading: boolean
+  loadingType: LoadingType
+}
+
 export function useLoadingTypeToolbar(
-  opts: {
-    loadingType: LoadingType;
-    loading: boolean;
-  },
+  initialOpts: ToolbarState,
   dependencyList: DependencyList = []
 ) {
-  const toolbar = useToolbar();
+  const toolbar = useToolbar()
+  const optsRef = useRef(initialOpts)
 
-  const setToolbarLoading = useCallback(() => {
-    toolbar.setLoading({
-      ...opts,
-    });
-  }, [toolbar, opts]);
+  // Update the ref if initialOpts changes
+  useEffect(() => {
+    optsRef.current = initialOpts
+  }, [initialOpts])
+
+  const setToolbarLoading = useCallback((newOpts?: Partial<ToolbarState>) => {
+    const updatedOpts = { ...optsRef.current, ...newOpts }
+    optsRef.current = updatedOpts
+    toolbar.setLoading(updatedOpts)
+  }, [toolbar])
 
   useEffect(() => {
-    setToolbarLoading();
+    setToolbarLoading()
 
     return () => {
       // Clean up by resetting loading state when the component unmounts
       toolbar.setLoading({
         loading: false,
-        loadingType: "",
-      });
-    };
-  }, [...dependencyList]);
+        loadingType: '',
+      })
+    }
+  }, [...dependencyList])
 
-  // Return the setToolbarLoading function in case it needs to be called manually
-  // return setToolbarLoading;
+  // Return an object with the current state and setter function
+  return {
+    toolbarState: optsRef.current,
+    setToolbarLoading,
+  }
 }

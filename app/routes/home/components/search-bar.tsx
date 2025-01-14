@@ -3,14 +3,14 @@ import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useNavigate } from "@remix-run/react";
 import { Control } from "react-hook-form";
 import { useSearchEntity } from "~/util/hooks/fetchers/core/use-entity-search-fetcher";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export default function SearchBar({
 }: {
 }) {
   const [fetcher, onChange] = useSearchEntity({});
   const navigate = useNavigate()
-  const r = routes
+  const r = route
   
   return (
     <div>

@@ -4,7 +4,7 @@ import { DataTable } from "@/components/custom/table/CustomTable"
 import { accountColumns } from "@/components/custom/table/columns/accounting/account-columns"
 import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 import { ButtonToolbar } from "~/types/actions"
 import { useTranslation } from "react-i18next"
@@ -19,7 +19,7 @@ export default function AccountsClient(){
         actions:actions,
         roleActions:globalState.roleActions
     })
-    const r = routes
+    const r = route
     const {t} = useTranslation("common")
     const navigate = useNavigate()
     setUpToolbar(()=>{

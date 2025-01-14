@@ -4,13 +4,13 @@ import { PartyType, partyTypeToJSON, PianoPartyType, pianoPartyTypeToJSON } from
 import { NavItem } from "~/types";
 import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const PianoFormsNav = ({ entities }: { 
     entities: number[] | undefined
 }): NavItem => {
   const { t } = useTranslation("common");
-  const r = routes
+  const r = route
   let pianoFormsChildren:NavItem[] = [];
   if(entities?.includes(Entity.PIANO_FORS)){
     pianoFormsChildren.push({

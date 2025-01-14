@@ -30,7 +30,7 @@ import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
 import { useNewBooking } from "~/routes/home._regate.booking.new/use-new-booking";
 import { useNavigate, useSearchParams } from "@remix-run/react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import { useTranslation } from "react-i18next";
 import { formatCurrency } from "~/util/format/formatCurrency";
@@ -70,7 +70,7 @@ export default function FieldReservation({
   const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
   const newBooking = useNewBooking();
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const { i18n } = useTranslation("common");
 
   const timeSlots = useMemo(() => generateTimeSlots(), []);

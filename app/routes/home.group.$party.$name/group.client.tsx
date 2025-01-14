@@ -8,14 +8,14 @@ import { TreeDescendents } from "@/components/layout/tree/TreeDescendents"
 import { TreeGroupLayout } from "@/components/layout/tree/TreeLayout"
 import DetailLayout from "@/components/layout/detail-layout"
 import GroupInfoTab from "./tab/group.info"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 export default function GroupClient(){
     const {group,actions,groupDescendents,activities} = useLoaderData<typeof loader>()
     const {t,i18n} = useTranslation("common")
     const [searchParams] = useSearchParams()
-    const r = routes
+    const r = route
     const params =  useParams()
     const groupParty = params.party || ""
 

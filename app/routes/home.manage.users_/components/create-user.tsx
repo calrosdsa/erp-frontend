@@ -9,7 +9,7 @@ import { Permission } from "~/types/permission";
 import { createUserSchema } from "~/util/data/schemas/manage/user-schema";
 import { action } from "../route";
 import { useEffect } from "react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { components } from "~/sdk";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
@@ -27,7 +27,7 @@ export const CreateUser = ({open,onOpenChange,permission,globalState}:{
 })=>{
     const {t }=useTranslation("common")
     const {toast} = useToast()
-    const r = routes
+    const r = route
     const fetcher = useFetcher<typeof action>()
     const [ rolesFetcherDebounce,onRoleNameChange] = useRoleDebounceFetcher()
     const fetcherPartyTypesUser = useFetcher<typeof action>({key:"party-types"})

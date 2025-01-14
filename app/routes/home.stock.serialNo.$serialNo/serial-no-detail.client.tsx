@@ -2,7 +2,7 @@ import { useLoaderData, useNavigate, useOutletContext, useSearchParams } from "@
 import { loader } from "./route"
 import DetailLayout from "@/components/layout/detail-layout"
 import { useTranslation } from "react-i18next"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { NavItem } from "~/types"
 import SerialNoInfo from "./tab/serial-no-info"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
@@ -16,7 +16,7 @@ import { ButtonToolbar } from "~/types/actions"
 export default function SerialNoClientDetail(){
     const {serialNo,actions} = useLoaderData<typeof loader>()
     const {t}= useTranslation("common")
-    const r= routes
+    const r= route
     const [searchParams] = useSearchParams()
     const tab = searchParams.get("tab") || "info"
     const {roleActions} = useOutletContext<GlobalState>()

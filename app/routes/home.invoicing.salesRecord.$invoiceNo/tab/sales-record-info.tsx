@@ -26,7 +26,7 @@ import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebou
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { Separator } from "@radix-ui/react-select";
 import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import SalesRecordData from "~/routes/home.invoicing.salesRecord.new/sales-record-data";
 type EditData = z.infer<typeof salesRecordDataSchema>;
 export default function SalesRecordInfo() {
@@ -36,7 +36,7 @@ export default function SalesRecordInfo() {
   const [permission] = usePermission({ actions, roleActions });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
-  const r = routes
+  const r = route
 
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: salesRecordDataSchema,

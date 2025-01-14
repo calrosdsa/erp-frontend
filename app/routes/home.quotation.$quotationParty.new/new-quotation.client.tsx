@@ -10,7 +10,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { action } from "./route";
 import { Form } from "@/components/ui/form";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -42,7 +42,7 @@ export default function NewQuotationClient() {
   const { companyDefaults } = useOutletContext<GlobalState>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const params = useParams();
   const quotationParty = params.quotationParty || "";
   const lineItemsStore = useLineItems();

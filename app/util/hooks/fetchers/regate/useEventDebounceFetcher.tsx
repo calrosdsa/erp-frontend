@@ -1,11 +1,11 @@
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
 import { components } from "~/sdk"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 
 
 export const useEventDebounceFetcher = () =>{
-    const r = routes
+    const r = route
     const fetcherDebounce = useDebounceFetcher<{
         actions:components["schemas"]["ActionDto"][],
         events:components["schemas"]["EventBookingDto"][],

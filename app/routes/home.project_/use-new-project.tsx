@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { create } from "zustand";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { action } from "./route";
 
 export const createProjectSchema = z.object({
@@ -22,7 +22,7 @@ export const NewProject = ({
 }) => {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
-  const r = routes;
+  const r = route;
 
   useDisplayMessage(
     {

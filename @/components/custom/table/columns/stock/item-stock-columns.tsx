@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { formatLongDate } from "~/util/format/formatDate";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellBoolean from "../../cells/table-cell-chek";
 import TableCellDate from "../../cells/table-cell-date";
 import TableCellQuantity from "../../cells/table-cell-quantity";
@@ -21,7 +21,7 @@ export const itemStockColums = ({
   includeItem?: boolean;
 }): ColumnDef<components["schemas"]["StockLevelDto"]>[] => {
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   let columns: ColumnDef<components["schemas"]["StockLevelDto"]>[] = [];
   if (includeWarehouse) {
     columns.push({

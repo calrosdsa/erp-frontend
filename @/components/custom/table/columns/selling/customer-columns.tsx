@@ -5,7 +5,7 @@ import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
@@ -14,7 +14,7 @@ export const customerColumns = ({}): ColumnDef<
   components["schemas"]["CustomerDto"]
 >[] => {
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   return [
     {
       accessorKey: "name",

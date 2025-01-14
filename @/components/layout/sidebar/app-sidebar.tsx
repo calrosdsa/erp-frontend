@@ -30,7 +30,7 @@ import { NavSecondary } from "./nav-secondary";
 import { GlobalState } from "~/types/app";
 import { NavItems } from "@/components/constant/side-nav";
 import { Link } from "@remix-run/react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -40,7 +40,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ ...props }: AppSidebarProps) {
-  const r = routes;
+  const r = route;
   // const navItems = React.useMemo(() => {
   //   return NavItems({ data:props.data });
   // }, [data]);

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { formatLongDate } from "~/util/format/formatDate";
 import DetailLayout from "@/components/layout/detail-layout";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import CompanyInfo from "./tab/company-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -14,7 +14,7 @@ import CompanyAccounts from "./tab/company-accounts";
 export default function CompanyClient() {
   const { company } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
 

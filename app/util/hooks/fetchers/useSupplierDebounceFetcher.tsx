@@ -3,7 +3,7 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { usePermission } from "../useActions";
 import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier";
 import { Control } from "react-hook-form";
@@ -75,7 +75,7 @@ export const SupplierSearch = ({ placeholder }: { placeholder: string }) => {
 };
 
 export const useSupplierDebounceFetcher = () => {
-  const r = routes;
+  const r = route;
   const fetcherDebounce = useDebounceFetcher<{
     actions: components["schemas"]["ActionDto"][];
     suppliers: components["schemas"]["SupplierDto"][];

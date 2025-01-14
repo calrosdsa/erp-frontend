@@ -2,13 +2,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import TableCellDate from "../../cells/table-cell-date";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { ChartType, chartTypeToJSON, TimeUnit } from "~/gen/common";
 import TableCellPrice from "../../cells/table-cell-price";
 import { DEFAULT_CURRENCY } from "~/constant";
-import { getChartName } from "~/routes/home._regate.rdashboard.$chart/util";
+import { getChartName } from "~/routes/home._regate.bookingDashboard.$chart/util";
 
 export const chartColumns = ({chartType,timeUnit}:{
     chartType:ChartType,
@@ -16,7 +16,7 @@ export const chartColumns = ({chartType,timeUnit}:{
 }):ColumnDef<components["schemas"]["ChartDataDto"]>[] =>{
 
     let columns:ColumnDef<components["schemas"]["ChartDataDto"]>[] = [];
-    const r= routes
+    const r= route
     const {t,i18n} = useTranslation("common")
     columns.push({
         accessorKey: "name",

@@ -1,9 +1,4 @@
-import { components } from "~/sdk";
 import { useTranslation } from "react-i18next";
-import { formatCurrency, sumTotal } from "~/util/format/formatCurrency";
-import { DEFAULT_CURRENCY } from "~/constant";
-import { formatMediumDate } from "~/util/format/formatDate";
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import {
   useFetcher,
   useLoaderData,
@@ -12,19 +7,12 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "../../route";
 import {
-  ItemLineType,
-  itemLineTypeToJSON,
   State,
   stateFromJSON,
   stateToJSON,
 } from "~/gen/common";
 import { Typography } from "@/components/typography";
 import { GlobalState } from "~/types/app";
-import LineItems from "@/components/custom/shared/item/line-items";
-import LineItemsDisplay from "@/components/custom/shared/item/line-items-display";
-import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
-import GrandTotal from "@/components/custom/shared/item/grand-total";
-import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
 import { useEffect, useRef } from "react";
 import { usePermission } from "~/util/hooks/useActions";
 import { z } from "zod";
@@ -37,14 +25,6 @@ import {
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
-import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
-import { Separator } from "@/components/ui/separator";
-import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
-import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
-import { Form } from "@/components/ui/form";
-import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";

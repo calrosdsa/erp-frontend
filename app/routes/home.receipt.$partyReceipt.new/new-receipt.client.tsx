@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { useEffect, useRef } from "react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { GlobalState } from "~/types/app";
 import { action } from "./route";
@@ -46,7 +46,7 @@ export default function NewReceiptClient() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
   const { payload } = useDocumentStore();

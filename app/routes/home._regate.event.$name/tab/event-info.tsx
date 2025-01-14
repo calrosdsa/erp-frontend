@@ -21,6 +21,7 @@ import { formatAmount, formatCurrency } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { Typography } from "@/components/typography";
 import { useEditFields } from "~/util/hooks/useEditFields";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
 type EditType = z.infer<typeof editEventSchema>;
 export default function EventInfoTab() {
@@ -40,6 +41,7 @@ export default function EventInfoTab() {
     schema: editEventSchema,
     defaultValues: defaultValues,
   });
+  const allowEdit = permission.edit;
   const onSubmit = (e: EditType) => {
     fetcher.submit(
       {
@@ -88,26 +90,28 @@ export default function EventInfoTab() {
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
           <div className="info-grid">
-            <CustomFormField
-              form={form}
+            <CustomFormFieldInput
+              control={form.control}
               name="name"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    value={field.value}
-                    inputType="input"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      form.trigger("name");
-                    }}
-                    title={t("form.name")}
-                    readOnly={!permission?.edit}
-                  />
-                );
-              }}
+              label={t("form.name")}
+              inputType="input"
+              allowEdit={allowEdit}
+              required={true}
             />
 
-            <CustomFormField
+            {form.watch("name") && (
+              <CustomFormFieldInput
+                className=" col-span-full"
+                control={form.control}
+                name="description"
+                required={false}
+                label={t("form.description")}
+                inputType="richtext"
+                allowEdit={allowEdit}
+              />
+            )}
+
+            {/* <CustomFormField
               form={form}
               name="description"
               children={(field) => {
@@ -124,10 +128,12 @@ export default function EventInfoTab() {
                   />
                 );
               }}
-            />
-          <div className=" col-span-full"/>
-          <Typography variant="subtitle2" className=" col-span-full">Información de reserva del evento</Typography>
-          <DisplayTextValue
+            /> */}
+            <div className=" col-span-full" />
+            <Typography variant="subtitle2" className=" col-span-full">
+              Información de reserva del evento
+            </Typography>
+            <DisplayTextValue
               value={formatLongDate(bookingInfo?.start_date, i18n.language)}
               title={t("form.startDate")}
             />
@@ -135,20 +141,30 @@ export default function EventInfoTab() {
               value={formatLongDate(bookingInfo?.end_date, i18n.language)}
               title={t("form.endDate")}
             />
-              <DisplayTextValue
-              value={formatCurrency(bookingInfo?.total_price,DEFAULT_CURRENCY ,i18n.language)}
+            <DisplayTextValue
+              value={formatCurrency(
+                bookingInfo?.total_price,
+                DEFAULT_CURRENCY,
+                i18n.language
+              )}
               title={t("form.total")}
             />
-             <DisplayTextValue
-              value={formatCurrency(bookingInfo?.total_paid,DEFAULT_CURRENCY ,i18n.language)}
+            <DisplayTextValue
+              value={formatCurrency(
+                bookingInfo?.total_paid,
+                DEFAULT_CURRENCY,
+                i18n.language
+              )}
               title={t("form.paidAmount")}
             />
             <DisplayTextValue
-              value={formatCurrency(bookingInfo?.total_discount,DEFAULT_CURRENCY ,i18n.language)}
+              value={formatCurrency(
+                bookingInfo?.total_discount,
+                DEFAULT_CURRENCY,
+                i18n.language
+              )}
               title={t("form.discount")}
             />
-
-          
           </div>
         </fetcher.Form>
       </Form>

@@ -5,7 +5,7 @@ import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
 import { components } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { usePermission } from "../useActions";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField";
@@ -70,7 +70,7 @@ export const CustomerSearch = ({ placeholder }: { placeholder: string }) => {
 };
 
 export const useCustomerDebounceFetcher = () => {
-  const r = routes;
+  const r = route;
   const fetcherDebounce = useDebounceFetcher<{
     actions: components["schemas"]["ActionDto"][];
     customers: components["schemas"]["CustomerDto"][];

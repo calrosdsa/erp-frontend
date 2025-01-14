@@ -6,7 +6,7 @@ import {
   ConnectionModule,
   PartyTypeConnection,
 } from "~/types/connections";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 interface UseConnectionsProps {
   moduleName?: string;
@@ -21,7 +21,7 @@ export const useConnections = ({
   references,
   querySearch,
 }: UseConnectionsProps): ConnectionModule => {
-  const r = routes;
+  const r = route;
 
   const connections = useMemo(() => {
     return references.reduce((acc, t) => {

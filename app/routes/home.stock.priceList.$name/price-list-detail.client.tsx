@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import DetailLayout from "@/components/layout/detail-layout";
 import PriceListInfo from "./tab/price-list-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -24,7 +24,7 @@ export default function PriceListDetailClient() {
   });
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
-  const r = routes;
+  const r = route;
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: r.project,

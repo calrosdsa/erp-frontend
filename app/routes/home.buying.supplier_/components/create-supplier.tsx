@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import CustomForm from "@/components/custom/form/CustomForm";
 import { createSupplierSchema } from "~/util/data/schemas/buying/supplier-schema";
 import { z } from "zod";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { GroupAutocompleteForm, useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
@@ -31,7 +31,7 @@ export const CreateSupplier = ({
   const { toast } = useToast();
   
   
-  const r = routes;
+  const r = route;
   useEffect(() => {
     if (fetcher.data?.error) {
       toast({

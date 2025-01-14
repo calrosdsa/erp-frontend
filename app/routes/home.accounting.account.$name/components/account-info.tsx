@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charges-template-schema";
 import { useEffect, useRef, useState } from "react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import {
   setUpToolbar,

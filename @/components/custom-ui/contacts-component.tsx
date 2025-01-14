@@ -5,7 +5,7 @@ import { User, Plus, ChevronDown, ChevronUp, Edit2, Mail, Phone } from "lucide-r
 import IconButton from './icon-button'
 import { components } from '~/sdk'
 import { useNavigate } from '@remix-run/react'
-import { routes } from '~/util/route'
+import { route } from '~/util/route'
 import { fullName } from '~/util/convertor/convertor'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +19,7 @@ interface ContactListProps {
 export default function ContactList({ contacts = [], onAddContact }: ContactListProps) {
   const [expandedIndex, setExpandedIndex] = useState<number[]>([]);
   const navigate = useNavigate()
-  const r = routes
+  const r = route
   const {t} = useTranslation("common")
 
   if (contacts == null || contacts.length === 0) {

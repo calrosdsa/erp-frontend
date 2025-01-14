@@ -3,12 +3,12 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
 import { components } from "~/sdk"
 import { PartyType } from "~/types/enums"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { usePermission } from "../useActions"
 
 
 export const useTaxDebounceFetcher = () =>{
-    const r = routes
+    const r = route
     const debounceFetcher = useDebounceFetcher<{
         actions:components["schemas"]["ActionDto"][],
         taxes:components["schemas"]["TaxDto"][],

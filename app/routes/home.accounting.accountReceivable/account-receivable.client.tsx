@@ -11,7 +11,7 @@ import { DEFAULT_CURRENCY } from "~/constant";
 import { useMemo } from "react";
 import { accountPayableColumns } from "@/components/custom/table/columns/accounting/account-payable-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import AccountReceivableHeader from "./components/account-receivable-header";
@@ -24,7 +24,7 @@ interface LedgerData {
 
 export default function AccountReceivableClient() {
   const { accountReceivable } = useLoaderData<typeof loader>();
-  const r = routes
+  const r = route
   const {t} = useTranslation("common")
   const navigate = useNavigate()
   const total =  useMemo(()=>{

@@ -14,12 +14,12 @@ import { SideNav } from "@/components/layout/side-nav";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMediaQuery } from "usehooks-ts";
 import ResponsiveSidebar from "@/components/layout/nav/responsive-sidebar";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import DetailLayout from "@/components/layout/detail-layout";
 
 export default function SettingClient() {
-    const r = routes 
+    const r = route 
     const {t} = useTranslation("common")
     const globalState = useOutletContext<GlobalState>()
     const navItems = [

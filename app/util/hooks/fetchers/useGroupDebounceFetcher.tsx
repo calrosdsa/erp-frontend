@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { components } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { usePermission } from "../useActions";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { Control } from "react-hook-form";
@@ -68,7 +68,7 @@ export const useGroupDebounceFetcher = ({
   partyType: string;
   isGroup?: boolean;
 }) => {
-  const r = routes;
+  const r = route;
   const debounceFetcher = useDebounceFetcher<{
     actions: components["schemas"]["ActionDto"][];
     groups: components["schemas"]["GroupDto"][];

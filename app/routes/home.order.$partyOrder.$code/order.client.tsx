@@ -22,7 +22,7 @@ import { useEffect } from "react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { PlusIcon } from "lucide-react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { z } from "zod";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import DetailLayout from "@/components/layout/detail-layout";
@@ -66,7 +66,7 @@ export default function PurchaseOrderClient() {
     roleActions: globalState.roleActions,
   });
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const params = useParams();
   const partyOrder = params.partyOrder || "";

@@ -14,7 +14,7 @@ import {
 import useTableRowActions from "~/util/hooks/useTableRowActions";
 import { MutableRefObject, useEffect } from "react";
 import { GlobalState } from "~/types/app";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { PaymentType } from "~/gen/common";
 import { cn } from "@/lib/utils";
@@ -89,7 +89,7 @@ export default function PaymentData({
   const formValues = form.getValues();
   const fetcherAccountBalance = useFetcherWithPromise<typeof actionAccount>();
   const { companyDefaults } = useOutletContext<GlobalState>();
-  const r = routes;
+  const r = route;
   const { accountBalanceService } = usePaymentData({
     form: form,
     i18n: i18n,

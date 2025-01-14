@@ -8,7 +8,7 @@ import {
 import { action, loader } from "./route";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import StockEntryInfo from "./tab/stock-entry-info";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -26,7 +26,7 @@ import { format, toZonedTime } from "date-fns-tz";
 export default function StockEntryDetailClient() {
   const { stockEntry, associatedActions } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const [searchParams] = useSearchParams();
   const fetcher = useFetcher<typeof action>();
   const tab = searchParams.get("tab") || "info";

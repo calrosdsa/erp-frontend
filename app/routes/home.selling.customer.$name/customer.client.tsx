@@ -8,7 +8,7 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import DetailLayout from "@/components/layout/detail-layout";
 import CustomerInfo from "./components/tab/customer-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -28,7 +28,7 @@ export default function CustomerClient() {
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const { roleActions } =  useOutletContext<GlobalState>()
   const [permission] = usePermission({

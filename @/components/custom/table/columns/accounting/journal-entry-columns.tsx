@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellStatus from "../../cells/table-cell-status";
@@ -16,7 +16,7 @@ export const journalEntryColumns = ({}: {}): ColumnDef<
   components["schemas"]["JournalEntryDto"]
 >[] => {
   let columns: ColumnDef<components["schemas"]["JournalEntryDto"]>[] = [];
-  const r = routes;
+  const r = route;
   const { t, i18n } = useTranslation("common");
   return [
   
@@ -63,7 +63,7 @@ export const journalEntryLineColumns = (): ColumnDef<
   z.infer<typeof journalEntryLineSchema>
 >[] => {
   let columns: ColumnDef<z.infer<typeof journalEntryLineSchema>>[] = [];
-  const r = routes;
+  const r = route;
   const { t, i18n } = useTranslation("common");
   columns.push({
     header: t("table.no"),

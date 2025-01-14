@@ -12,7 +12,7 @@ import { useAddItemPrice } from "./components/add-item-price";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useNewItemPrice } from "../home.stock.itemPrice.new/components/new-item-price-dialog";
 
@@ -24,7 +24,7 @@ export default function ItemPricesClient() {
     roleActions: globalState.roleActions,
     actions: actions,
   });
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const newItemPrice = useNewItemPrice();
 

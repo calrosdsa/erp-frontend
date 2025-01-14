@@ -2,14 +2,14 @@ import { useTranslation } from "react-i18next";
 import { InvoiceSearch } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { OrderSearch } from "~/util/hooks/fetchers/docs/use-order-fetcher";
 import { PricingSearch } from "~/util/hooks/fetchers/pricing/use-pricing-fetcher";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 
 export default function AutoCompleteByParty({
   partyType,
 }: {
   partyType: string;
 }) {
-  const p = parties;
+  const p = party;
   const { t } = useTranslation("common");
   if (partyType == p.pricing) {
     return <PricingSearch placeholder={t("pricing")} />;

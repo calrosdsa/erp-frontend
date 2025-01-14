@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellStatus from "../../cells/table-cell-status";
@@ -10,7 +10,7 @@ import TableCellPrice from "../../cells/table-cell-price";
 export const salesRecordColumn = ({}: {}): ColumnDef<
   components["schemas"]["SalesRecordDto"]
 >[] => {
-  const r = routes;
+  const r = route;
   const {i18n} = useTranslation()
   return [
     {

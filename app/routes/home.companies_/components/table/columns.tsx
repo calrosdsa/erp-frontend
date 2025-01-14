@@ -9,11 +9,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CornerDownRight, FolderIcon, FolderOpenIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const companyColumns = (): ColumnDef<components["schemas"]["CompanyDto"]>[] => {
   const { t,i18n } = useTranslation("common");
-  const r = routes
+  const r = route
   return [
     {
       header: "Name",

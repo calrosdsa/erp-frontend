@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { createCourtSchema } from "~/util/data/schemas/regate/court-schema";
 import { action } from "./route";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
@@ -20,7 +20,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 export default function NewCourtClient() {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
-  const r = routes;
+  const r = route;
   const { toast } = useToast();
   const form = useForm<z.infer<typeof createCourtSchema>>({
     resolver: zodResolver(createCourtSchema),

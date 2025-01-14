@@ -2,7 +2,7 @@ import { useLoaderData, useNavigate } from "@remix-run/react";
 import FinancialStatementHeader from "../home.accounting.profitAndLoss/components/financial-statement-header";
 import { loader } from "./route";
 import { BalanceSheetReport } from "./components/balance-sheet-report";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
 import { ButtonToolbar } from "~/types/actions";
@@ -10,7 +10,7 @@ import { ButtonToolbar } from "~/types/actions";
 export default function BalanceSheetClient() {
   const { balanceSheet } = useLoaderData<typeof loader>();
   const {t} = useTranslation("common")
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
 
   setUpToolbar(() => {

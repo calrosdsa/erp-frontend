@@ -5,7 +5,7 @@ import DetailLayout from "@/components/layout/detail-layout";
 import EventInfoTab from "./tab/event-info";
 import { useEffect, useState } from "react";
 import { NavItem } from "~/types";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import EventConnectionsTab from "./tab/event-connections";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { EventState, State, stateFromJSON } from "~/gen/common";
@@ -26,7 +26,7 @@ export default function EventDetailClient() {
   })
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const [navItems, setNavItems] = useState<NavItem[]>([]);
   const setUpNavItems = () => {
     if (event) {

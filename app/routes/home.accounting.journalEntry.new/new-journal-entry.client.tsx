@@ -8,7 +8,7 @@ import {
   createJournalEntrySchema,
   journalEntryLineSchema,
 } from "~/util/data/schemas/accounting/journal-entry-schema";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { action } from "./route";
 import { Form } from "@/components/ui/form";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -31,7 +31,7 @@ import { useRef } from "react";
 
 export default function NewJournalEntryClient() {
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const fetcher = useFetcher<typeof action>();
   const form = useForm<z.infer<typeof createJournalEntrySchema>>({
     resolver: zodResolver(createJournalEntrySchema),

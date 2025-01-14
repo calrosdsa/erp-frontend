@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { z } from "zod";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { action } from "../../home.stock.items.$code/route";
 import { useToast } from "@/components/ui/use-toast";
 import { create } from "zustand";
@@ -35,7 +35,7 @@ export default function CreateItemVariant({
   const params = useParams()
   const revalidator = useRevalidator()
   const fetcher = useFetcher<typeof action>();
-  const r = routes;
+  const r = route;
   const {toast} = useToast()
 
   useEffect(()=>{

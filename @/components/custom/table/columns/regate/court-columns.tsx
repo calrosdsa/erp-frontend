@@ -6,7 +6,7 @@ import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
 import TableCellIndex from "../../cells/table-cell-index";
@@ -14,7 +14,7 @@ import TableCellStatus from "../../cells/table-cell-status";
 
 export const courtColumns = (): ColumnDef<components["schemas"]["CourtDto"]>[] => {
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   return [
     {
        header:t("table.no"),

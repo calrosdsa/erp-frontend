@@ -4,7 +4,7 @@ import { useNavigate } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 import { PartyType, partyTypeToJSON } from "~/gen/common"
 import { components } from "~/sdk"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 
 
 export const PartyContacts = ({
@@ -16,7 +16,7 @@ export const PartyContacts = ({
 }) =>{
     const {t} = useTranslation("common")
     const navigate = useNavigate()
-    const r  = routes
+    const r  = route
     return (
         <div className="py-3 grid">
             <Typography fontSize={subtitle}>

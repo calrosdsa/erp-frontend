@@ -23,7 +23,7 @@ import { ItemLineType, itemLineTypeToJSON, StockEntryType } from "~/gen/common";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
 import SelectForm from "@/components/custom/select/SelectForm";
@@ -54,7 +54,7 @@ export const StockEntryData = ({
   const formValues = form.getValues();
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
-  const p = parties;
+  const p = party;
 
   const entryTypes: SelectItem[] = [
     {

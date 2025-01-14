@@ -2,7 +2,7 @@ import { useLoaderData, useNavigate } from "@remix-run/react";
 import { loader } from "../../route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { formatCurrency } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { CalendarDays, Clock, DollarSign } from "lucide-react";
@@ -15,7 +15,7 @@ export const BookingInfo = () => {
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
 
-  const r = routes;
+  const r = route;
   return (
     <div className="info-grid">
       <DisplayTextValue

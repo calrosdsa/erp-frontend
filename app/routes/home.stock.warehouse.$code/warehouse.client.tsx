@@ -3,7 +3,7 @@ import { loader } from "./route";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
 import { GlobalState, WarehouseGlobalState } from "~/types/app";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import DetailLayout from "@/components/layout/detail-layout";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import WarehouseInfo from "./tab/warehouse-info";
@@ -15,7 +15,7 @@ export default function WareHouseClient() {
   const globalState = useOutletContext<GlobalState>()
   const { warehouse,activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const [searchParams] = useSearchParams()
   const tab = searchParams.get("tab")
   const navigate = useNavigate()

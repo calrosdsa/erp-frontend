@@ -19,7 +19,7 @@ import { formatCurrency, formatCurrencyAmount } from "~/util/format/formatCurren
 import { DEFAULT_CURRENCY } from "~/constant";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { Link, useRevalidator } from "@remix-run/react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import IconButton from "@/components/custom-ui/icon-button";
 import {
   DropdownMenu,
@@ -50,7 +50,7 @@ export default function BookingDisplay({
   removeBooking,
   // onEditBooking,
 }: BookingDisplayProps) {
-  const r = routes;
+  const r = route;
   const { i18n, t } = useTranslation("common");
 
   const groupedBookings = bookings.reduce((acc, booking) => {

@@ -4,7 +4,7 @@ import { DataTable } from "@/components/custom/table/CustomTable"
 import { accountColumns } from "@/components/custom/table/columns/accounting/account-columns"
 import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 import { TreeView } from "@/components/layout/tree/tree-view"
 import { useNewAccount } from "../home.accounting.account.new/use-new-account"
@@ -17,7 +17,7 @@ export default function AccountsTreeViewClient(){
         actions:actions,
         roleActions:globalState.roleActions
     })
-    const r = routes
+    const r = route
     const navigate = useNavigate()
     const newAccount = useNewAccount()
     setUpToolbar(()=>{

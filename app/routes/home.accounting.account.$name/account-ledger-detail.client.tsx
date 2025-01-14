@@ -1,7 +1,7 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { loader } from "./route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { formatLongDate } from "~/util/format/formatDate";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -13,7 +13,7 @@ import AccountInfo from "./components/account-info";
 export default function AccountLedgerDetailClient() {
   const { actions, account } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
   const toRoute = (tab: string) => {

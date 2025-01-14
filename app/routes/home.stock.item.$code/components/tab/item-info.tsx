@@ -17,7 +17,7 @@ import { useEditFields } from "~/util/hooks/useEditFields";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { UomAutocompleteForm } from "~/util/hooks/fetchers/useUomDebounceFetcher";
 import { GroupAutocompleteForm } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 type EditItemType = z.infer<typeof editItemSchema>;
 export default function ItemInfoTab() {
@@ -25,7 +25,7 @@ export default function ItemInfoTab() {
   const { item, actions } = useLoaderData<typeof loader>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { roleActions } = useOutletContext<GlobalState>();
-  const r = routes;
+  const r = route;
   const [permission] = usePermission({ roleActions, actions });
   const fetcher = useFetcher<typeof action>();
   const allowEdit = permission.edit;

@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { action, loader } from "../route";
 import { GlobalState } from "~/types/app";
 import { useRef } from "react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import {
   setUpToolbar,

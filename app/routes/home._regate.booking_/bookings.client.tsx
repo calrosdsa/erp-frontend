@@ -13,7 +13,7 @@ import { bookingColumns } from "@/components/custom/table/columns/regate/booking
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import DataLayout from "@/components/layout/data-layout";
@@ -29,7 +29,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { GenericActionsDropdown } from "./components/actions-dropdown";
 import CustomSelect from "@/components/custom/select/custom-select";
 import { ButtonToolbar } from "~/types/actions";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 
 export default function BookingsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -48,8 +48,8 @@ export default function BookingsClient() {
   // const [selectedBookings, setSelectedBookings] = useState<
   //   components["schemas"]["BookingDto"][]
   // >([]);
-  const r = routes;
-  const p = parties
+  const r = route;
+  const p = party
   const onActions = (state: State) => {
     const body: components["schemas"]["UpdateBookingBatchRequestBody"] = {
       booking_ids: selectedRowsData.map((t) => t.id),
@@ -198,9 +198,8 @@ export default function BookingsClient() {
           created_at: false,
         }}
         enableRowSelection={true}
-        paginationOptions={{
-          rowCount: paginationResult?.total,
-        }}
+        enableSizeSelection={true}
+        
       />
     </DataLayout>
   );

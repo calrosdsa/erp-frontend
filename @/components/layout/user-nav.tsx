@@ -12,7 +12,7 @@ import { UserAvatar } from "@/components/layout/avatar";
 import { UserData } from "~/types/app";
 import { Form, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
 
 export function UserNav({ user,openSessionDefaults }: Props) {
     const { t } = useTranslation("common")
-    const r = routes
+    const r = route
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>

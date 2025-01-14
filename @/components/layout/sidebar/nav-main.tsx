@@ -14,30 +14,16 @@ import { NavItem } from "~/types";
 import { Link } from "@remix-run/react";
 import { components } from "~/sdk";
 import { useCallback } from "react";
+import icons from "~/data/icons";
 export function NavMain({ items }: { items: components["schemas"]["ModuleDto"][] }) {
-  const renderIcon = useCallback((iconType:string):JSX.Element=>{
+  const renderIcon = useCallback((iconType: string | null): JSX.Element => {
     // const d = <ContactIcon/>
-    switch(iconType){
-      case "contact":
-        return <ContactIcon/>
-      case "creditCard":
-        return <CreditCardIcon/>
-      case "currency":
-          return <DollarSignIcon/>
-      case "users":
-        return <UsersIcon/>
-      case "wallet":
-        return <WalletIcon/>
-      case "calendar":
-        return <CalendarIcon/>
-      case "arrowRight":
-        return <MoveRightIcon/>
-      case "arrowLeft":
-        return <MoveLeftIcon/>
-      default:
-        return <BoxIcon/>
+    const f = icons.find((t) => t.value == iconType);
+    if (f) {
+      return <f.icon />;
     }
-  },[])
+    return <BoxIcon />;
+  }, []);
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -48,7 +34,7 @@ export function NavMain({ items }: { items: components["schemas"]["ModuleDto"][]
               <SidebarMenuButton asChild tooltip={item.label}>
                 <Link to={item.href}>
                   {/* {item.icon && <item.icon />} */}
-                  {renderIcon(item.icon)}
+                  {renderIcon(item.icon_code)}
                   <span>{item.label}</span>
                 </Link>
               </SidebarMenuButton>

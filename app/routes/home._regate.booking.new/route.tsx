@@ -2,7 +2,7 @@ import { ActionFunctionArgs, json, redirect } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import NewBookingClient from "./new-booking.client"
 import { components } from "~/sdk"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 
 
 type ActionData = {
@@ -14,7 +14,7 @@ type ActionData = {
 export const action = async({request}:ActionFunctionArgs)=>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
-    const r =routes
+    const r =route
     let message:string | undefined = undefined
     let error:string | undefined = undefined
     let bookingData:components["schemas"]["BookingData"][] = []

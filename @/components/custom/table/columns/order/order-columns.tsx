@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import TableCellDate from "../../cells/table-cell-date";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellProgress from "../../cells/table-cell-progressbar";
@@ -16,7 +16,7 @@ export const orderColumns = ({
   orderPartyType: string;
 }): ColumnDef<components["schemas"]["OrderDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["OrderDto"]>[] = [];
-  const r = routes;
+  const r = route;
   const { t, i18n } = useTranslation("common");
 
   columns.push({

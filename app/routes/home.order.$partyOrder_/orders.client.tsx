@@ -9,7 +9,7 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { orderColumns } from "@/components/custom/table/columns/order/order-columns";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
 import DataLayout from "@/components/layout/data-layout";
@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 export default function OrdersClient() {
   const { paginationResult, actions, filters } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
-  const r = routes;
+  const r = route;
   const params = useParams();
   const partyOrder = params.partyOrder || "";
   const { t } = useTranslation("common");

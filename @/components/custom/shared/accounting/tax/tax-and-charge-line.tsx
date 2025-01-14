@@ -23,7 +23,7 @@ import {
   taxAndChargeSchema,
   mapToTaxAndChargeData,
 } from "~/util/data/schemas/accounting/tax-and-charge-schema";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { TaxChargeLineType, taxChargeLineTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import { action } from "~/routes/api.taxAndChargeLine/route";
@@ -131,7 +131,7 @@ export default function TaxAndChargeLine({
   payload,
 }: TaxAndChargeLineProps) {
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const fetcher = useFetcher<typeof action>();
   const {
     onEditTaxLine,

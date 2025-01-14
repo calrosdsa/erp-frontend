@@ -3,7 +3,7 @@ import { GroupedItem } from "./TreeDescendents";
 import { CornerDownRight, FolderIcon } from "lucide-react";
 import Typography, { labelF, subtitle } from "@/components/typography/Typography";
 import { Link } from "@remix-run/react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { cn } from "@/lib/utils";
 
 interface TreeNodeProps extends GroupedItem {
@@ -18,7 +18,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   partyType,
   children,
 }) => {
-    const r = routes
+    const r = route
     
   return (
     <div style={{ marginLeft: depth * 20 }}>

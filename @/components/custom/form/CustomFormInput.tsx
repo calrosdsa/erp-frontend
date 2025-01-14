@@ -103,9 +103,13 @@ export default function CustomFormFieldInput<TFieldValues extends FieldValues>({
                       disabled={!allowEdit}
                       checked={field.value}
                       onCheckedChange={(checked) => {
-                        field.onChange(checked)
-                        onChange?.(checked as any)
-                      }}
+                        try{
+                          field?.onChange(checked)
+                          onChange?.(checked as any)
+                        }catch(err){
+                          console.log(err)
+                        }
+                        }}
                     />
                   </div>
                 )}

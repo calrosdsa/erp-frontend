@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Connection, ConnectionModule } from "~/types/connections";
 import { components } from "~/sdk";
 import { PartyType, partyTypeToJSON, RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { loader } from "../../route";
 
 
@@ -46,7 +46,7 @@ const customerConnections = ({data,customer}:{
   const { t } = useTranslation("common");
   let res: ConnectionModule[] = [];
   let connections:Connection[] = []
-  const r = routes
+  const r = route
   const navigate = useNavigate()
   connections.push({
     entity: "Reservas",

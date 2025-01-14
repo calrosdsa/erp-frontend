@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { create } from "zustand";
 import { addPartyReferencesSchema } from "~/util/data/schemas/party/party-schemas";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { action } from "../route";
 import { useEffect, useState } from "react";
 import { components } from "~/sdk";
@@ -32,7 +32,7 @@ export const AddReference = ({
   const fetcher = useFetcher<typeof action>();
   const referenceOptsFetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const {toast} = useToast()
   const [selectedPartyType, setSelectedPartyType] = useState<
     components["schemas"]["PartyTypeDto"] | undefined

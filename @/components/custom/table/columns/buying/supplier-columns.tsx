@@ -2,7 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import TableCellDate from "../../cells/table-cell-date";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
@@ -12,7 +12,7 @@ export const supplierColumns = ({}:{
 }):ColumnDef<components["schemas"]["SupplierDto"]>[] =>{
 
     let columns:ColumnDef<components["schemas"]["SupplierDto"]>[] = [];
-    const r= routes
+    const r= route
     const {t,i18n} = useTranslation("common")
     columns.push({
         accessorKey: "name",

@@ -9,7 +9,7 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ItemPriceForm from "./item-price-form";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { GlobalState } from "~/types/app";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ export const NewItemPriceDialog = ({
   globalState: GlobalState;
 }) => {
   const fetcher = useFetcher<typeof action>();
-  const r = routes;
+  const r = route;
   const form = useForm<z.infer<typeof createItemPriceSchema>>({
     resolver: zodResolver(createItemPriceSchema),
     defaultValues: {},

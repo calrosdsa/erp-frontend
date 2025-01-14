@@ -2,14 +2,14 @@ import { ChartConfig } from "@/components/ui/chart";
 import { Link, useLoaderData } from "@remix-run/react";
 import { loader } from "./route";
 import BarChartComponent from "@/components/custom/chart/bar-chart";
-import { formatterValue, getChartName } from "../home._regate.rdashboard.$chart/util";
 import { ChartType, TimeUnit } from "~/gen/common";
 import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { ReactNode } from "react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { formatterValue, getChartName } from "../home._regate.bookingDashboard.$chart/util";
 
 const chartConfig = {
   value: {
@@ -35,7 +35,7 @@ export default function DashboardClient() {
   const { income, incomeAvg, bookingHors, bookingHorsAvg } =
     useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const start = format(startOfMonth(new Date()), "MMM d");
   const end = format(endOfMonth(new Date()), "MMM d");
   setUpToolbar(()=>{

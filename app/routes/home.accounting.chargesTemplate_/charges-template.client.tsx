@@ -6,7 +6,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { chargesTemplateColumns } from "@/components/custom/table/columns/accounting/charges-templates-columns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 
 export default function ChargesTemplateClient() {
@@ -17,7 +17,7 @@ export default function ChargesTemplateClient() {
     roleActions: globalState.roleActions,
   });
   const navigate = useNavigate()
-  const r = routes
+  const r = route
   const {reset} = useTaxAndCharges()
   setUpToolbar(() => {
     return {

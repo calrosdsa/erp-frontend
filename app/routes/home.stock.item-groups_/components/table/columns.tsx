@@ -21,11 +21,11 @@ import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { components } from "index";
 import { formatLongDate } from "~/util/format/formatDate";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const itemGroupColumns = (): ColumnDef<components["schemas"]["ItemGroup"]>[] => {
   const { t, i18n } = useTranslation("common");
-  const r = routes
+  const r = route
   return [
     {
       accessorKey: "Code",

@@ -7,7 +7,7 @@ import {
   useOutletContext,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { PartyAddresses } from "~/routes/home.party/components/party-addresses";
 import { PartyContacts } from "~/routes/home.party/components/party-contacts";
 import { editCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
@@ -41,7 +41,7 @@ export default function CustomerInfo() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const { form, hasChanged, updateRef } = useEditFields<EditCustomerType>({
     schema: editCustomerSchema,
     defaultValues: {

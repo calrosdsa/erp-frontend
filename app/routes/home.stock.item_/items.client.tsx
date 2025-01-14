@@ -13,7 +13,7 @@ import { itemColumns } from "./components/item-columns";
 import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -30,7 +30,7 @@ const ItemsClient = () => {
   });
   const submit = useSubmit();
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   setUpToolbar(() => {
     return {
       ...(permission?.create && {

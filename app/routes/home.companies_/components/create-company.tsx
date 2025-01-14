@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
 import { components } from "~/sdk";
@@ -23,7 +23,7 @@ export const CreateCompany = ({
 }) => {
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
-  const r = routes
+  const r = route
   const validParentCompaniesFetcher = useDebounceFetcher<{
     companies: components["schemas"]["Company"][];
   }>();

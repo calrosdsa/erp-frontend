@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Connection, ConnectionModule } from "~/types/connections";
 import { components } from "~/sdk";
 import { PartyType, partyTypeFromJSON, partyTypeToJSON, RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { loader } from "../../route";
 
 

@@ -4,7 +4,7 @@ import { PartyType } from "~/gen/common";
 import { NavItem } from "~/types";
 import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const AccountingNav = ({
   entities,
@@ -12,7 +12,7 @@ export const AccountingNav = ({
   entities: number[] | undefined;
 }): NavItem => {
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   let accountingChildrens: NavItem[] = [];
   if (entities?.includes(Entity.LEDGER)) {
     accountingChildrens.push({

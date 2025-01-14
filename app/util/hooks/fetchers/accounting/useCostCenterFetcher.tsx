@@ -3,7 +3,7 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const CostCenterSearch = ({placeholder}:{
   placeholder:string  
@@ -25,7 +25,7 @@ export const CostCenterSearch = ({placeholder}:{
 
 
 export const useCostCenterFetcher = () => {
-  const r = routes;
+  const r = route;
   const fetcherDebounce = useDebounceFetcher<{
     actions: components["schemas"]["ActionDto"][];
     costCenters: components["schemas"]["CostCenterDto"][];

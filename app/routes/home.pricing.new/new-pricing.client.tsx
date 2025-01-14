@@ -24,7 +24,7 @@ import {
 } from "@/components/custom/table/columns/pricing/pricing-columns";
 
 import { action } from "./route";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
@@ -68,7 +68,7 @@ export default function NewPricingClient() {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const inputRef = useRef<HTMLInputElement>(null);
   // const formRef = useRef<HTMLFormElement | null>(null)
 

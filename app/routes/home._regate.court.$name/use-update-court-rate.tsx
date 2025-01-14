@@ -31,7 +31,7 @@ import { Clock, DollarSign, TrashIcon } from "lucide-react";
 import IconButton from "@/components/custom-ui/icon-button";
 
 import { mapToCourtRateData } from "./util/generate-court-rate-interval";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { ActivityType, activityTypeToJSON } from "~/gen/common";
 
 export const UpdateCourtRate = ({}: {}) => {
@@ -40,7 +40,7 @@ export const UpdateCourtRate = ({}: {}) => {
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const [openAddRateDialog, setOpenAddRateDialog] = useState(false);
-  const r = routes;
+  const r = route;
   const form = useForm<z.infer<typeof updateCourtRateSchema>>({
     resolver: zodResolver(updateCourtRateSchema),
     defaultValues: {

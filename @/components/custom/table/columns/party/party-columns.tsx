@@ -5,7 +5,7 @@ import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
 import { z } from "zod";
@@ -16,7 +16,7 @@ export const partyReferencesColumns = ({}): ColumnDef<
   components["schemas"]["PartyReferenceDto"]
 >[] => {
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   return [
     {
       id: "index",

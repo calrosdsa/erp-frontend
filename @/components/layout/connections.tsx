@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { PlusCircle } from 'lucide-react'
 import { Link } from '@remix-run/react'
 import { components } from '~/sdk'
-import { routes } from '~/util/route'
+import { route } from '~/util/route'
 
 
 
@@ -14,7 +14,7 @@ export default function Connections({ data,q }: {
     data: components["schemas"]["PartyConnections"][]
     q?:Record<string,string | undefined>
 }) {
-  const r = routes
+  const r = route
   return (
     <Card className="w-full ">
       <CardHeader className="flex flex-row items-center justify-between">

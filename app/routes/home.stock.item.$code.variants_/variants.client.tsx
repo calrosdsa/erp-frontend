@@ -28,7 +28,7 @@ import AddItemVariant, {
 } from "./components/create-item-variant";
 import { action, loader } from "./route";
 import { ItemGlobalState } from "~/types/app";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 
 export default function ItemVariantsClient() {
@@ -41,7 +41,7 @@ export default function ItemVariantsClient() {
   const createItemVariant = useCreateItemVariant();
   const params = useParams();
   const { item } = useOutletContext<ItemGlobalState>();
-  const r = routes;
+  const r = route;
   //   const {  } = useLoaderData<typeof loader>();
 
   useEffect(() => {

@@ -7,7 +7,7 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import DetailLayout from "@/components/layout/detail-layout";
 import SupplierInfo from "./tab/supplier-info";
@@ -26,7 +26,7 @@ export default function SupplierClient() {
     useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
   const fetcher = useFetcher<typeof action>();

@@ -6,7 +6,7 @@ import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { action } from "./route";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,7 +26,7 @@ export default function NewSalesRecord() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const {payload} = useNewSalesRecord()
   // Default values for the form
   const form = useForm<z.infer<typeof salesRecordDataSchema>>({

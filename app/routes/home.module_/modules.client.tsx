@@ -1,10 +1,12 @@
-import { useLoaderData, useOutletContext } from "@remix-run/react";
+import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
 import { loader } from "./route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { moduleColumns } from "@/components/custom/table/columns/core/module-columns";
+import { route } from "~/util/route";
+import { party } from "~/util/party";
 
 export default function ModulesClient() {
   const { results, actions } = useLoaderData<typeof loader>();
@@ -13,9 +15,20 @@ export default function ModulesClient() {
     roleActions,
     actions,
   });
+  const navigate = useNavigate()
   setUpToolbar(() => {
     return {
-
+      titleToolbar:"Modulos",
+      ...(permission.create && {
+        addNew:()=>{
+          navigate(
+            route.toRoute({
+              main:party.module,
+              routeSufix:["new"]
+            })
+          )
+        }
+      })
     }
   },[permission]);
   return (

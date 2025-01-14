@@ -6,7 +6,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { stockLedgerColumns } from "@/components/custom/table/columns/stock/stock-ledger-columns";
 import StockLedgerHeader from "./components/stock-ledger-header";
 import { ResizableVirtualizedTable } from "@/components/custom/table/ResizableTable";
@@ -14,7 +14,7 @@ import { ResizableVirtualizedTable } from "@/components/custom/table/ResizableTa
 export default function StockLedgerClient() {
   const { stockLedger } = useLoaderData<typeof loader>();
   const {t} = useTranslation("common")
-  const r = routes
+  const r = route
   const navigate = useNavigate()
   setUpToolbar(()=>{
     return {

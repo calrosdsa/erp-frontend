@@ -5890,22 +5890,31 @@ export interface components {
             sections: components["schemas"]["ModuleSectionDto"][];
         };
         ModuleDto: {
+            has_direct_access: boolean;
             href: string;
-            icon: string;
+            icon_code: string | null;
+            icon_name: string | null;
             /** Format: int64 */
             id: number;
             label: string;
+            /** Format: int32 */
+            priority: number;
             status: string;
             uuid: string;
         };
         ModuleFields: {
+            has_direct_access: boolean;
             href: string;
-            icon: string;
+            icon_code: string | null;
+            icon_name: string | null;
             label: string;
+            /** Format: int32 */
+            priority: number;
         };
         ModuleSectionData: {
             /** Format: int32 */
             entity_id: number;
+            entity_name: string;
             /** Format: int64 */
             module_id: number;
             name: string;

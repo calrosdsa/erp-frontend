@@ -165,6 +165,7 @@ export default function LineItems({
             currency: currency,
             lineType: lineType,
           })}
+          fullHeight={false}
           metaOptions={{
             meta: {
               ...metaOptions,

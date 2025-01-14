@@ -5,14 +5,14 @@ import { Suspense } from "react";
 import { components } from "~/sdk";
 import { loader } from "../../route";
 import Connections from "@/components/layout/connections";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 import { setUpToolbarTab } from "~/util/hooks/ui/useSetUpToolbar";
 
 export default function InvoiceConnectionsTab() {
   const { connections, invoice } = useLoaderData<typeof loader>();
   const params = useParams()
   const partyInvoice = params.partyInvoice ||""
-  const p = parties
+  const p = party
 
    setUpToolbarTab(()=>{
       return {

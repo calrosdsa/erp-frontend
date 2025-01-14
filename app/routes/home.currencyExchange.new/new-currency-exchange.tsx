@@ -8,7 +8,7 @@ import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { action } from "./route";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,7 +31,7 @@ export default function NewCurrencyExchangeClient() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const { companyDefaults } = useOutletContext<GlobalState>();
   const form = useForm<z.infer<typeof createCurrencyExchangeSchema>>({
     resolver: zodResolver(createCurrencyExchangeSchema),

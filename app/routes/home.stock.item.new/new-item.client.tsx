@@ -34,7 +34,7 @@ import { GroupAutocompleteForm } from "~/util/hooks/fetchers/useGroupDebounceFet
 import { PriceListAutocompleteForm } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { GlobalState } from "~/types/app";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { PlusIcon, TrashIcon } from "lucide-react";
@@ -52,7 +52,7 @@ export default function NewItemClient() {
   const { roleActions } = useOutletContext<GlobalState>();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof createItemSchema>>({
     resolver: zodResolver(createItemSchema),

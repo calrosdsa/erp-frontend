@@ -4,13 +4,13 @@ import { PartyType } from "~/gen/common";
 import { NavItem } from "~/types";
 import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const CourtNav = ({ entities }: { 
     entities: number[] | undefined
 }): NavItem => {
   const { t } = useTranslation("common");
-  const r = routes
+  const r = route
 //   let accountingChildrens:NavItem[] = [];
 //   if(entities?.includes(Entity.LEDGER_ENTITY_ID)){
 //     accountingChildrens.push({

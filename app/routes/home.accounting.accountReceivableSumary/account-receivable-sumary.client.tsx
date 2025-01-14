@@ -11,7 +11,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import ReceivableSumaryHeader from "./components/account-receivable-header";
 import { accountReceivableSumaryColumns } from "@/components/custom/table/columns/accounting/account-receivable-sumary-columns";
 
@@ -22,7 +22,7 @@ interface LedgerData {
 export default function AccountReceivableSumaryClient() {
   const { accountReceivableSumary } = useLoaderData<typeof loader>();
   const {t} = useTranslation("common")
-  const r = routes
+  const r = route
   const navigate = useNavigate()
   const total =  useMemo(()=>{
     const totalInvoiceAmount = accountReceivableSumary?.reduce((prev,acc)=>prev + acc.total_invoiced_amount,0)

@@ -1,5 +1,5 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import DashboardClient from "./rdashboard.client";
+import DashboardClient from "./booking-dashboard.client";
 import apiClient from "~/apiclient";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { TimeUnit, timeUnitToJSON } from "~/gen/common";

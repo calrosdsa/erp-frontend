@@ -4,7 +4,7 @@ import CreateItemAttributeClient, {
 } from "./create-item-attribute.client";
 import { z } from "zod";
 import apiClient from "~/apiclient";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 type ActionData = {
   createItemData: z.infer<typeof createItemAttributeSchema>;
@@ -20,7 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     errorAction = res.error.detail;
   }
   if (res.data) {
-    const r = routes
+    const r = route
     return redirect(r.toItemAttributeDetail(res.data.result.Name))
     // successMessage = res.data.message;
   }

@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar, setUpToolbarDetailPage, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import QuotationConnections from "./components/tab/quotation-connections";
 import { format } from "date-fns";
 import { ButtonToolbar } from "~/types/actions";
@@ -50,7 +50,7 @@ export default function QuotationDetailClient() {
   const params = useParams();
   const quotationParty = params.quotationParty || "";
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const {allowActions} = useStatus({status:stateFromJSON(quotation?.status)})
   const toRoute = (tab: string) => {
     return r.toRoute({

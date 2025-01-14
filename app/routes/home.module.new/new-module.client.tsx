@@ -9,8 +9,8 @@ import ModuleData from "./module-data";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { action } from "./route";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { routes } from "~/util/route";
-import { parties } from "~/util/party";
+import { route } from "~/util/route";
+import { party } from "~/util/party";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
@@ -23,15 +23,25 @@ export default function NewModuleClient({}) {
     resolver: zodResolver(moduleDataSchema),
     defaultValues:{
         sections:[],
+        priority:0,
+        has_direct_access:false,
     }
   });
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
   const { t } = useTranslation("common");
-  const r = routes;
-  const p = parties;
+  const r = route;
+  const p = party;
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const onSubmit = (e: ModuleDataType) => {};
+  const onSubmit = (e: ModuleDataType) => {
+    fetcher.submit({
+      action:"create-module",
+      moduleData:e
+    },{
+      method:"POST",
+      encType:"application/json",
+    })
+  };
 
   useLoadingTypeToolbar(
     {

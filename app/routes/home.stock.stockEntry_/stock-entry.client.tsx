@@ -7,7 +7,7 @@ import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { journalEntryColumns } from "@/components/custom/table/columns/accounting/journal-entry-columns";
 import { stockEntryColumns } from "@/components/custom/table/columns/stock/stock-entry-columns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
 import { ButtonToolbar } from "~/types/actions";
@@ -21,7 +21,7 @@ export default function StockEntryClient() {
     roleActions: globalState.roleActions,
   });
   const navigate = useNavigate()
-  const r = routes
+  const r = route
   const { resetItems } = useResetDocument()
   
   setUpToolbar(() => {

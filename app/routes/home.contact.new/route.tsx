@@ -3,7 +3,7 @@ import { z } from "zod";
 import apiClient from "~/apiclient";
 import { fullName } from "~/util/convertor/convertor";
 import { createContactSchema } from "~/util/data/schemas/contact/contact-schema";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import ContactCreateClient from "./contact-create";
 
 type ActionData = {
@@ -14,7 +14,7 @@ type ActionData = {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
-  const r = routes;
+  const r = route;
   let error: string | undefined = undefined;
   switch (data.action) {
     case "create-contact": {

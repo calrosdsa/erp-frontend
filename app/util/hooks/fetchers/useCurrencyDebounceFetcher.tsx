@@ -3,7 +3,7 @@ import { Control } from "react-hook-form"
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
 import { components } from "~/sdk"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 
 
 export const CurrencyAutocompleteForm = ({
@@ -35,7 +35,7 @@ export const CurrencyAutocompleteForm = ({
 }
 
 export const useCurrencyDebounceFetcher = () =>{
-    const r = routes
+    const r = route
     const fetcherDebounce = useDebounceFetcher<{
         actions:components["schemas"]["ActionDto"][],
         currencies:components["schemas"]["CurrencyDto"][],

@@ -5,7 +5,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { journalEntryColumns } from "@/components/custom/table/columns/accounting/journal-entry-columns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export default function JournalEntryClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -14,7 +14,7 @@ export default function JournalEntryClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
-  const r =routes
+  const r =route
   const navigate = useNavigate()
   setUpToolbar(() => {
     return {

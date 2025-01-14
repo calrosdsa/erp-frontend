@@ -6,7 +6,7 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components, operations } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 
 // export const InvoiceAutocompleteForm = ({
@@ -87,7 +87,7 @@ export const PricingSearch = ({
 };
 
 export const usePricingFetcher = () => {
-  const r = routes;
+  const r = route;
   const fetcherDebounce = useDebounceFetcher<{
     actions: components["schemas"]["ActionDto"][];
     results: components["schemas"]["PricingDto"][];

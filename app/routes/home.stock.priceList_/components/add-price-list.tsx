@@ -9,7 +9,7 @@ import { createPriceListSchema } from "~/util/data/schemas/stock/price-list-sche
 import { action } from "../route"
 import { useFetcher } from "@remix-run/react"
 import { create } from "zustand"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 
 
 export const AddPriceList =({open,onOpenChange}:{
@@ -19,7 +19,7 @@ export const AddPriceList =({open,onOpenChange}:{
     const fetcher = useFetcher<typeof action>()
     const {t} = useTranslation("common")
     const {toast} = useToast()
-    const r = routes
+    const r = route
     useEffect(()=>{
         if(fetcher.data?.error){
             toast({

@@ -8,7 +8,7 @@ import { createTaxSchema } from "~/util/data/schemas/accounting/tax-schema";
 import { action } from "../route";
 import { useToast } from "@/components/ui/use-toast";
 import { create } from "zustand";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 
 export const AddTax = ({open,onOpenChange}:{
@@ -18,7 +18,7 @@ export const AddTax = ({open,onOpenChange}:{
     const fetcher = useFetcher<typeof action>()
     const {t} = useTranslation("common")
     const { toast } = useToast()
-    const r = routes
+    const r = route
     useEffect(()=>{
         if(fetcher.data?.error){
             toast({

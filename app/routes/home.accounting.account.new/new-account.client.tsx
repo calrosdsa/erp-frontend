@@ -21,7 +21,7 @@ import {
   useAccountLedgerDebounceFetcher,
 } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
@@ -50,7 +50,7 @@ export default function NewAccountClient() {
     },
   });
   const formValues = form.getValues();
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
   // const [accountRootTypes, setAccountRootTypes] = useState<SelectItem[]>([]);

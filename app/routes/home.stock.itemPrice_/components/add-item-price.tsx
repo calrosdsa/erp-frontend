@@ -17,7 +17,7 @@ import { GlobalState } from "~/types/app";
 import { createItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax";
 import { create } from "zustand";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { components } from "~/sdk";
 import { useItemDebounceFetcher } from "~/util/hooks/fetchers/useItemDebounceFetcher";
@@ -40,7 +40,7 @@ export default function AddItemPrice({
   const fetcher = useFetcher<typeof action>();
   const createTax = useCreateTax();
   const createPriceList = useCreatePriceList();
-  const r = routes;
+  const r = route;
 
   const [itemsDebounceFetcher, onItemNameChange] = useItemDebounceFetcher();
 

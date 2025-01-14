@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { components } from "~/sdk";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { Link } from "@remix-run/react";
 import { Card } from "@/components/ui/card";
 import { Typography } from "@/components/typography";
@@ -40,7 +40,7 @@ export default function Menu({
   data: components["schemas"]["ModuleDetailDto"];
   roleActions?: components["schemas"]["RoleActionDto"][];
 }) {
-  const r = routes;
+  const r = route;
   const groupedSections = useMemo(() => {
     const entities = roleActions
       ?.filter((item) => item.action.name == "view")

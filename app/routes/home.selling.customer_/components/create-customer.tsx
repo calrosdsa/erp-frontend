@@ -8,7 +8,7 @@ import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import CustomForm from "@/components/custom/form/CustomForm";
 import { createCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
 import { z } from "zod";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { GroupAutocompleteForm, useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
@@ -40,7 +40,7 @@ export const CreateCustomer = ({
   //     roleActions:globalState.roleActions
   // })
   // const createGroup = useCreateGroup()
-  const r = routes;
+  const r = route;
   // const getCustomerTypes = () =>{
   //     customerTypeFetcher.submit({
   //         action:"customer-types",

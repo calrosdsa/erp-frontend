@@ -4,7 +4,7 @@ import TableCellIndex from "../../cells/table-cell-index";
 import TableCellPrice from "../../cells/table-cell-price";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellStatus from "../../cells/table-cell-status";
 import TableCellDate from "../../cells/table-cell-date";
 
@@ -13,7 +13,7 @@ export const quotationColumns = ({quotationType}:{
 }): ColumnDef<components["schemas"]["QuotationDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["QuotationDto"]>[] = [];
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   columns.push({
     accessorKey: "code",
     header: t("form.code"),

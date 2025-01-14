@@ -7,7 +7,7 @@ import { partyReferencesSchema } from "~/util/data/schemas/party/party-schemas"
 import { AddReference, useAddReference } from "./add-reference"
 import { useFetcher } from "@remix-run/react"
 import { action } from "../route"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 
 
 
@@ -18,7 +18,7 @@ export const PartyReferences = ({
 }) =>{
     const addReference = useAddReference()
     const partyReferencesfetcher = useFetcher<typeof action>()
-    const r = routes
+    const r = route
     const getPartyReferences = () =>{
         partyReferencesfetcher.submit({
             action:"party-references",

@@ -69,6 +69,7 @@ interface DataTableProps<TData, TValue> {
   rowHeight?: number;
   enableRowSelection?: boolean;
   enableSizeSelection?: boolean;
+  fullHeight?: boolean;
   onSelectionChange?: (selectedRows: TData[]) => void;
   maxTableHeight?: number;
 }
@@ -110,10 +111,9 @@ export function DataTable<TData, TValue>({
   metaActions,
   enableRowSelection = false,
   enableSizeSelection = false,
+  fullHeight=true,
   onSelectionChange,
-  maxTableHeight = 480,
-  rowHeight = 41,
-
+  rowHeight = 51,
 }: DataTableProps<TData, TValue>) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [paginationState, setPaginationState] = useState<PaginationState>({
@@ -128,6 +128,25 @@ export function DataTable<TData, TValue>({
   const [expanded, setExpanded] = useState<ExpandedState>({});
   const { selection, toggle, clear, setAll, setSelectedRowsData } =
     useTableSelectionStore();
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerHeight, setContainerHeight] = useState<number>(500);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (containerRef.current) {
+        const windowHeight = window.innerHeight;
+        const containerTop = containerRef.current.getBoundingClientRect().top;
+        const footerHeight = 80; // Approximate height for the footer
+        const newHeight = windowHeight - containerTop - footerHeight;
+        setContainerHeight(newHeight);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
 
   const columns = useMemo(() => {
     if (!enableRowSelection) return userColumns;
@@ -205,10 +224,10 @@ export function DataTable<TData, TValue>({
     rowCount: Number(paginationOptions?.rowCount),
     autoResetPageIndex: false,
     manualPagination: true,
-      meta: {
-        ...metaOptions?.meta,
-        ...metaActions?.meta,
-      },
+    meta: {
+      ...metaOptions?.meta,
+      ...metaActions?.meta,
+    },
   });
 
   useEffect(() => {
@@ -230,7 +249,10 @@ export function DataTable<TData, TValue>({
       ),
       TableHead: TableHeader,
       // TableRow:TableRow
-      TableRow: ({ children, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
+      TableRow: ({
+        children,
+        ...props
+      }: React.HTMLAttributes<HTMLTableRowElement>) => (
         <tr {...props} className="border-b">
           {children}
         </tr>
@@ -273,15 +295,13 @@ export function DataTable<TData, TValue>({
             width: cell.column.getSize(),
             maxWidth: cell.column.getSize(),
             minWidth: cell.column.getSize(),
-            height: rowHeight,
             overflow: "hidden",
             textOverflow: "ellipsis",
           }}
           className={cn(
-            "border-r  last:border-r-0 p-2 text-xs whitespace-nowrap ",
+            "border-r  last:border-r-0 p-2 text-xs whitespace-nowrap "
           )}
         >
-          
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </TableCell>
       ));
@@ -290,15 +310,19 @@ export function DataTable<TData, TValue>({
   );
 
   return (
-    <div className="space-y-4 w-full">
-      {metaActions != undefined && <DataTableToolbar table={table} />}
-      <div className="rounded-md border w-full">
+    <div className="flex flex-col h-full space-y-4 w-full">
+      {metaActions && <DataTableToolbar table={table} />}
+      <div
+        ref={containerRef}
+        className="flex-grow rounded-md border w-full overflow-hidden"
+      >
         <div
-          // ref={tableRef}
-          className="relative"
+          className="relative w-full h-full"
           style={{
-            // height: `${Math.min((data.length * rowHeight) + 42, maxTableHeight)}px`,
-            height:"60vh"
+            // height: containerHeight,
+            height: fullHeight
+              ? `${containerHeight}px`
+              : `${Math.min(data.length * rowHeight + 42, containerHeight)}px`,
           }}
         >
           <TableVirtuoso
@@ -306,7 +330,6 @@ export function DataTable<TData, TValue>({
               height: "100%",
               width: "100%",
             }}
-            
             data={table.getRowModel().rows}
             components={TableComponents}
             itemContent={(index, row) => (
@@ -315,13 +338,44 @@ export function DataTable<TData, TValue>({
             fixedHeaderContent={fixedHeaderContent}
           />
         </div>
-        {/* <ScrollBar orientation="horizontal" /> */}
       </div>
       <div className="flex justify-between items-center">
-        {metaOptions != undefined && <DataTableEditFooter table={table} />}
+        {metaOptions && <DataTableEditFooter table={table} />}
         {enableSizeSelection && <DataTablePagination table={table} />}
       </div>
     </div>
+    // <div className="space-y-4 w-full">
+    //   {metaActions != undefined && <DataTableToolbar table={table} />}
+    //   <div className="rounded-md border w-full">
+    //     <div
+    //       // ref={tableRef}
+    //       className="relative"
+    //       style={{
+    //         height: `${Math.min((data.length * rowHeight) + 42, maxTableHeight)}px`,
+    //         // height:"60vh"
+    //       }}
+    //     >
+    //       <TableVirtuoso
+    //         style={{
+    //           height: "100%",
+    //           width: "100%",
+    //         }}
+
+    //         data={table.getRowModel().rows}
+    //         components={TableComponents}
+    //         itemContent={(index, row) => (
+    //           <MemoizedRow row={row} rowContent={rowContent} />
+    //         )}
+    //         fixedHeaderContent={fixedHeaderContent}
+    //       />
+    //     </div>
+    //     {/* <ScrollBar orientation="horizontal" /> */}
+    //   </div>
+    //   <div className="flex justify-between items-center">
+    //     {metaOptions != undefined && <DataTableEditFooter table={table} />}
+    //     {enableSizeSelection && <DataTablePagination table={table} />}
+    //   </div>
+    // </div>
   );
 }
 

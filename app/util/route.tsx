@@ -5,10 +5,10 @@ import {
   partyTypeFromJSON,
   partyTypeToJSON,
 } from "~/gen/common";
-import { parties } from "./party";
+import { party } from "./party";
 
 class Routes {
-  p = parties
+  p = party
   signin = "/signin";
   api = "/api";
   apiData = this.api + "/data";
@@ -576,4 +576,4 @@ class Routes {
   }
 }
 
-export const routes = new Routes();
+export const route = new Routes();

@@ -5,7 +5,7 @@ import { MapPin, Plus, ChevronDown, ChevronUp, EditIcon, Edit2Icon } from "lucid
 import { components } from '~/sdk';
 import { Link, useNavigate } from '@remix-run/react';
 import IconButton from './icon-button';
-import { routes } from '~/util/route';
+import { route } from '~/util/route';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
@@ -18,7 +18,7 @@ interface AddressListProps {
 
 export default function AddressesComponent({ addresses = [], onAddAddress }: AddressListProps) {
   const [expandedIndex, setExpandedIndex] = useState<number[]>([]);
-  const r = routes
+  const r = route
   const navigate = useNavigate()
   const {t} = useTranslation("common")
 

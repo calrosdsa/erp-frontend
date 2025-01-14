@@ -9,11 +9,11 @@ import { useTranslation } from "react-i18next";
 import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const itemColumns = (): ColumnDef<components["schemas"]["ItemDto"]>[] => {
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   return [
     {
       accessorKey: "name",

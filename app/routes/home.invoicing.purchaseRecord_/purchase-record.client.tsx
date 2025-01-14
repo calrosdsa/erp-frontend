@@ -6,7 +6,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { chargesTemplateColumns } from "@/components/custom/table/columns/accounting/charges-templates-columns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { currencyExchangeColumns } from "@/components/custom/table/columns/core/currency-exchange-columns";
 import { salesRecordColumn } from "@/components/custom/table/columns/invoicing/sales-records.columns";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -15,7 +15,7 @@ import { purchaseRecordColumn } from "@/components/custom/table/columns/invoicin
 import { InvoiceSearch } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { useTranslation } from "react-i18next";
 import DataLayout from "@/components/layout/data-layout";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 import { ButtonToolbar } from "~/types/actions";
 import { useExporter } from "~/util/hooks/ui/useExporter";
 import { CustomerSearch } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
@@ -30,8 +30,8 @@ export default function PurchaseRecordClient() {
     roleActions: globalState.roleActions,
   });
   const navigate = useNavigate();
-  const r = routes;
-  const p = parties;
+  const r = route;
+  const p = party;
   const { exportExcel } = useExporter();
 
   setUpToolbar(() => {

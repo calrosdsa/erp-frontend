@@ -10,7 +10,7 @@ import { createWarehouseSchema } from "~/util/data/schemas/stock/warehouse-schem
 import { action } from "../route";
 import { useToast } from "@/components/ui/use-toast";
 import { create } from "zustand";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { WarehouseAutocompleteForm } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { components } from "~/sdk";
 
@@ -23,7 +23,7 @@ export const CreateWareHouse = ({open,onOpenChange,roleActions}:{
     const {t} = useTranslation("common")
     const fetcher = useFetcher<typeof action>()
     const {toast} = useToast()
-    const r = routes
+    const r = route
     useEffect(()=>{
         if(fetcher.data?.error){
             toast({

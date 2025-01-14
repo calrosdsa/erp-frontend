@@ -8,7 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import CustomForm from "@/components/custom/form/CustomForm";
 import { createRoleSchema } from "~/util/data/schemas/manage/role-schema";
 import { z } from "zod";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const CreateRole = ({open,onOpenChange}:{
     open:boolean
@@ -16,7 +16,7 @@ export const CreateRole = ({open,onOpenChange}:{
 }) =>{
     const fetcher = useFetcher<typeof action>()
     const {t} = useTranslation("common")
-    const r = routes
+    const r = route
     const {toast } = useToast()
     useEffect(()=>{
         if(fetcher.data?.error){

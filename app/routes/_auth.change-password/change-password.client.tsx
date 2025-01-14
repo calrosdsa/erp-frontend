@@ -8,13 +8,13 @@ import { useEffect } from "react";
 import { changePasswordSchema } from "~/util/data/schemas/auth/forgot-password-schema";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { action } from "./route";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export default function ChangePasswordClient() {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const zodM = useTranslation("zod");
-  const r = routes
+  const r = route
   const navigate = useNavigate()
   useDisplayMessage(
     {

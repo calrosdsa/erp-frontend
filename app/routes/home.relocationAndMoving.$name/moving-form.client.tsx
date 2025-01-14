@@ -2,7 +2,7 @@ import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { loader } from "./route";
 import { useTranslation } from "react-i18next";
 import DetailLayout from "@/components/layout/detail-layout";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { fullName } from "~/util/convertor/convertor";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import Typography, { subtitle } from "@/components/typography/Typography";
@@ -13,7 +13,7 @@ export default function MovingFormDetailClient() {
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("info");
   const { t,i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const tabs = [
     {
       title: t("info"),

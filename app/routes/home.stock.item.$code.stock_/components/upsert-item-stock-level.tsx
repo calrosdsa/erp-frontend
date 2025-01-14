@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { useItemDebounceFetcher } from "~/util/hooks/fetchers/useItemDebounceFetcher";
 import { components } from "~/sdk";
@@ -37,7 +37,7 @@ export const UpsertItemStockLevel = ({
     useWarehouseDebounceFetcher({isGroup:false});
   const [itemsDebounceFetcher, onItemNameChange] = useItemDebounceFetcher();
   const params = useParams();
-  const r = routes;
+  const r = route;
 
   useEffect(() => {
     if (fetcher.data?.error) {

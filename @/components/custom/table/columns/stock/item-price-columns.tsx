@@ -6,7 +6,7 @@ import { formatCurrency } from "~/util/format/formatCurrency";
 import { formatLongDate } from "~/util/format/formatDate";
 import TableCellDate from "../../cells/table-cell-date";
 import { DEFAULT_CURRENCY } from "~/constant";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
@@ -18,7 +18,7 @@ export const itemPriceColumns = ({
 }): ColumnDef<components["schemas"]["ItemPriceDto"]>[] => {
   const { t, i18n } = useTranslation("common");
   let columns: ColumnDef<components["schemas"]["ItemPriceDto"]>[] = [];
-  const r = routes;
+  const r = route;
   
   if (includeItem) {
     columns.push({

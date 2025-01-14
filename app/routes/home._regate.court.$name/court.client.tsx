@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
 import { NavItem } from "~/types";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { CourtState, GlobalState } from "~/types/app";
 import CourtInfoTab from "./tabs/court-info";
 import CourtSchedule from "./tabs/court-schedule";
@@ -25,7 +25,7 @@ export default function CourtDetailClient() {
   const { court, activities } = useLoaderData<typeof loader>();
   const params = useParams();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");

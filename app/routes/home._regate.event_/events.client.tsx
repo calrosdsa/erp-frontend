@@ -7,7 +7,7 @@ import {
   useTableSelectionStore,
 } from "@/components/custom/table/CustomTable";
 import { eventBookingsColumns } from "@/components/custom/table/columns/regate/event-columns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useCreateEvent } from "./components/use-create-event";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";

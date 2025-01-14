@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import TableCellDate from "../../cells/table-cell-date";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { z } from "zod";
@@ -22,7 +22,7 @@ export const lineItemsColumns = ({
   lineType: string;
 }): ColumnDef<z.infer<typeof lineItemSchema>>[] => {
   let columns: ColumnDef<z.infer<typeof lineItemSchema>>[] = [];
-  const r = routes;
+  const r = route;
   const { t, i18n } = useTranslation("common");
   
   columns.push({
@@ -116,7 +116,7 @@ export const displayItemLineColumns = ({
   currency?: string;
 }): ColumnDef<components["schemas"]["ItemLineDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["ItemLineDto"]>[] = [];
-  const r = routes;
+  const r = route;
   const { t, i18n } = useTranslation("common");
   columns.push({
     header: t("table.no"),
@@ -198,7 +198,7 @@ export const lineItemColumns = ({
   currency?: string;
 }): ColumnDef<components["schemas"]["LineItemDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["LineItemDto"]>[] = [];
-  const r = routes;
+  const r = route;
   const { t, i18n } = useTranslation("common");
   columns.push({
     header: t("table.no"),

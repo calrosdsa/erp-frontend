@@ -18,7 +18,7 @@ import { ChargesTemplateForm } from "~/util/hooks/fetchers/accounting/useCharges
 import { UseFormReturn } from "react-hook-form";
 import { useFetcher } from "@remix-run/react";
 import { action } from "~/routes/api.taxAndChargeLine/route";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useEffect } from "react";
 
 export default function TaxAndChargesLines({
@@ -42,7 +42,7 @@ export default function TaxAndChargesLines({
 }) {
   const { t, i18n } = useTranslation("common");
   const taxAndCharge = useTaxAndCharge();
-  const r = routes;
+  const r = route;
   const fetcher = useFetcher<typeof action>();
   const {
     lines: taxLines,
@@ -156,6 +156,7 @@ export default function TaxAndChargesLines({
           columns={taxAndChargesColumns({
             currency: currency,
           })}
+          fullHeight={false}
           metaOptions={{
             meta: {
               ...metaOptions,

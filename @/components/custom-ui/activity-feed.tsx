@@ -19,7 +19,7 @@ import { action } from "~/routes/api.core/route";
 import FormLayout from "../custom/form/FormLayout";
 import CustomFormField from "../custom/form/CustomFormField";
 import { Form } from "../ui/form";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { DrawerLayout } from "../layout/drawer/DrawerLayout";
 import { Textarea } from "../ui/textarea";
@@ -39,7 +39,7 @@ export default function ActivityFeed({
   partyID,
 }: ActivityFeedProps) {
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const { toast } = useToast();
   const fetcher = useFetcher<typeof action>();
   const [activity, setActivity] = useState<
@@ -212,7 +212,7 @@ const EditCommentDrawer = ({
   const fetcher = useFetcher<typeof action>();
   const { toast } = useToast();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
 
   const onSubmit = (values: z.infer<typeof editCommentSchema>) => {
     fetcher.submit(

@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { Form } from "@/components/ui/form";
 import { z } from "zod";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { GlobalState } from "~/types/app";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -36,7 +36,7 @@ export default function NewItemPriceClient({}: {}) {
       uomID:payload?.uomID,
     },
   });
-  const r = routes;
+  const r = route;
   const onSubmit = (values: z.infer<typeof createItemPriceSchema>) => {
     fetcher.submit(
       {

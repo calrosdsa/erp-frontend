@@ -8,7 +8,7 @@ import {
 import { loader } from "./route";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
 import { quotationColumns } from "@/components/custom/table/columns/document/quotation-columns";
@@ -21,7 +21,7 @@ export default function QuotationsClient() {
   const globalState = useOutletContext<GlobalState>();
   const params = useParams();
   const quotationParty = params.quotationParty || "";
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [permission] = usePermission({

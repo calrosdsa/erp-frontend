@@ -2,7 +2,7 @@
 import { ColumnDef, NoInfer } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import TableCellDate from "../../cells/table-cell-date";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { ChartType, chartTypeToJSON, TimeUnit } from "~/gen/common";
@@ -15,7 +15,7 @@ export const movingFormColumns = ({}:{
 }):ColumnDef<components["schemas"]["PianoForm"]>[] =>{
 
     let columns:ColumnDef<components["schemas"]["PianoForm"]>[] = [];
-    const r= routes
+    const r= route
     const {t,i18n} = useTranslation("common")
 
     columns.push({

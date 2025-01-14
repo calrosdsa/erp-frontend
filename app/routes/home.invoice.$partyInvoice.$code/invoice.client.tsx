@@ -19,7 +19,7 @@ import {
 } from "~/gen/common";
 import { z } from "zod";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import DetailLayout from "@/components/layout/detail-layout";
 import InvoiceInfoTab from "./components/tab/invoice-info";
@@ -40,7 +40,7 @@ import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useNewSalesRecord } from "../home.invoicing.salesRecord.new/use-new-sales-record";
 import { useCreatePayment } from "../home.payment.new/use-create-payment";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 import { usePurchaseRecordStore } from "../home.invoicing.purchaseRecord.new/purchase-record-store";
 
 export default function InvoiceDetailClient() {
@@ -53,8 +53,8 @@ export default function InvoiceDetailClient() {
   const [searchParams] = useSearchParams();
   const { roleActions } = useOutletContext<GlobalState>();
   const tab = searchParams.get("tab");
-  const r = routes;
-  const p = parties;
+  const r = route;
+  const p = party;
   const navigate = useNavigate();
   const [paymentPermission] = usePermission({
     actions: associatedActions && associatedActions[Entity.PAYMENT],

@@ -4,7 +4,7 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
 import { components } from "~/sdk"
 import { PartyType } from "~/types/enums"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { usePermission } from "../useActions"
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
@@ -104,7 +104,7 @@ export const WarehouseAutocompleteForm = ({
 export const useWarehouseDebounceFetcher = ({isGroup}:{
     isGroup:boolean
 }) =>{
-    const r = routes
+    const r = route
     const debounceFetcher = useDebounceFetcher<{
         actions:components["schemas"]["ActionDto"][],
         warehouses:components["schemas"]["WareHouseDto"][],

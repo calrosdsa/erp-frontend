@@ -20,7 +20,7 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 type EditType = z.infer<typeof editGroupSchema>;
 export default function GroupInfoTab() {
@@ -31,7 +31,7 @@ export default function GroupInfoTab() {
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { roleActions } = useOutletContext<GlobalState>();
-  const r = routes
+  const r = route
   const [permission] = usePermission({ roleActions, actions });
   const fetcher = useFetcher<typeof action>();
   const allowEdit = permission.edit

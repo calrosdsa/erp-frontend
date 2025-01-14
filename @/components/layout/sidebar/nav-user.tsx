@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import { fullName } from "~/util/convertor/convertor";
 import { Form, Link } from "@remix-run/react";
@@ -23,7 +23,7 @@ export function NavUser({
   const { isMobile } = useSidebar();
   const { t } = useTranslation("common");
   const sessionDefaults = useSessionDefaults();
-  const r = routes;
+  const r = route;
 
   return (
     <SidebarMenu>

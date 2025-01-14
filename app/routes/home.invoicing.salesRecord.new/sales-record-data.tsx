@@ -11,7 +11,7 @@ import {
 import { MutableRefObject, useEffect, useRef } from "react";
 import { action } from "./route";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -48,7 +48,7 @@ export default function SalesRecordData({
 }) {
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const { roleActions } = useOutletContext<GlobalState>();
   return (
     <div>

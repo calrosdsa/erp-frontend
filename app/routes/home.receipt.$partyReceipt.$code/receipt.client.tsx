@@ -24,7 +24,7 @@ import {
   setUpToolbarDetailPage,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import ReceiptConnectionsTab from "./components/tab/receipt-connections";
 import { format } from "date-fns";
 import { ButtonToolbar } from "~/types/actions";
@@ -41,7 +41,7 @@ export default function ReceiptDetailClient() {
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
   const navigate = useNavigate();
-  const r = routes;
+  const r = route;
   const [gLPermission] = usePermission({
     actions: associatedActions && associatedActions[Entity.GENERAL_LEDGER],
     roleActions: roleActions,

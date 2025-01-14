@@ -40,13 +40,14 @@ interface Props<T extends object, K extends keyof T> {
   onSelect?: (v: T) => void;
   className?: string;
   inputClassName?: string;
+  defaultValue?:string
   addNew?: () => void;
   required?: boolean;
   isSearch?: boolean;
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
   isLoading?: boolean;
-  icon?: LucideIcon;
   enableSelected?: boolean;
+  shouldFilter?:boolean;
 }
 
 export default function Autocomplete<T extends object, K extends keyof T>({
@@ -58,14 +59,15 @@ export default function Autocomplete<T extends object, K extends keyof T>({
   className,
   addNew,
   isLoading,
+  defaultValue,
   placeholder,
   isSearch,
   inputClassName,
   enableSelected = true,
-  icon,
+  shouldFilter = false,
 }: Props<T, K>) {
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState<string>(defaultValue || "");
   const [selected, setSelected] = useState<string | null>(null);
   // const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -74,17 +76,21 @@ export default function Autocomplete<T extends object, K extends keyof T>({
     setQuery(e);
   };
   const onSelectItem = (item: T) => {
-    setQuery(item[nameK] as string);
+    const value = item[nameK] as string
+    console.log("VALUE",value)
     setOpen(false);
-    setSelected(item[nameK] as string);
-    onSelect?.(item);
+    if(onSelect) {
+      onSelect(item);
+    }
+    setSelected(value);
+    setQuery(value);
     // inputRef.current?.blur();
   };
 
   return (
     <div className="flex items-center">
       <Popover open={open} onOpenChange={setOpen}>
-        <Command shouldFilter={true} className="">
+        <Command shouldFilter={shouldFilter} className="">
           <PopoverAnchor asChild className="flex space-x-2">
             <CommandPrimitive.Input
               asChild
@@ -106,6 +112,7 @@ export default function Autocomplete<T extends object, K extends keyof T>({
                   onValueChange?.(query);
                 }
               }}
+              onBlur={()=>{}}
             >
               {isSearch ? (
                 <div
@@ -130,8 +137,11 @@ export default function Autocomplete<T extends object, K extends keyof T>({
                   className="text-xs m-0 rounded-none "
                 />
               )}
+
             </CommandPrimitive.Input>
           </PopoverAnchor>
+          {!open && <CommandList aria-hidden="true" className="hidden" />}
+
           <PopoverContent
             asChild
             onOpenAutoFocus={(e) => e.preventDefault()}
@@ -160,7 +170,9 @@ export default function Autocomplete<T extends object, K extends keyof T>({
                       key={(option[nameK] as string) || ""}
                       value={(option[nameK] as string) || ""}
                       onMouseDown={(e) => e.preventDefault()}
-                      onSelect={() => onSelectItem(option)}
+                      onSelect={() => {
+                        onSelectItem(option)
+                      }}
                     >
                       {enableSelected && (
                         <Check
@@ -180,7 +192,7 @@ export default function Autocomplete<T extends object, K extends keyof T>({
                   ))}
                 </CommandGroup>
               ) : null}
-              {!isLoading ? <CommandEmpty>{"No data."}</CommandEmpty> : null}
+              {/* {!isLoading ? <CommandEmpty>{"No data."}</CommandEmpty> : null} */}
             </CommandList>
           </PopoverContent>
         </Command>

@@ -1,7 +1,7 @@
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { action, loader } from "../route";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { PartyType, partyTypeToJSON } from "~/gen/common";

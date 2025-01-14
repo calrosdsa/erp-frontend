@@ -2,7 +2,7 @@ import { useLoaderData, useSearchParams } from "@remix-run/react"
 import { loader } from "./route"
 import DetailLayout from "@/components/layout/detail-layout"
 import { useTranslation } from "react-i18next"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { NavItem } from "~/types"
 import CostCenterInfo from "./tab/cost-center-info"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
@@ -11,7 +11,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 export default function CostCenterDetailClient(){
     const {costCenter} = useLoaderData<typeof loader>()
     const {t}= useTranslation("common")
-    const r= routes
+    const r= route
     const [searchParams] = useSearchParams()
     const tab = searchParams.get("tab") || "info"
     const toRoute = (tab:string)=>{

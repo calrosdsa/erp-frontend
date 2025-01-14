@@ -3,12 +3,12 @@ import { loader } from "../route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@/components/typography";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export default function CompanyAccounts() {
   const { accountSettings } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const toAccount = (name?: string, uuid?: string) => {
     return r.toRoute({
       main: r.accountM,

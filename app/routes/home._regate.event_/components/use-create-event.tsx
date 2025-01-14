@@ -5,7 +5,7 @@ import { create } from "zustand";
 import { action } from "../route";
 import { createEventSchema } from "~/util/data/schemas/regate/event-schema";
 import { z } from "zod";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
@@ -19,7 +19,7 @@ export const CreateEvent = ({
   onOpenChange: (e: boolean) => void;
 }) => {
   const fetcher = useFetcher<typeof action>();
-  const r = routes;
+  const r = route;
   const { t } = useTranslation("common");
   const { toast } = useToast();
   const onSubmit = (values: z.infer<typeof createEventSchema>) => {

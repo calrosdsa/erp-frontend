@@ -4,8 +4,8 @@ import { Control } from "react-hook-form";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { components } from "~/sdk";
-import { parties } from "~/util/party";
-import { routes } from "~/util/route";
+import { party } from "~/util/party";
+import { route } from "~/util/route";
 
 
 interface PartyAutocompleteProps {
@@ -57,7 +57,7 @@ export const PartySearch = ({partyType}:{
 
 
 export const PartyTypeSearch = ()=>{
-  const p = parties
+  const p = party
   return <AutocompleteSearch
     data={p.paymentOptions}
     nameK={"name"}
@@ -73,7 +73,7 @@ export const usePartyDebounceFetcher = ({
 }: {
   partyType?: string;
 }) => {
-  const r = routes;
+  const r = route;
   const fetcherDebounce = useDebounceFetcher<{
     // actions:components["schemas"]["ActionDto"][],
     parties: components["schemas"]["PartyDto"][];

@@ -12,7 +12,7 @@ import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-cha
 import { DEFAULT_CURRENCY } from "~/constant";
 import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charges-template-schema";
 import { useRef } from "react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import {
   setUpToolbar,

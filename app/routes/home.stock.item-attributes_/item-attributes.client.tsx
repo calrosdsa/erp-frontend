@@ -7,7 +7,7 @@ import { itemAttributeColumns } from "@/components/custom/table/columns/stock/it
 import { PaginationState } from "@tanstack/react-table"
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
 import { useState } from "react"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 import { GlobalState } from "~/types/app"
 import { usePermission } from "~/util/hooks/useActions"
 
@@ -28,7 +28,7 @@ export default function ItemAttributesClient(){
         pageSize: Number(searchParams.get("size") || DEFAULT_SIZE),
       });
 
-    const r = routes 
+    const r = route 
     return (
         <div>
             <DataTable

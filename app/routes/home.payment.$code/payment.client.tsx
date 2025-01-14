@@ -1,7 +1,7 @@
 import { useFetcher, useLoaderData, useNavigate, useOutletContext, useSearchParams } from "@remix-run/react";
 import { action, loader } from "./route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import { PartyType, partyTypeToJSON, stateFromJSON } from "~/gen/common";
@@ -21,7 +21,7 @@ export default function PaymentDetailClient() {
   const [searchParams ] = useSearchParams()
   const tab = searchParams.get("tab")
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
 
   const tabs =[

@@ -7,7 +7,7 @@ import {
 import { action, loader } from "./route";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import CostCenterInfo from "./tab/purchase-record-info";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -23,7 +23,7 @@ import PurchaseRecordInfo from "./tab/purchase-record-info";
 export default function PurchaseRecordDetailClient() {
   const { purchaseRecord, actions,activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const fetcher = useFetcher<typeof action>();
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";

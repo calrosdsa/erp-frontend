@@ -10,14 +10,14 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { loader } from "./route";
 
 
 export default function AccountPayableSumaryClient() {
   const { accountPayableSumary } = useLoaderData<typeof loader>();
   const {t} = useTranslation("common")
-  const r = routes
+  const r = route
   const navigate = useNavigate()
   const total =  useMemo(()=>{
     const totalInvoiceAmount = accountPayableSumary?.reduce((prev,acc)=>prev + acc.total_invoiced_amount,0)

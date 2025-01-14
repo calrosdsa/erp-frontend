@@ -5,7 +5,7 @@ import { PluginApp } from "~/types/enums"
 import { useTranslation } from "react-i18next"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 import DetailLayout from "@/components/layout/detail-layout"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 
 
 export default function ItemPriceDetailClient(){
@@ -13,7 +13,7 @@ export default function ItemPriceDetailClient(){
     const [searchParams] = useSearchParams()
     const tab = searchParams.get("tab")
     const {t} = useTranslation("common")
-    const r = routes
+    const r = route
     const tabs = [
         {
           title: t("info"),

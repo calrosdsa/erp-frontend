@@ -10,14 +10,14 @@ import { Icons } from "@/components/icons";
 import { Check } from "lucide-react";
 import { useExporter } from "~/util/hooks/ui/useExporter";
 import { ButtonToolbar } from "~/types/actions";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useExporterData } from "../api.exporter/components/use-exporter-data";
 
 export default function MovingForms() {
   const { paginationResult } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const {exportExcel} = useExporter()
-  const r = routes
+  const r = route
   const exporterData = useExporterData()
  
   setUpToolbar(() => {

@@ -6,13 +6,13 @@ import TableCellEditable from "../../cells/table-cell-editable";
 import { useTranslation } from "react-i18next";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Link } from "@remix-run/react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 
 export const itemAttributeColumns = ():ColumnDef<components["schemas"]["ItemAttributeDto"]>[] =>{
     const {t} = useTranslation("common")
-    const r = routes
+    const r = route
     return [
         {
             header: t("form.name"),

@@ -7,7 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { useTranslation } from "react-i18next";
@@ -63,7 +63,7 @@ export default function CreateBookings({
     roleActions: globalState.roleActions,
   });
   const createEvent = useCreateEvent();
-  const r = routes;
+  const r = route;
   const { resetPayload } = useNewBooking();
   const navigate = useNavigate();
 

@@ -16,7 +16,7 @@ import { GlobalState } from "~/types/app";
 import { createItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax";
 import { create } from "zustand";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { components } from "~/sdk";
 import {
@@ -50,7 +50,7 @@ export default function ItemPriceForm({
   const { t } = useTranslation("common");
   const data = useLoaderData<typeof loader>();
 
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const loaderFetcher = useFetcher<typeof loader>();
   const associatedActions =

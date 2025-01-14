@@ -25,7 +25,7 @@ import { validateBookingSchema } from "~/util/data/schemas/regate/booking-schema
 import { formatAmount } from "~/util/format/formatCurrency";
 import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const RescheduleBooking = ({
   open,
@@ -52,7 +52,7 @@ export const RescheduleBooking = ({
   });
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
 
   const onSubmit = (values: z.infer<typeof validateBookingSchema>) => {
     console.log("BODY", values);

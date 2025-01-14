@@ -14,7 +14,7 @@ import { TimeUnit, timeUnitToJSON } from "~/gen/common";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export default function ProfitAndLossClient() {
   const { profitAndLoss } = useLoaderData<typeof loader>();
@@ -27,7 +27,7 @@ export default function ProfitAndLossClient() {
     searchParams.get("toDate") || format(endOfMonth(new Date()), "yyyy-MM-dd");
   const timeUnit =
     searchParams.get("time_unit") || timeUnitToJSON(TimeUnit.month);
-  const r = routes
+  const r = route
   const navigate = useNavigate()
 
   setUpToolbar(() => {

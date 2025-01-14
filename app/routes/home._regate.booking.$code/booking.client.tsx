@@ -1,7 +1,7 @@
 import { useFetcher, useLoaderData, useOutletContext, useParams, useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { NavItem } from "~/types";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { action, loader } from "./route";
 import { BookingInfo } from "./components/tabs/booking-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -23,7 +23,7 @@ export const BookingDetailClient = () => {
   const globalState = useOutletContext<GlobalState>()
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
-  const r = routes
+  const r = route
   const {booking,actions,activities} = useLoaderData<typeof loader>()
   const {t} = useTranslation("common")
   const params = useParams()

@@ -5,7 +5,7 @@ import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
 import TableCellIndex from "../../cells/table-cell-index";
@@ -18,14 +18,14 @@ import { paymentReferceSchema } from "~/util/data/schemas/accounting/payment-sch
 import { i18n } from "i18next";
 import TableCellEditable from "../../cells/table-cell-editable";
 import { DataTableRowActions } from "../../data-table-row-actions";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 
 export const paymentColumns = (): ColumnDef<
   components["schemas"]["PaymentDto"]
 >[] => {
   const { t, i18n } = useTranslation("common");
-  const r = routes;
-  const p = parties;
+  const r = route;
+  const p = party;
   return [
     {
       accessorKey: "code",
@@ -103,7 +103,7 @@ export const paymentReferencesColumns = ({
 }): ColumnDef<z.infer<typeof paymentReferceSchema>>[] => {
   console.log("RE RENDER...");
   // const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   return [
     // {
     //   header: t("table.no"),

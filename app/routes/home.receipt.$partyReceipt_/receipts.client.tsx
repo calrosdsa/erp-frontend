@@ -9,7 +9,7 @@ import { loader } from "./route";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { receiptColumns } from "@/components/custom/table/columns/receipt/receipt-columns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { PartyType, partyTypeFromJSON, partyTypeToJSON } from "~/gen/common";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
@@ -24,7 +24,7 @@ export default function ReceiptsClient() {
   const globalState = useOutletContext<GlobalState>();
   const params = useParams();
   const partyReceipt = params.partyReceipt || ""
-  const r = routes;
+  const r = route;
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [permission] = usePermission({

@@ -4,7 +4,7 @@ import {
   useNavigate,
   useOutletContext,
 } from "@remix-run/react";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { formatAmount, formatCurrency } from "~/util/format/formatCurrency";
 import { usePermission } from "~/util/hooks/useActions";
@@ -28,7 +28,7 @@ import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and
 type PaymentDataSchema = z.infer<typeof paymentDataSchema>;
 export default function PaymentInfoTab() {
   const { t, i18n } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const { payment, actions,taxLines } = useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const [permission] = usePermission({ actions, roleActions });

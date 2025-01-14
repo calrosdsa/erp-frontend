@@ -28,7 +28,7 @@ import { action } from "~/routes/api/route";
 import { components } from "~/sdk";
 import { SessionData } from "~/sessions";
 import { languages } from "~/util/data/languages-data";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const sessionDefaultsFormSchema = z.object({
   sessionUuid: z.string().optional(),
@@ -46,7 +46,7 @@ export const SessionDefault = ({
   const fetcher = useFetcher<typeof action>();
   const fetcherSessions = useFetcher<typeof action>();
   const location = useLocation();
-  const r = routes;
+  const r = route;
   const form = useForm<z.infer<typeof sessionDefaultsFormSchema>>({
     resolver: zodResolver(sessionDefaultsFormSchema),
     defaultValues: {

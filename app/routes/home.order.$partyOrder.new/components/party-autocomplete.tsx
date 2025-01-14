@@ -18,7 +18,7 @@ import {
   useSupplierDebounceFetcher,
 } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 
 export default function PartyAutocomplete({
   party,
@@ -124,7 +124,7 @@ export const PartyAutocompleteField= ({
     actions: customerFetcher.data?.actions,
     roleActions: roleActions,
   });
-  const p = parties
+  const p = party
   const createCustomer = useCreateCustomer();
   const [supplierPermission] = usePermission({
     actions: supplierDebounceFetcher.data?.actions,

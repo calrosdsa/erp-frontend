@@ -6,7 +6,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import StockLedgerHeader from "./components/stock-balance-header";
 import { stockBalanceColumns } from "@/components/custom/table/columns/stock/stock-balance-columns";
 
@@ -17,7 +17,7 @@ interface LedgerData {
 export default function StockBalanceClient() {
   const { stockBalance } = useLoaderData<typeof loader>();
   const {t} = useTranslation("common")
-  const r = routes
+  const r = route
   const navigate = useNavigate()
   setUpToolbar(()=>{
     return {

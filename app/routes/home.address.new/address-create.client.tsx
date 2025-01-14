@@ -12,14 +12,14 @@ import { Input } from "@/components/ui/input"
 import CustomForm from "@/components/custom/form/CustomForm"
 import { countries } from "~/util/data/countries"
 import { useEffect } from "react"
-import { routes } from "~/util/route"
+import { route } from "~/util/route"
 
 
 export default function AddressCreateClient(){
     const fetcher = useFetcher<typeof action>()
     const {toast} = useToast()
     const {t} = useTranslation("common")
-    const r =routes
+    const r =route
     const [searchParams] = useSearchParams()
 
     useEffect(()=>{

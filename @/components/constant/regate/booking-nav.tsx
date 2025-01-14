@@ -9,7 +9,7 @@ import { PartyType } from "~/gen/common";
 import { NavItem } from "~/types";
 import { GlobalState } from "~/types/app";
 import { Entity } from "~/types/enums";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 
 export const BookingNav = ({
   entities,
@@ -17,7 +17,7 @@ export const BookingNav = ({
   entities: number[] | undefined;
 }): NavItem => {
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   let bookingNavs: NavItem[] = [];
   if (entities?.includes(Entity.BOOKING)) {
     bookingNavs.push({

@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import TableCellDate from "../../cells/table-cell-date";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellPrice from "../../cells/table-cell-price";
@@ -11,7 +11,7 @@ export const accountPayableSumaryColumns = ({}: {}): ColumnDef<
 >[] => {
   let columns: ColumnDef<components["schemas"]["SumaryEntryDto"]>[] =
     [];
-  const r = routes;
+  const r = route;
   const { t, i18n } = useTranslation("common");
   
   columns.push({

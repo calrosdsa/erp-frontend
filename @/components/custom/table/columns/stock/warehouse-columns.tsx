@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import TableCellDate from "../../cells/table-cell-date";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
@@ -13,7 +13,7 @@ export const warehouseColumns = (): ColumnDef<
   components["schemas"]["WareHouseDto"]
 >[] => {
   const { t,i18n } = useTranslation("common");
-  const r = routes
+  const r = route
   let columns: ColumnDef<components["schemas"]["WareHouseDto"]>[] = [];
   columns.push({
     accessorKey: "name",

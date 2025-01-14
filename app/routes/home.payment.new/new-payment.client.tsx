@@ -8,12 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PartyType, partyTypeToJSON, PaymentType } from "~/gen/common";
 
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { action, loader } from "./route";
 import { useCreatePayment } from "./use-create-payment";
 import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 import { Card } from "@/components/ui/card";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 import PaymentData from "./payment-data";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -54,8 +54,8 @@ export default function PaymentCreateClient() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const navigate = useNavigate();
-  const r = routes;
-  const p = parties;
+  const r = route;
+  const p = party;
  const {accountBalanceService} = usePaymentData({
     form:form,
     i18n:i18n

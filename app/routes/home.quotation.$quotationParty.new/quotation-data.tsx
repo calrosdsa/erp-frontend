@@ -27,7 +27,7 @@ import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
-import { parties } from "~/util/party";
+import { party } from "~/util/party";
 
 type QuotationData = z.infer<typeof quotationDataSchema>;
 
@@ -53,7 +53,7 @@ export const QuotationData = ({
   const formValues = form.getValues();
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
-  const p = parties;
+  const p = party;
 
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);

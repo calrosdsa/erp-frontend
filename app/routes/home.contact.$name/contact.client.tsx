@@ -11,7 +11,7 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { useTranslation } from "react-i18next";
 import { PartyReferences } from "../home.party/components/party-references";
 import DetailLayout from "@/components/layout/detail-layout";
-import { routes } from "~/util/route";
+import { route } from "~/util/route";
 import { ContactInfo } from "./tab/contact-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 
@@ -21,7 +21,7 @@ export default function ContactClient() {
   const tab = searchParams.get("tab") || "info"
   const globalState = useOutletContext<GlobalState>();
   const { t } = useTranslation("common");
-  const r = routes;
+  const r = route;
   const [permission] = usePermission({
     actions: actions,
     roleActions: globalState.roleActions,
