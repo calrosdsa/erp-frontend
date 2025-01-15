@@ -44,8 +44,6 @@ import IconButton from "../custom-ui/icon-button";
 import { DateRange } from "react-day-picker";
 import { toZonedTime } from "date-fns-tz";
 import { Badge } from "../ui/badge";
-import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-import { PricingSearch } from "~/util/hooks/fetchers/pricing/use-pricing-fetcher";
 import AutoCompleteByParty from "../custom/select/autocomple-by-party";
 
 type FilterOption = components["schemas"]["FilterOptionDto"];
@@ -174,11 +172,12 @@ const FilterSelectorValue: React.FC<{
     return <AutoCompleteByParty partyType={filterOption.party_type} />;
   }
   if (filterOption.type === "string") {
+
     return (
       <Input
         className="w-min"
         onChange={(e) => onChange([e.target.value])}
-        // value={current.value[0]}
+        value={current.value[0]}
       />
     );
   }

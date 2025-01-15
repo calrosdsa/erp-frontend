@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 
+export type UpdateStatusWithEventType = z.infer<typeof updateStatusWithEventSchema>
+
 export const updateStatusWithEventSchema = z.object({
     party_id:z.string(),
     party_type:z.string().optional(),

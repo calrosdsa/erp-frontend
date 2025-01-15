@@ -8,7 +8,7 @@ import {
 import { party } from "./party";
 
 class Routes {
-  p = party
+  p = party;
   signin = "/signin";
   api = "/api";
   apiData = this.api + "/data";
@@ -17,7 +17,7 @@ class Routes {
   apiItemLine = this.api + "/itemline";
   apiTaxAndChargeLine = this.api + "/taxAndChargeLine";
   base = "/home";
-  app = "app"
+  app = "app";
   party = this.base + "/party";
 
   address = this.base + "/address";
@@ -127,13 +127,16 @@ class Routes {
   customerGroup = "customerGroup";
   supplierGroup = "supplierGroup";
 
+  termsAndConditions = "terms-and-conditions";
+  paymentTerms = "payment-terms";
+  paymentTermsTemplate =  "payment-terms-template";
 
   defaultTab = {
     tab: "info",
   };
 
-  to(href:string, q?: Record<string, string | undefined>): string{
-    return `${this.base}/${this.baseRoute(href,q)}`
+  to(href: string, q?: Record<string, string | undefined>): string {
+    return `${this.base}/${this.baseRoute(href, q)}`;
     // return href;
   }
 

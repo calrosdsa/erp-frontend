@@ -3137,6 +3137,59 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/terms-and-conditions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Terms & Conditions */
+        get: operations["terms-and-conditions"];
+        /** Edit Terms & Conditions */
+        put: operations["edit-terms-and-conditions"];
+        /** Create Terms & Conditions */
+        post: operations["create-terms-and-conditions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/terms-and-conditions/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Terms & Conditions Detail */
+        get: operations["terms-and-conditions-details"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/terms-and-conditions/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Currency Exchange */
+        put: operations["update-status-currency-exchange"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/uom": {
         parameters: {
             query?: never;
@@ -5281,6 +5334,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityTaxDto"];
+        };
+        EntityResponseResultEntityTermsAndConditionsDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityTermsAndConditionsDto"];
         };
         EntityResponseResultEntityWareHouseDtoBody: {
             /**
@@ -7544,6 +7610,20 @@ export interface components {
             message: string;
             result: components["schemas"]["LineItemDto"][];
         };
+        ResponseDataListListTermsAndConditionsDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["TermsAndConditionsDto"][];
+        };
         ResponseDataListModuleDtoBody: {
             /**
              * Format: uri
@@ -7751,6 +7831,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["StockEntryDto"];
+        };
+        ResponseDataTermsAndConditionsDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["TermsAndConditionsDto"];
         };
         ResponseMessageBody: {
             /**
@@ -8026,6 +8119,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["TaxDto"];
+        };
+        ResultEntityTermsAndConditionsDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["TermsAndConditionsDto"];
         };
         ResultEntityWareHouseDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -8403,6 +8502,28 @@ export interface components {
             uuid: string;
             /** Format: double */
             value: number;
+        };
+        TermsAndConditionFields: {
+            name: string;
+            terms_and_conditions: string;
+        };
+        TermsAndConditionsData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            filds: components["schemas"]["TermsAndConditionFields"];
+            /** Format: int64 */
+            id?: number;
+        };
+        TermsAndConditionsDto: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            status: string;
+            terms_and_conditions: string;
+            uuid: string;
         };
         TotalsDto: {
             /** Format: int32 */
@@ -17553,6 +17674,182 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["DeleteTaxLineRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "terms-and-conditions": {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+                name?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListTermsAndConditionsDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-terms-and-conditions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TermsAndConditionsData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-terms-and-conditions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TermsAndConditionsData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataTermsAndConditionsDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "terms-and-conditions-details": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityTermsAndConditionsDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-currency-exchange": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
             };
         };
         responses: {

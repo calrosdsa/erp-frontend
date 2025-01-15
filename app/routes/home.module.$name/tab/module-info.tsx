@@ -6,7 +6,7 @@ import { useRef } from "react";
 import { setUpToolbarTab, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { State, stateFromJSON } from "~/gen/common";
+import { EventState, State, stateFromJSON } from "~/gen/common";
 import {
     mapToModuleSectionSchema,
   moduleDataSchema,
@@ -53,14 +53,19 @@ export default function ModuleInfo() {
       }
     );
   };
+
+    
+  
+
   setUpToolbarTab(() => {
+  
     return {
       onSave: () => {
         inputRef.current?.click();
       },
       disabledSave: !allowEdit,
     };
-  }, [allowEdit, module]);
+  }, [module,allowEdit]);
 
   useLoadingTypeToolbar(
     {

@@ -49,7 +49,6 @@ export default function CurrencyExchangeDetailClient() {
       href: toRoute("info"),
     },
   ];
-
     const onChangeState = (e: EventState) => {
       const body: z.infer<typeof updateStatusWithEventSchema> = {
         current_state: currencyExchange?.status || "",
@@ -86,7 +85,7 @@ export default function CurrencyExchangeDetailClient() {
     }
     if (permission.edit && state == State.DISABLED) {
       actions.push({
-        label: "Habilitar Evento",
+        label: "Habilitar",
         onClick: () => {
           onChangeState(EventState.ENABLED_EVENT);
         },

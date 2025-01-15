@@ -6,41 +6,37 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import DetailLayout from "@/components/layout/detail-layout";
-import { route } from "~/util/route";
-import { party } from "~/util/party";
 import { useTranslation } from "react-i18next";
-import { NavItem } from "~/types";
-import ModuleInfo from "./tab/module-info";
-import { setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
 import { EventState, State, stateFromJSON } from "~/gen/common";
-import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
+import { route } from "~/util/route";
+import { NavItem } from "~/types";
+import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
+import { setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
+import TermsAndConditionsInfo from "./tab/terms-and-conditions-info";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
-export default function ModuleDetailClient() {
-  const { module, sections, activities, actions } =
-    useLoaderData<typeof loader>();
+export default function TermsAndConditionsDetailClient() {
+  const { entity, activities, actions } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
-  const r = route;
-  const p = party;
   const fetcher = useFetcher<typeof action>();
-  const status = stateFromJSON(module?.status);
+  const status = stateFromJSON(entity?.status);
   const { roleActions } = useOutletContext<GlobalState>();
   const [permission] = usePermission({
     roleActions,
     actions,
   });
   const toRoute = (tab: string) => {
-    return r.toRoute({
-      main: p.module,
-      routePrefix: [r.accountingM],
-      routeSufix: [module?.label || ""],
+    return route.toRoute({
+      main: route.termsAndConditions,
+      routeSufix: [entity?.name || ""],
       q: {
         tab: tab,
-        id: module?.uuid || "",
+        id: entity?.uuid || "",
       },
     });
   };
@@ -54,8 +50,8 @@ export default function ModuleDetailClient() {
 
   const onChangeState = (e: EventState) => {
     const body: UpdateStatusWithEventType = {
-      current_state: module?.status || "",
-      party_id: module?.uuid || "",
+      current_state: entity?.status || "",
+      party_id: entity?.uuid || "",
       events: [e],
     };
     fetcher.submit(
@@ -69,6 +65,14 @@ export default function ModuleDetailClient() {
       }
     );
   };
+
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+    },
+    [fetcher.data]
+  );
 
   setUpToolbarDetailPage(
     (opts) => {
@@ -95,16 +99,16 @@ export default function ModuleDetailClient() {
         actions: actions,
       };
     },
-    [module]
+    [entity]
   );
 
   return (
     <DetailLayout
       activities={activities}
-      partyID={module?.id}
+      partyID={entity?.id}
       navItems={navItems}
     >
-      {tab == "info" && <ModuleInfo />}
+      {tab == "info" && <TermsAndConditionsInfo />}
     </DetailLayout>
   );
 }
