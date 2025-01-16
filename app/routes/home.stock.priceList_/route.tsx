@@ -31,6 +31,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "get": {
+      console.log("PRICELIST......",data.query)
       const res = await client.GET("/stock/item/price-list", {
         params: {
           query: data.query,

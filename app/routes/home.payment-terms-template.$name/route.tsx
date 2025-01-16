@@ -9,10 +9,13 @@ import TermsAndConditionsDetailClient from "./terms-and-conditions-detail.client
 import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
 import { LOAD_ACTION } from "~/constant";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { mapToPaymentTermsTemplateData, PaymentTermsTemplateType } from "~/util/data/schemas/document/payment-terms-template.schema";
+import PaymentTermsTemplateDetailClient from "./terms-and-conditions-detail.client";
+import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
-  editData: TermsAndCondtionsDataType;
+  editionData: PaymentTermsTemplateType;
   updateStatus: UpdateStatusWithEventType;
 };
 
@@ -25,7 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   switch (data.action) {
     case "update-status": {
-      const res = await client.PUT("/terms-and-conditions/update-status", {
+      const res = await client.PUT("/payment-terms-template/update-status", {
         body: data.updateStatus,
       });
       message = res.data?.message;
@@ -33,9 +36,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "edit": {
-      // console.log(data.editData)
-      const res = await client.PUT("/terms-and-conditions", {
-        body: mapToTermsAndConditionsData(data.editData),
+      const res = await client.PUT("/payment-terms-template", {
+        body: mapToPaymentTermsTemplateData(data.editionData),
       });
       error = res.error?.detail;
       message = res.data?.message;
@@ -66,7 +68,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  const res = await client.GET("/terms-and-conditions/detail/{id}", {
+  const tab = searchParams.get("tab") || "info"
+  const res = await client.GET("/payment-terms-template/detail/{id}", {
     params: {
       path: {
         id: searchParams.get("id") || "",
@@ -74,13 +77,28 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
+  let paymentTermLines:components["schemas"]["PaymentTermsLineDto"][] = []
+  switch(tab) {
+    case "info":{
+      const response =await client.GET("/payment-terms/{id}/lines",{
+        params:{
+          path:{
+            id:res.data?.result.entity.id?.toString() || "",
+          }
+        }
+      })
+      paymentTermLines = response.data?.result || []
+      break
+    }
+  }
   return json({
     entity: res.data?.result.entity,
     actions: res.data?.actions,
     activities: res.data?.result.activities,
+    paymentTermLines:paymentTermLines,
   });
 };
 
-export default function TermsAndConditionsDetail() {
-  return <TermsAndConditionsDetailClient />;
+export default function PaymentTermsTemplateDetail() {
+  return <PaymentTermsTemplateDetailClient />;
 }

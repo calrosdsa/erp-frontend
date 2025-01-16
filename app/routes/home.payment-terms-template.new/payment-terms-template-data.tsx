@@ -1,13 +1,14 @@
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import FormLayout from "@/components/custom/form/FormLayout";
+import PaymentTermLines from "@/components/custom/shared/document/payment-term-lines";
 import { Form } from "@/components/ui/form";
 import { FetcherWithComponents } from "@remix-run/react";
 import { MutableRefObject } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { TermsAndCondtionsDataType } from "~/util/data/schemas/document/terms-and-conditions.schema";
+import { PaymentTermsTemplateType } from "~/util/data/schemas/document/payment-terms-template.schema";
 
-export default function TermsAndConditionsData({
+export default function PaymentTermsTemplateData({
   fetcher,
   form,
   onSubmit,
@@ -15,12 +16,13 @@ export default function TermsAndConditionsData({
   allowEdit = true,
 }: {
   fetcher: FetcherWithComponents<any>;
-  form: UseFormReturn<TermsAndCondtionsDataType>;
-  onSubmit: (e: TermsAndCondtionsDataType) => void;
+  form: UseFormReturn<PaymentTermsTemplateType>;
+  onSubmit: (e: PaymentTermsTemplateType) => void;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
 }) {
-  const {t} = useTranslation("common")
+  const { t } = useTranslation("common");
+  const formValues = form.getValues();
   return (
     <FormLayout>
       <Form {...form}>
@@ -37,17 +39,13 @@ export default function TermsAndConditionsData({
               allowEdit={allowEdit}
               required={true}
             />
-
-              <CustomFormFieldInput
-                className=" col-span-full"
+            <div className=" col-span-full">
+              <PaymentTermLines
                 control={form.control}
-                name="terms_and_conditions"
-                required={true}
-                label={t("termsAndConditions")}
-                inputType="richtext"
+                formValues={formValues}
                 allowEdit={allowEdit}
               />
-              
+            </div>
           </div>
 
           <input ref={inputRef} type="submit" className="hidden" />

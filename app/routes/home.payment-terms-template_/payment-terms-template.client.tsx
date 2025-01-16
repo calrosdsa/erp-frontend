@@ -3,15 +3,16 @@ import DataLayout from "@/components/layout/data-layout";
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
 import { GlobalState } from "~/types/app";
 import { loader } from "./route";
-import { termsAndConditionsColumn } from "@/components/custom/table/columns/document/terms-and-conditions-columns";
+import { termsAndConditionsColumns } from "@/components/custom/table/columns/document/terms-and-conditions-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { entity } from "~/data/entites";
 import { useTranslation } from "react-i18next";
+import { paymentTermsTemplateColumns } from "@/components/custom/table/columns/document/payment-terms-template.columns";
 
 
-export default function TermsAndConditionsClient (){
+export default function PaymentTermsTemplateClient (){
     const {roleActions} = useOutletContext<GlobalState>()
     const {results,actions,filters} = useLoaderData<typeof loader>()
     const [permission] = usePermission({
@@ -21,11 +22,11 @@ export default function TermsAndConditionsClient (){
     const navigate = useNavigate()
     setUpToolbar(()=>{
         return {
-            titleToolbar:t("termsAndConditions"),
+            titleToolbar:t("paymentTermsTemplate"),
             ...(permission.create && {
                 addNew:()=>{
                     navigate(route.toRoute({
-                        main:entity.termsAndConditions.href,
+                        main:route.paymentTermsTemplate,
                         routeSufix:["new"]
                     }))
                 }
@@ -37,7 +38,7 @@ export default function TermsAndConditionsClient (){
         filterOptions={filters}>
             <DataTable
             data={results || []}
-            columns={termsAndConditionsColumn()}
+            columns={paymentTermsTemplateColumns()}
             enableSizeSelection={true}
             />
         </DataLayout>

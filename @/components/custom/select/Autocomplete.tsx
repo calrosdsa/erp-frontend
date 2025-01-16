@@ -48,6 +48,7 @@ interface Props<T extends object, K extends keyof T> {
   isLoading?: boolean;
   enableSelected?: boolean;
   shouldFilter?:boolean;
+  allowEdit?:boolean
 }
 
 export default function Autocomplete<T extends object, K extends keyof T>({
@@ -65,6 +66,7 @@ export default function Autocomplete<T extends object, K extends keyof T>({
   inputClassName,
   enableSelected = true,
   shouldFilter = false,
+  allowEdit= true,
 }: Props<T, K>) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState<string>(defaultValue || "");

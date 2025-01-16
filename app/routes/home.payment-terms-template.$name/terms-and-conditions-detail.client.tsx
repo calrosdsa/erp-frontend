@@ -15,10 +15,10 @@ import { NavItem } from "~/types";
 import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
 import { setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
-import TermsAndConditionsInfo from "./tab/terms-and-conditions-info";
+import TermsAndConditionsInfo from "./tab/payment-terms-template-info";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
-export default function TermsAndConditionsDetailClient() {
+export default function PaymentTermsTemplateDetailClient() {
   const { entity, activities, actions } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const [searchParams] = useSearchParams();

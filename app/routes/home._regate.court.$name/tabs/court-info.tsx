@@ -9,6 +9,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import {
   setUpToolbar,
+  setUpToolbarTab,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -53,15 +54,14 @@ export default function CourtInfoTab() {
     },
     [fetcher.state]
   );
-  setUpToolbar(
-    (opts) => {
+  setUpToolbarTab(
+    () => {
       return {
-        ...opts,
         onSave: () => inputRef.current?.click(),
         disabledSave: !hasChanged,
       };
     },
-    [hasChanged]
+    [hasChanged,court]
   );
 
   useDisplayMessage(

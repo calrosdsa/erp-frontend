@@ -19,7 +19,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { FormService, PartyTypeStrategyFactory, usePaymentData } from "./use-payment-data";
 export default function PaymentCreateClient() {
-  const { associatedActions, paymentAccounts } = useLoaderData<typeof loader>();
+  const { paymentAccounts } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const {payload} = useCreatePayment();
   const {i18n} = useTranslation("common")

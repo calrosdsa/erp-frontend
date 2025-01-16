@@ -1,31 +1,30 @@
 import { Card } from "@/components/ui/card";
-import TermsAndConditionsData from "./payment-terms-template-data";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { action } from "./route";
 import { useForm } from "react-hook-form";
-import { termsAndConditionsDataSchema, TermsAndCondtionsDataType } from "~/util/data/schemas/document/terms-and-conditions.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
-import { entity } from "~/data/entites";
+import { paymentTermsDataSchema, PaymentTermsType } from "~/util/data/schemas/document/payment-terms.schema";
+import PaymentTermsData from "./payment-term-data";
 
 
-export default function NewTermsAndConditionsClient(){
+export default function NewPaymentTermsClient(){
     const fetcher = useFetcher<typeof action>()
-    const form = useForm<TermsAndCondtionsDataType>({
-        resolver:zodResolver(termsAndConditionsDataSchema),
+    const form = useForm<PaymentTermsType>({
+        resolver:zodResolver(paymentTermsDataSchema),
         defaultValues:{}
     })
     const inputRef = useRef<HTMLInputElement | null>(null)
      const navigate = useNavigate();
       const { t } = useTranslation("common");
-       const onSubmit = (e: TermsAndCondtionsDataType) => {
+       const onSubmit = (e: PaymentTermsType) => {
           fetcher.submit({
             action:"create",
-            createData:e
+            creationData:e
           },{
             method:"POST",
             encType:"application/json",
@@ -43,7 +42,7 @@ export default function NewTermsAndConditionsClient(){
         setUpToolbar(() => {
           return {
             titleToolbar: t("f.add-new", {
-              o: t("termsAndConditions"),
+              o: "Condiciones de pago",
             }),
             onSave: () => {
               inputRef.current?.click();
@@ -56,14 +55,14 @@ export default function NewTermsAndConditionsClient(){
             error: fetcher.data?.error,
             success: fetcher.data?.message,
             onSuccessMessage: () => {
-              if (fetcher.data?.termsAndConditions) {
+              if (fetcher.data?.paymentTerms) {
                 navigate(
                   route.toRoute({
-                    main: route.termsAndConditions,
-                    routeSufix: [fetcher.data.termsAndConditions?.name],
+                    main: route.paymentTerms,
+                    routeSufix: [fetcher.data.paymentTerms?.name],
                     q: {
                       tab: "info",
-                      id:fetcher.data.termsAndConditions?.uuid,
+                      id:fetcher.data.paymentTerms?.uuid,
                     },
                   })
                 );
@@ -74,7 +73,7 @@ export default function NewTermsAndConditionsClient(){
         );
     return (
         <Card>
-            <TermsAndConditionsData
+            <PaymentTermsData
             fetcher={fetcher}
             form={form}
             inputRef={inputRef}

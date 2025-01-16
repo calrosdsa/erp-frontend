@@ -3,15 +3,14 @@ import DataLayout from "@/components/layout/data-layout";
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
 import { GlobalState } from "~/types/app";
 import { loader } from "./route";
-import { termsAndConditionsColumn } from "@/components/custom/table/columns/document/terms-and-conditions-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
-import { entity } from "~/data/entites";
 import { useTranslation } from "react-i18next";
+import { paymentTermsColumns } from "@/components/custom/table/columns/document/payment-terms.columns";
 
 
-export default function TermsAndConditionsClient (){
+export default function PaymentTermsClient (){
     const {roleActions} = useOutletContext<GlobalState>()
     const {results,actions,filters} = useLoaderData<typeof loader>()
     const [permission] = usePermission({
@@ -21,11 +20,11 @@ export default function TermsAndConditionsClient (){
     const navigate = useNavigate()
     setUpToolbar(()=>{
         return {
-            titleToolbar:t("termsAndConditions"),
+            titleToolbar:t("paymentTerms"),
             ...(permission.create && {
                 addNew:()=>{
                     navigate(route.toRoute({
-                        main:entity.termsAndConditions.href,
+                        main:route.paymentTerms,
                         routeSufix:["new"]
                     }))
                 }
@@ -37,7 +36,7 @@ export default function TermsAndConditionsClient (){
         filterOptions={filters}>
             <DataTable
             data={results || []}
-            columns={termsAndConditionsColumn()}
+            columns={paymentTermsColumns()}
             enableSizeSelection={true}
             />
         </DataLayout>

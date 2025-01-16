@@ -1,5 +1,4 @@
 import {  useOutletContext } from "react-router";
-import TermsAndConditionsData from "~/routes/home.terms-and-conditions.new/terms-and-conditions-data";
 import { action, loader } from "../route";
 import { useRef } from "react";
 import { GlobalState } from "~/types/app";
@@ -7,11 +6,12 @@ import { usePermission } from "~/util/hooks/useActions";
 import { State, stateFromJSON } from "~/gen/common";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { termsAndConditionsDataSchema, TermsAndCondtionsDataType } from "~/util/data/schemas/document/terms-and-conditions.schema";
 import { setUpToolbarTab, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { paymentTermsDataSchema, PaymentTermsType } from "~/util/data/schemas/document/payment-terms.schema";
+import PaymentTermsData from "~/routes/home.payment-terms.new/payment-term-data";
 
-export default function TermsAndConditionsInfo(){
+export default function PaymentTermsIndo(){
     const { entity, actions } = useLoaderData<typeof loader>();
       const inputRef = useRef<HTMLInputElement | null>(null);
       const { roleActions } = useOutletContext<GlobalState>();
@@ -22,20 +22,23 @@ export default function TermsAndConditionsInfo(){
       const status = stateFromJSON(entity?.status);
       const fetcher = useFetcher<typeof action>();
       const allowEdit = permission.edit || status == State.ENABLED;
-      const { form, updateRef } = useEditFields<TermsAndCondtionsDataType>({
-        schema: termsAndConditionsDataSchema,
+      const { form, updateRef } = useEditFields<PaymentTermsType>({
+        schema: paymentTermsDataSchema,
         defaultValues: {
             id:entity?.id,
             name:entity?.name,
-            terms_and_conditions:entity?.terms_and_conditions,
+            invoice_portion:entity?.invoice_portion,
+            credit_days:entity?.credit_days,
+            due_date_base_on:entity?.due_date_base_on,
+            description:entity?.description,
        },
       });
     
-      const onSubmit = (e: TermsAndCondtionsDataType) => {
+      const onSubmit = (e: PaymentTermsType) => {
         fetcher.submit(
           {
             action: "edit",
-            editData: e as any,
+            editionData: e as any,
           },
           {
             method: "POST",
@@ -72,7 +75,7 @@ export default function TermsAndConditionsInfo(){
       );
     
     return (
-        <TermsAndConditionsData
+        <PaymentTermsData
         fetcher={fetcher}
         form={form}
         onSubmit={onSubmit}

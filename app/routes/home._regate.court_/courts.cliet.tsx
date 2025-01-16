@@ -35,6 +35,7 @@ export default function CourtClient(){
             <DataTable
             data={paginationResult?.results || []}
             columns={courtColumns()}
+            enableSizeSelection={true}
             paginationOptions={{
                 rowCount:paginationResult?.total
             }}

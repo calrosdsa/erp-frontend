@@ -5,14 +5,16 @@ import {
   mapToTermsAndConditionsData,
   TermsAndCondtionsDataType,
 } from "~/util/data/schemas/document/terms-and-conditions.schema";
-import TermsAndConditionsDetailClient from "./terms-and-conditions-detail.client";
+import TermsAndConditionsDetailClient from "./payment-terms-detail.client";
 import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
 import { LOAD_ACTION } from "~/constant";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import PaymentTermsDetailClient from "./payment-terms-detail.client";
+import { mapToPaymentTermsData, PaymentTermsType } from "~/util/data/schemas/document/payment-terms.schema";
 
 type ActionData = {
   action: string;
-  editData: TermsAndCondtionsDataType;
+  editionData: PaymentTermsType;
   updateStatus: UpdateStatusWithEventType;
 };
 
@@ -25,7 +27,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   switch (data.action) {
     case "update-status": {
-      const res = await client.PUT("/terms-and-conditions/update-status", {
+      const res = await client.PUT("/payment-terms/update-status", {
         body: data.updateStatus,
       });
       message = res.data?.message;
@@ -33,9 +35,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "edit": {
-      // console.log(data.editData)
-      const res = await client.PUT("/terms-and-conditions", {
-        body: mapToTermsAndConditionsData(data.editData),
+      // console.log(data.editionData)
+      const res = await client.PUT("/payment-terms", {
+        body: mapToPaymentTermsData(data.editionData),
       });
       error = res.error?.detail;
       message = res.data?.message;
@@ -66,7 +68,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  const res = await client.GET("/terms-and-conditions/detail/{id}", {
+  const res = await client.GET("/payment-terms/detail/{id}", {
     params: {
       path: {
         id: searchParams.get("id") || "",
@@ -81,6 +83,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 };
 
-export default function TermsAndConditionsDetail() {
-  return <TermsAndConditionsDetailClient />;
+export default function PaymentTermsDetail() {
+  return <PaymentTermsDetailClient />;
 }

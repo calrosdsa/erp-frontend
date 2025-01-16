@@ -13,13 +13,14 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import RichTextEditor from '@/components/custom-ui/rich-text/editor'
+import Autocomplete from '../select/Autocomplete'
 
 interface Props<TFieldValues extends FieldValues> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name'> {
   label?: string
   control?: Control<TFieldValues>
   name: Path<TFieldValues>
   description?: string
-  inputType: "input" | "textarea" | "check" | "richtext"
+  inputType: "input" | "textarea" | "check" | "richtext" 
   required?: boolean
   allowEdit?: boolean
   register?: UseFormRegister<TFieldValues>

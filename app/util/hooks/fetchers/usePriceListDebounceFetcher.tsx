@@ -83,7 +83,7 @@ export const PriceListAutocompleteForm = ({
 
 
 
-export const usePriceListDebounceFetcher = ({isSelling,isBuying}:{
+export const usePriceListDebounceFetcher = ({isSelling=true,isBuying=true}:{
     isSelling?:boolean
     isBuying?:boolean
 }) =>{

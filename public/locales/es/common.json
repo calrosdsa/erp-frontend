@@ -424,6 +424,8 @@
   "purchaseRecord":"Registro de Compras",
   "pricing":"Pricing",
   "termsAndConditions":"Terminos y Condiciones",
+  "paymentTerms":"Condiciones de Pago",
+  "paymentTermsTemplate":"Plantilla de Condiciones de Pago",
 
   "accountingLedger": "Libro mayor contable",
   "accountPayable": "Cuentas por pagar",

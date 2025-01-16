@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import TermsAndConditionsData from "./terms-and-conditions-data";
+import TermsAndConditionsData from "./payment-terms-template-data";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { action } from "./route";
 import { useForm } from "react-hook-form";
@@ -11,21 +11,25 @@ import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToo
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 import { entity } from "~/data/entites";
+import { paymentTermsTemplateDataSchema, PaymentTermsTemplateType } from "~/util/data/schemas/document/payment-terms-template.schema";
+import PaymentTermsTemplateData from "./payment-terms-template-data";
 
 
-export default function NewTermsAndConditionsClient(){
+export default function NewPaymentTermsTemplateClient(){
     const fetcher = useFetcher<typeof action>()
-    const form = useForm<TermsAndCondtionsDataType>({
-        resolver:zodResolver(termsAndConditionsDataSchema),
-        defaultValues:{}
+    const form = useForm<PaymentTermsTemplateType>({
+        resolver:zodResolver(paymentTermsTemplateDataSchema),
+        defaultValues:{
+          payment_term_lines:[],
+        }
     })
     const inputRef = useRef<HTMLInputElement | null>(null)
      const navigate = useNavigate();
       const { t } = useTranslation("common");
-       const onSubmit = (e: TermsAndCondtionsDataType) => {
+       const onSubmit = (e: PaymentTermsTemplateType) => {
           fetcher.submit({
             action:"create",
-            createData:e
+            creationData:e
           },{
             method:"POST",
             encType:"application/json",
@@ -43,7 +47,7 @@ export default function NewTermsAndConditionsClient(){
         setUpToolbar(() => {
           return {
             titleToolbar: t("f.add-new", {
-              o: t("termsAndConditions"),
+              o: t("paymentTermsTemplate"),
             }),
             onSave: () => {
               inputRef.current?.click();
@@ -56,14 +60,14 @@ export default function NewTermsAndConditionsClient(){
             error: fetcher.data?.error,
             success: fetcher.data?.message,
             onSuccessMessage: () => {
-              if (fetcher.data?.termsAndConditions) {
+              if (fetcher.data?.paymentTermsTemplate) {
                 navigate(
                   route.toRoute({
-                    main: route.termsAndConditions,
-                    routeSufix: [fetcher.data.termsAndConditions?.name],
+                    main: route.paymentTermsTemplate,
+                    routeSufix: [fetcher.data.paymentTermsTemplate?.name],
                     q: {
                       tab: "info",
-                      id:fetcher.data.termsAndConditions?.uuid,
+                      id:fetcher.data.paymentTermsTemplate?.uuid,
                     },
                   })
                 );
@@ -74,7 +78,7 @@ export default function NewTermsAndConditionsClient(){
         );
     return (
         <Card>
-            <TermsAndConditionsData
+            <PaymentTermsTemplateData
             fetcher={fetcher}
             form={form}
             inputRef={inputRef}

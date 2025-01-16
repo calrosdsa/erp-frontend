@@ -5,10 +5,10 @@ import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { route } from "~/util/route";
 import TableCellStatus from "../../cells/table-cell-status";
 
-export const termsAndConditionsColumns = (): ColumnDef<
-  components["schemas"]["TermsAndConditionsDto"]
+export const paymentTermsTemplateColumns = (): ColumnDef<
+  components["schemas"]["PaymentTermsTemplateDto"]
 >[] => {
-  let columns: ColumnDef<components["schemas"]["TermsAndConditionsDto"]>[] = [];
+  let columns: ColumnDef<components["schemas"]["PaymentTermsTemplateDto"]>[] = [];
   const { t, i18n } = useTranslation("common");
   columns.push({
     accessorKey: "name",
@@ -21,7 +21,7 @@ export const termsAndConditionsColumns = (): ColumnDef<
           {...props}
           navigate={(name) =>
             route.toRoute({
-              main: route.termsAndConditions,
+              main: route.paymentTermsTemplate,
               routeSufix: [name],
               q: {
                 tab: "info",

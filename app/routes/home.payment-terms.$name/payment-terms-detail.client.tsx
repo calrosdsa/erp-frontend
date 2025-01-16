@@ -15,10 +15,10 @@ import { NavItem } from "~/types";
 import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
 import { setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
-import TermsAndConditionsInfo from "./tab/terms-and-conditions-info";
+import TermsAndConditionsInfo from "./tab/payment-terms-info";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
-export default function TermsAndConditionsDetailClient() {
+export default function PaymentTermsDetailClient() {
   const { entity, activities, actions } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const [searchParams] = useSearchParams();
@@ -32,7 +32,7 @@ export default function TermsAndConditionsDetailClient() {
   });
   const toRoute = (tab: string) => {
     return route.toRoute({
-      main: route.termsAndConditions,
+      main: route.paymentTerms,
       routeSufix: [entity?.name || ""],
       q: {
         tab: tab,

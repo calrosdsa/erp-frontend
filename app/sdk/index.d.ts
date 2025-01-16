@@ -1611,6 +1611,129 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/payment-terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Payment Terms */
+        get: operations["payment-terms"];
+        /** Edit Payment Terms */
+        put: operations["edit-payment-terms"];
+        /** Create Payment Terms */
+        post: operations["create-payment-terms"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment-terms-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Payment Terms Template */
+        get: operations["payment-terms-template"];
+        /** Edit Payment Terms Template */
+        put: operations["edit-payment-terms-template"];
+        /** Create Payment Terms Template */
+        post: operations["create-payment-terms-template"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment-terms-template/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Payment Terms Template Detail */
+        get: operations["payment-terms-template-details"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment-terms-template/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Payment Terms-template */
+        put: operations["update-status-payment-terms-template"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment-terms/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Payment Terms Detail */
+        get: operations["payment-terms-details"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment-terms/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Payment Terms */
+        put: operations["update-status-payment-terms"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment-terms/{id}/lines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Payment Term Lines */
+        get: operations["payment-term-lines"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/payment/associated-actions": {
         parameters: {
             query?: never;
@@ -3181,8 +3304,8 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Update Status Currency Exchange */
-        put: operations["update-status-currency-exchange"];
+        /** Update Status Terms & Conditions */
+        put: operations["update-status-terms-and-conditions"];
         post?: never;
         delete?: never;
         options?: never;
@@ -5140,6 +5263,32 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityPaymentDetailDto"];
         };
+        EntityResponseResultEntityPaymentTermsDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityPaymentTermsDto"];
+        };
+        EntityResponseResultEntityPaymentTermsTemplateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityPaymentTermsTemplateDto"];
+        };
         EntityResponseResultEntityPianoFormBody: {
             /**
              * Format: uri
@@ -6853,6 +7002,96 @@ export interface components {
             /** Format: int32 */
             total: number;
         };
+        PaymentTermsData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            filds: components["schemas"]["PaymentTermsFields"];
+            /** Format: int64 */
+            id?: number;
+        };
+        PaymentTermsDto: {
+            /** Format: int32 */
+            credit_days: number | null;
+            description: string | null;
+            /** Format: int64 */
+            discount: number | null;
+            discount_type: string | null;
+            /** Format: int32 */
+            discount_validity: number | null;
+            discount_validity_base_on: string | null;
+            due_date_base_on: string;
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            invoice_portion: number;
+            name: string;
+            status: string;
+            uuid: string;
+        };
+        PaymentTermsFields: {
+            /** Format: int32 */
+            credit_days: number | null;
+            description: string | null;
+            /** Format: int64 */
+            discount: number | null;
+            discount_type: string | null;
+            /** Format: int32 */
+            discount_validity: number | null;
+            discount_validity_base_on: string | null;
+            due_date_base_on: string;
+            /** Format: int32 */
+            invoice_portion: number;
+            name: string;
+        };
+        PaymentTermsLineData: {
+            /** Format: int32 */
+            credit_days: number | null;
+            description: string | null;
+            due_date_base_on: string;
+            /** Format: int32 */
+            invoice_portion: number;
+            /** Format: int64 */
+            payment_terms_id: number;
+        };
+        PaymentTermsLineDto: {
+            /** Format: int32 */
+            credit_days: number | null;
+            description: string | null;
+            /** Format: int64 */
+            document_id: number;
+            due_date_base_on: string;
+            /** Format: int32 */
+            id: number;
+            /** Format: int32 */
+            invoice_portion: number;
+            payment_term: string;
+            /** Format: int64 */
+            payment_term_id: number;
+        };
+        PaymentTermsTemplateData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            filds: components["schemas"]["PaymentTermsTemplateFields"];
+            /** Format: int64 */
+            id?: number;
+            lines: components["schemas"]["PaymentTermsLineData"][];
+        };
+        PaymentTermsTemplateDto: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            status: string;
+            uuid: string;
+        };
+        PaymentTermsTemplateFields: {
+            name: string;
+        };
         PhoneNumber: {
             countryCode: string;
             number: string;
@@ -7610,6 +7849,34 @@ export interface components {
             message: string;
             result: components["schemas"]["LineItemDto"][];
         };
+        ResponseDataListListPaymentTermsDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["PaymentTermsDto"][];
+        };
+        ResponseDataListListPaymentTermsTemplateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["PaymentTermsTemplateDto"][];
+        };
         ResponseDataListListTermsAndConditionsDtoBody: {
             /**
              * Format: uri
@@ -7662,6 +7929,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["PartyTypeDto"][];
+        };
+        ResponseDataListPaymentTermsLineDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["PaymentTermsLineDto"][];
         };
         ResponseDataListSerialNoTransactionDtoBody: {
             /**
@@ -7740,6 +8020,32 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["PaymentDto"];
+        };
+        ResponseDataPaymentTermsDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["PaymentTermsDto"];
+        };
+        ResponseDataPaymentTermsTemplateDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["PaymentTermsTemplateDto"];
         };
         ResponseDataPricingDtoBody: {
             /**
@@ -8029,6 +8335,18 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["PaymentDetailDto"];
+        };
+        ResultEntityPaymentTermsDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["PaymentTermsDto"];
+        };
+        ResultEntityPaymentTermsTemplateDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["PaymentTermsTemplateDto"];
         };
         ResultEntityPianoForm: {
             activities: components["schemas"]["ActivityDto"][];
@@ -13264,6 +13582,399 @@ export interface operations {
             };
         };
     };
+    "payment-terms": {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+                name?: string;
+                created_at?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListPaymentTermsDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-payment-terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentTermsData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-payment-terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentTermsData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataPaymentTermsDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "payment-terms-template": {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+                name?: string;
+                created_at?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListPaymentTermsTemplateDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-payment-terms-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentTermsTemplateData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-payment-terms-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentTermsTemplateData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataPaymentTermsTemplateDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "payment-terms-template-details": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityPaymentTermsTemplateDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-payment-terms-template": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "payment-terms-details": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityPaymentTermsDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-payment-terms": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "payment-term-lines": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListPaymentTermsLineDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get payment actions": {
         parameters: {
             query?: never;
@@ -17705,6 +18416,7 @@ export interface operations {
                 orientation?: string;
                 column?: string;
                 name?: string;
+                created_at?: string;
             };
             header?: never;
             path?: never;
@@ -17837,7 +18549,7 @@ export interface operations {
             };
         };
     };
-    "update-status-currency-exchange": {
+    "update-status-terms-and-conditions": {
         parameters: {
             query?: never;
             header?: {

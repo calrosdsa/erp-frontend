@@ -3,6 +3,7 @@ import { Column, Getter, Row, Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type Option = {
   label: string;
@@ -13,6 +14,7 @@ interface TableCellProps<TData> {
   row: Row<TData>;
   column: Column<TData, unknown>;
   table: Table<TData>;
+  data?: SelectItem[];
 }
 
 export default function TableCellEditable<TData>({
@@ -20,16 +22,17 @@ export default function TableCellEditable<TData>({
   row,
   column,
   table,
+  data,
 }: TableCellProps<TData>) {
   const initialValue = getValue();
   const columnMeta: any = column.columnDef.meta;
   const tableMeta: any = table.options.meta;
-  const [value, setValue] = useState(initialValue);
+  const [value, setValue] = useState("");
   const [focus, setFocus] = useState(false);
   //   const [validationMessage, setValidationMessage] = useState("");
 
   useEffect(() => {
-    setValue(initialValue);
+    setValue(initialValue || "");
   }, [initialValue]);
 
   const onBlur = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -85,6 +88,27 @@ export default function TableCellEditable<TData>({
         />
       );
     }
+
+    if (columnMeta?.inputType == "select") {
+      return (
+        <Select value={value} onValueChange={(e)=>{
+         setValue(e)
+         tableMeta?.updateCell(row.index, column.id, e);
+        }}>
+          <SelectTrigger >
+            <SelectValue placeholder="" />
+          </SelectTrigger>
+          <SelectContent defaultValue={initialValue}>
+            {data?.map((t)=>{
+              return (
+                <SelectItem value={t.value}>{t.name}</SelectItem>
+              )
+            })}
+          </SelectContent>
+        </Select>
+      );
+    }
+
     return (
       <Input
         value={value}

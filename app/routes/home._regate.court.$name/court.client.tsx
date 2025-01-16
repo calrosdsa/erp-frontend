@@ -18,7 +18,7 @@ import CourtInfoTab from "./tabs/court-info";
 import CourtSchedule from "./tabs/court-schedule";
 import { ButtonToolbar } from "~/types/actions";
 import { UpdateCourtRate, useUpdateCourtRate } from "./use-update-court-rate";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
 import { ActivityType } from "~/gen/common";
 
 export default function CourtDetailClient() {
@@ -55,7 +55,7 @@ export default function CourtDetailClient() {
     // },
   ];
 
-  setUpToolbar(() => {
+  setUpToolbarDetailPage((opts) => {
     const actions: ButtonToolbar[] = [];
     actions.push({
       label: "Editar precio por hora",
@@ -89,6 +89,7 @@ export default function CourtDetailClient() {
       },
     });
     return {
+      ...opts,
       titleToolbar: params.name,
       actions: actions,
     };

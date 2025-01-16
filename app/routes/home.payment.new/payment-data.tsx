@@ -96,6 +96,7 @@ export default function PaymentData({
   });
 
   const updateAmountFromReferences = () => {
+    if(formValues.paymentReferences.length == 0) return
     const totalAllocated = formValues.paymentReferences.reduce(
       (prev, curr) => prev + Number(curr.allocated),
       0
@@ -179,7 +180,7 @@ export default function PaymentData({
               <div>
                 <PartyAutocompleteField
                   control={form.control}
-                  party={formValues.partyType}
+                  partyType={formValues.partyType}
                   allowEdit={allowEdit}
                   roleActions={roleActions}
                 />
@@ -277,6 +278,7 @@ export default function PaymentData({
                   <DataTable
                     data={formValues.paymentReferences}
                     columns={paymentReferencesColumns({ t, i18n })}
+                    fullHeight={false}
                     metaOptions={{
                       meta: {
                         updateCell: (

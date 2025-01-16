@@ -3,7 +3,7 @@ import DataLayout from "@/components/layout/data-layout";
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
 import { GlobalState } from "~/types/app";
 import { loader } from "./route";
-import { termsAndConditionsColumn } from "@/components/custom/table/columns/document/terms-and-conditions-columns";
+import { termsAndConditionsColumns } from "@/components/custom/table/columns/document/terms-and-conditions-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
@@ -37,7 +37,7 @@ export default function TermsAndConditionsClient (){
         filterOptions={filters}>
             <DataTable
             data={results || []}
-            columns={termsAndConditionsColumn()}
+            columns={termsAndConditionsColumns()}
             enableSizeSelection={true}
             />
         </DataLayout>

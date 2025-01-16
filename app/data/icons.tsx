@@ -411,7 +411,7 @@ const icons = [
   { name: "Salvavidas", value: "lifeBuoy", icon: LifeBuoy },
   { name: "Enlace", value: "link", icon: Link },
   { name: "Enlace 2", value: "link2", icon: Link2 },
-  { name: "Confeti de fiesta", value: "party-popper", icon: PartyPopper },
+  { name: "Confeti de fiesta", value: "party-popper", icon: PartyPopper  },
   { name: "LinkedIn", value: "linkedin", icon: Linkedin },
   { name: "Lista", value: "list", icon: List },
   { name: "Cargador", value: "loader", icon: Loader },

@@ -106,12 +106,12 @@ export default function PartyAutocomplete({
 }
 
 export const PartyAutocompleteField= ({
-  party,
+  partyType,
   control,
   roleActions,
   allowEdit,
 }: {
-  party: string;
+  partyType: string;
   control: Control<any,any>;
   allowEdit?: boolean;
   roleActions: components["schemas"]["RoleActionDto"][];
@@ -134,11 +134,11 @@ export const PartyAutocompleteField= ({
 
   return (
     <>
-      {(party == p.purchaseOrder ||
-        party == p.purchaseInvoice ||
-        party == p.supplier ||
-        party == p.purchaseReceipt ||
-        party == p.supplierQuotation) && (
+      {(partyType == p.purchaseOrder ||
+        partyType == p.purchaseInvoice ||
+        partyType == p.supplier ||
+        partyType == p.purchaseReceipt ||
+        partyType == p.supplierQuotation) && (
         <FormAutocompleteField
           required={true}
           data={supplierDebounceFetcher.data?.suppliers || []}
@@ -156,11 +156,11 @@ export const PartyAutocompleteField= ({
         />
       )}
 
-      {(party == p.saleOrder ||
-        party == p.saleInvoice ||
-        party == p.deliveryNote ||
-        party == p.customer ||
-        party == p.salesQuotation) && (
+      {(partyType == p.saleOrder ||
+        partyType == p.saleInvoice ||
+        partyType == p.deliveryNote ||
+        partyType == p.customer ||
+        partyType == p.salesQuotation) && (
         <FormAutocompleteField
           required={true}
           data={customerFetcher.data?.customers || []}

@@ -2,22 +2,23 @@ import { json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import { DEFAULT_COLUMN, DEFAULT_ORDER, DEFAULT_SIZE } from "~/constant"
 import { handleError } from "~/util/api/handle-status-code"
-import TermsAndConditionsClient from "./terms-and-conditions.client"
+import TermsAndConditionsClient from "./payment-terms-template.client"
 import { components, operations } from "~/sdk"
+import PaymentTermsTemplateClient from "./payment-terms-template.client"
 
 type ActionData ={
     action:string
-    query:operations["terms-and-conditions"]["parameters"]["query"]
+    query:operations["payment-terms-template"]["parameters"]["query"]
 }
 
 export const action = async({request}:LoaderFunctionArgs)=>{
     const client = apiClient({request})
     const data =await request.json()as ActionData
-    let results:components["schemas"]["TermsAndConditionsDto"][] = []
+    let results:components["schemas"]["PaymentTermsTemplateDto"][] = []
     let actions:components["schemas"]["ActionDto"][] = []
     switch(data.action){
         case "get":{
-            const res = await client.GET("/terms-and-conditions",{
+            const res = await client.GET("/payment-terms-template",{
                 params:{
                     query:data.query
                 }
@@ -37,7 +38,7 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
     const client = apiClient({request})
     const url = new URL(request.url)
     const searchParams = url.searchParams
-    const res = await client.GET("/terms-and-conditions",{
+    const res = await client.GET("/payment-terms-template",{
         params:{
             query:{
                 size:searchParams.get("size") || DEFAULT_SIZE,
@@ -57,8 +58,8 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
     })
 }
 
-export default function TermsAndConditions(){
+export default function PaymentTermsTemplate(){
     return (
-        <TermsAndConditionsClient/>
+        <PaymentTermsTemplateClient/>
     )
 }
