@@ -74,10 +74,11 @@ export const InvoiceData = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
-            {/* {JSON.stringify(form.formState.errors)} */}
+            {JSON.stringify(form.formState.errors)}
+            {/* {JSON.stringify(form.getValues().lines)} */}
           <div className="create-grid">
             <PartyAutocompleteField
-              party={partyInvoice}
+              partyType={partyInvoice}
               roleActions={roleActions}
               control={form.control}
               allowEdit={allowEdit}
@@ -134,6 +135,7 @@ export const InvoiceData = ({
               complement={
                 <UpdateStock
                   form={form}
+                  allowEdit={allowEdit}
                   updateStock={formValues.updateStock}
                   partyType={partyInvoice}
                   isInvoice={true}

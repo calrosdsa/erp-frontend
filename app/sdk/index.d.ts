@@ -4092,7 +4092,6 @@ export interface components {
         };
         CreateItemLines: {
             lines: components["schemas"]["LineItemData"][];
-            update_stock?: boolean;
         };
         CreateItemVariantRequestBody: {
             /**
@@ -5740,6 +5739,7 @@ export interface components {
             /** Format: int64 */
             project_id?: number | null;
             tz: string;
+            update_stock?: boolean;
             /** Format: int64 */
             warehouse_id?: number | null;
         };
@@ -8639,6 +8639,7 @@ export interface components {
             date: string;
             /** Format: int32 */
             in_qty: number;
+            item_code: string;
             item_group_name: string;
             item_group_uuid: string;
             item_name: string;
@@ -8720,6 +8721,7 @@ export interface components {
             in_qty: number;
             /** Format: int32 */
             incoming_rate: number;
+            item_code: string;
             item_group_name: string;
             item_group_uuid: string;
             item_name: string;
@@ -12010,6 +12012,7 @@ export interface operations {
                 line_type?: string;
                 update_stock?: string;
                 id?: string;
+                party_type?: string;
             };
             header?: never;
             path?: never;

@@ -13,7 +13,7 @@ import { components } from "~/sdk";
 type ActionData = {
   action: string;
   updateStateWithEvent: z.infer<typeof updateStatusWithEventSchema>;
-  paymentData: z.infer<typeof paymentDataSchema>;
+  editionData: z.infer<typeof paymentDataSchema>;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -25,7 +25,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (data.action) {
     case "edit": {
       const res = await client.PUT("/payment", {
-        body: mapToPaymentBody(data.paymentData),
+        body: mapToPaymentBody(data.editionData),
       });
       error = res.error?.detail;
       message = res.data?.message;

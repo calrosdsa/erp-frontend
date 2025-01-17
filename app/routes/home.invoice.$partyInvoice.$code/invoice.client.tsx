@@ -27,6 +27,7 @@ import InvoiceConnectionsTab from "./components/tab/invoice-connections";
 import {
   setUpToolbar,
   setUpToolbarDetailPage,
+  setUpToolbarRegister,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
@@ -87,6 +88,7 @@ export default function InvoiceDetailClient() {
   const { total: totalTaxAndCharges } = useTaxAndCharges();
   const newSalesRecord = useNewSalesRecord();
   const purchaseRecordStore = usePurchaseRecordStore();
+
   const navItems = [
     {
       title: t("info"),
@@ -116,14 +118,14 @@ export default function InvoiceDetailClient() {
     switch (partyTypeFromJSON(partyInvoice)) {
       case PartyType.saleInvoice:
         return paymentTypeToJSON(PaymentType.RECEIVE);
-      case PartyType.purchaseInvoice:
+        case PartyType.purchaseInvoice:
         return paymentTypeToJSON(PaymentType.PAY);
       default:
         return "";
-    }
-  };
-
-  setUpToolbarDetailPage((opts) => {
+      }
+    };
+    
+ setUpToolbarRegister(()=>{
     let actions: ButtonToolbar[] = [];
     let view: ButtonToolbar[] = [];
     const status = stateFromJSON(invoice?.status);
@@ -267,7 +269,6 @@ export default function InvoiceDetailClient() {
     }
     console.log("RENDER TOOLBAR")
     return {
-      ...opts,
       titleToolbar: `${t("_invoice.base")}(${invoice?.code})`,
       status: stateFromJSON(invoice?.status),
       actions: actions,
@@ -291,7 +292,7 @@ export default function InvoiceDetailClient() {
         );
       },
     };
-  }, [
+  },[
     paymentPermission,
     invoice,
     gLPermission,
@@ -301,7 +302,20 @@ export default function InvoiceDetailClient() {
     stockLedgerPerm,
     salesRecordPerm,
     purchaseRecordPerm,
-  ]);
+  ])
+  // setUpToolbarDetailPage((opts) => {
+ 
+  // }, [
+  //   paymentPermission,
+  //   invoice,
+  //   gLPermission,
+  //   serialNoPermission,
+  //   total,
+  //   totalTaxAndCharges,
+  //   stockLedgerPerm,
+  //   salesRecordPerm,
+  //   purchaseRecordPerm,
+  // ]);
 
   useLoadingTypeToolbar(
     {

@@ -31,8 +31,8 @@ export default function AccountPayableSumaryClient() {
   },[accountPayableSumary])
 
   setUpToolbar(()=>{
-    let actions: ButtonToolbar[] = [];
-    actions.push({
+    let view: ButtonToolbar[] = [];
+    view.push({
       label: t("accountPayable"),
       onClick: () => {
         navigate(
@@ -48,7 +48,7 @@ export default function AccountPayableSumaryClient() {
       },
     });
     return {
-      actions:actions,
+      view:view,
     }
   },[])
   

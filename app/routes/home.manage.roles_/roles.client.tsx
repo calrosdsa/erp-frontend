@@ -44,6 +44,7 @@ export default function RolesClient(){
             }}
             data={paginationResult?.results || []}
             columns={roleColumns({})}
+            enableSizeSelection={true}
             />
         </>
     )

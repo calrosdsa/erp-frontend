@@ -83,7 +83,7 @@ export const PriceListAutocompleteForm = ({
 
 
 
-export const usePriceListDebounceFetcher = ({isSelling=true,isBuying=true}:{
+export const usePriceListDebounceFetcher = ({isSelling,isBuying}:{
     isSelling?:boolean
     isBuying?:boolean
 }) =>{
@@ -97,8 +97,8 @@ export const usePriceListDebounceFetcher = ({isSelling=true,isBuying=true}:{
         const d:operations["get-price-lists"]["parameters"]["query"] = {
             query:e,
             size:DEFAULT_SIZE,
-            is_selling:String(isSelling),
-            is_buying:String(isBuying)
+            is_selling:isSelling ? String(isSelling) : "",
+            is_buying:isBuying ? String(isBuying) :""
         }
         debounceFetcher.submit({
             action:"get",

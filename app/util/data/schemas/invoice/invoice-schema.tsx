@@ -6,12 +6,16 @@ import {
   lineItemReceipt,
   lineItemSchema,
 } from "../stock/line-item-schema";
-import { mapToTaxAndChargeData, taxAndChargeSchema } from "../accounting/tax-and-charge-schema";
+import {
+  mapToTaxAndChargeData,
+  taxAndChargeSchema,
+} from "../accounting/tax-and-charge-schema";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { field, fieldNull } from "..";
 import { components } from "~/sdk";
 import { formatRFC3339 } from "date-fns";
 import { lineItemSchemaToLineData } from "../buying/order-schema";
+import { toZonedTime } from "date-fns-tz";
 
 export const invoiceDataSchema = z
   .object({
@@ -30,7 +34,7 @@ export const invoiceDataSchema = z
 
     updateStock: z.boolean().optional(),
 
-    warehouse:fieldNull,
+    warehouse: fieldNull,
     // acceptedWarehouseID: z.number().optional(),
     // warehouse: z.string().optional(),
 
@@ -56,21 +60,29 @@ export const invoiceDataSchema = z
     }
     if (data.updateStock) {
       //For purchase invoice
-      if (data.warehouse && data.warehouse.id) {
+      if (
+        data.warehouse &&
+        data.warehouse.id &&
+        data.invoicePartyType == partyTypeToJSON(PartyType.purchaseInvoice)
+      ) {
         data.lines = data.lines.map((t, i) => {
           const receiptLineItem: z.infer<typeof lineItemReceipt> = {
             acceptedWarehouseID:
               t.lineItemReceipt?.acceptedWarehouseID ||
-              data.warehouse?.id || undefined,
+              data.warehouse?.id ||
+              undefined,
             acceptedWarehouse:
               t.lineItemReceipt?.acceptedWarehouse ||
-              data.warehouse?.name || undefined,
+              data.warehouse?.name ||
+              undefined,
             rejectedWarehouseID:
               t.lineItemReceipt?.rejectedWarehouseID ||
-              data.warehouse?.id || undefined,
+              data.warehouse?.id ||
+              undefined,
             rejectedWarehouse:
               t.lineItemReceipt?.rejectedWarehouse ||
-              data.warehouse?.name || undefined,
+              data.warehouse?.name ||
+              undefined,
             acceptedQuantity:
               t.lineItemReceipt?.acceptedQuantity || t.quantity || 0,
             rejectedQuantity: t.lineItemReceipt?.rejectedQuantity || 0,
@@ -90,7 +102,11 @@ export const invoiceDataSchema = z
         });
       }
       //For sale invoice
-      if (data.warehouse && data.warehouse.id) {
+      if (
+        data.warehouse &&
+        data.warehouse.id &&
+        data.invoicePartyType == partyTypeToJSON(PartyType.saleInvoice)
+      ) {
         data.lines = data.lines.map((t, i) => {
           const deliveryLine: z.infer<typeof deliveryLineItem> = {
             sourceWarehouseID: data.warehouse?.id || undefined,
@@ -141,30 +157,32 @@ export const mapToInvoiceBody = (
       cost_center_id: e.costCenter?.id,
       currency: e.currency,
       doc_reference_id: e.docReferenceID,
-      due_date: e.dueDate ? formatRFC3339(e.dueDate) : undefined,
+      due_date: e.dueDate
+        ? formatRFC3339(toZonedTime(e.dueDate, "UTC"))
+        : undefined,
       party_id: e.party?.id || 0,
-      posting_date: formatRFC3339(e.postingDate),
+      posting_date: formatRFC3339(toZonedTime(e.postingDate, "UTC")),
       posting_time: e.postingTime,
       price_list_id: e.priceList?.id,
       project_id: e.project?.id,
       tz: e.tz,
-      warehouse_id:e.warehouse?.id
+      warehouse_id: e.warehouse?.id,
+      update_stock: e.updateStock,
     },
     invoice_party_type: e.invoicePartyType,
-    total_amount: e.lines.reduce(
-      (prev, curr) => prev + Number(curr.quantity) * curr.rate,
-      0
-    ) +
-    e.taxLines.reduce((prev, curr) => prev + Number(curr.amount), 0),
+    total_amount:
+      e.lines.reduce(
+        (prev, curr) => prev + Number(curr.quantity) * curr.rate,
+        0
+      ) + e.taxLines.reduce((prev, curr) => prev + Number(curr.amount), 0),
   };
   return {
-    invoice:d,
-    items:{
-      update_stock:e.updateStock,
-      lines:e.lines.map((t) => lineItemSchemaToLineData(t))
+    invoice: d,
+    items: {
+      lines: e.lines.map((t) => lineItemSchemaToLineData(t)),
     },
-    tax_and_charges:{
-      lines:e.taxLines.map((t) => mapToTaxAndChargeData(t))
-    }
+    tax_and_charges: {
+      lines: e.taxLines.map((t) => mapToTaxAndChargeData(t)),
+    },
   };
 };

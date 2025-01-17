@@ -71,15 +71,18 @@ export default function ChartDataClient() {
         </CardContent>
 
         <CardFooter>
+          {chartData && 
           <div className="w-full">
           <DataTable
             data={chartData || []}
+            fullHeight={false}
             columns={chartColumns({
               chartType: chart,
               timeUnit: timeUnit,
             })}
             />
             </div>
+          }
         </CardFooter>
       </Card>
     </div>

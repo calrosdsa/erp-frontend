@@ -6,11 +6,7 @@ import {
   useParams,
 } from "@remix-run/react";
 import { action, loader } from "../../route";
-import {
-  State,
-  stateFromJSON,
-  stateToJSON,
-} from "~/gen/common";
+import { State, stateFromJSON, stateToJSON } from "~/gen/common";
 import { Typography } from "@/components/typography";
 import { GlobalState } from "~/types/app";
 import { useEffect, useRef } from "react";
@@ -23,9 +19,10 @@ import {
   setUpToolbar,
   setUpToolbarTab,
   useLoadingTypeToolbar,
+  useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { SetupToolbarOpts, useToolbar } from "~/util/hooks/ui/useToolbar";
 import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import { InvoiceData } from "~/routes/home.invoice.$partyInvoice.new/invoice-data";
@@ -51,19 +48,18 @@ export default function InvoiceInfoTab() {
   const allowCreate = isDraft && invoicePerm.create;
   const documentStore = useDocumentStore();
   const toolbar = useToolbar();
-  
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: invoiceDataSchema,
     defaultValues: {
       id: invoice?.id,
       currency: invoice?.currency,
-      invoicePartyType:partyInvoice,
-      docReferenceID:invoice?.doc_reference_id,
+      invoicePartyType: partyInvoice,
+      docReferenceID: invoice?.doc_reference_id,
       postingTime: invoice?.posting_time,
       postingDate: new Date(invoice?.posting_date || ""),
       dueDate: new Date(invoice?.due_date || new Date()),
       tz: invoice?.tz,
-      updateStock:invoice?.update_stock,
+      updateStock: invoice?.update_stock,
       party: {
         id: invoice?.party_id,
         name: invoice?.party_name,
@@ -84,25 +80,23 @@ export default function InvoiceInfoTab() {
         name: invoice?.price_list,
         uuid: invoice?.price_list_uuid,
       },
-      warehouse:{
-        id:invoice?.warehouse_id,
-        name:invoice?.warehouse,
-        uuid:invoice?.warehouse_uuid,
+      warehouse: {
+        id: invoice?.warehouse_id,
+        name: invoice?.warehouse,
+        uuid: invoice?.warehouse_uuid,
       },
       taxLines: taxLines.map((t) => toTaxAndChargeLineSchema(t)),
       lines: lineItems.map((t) =>
         toLineItemSchema(t, {
-          partyType:partyInvoice,
-          updateStock:invoice?.update_stock,
+          partyType: partyInvoice,
+          updateStock: invoice?.update_stock,
         })
       ),
     },
   });
-  const formValues = form.getValues();
-
+  const { setRegister } = useSetupToolbarStore();
 
   const onSubmit = (e: EditData) => {
-    console.log("ONSUBMIT",e)
     fetcher.submit(
       {
         action: "edit",
@@ -115,22 +109,23 @@ export default function InvoiceInfoTab() {
     );
   };
 
-  setUpToolbarTab(()=>{
-    return {
-      onSave: () => {
-        inputRef.current?.click()
-      },
-      disabledSave:!allowEdit,
-    }
-  },[allowEdit,invoice])
+  // setUpToolbarTab(() => {
+  //   return {
+  //     onSave: () => {
+  //       inputRef.current?.click();
+  //     },
+  //     disabledSave: !allowEdit,
+  //   };
+  // }, [allowEdit, invoice]);
 
-  
-  // useEffect(() => {
-  //   toolbar.setToolbar({
-  //     onSave: () => inputRef.current?.click(),
-  //     disabledSave: !hasChanged,
-  //   });
-  // }, [hasChanged]);
+  useEffect(() => {
+    setRegister("tab", {
+      onSave: () => {
+        inputRef.current?.click();
+      },
+      disabledSave: !allowEdit,
+    });
+  }, [allowEdit]);
 
   useLoadingTypeToolbar(
     {
@@ -166,15 +161,14 @@ export default function InvoiceInfoTab() {
 
   return (
     <>
-    {JSON.stringify(invoice?.total)}
-   <InvoiceData
-   form={form}
-   fetcher={fetcher}
-   allowEdit={allowEdit}
-   allowCreate={allowCreate}
-   inputRef={inputRef}
-   onSubmit={onSubmit}
-   />
-   </>
+      <InvoiceData
+        form={form}
+        fetcher={fetcher}
+        allowEdit={allowEdit}
+        allowCreate={allowCreate}
+        inputRef={inputRef}
+        onSubmit={onSubmit}
+      />
+    </>
   );
 }

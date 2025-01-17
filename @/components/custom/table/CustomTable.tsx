@@ -137,7 +137,10 @@ export function DataTable<TData, TValue>({
       if (containerRef.current) {
         const windowHeight = window.innerHeight;
         const containerTop = containerRef.current.getBoundingClientRect().top;
-        const footerHeight = 100; // Approximate height for the footer
+        let footerHeight = 0; // Approximate height for the footer
+        if(fullHeight){
+          footerHeight = 100
+        }
         const newHeight = windowHeight - containerTop - footerHeight;
         setContainerHeight(newHeight);
       }

@@ -32,12 +32,12 @@ export const stockBalanceColumns = ({}: {}): ColumnDef<
         <TableCellNameNavigation
           navigate={(name) =>
             r.toRoute({
-              main: partyTypeToJSON(PartyType.item),
+              main: r.itemM,
               routePrefix: [r.stockM],
               routeSufix: [name],
               q: {
                 tab: "info",
-                id: rowData.item_uuid,
+                id: rowData.item_code,
               },
             })
           }

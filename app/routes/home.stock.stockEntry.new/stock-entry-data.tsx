@@ -64,6 +64,7 @@ export const StockEntryData = ({
   ];
 
   useEffect(() => {
+    
     lineItemsStore.onLines(formValues.items);
     taxLinesStore.updateFromItems(formValues.items);
   }, [formValues.items]);
@@ -139,7 +140,6 @@ export const StockEntryData = ({
               //     partyType={partyReceipt}
               //   />
               // }
-              isNew={true}
             />
             {/* <TaxAndChargesLines
               onChange={(e) => {

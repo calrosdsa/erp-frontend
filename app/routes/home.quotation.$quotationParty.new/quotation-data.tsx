@@ -74,7 +74,7 @@ export const QuotationData = ({
         >
           <div className="create-grid">
             <PartyAutocompleteField
-              party={quotationParty}
+              partyType={quotationParty}
               roleActions={roleActions}
               control={form.control}
               allowEdit={allowEdit}
@@ -128,7 +128,6 @@ export const QuotationData = ({
               lineType={itemLineTypeToJSON(ItemLineType.QUOTATION_LINE_ITEM)}
               docPartyType={quotationParty}
               priceListID={formValues.priceList?.id || undefined}
-              isNew={true}
             />
             <TaxAndChargesLines
               onChange={(e) => {

@@ -16,10 +16,6 @@ import { route } from "~/util/route";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 
-interface LedgerData {
-  Name: string;
-}
-
 export default function AccountPayableClient() {
   const { accountPayable } = useLoaderData<typeof loader>();
   const r = route
@@ -37,8 +33,8 @@ export default function AccountPayableClient() {
   },[accountPayable])
 
   setUpToolbar(()=>{
-    let actions: ButtonToolbar[] = [];
-    actions.push({
+    let views: ButtonToolbar[] = [];
+    views.push({
       label: t("accountPayableSumary"),
       onClick: () => {
         navigate(
@@ -50,7 +46,7 @@ export default function AccountPayableClient() {
       },
     });
     return {
-      actions:actions,
+      view:views,
     }
   },[])
 

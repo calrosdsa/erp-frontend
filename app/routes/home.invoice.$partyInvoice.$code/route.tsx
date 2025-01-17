@@ -13,11 +13,9 @@ import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schem
 import { FetchResponse } from "openapi-fetch";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import {
-  editInvoiceSchema,
   invoiceDataSchema,
   mapToInvoiceBody,
 } from "~/util/data/schemas/invoice/invoice-schema";
-import { formatRFC3339 } from "date-fns";
 import { LOAD_ACTION } from "~/constant";
 import { components } from "~/sdk";
 type ActionData = {
@@ -50,7 +48,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
-      actionRes = "";
       console.log("ON EDIT INVOICE")
       break;
     }
@@ -110,6 +107,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
               id: res.data?.result.entity.invoice.id.toString(),
               update_stock:
                 res.data.result.entity.invoice.update_stock.toString(),
+              party_type:params.partyInvoice || "",
             },
           },
         });

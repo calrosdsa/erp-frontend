@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import Typography, { labelF } from "@/components/typography/Typography";
 import { ChartType, TimeUnit, timeUnitToJSON } from "~/gen/common";
 import { getTimeUnitOptions } from "../util";
+import { useTranslation } from "react-i18next";
 
 export default function ChartHeader({timeUnit,chartType}: {
   timeUnit:TimeUnit
@@ -16,6 +17,7 @@ export default function ChartHeader({timeUnit,chartType}: {
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const chartSetting = useChartSetting();
+  const {t } = useTranslation("common")
   const changeTimeUnit = (timeUnit:TimeUnit)=>{
     searchParams.set("time_unit",timeUnitToJSON(timeUnit))
     setSearchParams(searchParams, {
@@ -62,14 +64,15 @@ export default function ChartHeader({timeUnit,chartType}: {
                     Unidad de tiempo
                     </Typography>
                     <div className=" flex space-x-2 py-2">
-                      {getTimeUnitOptions(chartType).map((t,idx)=>{
+                      {getTimeUnitOptions(chartType).map((tU,idx)=>{
+                        const timeU = TimeUnit[tU]
                           return (
                             <Button size={"xs"} key={idx}
-                           variant={timeUnit == t ? "default" : "outline"}
+                           variant={timeUnit == tU ? "default" : "outline"}
                            onClick={()=>{
-                             changeTimeUnit(t)
+                             changeTimeUnit(tU)
                           }}>
-                              {TimeUnit[t]}
+                              {t(`timeUnit.${timeU}`)}
                           </Button>
                           )
                       })}

@@ -4,27 +4,28 @@ import {
   ItemLineType,
   itemLineTypeFromJSON,
   itemLineTypeToJSON,
+  PartyType,
+  partyTypeFromJSON,
 } from "~/gen/common";
 import { validateNumber, validateStringNumber } from "../base/base-schema";
 import { components } from "~/sdk";
 import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 
+export type LineItemType = z.infer<typeof lineItemSchema>;
 
-export type LineItemType = z.infer<typeof lineItemSchema>
-
-export const lineItemDefault = (opts:{
-  lineType:string,
-  updateStock?:boolean
-}):LineItemType=>{
-  const line:LineItemType = {
+export const lineItemDefault = (opts: {
+  lineType: string;
+  updateStock?: boolean;
+}): LineItemType => {
+  const line: LineItemType = {
     rate: 0,
     lineType: opts.lineType,
     uom: "",
     item_name: "",
     item_code: "",
     itemID: 0,
-    unitOfMeasureID:0,
-  }
+    unitOfMeasureID: 0,
+  };
   const lineType = itemLineTypeFromJSON(opts.lineType);
   if (lineType == ItemLineType.ITEM_LINE_RECEIPT || opts.updateStock) {
     line.lineItemReceipt = {
@@ -32,8 +33,8 @@ export const lineItemDefault = (opts:{
       rejectedQuantity: 0,
     };
   }
-  return line
-}
+  return line;
+};
 
 export const toLineItemSchema = (
   line: components["schemas"]["LineItemDto"],
@@ -50,8 +51,8 @@ export const toLineItemSchema = (
     rate: formatAmount(line.rate),
     quantity: line.quantity,
     itemLineReferenceID: line.item_line_reference_id,
-    itemID:line.item_id,
-    unitOfMeasureID:line.unit_of_measure_id,
+    itemID: line.item_id,
+    unitOfMeasureID: line.unit_of_measure_id,
 
     item_name: line.item_name,
     item_code: line.item_code,
@@ -59,8 +60,12 @@ export const toLineItemSchema = (
     party_type: opts.partyType,
   };
   const lineType = itemLineTypeFromJSON(line.line_type);
+  const partyType = partyTypeFromJSON(opts.partyType);
 
-  if (lineType == ItemLineType.ITEM_LINE_RECEIPT || opts.updateStock) {
+  if (
+    lineType == ItemLineType.ITEM_LINE_RECEIPT ||
+    (opts.updateStock && partyType == PartyType.purchaseInvoice)
+  ) {
     lineItem.lineItemReceipt = {
       acceptedQuantity: line.accepted_quantity,
       rejectedQuantity: line.rejected_quantity,
@@ -70,11 +75,14 @@ export const toLineItemSchema = (
       rejectedWarehouseID: line.rejected_warehouse_id,
     };
   }
-  if(lineType == ItemLineType.DELIVERY_LINE_ITEM || opts.updateStock) {
+  if (
+    lineType == ItemLineType.DELIVERY_LINE_ITEM ||
+    (opts.updateStock && partyType == PartyType.saleInvoice)
+  ) {
     lineItem.deliveryLineItem = {
-      sourceWarehouseID:line.source_warehouse_id,
-      sourceWarehouse:line.source_warehouse,
-    }
+      sourceWarehouseID: line.source_warehouse_id,
+      sourceWarehouse: line.source_warehouse,
+    };
   }
   return lineItem;
 };
@@ -87,7 +95,7 @@ export const schemaToLineItemData = (
 ): components["schemas"]["LineItemData"] => {
   const lineItemData: components["schemas"]["LineItemData"] = {
     item_id: line.itemID,
-    unit_of_measure_id:line.unitOfMeasureID,
+    unit_of_measure_id: line.unitOfMeasureID,
     line_type: line.lineType,
     quantity: line.quantity || 0,
     rate: line.rate,
@@ -141,8 +149,8 @@ export const lineItemSchema = z
     itemLineID: z.number().optional(),
     quantity: z.coerce.number().optional(),
     rate: z.coerce.number(),
-    itemID:z.number(),
-    unitOfMeasureID:z.number(),
+    itemID: z.number(),
+    unitOfMeasureID: z.number(),
 
     lineType: z.string(),
     itemLineReferenceID: z.number().optional().nullable(),
@@ -155,7 +163,6 @@ export const lineItemSchema = z
 
     item_name: z.string(),
     item_code: z.string(),
-
 
     party_type: z.string().optional(),
   })
@@ -174,7 +181,6 @@ export const lineItemSchema = z
     //     data.amount = Number(data.quantity) * data.rate;
     //   }
     // }
-    
     // if (data.lineItemReceipt != undefined) {
     //   data.quantity =
     //     data.lineItemReceipt.acceptedQuantity +

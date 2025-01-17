@@ -2,7 +2,7 @@ import Wizard from "@/components/layout/wizard";
 import CreateBookings from "./componets/create-bookings";
 import { ValidateBooking } from "./componets/validate-booking";
 import { action } from "./route";
-import { useFetcher } from "@remix-run/react";
+import { json, useFetcher } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { useUnmount } from "usehooks-ts";
@@ -19,6 +19,7 @@ export default function NewBookingClient() {
   const onBookingPayload = () => {
     if (payload) {
       const { court, selectedSlots, courtName } = payload;
+      console.log("SELECTED SLOTS",selectedSlots)
       const body: components["schemas"]["ValidateBookingBody"] = {
         bookings: generateBookingData(court, courtName, selectedSlots),
       };
@@ -54,6 +55,8 @@ export default function NewBookingClient() {
 
   return (
     <>
+          {/* {JSON.stringify(fetcher.data)} */}
+
           {fetcher.state == "submitting" ? (
             <LoadingSpinner className="h-[70vh]" size="lg" />
           ) : fetcher.data?.bookingData &&

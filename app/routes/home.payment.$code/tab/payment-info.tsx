@@ -18,7 +18,11 @@ import {
 } from "~/util/data/schemas/accounting/payment-schema";
 import { useEffect, useRef, useState } from "react";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbarTab,
+  useLoadingTypeToolbar,
+  useSetupToolbarStore,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import PaymentData from "~/routes/home.payment.new/payment-data";
 import { isEmpty } from "lodash";
@@ -29,7 +33,7 @@ type PaymentDataSchema = z.infer<typeof paymentDataSchema>;
 export default function PaymentInfoTab() {
   const { t, i18n } = useTranslation("common");
   const r = route;
-  const { payment, actions,taxLines } = useLoaderData<typeof loader>();
+  const { payment, actions, taxLines } = useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const [permission] = usePermission({ actions, roleActions });
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -43,17 +47,17 @@ export default function PaymentInfoTab() {
       partyType: payment?.party_type,
       paymentType: payment?.payment_type,
       // paymentTypeT: t(payment?.payment_type || ""),
-      party:{
-        id:payment?.party_id,
-        name:payment?.party_name,
+      party: {
+        id: payment?.party_id,
+        name: payment?.party_name,
       },
-      accountPaidFrom:{
-        id:payment?.paid_from_id,
-        name:payment?.paid_from_name,
+      accountPaidFrom: {
+        id: payment?.paid_from_id,
+        name: payment?.paid_from_name,
       },
-      accountPaidTo:{
-        id:payment?.paid_to_id,
-        name:payment?.paid_to_name,
+      accountPaidTo: {
+        id: payment?.paid_to_id,
+        name: payment?.paid_to_name,
       },
       paymentReferences:
         payment?.payment_references?.map((t) =>
@@ -74,6 +78,8 @@ export default function PaymentInfoTab() {
   });
   const formValues = form.getValues();
   const toolbar = useToolbar();
+  const { setRegister } = useSetupToolbarStore();
+
   const allowEdit =
     permission?.edit && stateFromJSON(payment?.status) == State.DRAFT;
   const allowCreate =
@@ -83,7 +89,7 @@ export default function PaymentInfoTab() {
     fetcher.submit(
       {
         action: "edit",
-        editData: e as any,
+        editionData: e as any,
       },
       {
         method: "POST",
@@ -101,13 +107,13 @@ export default function PaymentInfoTab() {
   );
 
   useEffect(() => {
-    if(allowEdit) {
-      toolbar.setToolbar({
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      });
-    }
-  }, [permission,toolbar.isMounted  ]);
+    setRegister("tab", {
+      onSave: () => {
+        inputRef.current?.click();
+      },
+      disabledSave: !allowEdit,
+    });
+  }, [allowEdit]);
 
   useDisplayMessage(
     {
@@ -122,14 +128,15 @@ export default function PaymentInfoTab() {
 
   return (
     <>
-        <PaymentData
-          form={form}
-          onSubmit={onSubmit}
-          inputRef={inputRef}
-          fetcher={fetcher}
-          allowEdit={allowEdit}
-          allowCreate={allowCreate}
-        />
+      {/* {JSON.stringify(formValues)} */}
+      <PaymentData
+        form={form}
+        onSubmit={onSubmit}
+        inputRef={inputRef}
+        fetcher={fetcher}
+        allowEdit={allowEdit}
+        allowCreate={allowCreate}
+      />
     </>
   );
 }

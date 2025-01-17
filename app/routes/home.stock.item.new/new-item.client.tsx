@@ -57,7 +57,6 @@ export default function NewItemClient() {
   const form = useForm<z.infer<typeof createItemSchema>>({
     resolver: zodResolver(createItemSchema),
     defaultValues: {
-      name: "",
       maintainStock:false,
       itemPriceLines: [],
     },
@@ -136,17 +135,20 @@ export default function NewItemClient() {
                   <CustomFormFieldInput
                     control={form.control}
                     name="name"
+                    required={true}
                     label={"Nombre"}
                     inputType="input"
                   />
                   <CustomFormFieldInput
                     control={form.control}
                     name="code"
+                    required={true}
                     label={"Código / NP"}
                     inputType="input"
                   />
                   <UomAutocompleteForm
                     control={form.control}
+                    required={true}
                     label={t("form.uom")}
                     name="uomName"
                     onSelect={(e) => {
@@ -157,6 +159,7 @@ export default function NewItemClient() {
                     control={form.control}
                     label={t("group")}
                     name="groupName"
+                    required={true}
                     roleActions={roleActions}
                     isGroup={false}
                     partyType={r.itemGroup}

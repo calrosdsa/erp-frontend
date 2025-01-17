@@ -76,7 +76,7 @@ export const OrderData = ({
             {JSON.stringify(form.formState.errors)}
           <div className="create-grid">
             <PartyAutocompleteField
-              party={partyOrder}
+              partyType={partyOrder}
               roleActions={roleActions}
               control={form.control}
               allowEdit={allowEdit}

@@ -36,8 +36,8 @@ export default function AccountReceivableSumaryClient() {
   },[accountReceivableSumary])
 
   setUpToolbar(()=>{
-    let actions: ButtonToolbar[] = [];
-    actions.push({
+    let view: ButtonToolbar[] = [];
+    view.push({
       label: t("accountReceivable"),
       onClick: () => {
         navigate(
@@ -53,7 +53,7 @@ export default function AccountReceivableSumaryClient() {
       },
     });
     return {
-      actions:actions,
+      view:view,
     }
   },[])
   

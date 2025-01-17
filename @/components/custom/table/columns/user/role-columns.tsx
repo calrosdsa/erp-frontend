@@ -111,11 +111,7 @@ export const roleColumns = ({}): ColumnDef<
   let columns: ColumnDef<components["schemas"]["RoleDto"]>[] = [];
   const r = route;
   const { t, i18n } = useTranslation("common");
-  columns.push({
-    header: "No.",
-    cell: TableCellIndex,
-    size:30,
-  })
+
   columns.push({
     accessorKey: "code",
     header: t("_role.base"),

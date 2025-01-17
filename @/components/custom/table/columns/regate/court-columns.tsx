@@ -17,10 +17,6 @@ export const courtColumns = (): ColumnDef<components["schemas"]["CourtDto"]>[] =
   const r = route;
   return [
     {
-       header:t("table.no"),
-       cell:TableCellIndex,
-    },
-    {
         accessorKey: "name",
         header: t("form.name"),
         cell:({...props})=>{

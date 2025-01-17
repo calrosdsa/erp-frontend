@@ -43,7 +43,6 @@ export const useToolbar = create<ToolbarState & ToolbarActions>((set) => ({
   ...initialState,
   setLoading: ({ loading, loadingType }) => set({ loading, loadingType }),
   setMounted: (e) => set((state)=>{
-    console.log("IS MOUNTED",state.isMounted)
   return  { 
     isMounted:e,
    }

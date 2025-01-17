@@ -7,7 +7,7 @@ import { GlobalState } from "~/types/app";
 import { PartyType, partyTypeToJSON, stateFromJSON } from "~/gen/common";
 import DetailLayout from "@/components/layout/detail-layout";
 import PaymentInfoTab from "./tab/payment-info";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarDetailPage, setUpToolbarRegister, setUpToolbarTab } from "~/util/hooks/ui/useSetUpToolbar";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { ButtonToolbar } from "~/types/actions";
@@ -33,7 +33,7 @@ export default function PaymentDetailClient() {
     },
   ]
 
-  setUpToolbar(()=>{
+  setUpToolbarRegister(()=>{
     let actions: ButtonToolbar[] = [];
     actions.push({
       label:t("accountingLedger"),

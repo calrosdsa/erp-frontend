@@ -470,6 +470,13 @@
   "TO_RECEIVE":"POR RECIBIR",
   "TO_BILL":"POR FACTURAR",
 
+  "timeUnit":{
+    "hour":"Hora",
+    "day":"Dia",
+    "week":"Semana",
+    "month":"Mes",
+    "year":"Año"
+  },
 
   "regate": {
     "schedule": "Horario",

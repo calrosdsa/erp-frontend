@@ -18,11 +18,11 @@ export const partyReferencesColumns = ({}): ColumnDef<
   const { t, i18n } = useTranslation("common");
   const r = route;
   return [
-    {
-      id: "index",
-      header: t("table.no"),
-      cell: TableCellIndex,
-    },
+    // {
+    //   id: "index",
+    //   header: t("table.no"),
+    //   cell: TableCellIndex,
+    // },
     {
       accessorKey: "reference",
       header: t("table.reference"),
