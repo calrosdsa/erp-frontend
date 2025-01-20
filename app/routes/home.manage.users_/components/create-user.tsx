@@ -76,13 +76,12 @@ export const CreateUser = ({open,onOpenChange,permission,globalState}:{
         <DrawerLayout
         open={open}
         onOpenChange={onOpenChange}
-        className="md:max-w-5xl"
+        className=""
         title={t("f.add-new",{o:t("_user.base")})}
         >
             <CustomForm
             schema={createUserSchema}
             fetcher={fetcher}
-            className="create-grid"
             onSubmit={(values:z.infer<typeof createUserSchema>)=>{
                 console.log("VALUES",values)
                 fetcher.submit({
@@ -148,7 +147,6 @@ export const CreateUser = ({open,onOpenChange,permission,globalState}:{
                     form={form}
                     label={t("roles")}
                     data={rolesFetcherDebounce.data?.roles || []}
-                    onOpen={()=>onRoleNameChange("")}
                     onValueChange={(e)=>onRoleNameChange(e)}
                     name="roleName"
                     nameK={"code"}

@@ -1,19 +1,29 @@
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { action, loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { companyColumns } from "../home.companies_/components/table/columns";
 import { aCompanyColumns } from "@/components/custom/table/columns/admin/a-company-columns";
 import { z } from "zod";
-import DetailLayout from "@/components/layout/detail-layout";
 import CustomForm from "@/components/custom/form/CustomForm";
 import { useTranslation } from "react-i18next";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import { useState } from "react";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { modules } from "~/data/modules";
+import { MultiSelect } from "@/components/custom/select/MultiSelect";
+
+
+export const module = z.object({
+  label:z.string(),
+  name:z.string(),
+  icon_name:z.string(),
+  icon_code:z.string(),
+  priority:z.number(),
+})
 
 export const createCompanySchema = z.object({
   name: z.string(),
+  modules:z.array(module)
 });
 
 export default function ACompanyClient() {
@@ -37,6 +47,7 @@ export default function ACompanyClient() {
       <DataTable
         data={paginationResult?.results || []}
         columns={aCompanyColumns()}
+        enableSizeSelection={true}
         paginationOptions={{
           rowCount: paginationResult?.total,
         }}
@@ -77,7 +88,8 @@ const CreateCompany = ({
             {
               method: "POST",
               encType: "application/json",
-            }
+            },
+
           );
         }}
         formItemsData={[
@@ -89,6 +101,23 @@ const CreateCompany = ({
         ]}
         schema={createCompanySchema}
         fetcher={fetcher}
+        renderCustomInputs={(form)=>{
+          return (
+            <>
+            <MultiSelect
+                data={modules} 
+                keyValue={"name"} 
+                keyName={"label"} 
+                name={""} 
+                label="Modulos"
+                form={form} 
+                onSelect={(e)=>{
+                  console.log("MODULES",e)
+                  form.setValue("modules",e)
+                }}/>
+            </>
+          )
+        }}
       />
     </DrawerLayout>
   );

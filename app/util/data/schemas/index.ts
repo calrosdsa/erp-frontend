@@ -15,6 +15,10 @@ export const fieldNull = z
   .optional()
   .nullable();
 
+export const selectItemSchema = z.object({
+  name:z.string(),
+  value:z.string(),
+})
 // interface ValidateProps<T extends object, K extends keyof T> {
 //   data: Record<string, boolean>;
 //   ctx: RefinementCtx;

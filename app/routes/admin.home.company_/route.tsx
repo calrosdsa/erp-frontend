@@ -20,6 +20,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const res = await client.POST("/admin/company", {
         body: {
           name: d.name,
+          company_modules:d.modules.map(t=>({
+            label:t.label,name:t.name,
+            icon_code:t.icon_code,
+            icon_name:t.icon_name,
+            priority:t.priority,
+          }))
         },
       });
       message = res.data?.message

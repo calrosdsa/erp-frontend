@@ -68,6 +68,7 @@ export default function ItemDetailClient() {
 
   setUpToolbar(() => {
     let view: ButtonToolbar[] = [];
+    
     view.push({
       label: t("stockBalance"),
       onClick: () => {

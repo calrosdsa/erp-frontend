@@ -27,6 +27,7 @@ export const roleEntitiesActionColumns = ({
     accessorKey: "entity.name",
     header: t("entity"),
     id: "entityName",
+    size:200,
   });
   columns.push({
     accessorKey: "actions",

@@ -3892,8 +3892,12 @@ export interface components {
             entity_name: string;
         };
         CompanyModule: {
+            icon_code: string;
+            icon_name: string;
             label: string;
             name: string;
+            /** Format: int32 */
+            priority: number;
         };
         CompanyPlugins: {
             /** Format: int64 */

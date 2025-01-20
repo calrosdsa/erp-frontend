@@ -33,6 +33,7 @@ export default function UsersClient() {
       <DataTable
         data={paginationResult?.results || []}
         columns={profileColumms({})}
+        enableSizeSelection={true}
         hiddenColumns={{
           givenName: false,
           familyName: false,
