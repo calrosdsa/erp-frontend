@@ -17,160 +17,175 @@ import { DEFAULT_DEBOUNCE_TIME, MAX_DEFAULT_SIZE } from "~/constant";
 import { useRoleDebounceFetcher } from "~/util/hooks/fetchers/userRoleDebounceFetcher";
 import { GlobalState } from "~/types/app";
 
+export const CreateUser = ({
+  open,
+  onOpenChange,
+  permission,
+  globalState,
+}: {
+  open: boolean;
+  onOpenChange: (e: boolean) => void;
+  permission?: Permission;
+  globalState: GlobalState;
+}) => {
+  const { t } = useTranslation("common");
+  const { toast } = useToast();
+  const r = route;
+  const fetcher = useFetcher<typeof action>();
+  const [rolesFetcherDebounce, onRoleNameChange] = useRoleDebounceFetcher();
+  const fetcherPartyTypesUser = useFetcher<typeof action>({
+    key: "party-types",
+  });
+  const companiesFetcher = useFetcher<{
+    companies: components["schemas"]["Company"][];
+  }>({ key: "companies" });
+  const getUserPartyTypes = async () => {
+    fetcherPartyTypesUser.submit(
+      {
+        action: "party-types",
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+        action: r.users,
+      }
+    );
+  };
+  const getCompanies = async () => {
+    companiesFetcher.submit(
+      {
+        action: "user-companies",
+        size: MAX_DEFAULT_SIZE,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+        action: r.companies,
+      }
+    );
+  };
 
-
-export const CreateUser = ({open,onOpenChange,permission,globalState}:{
-    open:boolean
-    onOpenChange:(e:boolean)=>void
-    permission?:Permission
-    globalState:GlobalState
-})=>{
-    const {t }=useTranslation("common")
-    const {toast} = useToast()
-    const r = route
-    const fetcher = useFetcher<typeof action>()
-    const [ rolesFetcherDebounce,onRoleNameChange] = useRoleDebounceFetcher()
-    const fetcherPartyTypesUser = useFetcher<typeof action>({key:"party-types"})
-    const companiesFetcher = useFetcher<{
-        companies:components["schemas"]["Company"][]
-    }>({key:"companies"})
-    const getUserPartyTypes = async() =>{
-        fetcherPartyTypesUser.submit({
-            action:"party-types"
-        },{
-            method:"POST",
-            encType:"application/json",
-            action:r.users
-        })
+  useEffect(() => {
+    if (fetcher.data?.error) {
+      toast({
+        title: fetcher.data.error,
+      });
     }
-    const getCompanies = async() =>{
-        companiesFetcher.submit({
-            action:"user-companies",
-            size:MAX_DEFAULT_SIZE,
-        },{
-            method:"POST",
-            encType:"application/json",
-            action:r.companies
-        })
+    if (fetcher.data?.message) {
+      toast({
+        title: fetcher.data.message,
+      });
+      onOpenChange(false);
     }
+  }, [fetcher.data]);
 
-    useEffect(()=>{
-        if(fetcher.data?.error){
-            toast({
-                title:fetcher.data.error
-            })
-        }
-        if(fetcher.data?.message){
-            toast({
-                title:fetcher.data.message,
-            })
-            onOpenChange(false)
-        }
-    },[fetcher.data])
+  useEffect(() => {
+    getUserPartyTypes();
+    getCompanies();
+  }, []);
+  return (
+    <DrawerLayout
+      open={open}
+      onOpenChange={onOpenChange}
+      className=""
+      title={t("f.add-new", { o: t("_user.base") })}
+    >
+      <CustomForm
+        schema={createUserSchema}
+        fetcher={fetcher}
+        onSubmit={(values: z.infer<typeof createUserSchema>) => {
+          console.log("VALUES", values);
+          fetcher.submit(
+            {
+              createUser: values,
+              action: "create-user",
+            },
+            {
+              method: "POST",
+              encType: "application/json",
+              action: r.users,
+            }
+          );
+        }}
+        formItemsData={[
+          {
+            name: "givenName",
+            required: true,
+            type: "string",
+            typeForm: "input",
+            label: t("form.givenName"),
+          },
+          {
+            name: "familyName",
+            required: true,
+            type: "string",
+            typeForm: "input",
+            label: t("form.familyName"),
+          },
+          {
+            name: "email",
+            type: "email",
+            required: true,
+            typeForm: "input",
+            label: t("form.email"),
+          },
+          {
+            name: "phoneNumber",
+            required: false,
+            type: "tel",
+            typeForm: "input",
+            label: t("form.phoneNumber"),
+          },
+          {
+            name: "partyCode",
+            type: "string",
+            typeForm: "select",
+            label: t("form.type"),
+            data: fetcherPartyTypesUser.data?.partyTypes || [],
+            keyName: "name",
+            keyValue: "code",
+          },
+          // {
+          //     name:"companyIds",
+          //     typeForm:"multiselect",
+          //     label:t("companies"),
+          //     data:companiesFetcher.data?.companies || [],
+          //     keyName:"name",
+          //     keyValue:"id",
+          // }
+        ]}
+        renderCustomInputs={(form) => {
+          return (
+            <>
+              <FormAutocomplete
+                form={form}
+                label={t("roles")}
+                data={rolesFetcherDebounce.data?.roles || []}
+                onValueChange={(e) => onRoleNameChange(e)}
+                name="roleName"
+                nameK={"code"}
+                onSelect={(v) => {
+                  form.setValue("roleUuid", v.uuid);
+                }}
+              />
+            </>
+          );
+        }}
+      />
+    </DrawerLayout>
+  );
+};
 
-    useEffect(()=>{
-        getUserPartyTypes()
-        getCompanies()
-    },[])
-    return (
-        <DrawerLayout
-        open={open}
-        onOpenChange={onOpenChange}
-        className=""
-        title={t("f.add-new",{o:t("_user.base")})}
-        >
-            <CustomForm
-            schema={createUserSchema}
-            fetcher={fetcher}
-            onSubmit={(values:z.infer<typeof createUserSchema>)=>{
-                console.log("VALUES",values)
-                fetcher.submit({
-                    createUser:values,
-                    action:"create-user",
-                },{
-                    method:'POST',
-                    encType:"application/json",
-                    action:r.users,
-                })
-            }}
-            formItemsData={[
-                {
-                    name:"givenName",
-                    required:true,
-                    type:"string",
-                    typeForm:"input",
-                    label:t("form.givenName"),
-                },
-                {
-                    name:"familyName",
-                    required:true,
-                    type:"string",
-                    typeForm:"input",
-                    label:t("form.familyName"),
-                },
-                {
-                    name:"email",
-                    type:"email",
-                    required:true,
-                    typeForm:"input",
-                    label:t("form.email")
-                },
-                {
-                    name:"phoneNumber",
-                    required:false,
-                    type:"tel",
-                    typeForm:"input",
-                    label:t("form.phoneNumber")
-                },
-                {
-                    name:"partyCode",
-                    type:"string",
-                    typeForm:"select",
-                    label:t("form.type"),
-                    data:fetcherPartyTypesUser.data?.partyTypes || [],
-                    keyName:"name",
-                    keyValue:"code"
-                },
-                // {
-                //     name:"companyIds",
-                //     typeForm:"multiselect",
-                //     label:t("companies"),
-                //     data:companiesFetcher.data?.companies || [],
-                //     keyName:"name",
-                //     keyValue:"id",
-                // }
-            ]}
-            renderCustomInputs={(form)=>{
-                return (
-                    <>
-                    <FormAutocomplete
-                    form={form}
-                    label={t("roles")}
-                    data={rolesFetcherDebounce.data?.roles || []}
-                    onValueChange={(e)=>onRoleNameChange(e)}
-                    name="roleName"
-                    nameK={"code"}
-                    onSelect={(v)=>{
-                        form.setValue("roleUuid", v.uuid);
-                    }}
-                    />
-                    </>
-                )
-            }}
-            />
-        </DrawerLayout>
-    )
+interface UserCreateStore {
+  open: boolean;
+  permission: Permission | undefined;
+  onOpenChange: (e: boolean) => void;
+  openDialog: (opts: { permission?: Permission }) => void;
 }
-
-interface UserCreateStore{
-    open:boolean
-    permission:Permission | undefined
-    onOpenChange:(e:boolean)=>void
-    openDialog:(opts:{permission?:Permission})=>void
-}
-export const useCreateUser = create<UserCreateStore>((set)=>({
-    open:false,
-    permission:undefined,
-    openDialog:(opts) => set((state)=>({open:true,permission:opts.permission})),
-    onOpenChange:(e)=>set((state)=>({open:e}))
-}))
+export const useCreateUser = create<UserCreateStore>((set) => ({
+  open: false,
+  permission: undefined,
+  openDialog: (opts) =>
+    set((state) => ({ open: true, permission: opts.permission })),
+  onOpenChange: (e) => set((state) => ({ open: e })),
+}));
