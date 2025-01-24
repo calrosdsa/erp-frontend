@@ -4,40 +4,25 @@ import {
   useOutletContext,
   useParams,
 } from "@remix-run/react";
-import { GlobalState, OrderGlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app";
 import { useTranslation } from "react-i18next";
 import {
-  ItemLineType,
-  itemLineTypeToJSON,
   State,
   stateFromJSON,
-  stateToJSON,
 } from "~/gen/common";
 import { action, loader } from "../../route";
-import LineItemsDisplay from "@/components/custom/shared/item/line-items-display";
-import { TaxBreakup } from "@/components/custom/shared/accounting/tax/tax-breakup";
-import GrandTotal from "@/components/custom/shared/item/grand-total";
-import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
+
 import { useEffect, useRef } from "react";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { orderDataSchema } from "~/util/data/schemas/buying/order-schema";
 import { z } from "zod";
-import { Form } from "@/components/ui/form";
-import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
-import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import {
-  setUpToolbar,
   setUpToolbarTab,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";
-import { Separator } from "@/components/ui/separator";
-import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { CustomFormTime } from "@/components/custom/form/CustomFormTime";
-import PartyAutocomplete from "~/routes/home.order.$partyOrder.new/components/party-autocomplete";
-import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { OrderData } from "~/routes/home.order.$partyOrder.new/order-data";
 import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";

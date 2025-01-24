@@ -1378,6 +1378,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/order/document/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export Order */
+        post: operations["export-order"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order/update-status": {
         parameters: {
             query?: never;
@@ -1658,6 +1675,23 @@ export interface paths {
         };
         /** Payment Terms Template Detail */
         get: operations["payment-terms-template-details"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payment-terms-template/greet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Greet */
+        get: operations["greet"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6166,7 +6200,10 @@ export interface components {
         };
         OrderDetailDto: {
             acc_dimensions: components["schemas"]["AccountingDimensionDto"];
+            company_addresss: components["schemas"]["AddressDto"];
             order: components["schemas"]["OrderDto"];
+            party_address: components["schemas"]["AddressDto"];
+            party_contact: components["schemas"]["ContactDto"];
         };
         OrderDto: {
             /** Format: int32 */
@@ -12875,6 +12912,37 @@ export interface operations {
             };
         };
     };
+    "export-order": {
+        parameters: {
+            query?: {
+                party_type?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "update-order-status": {
         parameters: {
             query?: never;
@@ -13819,6 +13887,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityPaymentTermsTemplateDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    greet: {
+        parameters: {
+            query?: {
+                name?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
                 };
             };
             /** @description Error */
