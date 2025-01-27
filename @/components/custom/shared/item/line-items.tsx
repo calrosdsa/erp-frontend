@@ -11,7 +11,7 @@ import { DataTable } from "../../table/CustomTable";
 import {
   lineItemColumns,
   lineItemsColumns,
-} from "../../table/columns/order/order-line-column";
+} from "../../table/columns/order/line-item-column";
 import { DEFAULT_CURRENCY } from "~/constant";
 import OrderSumary from "../../display/order-sumary";
 import {

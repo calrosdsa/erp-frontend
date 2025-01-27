@@ -13,18 +13,43 @@ import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Input } from "@/components/ui/input";
 import TableCellEditable from "../../cells/table-cell-editable";
+import { PriceAutocompleteForm } from "~/util/hooks/fetchers/useItemPriceForOrder";
 
 export const lineItemsColumns = ({
   currency,
   lineType,
+  allowEdit,
+  docPartyType,
+  priceListID,
 }: {
   currency: string;
   lineType: string;
+  allowEdit?: boolean;
+  docPartyType?:string
+  priceListID?:number
+
 }): ColumnDef<z.infer<typeof lineItemSchema>>[] => {
   let columns: ColumnDef<z.infer<typeof lineItemSchema>>[] = [];
   const r = route;
   const { t, i18n } = useTranslation("common");
-  
+  columns.push({
+    id: "item",
+    header: t("item"),
+    cell: ({ ...props }) => {
+      return (
+        <PriceAutocompleteForm
+          allowEdit={allowEdit}
+          currency={currency}
+          onSelect={(e) => {
+          }}
+          priceListID={priceListID}
+          lang={i18n.language}
+          docPartyType={docPartyType || ""}
+        />
+      );
+    },
+  });
+
   columns.push({
     accessorKey: "item_code",
     header: t("_item.code"),
@@ -46,10 +71,10 @@ export const lineItemsColumns = ({
   columns.push({
     accessorKey: "quantity",
     header: t("_item.quantity"),
-    cell:TableCellEditable,
-    meta:{
-      type:"number",
-    }
+    cell: TableCellEditable,
+    meta: {
+      type: "number",
+    },
   });
   // }
 
@@ -76,9 +101,9 @@ export const lineItemsColumns = ({
     accessorKey: "rate",
     header: t("form.rate"),
     cell: TableCellEditable,
-    meta:{
-      type:"number",
-    }
+    meta: {
+      type: "number",
+    },
   });
 
   columns.push({
@@ -103,7 +128,7 @@ export const lineItemsColumns = ({
   columns.push({
     id: "actions",
     cell: DataTableRowActions,
-    size:35,
+    size: 35,
   });
 
   return [...columns];

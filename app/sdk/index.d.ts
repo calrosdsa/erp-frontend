@@ -278,6 +278,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/address": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Addresses */
+        get: operations["get-addresses"];
+        put?: never;
+        /** Create Address */
+        post: operations["create-address"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/address/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Address */
+        get: operations["get-address"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/address/references": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Address References */
+        get: operations["get-address-references"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/company": {
         parameters: {
             query?: never;
@@ -905,6 +957,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/document/info/address-and-contact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Edit Address & Contact */
+        put: operations["edit-address-and-contact"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/document/info/address-and-contact/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Address & Contact */
+        get: operations["address-and-contact"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/financial-statement/balance-sheet": {
         parameters: {
             query?: never;
@@ -1378,7 +1464,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/order/document/{id}": {
+    "/order/export/document": {
         parameters: {
             query?: never;
             header?: never;
@@ -1421,58 +1507,6 @@ export interface paths {
         };
         /** Retrieve orders */
         get: operations["orders"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/party/address": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Addresses */
-        get: operations["get addresses"];
-        put?: never;
-        /** Create Address */
-        post: operations["create address"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/party/address/detail/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Address */
-        get: operations["get address"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/party/address/references": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Address References */
-        get: operations["get address references"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3625,6 +3659,41 @@ export interface components {
             total_amount: number;
             type: string;
         };
+        AddressAndContactData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["AddressAndContactFields"];
+            /** Format: int64 */
+            id: number;
+            party_type?: string;
+        };
+        AddressAndContactDto: {
+            billing_address: string | null;
+            /** Format: int64 */
+            billing_address_id: number | null;
+            contact: string | null;
+            /** Format: int64 */
+            contact_id: number | null;
+            shipping_address: string | null;
+            /** Format: int64 */
+            shipping_address_id: number | null;
+            supplier_address: string | null;
+            /** Format: int64 */
+            supplier_address_id: number | null;
+        };
+        AddressAndContactFields: {
+            /** Format: int64 */
+            billing_address_id?: number | null;
+            /** Format: int64 */
+            contact_id?: number | null;
+            /** Format: int64 */
+            shipping_address_id?: number | null;
+            /** Format: int64 */
+            supplier_address_id?: number | null;
+        };
         AddressDto: {
             city: string;
             company: string | null;
@@ -5618,6 +5687,15 @@ export interface components {
                 [key: string]: string | undefined;
             };
         };
+        ExportDocumentData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            id: string;
+            party_type?: string;
+        };
         FilterOptionDto: {
             name: string;
             operators: string[];
@@ -6262,15 +6340,6 @@ export interface components {
             project_id?: number | null;
             tz: string;
         };
-        PaginationResponsePaginationResultListAddressDtoBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListAddressDto"];
-        };
         PaginationResponsePaginationResultListBatchBundleDtoBody: {
             /**
              * Format: uri
@@ -6639,12 +6708,6 @@ export interface components {
             readonly $schema?: string;
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListWareHouseDto"];
-        };
-        PaginationResultListAddressDto: {
-            filters: components["schemas"]["FilterOptionDto"][];
-            results: components["schemas"]["AddressDto"][];
-            /** Format: int64 */
-            total: number;
         };
         PaginationResultListBatchBundleDto: {
             filters: components["schemas"]["FilterOptionDto"][];
@@ -7656,6 +7719,19 @@ export interface components {
             readonly $schema?: string;
             email: string;
         };
+        ResponseDataAddressAndContactDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["AddressAndContactDto"];
+        };
         ResponseDataChargesTemplateDtoBody: {
             /**
              * Format: uri
@@ -7889,6 +7965,20 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["LineItemDto"][];
+        };
+        ResponseDataListListAddressDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["AddressDto"][];
         };
         ResponseDataListListPaymentTermsDtoBody: {
             /**
@@ -9652,6 +9742,148 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-addresses": {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+                title?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListAddressDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-address": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePartyAddressRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-address": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityAddressDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-address-references": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityListPartyTypeDtoBody"];
                 };
             };
             /** @description Error */
@@ -11524,6 +11756,75 @@ export interface operations {
             };
         };
     };
+    "edit-address-and-contact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddressAndContactData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "address-and-contact": {
+        parameters: {
+            query: {
+                party: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataAddressAndContactDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "balance-sheet": {
         parameters: {
             query: {
@@ -12914,16 +13215,16 @@ export interface operations {
     };
     "export-order": {
         parameters: {
-            query?: {
-                party_type?: string;
-            };
+            query?: never;
             header?: never;
-            path: {
-                id: string;
-            };
+            path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportDocumentData"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
@@ -13015,155 +13316,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListOrderDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get addresses": {
-        parameters: {
-            query: {
-                page?: string;
-                size: string;
-                enabled?: string;
-                status?: string;
-                is_group?: string;
-                query?: string;
-                orientation?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListAddressDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "create address": {
-        parameters: {
-            query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreatePartyAddressRequestBody"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get address": {
-        parameters: {
-            query?: {
-                query?: string;
-                orientation?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityAddressDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get address references": {
-        parameters: {
-            query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityListPartyTypeDtoBody"];
                 };
             };
             /** @description Error */

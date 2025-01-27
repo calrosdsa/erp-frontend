@@ -19,6 +19,7 @@ import { z } from "zod";
 import {
   setUpToolbarTab,
   useLoadingTypeToolbar,
+  useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";
@@ -83,7 +84,7 @@ export default function OrderInfoTab() {
   const allowCreate = isDraft && orderPerm.create;
   const toolbar = useToolbar();
   const documentStore = useDocumentStore();
-
+  const { setRegister } = useSetupToolbarStore();
   const onSubmit = (e: EditData) => {
     console.log("ONSUBMIT ORDER", e);
     fetcher.submit(
@@ -106,15 +107,14 @@ export default function OrderInfoTab() {
     [fetcher.state]
   );
 
-  setUpToolbarTab(() => {
-    return {
+  useEffect(() => {
+    setRegister("tab", {
       onSave: () => {
-        console.log("ON SAVE");
         inputRef.current?.click();
       },
       disabledSave: !allowEdit,
-    };
-  }, [allowEdit,order]);
+    });
+  }, [allowEdit]);
 
   useDisplayMessage(
     {

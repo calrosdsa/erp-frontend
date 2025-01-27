@@ -7,7 +7,6 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "../../route";
 import { State, stateFromJSON, stateToJSON } from "~/gen/common";
-import { Typography } from "@/components/typography";
 import { GlobalState } from "~/types/app";
 import { useEffect, useRef } from "react";
 import { usePermission } from "~/util/hooks/useActions";
@@ -16,8 +15,6 @@ import { invoiceDataSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import {
-  setUpToolbar,
-  setUpToolbarTab,
   useLoadingTypeToolbar,
   useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";

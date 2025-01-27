@@ -36,7 +36,7 @@ export default function SalesRecordClient() {
   const { exportExcel } = useExporter();
   const { t } = useTranslation("common");
 
-  setUpToolbar(() => {
+  setUpToolbar(() => {  
     let actions: ButtonToolbar[] = [];
     actions.push({
       label: "Export Data",

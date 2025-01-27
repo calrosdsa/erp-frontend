@@ -31,12 +31,17 @@ import OrderConnectionsTab from "./components/tab/order-connections";
 import {
   setUpToolbar,
   setUpToolbarDetailPage,
+  setUpToolbarRegister,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { useCreatePurchaseInvoice } from "../home.invoice.$partyInvoice.new/use-purchase-invoice";
 import { Entity } from "~/types/enums";
+import { useExporter } from "~/util/hooks/ui/useExporter";
+import { components } from "~/sdk";
+import AddressAndContact from "@/components/custom/shared/document/tab/address-and-contact";
+import OrderAddressAndContactTab from "./components/tab/order-address-and-contact";
 
 export default function PurchaseOrderClient() {
   const { order, actions, associatedActions, activities } =
@@ -74,28 +79,31 @@ export default function PurchaseOrderClient() {
     status: stateFromJSON(order?.status),
   });
 
+  const {exportPdf} = useExporter()
+
+  const toRoute = (tab: string) => {
+    return r.toRoute({
+      main: partyOrder,
+      routePrefix:[r.orderM],
+      routeSufix: [order?.code || ""],
+      q: {
+        tab: tab,
+      },
+    });
+  };
+
   const navItems = [
     {
       title: t("info"),
-      href: r.toRoute({
-        main: partyOrder,
-        routePrefix: [r.orderM],
-        routeSufix: [order?.code || ""],
-        q: {
-          tab: "info",
-        },
-      }),
+      href: toRoute("info"),
+    },
+    {
+      title: "Dirección y Contacto",
+      href: toRoute("address-and-contact"),
     },
     {
       title: t("connections"),
-      href: r.toRoute({
-        main: partyOrder,
-        routePrefix: [r.orderM],
-        routeSufix: [order?.code || ""],
-        q: {
-          tab: "connections",
-        },
-      }),
+      href: toRoute("connections"),
     },
   ];
 
@@ -118,8 +126,7 @@ export default function PurchaseOrderClient() {
         return "";
     }
   };
-  setUpToolbarDetailPage(
-    (opts) => {
+  setUpToolbarRegister(() => {
       console.log("SET UP TOOLBAR...");
       const actions: ButtonToolbar[] = [];
       const status = stateFromJSON(order?.status);
@@ -201,8 +208,17 @@ export default function PurchaseOrderClient() {
           Icon: PlusIcon,
         });
       }
+      actions.push({
+        label:t("form.download"),
+        onClick:()=>{
+          const exportData:components["schemas"]["ExportDocumentData"] =  {
+            party_type:partyOrder,
+            id:params.code || "",
+          }
+          exportPdf("/order/export/document",exportData)
+        }
+      })
       return {
-        ...opts,
         actions: actions,
         titleToolbar: `${t("_order.base")}(${order?.code})`,
         status: stateFromJSON(order?.status),
@@ -260,6 +276,7 @@ export default function PurchaseOrderClient() {
       {/* {JSON.stringify(order?.order_lines)} */}
       {tab == "info" && <OrderInfoTab />}
       {tab == "connections" && <OrderConnectionsTab />}
+      {tab == "address-and-contact" && <OrderAddressAndContactTab />}
     </DetailLayout>
   );
 }

@@ -30,11 +30,8 @@ export default function AddressesClient(){
     return (
         <div>
             <DataTable
-            data={paginationResult?.results || []}
+            data={paginationResult || []}
             columns={addressColumns()}
-            paginationOptions={{
-                rowCount:paginationResult?.total
-            }}
             enableSizeSelection={true}
 
             />

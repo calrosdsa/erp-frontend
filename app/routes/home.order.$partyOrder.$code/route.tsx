@@ -11,11 +11,9 @@ import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schem
 import { z } from "zod";
 import { FetchResponse } from "openapi-fetch";
 import {
-  editOrderSchema,
   mapToOrderData,
   orderDataSchema,
 } from "~/util/data/schemas/buying/order-schema";
-import { formatRFC3339 } from "date-fns";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
 import { components } from "~/sdk";
@@ -95,6 +93,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   });
   let lineItems: components["schemas"]["LineItemDto"][] = [];
   let taxLines: components["schemas"]["TaxAndChargeLineDto"][] = [];
+  let addressAndContact:components["schemas"]["AddressAndContactDto"] | undefined = undefined
   if (res.data) {
     switch (tab) {
       case "info": {
@@ -131,6 +130,19 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         // console.log(resConnection.data,resConnection.error)
         break;
       }
+      case "address-and-contact":{
+        const aacRes = await client.GET("/document/info/address-and-contact/{id}",{
+          params:{
+            path:{
+              id:res.data.result.entity.order.id.toString(),
+            },
+            query:{
+              party: params.partyOrder || "",
+            }
+          }
+        })
+        addressAndContact = aacRes.data?.result
+      }
     }
   }
   // res.data?.related_actions
@@ -144,6 +156,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     connections: resConnections,
     lineItems: lineItems,
     taxLines: taxLines,
+    addressAndContact,
   });
 };
 

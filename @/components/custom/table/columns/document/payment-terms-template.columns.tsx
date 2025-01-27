@@ -17,6 +17,7 @@ export const paymentTermsTemplateColumns = (): ColumnDef<
     cell: ({ ...props }) => {
         const rowData = props.row.original
       return (
+        
         <TableCellNameNavigation
           {...props}
           navigate={(name) =>

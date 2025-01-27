@@ -13,6 +13,7 @@ class Routes {
   api = "/api";
   apiData = this.api + "/data";
   apiCore = this.api + "/core";
+  apiDocument = this.api + "/document";
   apiExporter = this.api + "/exporter";
   apiItemLine = this.api + "/itemline";
   apiTaxAndChargeLine = this.api + "/taxAndChargeLine";

@@ -1,4 +1,5 @@
 class Parties {
+
   customer = "customer";
   supplier = "supplier";
   purchaseInvoice = "purchaseInvoice";
