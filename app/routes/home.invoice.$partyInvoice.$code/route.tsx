@@ -97,6 +97,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   handleError(res.error);
   let lineItems: components["schemas"]["LineItemDto"][] = [];
   let taxLines: components["schemas"]["TaxAndChargeLineDto"][] = [];
+  let addressAndContact:components["schemas"]["AddressAndContactDto"] | undefined = undefined
+  let docTerms:components["schemas"]["DocTermsDto"] | undefined = undefined
+  let docAccounts:components["schemas"]["DocAccountingDto"] | undefined = undefined
+
   if (res.data) {
     switch (tab) {
       case "info": {
@@ -135,6 +139,47 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         });
         break;
       }
+
+      case "address-and-contact":{
+        const aacRes = await client.GET("/document/info/address-and-contact/{id}",{
+          params:{
+            path:{
+              id:res.data.result.entity.invoice.id.toString(),
+            },
+            query:{
+              party: params.partyInvoice || "",
+            }
+          }
+        })
+        addressAndContact = aacRes.data?.result
+      }
+      case "terms-and-conditions":{
+        const aacRes = await client.GET("/document/info/doc-term/{id}",{
+          params:{
+            path:{
+              id:res.data.result.entity.invoice.id.toString(),
+            },
+            query:{
+              party: params.partyInvoice || "",
+            }
+          }
+        })
+        docTerms = aacRes.data?.result
+      }
+
+      case "accounts":{
+        const accountsRes = await client.GET("/document/info/doc-accounting/{id}",{
+          params:{
+            path:{
+              id:res.data.result.entity.invoice.id.toString(),
+            },
+            query:{
+              party: params.partyInvoice || "",
+            }
+          }
+        })
+        docAccounts = accountsRes.data?.result
+      }
     }
   }
   return defer({
@@ -146,6 +191,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     totals: res.data?.result.entity.totals,
     lineItems: lineItems,
     taxLines: taxLines,
+    addressAndContact,
+    docTerms,
+    docAccounts
   });
 };
 export default function InvoiceDetail() {

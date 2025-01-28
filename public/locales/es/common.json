@@ -186,7 +186,8 @@
     "valuationRate": "Tasa de Valoración",
     "balanceValue": "Valor de Saldo",
     "items":"Articulos",
-    "targetWarehouse":"Almacen de destino"
+    "targetWarehouse":"Almacen de destino",
+    "download":"Descargar"
   },
   "accounts": "Cuentas",
   "_selling": {

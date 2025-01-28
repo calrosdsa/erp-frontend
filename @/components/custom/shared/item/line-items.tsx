@@ -29,7 +29,7 @@ import {
 } from "~/util/data/schemas/stock/line-item-schema";
 import DisplayTextValue from "../../display/DisplayTextValue";
 import { Separator } from "@/components/ui/separator";
-import { PriceAutocompleteForm } from "~/util/hooks/fetchers/useItemPriceForOrder";
+import { PriceAutocompleteForm } from "~/util/hooks/fetchers/use-item-price-for-order";
 import useEditableTable from "~/util/hooks/useEditableTable";
 
 export default function LineItems({
@@ -71,19 +71,27 @@ export default function LineItems({
   const [metaOptions] = useTableRowActions({
     ...(allowCreate && {
       onAddRow: () => {
-        itemLine.onOpenDialog({
-          ...shared,
-          onEdit: (e) => {
-            const lines = [...lineItems, e];
+        const line = lineItemDefault({
+              lineType: lineType,
+              updateStock: updateStock,
+          })
+        const lines = [...lineItems, line];
             if (onChange) {
               onChange(lines);
             }
-          },
-          line: lineItemDefault({
-            lineType: lineType,
-            updateStock: updateStock,
-          }),
-        });
+        // itemLine.onOpenDialog({
+        //   ...shared,
+        //   onEdit: (e) => {
+        //     const lines = [...lineItems, e];
+        //     if (onChange) {
+        //       onChange(lines);
+        //     }
+        //   },
+        //   line: lineItemDefault({
+        //     lineType: lineType,
+        //     updateStock: updateStock,
+        //   }),
+        // });
       },
     }),
     onEdit: (rowIndex) => {
@@ -131,7 +139,7 @@ export default function LineItems({
 
       {complement}
 
-      {allowCreate && (
+      {/* {allowCreate && (
         <div className=" col-span-full create-grid">
           <PriceAutocompleteForm
             allowEdit={allowEdit}
@@ -156,7 +164,7 @@ export default function LineItems({
             docPartyType={docPartyType || ""}
           />
         </div>
-      )}
+      )} */}
 
       <div className=" col-span-full">
         <DataTable
@@ -164,6 +172,9 @@ export default function LineItems({
           columns={lineItemsColumns({
             currency: currency,
             lineType: lineType,
+            allowEdit:allowEdit,
+            priceListID:priceListID,
+            docPartyType:docPartyType
           })}
           fullHeight={false}
           metaOptions={{

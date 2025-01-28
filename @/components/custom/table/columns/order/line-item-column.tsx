@@ -7,13 +7,13 @@ import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { z } from "zod";
 import TableCellPrice from "../../cells/table-cell-price";
 import TableCellIndex from "../../cells/table-cell-index";
-import { formatTax, getTaxPorcent } from "~/util/format/formatCurrency";
+import { formatAmount, formatTax, getTaxPorcent } from "~/util/format/formatCurrency";
 import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Input } from "@/components/ui/input";
 import TableCellEditable from "../../cells/table-cell-editable";
-import { PriceAutocompleteForm } from "~/util/hooks/fetchers/useItemPriceForOrder";
+import { PriceAutocompleteForm } from "~/util/hooks/fetchers/use-item-price-for-order";
 
 export const lineItemsColumns = ({
   currency,
@@ -25,22 +25,33 @@ export const lineItemsColumns = ({
   currency: string;
   lineType: string;
   allowEdit?: boolean;
-  docPartyType?:string
-  priceListID?:number
-
+  docPartyType?: string;
+  priceListID?: number;
 }): ColumnDef<z.infer<typeof lineItemSchema>>[] => {
   let columns: ColumnDef<z.infer<typeof lineItemSchema>>[] = [];
   const r = route;
   const { t, i18n } = useTranslation("common");
   columns.push({
     id: "item",
+    size: 200,
     header: t("item"),
     cell: ({ ...props }) => {
+      const rowData = props.row.original;
+      const tableMeta: any = props.table.options.meta;
       return (
         <PriceAutocompleteForm
           allowEdit={allowEdit}
           currency={currency}
+          defaultValue={rowData.item_name}
           onSelect={(e) => {
+            tableMeta?.updateCell(props.row.index, "item_name", e.item_name);
+            tableMeta?.updateCell(props.row.index, "item_code", e.item_code);
+            tableMeta?.updateCell(props.row.index, "uom", e.item_uom);
+            tableMeta?.updateCell(props.row.index, "itemID", e.item_id);
+            tableMeta?.updateCell(props.row.index, "unitOfMeasureID", e.item_uom_id);
+            tableMeta?.updateCell(props.row.index, "quantity", 1);
+            tableMeta?.updateCell(props.row.index, "rate", formatAmount(e.rate));
+            // tableMeta?.updateCell(props.row.index, "payment_term_id", e.id);
           }}
           priceListID={priceListID}
           lang={i18n.language}
@@ -54,10 +65,10 @@ export const lineItemsColumns = ({
     accessorKey: "item_code",
     header: t("_item.code"),
   });
-  columns.push({
-    accessorKey: "item_name",
-    header: t("form.name"),
-  });
+  // columns.push({
+  //   accessorKey: "item_name",
+  //   header: t("form.name"),
+  // });
   columns.push({
     accessorKey: "uom",
     header: t("form.uom"),

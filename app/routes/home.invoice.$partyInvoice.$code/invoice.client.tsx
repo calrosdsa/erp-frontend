@@ -33,7 +33,7 @@ import {
 import { ButtonToolbar } from "~/types/actions";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import { PlusIcon } from "lucide-react";
+import { DownloadIcon, PlusIcon } from "lucide-react";
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { format } from "date-fns";
 import { Entity } from "~/types/enums";
@@ -43,6 +43,11 @@ import { useNewSalesRecord } from "../home.invoicing.salesRecord.new/use-new-sal
 import { useCreatePayment } from "../home.payment.new/use-create-payment";
 import { party } from "~/util/party";
 import { usePurchaseRecordStore } from "../home.invoicing.purchaseRecord.new/purchase-record-store";
+import InvoiceAddressAndContactTab from "./components/tab/invoice-address-and-contact";
+import InvoiceTermsAndConditionsTab from "./components/tab/invoice-terms-and-conditions";
+import InvoiceAccountsTab from "./components/tab/invoice-accounts";
+import { components } from "~/sdk";
+import { useExporter } from "~/util/hooks/ui/useExporter";
 
 export default function InvoiceDetailClient() {
   const { invoice, activities, associatedActions, totals } =
@@ -88,29 +93,39 @@ export default function InvoiceDetailClient() {
   const { total: totalTaxAndCharges } = useTaxAndCharges();
   const newSalesRecord = useNewSalesRecord();
   const purchaseRecordStore = usePurchaseRecordStore();
+  const {exportPdf} = useExporter()
+
+  const toRoute = (tab: string) => {
+    return r.toRoute({
+      main: partyInvoice,
+      routePrefix:[r.invoiceM],
+      routeSufix: [invoice?.code || ""],
+      q: {
+        tab: tab,
+      },
+    });
+  };
 
   const navItems = [
     {
       title: t("info"),
-      href: r.toRoute({
-        main: partyInvoice,
-        routePrefix: ["invoice"],
-        routeSufix: [invoice?.code || ""],
-        q: {
-          tab: "info",
-        },
-      }),
+      href:toRoute("info"),
+    },
+    {
+      title: "Términos y Condiciones",
+      href: toRoute("terms-and-conditions"),
+    },
+    {
+      title: "Dirección y Contacto",
+      href: toRoute("address-and-contact"),
+    },
+    {
+      title: "Cuentas",
+      href: toRoute("accounts"),
     },
     {
       title: t("connections"),
-      href: r.toRoute({
-        main: partyInvoice,
-        routePrefix: ["invoice"],
-        routeSufix: [invoice?.code || ""],
-        q: {
-          tab: "connections",
-        },
-      }),
+      href:toRoute("connections"),
     },
   ];
 
@@ -267,7 +282,17 @@ export default function InvoiceDetailClient() {
         },
       });
     }
-    console.log("RENDER TOOLBAR")
+    actions.push({
+      label:t("form.download"),
+      Icon:DownloadIcon,
+      onClick:()=>{
+        const exportData:components["schemas"]["ExportDocumentData"] =  {
+          party_type:partyInvoice,
+          id:params.code || "",
+        }
+        exportPdf("/invoice/export/document",exportData)
+      }
+    })
     return {
       titleToolbar: `${t("_invoice.base")}(${invoice?.code})`,
       status: stateFromJSON(invoice?.status),
@@ -302,6 +327,7 @@ export default function InvoiceDetailClient() {
     stockLedgerPerm,
     salesRecordPerm,
     purchaseRecordPerm,
+    t,
   ])
   // setUpToolbarDetailPage((opts) => {
  
@@ -341,6 +367,9 @@ export default function InvoiceDetailClient() {
       {/* {JSON.stringify(purchaseRecordPerm)} */}
       {tab == "info" && <InvoiceInfoTab />}
       {tab == "connections" && <InvoiceConnectionsTab />}
+      {tab == "address-and-contact" && <InvoiceAddressAndContactTab />}
+      {tab == "terms-and-conditions" && <InvoiceTermsAndConditionsTab />}
+      {tab == "accounts" && <InvoiceAccountsTab />}
     </DetailLayout>
   );
 }

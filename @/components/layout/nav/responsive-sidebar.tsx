@@ -45,7 +45,7 @@ export default function ResponsiveSidebar({
               if (setOpen) setOpen(false);
             }}
             className={cn(
-              "p-2 font-medium ",
+              "p-2 font-medium text-sm ",
               path.includes(item.href) && " border-b-2 border-primary hover:border-primary",
               location.search != "" && item.href.includes(location.search) && " border-b-2 border-primary hover:border-primary"
             )}

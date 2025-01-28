@@ -62,6 +62,7 @@ export const moduleSectionColumns = ({}: {}): ColumnDef<
     {
       accessorKey: "name",
       header: "Entidad",
+      size:200,
       cell: ({ ...props }) => {
         const tableMeta: any = props.table.options.meta;
         const [entityFetcher, onChangeEntity] = useSearchEntity({

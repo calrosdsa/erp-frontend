@@ -991,6 +991,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/document/info/doc-accounting": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Edit Doc Accounts */
+        put: operations["edit-doc-accounts"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/document/info/doc-accounting/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Doc Accounting */
+        get: operations["doc-accounting"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/document/info/doc-term": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Edit Doc Terms */
+        put: operations["edit-doc-terms"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/document/info/doc-term/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Doc Terms */
+        get: operations["doc-terms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/financial-statement/balance-sheet": {
         parameters: {
             query?: never;
@@ -1140,6 +1208,23 @@ export interface paths {
         put: operations["edit-invoice"];
         /** Create Invoice */
         post: operations["create-invoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/invoice/export/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export Invoice */
+        post: operations["export-invoice"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3677,12 +3762,12 @@ export interface components {
             contact: string | null;
             /** Format: int64 */
             contact_id: number | null;
+            party_address: string | null;
+            /** Format: int64 */
+            party_address_id: number | null;
             shipping_address: string | null;
             /** Format: int64 */
             shipping_address_id: number | null;
-            supplier_address: string | null;
-            /** Format: int64 */
-            supplier_address_id: number | null;
         };
         AddressAndContactFields: {
             /** Format: int64 */
@@ -3690,9 +3775,9 @@ export interface components {
             /** Format: int64 */
             contact_id?: number | null;
             /** Format: int64 */
-            shipping_address_id?: number | null;
+            party_address_id?: number | null;
             /** Format: int64 */
-            supplier_address_id?: number | null;
+            shipping_address_id?: number | null;
         };
         AddressDto: {
             city: string;
@@ -4472,6 +4557,76 @@ export interface components {
         DeliveryLineItemData: {
             /** Format: int64 */
             source_warehouse: number;
+        };
+        DocAccountingData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            doc_id: number;
+            doc_party_type: string;
+            fields: components["schemas"]["DocAccountingFields"];
+        };
+        DocAccountingDto: {
+            cogs_account: string | null;
+            /** Format: int64 */
+            cogs_account_id: number | null;
+            income_account: string | null;
+            /** Format: int64 */
+            income_account_id: number | null;
+            inventory_account: string | null;
+            /** Format: int64 */
+            inventory_account_id: number | null;
+            payable_account: string | null;
+            /** Format: int64 */
+            payable_account_id: number | null;
+            receivable_account: string | null;
+            /** Format: int64 */
+            receivable_account_id: number | null;
+            srbnb_account: string | null;
+            /** Format: int64 */
+            srbnb_account_id: number | null;
+        };
+        DocAccountingFields: {
+            /** Format: int64 */
+            cogs_account_id?: number | null;
+            /** Format: int64 */
+            income_account_id?: number | null;
+            /** Format: int64 */
+            inventory_account_id?: number | null;
+            /** Format: int64 */
+            payable_account_id?: number | null;
+            /** Format: int64 */
+            receivable_account_id?: number | null;
+            /** Format: int64 */
+            srbnb_account_id?: number | null;
+        };
+        DocTermsData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            doc_id: number;
+            doc_party_type: string;
+            fields: components["schemas"]["DocTermsFields"];
+        };
+        DocTermsDto: {
+            payment_term_template: string | null;
+            /** Format: int64 */
+            payment_term_template_id: number | null;
+            terms_and_condition: string | null;
+            /** Format: int64 */
+            terms_and_condition_id: number | null;
+        };
+        DocTermsFields: {
+            /** Format: int64 */
+            payment_term_template_id?: number | null;
+            /** Format: int64 */
+            terms_and_condition_id?: number | null;
         };
         EditActivityCommnetBody: {
             /**
@@ -7809,6 +7964,32 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["CurrencyExchangeDto"];
+        };
+        ResponseDataDocAccountingDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["DocAccountingDto"];
+        };
+        ResponseDataDocTermsDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["DocTermsDto"];
         };
         ResponseDataEventBookingDtoBody: {
             /**
@@ -11825,6 +12006,144 @@ export interface operations {
             };
         };
     };
+    "edit-doc-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocAccountingData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "doc-accounting": {
+        parameters: {
+            query: {
+                party: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataDocAccountingDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-doc-terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocTermsData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "doc-terms": {
+        parameters: {
+            query: {
+                party: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataDocTermsDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "balance-sheet": {
         parameters: {
             query: {
@@ -12216,6 +12535,37 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ResponseDataInvoiceDtoBody"];
                 };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "export-invoice": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportDocumentData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Error */
             default: {

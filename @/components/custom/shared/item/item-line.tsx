@@ -13,7 +13,7 @@ import {
   lineItemSchema,
   schemaToLineItemData,
 } from "~/util/data/schemas/stock/line-item-schema";
-import { PriceAutocompleteForm, useItemPriceForOrders } from "~/util/hooks/fetchers/useItemPriceForOrder";
+import { PriceAutocompleteForm, useItemPriceForOrders } from "~/util/hooks/fetchers/use-item-price-for-order";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import { formatAmount, formatCurrency } from "~/util/format/formatCurrency";
 import { action } from "~/routes/api.itemline/route";

@@ -98,6 +98,10 @@ export default function Autocomplete<T extends object, K extends keyof T>({
               asChild
               // ref={inputRef}
               value={query}
+              onFocus={()=>{
+                console.log("FOCUS INPUT...")
+                onValueChange?.("")
+              }}
               onValueChange={onQueryChange}
               onKeyDown={(e) => {
                 switch (e.key) {

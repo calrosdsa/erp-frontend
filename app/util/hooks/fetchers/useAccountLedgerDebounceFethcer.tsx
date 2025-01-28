@@ -61,6 +61,7 @@ export const LedgerAutocompleteForm = ({
     name,
     isGroup = false,
     roleActions,
+    onClear,
   }: {
     allowEdit?: boolean;
     control?: Control<any, any>;
@@ -69,6 +70,7 @@ export const LedgerAutocompleteForm = ({
     onSelect: (e: components["schemas"]["LedgerDto"]) => void;
     isGroup?: boolean;
     roleActions?: components["schemas"]["RoleActionDto"][];
+    onClear?:()=>void
   }) => {
     const [fetcherDebounce, onChange] = useAccountLedgerDebounceFetcher({
       isGroup,
@@ -88,7 +90,7 @@ export const LedgerAutocompleteForm = ({
         control={control}
         allowEdit={allowEdit}
         onSelect={onSelect}
-        
+        onClear={onClear}
       />
     );
   };

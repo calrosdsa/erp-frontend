@@ -6,14 +6,14 @@ import { usePermission } from "~/util/hooks/useActions";
 import { AddressAndContactDataType } from "~/util/data/schemas/document/address-and-contact.schema";
 import { route } from "~/util/route";
 
-export default function OrderAddressAndContactTab() {
-  const { actions,addressAndContact,order } = useLoaderData<typeof loader>();
+export default function InvoiceAddressAndContactTab() {
+  const { actions,addressAndContact,invoice } = useLoaderData<typeof loader>();
   const { roleActions } = useOutletContext<GlobalState>();
-  const [orderPerm] = usePermission({ roleActions, actions });
-  const allowEdit = orderPerm?.edit;
+  const [perm] = usePermission({ roleActions, actions });
+  const allowEdit = perm?.edit;
   const params = useParams()
   const r = route
-  const partyType = params.partyOrder || ""
+  const partyType = params.partyInvoice || ""
 
   return (
     <>
@@ -21,7 +21,7 @@ export default function OrderAddressAndContactTab() {
     <AddressAndContact
       allowEdit={allowEdit}
       defaultValues={{
-        id:order?.id,
+        id:invoice?.id,
         party_type:partyType,
         billing_address_id:addressAndContact?.billing_address_id,
         billing_address_name:addressAndContact?.billing_address,
@@ -31,10 +31,10 @@ export default function OrderAddressAndContactTab() {
         party_address_name:addressAndContact?.party_address,
 
     } as AddressAndContactDataType}
-      showShippingAddress={true}
-      showPartyrAddress={partyType == r.p.purchaseOrder}
-      showBillingAddress={partyType == r.p.saleOrder}
-      partyLabel={partyType == r.p.purchaseOrder ? "Dirección de Proveedor":""}
+      // showShippingAddress={true}
+      showPartyrAddress={partyType == r.p.purchaseInvoice}
+      showBillingAddress={true}
+      partyLabel={partyType == r.p.purchaseInvoice ? "Dirección de Proveedor" : "Dirección del Cliente"}
     />
     </>
   );

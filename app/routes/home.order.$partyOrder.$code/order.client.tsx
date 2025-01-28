@@ -21,7 +21,7 @@ import {
 import { useEffect } from "react";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { ButtonToolbar } from "~/types/actions";
-import { PlusIcon } from "lucide-react";
+import { DownloadIcon, PlusIcon } from "lucide-react";
 import { route } from "~/util/route";
 import { z } from "zod";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
@@ -42,6 +42,7 @@ import { useExporter } from "~/util/hooks/ui/useExporter";
 import { components } from "~/sdk";
 import AddressAndContact from "@/components/custom/shared/document/tab/address-and-contact";
 import OrderAddressAndContactTab from "./components/tab/order-address-and-contact";
+import OrderTermsAndConditionsTab from "./components/tab/order-terms-and-conditions";
 
 export default function PurchaseOrderClient() {
   const { order, actions, associatedActions, activities } =
@@ -98,6 +99,10 @@ export default function PurchaseOrderClient() {
       href: toRoute("info"),
     },
     {
+      title: "Términos y Condiciones",
+      href: toRoute("terms-and-conditions"),
+    },
+    {
       title: "Dirección y Contacto",
       href: toRoute("address-and-contact"),
     },
@@ -106,16 +111,6 @@ export default function PurchaseOrderClient() {
       href: toRoute("connections"),
     },
   ];
-
-  const getPartyType = (partyType: string) => {
-    switch (partyTypeFromJSON(partyType)) {
-      case PartyType.purchaseOrder:
-        return partyTypeToJSON(PartyType.supplier);
-      case PartyType.saleOrder:
-        return partyTypeToJSON(PartyType.customer);
-    }
-    return partyTypeToJSON(PartyType.UNRECOGNIZED);
-  };
   const getInvoicePartyType = (partyOrder: string) => {
     switch (partyTypeFromJSON(partyOrder)) {
       case PartyType.purchaseOrder:
@@ -210,6 +205,7 @@ export default function PurchaseOrderClient() {
       }
       actions.push({
         label:t("form.download"),
+        Icon:DownloadIcon,
         onClick:()=>{
           const exportData:components["schemas"]["ExportDocumentData"] =  {
             party_type:partyOrder,
@@ -248,6 +244,7 @@ export default function PurchaseOrderClient() {
       receiptPermission,
       order,
       deliveryNotePermission,
+      t,
     ]
   );
 
@@ -277,6 +274,7 @@ export default function PurchaseOrderClient() {
       {tab == "info" && <OrderInfoTab />}
       {tab == "connections" && <OrderConnectionsTab />}
       {tab == "address-and-contact" && <OrderAddressAndContactTab />}
+      {tab == "terms-and-conditions" && <OrderTermsAndConditionsTab />}
     </DetailLayout>
   );
 }

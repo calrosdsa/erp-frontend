@@ -113,9 +113,8 @@ export const InvoiceData = ({
             <CurrencyAndPriceList
               control={form.control}
               allowEdit={allowEdit}
-              isSelling={partyInvoice == p.salesQuotation}
-              isBuying={partyInvoice == p.supplierQuotation}
-              
+              isSelling={partyInvoice == p.saleInvoice}
+              isBuying={partyInvoice == p.purchaseInvoice}
             />
 
             <Separator className=" col-span-full" />

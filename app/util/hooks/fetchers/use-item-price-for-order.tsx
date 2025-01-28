@@ -8,26 +8,27 @@ import { PartyType, partyTypeToJSON } from "~/gen/common"
 import { Control, Form } from "react-hook-form"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import { formatCurrency } from "~/util/format/formatCurrency"
+import Autocomplete from "@/components/custom/select/Autocomplete"
 
 
 export const PriceAutocompleteForm = ({
     allowEdit =true,
-    control,
     label,
     onSelect,
     docPartyType,
     currency,
     lang,
     priceListID,
+    defaultValue,
 }:{
     allowEdit?: boolean;
-    control?: Control<any, any>;
     label?: string;
     onSelect: (e: components["schemas"]["ItemPriceDto"]) => void;
     docPartyType:string;
     currency?:string,
     lang:string
     priceListID?:number
+    defaultValue?:string
   }) =>{
   const [fetcher, onChange] = useItemPriceForOrders({
     isBuying:
@@ -45,19 +46,17 @@ export const PriceAutocompleteForm = ({
   });
   return (
     <>
-    {/* {JSON.stringify(fetcher.data?.itemPriceForOrders)} */}
-    <FormAutocomplete
+    <Autocomplete
     data={fetcher.data?.itemPriceForOrders || []}
     nameK={"item_name"}
     label={label}
-    name="item_name"
     allowEdit={allowEdit}
-    control={control}
     onValueChange={onChange}
     onSelect={onSelect}
+    defaultValue={defaultValue}
     onCustomDisplay={(e) => {
       return (
-        <div className="flex flex-col">
+        <div className="flex flex-col text-xs">
           <div className="flex font-medium space-x-1">
             <span>{e.item_name}</span>
             <span className=" uppercase"> {e.uuid.slice(0, 5)}</span>

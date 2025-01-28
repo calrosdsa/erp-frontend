@@ -94,6 +94,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   let lineItems: components["schemas"]["LineItemDto"][] = [];
   let taxLines: components["schemas"]["TaxAndChargeLineDto"][] = [];
   let addressAndContact:components["schemas"]["AddressAndContactDto"] | undefined = undefined
+  let docTerms:components["schemas"]["DocTermsDto"] | undefined = undefined
   if (res.data) {
     switch (tab) {
       case "info": {
@@ -143,6 +144,19 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         })
         addressAndContact = aacRes.data?.result
       }
+      case "terms-and-conditions":{
+        const aacRes = await client.GET("/document/info/doc-term/{id}",{
+          params:{
+            path:{
+              id:res.data.result.entity.order.id.toString(),
+            },
+            query:{
+              party: params.partyOrder || "",
+            }
+          }
+        })
+        docTerms = aacRes.data?.result
+      }
     }
   }
   // res.data?.related_actions
@@ -157,6 +171,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     lineItems: lineItems,
     taxLines: taxLines,
     addressAndContact,
+    docTerms,
   });
 };
 

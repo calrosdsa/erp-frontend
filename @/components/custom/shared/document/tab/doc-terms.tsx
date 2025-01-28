@@ -9,7 +9,10 @@ import {
   AddressAndContactDataType,
   addressAndContactSchema,
 } from "~/util/data/schemas/document/address-and-contact.schema";
+import { docTermsSchema, DocTermsType } from "~/util/data/schemas/document/doc-terms.schema";
 import { AddressAutoCompleteForm } from "~/util/hooks/fetchers/core/use-address-fetcher";
+import { PaymentTermTemplateForm } from "~/util/hooks/fetchers/docs/use-payment-term-template-fetcher";
+import { TermsAndConditionsForm } from "~/util/hooks/fetchers/docs/use-terms-and-conditions-fetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   useLoadingTypeToolbar,
@@ -18,35 +21,27 @@ import {
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { route } from "~/util/route";
 
-export default function AddressAndContact({
+export default function DocTerms({
   defaultValues,
   allowEdit,
-  showShippingAddress,
-  showPartyrAddress,
-  showBillingAddress,
-  partyLabel,
 }: {
-  defaultValues: AddressAndContactDataType;
-  showShippingAddress?: boolean;
-  showPartyrAddress?: boolean;
-  showBillingAddress?: boolean;
+  defaultValues: DocTermsType;
   allowEdit: boolean;
-  partyLabel?:string
 }) {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const { form, hasChanged, updateRef, previousValues } =
-    useEditFields<AddressAndContactDataType>({
-      schema: addressAndContactSchema,
+    useEditFields<DocTermsType>({
+      schema: docTermsSchema,
       defaultValues: defaultValues,
     });
   const { setRegister } = useSetupToolbarStore();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const r = route
-  const onSubmit = (e: AddressAndContactDataType) => {
+  const onSubmit = (e: DocTermsType) => {
     fetcher.submit({
-      addressAndContactData: e,
-      action: "edit-address-and-contact",
+        docTermsData: e,
+      action: "edit-doc-terms",
     },{
         method:"POST",
         action:r.apiDocument,
@@ -91,53 +86,32 @@ export default function AddressAndContact({
           className={"gap-y-3 grid p-3"}
         >
           <div className="create-grid">
-            {showPartyrAddress && (
-              <AddressAutoCompleteForm
+              <PaymentTermTemplateForm
                 allowEdit={allowEdit}
                 control={form.control}
-                name="party_address_name"
-                label={partyLabel}
+                name="payment_term_template"
+                label="Plantilla de Condiciones de Pago"
                 onClear={()=>{
-                  form.setValue("party_address_id",null)
-                  form.setValue("party_address_name",null)
+                  form.setValue("payment_term_template_id",null)
+                  form.setValue("payment_term_template",null)
                 }}
                 onSelect={(e) => {
-                  form.setValue("party_address_id", e.id);
+                  form.setValue("payment_term_template_id", e.id);
                 }}
               />
-            )}
-
-            {showShippingAddress && (
-              <AddressAutoCompleteForm
+              <TermsAndConditionsForm
                 allowEdit={allowEdit}
                 control={form.control}
-                name="shipping_address_name"
-                label="Dirección de Envío"
+                name="terms_and_conditions"
+                label="Términos y condiciones"
                 onClear={()=>{
-                  form.setValue("shipping_address_id",null)
-                  form.setValue("shipping_address_name",null)
+                  form.setValue("terms_and_conditions_id",null)
+                  form.setValue("terms_and_conditions",null)
                 }}
                 onSelect={(e) => {
-                  form.setValue("shipping_address_id", e.id);
+                  form.setValue("terms_and_conditions_id", e.id);
                 }}
               />
-            )}
-
-            {showBillingAddress && (
-              <AddressAutoCompleteForm
-                allowEdit={allowEdit}
-                name="billing_address_name"
-                control={form.control}
-                onClear={()=>{
-                  form.setValue("billing_address_id",null)
-                  form.setValue("billing_address_name",null)
-                }}
-                label="Dirección de Facturación"
-                onSelect={(e) => {
-                  form.setValue("billing_address_id", e.id);
-                }}
-              />
-            )}
           </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
