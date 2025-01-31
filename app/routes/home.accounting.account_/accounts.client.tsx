@@ -14,7 +14,7 @@ import { PartyType, partyTypeToJSON } from "~/gen/common"
 
 export default function AccountsClient(){
     const globalState = useOutletContext<GlobalState>()
-    const {paginationResult,actions} = useLoaderData<typeof loader>()
+    const {result,actions} = useLoaderData<typeof loader>()
     const [permission] = usePermission({
         actions:actions,
         roleActions:globalState.roleActions
@@ -47,12 +47,9 @@ export default function AccountsClient(){
     return (
         <div className="">
             <DataTable
-            data={paginationResult?.results || []}
+            data={result || []}
             columns={accountColumns()}
             enableSizeSelection={true}
-            paginationOptions={{
-                rowCount:paginationResult?.total
-            }}
             />
         </div>
     )

@@ -29,13 +29,14 @@ import {
   ArrowRight,
   Check,
   ChevronsUpDown,
+  MoveRightIcon,
   PlusIcon,
   XIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { Control } from "react-hook-form";
 
-interface Props<T extends object, K extends keyof T> {
+export interface AutocompleteFormProps<T extends object, K extends keyof T> {
   data: T[];
   nameK: K;
   name: string;
@@ -74,7 +75,7 @@ export default function FormAutocompleteField<
   addNew,
   required,
   href,
-}: Props<T, K>) {
+}: AutocompleteFormProps<T, K>) {
   const [open, setOpen] = useState(false);
   return (
     <FormField
@@ -131,8 +132,26 @@ export default function FormAutocompleteField<
                   >
                     <span className=" truncate">{field.value?.name || ""}</span>
 
-                    {field.value && allowEdit && !required && (
+                    {/* {field.value && allowEdit && !required && ( */}
+                    {field.value && allowEdit && (
                       <div className="flex items-center">
+                        {field.value?.name ? (
+                          <IconButton
+                            icon={XIcon}
+                            size="sm"
+                            className="ml-1 h-6 w-6 shrink-0 opacity-50 "
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              field.onChange({});
+                              // onClear?.();
+                              setOpen(false);
+                              // form.setValue(name, "");
+                            }}
+                          />
+                        ) : (
+                          <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
+                        )}
+
                         {href && (
                           <div
                             onClick={(e) => {
@@ -148,24 +167,8 @@ export default function FormAutocompleteField<
                             </Link>
                           </div>
                         )}
-                        {field.value?.name ? (
-                          <IconButton
-                            icon={XIcon}
-                            size="sm"
-                            className="ml-1 h-6 w-6 shrink-0 opacity-50 "
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              field.onChange({});
-                              // onClear?.();
-                              setOpen(false);
-                              // form.setValue(name, "");
-                            }}
-                          />
-                        ):
-                        <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
-                        }
                       </div>
-                    ) }
+                    )}
                   </Button>
                 </FormControl>
               </PopoverTrigger>
@@ -211,6 +214,9 @@ export default function FormAutocompleteField<
                             field.onChange({
                               name: item[nameK],
                               id: item["id" as keyof T],
+                              uuid: item["uuid" as keyof T]
+                                ? item["uuid" as keyof T]
+                                : undefined,
                             });
                             // field.onChange(item[nameK]);
                             if (onSelect) {

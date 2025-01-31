@@ -2,12 +2,11 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import AccountsClient from "./accounts.client";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
-import { components } from "~/sdk";
+import { components, operations } from "~/sdk";
 
 type ActionData = {
     action:string
-    query:string
-    isGroup:boolean
+    query:operations["get-acconts"]["parameters"]["query"]
 }
 export const action = async({request}:ActionFunctionArgs)=>{
     const client = apiClient({request})
@@ -18,15 +17,10 @@ export const action = async({request}:ActionFunctionArgs)=>{
         case "get":{
             const res =  await client.GET("/ledger",{
                 params:{
-                    query:{
-                        page:DEFAULT_PAGE,
-                        size:DEFAULT_SIZE,
-                        query:data.query,
-                        is_group:data.isGroup.toString(),
-                    }
+                    query:data.query
                 }
             })
-            accounts = res.data?.pagination_result.results || []
+            accounts = res.data?.result || []
             actions = res.data?.actions || []
             break;
         }
@@ -51,7 +45,7 @@ export const loader = async({request}:LoaderFunctionArgs)=>{
     })
     console.log(res.error)
     return json({
-        paginationResult:res.data?.pagination_result,
+        result:res.data?.result,
         actions:res.data?.actions
     })
 }

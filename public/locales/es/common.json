@@ -427,6 +427,8 @@
   "termsAndConditions":"Terminos y Condiciones",
   "paymentTerms":"Condiciones de Pago",
   "paymentTermsTemplate":"Plantilla de Condiciones de Pago",
+  "bank":"Banco",
+  "bankAccount":"Cuenta Bancaria",
 
   "accountingLedger": "Libro mayor contable",
   "accountPayable": "Cuentas por pagar",

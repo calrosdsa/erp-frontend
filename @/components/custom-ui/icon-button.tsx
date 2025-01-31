@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 
 interface IconButtonProps extends Omit<ButtonProps, 'size'> {
   icon: LucideIcon;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' |'sm' | 'md' | 'lg';
   label?: string;
 }
 
@@ -18,12 +18,14 @@ export default function IconButton({
   ...props
 }: IconButtonProps) {
   const sizeClasses = {
+    xs: 'p-1',
     sm: 'p-1',
     md: 'p-2',
     lg: 'p-3'
   }
 
   const iconSizeClasses = {
+    xs: 'w-2 h-2',
     sm: 'w-4 h-4',
     md: 'w-5 h-5',
     lg: 'w-6 h-6'

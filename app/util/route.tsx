@@ -131,6 +131,8 @@ class Routes {
   termsAndConditions = "terms-and-conditions";
   paymentTerms = "payment-terms";
   paymentTermsTemplate =  "payment-terms-template";
+  bank = "bank"
+  bankAccount = "bank-account"
 
   defaultTab = {
     tab: "info",
