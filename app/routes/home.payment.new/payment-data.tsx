@@ -2,6 +2,7 @@ import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-
 import {
   FetcherWithComponents,
   useFetcher,
+  useNavigate,
   useOutletContext,
 } from "@remix-run/react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
@@ -39,6 +40,8 @@ import { components, operations } from "~/sdk";
 import { action as actionAccount } from "../home.accounting.account.$name/route";
 import { useFetcherWithPromise } from "../../util/hooks/use-fetcher-with-promise";
 import { usePaymentData } from "./use-payment-data";
+import { BankAccountForm } from "~/util/hooks/fetchers/accounting/use-bank-account-fetcher";
+import { useBankAccountStore } from "../home.bank-account.new/bank-account.store";
 
 type PaymentDataType = z.infer<typeof paymentDataSchema>;
 export default function PaymentData({
@@ -94,9 +97,11 @@ export default function PaymentData({
     form: form,
     i18n: i18n,
   });
+  const navigate = useNavigate();
+  const bankAccountStore = useBankAccountStore();
 
   const updateAmountFromReferences = () => {
-    if(formValues.paymentReferences.length == 0) return
+    if (formValues.paymentReferences.length == 0) return;
     const totalAllocated = formValues.paymentReferences.reduce(
       (prev, curr) => prev + Number(curr.allocated),
       0
@@ -106,11 +111,87 @@ export default function PaymentData({
     form.trigger("amount");
   };
 
+  const navigateToCreateNewBankAccount = () => {
+    console.log("BANK ACCOUNT STORE...");
+    bankAccountStore.setPayload({
+      partyType: formValues.partyType,
+      party: formValues.party,
+      account_name: formValues.party.name,
+      _go_back: true,
+    });
+    navigate(
+      route.toRoute({
+        main: route.bankAccount,
+        routeSufix: ["new"],
+      })
+    );
+  };
+
   useEffect(() => {
     updateAmountFromReferences();
   }, [formValues.paymentReferences]);
 
-  useEffect(() => {}, [fetcherAccountBalance.data]);
+  const updateBalance = async (
+    direction: "from" | "to",
+    name: string,
+    id: number,
+    currency: string
+  ) => {
+    try {
+      const openingData = await accountBalanceService.getAccountBalance(
+        name,
+        id
+      );
+      console.log("OPENING BALANCE", openingData, name, direction);
+      const balanceKey =
+        direction === "from"
+          ? "accountPaidFromBalance"
+          : "accountPaidToBalance";
+      const currencyKey =
+        direction === "from"
+          ? "accountPaidFromCurrency"
+          : "accountPaidToCurrency";
+
+      accountBalanceService.setAccountValue({
+        [balanceKey]: openingData?.opening_balance,
+        [currencyKey]: currency,
+      });
+    } catch (error) {
+      console.error(`Error updating ${direction} balance:`, error);
+      // Consider adding error state handling here
+    }
+  };
+
+  useEffect(() => {
+    const updateAccountBalances = async () => {
+      if (
+        formValues.company_bank_account_ledger &&
+        formValues.paymentType !== undefined
+      ) {
+        const ledger = formValues.company_bank_account_ledger;
+        const name = ledger?.name || "";
+        const id = ledger?.id || 0;
+        const currency = formValues.company_bank_account_currency || "";
+        const uuid = ledger?.uuid || undefined;
+
+        try {
+          if (formValues.paymentType === PaymentType[PaymentType.PAY]) {
+            form.setValue("accountPaidFrom", { name, id, uuid });
+            await updateBalance("from", name, id, currency);
+          } else if (
+            formValues.paymentType === PaymentType[PaymentType.RECEIVE]
+          ) {
+            form.setValue("accountPaidTo", { name, id, uuid });
+            await updateBalance("to", name, id, currency);
+          }
+        } catch (error) {
+          console.error("Account balance update failed:", error);
+        }
+      }
+    };
+
+    updateAccountBalances();
+  }, [formValues.company_bank_account_ledger, formValues.paymentType]);
 
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
@@ -185,6 +266,39 @@ export default function PaymentData({
                   roleActions={roleActions}
                 />
               </div>
+            )}
+            {formValues.party?.id && (
+              <>
+                <BankAccountForm
+                  partyID={formValues.party.id}
+                  control={form.control}
+                  name="party_bank_account"
+                  label="Cuenta bancaria del partido"
+                  allowEdit={allowEdit}
+                  roleActions={roleActions}
+                  addNew={navigateToCreateNewBankAccount}
+                />
+                <BankAccountForm
+                  isCompanyAccount={true}
+                  control={form.control}
+                  name="company_bank_account"
+                  label="Cuenta bancaria de la empresa"
+                  allowEdit={allowEdit}
+                  roleActions={roleActions}
+                  addNew={navigateToCreateNewBankAccount}
+                  onSelect={(e: components["schemas"]["BankAccountDto"]) => {
+                    form.setValue("company_bank_account_ledger", {
+                      name: e.company_account,
+                      id: e.company_account_id,
+                      uuid: e.company_account_uuid,
+                    });
+                    form.setValue(
+                      "company_bank_account_currency",
+                      e.company_account_currency
+                    );
+                  }}
+                />
+              </>
             )}
             <Separator className=" col-span-full" />
             <Typography className=" col-span-full" variant="subtitle2">
@@ -309,6 +423,25 @@ export default function PaymentData({
               currency={companyDefaults?.currency || DEFAULT_CURRENCY}
               showTotal={false}
               allowCreate={allowCreate}
+              allowEdit={allowEdit}
+            />
+
+            <Separator className=" col-span-full" />
+            <Typography className=" col-span-full" variant="subtitle2">
+              ID de transacción
+            </Typography>
+            
+            <CustomFormFieldInput
+              control={form.control}
+              name="cheque_reference_no"
+              label={"Cheque / No. de Referencia"}
+              inputType="input"
+              allowEdit={allowEdit}
+            />
+            <CustomFormDate
+              control={form.control}
+              name="cheque_reference_date"
+              label={"Cheque / Fecha de referencia"}
               allowEdit={allowEdit}
             />
 

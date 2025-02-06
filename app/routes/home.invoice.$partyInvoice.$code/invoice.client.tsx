@@ -40,7 +40,7 @@ import { Entity } from "~/types/enums";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useNewSalesRecord } from "../home.invoicing.salesRecord.new/use-new-sales-record";
-import { useCreatePayment } from "../home.payment.new/use-create-payment";
+import { useCreatePayment, usePaymentStore } from "../home.payment.new/payment-store";
 import { party } from "~/util/party";
 import { usePurchaseRecordStore } from "../home.invoicing.purchaseRecord.new/purchase-record-store";
 import InvoiceAddressAndContactTab from "./components/tab/invoice-address-and-contact";
@@ -48,6 +48,7 @@ import InvoiceTermsAndConditionsTab from "./components/tab/invoice-terms-and-con
 import InvoiceAccountsTab from "./components/tab/invoice-accounts";
 import { components } from "~/sdk";
 import { useExporter } from "~/util/hooks/ui/useExporter";
+import { formatAmount } from "~/util/format/formatCurrency";
 
 export default function InvoiceDetailClient() {
   const { invoice, activities, associatedActions, totals } =
@@ -88,7 +89,7 @@ export default function InvoiceDetailClient() {
     roleActions,
   });
 
-  const createPayment = useCreatePayment();
+  const paymentStore = usePaymentStore();
   const { total } = useLineItems();
   const { total: totalTaxAndCharges } = useTaxAndCharges();
   const newSalesRecord = useNewSalesRecord();
@@ -170,18 +171,26 @@ export default function InvoiceDetailClient() {
         onClick: () => {
           const total = invoice?.total || 0;
           const outstanding = total - Number(totals?.paid);
-          createPayment.setData({
+          paymentStore.setPayload({
             amount: outstanding,
-            partyUuid: invoice?.party_uuid,
+            party: {
+              uuid:invoice?.party_uuid,
+              id:invoice?.party_id,
+              name:invoice?.party_name
+            },
             partyType: invoice?.party_type,
-            partyID: invoice?.party_id,
-            partyName: invoice?.party_name,
             partyReference: invoice?.id,
             paymentType: getPaymentType(partyInvoice),
-            project:invoice?.project,
-            projectID:invoice?.project_id,
-            costCenter:invoice?.cost_center,
-            costCenterID:invoice?.cost_center_id,
+            project:{
+              id:invoice?.project_id,
+              name:invoice?.project,
+              uuid:invoice?.project_uuid,
+            },
+            costCenter:{
+              id:invoice?.cost_center_id,
+              name:invoice?.cost_center,
+              uuid:invoice?.cost_center_uuid,
+            },
             paymentReferences: [
               {
                 partyType: partyInvoice,
@@ -267,10 +276,13 @@ export default function InvoiceDetailClient() {
         Icon: PlusIcon,
         onClick: () => {
           purchaseRecordStore.setPayload({
-            supplierID: invoice?.party_id,
+            supplier_id: invoice?.party_id,
             supplier: invoice?.party_name,
-            invoiceCode: invoice?.code,
-            invoiceID: invoice?.id,
+            invoice: invoice?.code,
+            invoice_id: invoice?.id,
+            supplier_business_name:invoice?.party_name,
+            subtotal:formatAmount(invoice?.total),
+            total_purchase_amount:formatAmount(invoice?.total),
           });
           navigate(
             r.toRoute({

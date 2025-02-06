@@ -1,17 +1,12 @@
 import { create } from "zustand"
+import { PurchaseRecordDataType } from "~/util/data/schemas/invoicing/purchase-record-schema"
 
 
 
-interface Payload {
-    supplierID?:number
-    supplier?:string
-    invoiceCode?:string
-    invoiceID?:number
-}
 
 interface PurchaseRecordStore {
-    payload:Payload
-    setPayload:(e:Payload)=>void
+    payload:Partial<PurchaseRecordDataType>
+    setPayload:(e:Partial<PurchaseRecordDataType>)=>void
 }
 
 

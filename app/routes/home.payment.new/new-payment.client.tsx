@@ -1,7 +1,7 @@
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { paymentDataSchema } from "~/util/data/schemas/accounting/payment-schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +10,7 @@ import { PartyType, partyTypeToJSON, PaymentType } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { route } from "~/util/route";
 import { action, loader } from "./route";
-import { useCreatePayment } from "./use-create-payment";
+import { useCreatePayment, usePaymentStore } from "./payment-store";
 import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 import { Card } from "@/components/ui/card";
 import { party } from "~/util/party";
@@ -21,38 +21,22 @@ import { FormService, PartyTypeStrategyFactory, usePaymentData } from "./use-pay
 export default function PaymentCreateClient() {
   const { paymentAccounts } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
-  const {payload} = useCreatePayment();
   const {i18n} = useTranslation("common")
   const toolbar = useToolbar()  
+  const { payload, setPayload } = usePaymentStore();
   const form = useForm<z.infer<typeof paymentDataSchema>>({
     resolver: zodResolver(paymentDataSchema),
-    defaultValues: {
-      amount: formatAmount(payload?.amount),
-      paymentType: payload?.paymentType,
-      postingDate: new Date(),
-      partyType: payload?.partyType,
-
-      party:{
-        id:payload?.partyID,
-        name:payload?.partyName,
-      },
-      costCenter:{
-        name:payload?.costCenter,
-        id:payload?.costCenterID,
-      },
-      project: {
-        name:payload?.project,
-        id:payload?.projectID,
-      },
-      partyReference: payload?.partyReference,
-
-      paymentReferences: payload?.paymentReferences || [],
-      taxLines: [],
-    },
+    defaultValues: payload ? {
+      ...payload,
+      taxLines:payload.taxLines ?  payload.taxLines : [],
+      postingDate:new Date(),
+    } : {},  
   });
   const formValues = form.getValues();
   const inputRef = useRef<HTMLInputElement | null>(null);
-
+ const watchedFields = useWatch({
+    control: form.control,
+  });
   const navigate = useNavigate();
   const r = route;
   const p = party;
@@ -174,8 +158,13 @@ export default function PaymentCreateClient() {
     [fetcher.data]
   );
 
+  useEffect(() => {
+    setPayload(form.getValues());
+  }, [watchedFields]);
+
   return (
     <Card>
+      {JSON.stringify(form.formState.errors)}
       <PaymentData
         form={form}
         onSubmit={onSubmit}

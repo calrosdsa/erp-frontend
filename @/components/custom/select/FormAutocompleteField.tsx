@@ -241,18 +241,21 @@ export default function FormAutocompleteField<
                 </CommandList>
               </Command>
               <div className="pt-2 px-1">
-                {addNew && (
-                  <Button
-                    onClick={() => {
-                      addNew();
-                    }}
-                    size={"sm"}
-                    className=" space-x-2 flex"
-                  >
-                    <Typography fontSize={xs}>Add New</Typography>
-                    <PlusIcon size={15} />
-                  </Button>
-                )}
+                <>
+                 
+                  {addNew && (
+                    <Button
+                      onClick={() => {
+                        addNew();
+                      }}
+                      size={"sm"}
+                      className=" space-x-2 flex"
+                    >
+                      <Typography fontSize={xs}>Add New</Typography>
+                      <PlusIcon size={15} />
+                    </Button>
+                  )}
+                </>
               </div>
             </PopoverContent>
           </Popover>

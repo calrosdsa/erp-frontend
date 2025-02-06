@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { create } from "zustand";
-import { paymentReferceSchema } from "~/util/data/schemas/accounting/payment-schema";
+import { PaymentDataType, paymentReferceSchema } from "~/util/data/schemas/accounting/payment-schema";
 import { formatAmount } from "~/util/format/formatCurrency";
 
 // Define the PaymentReference type based on the Zod schema
@@ -52,3 +52,18 @@ export const useCreatePayment = create<CreatePaymentStore>((set) => ({
     }));
   },
 }));
+
+
+interface PaymentStore {
+    payload:Partial<PaymentDataType>,
+    setPayload:(e:Partial<PaymentDataType>)=>void
+}
+export const usePaymentStore = create<PaymentStore>((set)=>({
+    payload:{
+      paymentReferences:[],
+      taxLines:[],
+    },
+    setPayload:(e)=>set({
+        payload:e
+    })
+}))

@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData, useNavigate, useOutletContext, useSearchParams } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigate, useOutletContext, useParams, useSearchParams } from "@remix-run/react";
 import { action, loader } from "./route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { route } from "~/util/route";
@@ -13,6 +13,10 @@ import { z } from "zod";
 import { ButtonToolbar } from "~/types/actions";
 import { format } from "date-fns";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { DownloadIcon } from "lucide-react";
+import { components } from "~/sdk";
+import { party } from "~/util/party";
+import { useExporter } from "~/util/hooks/ui/useExporter";
 
 export default function PaymentDetailClient() {
   const { payment, actions,activities } = useLoaderData<typeof loader>();
@@ -23,6 +27,8 @@ export default function PaymentDetailClient() {
   const { t, i18n } = useTranslation("common");
   const r = route;
   const navigate = useNavigate();
+  const params = useParams()
+  const {exportPdf} = useExporter()
 
   const tabs =[
     {
@@ -47,6 +53,16 @@ export default function PaymentDetailClient() {
             voucherNo:payment?.code,
           }
         }))
+      }
+    })
+    actions.push({
+      label:t("form.download"),
+      Icon:DownloadIcon,
+      onClick:()=>{
+        const exportData:components["schemas"]["ExportDocumentData"] =  {
+          id:params.code || "",
+        }
+        exportPdf("/payment/export/document",exportData)
       }
     })
     return {

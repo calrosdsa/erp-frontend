@@ -15,8 +15,10 @@ export const bankAccountSchema = z
     iban: z.string().nullable().optional(),
     branch_code: z.string().nullable().optional(),
     bank_account_number: z.string().nullable().optional(),
-    is_company_account: z.boolean(),
+    is_company_account: z.boolean().optional(),
     company_account: fieldNull,
+    //for redirect after creation
+    _go_back:z.boolean(),
   })
   .superRefine((data, ctx) => {
     validateRequiredField({
@@ -43,7 +45,7 @@ export const mapToBankAccountData = (e: BankAccountType) => {
       iban: e.iban,
       bank_id: e.bank.id || 0,
       party_id: e.party?.id || null,
-      is_comapny_account: e.is_company_account,
+      is_comapny_account: e.is_company_account || false,
       company_account_id: e.company_account?.id,
     },
     id: e.id || 0,

@@ -3,10 +3,6 @@ import BankAccountData from "./bank-account-data";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { action } from "./route";
 import { useForm, useWatch } from "react-hook-form";
-import {
-  termsAndConditionsDataSchema,
-  TermsAndCondtionsDataType,
-} from "~/util/data/schemas/document/terms-and-conditions.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -73,16 +69,20 @@ export default function NewBankAccountClient() {
       success: fetcher.data?.message,
       onSuccessMessage: () => {
         if (fetcher.data?.entity) {
-          navigate(
-            route.toRoute({
-              main: route.bankAccount,
-              routeSufix: [fetcher.data.entity?.account_name],
-              q: {
-                tab: "info",
-                id: fetcher.data.entity?.uuid,
-              },
-            })
-          );
+          if (form.getValues()._go_back) {
+            navigate(-1);
+          } else {
+            navigate(
+              route.toRoute({
+                main: route.bankAccount,
+                routeSufix: [fetcher.data.entity?.account_name],
+                q: {
+                  tab: "info",
+                  id: fetcher.data.entity?.uuid,
+                },
+              })
+            );
+          }
         }
       },
     },

@@ -64,10 +64,8 @@ export default function PurchaseRecordData({
                 label={t("supplier")}
                 control={form.control}
                 roleActions={roleActions}
+                required={true}
                 allowEdit={allowEdit}
-                onClear={() => {
-                  form.setValue("supplier_id", undefined);
-                }}
                 onSelect={(e) => {
                   form.setValue("supplier_id", e.id);
                   form.setValue("supplier_business_name", e.name);

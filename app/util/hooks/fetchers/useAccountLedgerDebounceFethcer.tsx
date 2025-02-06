@@ -42,7 +42,7 @@ export const LedgerAutocompleteFormField = ({
 
   return (
     <FormAutocompleteField
-      data={fetcherDebounce.data?.accounts || []}
+      data={fetcherDebounce.data?.results || []}
       onValueChange={onChange}
       label={label}
       name={name || "ledger"}
@@ -85,7 +85,7 @@ export const LedgerAutocompleteForm = ({
   
     return (
       <FormAutocomplete
-        data={fetcherDebounce.data?.accounts || []}
+        data={fetcherDebounce.data?.results || []}
         onValueChange={onChange}
         label={label}
         name={name || "ledger"}
@@ -104,14 +104,14 @@ export const useAccountLedgerDebounceFetcher = ({isGroup}:{
 }) =>{
    const r = route;
     const fetcherDebounce = useDebounceFetcher<{
-      results: components["schemas"]["BankDto"][];
+      results: components["schemas"]["LedgerDto"][];
       actions: components["schemas"]["ActionDto"][];
     }>();
     const onChange = (e: string) => {
       const d: operations["get-acconts"]["parameters"]["query"] = {
         size: DEFAULT_SIZE,
         name: e,
-        is_group:isGroup
+        is_group:String(isGroup)
       };
       fetcherDebounce.submit(
         {
@@ -123,7 +123,8 @@ export const useAccountLedgerDebounceFetcher = ({isGroup}:{
           encType: "application/json",
           debounceTimeout: DEFAULT_DEBOUNCE_TIME,
           action: r.toRoute({
-              main:r.bank
+              main:r.ledger,
+              routePrefix:[r.accountingM]
           }),
         }
       );
@@ -149,7 +150,4 @@ export const useAccountLedgerDebounceFetcher = ({isGroup}:{
     //     })
     // }
     
- 
-
-    return [debounceFetcher,onChange] as const
 }

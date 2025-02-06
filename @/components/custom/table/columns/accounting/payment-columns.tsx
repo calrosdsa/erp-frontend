@@ -101,7 +101,6 @@ export const paymentReferencesColumns = ({
   t: TFunction<"common", undefined>;
   i18n: i18n;
 }): ColumnDef<z.infer<typeof paymentReferceSchema>>[] => {
-  console.log("RE RENDER...");
   // const { t, i18n } = useTranslation("common");
   const r = route;
   return [

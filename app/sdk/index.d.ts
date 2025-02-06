@@ -2027,6 +2027,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/payment/export/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export Payment */
+        post: operations["export-payment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/payment/parties": {
         parameters: {
             query?: never;
@@ -3957,6 +3974,7 @@ export interface components {
             bank_uuid: string;
             branch_code: string | null;
             company_account: string | null;
+            company_account_currency: string | null;
             /** Format: int64 */
             company_account_id: number | null;
             company_account_uuid: string | null;
@@ -7351,11 +7369,16 @@ export interface components {
             id?: number;
         };
         PaymentDetailDto: {
-            PartyBankAccount: string | null;
             /** Format: int64 */
             amount: number;
+            /** Format: date-time */
+            cheque_reference_date: string | null;
+            cheque_reference_no: string | null;
             code: string;
             company_bank_account: string | null;
+            /** Format: int64 */
+            company_bank_account_id: number | null;
+            company_bank_account_uuid: string | null;
             cost_center: string | null;
             /** Format: int64 */
             cost_center_id: number | null;
@@ -7374,6 +7397,10 @@ export interface components {
             paid_to_id: number;
             paid_to_name: string;
             paid_to_uuid: string;
+            party_bank_account: string | null;
+            /** Format: int64 */
+            party_bank_account_id: number | null;
+            party_bank_account_uuid: string | null;
             /** Format: int64 */
             party_id: number;
             party_name: string;
@@ -7390,11 +7417,16 @@ export interface components {
             status: string;
         };
         PaymentDto: {
-            PartyBankAccount: string | null;
             /** Format: int64 */
             amount: number;
+            /** Format: date-time */
+            cheque_reference_date: string | null;
+            cheque_reference_no: string | null;
             code: string;
             company_bank_account: string | null;
+            /** Format: int64 */
+            company_bank_account_id: number | null;
+            company_bank_account_uuid: string | null;
             cost_center: string | null;
             /** Format: int64 */
             cost_center_id: number | null;
@@ -7403,6 +7435,10 @@ export interface components {
             created_at: string;
             /** Format: int64 */
             id: number;
+            party_bank_account: string | null;
+            /** Format: int64 */
+            party_bank_account_id: number | null;
+            party_bank_account_uuid: string | null;
             /** Format: int64 */
             party_id: number;
             party_name: string;
@@ -7424,8 +7460,15 @@ export interface components {
             account_paid_to_id: number;
             /** Format: int64 */
             amount: number;
+            /** Format: date-time */
+            cheque_reference_date?: string | null;
+            cheque_reference_no?: string | null;
+            /** Format: int64 */
+            company_bank_account_id?: number | null;
             /** Format: int64 */
             cost_center_id?: number | null;
+            /** Format: int64 */
+            party_bank_account_id?: number | null;
             /** Format: int64 */
             party_id: number;
             payment_type: string;
@@ -7435,16 +7478,16 @@ export interface components {
             project_id?: number | null;
         };
         PaymentReferenceDto: {
-            /** Format: int32 */
+            /** Format: int64 */
             allocated: number;
             currency: string;
-            /** Format: int32 */
+            /** Format: int64 */
             outstanding: number;
             party_code: string;
             /** Format: int64 */
             party_id: number;
             party_type: string;
-            /** Format: int32 */
+            /** Format: int64 */
             total: number;
         };
         PaymentTermsData: {
@@ -7804,49 +7847,9 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            authorization_code: string;
-            /** Format: double */
-            cf_base_amount: number;
-            consolidation_status: string;
-            control_code: string;
-            /** Format: double */
-            discounts_bonus_rebates_subject_to_vat: number;
-            dui_dim_no: string;
-            /** Format: double */
-            exempt_amounts: number;
-            /** Format: double */
-            gift_card_amount: number;
-            /** Format: double */
-            ice_amount: number;
+            fields: components["schemas"]["PurchaseRecordFields"];
             /** Format: int64 */
-            id?: number;
-            /** Format: double */
-            iehd_amount: number;
-            /** Format: date-time */
-            invoice_dui_dim_date: string;
-            /** Format: int64 */
-            invoice_id: number;
-            invoice_no: string;
-            /** Format: double */
-            ipj_amount: number;
-            /** Format: double */
-            other_not_subject_to_tax_credit: number;
-            purchase_type: string;
-            /** Format: double */
-            subtotal: number;
-            supplier_business_name: string;
-            /** Format: int64 */
-            supplier_id: number;
-            supplier_nit: string;
-            /** Format: double */
-            tax_credit: number;
-            /** Format: double */
-            tax_rates: number;
-            /** Format: double */
-            total_purchase_amount: number;
-            with_tax_credit_right: boolean;
-            /** Format: double */
-            zero_rate_taxable_purchases_amount: number;
+            id: number;
         };
         PurchaseRecordDto: {
             authorization_code: string;
@@ -7894,6 +7897,49 @@ export interface components {
             /** Format: int32 */
             total_purchase_amount: number;
             uuid: string;
+            with_tax_credit_right: boolean;
+            /** Format: int32 */
+            zero_rate_taxable_purchases_amount: number;
+        };
+        PurchaseRecordFields: {
+            authorization_code: string;
+            /** Format: int32 */
+            cf_base_amount: number;
+            consolidation_status: string;
+            control_code: string;
+            /** Format: int32 */
+            discounts_bonus_rebates_subject_to_vat: number;
+            dui_dim_no: string;
+            /** Format: int32 */
+            exempt_amounts: number;
+            /** Format: int32 */
+            gift_card_amount: number;
+            /** Format: int32 */
+            ice_amount: number;
+            /** Format: int32 */
+            iehd_amount: number;
+            /** Format: date-time */
+            invoice_dui_dim_date: string;
+            /** Format: int64 */
+            invoice_id: number;
+            invoice_no: string;
+            /** Format: int32 */
+            ipj_amount: number;
+            /** Format: int32 */
+            other_not_subject_to_tax_credit: number;
+            purchase_type: string;
+            /** Format: int64 */
+            subtotal: number;
+            supplier_business_name: string;
+            /** Format: int64 */
+            supplier_id: number;
+            supplier_nit: string;
+            /** Format: int32 */
+            tax_credit: number;
+            /** Format: int32 */
+            tax_rates: number;
+            /** Format: int64 */
+            total_purchase_amount: number;
             with_tax_credit_right: boolean;
             /** Format: int32 */
             zero_rate_taxable_purchases_amount: number;
@@ -10992,6 +11038,7 @@ export interface operations {
                 column?: string;
                 account_name?: string;
                 party_id?: string;
+                is_company_account?: string;
                 created_at?: string;
                 updated_at?: string;
             };
@@ -13618,6 +13665,7 @@ export interface operations {
                 is_credit_balance?: string;
                 is_debit_balance?: string;
                 is_group?: string;
+                account_type?: string;
             };
             header?: never;
             path?: never;
@@ -15256,6 +15304,37 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityPaymentDetailDtoBody"];
                 };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "export-payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportDocumentData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Error */
             default: {

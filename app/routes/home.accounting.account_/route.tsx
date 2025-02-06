@@ -11,8 +11,9 @@ type ActionData = {
 export const action = async({request}:ActionFunctionArgs)=>{
     const client = apiClient({request})
     const data = await request.json() as ActionData
-    let accounts:components["schemas"]["LedgerDto"][] = []
+    let results:components["schemas"]["LedgerDto"][] = []
     let actions:components["schemas"]["ActionDto"][] = []
+    console.log("QUERY",data.query)
     switch(data.action){
         case "get":{
             const res =  await client.GET("/ledger",{
@@ -20,13 +21,13 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     query:data.query
                 }
             })
-            accounts = res.data?.result || []
+            results = res.data?.result || []
             actions = res.data?.actions || []
             break;
         }
     }
     return json({
-        accounts,actions
+        results,actions
     })
 }
 

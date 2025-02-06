@@ -19,11 +19,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (data.action) {
     case "create-purchase-record": {
       const d = data.purchaseRecordData;
-      const purchaseRecordData = mapToPurchaseRecordData(d)
       const res = await client.POST("/purchase-record", {
-        body: {
-         ...purchaseRecordData
-        },
+        body: mapToPurchaseRecordData(d),
       });
       console.log(res.data,res.error)
       message = res.data?.message;

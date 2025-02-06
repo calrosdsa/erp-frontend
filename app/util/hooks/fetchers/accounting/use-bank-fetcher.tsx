@@ -34,6 +34,7 @@ export const useBankFetcher = () => {
     const d: operations["bank"]["parameters"]["query"] = {
       size: DEFAULT_SIZE,
       name: e,
+      
     };
     fetcherDebounce.submit(
       {

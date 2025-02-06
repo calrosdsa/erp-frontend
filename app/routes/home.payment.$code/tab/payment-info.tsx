@@ -74,6 +74,20 @@ export default function PaymentInfoTab() {
         name: payment?.cost_center,
         uuid: payment?.cost_center_uuid,
       },
+      company_bank_account: {
+        id: payment?.company_bank_account_id,
+        name: payment?.company_bank_account,
+        uuid: payment?.company_bank_account_uuid,
+      },
+      party_bank_account: {
+        id: payment?.party_bank_account_id,
+        name: payment?.party_bank_account,
+        uuid: payment?.party_bank_account_uuid,
+      },
+      cheque_reference_date: payment?.cheque_reference_date
+        ? new Date(payment?.cheque_reference_date)
+        : undefined,
+      cheque_reference_no:payment?.cheque_reference_no
     },
   });
   const formValues = form.getValues();
@@ -128,7 +142,7 @@ export default function PaymentInfoTab() {
 
   return (
     <>
-      {/* {JSON.stringify(formValues)} */}
+      {/* {JSON.stringify(payment?.paid_from_name)} */}
       <PaymentData
         form={form}
         onSubmit={onSubmit}

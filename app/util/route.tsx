@@ -112,6 +112,7 @@ class Routes {
   chargesTemplate = "chargesTemplate";
   currencyExchange = "currencyExchange";
   salesRecord = "salesRecord";
+  ledger = "account"
   purchaseRecord = "purchaseRecord";
   stockEntry = "stockEntry";
   project = "project";

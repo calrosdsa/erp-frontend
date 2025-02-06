@@ -66,17 +66,19 @@ export default function CustomFormDate({
                       "disabled:opacity-100 disabled:cursor-default bg-secondary"
                   )}
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {field.value ? (
-                    <span className="flex-1">
-                      {isDatetime
-                        ? format(field.value, "PPP HH:mm:ss")
-                        : format(toZonedTime(field.value, "UTC"), "PPP")}
-                    </span>
-                  ) : (
-                    <span>{t("form.pickADate")}</span>
-                  )}
-                  {(field.value && allowEdit) && (
+                  <>
+                    {allowEdit && <CalendarIcon className="mr-2 h-4 w-4" />}
+                    {field.value ? (
+                      <span className="flex-1">
+                        {isDatetime
+                          ? format(field.value, "PPP HH:mm:ss")
+                          : format(toZonedTime(field.value, "UTC"), "PPP")}
+                      </span>
+                    ) : (
+                      allowEdit && <span>{t("form.pickADate")}</span>
+                    )}
+                  </>
+                  {field.value && allowEdit && (
                     <Button
                       variant="ghost"
                       size="icon"
@@ -86,7 +88,6 @@ export default function CustomFormDate({
                         e.stopPropagation();
                         console.log("CREAR");
                         field.onChange(null);
-                        
                       }}
                     >
                       <X className="h-3 w-3" />
