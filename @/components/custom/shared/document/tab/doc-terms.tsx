@@ -1,18 +1,15 @@
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
-import { useFetcher, useOutletContext } from "@remix-run/react";
+import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { action } from "~/routes/api.document/route";
 import { GlobalState } from "~/types/app";
-import {
-  AddressAndContactDataType,
-  addressAndContactSchema,
-} from "~/util/data/schemas/document/address-and-contact.schema";
+import { Permission } from "~/types/permission";
 import { docTermsSchema, DocTermsType } from "~/util/data/schemas/document/doc-terms.schema";
-import { AddressAutoCompleteForm } from "~/util/hooks/fetchers/core/use-address-fetcher";
-import { PaymentTermTemplateForm } from "~/util/hooks/fetchers/docs/use-payment-term-template-fetcher";
-import { TermsAndConditionsForm } from "~/util/hooks/fetchers/docs/use-terms-and-conditions-fetcher";
+import { AddressAutoCompleteFormField } from "~/util/hooks/fetchers/core/use-address-fetcher";
+import { PaymentTermTemplateFormField } from "~/util/hooks/fetchers/docs/use-payment-term-template-fetcher";
+import { TermsAndConditionsFormField } from "~/util/hooks/fetchers/docs/use-terms-and-conditions-fetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   useLoadingTypeToolbar,
@@ -24,9 +21,13 @@ import { route } from "~/util/route";
 export default function DocTerms({
   defaultValues,
   allowEdit,
+  paymentTermsTemplatePerm,
+  termsAndConditionsPerm,
 }: {
   defaultValues: DocTermsType;
   allowEdit: boolean;
+  paymentTermsTemplatePerm?:Permission;
+  termsAndConditionsPerm?:Permission;
 }) {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
@@ -38,6 +39,8 @@ export default function DocTerms({
   const { setRegister } = useSetupToolbarStore();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const r = route
+  const navigate = useNavigate()
+  const formValues = form.getValues()
   const onSubmit = (e: DocTermsType) => {
     fetcher.submit({
         docTermsData: e,
@@ -86,31 +89,51 @@ export default function DocTerms({
           className={"gap-y-3 grid p-3"}
         >
           <div className="create-grid">
-              <PaymentTermTemplateForm
+              <PaymentTermTemplateFormField
                 allowEdit={allowEdit}
                 control={form.control}
                 name="payment_term_template"
                 label="Plantilla de Condiciones de Pago"
-                onClear={()=>{
-                  form.setValue("payment_term_template_id",null)
-                  form.setValue("payment_term_template",null)
-                }}
-                onSelect={(e) => {
-                  form.setValue("payment_term_template_id", e.id);
-                }}
+                {...(paymentTermsTemplatePerm?.create && {
+                  addNew: () => {
+                    navigate(
+                      r.toRoute({ main: r.paymentTermsTemplate, routeSufix: ["new"] })
+                    );
+                  },
+                })}
+                {...(paymentTermsTemplatePerm?.view && {
+                  href: route.toRoute({
+                    main: r.paymentTermsTemplate,
+                    routeSufix: [formValues.payment_term_template?.name || ""],
+                    q: {
+                      tab:"info",
+                      id: formValues.payment_term_template?.uuid || "",
+                    },
+                  }),
+                })}
               />
-              <TermsAndConditionsForm
+              <TermsAndConditionsFormField
                 allowEdit={allowEdit}
                 control={form.control}
                 name="terms_and_conditions"
                 label="Términos y condiciones"
-                onClear={()=>{
-                  form.setValue("terms_and_conditions_id",null)
-                  form.setValue("terms_and_conditions",null)
-                }}
-                onSelect={(e) => {
-                  form.setValue("terms_and_conditions_id", e.id);
-                }}
+                {...(termsAndConditionsPerm?.create && {
+                  addNew: () => {
+                    navigate(
+                      r.toRoute({ main: r.termsAndConditions, routeSufix: ["new"] })
+                    );
+                  },
+                })}
+                {...(termsAndConditionsPerm?.view && {
+                  href: route.toRoute({
+                    main: r.termsAndConditions,
+                    routeSufix: [formValues.terms_and_conditions?.name || ""],
+                    q: {
+                      tab:"info",
+                      id: formValues.terms_and_conditions?.uuid || "",
+                    },
+                  }),
+                })}
               />
           </div>
           <input ref={inputRef} type="submit" className="hidden" />

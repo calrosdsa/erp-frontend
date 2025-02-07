@@ -7,34 +7,22 @@ import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
+import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField";
 
-export const TermsAndConditionsForm = ({
-  allowEdit,
-  control,
-  label,
-  name,
-  onSelect,
-  onClear,
-}: {
-  allowEdit?: boolean;
-  control?: Control<any, any>;
-  label?: string;
-  name?: string;
-  onSelect?: (e: components["schemas"]["TermsAndConditionsDto"]) => void;
-  onClear?:()=>void
-}) => {
+type TermsAndConditions = components["schemas"]["TermsAndConditionsDto"]
+interface TermsAndConditionsProps extends Partial<AutocompleteFormProps<TermsAndConditions, keyof TermsAndConditions>> {
+}
+export const TermsAndConditionsFormField = ({
+  ...props
+}: TermsAndConditionsProps) => {
   const [fetcher, onChange] = useTermsAndConditions();
   return (
-    <FormAutocomplete
+    <FormAutocompleteField
+      {...props}
       data={fetcher.data?.results || []}
       onValueChange={onChange}
-      label={label}
-      name={name || "terms_and_conditions"}
+      name={props.name || "terms_and_conditions"}
       nameK="name"
-      control={control}
-      allowEdit={allowEdit}
-      onSelect={onSelect}
-      onClear={onClear}
     />
   );
 };

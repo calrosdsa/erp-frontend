@@ -2358,6 +2358,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/purchase-record/export/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export Purchase Record */
+        post: operations["export-purchase-record"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/purchase-record/update-status": {
         parameters: {
             query?: never;
@@ -2490,6 +2507,23 @@ export interface paths {
         get: operations["get-receipt-detail"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/receipt/export/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export Receipt */
+        post: operations["export-receipt"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3882,15 +3916,19 @@ export interface components {
             billing_address: string | null;
             /** Format: int64 */
             billing_address_id: number | null;
+            billing_address_uuid: string | null;
             contact: string | null;
             /** Format: int64 */
             contact_id: number | null;
+            contact_uuid: string | null;
             party_address: string | null;
             /** Format: int64 */
             party_address_id: number | null;
+            party_address_uuid: string | null;
             shipping_address: string | null;
             /** Format: int64 */
             shipping_address_id: number | null;
+            shipping_address_uuid: string | null;
         };
         AddressAndContactFields: {
             /** Format: int64 */
@@ -4766,21 +4804,27 @@ export interface components {
             cogs_account: string | null;
             /** Format: int64 */
             cogs_account_id: number | null;
+            cogs_account_uuid: string | null;
             income_account: string | null;
             /** Format: int64 */
             income_account_id: number | null;
+            income_account_uuid: string | null;
             inventory_account: string | null;
             /** Format: int64 */
             inventory_account_id: number | null;
+            inventory_account_uuid: string | null;
             payable_account: string | null;
             /** Format: int64 */
             payable_account_id: number | null;
+            payable_account_uuid: string | null;
             receivable_account: string | null;
             /** Format: int64 */
             receivable_account_id: number | null;
+            receivable_account_uuid: string | null;
             srbnb_account: string | null;
             /** Format: int64 */
             srbnb_account_id: number | null;
+            srbnb_account_uuid: string | null;
         };
         DocAccountingFields: {
             /** Format: int64 */
@@ -4811,9 +4855,11 @@ export interface components {
             payment_term_template: string | null;
             /** Format: int64 */
             payment_term_template_id: number | null;
+            payment_term_template_uuid: string | null;
             terms_and_condition: string | null;
             /** Format: int64 */
             terms_and_condition_id: number | null;
+            terms_and_condition_uuid: string | null;
         };
         DocTermsFields: {
             /** Format: int64 */
@@ -7853,36 +7899,38 @@ export interface components {
         };
         PurchaseRecordDto: {
             authorization_code: string;
-            /** Format: int32 */
+            /** Format: int64 */
             cf_base_amount: number;
             consolidation_status: string;
             control_code: string;
-            /** Format: int32 */
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
             discounts_bonus_rebates_subject_to_vat: number;
             dui_dim_no: string;
-            /** Format: int32 */
+            /** Format: int64 */
             exempt_amounts: number;
-            /** Format: int32 */
+            /** Format: int64 */
             gift_card_amount: number;
-            /** Format: int32 */
+            /** Format: int64 */
             ice_amount: number;
             /** Format: int64 */
             id: number;
-            /** Format: int32 */
+            /** Format: int64 */
             iehd_amount: number;
-            invoice_code: string;
+            invoice_code: string | null;
             /** Format: date-time */
             invoice_dui_dim_date: string;
             /** Format: int64 */
-            invoice_id: number;
+            invoice_id: number | null;
             invoice_no: string;
-            /** Format: int32 */
+            /** Format: int64 */
             ipj_amount: number;
-            /** Format: int32 */
+            /** Format: int64 */
             other_not_subject_to_tax_credit: number;
             purchase_type: string;
             status: string;
-            /** Format: int32 */
+            /** Format: int64 */
             subtotal: number;
             supplier: string;
             supplier_business_name: string;
@@ -7890,42 +7938,42 @@ export interface components {
             supplier_id: number;
             supplier_nit: string;
             supplier_uuid: string;
-            /** Format: int32 */
+            /** Format: int64 */
             tax_credit: number;
             /** Format: int32 */
             tax_rates: number;
-            /** Format: int32 */
+            /** Format: int64 */
             total_purchase_amount: number;
             uuid: string;
             with_tax_credit_right: boolean;
-            /** Format: int32 */
+            /** Format: int64 */
             zero_rate_taxable_purchases_amount: number;
         };
         PurchaseRecordFields: {
             authorization_code: string;
-            /** Format: int32 */
+            /** Format: int64 */
             cf_base_amount: number;
             consolidation_status: string;
             control_code: string;
-            /** Format: int32 */
+            /** Format: int64 */
             discounts_bonus_rebates_subject_to_vat: number;
             dui_dim_no: string;
-            /** Format: int32 */
+            /** Format: int64 */
             exempt_amounts: number;
-            /** Format: int32 */
+            /** Format: int64 */
             gift_card_amount: number;
-            /** Format: int32 */
+            /** Format: int64 */
             ice_amount: number;
-            /** Format: int32 */
+            /** Format: int64 */
             iehd_amount: number;
             /** Format: date-time */
             invoice_dui_dim_date: string;
             /** Format: int64 */
-            invoice_id: number;
+            invoice_id?: number | null;
             invoice_no: string;
-            /** Format: int32 */
+            /** Format: int64 */
             ipj_amount: number;
-            /** Format: int32 */
+            /** Format: int64 */
             other_not_subject_to_tax_credit: number;
             purchase_type: string;
             /** Format: int64 */
@@ -7934,14 +7982,14 @@ export interface components {
             /** Format: int64 */
             supplier_id: number;
             supplier_nit: string;
-            /** Format: int32 */
+            /** Format: int64 */
             tax_credit: number;
             /** Format: int32 */
             tax_rates: number;
             /** Format: int64 */
             total_purchase_amount: number;
             with_tax_credit_right: boolean;
-            /** Format: int32 */
+            /** Format: int64 */
             zero_rate_taxable_purchases_amount: number;
         };
         QuotationBody: {
@@ -16274,6 +16322,37 @@ export interface operations {
             };
         };
     };
+    "export-purchase-record": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportDocumentData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "update-status-purchase-record": {
         parameters: {
             query?: never;
@@ -16622,6 +16701,37 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityReceiptDetailDtoBody"];
                 };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "export-receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportDocumentData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Error */
             default: {

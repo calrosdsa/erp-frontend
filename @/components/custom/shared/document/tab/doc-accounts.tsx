@@ -13,7 +13,7 @@ import {
   docAccountsSchema,
   DocAccountsType,
 } from "~/util/data/schemas/document/doc-accounts.schema";
-import { AddressAutoCompleteForm } from "~/util/hooks/fetchers/core/use-address-fetcher";
+import { AddressAutoCompleteFormField } from "~/util/hooks/fetchers/core/use-address-fetcher";
 import { LedgerAutocompleteForm } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {

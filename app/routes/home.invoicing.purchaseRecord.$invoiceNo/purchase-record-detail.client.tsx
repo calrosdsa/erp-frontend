@@ -2,6 +2,7 @@ import {
   useFetcher,
   useLoaderData,
   useOutletContext,
+  useParams,
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
@@ -10,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import CostCenterInfo from "./tab/purchase-record-info";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarRegister, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { EventState, State, stateFromJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
@@ -19,6 +20,9 @@ import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import PurchaseRecordInfo from "./tab/purchase-record-info";
+import { DownloadIcon } from "lucide-react";
+import { components } from "~/sdk";
+import { useExporter } from "~/util/hooks/ui/useExporter";
 
 export default function PurchaseRecordDetailClient() {
   const { purchaseRecord, actions,activities } = useLoaderData<typeof loader>();
@@ -32,6 +36,8 @@ export default function PurchaseRecordDetailClient() {
     roleActions,
     actions,
   });
+  const {exportPdf} = useExporter()
+  
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: r.purchaseRecord,
@@ -82,15 +88,28 @@ export default function PurchaseRecordDetailClient() {
     success:fetcher.data?.message,
  },[fetcher.data])
 
-  setUpToolbar(() => {
-    const state = stateFromJSON(purchaseRecord?.status);
-    
-    return {
-      status: stateFromJSON(purchaseRecord?.status),
+  setUpToolbarRegister(()=>{
+     let actions: ButtonToolbar[] = [];
+     actions.push({
+      label:t("form.download"),
+      Icon:DownloadIcon,
+      onClick:()=>{
+        const exportData:components["schemas"]["ExportDocumentData"] =  {
+          id:searchParams.get("id") || "",
+        }
+        exportPdf("/purchase-record/export/document",exportData)
+      }
+    })
+     return {
+      actions:actions,
+      status:stateFromJSON(purchaseRecord?.status),
       titleToolbar:`Nº de la Factura(${purchaseRecord?.invoice_no})`,
       onChangeState:onChangeState
-    };
-  }, [purchaseRecord, permission]);
+
+    }
+  },[purchaseRecord,permission])
+
+  
   return (
     <DetailLayout partyID={purchaseRecord?.id} navItems={navItems}
     activities={activities}>

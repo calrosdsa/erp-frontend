@@ -21,9 +21,8 @@ class Routes {
   app = "app";
   party = this.base + "/party";
 
-  address = this.base + "/address";
-  contact = this.base + "/contact";
-  createAddress = this.address + "/new";
+  address = "address";
+  contact = "contact";
   group = "group";
   groups = this.base + "/group";
   companies = this.base + "/companies";
@@ -271,13 +270,6 @@ class Routes {
       default:
         return this.base;
     }
-  }
-
-  toCreateAddress(id?: number) {
-    if (id) {
-      return `${this.createAddress}?referenceId=${id}`;
-    }
-    return this.createAddress;
   }
 
   toAddressDetail(name: string, id: string): string {

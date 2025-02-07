@@ -11,17 +11,14 @@ import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
 import ReceiptInfoTab from "./components/tab/receipt-info";
 import { useTranslation } from "react-i18next";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
 import { State, stateFromJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
-import { useToast } from "@/components/ui/use-toast";
-import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
-  setUpToolbar,
   setUpToolbarDetailPage,
+  setUpToolbarRegister,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { route } from "~/util/route";
@@ -29,6 +26,12 @@ import ReceiptConnectionsTab from "./components/tab/receipt-connections";
 import { format } from "date-fns";
 import { ButtonToolbar } from "~/types/actions";
 import { Entity } from "~/types/enums";
+import { useExporter } from "~/util/hooks/ui/useExporter";
+import { DownloadIcon } from "lucide-react";
+import { components } from "~/sdk";
+import ReceiptAddressAndContactTab from "./components/tab/receipt-address-and-contact";
+import ReceiptTermsAndConditionsTab from "./components/tab/receipt-terms-and-conditions";
+import ReceiptAccountsTab from "./components/tab/receipt-accounts";
 
 export default function ReceiptDetailClient() {
   const { receipt, actions, activities, associatedActions } =
@@ -40,6 +43,7 @@ export default function ReceiptDetailClient() {
   const tab = searchParams.get("tab");
   const fetcher = useFetcher<typeof action>();
   const params = useParams();
+  const partyReceipt = params.partyReceipt || "";
   const navigate = useNavigate();
   const r = route;
   const [gLPermission] = usePermission({
@@ -55,24 +59,44 @@ export default function ReceiptDetailClient() {
     actions: associatedActions && associatedActions[Entity.STOCK_LEDGER],
     roleActions: roleActions,
   });
-
+  const { exportPdf } = useExporter();
+  const toRoute = (tab: string) => {
+    return r.toRoute({
+      main: partyReceipt,
+      routePrefix: [r.receiptM],
+      routeSufix: [receipt?.code || ""],
+      q: {
+        tab: tab,
+      },
+    });
+  };
   const navItems = [
     {
       title: t("info"),
-      href: r.toReceiptDetail(params.partyReceipt || "", receipt?.code || ""),
+      href: toRoute("info"),
+    },
+    {
+      title: "Términos y Condiciones",
+      href: toRoute("terms-and-conditions"),
+    },
+    {
+      title: "Dirección y Contacto",
+      href: toRoute("address-and-contact"),
+    },
+    {
+      title: "Cuentas",
+      href: toRoute("accounts"),
     },
     {
       title: t("connections"),
-      href: r.toReceiptDetail(
-        params.partyReceipt || "",
-        receipt?.code || "",
-        "connections"
-      ),
+      href: toRoute("connections"),
     },
   ];
 
-  setUpToolbarDetailPage(() => {
+  setUpToolbarRegister(() => {
     let view: ButtonToolbar[] = [];
+    let actions: ButtonToolbar[] = [];
+
     const status = stateFromJSON(receipt?.status);
     const active = status != State.DRAFT && status != State.CANCELLED;
     if (gLPermission.view && active) {
@@ -122,16 +146,24 @@ export default function ReceiptDetailClient() {
               routePrefix: [r.stockM],
               q: {
                 voucherNo: receipt?.code || "",
-                fromDate: format(
-                  receipt?.posting_date || "",
-                  "yyyy-MM-dd"
-                ),
+                fromDate: format(receipt?.posting_date || "", "yyyy-MM-dd"),
               },
             })
           );
         },
       });
     }
+    actions.push({
+      label: t("form.download"),
+      Icon: DownloadIcon,
+      onClick: () => {
+        const exportData: components["schemas"]["ExportDocumentData"] = {
+          party_type: partyReceipt,
+          id: params.code || "",
+        };
+        exportPdf("/invoice/export/document", exportData);
+      },
+    });
 
     return {
       titleToolbar: `${t("_receipt.base")}(${receipt?.code})`,
@@ -156,7 +188,7 @@ export default function ReceiptDetailClient() {
         );
       },
     };
-  }, [receipt,gLPermission,stockLedgerPerm,serialNoPermission]);
+  }, [receipt, gLPermission, stockLedgerPerm, serialNoPermission]);
 
   useLoadingTypeToolbar(
     {
@@ -182,6 +214,9 @@ export default function ReceiptDetailClient() {
     >
       {tab == "info" && <ReceiptInfoTab />}
       {tab == "connections" && <ReceiptConnectionsTab />}
+      {tab == "address-and-contact" && <ReceiptAddressAndContactTab />}
+      {tab == "terms-and-conditions" && <ReceiptTermsAndConditionsTab />}
+      {tab == "accounts" && <ReceiptAccountsTab />}
     </DetailLayout>
   );
 }

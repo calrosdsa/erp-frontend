@@ -2,13 +2,13 @@ import { formatRFC3339 } from "date-fns";
 import { z } from "zod";
 import { components } from "~/sdk";
 import { formatAmountToInt } from "~/util/format/formatCurrency";
+import { fieldNull } from "..";
 
 export type PurchaseRecordDataType = z.infer<typeof purchaseRecordDataSchema>;
 
 export const purchaseRecordDataSchema = z.object({
   id: z.number().optional(),
-  invoice_id: z.number(),
-  invoice: z.string().optional(),
+  invoice:fieldNull,
   authorization_code: z.string(),
   cf_base_amount: z.coerce.number(), // Format: int32
   consolidation_status: z.string(),
@@ -72,7 +72,7 @@ export const mapToPurchaseRecordData = (
       zero_rate_taxable_purchases_amount: formatAmountToInt(
         data.zero_rate_taxable_purchases_amount
       ),
-      invoice_id: data.invoice_id,
+      invoice_id: data.invoice?.id,
     },
   };
 

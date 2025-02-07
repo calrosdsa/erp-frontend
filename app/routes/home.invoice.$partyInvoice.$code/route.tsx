@@ -139,7 +139,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         });
         break;
       }
-
       case "address-and-contact":{
         const aacRes = await client.GET("/document/info/address-and-contact/{id}",{
           params:{

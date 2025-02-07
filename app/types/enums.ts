@@ -75,6 +75,11 @@ export enum Entity {
   SUPPLIER_GROUP = 55,
   CUSTOMER_GROUP = 56,
   PRICING = 57,
+  TERMS_AND_CONDITIONS      =  58,
+	PAYMENT_TERMS             = 59,
+	PAYMENT_TERMS_TEMPLATE    =  60,
+	BANK    = 61,
+	BANK_ACCOUNT    = 62,
 }
 
 export enum PartyType {

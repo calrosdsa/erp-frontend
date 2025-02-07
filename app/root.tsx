@@ -78,9 +78,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
   // detected by the loader, this way, when we do something to change the
   // language, this locale will change and i18next will load the correct
   // translation files
-  if (data != undefined) {
-    useChangeLanguage(data.locale);
-  }
+  // if (data != undefined) {
+  //   useChangeLanguage(data.locale);
+  // }
 
   return (
     <html lang={i18n.resolvedLanguage} dir={i18n.dir()} className={clsx(data?.theme || Theme.LIGHT)}>

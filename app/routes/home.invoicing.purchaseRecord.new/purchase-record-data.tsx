@@ -27,7 +27,7 @@ import {
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
-import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
+import { InvoiceAutocompleteForm, InvoiceAutocompleteFormField } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { Separator } from "@/components/ui/separator";
 import Supplier from "../home.buying.supplier.$name/route";
 type PurchaseRecordDataType = z.infer<typeof purchaseRecordDataSchema>;
@@ -72,15 +72,12 @@ export default function PurchaseRecordData({
                 }}
               />
 
-              <InvoiceAutocompleteForm
+              <InvoiceAutocompleteFormField
                 label={t("purchaseInvoice")}
                 partyType={r.purchaseInvoice}
                 partyID={formValues.supplier_id}
                 allowEdit={allowEdit}
                 control={form.control}
-                onSelect={(e) => {
-                  form.setValue("invoice_id", e.id);
-                }}
               />
 
               <Separator className=" col-span-full" />

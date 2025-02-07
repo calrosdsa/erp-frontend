@@ -6,7 +6,7 @@ import { handleError } from "~/util/api/handle-status-code"
 export const loader = async({request}:LoaderFunctionArgs)=>{
     const client = apiClient({request})
     const url = new URL(request.url)
-    const res = await client.GET("/party/address/detail/{id}",{
+    const res = await client.GET("/address/detail/{id}",{
         params:{
             path:{
                 id:url.searchParams.get("id") || ""

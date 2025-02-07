@@ -22,7 +22,10 @@ export default function AddressesClient(){
         return {
             ...(permission?.create && {
                 addNew:()=>{
-                    navigate(r.createAddress)
+                    navigate(r.toRoute({
+                        main:r.address,
+                        routeSufix:["new"]
+                    }))
                 }
             })
         }

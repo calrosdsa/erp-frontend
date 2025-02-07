@@ -16,13 +16,9 @@ import {
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { z } from "zod";
-import FormLayout from "@/components/custom/form/FormLayout";
-import { Form } from "@/components/ui/form";
-import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { usePermission } from "~/util/hooks/useActions";
 import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { purchaseRecordDataSchema } from "~/util/data/schemas/invoicing/purchase-record-schema";
 import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import PurchaseRecordData from "~/routes/home.invoicing.purchaseRecord.new/purchase-record-data";
@@ -38,6 +34,10 @@ export default function PurchaseRecordInfo() {
     schema: purchaseRecordDataSchema,
     defaultValues: {
       id: purchaseRecord?.id,
+      invoice:{
+        id:purchaseRecord?.invoice_id,
+        name:purchaseRecord?.invoice_code,
+      },
       invoice_dui_dim_date: new Date(purchaseRecord?.invoice_dui_dim_date || ""),
       invoice_no: purchaseRecord?.invoice_no,
       authorization_code: purchaseRecord?.authorization_code,

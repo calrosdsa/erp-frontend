@@ -20,7 +20,10 @@ import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
 import { formatRFC3339 } from "date-fns";
 import { components } from "~/sdk";
-import { mapToReceiptData, receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
+import {
+  mapToReceiptData,
+  receiptDataSchema,
+} from "~/util/data/schemas/receipt/receipt-schema";
 
 type ActionData = {
   action: string;
@@ -96,6 +99,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   handleError(res.error);
   let lineItems: components["schemas"]["LineItemDto"][] = [];
   let taxLines: components["schemas"]["TaxAndChargeLineDto"][] = [];
+  let addressAndContact:
+    | components["schemas"]["AddressAndContactDto"]
+    | undefined = undefined;
+  let docTerms: components["schemas"]["DocTermsDto"] | undefined = undefined;
+  let docAccounts: components["schemas"]["DocAccountingDto"] | undefined =
+    undefined;
+
   if (res.data) {
     switch (tab) {
       case "connections": {
@@ -113,7 +123,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         break;
       }
       case "info": {
-        const lineItemRes =await  client.GET("/item-line", {
+        const lineItemRes = await client.GET("/item-line", {
           params: {
             query: {
               line_type:
@@ -125,7 +135,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
-        lineItems = lineItemRes.data?.result || []
+        lineItems = lineItemRes.data?.result || [];
         const taxLinesRes = await client.GET("/taxes-and-charges", {
           params: {
             query: {
@@ -133,9 +143,56 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             },
           },
         });
-        taxLines = taxLinesRes.data?.result || []
+        taxLines = taxLinesRes.data?.result || [];
         // console.log("ITEM LINES", lineItemResd.error, lineItemResd.data);
         break;
+      }
+      case "address-and-contact": {
+        const aacRes = await client.GET(
+          "/document/info/address-and-contact/{id}",
+          {
+            params: {
+              path: {
+                id: res.data.result.entity.receipt.id.toString(),
+              },
+              query: {
+                party: params.partyReceipt || "",
+              },
+            },
+          }
+        );
+        addressAndContact = aacRes.data?.result;
+      }
+      case "terms-and-conditions": {
+        const aacRes = await client.GET("/document/info/doc-term/{id}", {
+          params: {
+            path: {
+              id: res.data.result.entity.receipt.id.toString(),
+            },
+            query: {
+              party: params.partyReceipt || "",
+            },
+          },
+        });
+        docTerms = aacRes.data?.result;
+      }
+
+      case "accounts": {
+        const accountsRes = await client.GET(
+          "/document/info/doc-accounting/{id}",
+          {
+            params: {
+              path: {
+                id: res.data.result.entity.receipt.id.toString(),
+              },
+              query: {
+                party: params.partyReceipt || "",
+              },
+            },
+          }
+        );
+        docAccounts = accountsRes.data?.result;
+        console.log("ACCOUNTS",accountsRes.data);
       }
     }
   }
@@ -149,6 +206,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     activities: res.data?.result.activities,
     lineItems: lineItems,
     taxLines: taxLines,
+    addressAndContact,
+    docTerms,
+    docAccounts,
   });
 };
 

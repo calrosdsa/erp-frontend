@@ -6,6 +6,54 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
+import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField";
+
+export const InvoiceAutocompleteFormField = ({
+  allowEdit = true,
+  control,
+  label,
+  onSelect,
+  name,
+  partyType,
+  partyID,
+}: {
+  allowEdit?: boolean;
+  control?: Control<any, any>;
+  label?: string;
+  name?: string;
+  partyType: string;
+  partyID?: number;
+  onSelect?: (e: components["schemas"]["InvoiceDto"]) => void;
+}) => {
+  const [fetcher, onChange] = useInvoiceFetcher({ 
+    partyType,
+    partyID:partyID
+   });
+  return (
+    <FormAutocompleteField
+      data={fetcher.data?.results || []}
+      onValueChange={onChange}
+      label={label}
+      name={name || "invoice"}
+      nameK="code"
+      control={control}
+      allowEdit={allowEdit}
+      onSelect={onSelect}
+      onCustomDisplay={(e) => {
+        return (
+          <div className="flex flex-col">
+            <span className=" font-medium">
+              {e.record_no && `${e.record_no}-`}
+              {e.code}
+            </span>
+            <span>{e.party_type}</span>
+          </div>
+        );
+      }}
+    />
+  );
+};
+
 
 export const InvoiceAutocompleteForm = ({
   allowEdit = true,

@@ -152,7 +152,7 @@ export default function FormAutocompleteField<
                           <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
                         )}
 
-                        {href && (
+                        {href && field.value["name" as keyof T] && (
                           <div
                             onClick={(e) => {
                               e.stopPropagation();
@@ -194,6 +194,7 @@ export default function FormAutocompleteField<
                             field.onChange({
                               name: item[nameK],
                               id: item["id" as keyof T],
+                              uuid: item["uuid" as keyof T],
                             });
                             if (onSelect) {
                               onSelect(item);
@@ -242,7 +243,6 @@ export default function FormAutocompleteField<
               </Command>
               <div className="pt-2 px-1">
                 <>
-                 
                   {addNew && (
                     <Button
                       onClick={() => {

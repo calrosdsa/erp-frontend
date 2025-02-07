@@ -278,8 +278,10 @@ export default function InvoiceDetailClient() {
           purchaseRecordStore.setPayload({
             supplier_id: invoice?.party_id,
             supplier: invoice?.party_name,
-            invoice: invoice?.code,
-            invoice_id: invoice?.id,
+            invoice: {
+              name:invoice?.code,
+              id:invoice?.id,
+            },
             supplier_business_name:invoice?.party_name,
             subtotal:formatAmount(invoice?.total),
             total_purchase_amount:formatAmount(invoice?.total),

@@ -6,35 +6,23 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
-import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
+import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField";
 
-export const PaymentTermTemplateForm = ({
-  allowEdit,
-  control,
-  label,
-  name,
-  onSelect,
-  onClear,
-}: {
-  allowEdit?: boolean;
-  control?: Control<any, any>;
-  label?: string;
-  name?: string;
-  onSelect?: (e: components["schemas"]["PaymentTermsTemplateDto"]) => void;
-  onClear?:()=>void
-}) => {
+type PaymentTermsTemplate = components["schemas"]["PaymentTermsTemplateDto"]
+interface PaymentTermsTemplateFormProps extends Partial<AutocompleteFormProps<PaymentTermsTemplate, keyof PaymentTermsTemplate>> {
+}
+
+export const PaymentTermTemplateFormField = ({
+  ...props
+}:PaymentTermsTemplateFormProps ) => {
   const [fetcher, onChange] = usePaymentTermTemplate();
   return (
-    <FormAutocomplete
+    <FormAutocompleteField
+      {...props}
       data={fetcher.data?.results || []}
       onValueChange={onChange}
-      label={label}
-      name={name || "terms_and_conditions"}
+      name={props.name || "payment_terms_template"}
       nameK="name"
-      control={control}
-      allowEdit={allowEdit}
-      onSelect={onSelect}
-      onClear={onClear}
     />
   );
 };
