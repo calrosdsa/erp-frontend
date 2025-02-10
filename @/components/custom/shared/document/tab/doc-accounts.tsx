@@ -1,57 +1,76 @@
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
-import { useFetcher, useOutletContext } from "@remix-run/react";
+import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { action } from "~/routes/api.document/route";
-import { GlobalState } from "~/types/app";
-import {
-  AddressAndContactDataType,
-  addressAndContactSchema,
-} from "~/util/data/schemas/document/address-and-contact.schema";
-import {
-  docAccountsSchema,
-  DocAccountsType,
-} from "~/util/data/schemas/document/doc-accounts.schema";
-import { AddressAutoCompleteFormField } from "~/util/hooks/fetchers/core/use-address-fetcher";
-import { LedgerAutocompleteForm } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { Permission } from "~/types/permission";
+import { FieldNullType } from "~/util/data/schemas";
+import { docAccountsSchema, DocAccountsType } from "~/util/data/schemas/document/doc-accounts.schema";
+import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import {
-  useLoadingTypeToolbar,
-  useSetupToolbarStore,
-} from "~/util/hooks/ui/useSetUpToolbar";
+import { useLoadingTypeToolbar, useSetupToolbarStore } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { route } from "~/util/route";
 
 export default function DocAccounts({
   defaultValues,
   allowEdit,
-  showPayableAccount,
-  showCogsAccount,
-  showReceivableAccount,
-  showIncomeAccount,
-  showInventoryAccount,
-  showSrbnb,
+  showCreditAccount,
+  showDebitAccount,
+  ledgerPerm,
 }: {
   defaultValues: DocAccountsType;
-  showPayableAccount?: boolean;
-  showCogsAccount?: boolean;
-  showReceivableAccount?: boolean;
-  showIncomeAccount?: boolean;
-  showInventoryAccount?: boolean;
-  showSrbnb?: boolean;
+  showCreditAccount?: boolean;
+  showDebitAccount?: boolean;
+
   allowEdit: boolean;
+  ledgerPerm?: Permission;
 }) {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
-  const { form, hasChanged, updateRef, previousValues } =
-    useEditFields<DocAccountsType>({
-      schema: docAccountsSchema,
-      defaultValues: defaultValues,
-    });
+  const { form, hasChanged, updateRef, previousValues } = useEditFields<DocAccountsType>({
+    schema: docAccountsSchema,
+    defaultValues: defaultValues,
+  });
+  const navigate = useNavigate();
   const { setRegister } = useSetupToolbarStore();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const r = route;
+  const formValues = form.getValues();
+  const fieldsConfig = [
+    {
+      show: showCreditAccount,
+      name: "credit_account",
+      label: "Cuenta por Pagar",
+    },
+    {
+      show: showDebitAccount,
+      name: "debit_account",
+      label: "Cuenta de Costo de Bienes Vendidos",
+    },
+    // {
+    //   show: showReceivableAccount,
+    //   name: "receivable_account",
+    //   label: "Cuenta por Cobrar",
+    // },
+    // {
+    //   show: showIncomeAccount,
+    //   name: "income_account",
+    //   label: "Cuenta por Cobrar",
+    // },
+    // {
+    //   show: showInventoryAccount,
+    //   name: "inventory_account",
+    //   label: "Cuenta de Inventario",
+    // },
+    // {
+    //   show: showSrbnb,
+    //   name: "srbnb_account",
+    //   label: "Cuenta Transitoria",
+    // },
+  ];
+
   const onSubmit = (e: DocAccountsType) => {
     fetcher.submit(
       {
@@ -70,27 +89,19 @@ export default function DocAccounts({
     {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
-      onSuccessMessage: () => {
-        updateRef(form.getValues());
-      },
+      onSuccessMessage: () => updateRef(form.getValues()),
     },
     [fetcher.data]
   );
 
   useLoadingTypeToolbar(
-    {
-      loading: fetcher.state == "submitting",
-      loadingType: "SAVE",
-    },
+    { loading: fetcher.state == "submitting", loadingType: "SAVE" },
     [fetcher.state]
   );
 
   useEffect(() => {
     setRegister("tab", {
-      onSave: () => {
-        console.log("ON SAVE ADDRESS AND CONTACT");
-        inputRef.current?.click();
-      },
+      onSave: () => inputRef.current?.click(),
       disabledSave: !allowEdit,
     });
   }, [allowEdit]);
@@ -98,105 +109,31 @@ export default function DocAccounts({
   return (
     <FormLayout>
       <Form {...form}>
-        <fetcher.Form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
-        >
+        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)} className={"gap-y-3 grid p-3"}>
           <div className="create-grid">
-            {showPayableAccount && (
-              <LedgerAutocompleteForm
-                allowEdit={allowEdit}
-                control={form.control}
-                name="payable_account"
-                label="Cuenta por Pagar"
-                onClear={() => {
-                  form.setValue("payable_account_id", null);
-                  form.setValue("payable_account", null);
-                }}
-                onSelect={(e) => {
-                  form.setValue("payable_account_id", e.id);
-                }}
-              />
-            )}
-            {showCogsAccount && (
-              <LedgerAutocompleteForm
-                allowEdit={allowEdit}
-                control={form.control}
-                name="cogs_account"
-                label="Cuenta de Costo de Bienes Vendidos"
-                onClear={() => {
-                  form.setValue("cogs_account_id", null);
-                  form.setValue("cogs_account", null);
-                }}
-                onSelect={(e) => {
-                  form.setValue("cogs_account_id", e.id);
-                }}
-              />
-            )}
-            {showReceivableAccount && (
-              <LedgerAutocompleteForm
-                allowEdit={allowEdit}
-                control={form.control}
-                name="cogs_account"
-                label="Cuenta por Cobrar"
-                onClear={() => {
-                  form.setValue("receivable_account_id", null);
-                  form.setValue("receivable_account", null);
-                }}
-                onSelect={(e) => {
-                  form.setValue("receivable_account_id", e.id);
-                }}
-              />
-            )}
-
-          
-
-            {showIncomeAccount && (
-              <LedgerAutocompleteForm
-                allowEdit={allowEdit}
-                control={form.control}
-                name="income_account"
-                label="Cuenta por Cobrar"
-                onClear={() => {
-                  form.setValue("income_account_id", null);
-                  form.setValue("income_account", null);
-                }}
-                onSelect={(e) => {
-                  form.setValue("income_account_id", e.id);
-                }}
-              />
-            )}
-
-            {showInventoryAccount && (
-              <LedgerAutocompleteForm
-                allowEdit={allowEdit}
-                control={form.control}
-                name="inventory_account"
-                label="Cuenta de Inventario"
-                onClear={() => {
-                  form.setValue("inventory_account_id", null);
-                  form.setValue("inventory_account", null);
-                }}
-                onSelect={(e) => {
-                  form.setValue("inventory_account_id", e.id);
-                }}
-              />
-            )}
-
-            {showSrbnb && (
-              <LedgerAutocompleteForm
-                allowEdit={allowEdit}
-                control={form.control}
-                name="srbnb_account"
-                label="Cuenta Transitoria"
-                onClear={() => {
-                  form.setValue("srbnb_account_id", null);
-                  form.setValue("srbnb_account", null);
-                }}
-                onSelect={(e) => {
-                  form.setValue("srbnb_account_id", e.id);
-                }}
-              />
+            {fieldsConfig.map(({ show, name, label }) =>
+              show ? (
+                <LedgerAutocompleteFormField
+                  key={name}
+                  allowEdit={allowEdit}
+                  control={form.control}
+                  name={name}
+                  label={label}
+                  {...(ledgerPerm?.create && {
+                    addNew: () => navigate(r.toRoute({ main: r.ledger, routeSufix: ["new"] })),
+                  })}
+                  {...(ledgerPerm?.view && {
+                    href: r.toRoute({
+                      main: r.ledger,
+                      routeSufix: [(formValues[name as keyof DocAccountsType] as FieldNullType)?.name || ""],
+                      q: { 
+                        tab: "info", 
+                        id: (formValues[name as keyof DocAccountsType] as FieldNullType)?.uuid || "" 
+                      },
+                    }),
+                  })}
+                />
+              ) : null
             )}
           </div>
           <input ref={inputRef} type="submit" className="hidden" />

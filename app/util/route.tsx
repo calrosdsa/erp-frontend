@@ -132,6 +132,7 @@ class Routes {
   paymentTerms = "payment-terms";
   paymentTermsTemplate =  "payment-terms-template";
   bank = "bank"
+  cashOutflow = "cash-outflow"
   bankAccount = "bank-account"
 
   defaultTab = {

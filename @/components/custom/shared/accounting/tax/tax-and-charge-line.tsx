@@ -113,7 +113,7 @@ function AccountSelect({
 
   return (
     <FormAutocomplete
-      data={accountFetcher.data?.accounts || []}
+      data={accountFetcher.data?.results || []}
       form={form}
       allowEdit={allowEdit}
       label="Cuenta Contable"

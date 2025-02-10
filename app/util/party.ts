@@ -29,6 +29,8 @@ class Parties {
   supplierQuotation = "supplierQuotation";
   salesQuotation = "salesQuotation"
   
+  cashOutflow = "cashOutflow"
+
   itemGroup = "itemGroup";
   customerGroup = "customerGroup";
   supplierGroup = "supplierGroup";
@@ -50,6 +52,8 @@ class Parties {
   supplierOption: SelectItem = { value: this.supplier, name: "Proveedor" };
 
   paymentOptions: SelectItem[] = [this.customerOption, this.supplierOption];
+
+  cashOutflowOptions: SelectItem[] = [this.supplierOption];
 }
 
 export const party = new Parties();

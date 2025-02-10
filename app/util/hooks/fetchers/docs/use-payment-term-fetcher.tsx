@@ -4,6 +4,7 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
+import { formatQuery } from "..";
 
 export const PaymentTermAutocomplete = ({allowEdit,onSelect,defaultValue}:{
     allowEdit:boolean
@@ -31,7 +32,7 @@ export const usePaymentTermFetcher = () => {
     fetcherDebounce.submit(
       {
         query:{
-            code:`["like","${e}"]`,
+            code:formatQuery(e),
             size:DEFAULT_SIZE,
         } as operations["payment-terms"]["parameters"]["query"],
         action: "get",

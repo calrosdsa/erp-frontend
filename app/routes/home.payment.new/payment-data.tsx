@@ -37,7 +37,7 @@ import { PartyAutocompleteField } from "../home.order.$partyOrder.new/components
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { components, operations } from "~/sdk";
-import { action as actionAccount } from "../home.accounting.account.$name/route";
+import { action as actionAccount } from "../home.account.$name/route";
 import { useFetcherWithPromise } from "../../util/hooks/use-fetcher-with-promise";
 import { usePaymentData } from "./use-payment-data";
 import { BankAccountForm } from "~/util/hooks/fetchers/accounting/use-bank-account-fetcher";

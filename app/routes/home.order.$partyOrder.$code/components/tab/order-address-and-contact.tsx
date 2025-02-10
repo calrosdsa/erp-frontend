@@ -23,13 +23,21 @@ export default function OrderAddressAndContactTab() {
       defaultValues={{
         id:order?.id,
         party_type:partyType,
-        billing_address_id:addressAndContact?.billing_address_id,
-        billing_address_name:addressAndContact?.billing_address,
-        shipping_address_id:addressAndContact?.shipping_address_id,
-        shipping_address_name:addressAndContact?.shipping_address,
-        party_address_id:addressAndContact?.party_address_id,
-        party_address_name:addressAndContact?.party_address,
-
+        billing_address:{
+          name:addressAndContact?.billing_address,  
+          id:addressAndContact?.billing_address_id,
+          uuid:addressAndContact?.billing_address_uuid,
+        },
+        shipping_address:{
+          id:addressAndContact?.shipping_address_id,
+          name:addressAndContact?.shipping_address,
+          uuid:addressAndContact?.shipping_address_uuid
+        },
+        party_address:{
+          id:addressAndContact?.party_address_id,
+          name:addressAndContact?.party_address,
+          uuid:addressAndContact?.party_address_uuid
+        }
     } as AddressAndContactDataType}
       showShippingAddress={true}
       showPartyrAddress={partyType == r.p.purchaseOrder}

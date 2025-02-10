@@ -7,7 +7,7 @@ import { usePermission } from "~/util/hooks/useActions"
 import { route } from "~/util/route"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 import { TreeView } from "@/components/layout/tree/tree-view"
-import { useNewAccount } from "../home.accounting.account.new/use-new-account"
+import { useNewAccount } from "../home.account.new/use-new-account"
 
 
 export default function AccountsTreeViewClient(){

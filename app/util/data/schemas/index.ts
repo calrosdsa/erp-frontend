@@ -1,5 +1,7 @@
 import { RefinementCtx, z } from "zod";
 
+export type FieldNullType = z.infer<typeof fieldNull>
+
 export const field = z.object({
   id: z.number().optional(),
   name: z.string().optional(),

@@ -645,6 +645,59 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cash-outflow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cash Outflow */
+        get: operations["cash-outflow"];
+        /** Edit Cash Outflow */
+        put: operations["edit-cash-outflow"];
+        /** Create Cash Outflow */
+        post: operations["create-cash-outflow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cash-outflow/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cash Outflow Detail */
+        get: operations["cash-outflow-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cash-outflow/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Cash Outflow */
+        put: operations["update-status-cash-outflow"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/charge-template": {
         parameters: {
             query?: never;
@@ -4176,6 +4229,73 @@ export interface components {
             amount: number;
             cash_flow_section: string;
         };
+        CashOutflowData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["CashOutflowFields"];
+            /** Format: int64 */
+            id: number;
+            tax_and_charges: components["schemas"]["CreateTaxAndChanges"];
+        };
+        CashOutflowDto: {
+            /** Format: int64 */
+            amount: number;
+            auth_code: string | null;
+            cash_outflow_type: string | null;
+            code: string;
+            concept: string | null;
+            cost_center: string | null;
+            /** Format: int64 */
+            cost_center_id: number | null;
+            cost_center_uuid: string | null;
+            ctrl_code: string | null;
+            /** Format: date-time */
+            emision_date: string | null;
+            /** Format: int64 */
+            id: number;
+            invoice_no: string | null;
+            nit: string | null;
+            party: string;
+            /** Format: int64 */
+            party_id: number;
+            party_type: string;
+            party_uuid: string;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            project: string | null;
+            /** Format: int64 */
+            project_id: number | null;
+            project_uuid: string | null;
+            status: string;
+            tz: string;
+        };
+        CashOutflowFields: {
+            /** Format: int64 */
+            amount: number;
+            auth_code?: string | null;
+            cash_outflow_type?: string | null;
+            concept?: string | null;
+            /** Format: int64 */
+            cost_center_id?: number | null;
+            ctrl_code?: string | null;
+            /** Format: date-time */
+            emision_date?: string | null;
+            invoice_no?: string | null;
+            nit?: string | null;
+            /** Format: int64 */
+            party_id: number;
+            party_type: string;
+            /** Format: date-time */
+            posting_date: string;
+            posting_time: string;
+            /** Format: int64 */
+            project_id?: number | null;
+            tz: string;
+        };
         ChangePasswordRequestBody: {
             /**
              * Format: uri
@@ -4801,44 +4921,20 @@ export interface components {
             fields: components["schemas"]["DocAccountingFields"];
         };
         DocAccountingDto: {
-            cogs_account: string | null;
+            credit_account: string | null;
             /** Format: int64 */
-            cogs_account_id: number | null;
-            cogs_account_uuid: string | null;
-            income_account: string | null;
+            credit_account_id: number | null;
+            credit_account_uuid: string | null;
+            debit_account: string | null;
             /** Format: int64 */
-            income_account_id: number | null;
-            income_account_uuid: string | null;
-            inventory_account: string | null;
-            /** Format: int64 */
-            inventory_account_id: number | null;
-            inventory_account_uuid: string | null;
-            payable_account: string | null;
-            /** Format: int64 */
-            payable_account_id: number | null;
-            payable_account_uuid: string | null;
-            receivable_account: string | null;
-            /** Format: int64 */
-            receivable_account_id: number | null;
-            receivable_account_uuid: string | null;
-            srbnb_account: string | null;
-            /** Format: int64 */
-            srbnb_account_id: number | null;
-            srbnb_account_uuid: string | null;
+            debit_account_id: number | null;
+            debit_account_uuid: string | null;
         };
         DocAccountingFields: {
             /** Format: int64 */
-            cogs_account_id?: number | null;
+            credit_account_id?: number | null;
             /** Format: int64 */
-            income_account_id?: number | null;
-            /** Format: int64 */
-            inventory_account_id?: number | null;
-            /** Format: int64 */
-            payable_account_id?: number | null;
-            /** Format: int64 */
-            receivable_account_id?: number | null;
-            /** Format: int64 */
-            srbnb_account_id?: number | null;
+            debit_account_id?: number | null;
         };
         DocTermsData: {
             /**
@@ -5450,6 +5546,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityBookingDto"];
+        };
+        EntityResponseResultEntityCashOutflowDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityCashOutflowDto"];
         };
         EntityResponseResultEntityChargesTemplateDtoBody: {
             /**
@@ -8193,6 +8302,19 @@ export interface components {
             message: string;
             result: components["schemas"]["BankDto"];
         };
+        ResponseDataCashOutflowDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["CashOutflowDto"];
+        };
         ResponseDataChargesTemplateDtoBody: {
             /**
              * Format: uri
@@ -8494,6 +8616,20 @@ export interface components {
             filters: components["schemas"]["FilterOptionDto"][];
             message: string;
             result: components["schemas"]["BankDto"][];
+        };
+        ResponseDataListListCashOutflowDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["CashOutflowDto"][];
         };
         ResponseDataListListLedgerDtoBody: {
             /**
@@ -8851,6 +8987,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["BookingDto"];
+        };
+        ResultEntityCashOutflowDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["CashOutflowDto"];
         };
         ResultEntityChargesTemplateDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -11400,6 +11542,183 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityBatchBundleDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "cash-outflow": {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+                created_at?: string;
+                updated_at?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListCashOutflowDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-cash-outflow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CashOutflowData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-cash-outflow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CashOutflowData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataCashOutflowDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "cash-outflow-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityCashOutflowDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-cash-outflow": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

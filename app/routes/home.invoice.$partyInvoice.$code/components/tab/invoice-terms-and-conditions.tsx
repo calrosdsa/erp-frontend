@@ -24,10 +24,16 @@ export default function InvoiceTermsAndConditionsTab() {
       defaultValues={{
         doc_id:invoice?.id,
         doc_party_type:partyType,
-        terms_and_conditions_id:docTerms?.terms_and_condition_id,
-        terms_and_conditions:docTerms?.terms_and_condition,
-        payment_term_template:docTerms?.payment_term_template,
-        payment_term_template_id:docTerms?.payment_term_template_id,
+        terms_and_condition:{
+          id:docTerms?.terms_and_condition_id,
+          name:docTerms?.terms_and_condition,
+          uuid:docTerms?.terms_and_condition_uuid,
+        },
+        payment_term_template:{
+          name:docTerms?.payment_term_template,
+          id:docTerms?.payment_term_template_id,
+          uuid:docTerms?.payment_term_template_uuid,
+        }
     } as DocTermsType}
 
     />

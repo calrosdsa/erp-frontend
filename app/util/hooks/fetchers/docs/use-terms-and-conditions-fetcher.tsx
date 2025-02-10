@@ -1,17 +1,17 @@
-
-
-
-import { Control } from "react-hook-form";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
-import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField";
+import FormAutocompleteField, {
+  AutocompleteFormProps,
+} from "@/components/custom/select/FormAutocompleteField";
+import { formatQuery } from "..";
 
-type TermsAndConditions = components["schemas"]["TermsAndConditionsDto"]
-interface TermsAndConditionsProps extends Partial<AutocompleteFormProps<TermsAndConditions, keyof TermsAndConditions>> {
-}
+type TermsAndConditions = components["schemas"]["TermsAndConditionsDto"];
+interface TermsAndConditionsProps
+  extends Partial<
+    AutocompleteFormProps<TermsAndConditions, keyof TermsAndConditions>
+  > {}
 export const TermsAndConditionsFormField = ({
   ...props
 }: TermsAndConditionsProps) => {
@@ -36,7 +36,7 @@ export const useTermsAndConditions = () => {
   const onChange = (e: string) => {
     const d: operations["terms-and-conditions"]["parameters"]["query"] = {
       size: DEFAULT_SIZE,
-      name: e,
+      name: formatQuery(e),
     };
     fetcherDebounce.submit(
       {
@@ -48,7 +48,7 @@ export const useTermsAndConditions = () => {
         encType: "application/json",
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         action: r.toRoute({
-            main:r.termsAndConditions
+          main: r.termsAndConditions,
         }),
       }
     );

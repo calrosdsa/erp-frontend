@@ -4,7 +4,7 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { formatLongDate } from "~/util/format/formatDate";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarDetailPage, setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar";
 import { stateFromJSON } from "~/gen/common";
 import { NavItem } from "~/types";
 import DetailLayout from "@/components/layout/detail-layout";
@@ -35,7 +35,7 @@ export default function AccountLedgerDetailClient() {
     },
   ];
 
-  setUpToolbar(() => {
+  setUpToolbarRegister(() => {
     return {
       status: stateFromJSON(account?.status),
     };

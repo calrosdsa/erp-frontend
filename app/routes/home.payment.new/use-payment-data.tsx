@@ -4,7 +4,7 @@ import { components, operations } from "~/sdk";
 import { paymentDataSchema } from "~/util/data/schemas/accounting/payment-schema";
 import { useFetcherWithPromise } from "~/util/hooks/use-fetcher-with-promise";
 import { route } from "~/util/route";
-import { action as actionAccount } from "../home.accounting.account.$name/route";
+import { action as actionAccount } from "../home.account.$name/route";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import {
   formatAmount,

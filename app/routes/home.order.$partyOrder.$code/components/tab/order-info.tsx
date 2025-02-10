@@ -17,7 +17,6 @@ import { useDocumentStore } from "@/components/custom/shared/document/use-docume
 import { orderDataSchema } from "~/util/data/schemas/buying/order-schema";
 import { z } from "zod";
 import {
-  setUpToolbarTab,
   useLoadingTypeToolbar,
   useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
@@ -82,7 +81,6 @@ export default function OrderInfoTab() {
   const isDraft = stateFromJSON(order?.status) == State.DRAFT;
   const allowEdit = isDraft && orderPerm?.edit;
   const allowCreate = isDraft && orderPerm.create;
-  const toolbar = useToolbar();
   const documentStore = useDocumentStore();
   const { setRegister } = useSetupToolbarStore();
   const onSubmit = (e: EditData) => {

@@ -28,9 +28,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "edit-doc-terms":{
+
       const res =await client.PUT("/document/info/doc-term",{
         body:mapToDocTermsData(data.docTermsData)
       })
+      // console.log("EDIT DOC TERMS",res.data?.message,res.error)
       message = res.data?.message
       error = res.error?.detail
       break;

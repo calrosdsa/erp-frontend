@@ -16,11 +16,11 @@ export default function ReceiptAddressAndContactTab() {
   const allowEdit = perm?.edit;
   const params = useParams();
   const r = route;
+  const partyType = params.partyReceipt || "";
   const entityPermissions = useEntityPermission({
     entities: associatedActions,
     roleActions,
   });
-  const partyType = params.partyReceipt || "";
   const addressPerm = entityPermissions[Entity.ADDRESS];
   const contactPerm = entityPermissions[Entity.CONTACT];
 

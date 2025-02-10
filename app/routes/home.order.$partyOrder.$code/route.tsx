@@ -155,6 +155,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
             }
           }
         })
+        console.log("DOC TERMS",aacRes.data)
         docTerms = aacRes.data?.result
       }
     }

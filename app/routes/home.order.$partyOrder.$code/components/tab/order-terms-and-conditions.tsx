@@ -2,37 +2,51 @@ import AddressAndContact from "@/components/custom/shared/document/tab/address-a
 import { useLoaderData, useOutletContext, useParams } from "@remix-run/react";
 import { loader } from "../../route";
 import { GlobalState } from "~/types/app";
-import { usePermission } from "~/util/hooks/useActions";
-import { AddressAndContactDataType } from "~/util/data/schemas/document/address-and-contact.schema";
-import { route } from "~/util/route";
+import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
 import DocTerms from "@/components/custom/shared/document/tab/doc-terms";
-import { DocAccountsType } from "~/util/data/schemas/document/doc-accounts.schema";
 import { DocTermsType } from "~/util/data/schemas/document/doc-terms.schema";
+import { Entity } from "~/types/enums";
 
 export default function OrderTermsAndConditionsTab() {
-  const { actions,docTerms,order } = useLoaderData<typeof loader>();
+  const { actions, docTerms, order, associatedActions } =
+    useLoaderData<typeof loader>();
   const { roleActions } = useOutletContext<GlobalState>();
   const [orderPerm] = usePermission({ roleActions, actions });
   const allowEdit = orderPerm?.edit;
-  const params = useParams()
-  const r = route
-  const partyType = params.partyOrder || ""
+  const params = useParams();
+  const partyType = params.partyOrder || "";
+  const entityPermissions = useEntityPermission({
+    entities: associatedActions,
+    roleActions,
+  });
+  const paymentTermsTemplatePerm =
+    entityPermissions[Entity.PAYMENT_TERMS_TEMPLATE];
+  const termsAndConditionsPerm = entityPermissions[Entity.TERMS_AND_CONDITIONS];
 
   return (
     <>
-    {/* {JSON.stringify(addressAndContact)} */}
-    <DocTerms
-      allowEdit={allowEdit}
-      defaultValues={{
-        doc_id:order?.id,
-        doc_party_type:partyType,
-        terms_and_conditions_id:docTerms?.terms_and_condition_id,
-        terms_and_conditions:docTerms?.terms_and_condition,
-        payment_term_template:docTerms?.payment_term_template,
-        payment_term_template_id:docTerms?.payment_term_template_id,
-    } as DocTermsType}
-
-    />
+      {/* {JSON.stringify(docTerms)} */}
+      <DocTerms
+        allowEdit={allowEdit}
+        paymentTermsTemplatePerm={paymentTermsTemplatePerm}
+        termsAndConditionsPerm={termsAndConditionsPerm}
+        defaultValues={
+          {
+            doc_id: order?.id,
+            doc_party_type: partyType,
+            terms_and_conditions: {
+              name: docTerms?.terms_and_condition,
+              id: docTerms?.terms_and_condition_id,
+              uuid: docTerms?.terms_and_condition_uuid,
+            },
+            payment_term_template: {
+              name: docTerms?.payment_term_template,
+              id: docTerms?.payment_term_template_id,
+              uuid: docTerms?.payment_term_template_uuid,
+            },
+          } as DocTermsType
+        }
+      />
     </>
   );
 }

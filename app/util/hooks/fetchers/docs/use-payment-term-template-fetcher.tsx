@@ -7,6 +7,7 @@ import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField";
+import { formatQuery } from "..";
 
 type PaymentTermsTemplate = components["schemas"]["PaymentTermsTemplateDto"]
 interface PaymentTermsTemplateFormProps extends Partial<AutocompleteFormProps<PaymentTermsTemplate, keyof PaymentTermsTemplate>> {
@@ -36,7 +37,7 @@ export const usePaymentTermTemplate = () => {
   const onChange = (e: string) => {
     const d: operations["payment-terms-template"]["parameters"]["query"] = {
       size: DEFAULT_SIZE,
-      name: e,
+      name: formatQuery(e),
     };
     fetcherDebounce.submit(
       {

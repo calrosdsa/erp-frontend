@@ -1,57 +1,36 @@
-import { useEffect } from "react"
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant"
 import { components, operations } from "~/sdk"
-import { PartyType } from "~/types/enums"
 import { route } from "~/util/route"
-import { usePermission } from "../useActions"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import { Control } from "react-hook-form"
-import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField"
+import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField"
+import { formatQuery } from "."
 
-
-
-export const LedgerAutocompleteFormField = ({
-  allowEdit = true,
-  control,
-  label,
-  name,
-  isGroup = false,
-  onSelect,
-  roleActions,
-  description,
-  required,
-}: {
-  allowEdit?: boolean;
-  control?: Control<any, any>;
-  label?: string;
-  name?: string;
-  description?:string;
+type Ledger = components["schemas"]["LedgerDto"]
+interface LedgerFormProps extends Partial<AutocompleteFormProps<Ledger, keyof Ledger>> {
   isGroup?: boolean;
   roleActions?: components["schemas"]["RoleActionDto"][];
-  onSelect?:(e:components["schemas"]["LedgerDto"])=>void;
-  required?:boolean
-}) => {
+}
+
+export const LedgerAutocompleteFormField = ({
+  name,
+  isGroup = false,
+  roleActions,
+  ...props
+}: LedgerFormProps) => {
   const [fetcherDebounce, onChange] = useAccountLedgerDebounceFetcher({
     isGroup,
   });
-  // const [permission] = usePermission({
-  //   actions:fetcherDebounce.data?.actions,
-  //   roleActions,
-  // });
+  
 
   return (
     <FormAutocompleteField
+      {...props}
       data={fetcherDebounce.data?.results || []}
       onValueChange={onChange}
-      label={label}
       name={name || "ledger"}
       nameK="name"
-      control={control}
-      description={description}
-      allowEdit={allowEdit}
-      onSelect={onSelect}
-      required={required}
     />
   );
 };
@@ -110,7 +89,7 @@ export const useAccountLedgerDebounceFetcher = ({isGroup}:{
     const onChange = (e: string) => {
       const d: operations["get-acconts"]["parameters"]["query"] = {
         size: DEFAULT_SIZE,
-        name: e,
+        name: formatQuery(e),
         is_group:String(isGroup)
       };
       fetcherDebounce.submit(
@@ -124,30 +103,11 @@ export const useAccountLedgerDebounceFetcher = ({isGroup}:{
           debounceTimeout: DEFAULT_DEBOUNCE_TIME,
           action: r.toRoute({
               main:r.ledger,
-              routePrefix:[r.accountingM]
           }),
         }
       );
     };
     return [fetcherDebounce, onChange] as const;
-    // const r = route
-    // const debounceFetcher = useDebounceFetcher<{
-    //     // actions:components["schemas"]["ActionDto"][],
-    //     actions:components["schemas"]["ActionDto"][],
-    //     accounts:components["schemas"]["LedgerDto"][]
-    // }>()
 
-    // const onChange = (e:string)=>{
-    //     debounceFetcher.submit({
-    //         action:"get",
-    //         query:e,
-    //         isGroup:isGroup,
-    //     },{
-    //         method:"POST",
-    //         debounceTimeout:DEFAULT_DEBOUNCE_TIME,
-    //         encType:"application/json",
-    //         action:r.chartOfAccount
-    //     })
-    // }
     
 }

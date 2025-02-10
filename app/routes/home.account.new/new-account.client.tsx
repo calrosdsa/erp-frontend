@@ -1,31 +1,20 @@
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import {
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-  useOutletContext,
-} from "@remix-run/react";
-import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
-import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charges-template-schema";
+import { useToast } from "@/components/ui/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
-import { route } from "~/util/route";
-import { useEditFields } from "~/util/hooks/useEditFields";
-import {
-  setUpToolbar,
-  useLoadingTypeToolbar,
-} from "~/util/hooks/ui/useSetUpToolbar";
-import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { createAccountLedger } from "~/util/data/schemas/accounting/account-schema";
+import { action } from "./route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
-import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
-import { usePermission } from "~/util/hooks/useActions";
-import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
-import { action, loader } from "../route";
-import { editAccountLedger } from "~/util/data/schemas/accounting/account-schema";
-import { LedgerAutocompleteForm } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import SelectForm from "@/components/custom/select/SelectForm";
+import {
+  LedgerAutocompleteForm,
+} from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { route } from "~/util/route";
+import { useNewAccount } from "./use-new-account";
 import {
   AccountType,
   CashFlowSection,
@@ -34,18 +23,28 @@ import {
   finacialReportToJSON,
 } from "~/gen/common";
 import AccordationLayout from "@/components/layout/accordation-layout";
-type EditData = z.infer<typeof editAccountLedger>;
-export default function AccountInfo() {
-  const { t } = useTranslation("common");
-  const { account, actions } = useLoaderData<typeof loader>();
-  const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
-  const [permission] = usePermission({ actions, roleActions });
-  const inputRef = useRef<HTMLInputElement | null>(null);
+import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+
+export default function NewAccountClient() {
   const fetcher = useFetcher<typeof action>();
-  const [accountRootTypes, setAccountRootTypes] = useState<SelectItem[]>([]);
+  const { t } = useTranslation("common");
+  const { toast } = useToast();
+  const newAccount = useNewAccount();
+  const form = useForm<z.infer<typeof createAccountLedger>>({
+    resolver: zodResolver(createAccountLedger),
+    defaultValues: {
+      parent: newAccount.payload?.parentName,
+      parentID: newAccount.payload?.parentID,
+    },
+  });
+  const formValues = form.getValues();
+  const r = route;
+  const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  // const [accountRootTypes, setAccountRootTypes] = useState<SelectItem[]>([]);
   const [accountTypes, setAccountTypes] = useState<SelectItem[]>([]);
-  const setUpAccountRootTypes = () => {
-    const n: SelectItem[] = [
+  const accountRootTypes: SelectItem[] = [
       {
         name: t(AccountType[AccountType.ASSET]),
         value: AccountType[AccountType.ASSET],
@@ -63,8 +62,6 @@ export default function AccountInfo() {
         value: AccountType[AccountType.EXPENSE],
       },
     ];
-    setAccountRootTypes(n);
-  };
 
   const setUpAccountTypes = () => {
     const n: SelectItem[] = Object.keys(AccountType)
@@ -73,8 +70,7 @@ export default function AccountInfo() {
       ) // Filter to get only numeric values (enum values)
       .map((key) => {
         return {
-          // name: t(AccountType[Number(key)] || ""), // Translate enum name
-          name: AccountType[Number(key)], // Translate enum name
+          name: t(AccountType[Number(key)] || ""), // Translate enum name
           value: AccountType[Number(key)] || "", // Use the numeric value of the enum
         } as unknown as SelectItem;
       });
@@ -82,30 +78,11 @@ export default function AccountInfo() {
     setAccountTypes(n); // Function to handle the updated list
   };
 
-  const { form, hasChanged, updateRef } = useEditFields<EditData>({
-    schema: editAccountLedger,
-    defaultValues: {
-      id: account?.id,
-      name: account?.name,
-      isGroup: account?.is_group,
-      accountType: account?.account_type,
-      accountRootType:account?.account_root_type,
-      reportType: account?.report_type,
-      cashFlowSection: account?.cash_flow_section,
-      ledgerNo: account?.ledger_no,
-      parent:account?.parent,
-      parentID:account?.parent_id,
-      // accountRootType:account.
-    },
-  });
-  const allowEdit = permission?.edit || false;
-  const formValues = form.getValues();
-
-  const onSubmit = (e: EditData) => {
+  const onSubmit = (values: z.infer<typeof createAccountLedger>) => {
     fetcher.submit(
       {
-        action: "edit",
-        editData: e,
+        action: "create-ledger-account",
+        createAccountLedger: values,
       },
       {
         method: "POST",
@@ -113,52 +90,55 @@ export default function AccountInfo() {
       }
     );
   };
-  useLoadingTypeToolbar(
-    {
-      loading: fetcher.state == "submitting",
-      loadingType: "SAVE",
-    },
-    [fetcher.state]
-  );
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
-
-  useDisplayMessage(
-    {
-      error: fetcher.data?.error,
-      success: fetcher.data?.message,
-      onSuccessMessage: () => {
-        updateRef(form.getValues());
+  setUpToolbar(() => {
+    return {
+      titleToolbar: t("f.add-new", {
+        o: t("_ledger.base").toLocaleLowerCase(),
+      }),
+      onSave: () => {
+        inputRef.current?.click();
       },
-    },
-    [fetcher.data]
-  );
+    };
+  }, []);
 
   useEffect(() => {
-    setUpAccountRootTypes();
     setUpAccountTypes();
-  }, [t]);
+  }, []);
+
+  useEffect(() => {
+    if (fetcher.data?.error) {
+      toast({
+        title: fetcher.data.error,
+      });
+    }
+    if (fetcher.data?.message) {
+      toast({
+        title: fetcher.data.message,
+      });
+      navigate(
+        r.toRoute({
+          main: r.accountM,
+          routePrefix: [r.accountingM],
+          routeSufix: [fetcher.data.accountLedger?.name || ""],
+          q: {
+            tab: "info",
+          },
+        })
+      );
+    }
+  }, [fetcher.data]);
 
   return (
     <FormLayout>
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="info-grid">
+          <div className="create-grid">
             <CustomFormFieldInput
               label={t("form.name")}
               control={form.control}
               name="name"
               inputType="input"
-              allowEdit={allowEdit}
             />
 
             <LedgerAutocompleteForm
@@ -166,7 +146,6 @@ export default function AccountInfo() {
               control={form.control}
               name="parent"
               isGroup={true}
-              allowEdit={allowEdit}
               onSelect={(e) => {
                 form.setValue("parentID", e.id);
               }}
@@ -175,9 +154,11 @@ export default function AccountInfo() {
               label={t("form.isGroup")}
               control={form.control}
               name="isGroup"
-              allowEdit={false}
               inputType="check"
               // description={t("form.isGroupDescription")}
+              onChange={() => {
+                form.trigger("isGroup");
+              }}
             />
             <div className=" col-span-full" />
 
@@ -187,8 +168,7 @@ export default function AccountInfo() {
               name="accountRootType"
               keyName={"name"}
               keyValue={"value"}
-              allowEdit={allowEdit}
-              form={form}
+              control={form.control}
             />
 
             {!formValues.isGroup && (
@@ -197,9 +177,8 @@ export default function AccountInfo() {
                 label={t("_ledger.type")}
                 name="accountType"
                 keyName={"name"}
-              allowEdit={allowEdit}
                 keyValue={"value"}
-                form={form}
+                control={form.control}
               />
             )}
 
@@ -208,12 +187,11 @@ export default function AccountInfo() {
               control={form.control}
               name="ledgerNo"
               inputType="input"
-              allowEdit={allowEdit}
             />
             {/* <div className=" col-span-full"></div> */}
 
             <AccordationLayout
-              title="Reporte"
+              title="Report"
               containerClassName=" col-span-full"
               className="create-grid"
             >
@@ -231,7 +209,6 @@ export default function AccountInfo() {
                 label={"Tipo de Reporte"}
                 name="reportType"
                 keyName={"name"}
-                allowEdit={allowEdit}
                 keyValue={"value"}
                 control={form.control}
               />
@@ -253,14 +230,13 @@ export default function AccountInfo() {
                 ]}
                 label={t("Sección de flujo de efectivo")}
                 name="cashFlowSection"
-                allowEdit={allowEdit}
                 keyName={"name"}
                 keyValue={"value"}
                 control={form.control}
               />
             </AccordationLayout>
           </div>
-          <input className="hidden" type="submit" ref={inputRef} />
+          <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>
     </FormLayout>

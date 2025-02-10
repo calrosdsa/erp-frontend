@@ -4,11 +4,11 @@ import { useLoaderData, useOutletContext, useParams } from "@remix-run/react";
 import { DocAccountsType } from "~/util/data/schemas/document/doc-accounts.schema";
 import { GlobalState } from "~/types/app";
 import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
-import { loader } from "../../route";
 import { party } from "~/util/party";
 import { Entity } from "~/types/enums";
+import { loader } from "../route";
 
-export default function InvoiceAccountsTab() {
+export default function CashOurflowDefaultsTab() {
   const { actions, docAccounts, invoice,associatedActions } = useLoaderData<typeof loader>();
   const { roleActions } = useOutletContext<GlobalState>();
   const [perm] = usePermission({ roleActions, actions });

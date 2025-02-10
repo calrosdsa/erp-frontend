@@ -8,9 +8,11 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
+import { BankColumns } from "@/components/custom/table/columns/accounting/bank.columns";
+import { CashOutflowColumns } from "@/components/custom/table/columns/accounting/cash-outflow.columns";
 
 
-export default function TermsAndConditionsClient (){
+export default function CashOutflowClient (){
     const {roleActions} = useOutletContext<GlobalState>()
     const {results,actions,filters} = useLoaderData<typeof loader>()
     const [permission] = usePermission({
@@ -20,11 +22,11 @@ export default function TermsAndConditionsClient (){
     const navigate = useNavigate()
     setUpToolbar(()=>{
         return {
-            titleToolbar:t("termsAndConditions"),
+            titleToolbar:t("cashOutflow"),
             ...(permission.create && {
                 addNew:()=>{
                     navigate(route.toRoute({
-                        main:route.termsAndConditions,
+                        main:route.cashOutflow,
                         routeSufix:["new"]
                     }))
                 }
@@ -36,7 +38,7 @@ export default function TermsAndConditionsClient (){
         filterOptions={filters}>
             <DataTable
             data={results || []}
-            columns={termsAndConditionsColumns()}
+            columns={CashOutflowColumns()}
             enableSizeSelection={true}
             />
         </DataLayout>
