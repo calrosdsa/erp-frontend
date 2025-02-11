@@ -1,4 +1,5 @@
 import FormLayout from "@/components/custom/form/FormLayout";
+import { Typography } from "@/components/typography";
 import { Form } from "@/components/ui/form";
 import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useEffect, useRef } from "react";
@@ -6,10 +7,16 @@ import { useTranslation } from "react-i18next";
 import { action } from "~/routes/api.document/route";
 import { Permission } from "~/types/permission";
 import { FieldNullType } from "~/util/data/schemas";
-import { docAccountsSchema, DocAccountsType } from "~/util/data/schemas/document/doc-accounts.schema";
+import {
+  docAccountsSchema,
+  DocAccountsType,
+} from "~/util/data/schemas/document/doc-accounts.schema";
 import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { useLoadingTypeToolbar, useSetupToolbarStore } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  useLoadingTypeToolbar,
+  useSetupToolbarStore,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { route } from "~/util/route";
 
@@ -29,10 +36,11 @@ export default function DocAccounts({
 }) {
   const { t } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
-  const { form, hasChanged, updateRef, previousValues } = useEditFields<DocAccountsType>({
-    schema: docAccountsSchema,
-    defaultValues: defaultValues,
-  });
+  const { form, hasChanged, updateRef, previousValues } =
+    useEditFields<DocAccountsType>({
+      schema: docAccountsSchema,
+      defaultValues: defaultValues,
+    });
   const navigate = useNavigate();
   const { setRegister } = useSetupToolbarStore();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -42,33 +50,13 @@ export default function DocAccounts({
     {
       show: showCreditAccount,
       name: "credit_account",
-      label: "Cuenta por Pagar",
+      label: "Acreditar a",
     },
     {
       show: showDebitAccount,
       name: "debit_account",
-      label: "Cuenta de Costo de Bienes Vendidos",
+      label: "Debitar a",
     },
-    // {
-    //   show: showReceivableAccount,
-    //   name: "receivable_account",
-    //   label: "Cuenta por Cobrar",
-    // },
-    // {
-    //   show: showIncomeAccount,
-    //   name: "income_account",
-    //   label: "Cuenta por Cobrar",
-    // },
-    // {
-    //   show: showInventoryAccount,
-    //   name: "inventory_account",
-    //   label: "Cuenta de Inventario",
-    // },
-    // {
-    //   show: showSrbnb,
-    //   name: "srbnb_account",
-    //   label: "Cuenta Transitoria",
-    // },
   ];
 
   const onSubmit = (e: DocAccountsType) => {
@@ -109,8 +97,14 @@ export default function DocAccounts({
   return (
     <FormLayout>
       <Form {...form}>
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)} className={"gap-y-3 grid p-3"}>
+        <fetcher.Form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className={"gap-y-3 grid p-3"}
+        >
           <div className="create-grid">
+            <Typography variant="subtitle2" className=" col-span-full">
+              Detalles de Contabilidad
+            </Typography>
             {fieldsConfig.map(({ show, name, label }) =>
               show ? (
                 <LedgerAutocompleteFormField
@@ -120,15 +114,29 @@ export default function DocAccounts({
                   name={name}
                   label={label}
                   {...(ledgerPerm?.create && {
-                    addNew: () => navigate(r.toRoute({ main: r.ledger, routeSufix: ["new"] })),
+                    addNew: () =>
+                      navigate(
+                        r.toRoute({ main: r.ledger, routeSufix: ["new"] })
+                      ),
                   })}
                   {...(ledgerPerm?.view && {
                     href: r.toRoute({
                       main: r.ledger,
-                      routeSufix: [(formValues[name as keyof DocAccountsType] as FieldNullType)?.name || ""],
-                      q: { 
-                        tab: "info", 
-                        id: (formValues[name as keyof DocAccountsType] as FieldNullType)?.uuid || "" 
+                      routeSufix: [
+                        (
+                          formValues[
+                            name as keyof DocAccountsType
+                          ] as FieldNullType
+                        )?.name || "",
+                      ],
+                      q: {
+                        tab: "info",
+                        id:
+                          (
+                            formValues[
+                              name as keyof DocAccountsType
+                            ] as FieldNullType
+                          )?.uuid || "",
                       },
                     }),
                   })}

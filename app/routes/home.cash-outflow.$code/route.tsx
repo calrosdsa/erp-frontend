@@ -52,7 +52,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       error = res.error?.detail;
       message = res.data?.message;
     }
-   
   }
   return json({
     error,
@@ -75,7 +74,7 @@ export function shouldRevalidate({
   return defaultShouldRevalidate;
 }
 
-export const loader = async ({ request,params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
@@ -88,8 +87,9 @@ export const loader = async ({ request,params }: LoaderFunctionArgs) => {
     },
   });
   let taxLines: components["schemas"]["TaxAndChargeLineDto"][] = [];
-    let docAccounts:components["schemas"]["DocAccountingDto"] | undefined = undefined
-  
+  let docAccounts: components["schemas"]["DocAccountingDto"] | undefined =
+    undefined;
+
   handleError(res.error);
   if (res.data) {
     switch (tab) {
@@ -104,19 +104,22 @@ export const loader = async ({ request,params }: LoaderFunctionArgs) => {
         taxLines = taxLinesRes.data?.result || [];
         break;
       }
-      case "defaults":{
-        const accountsRes = await client.GET("/document/info/doc-accounting/{id}",{
-          params:{
-            path:{
-              id:res.data.result.entity.id.toString(),
+      case "defaults": {
+        const accountsRes = await client.GET(
+          "/document/info/doc-accounting/{id}",
+          {
+            params: {
+              path: {
+                id: res.data.result.entity.id.toString(),
+              },
+              query: {
+                party: party.cashOutflow || "",
+              },
             },
-            query:{
-              party: party.cashOutflow || "",
-            }
           }
-        })
-        docAccounts = accountsRes.data?.result
-        break
+        );
+        docAccounts = accountsRes.data?.result;
+        break;
       }
     }
   }
@@ -125,6 +128,8 @@ export const loader = async ({ request,params }: LoaderFunctionArgs) => {
     actions: res.data?.actions,
     activities: res.data?.result.activities,
     taxLines: taxLines,
+    associatedActions:res.data?.associated_actions,
+    docAccounts,
   });
 };
 

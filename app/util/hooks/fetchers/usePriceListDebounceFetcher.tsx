@@ -9,6 +9,8 @@ import { Control } from "react-hook-form"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField"
 
+
+
 export const PriceListAutocompleteFormField = ({
     allowEdit =true,
     required,
@@ -39,6 +41,9 @@ export const PriceListAutocompleteFormField = ({
       nameK="name"
       control={control}
       allowEdit={allowEdit}
+      onSelect={(e)=>{
+        console.log("PRICE LIST",e)
+      }}
       //   onSelect={onSelect}
       />
       </>

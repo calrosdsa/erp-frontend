@@ -38,7 +38,6 @@ export const usePaymentData = ({
           {
             action: r.toRoute({
               main: r.p.accountLedger,
-              routePrefix: [r.p.accounting],
               routeSufix: [name || ""],
             }),
             method: "POST",

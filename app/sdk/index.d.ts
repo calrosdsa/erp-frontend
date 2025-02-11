@@ -681,6 +681,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cash-outflow/export/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export Cash Outflow */
+        post: operations["export-cash-outflow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/cash-outflow/update-status": {
         parameters: {
             query?: never;
@@ -5106,24 +5123,6 @@ export interface components {
             /** Format: int64 */
             uom_id: number;
         };
-        EditLedgerRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            account_root_type: string;
-            account_type?: string;
-            cash_flow_section?: string;
-            /** Format: int64 */
-            id: number;
-            is_group?: boolean;
-            ledger_no?: string;
-            name: string;
-            /** Format: int64 */
-            parent_id?: number;
-            report_type?: string;
-        };
         EditLineItemRequestBody: {
             /**
              * Format: uri
@@ -6614,15 +6613,9 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            account_root_type: string;
-            account_type?: string;
-            cash_flow_section?: string;
-            is_group?: boolean;
-            ledger_no?: string;
-            name: string;
+            fields: components["schemas"]["LedgerFields"];
             /** Format: int64 */
-            parent_id?: number;
-            report_type?: string;
+            id?: number;
         };
         LedgerDetailDto: {
             account_root_type: string;
@@ -6668,6 +6661,18 @@ export interface components {
             report_type: string;
             status: string;
             uuid: string;
+        };
+        LedgerFields: {
+            account_root_type: string;
+            account_type?: string | null;
+            cash_flow_section?: string | null;
+            is_group: boolean;
+            is_offset_account?: boolean;
+            ledger_no?: string | null;
+            /** Format: int64 */
+            ledger_parent?: number | null;
+            name: string;
+            report_type?: string | null;
         };
         LineItemData: {
             delivery_line_item?: components["schemas"]["DeliveryLineItemData"];
@@ -11696,6 +11701,37 @@ export interface operations {
             };
         };
     };
+    "export-cash-outflow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportDocumentData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "update-status-cash-outflow": {
         parameters: {
             query?: never;
@@ -14069,7 +14105,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditLedgerRequestBody"];
+                "application/json": components["schemas"]["LedgerData"];
             };
         };
         responses: {

@@ -125,15 +125,6 @@ export default function PurchaseOrderClient() {
       console.log("SET UP TOOLBAR...");
       const actions: ButtonToolbar[] = [];
       const status = stateFromJSON(order?.status);
-      if (paymentPermission?.create) {
-        actions.push({
-          label: t("_payment.base"),
-          onClick: () => {
-            navigate(r.toPaymentCreate());
-          },
-          Icon: PlusIcon,
-        });
-      }
       if (
         saleInvoicePermission?.create &&
         enabledOrder &&
@@ -214,6 +205,8 @@ export default function PurchaseOrderClient() {
           exportPdf("/order/export/document",exportData)
         }
       })
+
+
       return {
         actions: actions,
         titleToolbar: `${t("_order.base")}(${order?.code})`,

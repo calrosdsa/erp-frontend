@@ -1,4 +1,4 @@
-import { createAccountLedger } from "~/util/data/schemas/accounting/account-schema"
+import { accountLedgerDataSchema } from "~/util/data/schemas/accounting/account.schema"
 import NewAccountClient from "./new-account.client"
 import { z } from "zod"
 import { ActionFunctionArgs, json } from "@remix-run/node"
@@ -7,7 +7,7 @@ import { components } from "~/sdk"
 
 type ActionData = {
     action:string
-    createAccountLedger:z.infer<typeof createAccountLedger>
+    createAccountLedger:z.infer<typeof accountLedgerDataSchema>
 }
 export const action = async({request}:ActionFunctionArgs)=>{
     const client = apiClient({request})
@@ -24,8 +24,8 @@ export const action = async({request}:ActionFunctionArgs)=>{
                     account_root_type:d.accountRootType,
                     name:d.name,
                     parent_id:d.parentID,
-                    ledger_no:d.ledgerNo,
-                    is_group:d.isGroup,
+                    ledger_no:d.ledger_no,
+                    is_group:d.is_group,
                     cash_flow_section:d.cashFlowSection,
                     report_type:d.reportType,
                 }

@@ -7,25 +7,27 @@ import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
 import { party } from "~/util/party";
 import { Entity } from "~/types/enums";
 import { loader } from "../route";
+import { State, stateFromJSON } from "~/gen/common";
 
-export default function CashOurflowDefaultsTab() {
-  const { actions, docAccounts, invoice,associatedActions } = useLoaderData<typeof loader>();
+export default function CashOutflowDefaultsTab() {
+  const { actions, docAccounts, entity, associatedActions } =
+    useLoaderData<typeof loader>();
   const { roleActions } = useOutletContext<GlobalState>();
   const [perm] = usePermission({ roleActions, actions });
-  const allowEdit = perm?.edit;
-  const params = useParams();
-  const partyType = params.partyInvoice || "";
+  const status = stateFromJSON(entity?.status);
+  const allowEdit = perm.edit && status == State.DRAFT;
+  const partyType = party.cashOutflow;
   const entityPermissions = useEntityPermission({
-      entities: associatedActions,
-      roleActions,
-    });
-    const ledgerPerm = entityPermissions[Entity.LEDGER];
+    entities: associatedActions,
+    roleActions,
+  });
+  const ledgerPerm = entityPermissions[Entity.LEDGER];
   return (
     <>
       <DocAccounts
         defaultValues={
           {
-            doc_id: invoice?.id,
+            doc_id: entity?.id,
             doc_party_type: partyType,
             credit_account: {
               id: docAccounts?.credit_account_id,
@@ -40,9 +42,8 @@ export default function CashOurflowDefaultsTab() {
           } as DocAccountsType
         }
         ledgerPerm={ledgerPerm}
-        showCreditAccount={partyType == party.purchaseInvoice}
-        showDebitAccount={partyType == party.saleInvoice}
-
+        showCreditAccount={true}
+        showDebitAccount={true}
         allowEdit={allowEdit}
       />
     </>

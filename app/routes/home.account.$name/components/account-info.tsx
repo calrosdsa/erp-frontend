@@ -24,7 +24,7 @@ import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { usePermission } from "~/util/hooks/useActions";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { action, loader } from "../route";
-import { editAccountLedger } from "~/util/data/schemas/accounting/account-schema";
+import { editAccountLedger } from "~/util/data/schemas/accounting/account.schema";
 import { LedgerAutocompleteForm } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import SelectForm from "@/components/custom/select/SelectForm";
 import {

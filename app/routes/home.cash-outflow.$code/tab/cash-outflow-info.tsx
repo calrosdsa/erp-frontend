@@ -30,9 +30,9 @@ export default function CashOutflowInfoTab() {
     roleActions,
     actions,
   });
-  const status = stateFromJSON(entity?.status);
   const fetcher = useFetcher<typeof action>();
-  const allowEdit = permission.edit || status == State.ENABLED;
+  const status = stateFromJSON(entity?.status);
+  const allowEdit = permission.edit && status == State.DRAFT;
   const { form, updateRef } = useEditFields<CashOutflowDataType>({
     schema: cashOutflowDataSchema,
     defaultValues: {

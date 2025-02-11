@@ -31,7 +31,6 @@ export default function PaymentTermLines({
   };
   return (
     <>
-      {JSON.stringify(formValues)}
       <DataTable
         data={formValues.payment_term_lines}
         columns={paymentTermsLineColumns({

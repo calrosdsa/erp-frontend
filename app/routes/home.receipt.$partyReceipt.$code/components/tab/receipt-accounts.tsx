@@ -28,26 +28,20 @@ export default function ReceiptAccountsTab() {
           {
             doc_id: receipt?.id,
             doc_party_type: partyType,
-            cogs_account: {
-              id: docAccounts?.cogs_account_id,
-              name: docAccounts?.cogs_account,
-              uuid: docAccounts?.cogs_account_uuid,
+            credit_account: {
+              id: docAccounts?.credit_account_id,
+              name: docAccounts?.credit_account,
+              uuid: docAccounts?.credit_account_uuid,
             },
-            inventory_account: {
-              id: docAccounts?.inventory_account_id,
-              name: docAccounts?.inventory_account,
-              uuid: docAccounts?.inventory_account_uuid,
-            },
-            srbnb_account: {
-              id: docAccounts?.srbnb_account_id,
-              name: docAccounts?.srbnb_account,
-              uuid: docAccounts?.srbnb_account_uuid,
-            },
+            debit_account: {
+              id: docAccounts?.debit_account_id,
+              name: docAccounts?.debit_account,
+              uuid: docAccounts?.debit_account_uuid,
+            },            
           } as DocAccountsType
         }
-        showSrbnb={partyType == party.purchaseReceipt}
-        showCogsAccount={partyType == party.deliveryNote}
-        showInventoryAccount={true}
+        showCreditAccount={true}
+        showDebitAccount={true}
         ledgerPerm={ledgerPerm}
         allowEdit={allowEdit}
       />

@@ -55,14 +55,14 @@ export default function TaxAndChargesLines({
     currency: currency,
     allowEdit: allowEdit,
     docPartyID: docPartyID,
-    docPartyType:docPartyType,
+    docPartyType: docPartyType,
   };
   const [metaOptions] = useTableRowActions({
     ...(allowCreate && {
       onAddRow: () => {
         taxAndCharge.onOpenDialog({
           ...shared,
-          idx:taxLines.length,
+          idx: taxLines.length,
           onEdit: (e) => {
             const lines = [...taxLines, e];
             if (onChange) {
@@ -78,7 +78,7 @@ export default function TaxAndChargesLines({
         taxAndCharge.onOpenDialog({
           ...shared,
           line: f,
-          idx:rowIndex,
+          idx: rowIndex,
           onEdit: (e) => {
             const lines = taxLines.map((t, idx) => {
               if (idx == rowIndex) {
@@ -129,7 +129,7 @@ export default function TaxAndChargesLines({
       <Typography variant="subtitle2" className=" col-span-full">
         Impuestos y cargos
       </Typography>
-      {form && (
+      {(form && allowEdit) && (
         <ChargesTemplateForm
           control={form?.control}
           label={t("chargesTemplate")}

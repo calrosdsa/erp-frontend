@@ -10,6 +10,7 @@ import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { BankColumns } from "@/components/custom/table/columns/accounting/bank.columns";
 import { CashOutflowColumns } from "@/components/custom/table/columns/accounting/cash-outflow.columns";
+import { ButtonToolbar } from "~/types/actions";
 
 
 export default function CashOutflowClient (){
@@ -21,6 +22,7 @@ export default function CashOutflowClient (){
     const {t} = useTranslation("common")
     const navigate = useNavigate()
     setUpToolbar(()=>{
+        
         return {
             titleToolbar:t("cashOutflow"),
             ...(permission.create && {

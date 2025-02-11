@@ -25,8 +25,6 @@ import DetailLayout from "@/components/layout/detail-layout";
 import InvoiceInfoTab from "./components/tab/invoice-info";
 import InvoiceConnectionsTab from "./components/tab/invoice-connections";
 import {
-  setUpToolbar,
-  setUpToolbarDetailPage,
   setUpToolbarRegister,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
@@ -40,7 +38,7 @@ import { Entity } from "~/types/enums";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useNewSalesRecord } from "../home.invoicing.salesRecord.new/use-new-sales-record";
-import { useCreatePayment, usePaymentStore } from "../home.payment.new/payment-store";
+import {  usePaymentStore } from "../home.payment.new/payment-store";
 import { party } from "~/util/party";
 import { usePurchaseRecordStore } from "../home.invoicing.purchaseRecord.new/purchase-record-store";
 import InvoiceAddressAndContactTab from "./components/tab/invoice-address-and-contact";
@@ -169,9 +167,9 @@ export default function InvoiceDetailClient() {
       actions.push({
         label: t("_payment.base"),
         onClick: () => {
-          const total = invoice?.total || 0;
-          const outstanding = total - Number(totals?.paid);
-          paymentStore.setPayload({
+          const total = formatAmount(invoice?.total || 0);
+          const outstanding = total - formatAmount(Number(totals?.paid));
+          const b = {
             amount: outstanding,
             party: {
               uuid:invoice?.party_uuid,
@@ -202,7 +200,9 @@ export default function InvoiceDetailClient() {
                 currency:invoice?.currency || "",
               },
             ],
-          });
+          }
+          console.log("PAYMENT PAYLOAD",b)
+          paymentStore.setPayload(b);
           navigate(
             r.toRoute({
               main: partyTypeToJSON(PartyType.payment),
@@ -343,19 +343,7 @@ export default function InvoiceDetailClient() {
     purchaseRecordPerm,
     t,
   ])
-  // setUpToolbarDetailPage((opts) => {
- 
-  // }, [
-  //   paymentPermission,
-  //   invoice,
-  //   gLPermission,
-  //   serialNoPermission,
-  //   total,
-  //   totalTaxAndCharges,
-  //   stockLedgerPerm,
-  //   salesRecordPerm,
-  //   purchaseRecordPerm,
-  // ]);
+
 
   useLoadingTypeToolbar(
     {
@@ -378,7 +366,6 @@ export default function InvoiceDetailClient() {
       partyID={invoice?.id}
       activities={activities}
     >
-      {/* {JSON.stringify(purchaseRecordPerm)} */}
       {tab == "info" && <InvoiceInfoTab />}
       {tab == "connections" && <InvoiceConnectionsTab />}
       {tab == "address-and-contact" && <InvoiceAddressAndContactTab />}

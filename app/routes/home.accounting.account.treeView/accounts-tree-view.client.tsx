@@ -40,14 +40,12 @@ export default function AccountsTreeViewClient(){
                 })
                 navigate(r.toRoute({
                     main:r.accountM,
-                    routePrefix:[r.accountingM],
                     routeSufix:["new"]
                 }))
             }}
             onEdit={(e)=>{
                 navigate(r.toRoute({
                     main:r.accountM,
-                    routePrefix:[r.accountingM],
                     routeSufix:[e.name],
                     q:{
                         tab:"info",

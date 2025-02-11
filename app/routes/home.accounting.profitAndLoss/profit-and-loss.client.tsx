@@ -59,6 +59,7 @@ export default function ProfitAndLossClient() {
 
   return (
     <div className="grid gap-y-2">
+      {/* {JSON.stringify(profitAndLoss)} */}
       <FinancialStatementHeader />
       <ProfitLossStatement
         data={profitAndLoss || []}

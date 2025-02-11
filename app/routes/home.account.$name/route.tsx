@@ -5,7 +5,7 @@ import { handleError } from "~/util/api/handle-status-code";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
 import { z } from "zod";
-import { editAccountLedger } from "~/util/data/schemas/accounting/account-schema";
+import { editAccountLedger } from "~/util/data/schemas/accounting/account.schema";
 import { components, operations } from "~/sdk";
 
 type ActionData = {
