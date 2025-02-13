@@ -8,7 +8,7 @@ import { MutableRefObject, useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
-import { AccountLedgerData } from "~/util/data/schemas/accounting/account.schema";
+import { AccountLedgerData } from "~/util/data/schemas/accounting/account-ledger.schema";
 import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { AccountType, CashFlowSection, cashFlowSectionToJSON, FinacialReport, finacialReportToJSON } from "~/gen/common";
 import AccordationLayout from "@/components/layout/accordation-layout";

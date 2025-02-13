@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
-import AccountsClient from "./accounts.client";
+import AccountsClient from "./accounts-ledger.client";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
@@ -22,6 +22,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
                 }
             })
             results = res.data?.result || []
+            console.log("results",results)
             actions = res.data?.actions || []
             break;
         }

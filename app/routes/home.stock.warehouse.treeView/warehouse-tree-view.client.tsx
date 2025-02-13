@@ -22,7 +22,6 @@ export default function WarehouseTreeViewClient(){
         return {
             ...(permission?.create && {
                 addNew:()=>{
-                    navigate(r.toCreateAccountLedger())
                 }
             })
         }

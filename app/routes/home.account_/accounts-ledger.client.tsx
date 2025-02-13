@@ -29,7 +29,6 @@ export default function AccountsClient(){
             onClick:()=>{
                 navigate(r.toRoute({
                     main:r.accountM,
-                    routePrefix:[r.accountingM],
                     routeSufix:[r.treeView]
                 }))
             },
@@ -39,7 +38,10 @@ export default function AccountsClient(){
             buttons:buttons,
             ...(permission?.create && {
                 addNew:()=>{
-                    navigate(r.toCreateAccountLedger())
+                    navigate(r.toRoute({
+                        main:r.accountM,
+                        routeSufix:["new"]
+                    }))
                 }
             })
         }

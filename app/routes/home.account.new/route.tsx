@@ -1,4 +1,4 @@
-import { accountLedgerDataSchema } from "~/util/data/schemas/accounting/account.schema"
+import { accountLedgerDataSchema, mapToAccountLedgerData } from "~/util/data/schemas/accounting/account-ledger.schema"
 import NewAccountClient from "./new-account.client"
 import { z } from "zod"
 import { ActionFunctionArgs, json } from "@remix-run/node"
@@ -19,16 +19,7 @@ export const action = async({request}:ActionFunctionArgs)=>{
         case "create-ledger-account":{
             const d =data.createAccountLedger
             const res = await client.POST("/ledger",{
-                body:{
-                    account_type:d.accountType,
-                    account_root_type:d.accountRootType,
-                    name:d.name,
-                    parent_id:d.parentID,
-                    ledger_no:d.ledger_no,
-                    is_group:d.is_group,
-                    cash_flow_section:d.cashFlowSection,
-                    report_type:d.reportType,
-                }
+                body:mapToAccountLedgerData(d)
             })
             error = res.error?.detail
             message = res.data?.message

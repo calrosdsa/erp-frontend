@@ -1,7 +1,7 @@
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Typography } from "@/components/typography";
 import { Form } from "@/components/ui/form";
-import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
+import { useFetcher, useLocation, useNavigate, useOutletContext } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { action } from "~/routes/api.document/route";
@@ -46,6 +46,7 @@ export default function DocAccounts({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const r = route;
   const formValues = form.getValues();
+  const location = useLocation()
   const fieldsConfig = [
     {
       show: showCreditAccount,
@@ -115,8 +116,13 @@ export default function DocAccounts({
                   label={label}
                   {...(ledgerPerm?.create && {
                     addNew: () =>
+
                       navigate(
-                        r.toRoute({ main: r.ledger, routeSufix: ["new"] })
+                        r.toRoute({ main: r.ledger, routeSufix: ["new"],
+                          q:{
+                            redirect:location.pathname + location.search
+                          }
+                        })
                       ),
                   })}
                   {...(ledgerPerm?.view && {

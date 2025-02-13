@@ -26,7 +26,6 @@ export const accountColumns = (): ColumnDef<components["schemas"]["LedgerDto"]>[
           {...props}
           navigate={(name)=>r.toRoute({
             main:r.accountM,
-            routePrefix:[r.accountingM],
             routeSufix:[name],
             q:{
               tab:"info",

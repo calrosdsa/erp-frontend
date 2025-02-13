@@ -174,7 +174,7 @@ export default function FormAutocompleteField<
               </PopoverTrigger>
             )}
             <PopoverContent className="">
-              <Command className="max-h-[150px] sm:max-h-[200px]">
+              <Command className="max-h-[200px]">
                 <CommandInput
                   placeholder="Buscar..."
                   onValueChange={(e) => {
@@ -182,7 +182,7 @@ export default function FormAutocompleteField<
                   }}
                 />
                 <CommandList>
-                  <CommandEmpty>No se encontraron resultados.</CommandEmpty>
+                  <CommandEmpty className="py-16 text-center w-full">No se encontraron resultados.</CommandEmpty>
                   <CommandGroup>
                     {data.map((item, idx) =>
                       onCustomDisplay ? (

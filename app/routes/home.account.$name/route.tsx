@@ -5,12 +5,12 @@ import { handleError } from "~/util/api/handle-status-code";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
 import { z } from "zod";
-import { editAccountLedger } from "~/util/data/schemas/accounting/account.schema";
+import { AccountLedgerData, editAccountLedger, mapToAccountLedgerData } from "~/util/data/schemas/accounting/account-ledger.schema";
 import { components, operations } from "~/sdk";
 
 type ActionData = {
   action: string;
-  editData: z.infer<typeof editAccountLedger>;
+  editData: AccountLedgerData;
   accountBalanceQuery: operations["account-balance"]["parameters"]["query"];
 };
 
@@ -37,17 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "edit": {
       const d = data.editData;
       const res = await client.PUT("/ledger", {
-        body: {
-          id: d.id,
-          account_type: d.accountType,
-          account_root_type: d.accountRootType,
-          name: d.name,
-          parent_id: d.parentID,
-          ledger_no: d.ledgerNo || undefined,
-          is_group: d.isGroup,
-          cash_flow_section: d.cashFlowSection,
-          report_type: d.reportType,
-        },
+        body:mapToAccountLedgerData(d)
       });
       error = res.error?.detail;
       message = res.data?.message;

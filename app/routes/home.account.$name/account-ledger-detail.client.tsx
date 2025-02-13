@@ -8,7 +8,7 @@ import { setUpToolbar, setUpToolbarDetailPage, setUpToolbarRegister } from "~/ut
 import { stateFromJSON } from "~/gen/common";
 import { NavItem } from "~/types";
 import DetailLayout from "@/components/layout/detail-layout";
-import AccountInfo from "./components/account-info";
+import AccountInfo from "./tabs/account-ledger-info";
 
 export default function AccountLedgerDetailClient() {
   const { actions, account } = useLoaderData<typeof loader>();
@@ -19,7 +19,6 @@ export default function AccountLedgerDetailClient() {
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: r.accountM,
-      routePrefix: [r.accountingM],
       routeSufix: [account?.name || ""],
       q: {
         tab: tab,

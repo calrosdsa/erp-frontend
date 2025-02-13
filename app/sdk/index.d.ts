@@ -6630,13 +6630,15 @@ export interface components {
             /** Format: int64 */
             id: number;
             is_group: boolean;
+            is_offset_account: boolean;
             ledger_no: string | null;
             /** Format: int64 */
             limit: number;
             name: string;
-            parent: string;
+            parent: string | null;
             /** Format: int64 */
-            parent_id: number;
+            parent_id: number | null;
+            parent_uuid: string | null;
             report_type: string;
             status: string;
             uuid: string;
@@ -6654,6 +6656,7 @@ export interface components {
             /** Format: int64 */
             id: number;
             is_group: boolean;
+            is_offset_account: boolean;
             ledger_no: string | null;
             /** Format: int64 */
             limit: number;

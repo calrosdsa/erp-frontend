@@ -1,50 +1,41 @@
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
+import {
+  useFetcher,
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { accountLedgerDataSchema } from "~/util/data/schemas/accounting/account.schema";
+import { accountLedgerDataSchema } from "~/util/data/schemas/accounting/account-ledger.schema";
 import { action } from "./route";
-import FormLayout from "@/components/custom/form/FormLayout";
-import { Form } from "@/components/ui/form";
-import SelectForm from "@/components/custom/select/SelectForm";
-import {
-  LedgerAutocompleteForm,
-} from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { route } from "~/util/route";
 import { useNewAccount } from "./use-new-account";
-import {
-  AccountType,
-  CashFlowSection,
-  cashFlowSectionToJSON,
-  FinacialReport,
-  finacialReportToJSON,
-} from "~/gen/common";
-import AccordationLayout from "@/components/layout/accordation-layout";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
-import AccountLedgerForm from "./account-form";
+import AccountLedgerForm from "./account-ledger-form";
+import { useAccounLedgerStore } from "./account-ledger-store";
+import { Card } from "@/components/ui/card";
 
 export default function NewAccountClient() {
   const fetcher = useFetcher<typeof action>();
   const { t } = useTranslation("common");
   const { toast } = useToast();
-  const newAccount = useNewAccount();
+  const { payload, setPayload } = useAccounLedgerStore();
   const form = useForm<z.infer<typeof accountLedgerDataSchema>>({
     resolver: zodResolver(accountLedgerDataSchema),
-    defaultValues: {
-      parent: newAccount.payload?.parentName,
-      parentID: newAccount.payload?.parentID,
-    },
+    defaultValues: payload,
   });
-  const formValues = form.getValues();
+  const watchedFields = useWatch({
+    control: form.control,
+  });
   const r = route;
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  // const [accountRootTypes, setAccountRootTypes] = useState<SelectItem[]>([]);
-  
+  const allowEdit = true;
 
   const onSubmit = (values: z.infer<typeof accountLedgerDataSchema>) => {
     fetcher.submit(
@@ -71,10 +62,6 @@ export default function NewAccountClient() {
   }, []);
 
   useEffect(() => {
-    setUpAccountTypes();
-  }, []);
-
-  useEffect(() => {
     if (fetcher.data?.error) {
       toast({
         title: fetcher.data.error,
@@ -84,24 +71,39 @@ export default function NewAccountClient() {
       toast({
         title: fetcher.data.message,
       });
-      navigate(
-        r.toRoute({
-          main: r.accountM,
-          routePrefix: [r.accountingM],
-          routeSufix: [fetcher.data.accountLedger?.name || ""],
-          q: {
-            tab: "info",
-          },
-        })
-      );
+      const redirect = searchParams.get("redirect");
+      if (redirect) {
+        navigate(redirect);
+      } else {
+        navigate(
+          r.toRoute({
+            main: r.accountM,
+            routeSufix: [fetcher.data.accountLedger?.name || ""],
+            q: {
+              tab: "info",
+              id: fetcher.data.accountLedger?.uuid || "",
+            },
+          })
+        );
+      }
     }
   }, [fetcher.data]);
 
+  useEffect(() => {
+    setPayload(form.getValues());
+  }, [watchedFields]);
+
   return (
-   <>
-   <AccountLedgerForm
-   allowEdit={allowEdit}
-   />
-   </>
+    <>
+      <Card>
+        <AccountLedgerForm
+          allowEdit={allowEdit}
+          form={form}
+          fetcher={fetcher}
+          onSubmit={onSubmit}
+          inputRef={inputRef}
+        />
+      </Card>
+    </>
   );
 }
