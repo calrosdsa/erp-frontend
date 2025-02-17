@@ -43,7 +43,7 @@ export default function DocAccounts({
     });
   const navigate = useNavigate();
   const { setRegister } = useSetupToolbarStore();
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null); 
   const r = route;
   const formValues = form.getValues();
   const location = useLocation()

@@ -1,9 +1,34 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node"
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import CompanyClient from "./company.client"
 import { handleError } from "~/util/api/handle-status-code"
 import { components } from "~/sdk"
+import { AccountSettingData, mapToAccountSettingData } from "~/util/data/schemas/company/account-setting.schema"
 
+type ActionData = {
+    action:string
+    accountSettingData:AccountSettingData
+}
+
+export const action  = async({request}:ActionFunctionArgs)=>{
+    const client = apiClient({request})
+    const data =await request.json() as ActionData
+    let message:string | undefined = undefined
+    let error:string | undefined = undefined
+    switch(data.action){
+        case "edit-account-setting":{
+            const res = await client.PUT("/company/setting/account",{
+                body:mapToAccountSettingData(data.accountSettingData)
+            })
+            message = res.data?.message
+            error = res.error?.detail
+            break
+        }
+    }
+    return json({
+        message,error
+    })
+}
 
 export const loader = async({request,params}:LoaderFunctionArgs) =>{
     const client = apiClient({request})
@@ -35,6 +60,7 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
     return json({
         company:res.data?.result.entity,
         accountSettings,
+        actions:res.data?.associated_actions,
     })
 }
 

@@ -8,7 +8,7 @@ import DetailLayout from "@/components/layout/detail-layout";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import CompanyInfo from "./tab/company-info";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar";
 import CompanyAccounts from "./tab/company-accounts";
 
 export default function CompanyClient() {
@@ -42,7 +42,7 @@ export default function CompanyClient() {
       }),
     },
   ];
-  setUpToolbar(() => {
+  setUpToolbarRegister(() => {
     return {};
   }, []);
   return (

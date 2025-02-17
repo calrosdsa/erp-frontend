@@ -8,6 +8,7 @@ import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { TreeView } from "@/components/layout/tree/tree-view";
 import { useNewAccount } from "../home.account.new/use-new-account";
+import { useAccounLedgerStore } from "../home.account.new/account-ledger-store";
 
 export default function AccountsTreeViewClient() {
   const globalState = useOutletContext<GlobalState>();
@@ -18,7 +19,7 @@ export default function AccountsTreeViewClient() {
   });
   const r = route;
   const navigate = useNavigate();
-  const newAccount = useNewAccount();
+  const accountLedgerStore = useAccounLedgerStore()
   setUpToolbar(() => {
     return {
       ...(permission?.create && {
@@ -38,9 +39,12 @@ export default function AccountsTreeViewClient() {
       <TreeView
         data={data || []}
         onAddChild={(e) => {
-          newAccount.setPayload({
-            parentName: e.name,
-            parentID: e.id,
+          accountLedgerStore.setPayload({
+            parent:{
+              name:e.name,
+              id:e.id,
+              uuid:e.uuid,
+            },
           });
           navigate(
             r.toRoute({

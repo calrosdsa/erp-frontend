@@ -812,7 +812,8 @@ export interface paths {
         };
         /** Company Account Setting */
         get: operations["company-account-setting"];
-        put?: never;
+        /** Edit Company Account Setting */
+        put: operations["edit-company-account-setting"];
         post?: never;
         delete?: never;
         options?: never;
@@ -3834,18 +3835,54 @@ export interface components {
             role_actions: components["schemas"]["RoleActionDto"][];
             user: components["schemas"]["UserDto"];
         };
+        AccountSettingData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["AccountSettingFields"];
+            /** Format: int64 */
+            id: number;
+        };
+        AccountSettingFields: {
+            /** Format: int64 */
+            bank_account: number;
+            /** Format: int64 */
+            cash_accunt: number;
+            /** Format: int64 */
+            cost_of_good_sold_account: number;
+            /** Format: int64 */
+            income_account: number;
+            /** Format: int64 */
+            payable_account: number;
+            /** Format: int64 */
+            receivable_account: number;
+        };
         AccountSettingsDto: {
-            bank_acct_name: string;
+            bank_acct: string;
+            /** Format: int64 */
+            bank_acct_id: number;
             bank_acct_uuid: string;
-            cash_acct_name: string;
+            cash_acct: string;
+            /** Format: int64 */
+            cash_acct_id: number;
             cash_acct_uuid: string;
-            cost_of_goods_sold_acct_name: string;
+            cost_of_goods_sold_acct: string;
+            /** Format: int64 */
+            cost_of_goods_sold_acct_id: number;
             cost_of_goods_sold_acct_uuid: string;
-            income_acct_name: string;
+            income_acct: string;
+            /** Format: int64 */
+            income_acct_id: number;
             income_acct_uuid: string;
-            payable_acct_name: string;
+            payable_acct: string;
+            /** Format: int64 */
+            payable_acct_id: number;
             payable_acct_uuid: string;
-            receivable_acct_name: string;
+            receivable_acct: string;
+            /** Format: int64 */
+            receivable_acct_id: number;
             receivable_acct_uuid: string;
         };
         AccountingDimensionDto: {
@@ -12079,6 +12116,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseAccountSettingsDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-company-account-setting": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountSettingData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
