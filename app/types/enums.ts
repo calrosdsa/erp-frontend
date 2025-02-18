@@ -80,6 +80,9 @@ export enum Entity {
 	PAYMENT_TERMS_TEMPLATE    =  60,
 	BANK    = 61,
 	BANK_ACCOUNT    = 62,
+  CASH_OUTFLOW = 63,
+  DEAL = 64,
+  STAGE = 65,
 }
 
 export enum PartyType {

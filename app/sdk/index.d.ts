@@ -1117,6 +1117,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/deal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Deal */
+        get: operations["deal"];
+        /** Edit Deal */
+        put: operations["edit-deal"];
+        /** Create Deal */
+        post: operations["create-deal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/deal/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Deal Detail */
+        get: operations["deal-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/delete-collectors": {
         parameters: {
             query?: never;
@@ -3083,6 +3119,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Stage */
+        get: operations["stage"];
+        /** Edit Stage */
+        put: operations["edit-stage"];
+        /** Create Stage */
+        post: operations["create-stage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock-entry": {
         parameters: {
             query?: never;
@@ -4912,6 +4967,54 @@ export interface components {
             code: string;
             name: string;
         };
+        DealData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["DealFields"];
+            /** Format: int64 */
+            id: number;
+        };
+        DealDto: {
+            /** Format: int64 */
+            amount: number;
+            currency: string;
+            deal_type: string | null;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            responsible: string;
+            /** Format: int64 */
+            responsible_family_name: number;
+            /** Format: int64 */
+            responsible_given_name: number;
+            responsible_uuid: string;
+            source: string | null;
+            source_information: string | null;
+            stage: string;
+            /** Format: int32 */
+            stage_id: number;
+            /** Format: date-time */
+            start_date: string;
+            uuid: string;
+        };
+        DealFields: {
+            /** Format: int64 */
+            amount: number;
+            currency: string;
+            deal_type: string | null;
+            name: string;
+            /** Format: int64 */
+            responsible_id: number;
+            source: string | null;
+            source_information: string | null;
+            /** Format: int64 */
+            stage_id: number;
+            /** Format: date-time */
+            start_date: string;
+        };
         DeleteEventBatchRequestBody: {
             /**
              * Format: uri
@@ -5686,6 +5789,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityCustomerDto"];
+        };
+        EntityResponseResultEntityDealDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityDealDto"];
         };
         EntityResponseResultEntityEntityDetailDtoBody: {
             /**
@@ -8438,6 +8554,19 @@ export interface components {
             message: string;
             result: components["schemas"]["CurrencyExchangeDto"];
         };
+        ResponseDataDealDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["DealDto"];
+        };
         ResponseDataDocAccountingDtoBody: {
             /**
              * Format: uri
@@ -8676,6 +8805,20 @@ export interface components {
             message: string;
             result: components["schemas"]["CashOutflowDto"][];
         };
+        ResponseDataListListDealDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["DealDto"][];
+        };
         ResponseDataListListLedgerDtoBody: {
             /**
              * Format: uri
@@ -8717,6 +8860,20 @@ export interface components {
             filters: components["schemas"]["FilterOptionDto"][];
             message: string;
             result: components["schemas"]["PaymentTermsTemplateDto"][];
+        };
+        ResponseDataListListStageDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["StageDto"][];
         };
         ResponseDataListListTermsAndConditionsDtoBody: {
             /**
@@ -8966,6 +9123,19 @@ export interface components {
             message: string;
             result: components["schemas"]["SalesRecordDto"];
         };
+        ResponseDataStageDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["StageDto"];
+        };
         ResponseDataStockEntryDtoBody: {
             /**
              * Format: uri
@@ -9080,6 +9250,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CustomerDto"];
+        };
+        ResultEntityDealDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["DealDto"];
         };
         ResultEntityEntityDetailDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -9485,6 +9661,28 @@ export interface components {
             access_token: string;
             user: components["schemas"]["UserDto"];
             user_relation: components["schemas"]["UserRelationDto"];
+        };
+        StageData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["StageFields"];
+            /** Format: int32 */
+            id: number;
+        };
+        StageDto: {
+            color: string;
+            /** Format: int32 */
+            id: number;
+            name: string;
+        };
+        StageFields: {
+            color: string;
+            /** Format: int64 */
+            entity_id: number;
+            name: string;
         };
         StockBalanceEntryDto: {
             /** Format: int32 */
@@ -13038,6 +13236,147 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    deal: {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+                created_at?: string;
+                updated_at?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListDealDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-deal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DealData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-deal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DealData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataDealDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "deal-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityDealDtoBody"];
                 };
             };
             /** @description Error */
@@ -18397,6 +18736,107 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataListSerialNoTransactionDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    stage: {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+                entity_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListStageDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-stage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StageData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-stage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StageData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataStageDtoBody"];
                 };
             };
             /** @description Error */
