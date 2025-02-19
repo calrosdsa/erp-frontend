@@ -6,14 +6,7 @@ import {
   SessionDefaultDrawer,
   useSessionDefaults,
 } from "./components/SessionDefaults";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+
 import { HomeIcon } from "lucide-react";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";

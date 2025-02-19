@@ -3132,6 +3132,24 @@ export interface paths {
         put: operations["edit-stage"];
         /** Create Stage */
         post: operations["create-stage"];
+        /** Delete Stage */
+        delete: operations["delete-stage"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stage/transition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Stage Transition */
+        put: operations["stage-transition"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -4980,8 +4998,11 @@ export interface components {
         DealDto: {
             /** Format: int64 */
             amount: number;
+            available_for_everyone: boolean;
             currency: string;
             deal_type: string | null;
+            /** Format: date-time */
+            end_date: string | null;
             /** Format: int64 */
             id: number;
             name: string;
@@ -5003,13 +5024,16 @@ export interface components {
         DealFields: {
             /** Format: int64 */
             amount: number;
+            available_for_everyone: boolean;
             currency: string;
-            deal_type: string | null;
+            deal_type?: string | null;
+            /** Format: date-time */
+            end_date?: string | null;
             name: string;
             /** Format: int64 */
             responsible_id: number;
-            source: string | null;
-            source_information: string | null;
+            source?: string | null;
+            source_information?: string | null;
             /** Format: int64 */
             stage_id: number;
             /** Format: date-time */
@@ -9674,15 +9698,36 @@ export interface components {
         };
         StageDto: {
             color: string;
+            /** Format: int64 */
+            entity_id: number;
             /** Format: int32 */
             id: number;
+            /** Format: int32 */
+            index: number;
             name: string;
         };
         StageFields: {
             color: string;
-            /** Format: int64 */
+            /** Format: int32 */
             entity_id: number;
+            /** Format: int32 */
+            index: number;
             name: string;
+        };
+        StageTransitionData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int32 */
+            destination_id: number;
+            /** Format: int32 */
+            destionation_index: number;
+            /** Format: int32 */
+            source_id: number;
+            /** Format: int32 */
+            source_index: number;
         };
         StockBalanceEntryDto: {
             /** Format: int32 */
@@ -18757,6 +18802,7 @@ export interface operations {
                 orientation?: string;
                 column?: string;
                 entity_id: string;
+                name?: string;
             };
             header?: never;
             path?: never;
@@ -18837,6 +18883,71 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataStageDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-stage": {
+        parameters: {
+            query: {
+                id: string;
+                party_type?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "stage-transition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StageTransitionData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

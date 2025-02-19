@@ -69,6 +69,13 @@ enum PartyType {
     purchaseRecord = 43;
     module = 44;
     pricing = 45;
+    termsAndConditions = 46;
+    paymentTerms = 47;
+    paymentTermsTemplate = 48;
+    bank = 49;
+    bankAccount = 50;
+    cashOutflow = 51;
+    deal = 52;
 }
 
 enum PianoPartyType {
@@ -262,4 +269,13 @@ enum JournalEntryType {
     bankEntry = 1;
     contraEntry = 2;
     creditCardEntry =3;
+}
+
+
+enum DealType {
+    Sales = 0;
+    Services = 1;
+    IntegratedSales = 2;
+    MerchadiseSales = 3;
+    AfterSales = 4;
 }

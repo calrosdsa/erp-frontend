@@ -1,9 +1,10 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import CrmClient from "./deal-kanban.client";
 import apiClient from "~/apiclient";
-import { DEFAULT_SIZE, LOAD_ACTION, MAX_SIZE } from "~/constant";
+import { DEFAULT_ORDER, DEFAULT_SIZE, LOAD_ACTION, MAX_SIZE } from "~/constant";
 import { Entity } from "~/types/enums";
-import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { Outlet, ShouldRevalidateFunctionArgs, useOutletContext } from "@remix-run/react";
+import { GlobalState } from "~/types/app";
 
 export function shouldRevalidate({
   formMethod,
@@ -39,6 +40,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
           query: {
             size: MAX_SIZE,
             entity_id: searchParams.get("entity_id") ?? Entity.DEAL.toString(),
+            column:"index",
+            orientation:"ASC"
           },
         },
       }),
@@ -60,5 +63,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function Crm() {
-  return <CrmClient />;
+  const globalContext = useOutletContext<GlobalState>()
+  return (
+    <>
+    <CrmClient />
+    <Outlet
+    context={globalContext}
+    />
+    </>
+  );
 }

@@ -147,6 +147,13 @@ export enum PartyType {
   purchaseRecord = 43,
   module = 44,
   pricing = 45,
+  termsAndConditions = 46,
+  paymentTerms = 47,
+  paymentTermsTemplate = 48,
+  bank = 49,
+  bankAccount = 50,
+  cashOutflow = 51,
+  deal = 52,
   UNRECOGNIZED = -1,
 }
 
@@ -290,6 +297,27 @@ export function partyTypeFromJSON(object: any): PartyType {
     case 45:
     case "pricing":
       return PartyType.pricing;
+    case 46:
+    case "termsAndConditions":
+      return PartyType.termsAndConditions;
+    case 47:
+    case "paymentTerms":
+      return PartyType.paymentTerms;
+    case 48:
+    case "paymentTermsTemplate":
+      return PartyType.paymentTermsTemplate;
+    case 49:
+    case "bank":
+      return PartyType.bank;
+    case 50:
+    case "bankAccount":
+      return PartyType.bankAccount;
+    case 51:
+    case "cashOutflow":
+      return PartyType.cashOutflow;
+    case 52:
+    case "deal":
+      return PartyType.deal;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -391,6 +419,20 @@ export function partyTypeToJSON(object: PartyType): string {
       return "module";
     case PartyType.pricing:
       return "pricing";
+    case PartyType.termsAndConditions:
+      return "termsAndConditions";
+    case PartyType.paymentTerms:
+      return "paymentTerms";
+    case PartyType.paymentTermsTemplate:
+      return "paymentTermsTemplate";
+    case PartyType.bank:
+      return "bank";
+    case PartyType.bankAccount:
+      return "bankAccount";
+    case PartyType.cashOutflow:
+      return "cashOutflow";
+    case PartyType.deal:
+      return "deal";
     case PartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1561,6 +1603,57 @@ export function journalEntryTypeToJSON(object: JournalEntryType): string {
     case JournalEntryType.creditCardEntry:
       return "creditCardEntry";
     case JournalEntryType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum DealType {
+  Sales = 0,
+  Services = 1,
+  IntegratedSales = 2,
+  MerchadiseSales = 3,
+  AfterSales = 4,
+  UNRECOGNIZED = -1,
+}
+
+export function dealTypeFromJSON(object: any): DealType {
+  switch (object) {
+    case 0:
+    case "Sales":
+      return DealType.Sales;
+    case 1:
+    case "Services":
+      return DealType.Services;
+    case 2:
+    case "IntegratedSales":
+      return DealType.IntegratedSales;
+    case 3:
+    case "MerchadiseSales":
+      return DealType.MerchadiseSales;
+    case 4:
+    case "AfterSales":
+      return DealType.AfterSales;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return DealType.UNRECOGNIZED;
+  }
+}
+
+export function dealTypeToJSON(object: DealType): string {
+  switch (object) {
+    case DealType.Sales:
+      return "Sales";
+    case DealType.Services:
+      return "Services";
+    case DealType.IntegratedSales:
+      return "IntegratedSales";
+    case DealType.MerchadiseSales:
+      return "MerchadiseSales";
+    case DealType.AfterSales:
+      return "AfterSales";
+    case DealType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

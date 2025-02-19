@@ -11,9 +11,18 @@ import {
 } from "@/components/ui/dialog";
 import { AlertTriangle } from "lucide-react";
 import { create } from "zustand";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
-interface TopConfirmationDialogProps {  
+interface TopConfirmationDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 }
@@ -36,23 +45,27 @@ export function ConfirmationDialog({
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={onOpenChange} >
+    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent className="fixed top-20 left-1/2 -translate-x-1/2 m-auto w-full max-w-sm sm:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2 ">
-            {payload?.title || "Por favor, confirma antes de proceder con la acción seleccionada."}
+            {payload?.title || "Por favor, confirma antes de proceder."}
           </AlertDialogTitle>
-          <AlertDialogDescription>{payload?.description || ""}</AlertDialogDescription>
+              <AlertDialogDescription className="p-2 border rounded-md">
+                {payload?.description || ""}
+              </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogDescription className="sm:justify-start">
-          <div className="flex flex-col-reverse sm:flex-row w-full sm:justify-between gap-2">
-            <AlertDialogCancel onClick={handleCancel}>
-              {payload?.cancelLabel || "Cancelar"}
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirm}>
-              {payload?.confirmLabel || "Confirmar"}
-            </AlertDialogAction>
-          </div>
+            <div className="flex flex-col-reverse sm:flex-row w-full sm:justify-between gap-2">
+              <AlertDialogCancel onClick={handleCancel}>
+                {payload?.cancelLabel || "Cancelar"}
+              </AlertDialogCancel>
+          {!payload?.hideConfirmButton && (
+              <AlertDialogAction onClick={handleConfirm}>
+                {payload?.confirmLabel || "Confirmar"}
+              </AlertDialogAction>
+          )}
+            </div>
         </AlertDialogDescription>
       </AlertDialogContent>
     </AlertDialog>
@@ -66,6 +79,7 @@ interface Payload {
   cancelLabel?: string;
   onConfirm: () => void;
   onCancel?: () => void;
+  hideConfirmButton?: boolean;
 }
 
 interface ConfirmationDialogStore {
@@ -84,6 +98,6 @@ export const useConfirmationDialog = create<ConfirmationDialogStore>((set) => ({
   onOpenDialog: (e) =>
     set(() => ({
       payload: e,
-      isOpen:true
+      isOpen: true,
     })),
 }));

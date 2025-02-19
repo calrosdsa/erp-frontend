@@ -103,6 +103,8 @@ class Routes {
   quotation = "quotation";
   salesQuotation = "salesQuotation";
 
+  stage = "stage"
+
   //Party
   purchaseReceipt = "purchaseReceipt";
   deliveryNote = "deliveryNote";
@@ -134,6 +136,7 @@ class Routes {
   bank = "bank"
   cashOutflow = "cash-outflow"
   bankAccount = "bank-account"
+  deal = "crm/deal"
 
   defaultTab = {
     tab: "info",
