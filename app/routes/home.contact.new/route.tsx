@@ -2,7 +2,7 @@ import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { z } from "zod";
 import apiClient from "~/apiclient";
 import { fullName } from "~/util/convertor/convertor";
-import { createContactSchema } from "~/util/data/schemas/contact/contact-schema";
+import { createContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { route } from "~/util/route";
 import ContactCreateClient from "./contact-create";
 
@@ -26,7 +26,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             given_name: d.givenName || "",
             family_name: d.familyName,
             email: d.email,
-            phone_number: d.phoneNumber,
+            phone_number: d.phone_number,
             gender: d.gender,
           },
           party_reference: d.partyReferenceId,

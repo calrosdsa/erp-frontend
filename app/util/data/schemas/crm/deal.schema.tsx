@@ -19,6 +19,7 @@ export const dealSchema = z.object({
     end_date:z.date().optional().nullable(),
     available_for_everyone:z.boolean(),
     responsible:fieldRequired,
+    index:z.number(),
 })
 
 export const mapToDealData = (e:DealData) => {
@@ -35,6 +36,7 @@ export const mapToDealData = (e:DealData) => {
             start_date: formatRFC3339(e.start_date),
             end_date:e.end_date ? formatRFC3339(e.end_date) : undefined,
             available_for_everyone:e.available_for_everyone,
+            index:e.index,
         },
         id: e.id || 0
     }

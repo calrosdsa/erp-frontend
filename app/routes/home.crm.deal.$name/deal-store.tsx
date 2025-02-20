@@ -10,7 +10,6 @@ export const useDealStore = create<DealStore>((set)=>({
     setPayload:(e)=>set((state)=>({
         payload:{
             ...e,
-            available_for_everyone:true
         }
     }))
 }))

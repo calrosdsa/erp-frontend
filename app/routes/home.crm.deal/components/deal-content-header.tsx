@@ -17,7 +17,7 @@ export default function DealContentHeader({ deals }: DealCardProps) {
       </div>
       <Link to={route.toRoute({
         main:route.deal,
-        routeSufix:["kanban","new"]
+        routeSufix:["new"]
       })}>
         <Button className="w-full rounded-full" variant={"outline"}>
           <span>Crear Trato</span>

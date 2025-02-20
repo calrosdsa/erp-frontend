@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
-import { createContactSchema } from "../contact/contact-schema";
+import { contactDataSchema } from "../contact/contact.schema";
 
 
 export const createCustomerSchema = z.object({
@@ -9,11 +9,11 @@ export const createCustomerSchema = z.object({
     groupID:z.number().optional(),
     group:z.string().optional(),
 
-    contactData:createContactSchema.optional(),
+    contactData:contactDataSchema.optional(),
 }).superRefine((data,ctx)=>{
-    if(data.contactData && (data.contactData.email || data.contactData.phoneNumber)){
-        data.contactData.givenName = data.name
-    }
+    // if(data.contactData && (data.contactData.email || data.contactData.phone_number)){
+    //     data.contactData.givenName = data.name
+    // }
 })
 
 

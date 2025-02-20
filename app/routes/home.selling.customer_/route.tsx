@@ -6,7 +6,7 @@ import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { z } from "zod";
 import { createCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
 import { components } from "~/sdk";
-import { mapToContactData } from "~/util/data/schemas/contact/contact-schema";
+import { mapToContactData } from "~/util/data/schemas/contact/contact.schema";
 
 type ActionData = {
   action: string;

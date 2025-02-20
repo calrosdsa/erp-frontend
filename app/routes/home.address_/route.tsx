@@ -12,7 +12,7 @@ type ActionData = {
 
 export const action = async({request}:ActionFunctionArgs) =>{
     const client = apiClient({request})
-    const data = await request.json() 
+    const data = await request.json() as ActionData
     let results:components["schemas"]["AddressDto"][] = []
     let actions:components["schemas"]["ActionDto"][] = []
     switch (data.action) {

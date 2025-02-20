@@ -1,4 +1,5 @@
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
+import { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField"
 import { Control } from "react-hook-form"
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
@@ -6,30 +7,20 @@ import { components } from "~/sdk"
 import { route } from "~/util/route"
 
 
-export const CurrencyAutocompleteForm = ({
-    allowEdit =true,
-    control,
-    label,
-    onSelect,
-    name
-}:{
-    allowEdit?: boolean;
-    control?: Control<any, any>;
-    label?: string;
-    name?:string
-    onSelect?: (e: components["schemas"]["CurrencyDto"]) => void;
-  }) =>{
+type Currency = components["schemas"]["CurrencyDto"];
+interface CurrencyFormProps
+  extends Partial<AutocompleteFormProps<Currency, keyof Currency>> {
+}
+
+export const CurrencyAutocompleteForm = ({...props}:CurrencyFormProps) =>{
   const [currencyFetcher, onChange] = useCurrencyDebounceFetcher();
   return (
     <FormAutocomplete
+        {...props}
       data={currencyFetcher.data?.currencies || []}
       onValueChange={onChange}
-      label={label}
-      name={name || "currency"}
+      name={props.name || "currency"}
       nameK="code"
-      control={control}
-      allowEdit={allowEdit}
-      onSelect={onSelect}
     />
   );
 }

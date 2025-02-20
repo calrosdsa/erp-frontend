@@ -3,11 +3,11 @@ import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
 import ContactClient from "./contact.client";
 import { z } from "zod";
-import { editContactSchema } from "~/util/data/schemas/contact/contact-schema";
+import { ContactData, mapToContactData } from "~/util/data/schemas/contact/contact.schema";
 
 type ActionData = {
   action: string;
-  editContact: z.infer<typeof editContactSchema>;
+  editContact: ContactData;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -19,13 +19,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "edit-contact": {
       const d = data.editContact;
       const res = await client.PUT("/party/contact", {
-        body: {
-          given_name: d.givenName,
-          family_name: d.familyName,
-          email: d.email,
-          phone_number: d.phoneNumber,
-          party_id: d.partyID,
-        },
+        body: mapToContactData(data.editContact)
       });
       error = res.error?.detail;
       message = res.data?.message;

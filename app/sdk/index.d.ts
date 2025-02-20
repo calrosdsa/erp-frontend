@@ -1153,6 +1153,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/deal/transition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Deal Transition */
+        put: operations["deal-transition"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/delete-collectors": {
         parameters: {
             query?: never;
@@ -1838,11 +1855,28 @@ export interface paths {
             cookie?: never;
         };
         /** Get Contacts */
-        get: operations["get contacts"];
+        get: operations["contacts"];
         /** Edit contact */
         put: operations["edit-contact"];
         /** Create Contact */
-        post: operations["create contact"];
+        post: operations["create-contact"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/party/contact/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Contact Bulk */
+        post: operations["contact-bulk"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1857,7 +1891,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get Contact */
-        get: operations["get contact"];
+        get: operations["contact"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4571,25 +4605,45 @@ export interface components {
             Credentials?: string;
             Plugin: string;
         };
+        ContactBulkData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            contacts: components["schemas"]["ContactData"][];
+            /** Format: int64 */
+            party_id?: number;
+        };
         ContactData: {
-            /** Format: email */
-            email?: string | null;
-            family_name?: string | null;
-            gender?: string | null;
-            given_name: string;
-            phone_number?: string | null;
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["ContactFields"];
+            /** Format: int64 */
+            id?: number;
+            /** Format: int64 */
+            reference_id?: number | null;
         };
         ContactDto: {
             /** Format: date-time */
             created_at: string;
             email: string | null;
-            family_name: string | null;
             gender: string | null;
-            given_name: string;
             /** Format: int64 */
             id: number;
+            name: string;
             phone_number: string | null;
             uuid: string;
+        };
+        ContactFields: {
+            /** Format: email */
+            email?: string | null;
+            gender?: string | null;
+            name: string;
+            phone_number?: string | null;
         };
         CostCenterDto: {
             /** Format: date-time */
@@ -4665,16 +4719,6 @@ export interface components {
             /** Format: int64 */
             parentId?: number | null;
         };
-        CreateContactBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            contact: components["schemas"]["ContactData"];
-            /** Format: int64 */
-            party_reference?: number | null;
-        };
         CreateCostCenterRequetBody: {
             /**
              * Format: uri
@@ -4712,7 +4756,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            contact?: components["schemas"]["ContactData"];
+            contact?: components["schemas"]["ContactFields"];
             customer: components["schemas"]["CustomerData"];
         };
         CreateEntityRequestBody: {
@@ -5005,12 +5049,13 @@ export interface components {
             end_date: string | null;
             /** Format: int64 */
             id: number;
+            /** Format: int32 */
+            index: number;
             name: string;
-            responsible: string;
+            responsible_family_name: string;
+            responsible_given_name: string;
             /** Format: int64 */
-            responsible_family_name: number;
-            /** Format: int64 */
-            responsible_given_name: number;
+            responsible_id: number;
             responsible_uuid: string;
             source: string | null;
             source_information: string | null;
@@ -5029,6 +5074,8 @@ export interface components {
             deal_type?: string | null;
             /** Format: date-time */
             end_date?: string | null;
+            /** Format: int32 */
+            index: number;
             name: string;
             /** Format: int64 */
             responsible_id: number;
@@ -5038,6 +5085,23 @@ export interface components {
             stage_id: number;
             /** Format: date-time */
             start_date: string;
+        };
+        DealTransitionData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            deal_id: number;
+            /** Format: int32 */
+            destination_index: number;
+            /** Format: int64 */
+            destination_stage_id: number;
+            /** Format: int32 */
+            source_index: number;
+            /** Format: int64 */
+            source_stage_id: number;
         };
         DeleteEventBatchRequestBody: {
             /**
@@ -5174,21 +5238,6 @@ export interface components {
             givenName: string;
             organizationName: string;
             phoneNumber: components["schemas"]["PhoneNumber"];
-        };
-        EditContactBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: email */
-            email?: string | null;
-            family_name?: string | null;
-            gender?: string | null;
-            given_name: string;
-            /** Format: int64 */
-            party_id: number;
-            phone_number?: string | null;
         };
         EditCourtBody: {
             /**
@@ -7090,15 +7139,6 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListCompanyDto"];
         };
-        PaginationResponsePaginationResultListContactDtoBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListContactDto"];
-        };
         PaginationResponsePaginationResultListCostCenterDtoBody: {
             /**
              * Format: uri
@@ -7435,12 +7475,6 @@ export interface components {
         PaginationResultListCompanyDto: {
             filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["CompanyDto"][];
-            /** Format: int64 */
-            total: number;
-        };
-        PaginationResultListContactDto: {
-            filters: components["schemas"]["FilterOptionDto"][];
-            results: components["schemas"]["ContactDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -8829,6 +8863,20 @@ export interface components {
             message: string;
             result: components["schemas"]["CashOutflowDto"][];
         };
+        ResponseDataListListContactDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["ContactDto"][];
+        };
         ResponseDataListListDealDtoBody: {
             /**
              * Format: uri
@@ -9521,6 +9569,8 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             description: string | null;
+            /** Format: int64 */
+            id: number;
             /** Format: date-time */
             updated_at: string | null;
             uuid: string;
@@ -9868,7 +9918,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            contact?: components["schemas"]["ContactData"];
+            contact?: components["schemas"]["ContactFields"];
             supplier: components["schemas"]["SupplierData"];
         };
         SupplierData: {
@@ -13435,6 +13485,39 @@ export interface operations {
             };
         };
     };
+    "deal-transition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DealTransitionData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "test-request": {
         parameters: {
             query?: {
@@ -15240,23 +15323,16 @@ export interface operations {
             };
         };
     };
-    "get contacts": {
+    contacts: {
         parameters: {
             query: {
-                page?: string;
                 size: string;
-                enabled?: string;
                 status?: string;
-                is_group?: string;
-                query?: string;
                 orientation?: string;
                 column?: string;
-                parentId?: string;
+                name?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -15268,7 +15344,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListContactDtoBody"];
+                    "application/json": components["schemas"]["ResponseDataListListContactDtoBody"];
                 };
             };
             /** @description Error */
@@ -15291,7 +15367,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditContactBody"];
+                "application/json": components["schemas"]["ContactData"];
             };
         };
         responses: {
@@ -15315,7 +15391,7 @@ export interface operations {
             };
         };
     };
-    "create contact": {
+    "create-contact": {
         parameters: {
             query?: never;
             header?: never;
@@ -15324,7 +15400,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateContactBody"];
+                "application/json": components["schemas"]["ContactData"];
             };
         };
         responses: {
@@ -15348,7 +15424,40 @@ export interface operations {
             };
         };
     };
-    "get contact": {
+    "contact-bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContactBulkData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    contact: {
         parameters: {
             query?: {
                 query?: string;

@@ -56,7 +56,7 @@ export default function ToolBar({ title }: { title: string }) {
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 mb-1 flex-wrap justify-between">
         <div className="flex flex-wrap space-x-2 ">
           <Typography variant="title2">
-            {titleToolbar != undefined ? titleToolbar : title}
+            {titleToolbar != undefined ? titleToolbar : title} 
           </Typography>
           {status && (
             <Badge variant={"outline"} className="">

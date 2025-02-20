@@ -21,9 +21,7 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
-import {
-  GroupAutocompleteForm,
-} from "~/util/hooks/fetchers/useGroupDebounceFetcher";
+import { GroupAutocompleteForm } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
@@ -51,11 +49,11 @@ export default function CustomerInfo() {
       name: supplier?.name || "",
       group: supplier?.group,
       groupID: supplier?.group_id,
-      groupUUID:supplier?.group_uuid
+      groupUUID: supplier?.group_uuid,
     },
   });
-  const formValues = form.getValues()
-  const allowEdit = permission.edit || false
+  const formValues = form.getValues();
+  const allowEdit = permission.edit || false;
 
   const onSubmit = (e: EditType) => {
     fetcher.submit(
@@ -115,15 +113,19 @@ export default function CustomerInfo() {
               <GroupAutocompleteForm
                 name="group"
                 label={t("group")}
-                href={formValues.groupUUID ? r.toRoute({
-                  main:r.customerGroup,
-                  routePrefix:[r.group],
-                  routeSufix:[formValues.group || ""],
-                  q:{
-                    tab:"info",
-                    id:formValues.groupUUID,
-                  }
-                }): undefined}
+                href={
+                  formValues.groupUUID
+                    ? r.toRoute({
+                        main: r.customerGroup,
+                        routePrefix: [r.group],
+                        routeSufix: [formValues.group || ""],
+                        q: {
+                          tab: "info",
+                          id: formValues.groupUUID,
+                        },
+                      })
+                    : undefined
+                }
                 control={form.control}
                 partyType={r.supplierGroup}
                 isGroup={false}
@@ -133,7 +135,6 @@ export default function CustomerInfo() {
                 }}
                 allowEdit={allowEdit}
               />
-             
             </div>
             <input className="hidden" type="submit" ref={inputRef} />
           </fetcher.Form>
@@ -144,7 +145,7 @@ export default function CustomerInfo() {
         <PartyAddresses
           addresses={addresses}
           onAddAddress={() => {
-            navigate(r.toCreateAddress(supplier?.id));
+            navigate(r.toRoute({ main: r.address, routeSufix: ["new"] }));
           }}
         />
 

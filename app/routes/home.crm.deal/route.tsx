@@ -1,10 +1,38 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import CrmClient from "./deal-kanban.client";
 import apiClient from "~/apiclient";
 import { DEFAULT_ORDER, DEFAULT_SIZE, LOAD_ACTION, MAX_SIZE } from "~/constant";
 import { Entity } from "~/types/enums";
 import { Outlet, ShouldRevalidateFunctionArgs, useOutletContext } from "@remix-run/react";
 import { GlobalState } from "~/types/app";
+import { components } from "~/sdk";
+
+type ActionData = {
+  dealTransition:components["schemas"]["DealTransitionData"]
+  action:string
+}
+
+export const action = async({request}:ActionFunctionArgs)=>{
+  const client = apiClient({request})
+  const data =await request.json() as ActionData
+  let message :string | undefined = undefined 
+  let error:string | undefined = undefined
+  let action = LOAD_ACTION
+  switch(data.action){
+    case "deal-transition":{
+      const res= await client.PUT("/deal/transition",{
+        body:data.dealTransition,
+      })
+      message = res.data?.message
+      error = res.error?.detail
+      console.log(res.error,res.data)
+      break;
+    }
+  }
+  return json({
+    message,error,action
+  })
+}
 
 export function shouldRevalidate({
   formMethod,
@@ -32,6 +60,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         params: {
           query: {
             size: MAX_SIZE,
+            column:"index",
+            orientation:"ASC"
           },
         },
       }),
@@ -66,10 +96,11 @@ export default function Crm() {
   const globalContext = useOutletContext<GlobalState>()
   return (
     <>
-    <CrmClient />
     <Outlet
     context={globalContext}
     />
+    <CrmClient />
+   
     </>
   );
 }

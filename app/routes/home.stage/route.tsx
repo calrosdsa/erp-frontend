@@ -27,6 +27,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
       })
       results = res.data?.result || []
       actions = res.data?.actions || []
+      actionRes = "";
       break;
     }
     case "delete":{
@@ -47,6 +48,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
+      actionRes = "";
       break;
     }
     case "edit": {

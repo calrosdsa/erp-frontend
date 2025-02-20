@@ -5,7 +5,7 @@ import SuppliersClient from "./suppliers.client"
 import { z } from "zod"
 import { createSupplierSchema } from "~/util/data/schemas/buying/supplier-schema"
 import { components } from "~/sdk"
-import { mapToContactData } from "~/util/data/schemas/contact/contact-schema"
+import { mapToContactData } from "~/util/data/schemas/contact/contact.schema"
 
 type ActionData = {
     action:string

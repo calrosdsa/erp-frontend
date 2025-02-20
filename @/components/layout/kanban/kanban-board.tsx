@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { DragDropContext, type DropResult, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext, DraggableLocation, type DropResult, Droppable } from "@hello-pangea/dnd";
 import { components } from "~/sdk";
 import KanbanColumnComponent from "./kanban-column";
 import { useFetcher } from "@remix-run/react";
@@ -12,8 +12,13 @@ import { useConfirmationDialog } from "../drawer/ConfirmationDialog";
 interface KanbanLayout<T> {
   data?: T[];
   stages?: components["schemas"]["StageDto"][];
-  headerComponent:(e:T[])=>JSX.Element
-  cardComponent:(e:T)=>JSX.Element
+  headerComponent: (e: T[]) => JSX.Element;
+  cardComponent: (e: T) => JSX.Element;
+  dataTransition: (
+    source: DraggableLocation<string>,
+    destination: DraggableLocation<string>,
+    data: T,
+  ) => void;
 }
 
 type StageDto = components["schemas"]["StageDto"];
@@ -23,7 +28,13 @@ export interface KanbanColumn<T> extends StageDto {
   // Aquí puedes agregar propiedades o métodos adicionales
 }
 
-export function KanbanBoard<T>({ stages, data,headerComponent,cardComponent }: KanbanLayout<T>) {
+export function KanbanBoard<T>({
+  stages,
+  data,
+  dataTransition,
+  headerComponent,
+  cardComponent,
+}: KanbanLayout<T>) {
   const [columns, setColumns] = React.useState<KanbanColumn<T>[]>([]);
   const [selectColumn, setSelectColumn] = React.useState<number | null>(null);
   const stageFetcher = useFetcher<typeof action>();
@@ -38,24 +49,22 @@ export function KanbanBoard<T>({ stages, data,headerComponent,cardComponent }: K
         destionation_index: destinationIndex,
         destination_id: destination.id,
       };
-      console.log("STAGE TRANSITION", body);
       stageFetcher.submit(
         {
           stageTransition: body,
           action: "stage-transition",
         },
         {
-          action: route.toRoute({main:route.stage}),
+          action: route.toRoute({ main: route.stage }),
           method: "POST",
           encType: "application/json",
         }
       );
     }
   };
-
   const onDragEnd = (result: DropResult) => {
     const { source, destination, type } = result;
-    if (!destination) return;
+    if (!destination || !source) return;
 
     if (type === "COLUMN") {
       const newColumns = Array.from(columns);
@@ -71,7 +80,8 @@ export function KanbanBoard<T>({ stages, data,headerComponent,cardComponent }: K
 
     // Copy current state
     const newColumns = [...columns];
-
+    console.log("SOURCE", source);
+    console.log("DESTINATION", destination);
     // Find source and destination columns
     const sourceColumn = newColumns.find(
       (col) => col.id.toString() === source.droppableId
@@ -79,6 +89,9 @@ export function KanbanBoard<T>({ stages, data,headerComponent,cardComponent }: K
     const destColumn = newColumns.find(
       (col) => col.id.toString() === destination.droppableId
     );
+
+    console.log("source Column", sourceColumn);
+    console.log("dest Column", destColumn);
 
     if (!sourceColumn || !destColumn) return;
 
@@ -88,6 +101,7 @@ export function KanbanBoard<T>({ stages, data,headerComponent,cardComponent }: K
     // Insert the deal in the destination
     console.log("MOVE DEAL", movedDeal);
     if (movedDeal) {
+      dataTransition(source,destination,movedDeal)
       destColumn.data.splice(destination.index, 0, movedDeal);
     }
 
@@ -127,7 +141,7 @@ export function KanbanBoard<T>({ stages, data,headerComponent,cardComponent }: K
           },
           {
             encType: "application/json",
-            action: route.toRoute({main:route.stage}),
+            action: route.toRoute({ main: route.stage }),
             method: "POST",
           }
         );
@@ -146,7 +160,7 @@ export function KanbanBoard<T>({ stages, data,headerComponent,cardComponent }: K
       },
       {
         encType: "application/json",
-        action: route.toRoute({main:route.stage}),
+        action: route.toRoute({ main: route.stage }),
         method: "POST",
       }
     );
@@ -159,7 +173,7 @@ export function KanbanBoard<T>({ stages, data,headerComponent,cardComponent }: K
       },
       {
         encType: "application/json",
-        action: route.toRoute({main:route.stage}),
+        action: route.toRoute({ main: route.stage }),
         method: "POST",
       }
     );

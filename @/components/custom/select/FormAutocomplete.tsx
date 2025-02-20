@@ -34,25 +34,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Control } from "react-hook-form";
+import { AutocompleteFormProps } from "./FormAutocompleteField";
 
-interface Props<T extends object, K extends keyof T> {
-  data: T[];
-  nameK: K;
-  name: string;
-  form?: any;
-  control?: Control<any, any>;
-  label?: string;
-  description?: string;
-  onValueChange?: (e: string) => void;
-  onSelect?: (v: T) => void;
-  onClear?: () => void;
-  className?: string;
-  allowEdit?: boolean;
-  addNew?: () => void;
-  required?: boolean;
-  href?: string;
-  onCustomDisplay?: (e: T, idx: number) => JSX.Element;
-}
 
 export default function FormAutocomplete<T extends object, K extends keyof T>({
   data,
@@ -68,10 +51,11 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   onCustomDisplay,
   className,
   allowEdit = true,
+  modal = false,
   addNew,
   required,
   href,
-}: Props<T, K>) {
+}: AutocompleteFormProps<T, K>) {
   const [open, setOpen] = useState(false);
   return (
     <FormField
@@ -84,7 +68,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
               {label} {required && "*"}
             </FormLabel>
           )}
-          <Popover open={open} onOpenChange={setOpen} modal={false}>
+          <Popover open={open} onOpenChange={setOpen} modal={modal}>
             {href && !allowEdit ? (
               <Button
                 variant="outline"

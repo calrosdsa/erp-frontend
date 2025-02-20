@@ -21,13 +21,13 @@ interface KanbanColumnProps<T> {
   column: KanbanColumn<T>;
   index: number;
   selectColumn: number | null;
-  editColumn:(e:KanbanColumn<T>)=>void
+  editColumn: (e: KanbanColumn<T>) => void;
   addColumn: (index: number) => void;
   removeColumn: (index: number) => void;
-  deleteColumn:(e:KanbanColumn<T>)=>void;
+  deleteColumn: (e: KanbanColumn<T>) => void;
   setSelectColumn: React.Dispatch<React.SetStateAction<number | null>>;
-  headerComponent:(e:T[])=>JSX.Element
-  cardComponent:(e:T)=>JSX.Element
+  headerComponent: (e: T[]) => JSX.Element;
+  cardComponent: (e: T) => JSX.Element;
 }
 
 export default function KanbanColumnComponent<T>({
@@ -44,12 +44,12 @@ export default function KanbanColumnComponent<T>({
 }: KanbanColumnProps<T>) {
   const [hoveredColumn, setHoveredColumn] = React.useState<number | null>(null);
   const [formColumn, setFormColumn] = useState<KanbanColumn<T>>({
-    id:0,
+    id: 0,
     name: "",
     color: "",
     index: 0,
-    data:[],
-    entity_id:0,
+    data: [],
+    entity_id: 0,
   });
   const columnHeaderRef = React.useRef<HTMLInputElement | null>(null);
   const [allowClickOutside, setAllowClickOutside] = useState(true);
@@ -80,7 +80,7 @@ export default function KanbanColumnComponent<T>({
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className="flex min-w-64 min-h-[90vh]  flex-col rounded-sm border-r border-l"
+          className="flex min-w-64 min-h-[90vh] bg-gray-100  flex-col rounded-sm border-r border-l"
         >
           <div
             {...provided.dragHandleProps}
@@ -130,7 +130,7 @@ export default function KanbanColumnComponent<T>({
                       variant="ghost"
                       size="icon"
                       onClick={() => {
-                        editColumn(formColumn)
+                        editColumn(formColumn);
                         setSelectColumn(null);
                       }}
                       className="h-5 w-5 text-white rounded-full"
@@ -144,7 +144,7 @@ export default function KanbanColumnComponent<T>({
                       size="icon"
                       onClick={() => {
                         setSelectColumn(null);
-                        setFormColumn(column)
+                        setFormColumn(column);
                       }}
                       className="h-5 w-5 text-white rounded-full"
                     >
@@ -164,7 +164,7 @@ export default function KanbanColumnComponent<T>({
                     className="h-5 w-5 text-white rounded-full"
                     onClick={() => {
                       setSelectColumn(null);
-                      deleteColumn(column)
+                      deleteColumn(column);
                     }}
                   >
                     <TrashIcon className="h-4 w-4 p-[1px]" />
@@ -183,8 +183,8 @@ export default function KanbanColumnComponent<T>({
                     variant="ghost"
                     size="icon"
                     onClick={() => {
-                      addColumn(index)
-                      setSelectColumn(index + 1)
+                      addColumn(index);
+                      setSelectColumn(index + 1);
                     }}
                     className="h-5 w-5 text-white rounded-full hover:scale-105 hover:transition-all 
                 hover:duration-300 hover:ease-in-out"
@@ -204,39 +204,37 @@ export default function KanbanColumnComponent<T>({
                 {...provided.droppableProps}
                 className="flex-1 space-y-4 overflow-y-auto p-4"
               >
-                {column.data.map((item, index) => (
-                            <Draggable
-                              key={index}
-                              draggableId={index.toString()}
-                              index={index}
-                              >
-                              {(provided) => (
-                                <Card
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className="bg-white p-4"
-                                >
-                                  {cardComponent(item)}
-                                </Card>
-                              )}
-                            </Draggable>
-                          ))}
-
+                {column.data.map((item, index) => {
+                  const id = (item["id" as keyof T] as number).toString()
+                  return (
+                    <Draggable
+                      key={id}
+                      draggableId={id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <Card
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className=" "
+                          
+                        >
+                          <div className="bg-white p-4 rounded-lg border-0 border-l-2" style={{
+                            borderColor:column.color,
+                          }}>
+                          {cardComponent(item)}
+                          </div>
+                        </Card>
+                      )}
+                    </Draggable>
+                  );
+                })}
 
                 {provided.placeholder}
               </div>
             )}
           </Droppable>
-          <div className="p-4">
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-blue-900"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add deal
-            </Button>
-          </div>
         </div>
       )}
     </Draggable>

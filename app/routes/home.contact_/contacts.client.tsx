@@ -9,7 +9,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 
 
 export default function ContactsClient(){
-    const { paginationResult,actions } = useLoaderData<typeof loader>()
+    const { results,actions } = useLoaderData<typeof loader>()
     const  globalState = useOutletContext<GlobalState>()
     const r = route
     const navigate = useNavigate()
@@ -29,11 +29,8 @@ export default function ContactsClient(){
     return (
         <div>
             <DataTable
-            data={paginationResult?.results || []}
+            data={results || []}
             columns={contactColumns()}
-            paginationOptions={{
-                rowCount:paginationResult?.total
-            }}
             enableSizeSelection={true}
             />
         </div>

@@ -30,7 +30,7 @@ export default function ContactClient() {
     return r.toRoute({
       main: r.customerM,
       routePrefix: [r.sellingM],
-      routeSufix: [contact?.given_name || ""],
+      routeSufix: [contact?.name || ""],
       q: {
         tab: tab,
         id: contact?.uuid || "",

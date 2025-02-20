@@ -1,7 +1,7 @@
 import { useFetcher, useSearchParams } from "@remix-run/react"
 import { action } from "./route"
 import CustomForm from "@/components/custom/form/CustomForm"
-import { createContactSchema } from "~/util/data/schemas/contact/contact-schema"
+import { createContactSchema } from "~/util/data/schemas/contact/contact.schema"
 import { z } from "zod"
 import { useTranslation } from "react-i18next"
 import { useToast } from "@/components/ui/use-toast"

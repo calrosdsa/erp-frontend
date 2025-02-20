@@ -5,7 +5,7 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { Typography } from "@/components/typography";
 import { PartyReferences } from "~/routes/home.party/components/party-references";
 import { useRef } from "react";
-import { editContactSchema } from "~/util/data/schemas/contact/contact-schema";
+import { editContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { z } from "zod";
 import {
   setUpToolbar,

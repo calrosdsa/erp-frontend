@@ -13,10 +13,10 @@ export default function ACompanyInfo() {
       title={t("form.name")} 
       value={company?.name}
       />
-      <DisplayTextValue 
+      {/* <DisplayTextValue 
       title={t("table.createdAt")} 
       value={formatMediumDate(company?.created_at,i18n.language)}
-      />
+      /> */}
     </div>
   );
 }

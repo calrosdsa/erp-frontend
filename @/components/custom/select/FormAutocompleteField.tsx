@@ -50,6 +50,7 @@ export interface AutocompleteFormProps<T extends object, K extends keyof T> {
   className?: string;
   allowEdit?: boolean;
   addNew?: () => void;
+  modal?:boolean;
   required?: boolean;
   href?: string;
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
@@ -72,6 +73,7 @@ export default function FormAutocompleteField<
   onCustomDisplay,
   className,
   allowEdit = true,
+  modal = false,
   addNew,
   required,
   href,
@@ -88,7 +90,7 @@ export default function FormAutocompleteField<
               {label} {required && "*"}
             </FormLabel>
           )}
-          <Popover open={open} onOpenChange={setOpen} modal={false}>
+          <Popover open={open} onOpenChange={setOpen} modal={modal}>
             {href && !allowEdit ? (
               <Button
                 variant="outline"

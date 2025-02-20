@@ -4,6 +4,7 @@ import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField";
+import { formatQuery } from "..";
 
 type Address = components["schemas"]["AddressDto"]
 interface AddressFormProps extends Partial<AutocompleteFormProps<Address, keyof Address>> {
@@ -41,7 +42,7 @@ export const useAddressFetcher = () => {
   const onChange = (e: string) => {
     const d: operations["get-addresses"]["parameters"]["query"] = {
       size: DEFAULT_SIZE,
-      title: e,
+      title: formatQuery(e),
     };
     fetcherDebounce.submit(
       {
