@@ -51,7 +51,7 @@ export default function FormAutocomplete<T extends object, K extends keyof T>({
   onCustomDisplay,
   className,
   allowEdit = true,
-  modal = false,
+  modal = true,
   addNew,
   required,
   href,

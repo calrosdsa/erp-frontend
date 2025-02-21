@@ -1,15 +1,36 @@
 import { create } from "zustand";
 import { DealData } from "~/util/data/schemas/crm/deal.schema";
 
-interface DealStore {
-    payload:Partial<DealData>
-    setPayload:(e:Partial<DealData>)=>void
+interface Payload extends DealData {
+  onSave?: () => void;
+  onCancel?: () => void;
+  isEditable?: boolean;
+  open?: boolean;
 }
-export const useDealStore = create<DealStore>((set)=>({
-    payload:{},
-    setPayload:(e)=>set((state)=>({
-        payload:{
-            ...e,
-        }
-    }))
-}))
+
+interface DealStore {
+  // Combining a partial DealData with an optional isNew flag.
+  payload: Partial<Payload>;
+  setPayload: (update: Partial<Payload>) => void;
+  editPayload: (update: Partial<Payload>) => void;
+}
+
+export const useDealStore = create<DealStore>((set) => ({
+  // Optionally, you could initialize isNew if needed, e.g., { isNew: false }
+  payload: {
+    open:true,
+  },
+  setPayload: (update) =>
+    set((state) => ({
+      payload: {
+        ...update, // Apply new updates
+      },
+    })),
+  editPayload: (update) =>
+    set((state) => ({
+      payload: {
+        ...state.payload,
+        ...update, // Apply new updates
+      },
+    })),
+}));

@@ -18,6 +18,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   setUpToolbar,
   setUpToolbarDetailPage,
+  setUpToolbarRegister,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import PricingInfo from "./components/pricing-info";
@@ -49,7 +50,6 @@ export default function PricingDetailClient() {
     actions: actions && actions[Entity.QUOTATION],
   });
   const confirmationDialog = useConfirmationDialog();
-
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: r.pricing,
@@ -97,11 +97,9 @@ export default function PricingDetailClient() {
     [fetcher.data]
   );
 
-  setUpToolbarDetailPage(
-    (opts) => {
-      console.log("TOOL BAR OPTS", opts);
+  setUpToolbarRegister(
+    () => {
       return {
-        ...opts,
         status: stateFromJSON(pricing?.status),
         onChangeState: onChangeState,
       };

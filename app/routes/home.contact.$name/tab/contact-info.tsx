@@ -5,7 +5,6 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { Typography } from "@/components/typography";
 import { PartyReferences } from "~/routes/home.party/components/party-references";
 import { useRef } from "react";
-import { editContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { z } from "zod";
 import {
   setUpToolbar,
@@ -19,8 +18,8 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import { ContactData, contactDataSchema } from "~/util/data/schemas/contact/contact.schema";
 
-type EditContactType = z.infer<typeof editContactSchema>;
 export const ContactInfo = () => {
   const { contact, actions } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
@@ -28,18 +27,17 @@ export const ContactInfo = () => {
   const { roleActions } = useOutletContext<GlobalState>();
   const [permission] = usePermission({ roleActions, actions });
   const fetcher = useFetcher<typeof action>();
-  const { form, hasChanged, updateRef } = useEditFields<EditContactType>({
-    schema: editContactSchema,
+  const { form, hasChanged, updateRef } = useEditFields<ContactData>({
+    schema: contactDataSchema,
     defaultValues: {
-      givenName: contact?.given_name || "",
-      familyName: contact?.family_name,
-      partyID: contact?.id,
+      contact_id: contact?.id,
+      name: contact?.name,
       email: contact?.email,
-      phoneNumber: contact?.phone_number,
+      phone_number: contact?.phone_number,
     },
   });
   const allowEdit = permission.edit;
-  const onSubmit = (e: EditContactType) => {
+  const onSubmit = (e: ContactData) => {
     console.log("DATA", e);
     fetcher.submit(
       {
@@ -89,17 +87,10 @@ export const ContactInfo = () => {
           <input className="hidden" type="submit" ref={inputRef} />
           <div className="info-grid">
             <CustomFormFieldInput
-              name="givenName"
+              name="name"
               control={form.control}
               inputType="input"
-              label={t("form.givenName")}
-              allowEdit={allowEdit}
-            />
-            <CustomFormFieldInput
-              name="familyName"
-              control={form.control}
-              inputType="input"
-              label={t("form.familyName")}
+              label={t("form.name")}
               allowEdit={allowEdit}
             />
 
@@ -113,7 +104,7 @@ export const ContactInfo = () => {
             />
 
             <CustomFormFieldInput
-              name="phoneNumber"
+              name="phone_number"
               control={form.control}
               inputType="input"
               type="tel"

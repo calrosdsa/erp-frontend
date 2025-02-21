@@ -5,7 +5,7 @@ import { Typography } from "@/components/typography";
 import { Form } from "@/components/ui/form";
 import { FetcherWithComponents, useOutletContext } from "@remix-run/react";
 import { MutableRefObject, useEffect, useState } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
@@ -18,13 +18,14 @@ import { Entity } from "~/types/enums";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { PencilIcon } from "lucide-react";
+import { PartyContacts } from "../home.party/components/party-contacts";
 
 export default function DealForm({
   fetcher,
   form,
   onSubmit,
   inputRef,
-  allowEdit = true,
+  allowEdit,
   enableEditDefault = false,
 }: {
   fetcher: FetcherWithComponents<any>;
@@ -36,7 +37,11 @@ export default function DealForm({
 }) {
   const { t } = useTranslation("common");
   const [enableEdit, setEnableEdit] = useState(enableEditDefault);
-
+  const fieldArray = useFieldArray({
+    control: form.control,
+    name: "contacts",
+  });
+  const formValues = form.getValues()
   return (
     <FormLayout>
       <Form {...form}>
@@ -55,14 +60,14 @@ export default function DealForm({
                   <Typography variant="subtitle2" className=" col-span-full">
                     Acerca del acuerdo
                   </Typography>
-                  {enableEdit ? (
+                  {/* {enableEdit ? (
                     <div className="flex space-x-1">
-                      <Button variant="outline" type="submit" size="sm">
+                      <Button variant="outline" type="submit" size="xs">
                         <span>Guardar</span>
                       </Button>
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="xs"
                         onClick={() => {
                           setEnableEdit(false);
                         }}
@@ -70,20 +75,21 @@ export default function DealForm({
                         <span>Cancelar</span>
                       </Button>
                     </div>
-                  ) : (
-                    allowEdit && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setEnableEdit(true);
-                        }}
-                      >
-                        <PencilIcon />
-                        <span>Editar</span>
-                      </Button>
-                    )
+                  ) : ( */}
+                  {allowEdit && (
+                    <Button
+                      variant="ghost"
+                      type="button"
+                      size="xs"
+                      onClick={() => {
+                        setEnableEdit(true);
+                      }}
+                    >
+                      <PencilIcon />
+                      <span>Editar</span>
+                    </Button>
                   )}
+                  {/* )} */}
                 </div>
                 <Separator />
                 <div className="grid sm:grid-cols-2 gap-3">
@@ -165,6 +171,15 @@ export default function DealForm({
                 />
               </div>
             </div>
+
+            <PartyContacts
+              fieldArray={fieldArray}
+              form={form}
+              partyID={formValues.id}
+              contacts={formValues.contacts}
+              
+              // perm={permissions[Entity.CONTACT]}
+            />
 
             {/* <div className="col-span-full" />
             <Typography variant="subtitle2" className=" col-span-full">

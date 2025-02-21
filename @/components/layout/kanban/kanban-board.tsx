@@ -12,7 +12,7 @@ import { useConfirmationDialog } from "../drawer/ConfirmationDialog";
 interface KanbanLayout<T> {
   data?: T[];
   stages?: components["schemas"]["StageDto"][];
-  headerComponent: (e: T[]) => JSX.Element;
+  headerComponent: (e: T[],stage:StageDto) => JSX.Element;
   cardComponent: (e: T) => JSX.Element;
   dataTransition: (
     source: DraggableLocation<string>,

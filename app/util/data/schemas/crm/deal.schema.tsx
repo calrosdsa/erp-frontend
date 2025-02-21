@@ -3,6 +3,7 @@ import { field, fieldRequired } from "..";
 import { components } from "~/sdk";
 import { formatAmountToInt } from "~/util/format/formatCurrency";
 import { formatRFC3339 } from "date-fns";
+import { contactBulkDataSchema, contactDataSchema, mapToContactBulkData } from "../contact/contact.schema";
 
 export type DealData = z.infer<typeof dealSchema>
 
@@ -19,6 +20,7 @@ export const dealSchema = z.object({
     end_date:z.date().optional().nullable(),
     available_for_everyone:z.boolean(),
     responsible:fieldRequired,
+    contacts:z.array(contactDataSchema),
     index:z.number(),
 })
 
@@ -38,7 +40,8 @@ export const mapToDealData = (e:DealData) => {
             available_for_everyone:e.available_for_everyone,
             index:e.index,
         },
-        id: e.id || 0
+        id: e.id || 0,
+        contact_bulk:e.cont
     }
     return d
 }

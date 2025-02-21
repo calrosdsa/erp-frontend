@@ -42,8 +42,8 @@ setUpToolbar(()=>{
       <KanbanBoard
         stages={stages}
         data={deals}
-        headerComponent={(deals) => {
-          return <DealContentHeader deals={deals} />;
+        headerComponent={(deals,stage) => {
+          return <DealContentHeader deals={deals} stage={stage}/>;
         }}
         cardComponent={(deal) => {
           return <DealCard deal={deal} />;

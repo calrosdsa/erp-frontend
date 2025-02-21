@@ -6,7 +6,7 @@ export type ContactData = z.infer<typeof contactDataSchema>;
 export type ContactBulkData = z.infer<typeof contactBulkDataSchema>;
 
 export const contactDataSchema = z.object({
-  id: z.number().optional(),
+  contact_id: z.number().optional(),
   name: z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
   email: z.string().email().nullable().optional(),
   gender: z.string().nullable().optional(),
@@ -36,18 +36,20 @@ export const mapToContactData = (e: ContactData) => {
       phone_number: e.phone_number,
     },
     reference_id: e.reference_id,
-    id: e.id,
+    id: e.contact_id,
   };
   return d;
 };
 
 
-export const mapToContactSchema = (e:components["schemas"]["ContactDto"]) =>{
+export const mapToContactSchema = (e:components["schemas"]["ContactDto"],reference_id?:number) =>{
   const d:ContactData = {
-    id:e.id,
+    contact_id:e.id,
     name: e.name,
     email:e.email,
     phone_number:e.phone_number,
+    reference_id:reference_id,
+
   }
   return d
 }

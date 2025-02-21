@@ -8,7 +8,7 @@ export type FieldRequiredType = z.infer<typeof fieldRequired>
 export const fieldRequired = z.object({
   id: z.coerce.number(),
   name: z.coerce.string(),
-  uuid: z.coerce.string(),
+  uuid: z.coerce.string().optional(),
 });
 
 export const field = z.object({

@@ -43,6 +43,7 @@ export const PartyReferences = ({
         partyId={partyId}
         />
         }
+        {/* {JSON.stringify(partyReferencesfetcher.data)} */}
             <DataTable
             data={partyReferencesfetcher.data?.partyReferencesPagination?.results || []}
             columns={partyReferencesColumns({})}

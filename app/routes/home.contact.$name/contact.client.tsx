@@ -6,10 +6,7 @@ import {
 import { loader } from "./route";
 import { GlobalState } from "~/types/app";
 import { usePermission } from "~/util/hooks/useActions";
-import Typography, { subtitle } from "@/components/typography/Typography";
-import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { useTranslation } from "react-i18next";
-import { PartyReferences } from "../home.party/components/party-references";
 import DetailLayout from "@/components/layout/detail-layout";
 import { route } from "~/util/route";
 import { ContactInfo } from "./tab/contact-info";

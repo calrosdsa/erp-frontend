@@ -5,6 +5,7 @@ import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
 import { MAX_SIZE } from "~/constant";
 import { Entity } from "~/types/enums";
+import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
@@ -16,11 +17,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  let deal: components["schemas"]["DealDto"] | undefined = undefined;
   switch (data.action) {
-    case "edit":{
-      const res =await client.PUT("/deal",{
+    case "edit": {
+      const res = await client.PUT("/deal", {
         body: mapToDealData(data.dealData),
-      })
+      });
       error = res.error?.detail;
       message = res.data?.message;
       break;
@@ -31,12 +33,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       error = res.error?.detail;
       message = res.data?.message;
+      deal = res.data?.result
       break;
     }
   }
   return json({
     error,
     message,
+    deal,
   });
 };
 
@@ -44,7 +48,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  
+
   const id = searchParams.get("id");
   const entityId = searchParams.get("entity_id") ?? Entity.DEAL.toString();
 
@@ -55,31 +59,30 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         size: MAX_SIZE,
         entity_id: entityId,
         column: "index",
-        orientation: "ASC"
-      }
-    }
+        orientation: "ASC",
+      },
+    },
   });
 
   // Crear promesa condicional para el detalle del deal
-  const dealPromise = id ? client.GET("/deal/detail/{id}", {
-    params: {
-      path: { id }
-    }
-  }) : Promise.resolve(undefined);
+  const dealPromise = id
+    ? client.GET("/deal/detail/{id}", {
+        params: {
+          path: { id },
+        },
+      })
+    : Promise.resolve(undefined);
 
   // Ejecutar promesas en paralelo
-  const [stagesRes, dealRes] = await Promise.all([
-    stagesPromise,
-    dealPromise
-  ]);
+  const [stagesRes, dealRes] = await Promise.all([stagesPromise, dealPromise]);
 
   return json({
     stages: stagesRes.data?.result || [],
     deal: dealRes?.data?.result.entity || null,
-    activities:dealRes?.data?.result.activities || [],
-    actions:dealRes?.data?.actions,
-    contacts:dealRes?.data?.result.contacts,
-    entityActions:dealRes?.data?.associated_actions,
+    activities: dealRes?.data?.result.activities || [],
+    actions: dealRes?.data?.actions,
+    contacts: dealRes?.data?.result.contacts,
+    entityActions: dealRes?.data?.associated_actions,
   });
 };
 

@@ -1,6 +1,6 @@
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import FormLayout from "@/components/custom/form/FormLayout";
-import Autocomplete from "@/components/custom/select/Autocomplete";
+import Autocomplete from "@/components/custom/select/autocomplete";
 import SelectForm from "@/components/custom/select/SelectForm";
 import { Form } from "@/components/ui/form";
 import { FetcherWithComponents } from "@remix-run/react";

@@ -1,16 +1,22 @@
 import ContactList from "@/components/custom-ui/contacts-component";
 import FormLayout from "@/components/custom/form/FormLayout";
-import AutoCompleteFieldArray from "@/components/custom/select/autocomplete-field-array";
 import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
+import { FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFetcher, useNavigate } from "@remix-run/react";
-import { PencilIcon, PlusIcon } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { ArrowRightLeft, PencilIcon, PlusIcon, XIcon } from "lucide-react";
+import { useState } from "react";
+import {
+  ArrayPath,
+  FieldValues,
+  useFieldArray,
+  UseFieldArrayReturn,
+  useForm,
+  UseFormReturn,
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { action } from "~/routes/home.contact_/route";
 import { components } from "~/sdk";
 import { Permission } from "~/types/permission";
@@ -20,94 +26,163 @@ import {
   ContactData,
   mapToContactSchema,
 } from "~/util/data/schemas/contact/contact.schema";
-import { ContactFieldArray } from "~/util/hooks/fetchers/core/use-contact-fetcher";
+import { ContactAutocomplete } from "~/util/hooks/fetchers/core/use-contact-fetcher";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
+interface Contact<T extends FieldValues> {
+  contacts: ContactData[];
+}
 
-export const PartyContacts = ({
-  contacts,
-  onAddContact,
+type FieldArray<T extends FieldValues> = UseFieldArrayReturn<
+  Contact<T>,
+  ArrayPath<Contact<T>>,
+  "id"
+>;
+
+export const PartyContacts = <T extends FieldValues>({
   partyID,
-  perm,
+  // perm,
+  enableEditDefault,
+  fieldArray,
+  form,
+  contacts,
 }: {
-  contacts: components["schemas"]["ContactDto"][] | undefined | null;
-  onAddContact?: () => void;
   partyID?: number;
-  perm?: Permission;
+  // perm?: Permission;
+  contacts?: ContactData[];
+  enableEditDefault?: boolean;
+  fieldArray: FieldArray<T>;
+  form: UseFormReturn<any>;
 }) => {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
   const r = route;
-  const form = useForm<ContactBulkData>({
-    resolver: zodResolver(contactBulkDataSchema),
-    defaultValues: {},
-  });
-  const { fields, append, remove ,update} = useFieldArray({
-    control: form.control, // Control from useForm
-    name: "contacts", // Name of the array field
-  });
+  const { fields, append, remove, update } = fieldArray;
   const fetcher = useFetcher<typeof action>();
+  const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
+  const [enableEdit, setEnableEdit] = useState(enableEditDefault);
+
+  const toggleItem = (itemId: string) => {
+    setOpenStates((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
+  };
+
+  const onAddContact = () => {
+    if (!enableEdit) {
+      setEnableEdit(true);
+    }
+    append({ name: "" } as ContactData);
+  };
+
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+    },
+    [fetcher.data]
+  );
 
   return (
-    <FormLayout>
-      <Form {...form}>
-        <fetcher.Form
-          onSubmit={form.handleSubmit((e) => {})}
-          className={" grid border rounded-lg p-2"}
-        >
-          <div className="grid border rounded-lg p-2">
-            <div className="flex justify-between items-center">
-              <Typography variant="subtitle2">{t("_contact.list")}</Typography>
-              {perm?.edit && (
-                <Button variant={"ghost"}>
-                  <PencilIcon />
-                  <span>Edit</span>
-                </Button>
-              )}
-            </div>
+    <div className="grid border rounded-lg p-2">
+      <div className="flex justify-between items-center">
+        <Typography variant="subtitle2">{t("_contact.list")}</Typography>
+      </div>
 
-            <div className="py-3 grid gap-y-3">
-              {fields.map((field, index) => {
-                
-                return (
-                  <div key={field.id} className="">
-                    <ContactFieldArray placeholder="Nombre de Contacto" 
-                    onSelect={(e)=>{
-                        const d = mapToContactSchema(e)
-                        console.log("CONTACT D",d)
-                        update(index,d)
-                        // form.setValue(`contacts.${index}`,d)
-                    }}/>
-                    {JSON.stringify(field)}
-                  </div>
-                );
-              })}
+      {enableEdit ? (
+        <div className="py-3 grid gap-y-3">
+          {fields.map((field, index) => {
+            return (
+              <div key={field.contact_id} className="grid gap-2">
+                {/* {JSON.stringify(field)} */}
+                <div className=" flex space-x-2 w-full items-center">
+                  <ContactAutocomplete
+                    placeholder="Nombre de Contacto"
+                    className="w-full"
+                    defaultValue={field.name}
+                    badgeLabel={
+                      field.contact_id && openStates[field.id]
+                        ? "Editar"
+                        : undefined
+                    }
+                    disableAutocomplete={field.contact_id != undefined}
+                    onBlur={(e) => {
+                      form.setValue(`contacts.${index}.name`, e);
+                      // form.trigger(`contacts.${index}`);
+                    }}
+                    actions={[
+                      ...(field.contact_id
+                        ? [
+                            ...(openStates[field.id]
+                              ? [
+                                  {
+                                    Icon: ArrowRightLeft,
+                                    onClick: () => toggleItem(field.id),
+                                  },
+                                ]
+                              : [
+                                  {
+                                    Icon: PencilIcon,
+                                    onClick: () => toggleItem(field.id),
+                                  },
+                                ]),
+                          ]
+                        : []),
+                    ]}
+                    onSelect={(e) => {
+                      const d = mapToContactSchema(e, partyID);
+                      console.log("CONTACT D", d);
+                      update(index, d);
+                      // form.setValue(`contacts.${index}`, d);
+                    }}
+                  />
+                  <XIcon
+                    className="icon-button w-4 h-4"
+                    onClick={() => {
+                      remove(index);
+                    }}
+                  />
+                </div>
 
-              <Button variant={"ghost"} onClick={() => append({name:""} as ContactData)}
-                className="text-xs mt-4 underline">
-                <PlusIcon className="w-4 h-4"/>
-                <span>Add Subtask</span>
-              </Button>
+                {openStates[field.id] && (
+                  <>
+                    <div>
+                      <FormLabel className="text-xs mb-1">E-mail</FormLabel>
+                      <Input
+                        className="text-xs"
+                        {...form.register(
+                          `contact_bulk.contacts.${index}.email`
+                        )}
+                        type="email"
+                      />
+                    </div>
 
-              {/* <ContactList
-            onAddContact={()=>{
-                if(onAddContact){
-                    onAddContact()
-                    }else{
-                        navigate(r.toRoute({
-                    main:partyTypeToJSON(PartyType.contact),
-                        routePrefix:["new"],
-                        q:{
-                            referenceID:partyID?.toString(),
-                            }
-                            }))
-                            }
-                            }}
-                            contacts={contacts}
-                            /> */}
-            </div>
-          </div>
-        </fetcher.Form>
-      </Form>
-    </FormLayout>
+                    <div>
+                      <FormLabel className="text-xs mb-1">Teléfono</FormLabel>
+                      <Input
+                        className="text-xs"
+                        {...form.register(
+                          `contact_bulk.contacts.${index}.phone_number`
+                        )}
+                        type="tel"
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
+          <Button
+            variant={"ghost"}
+            type="button"
+            onClick={onAddContact}
+            className="text-xs mt-4 underline"
+          >
+            <PlusIcon className="w-4 h-4" />
+            <span>Agregar contacto</span>
+          </Button>
+        </div>
+      ) : (
+        <ContactList contacts={contacts} onAddContact={onAddContact} />
+      )}
+    </div>
   );
 };

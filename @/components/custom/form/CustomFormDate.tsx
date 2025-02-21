@@ -53,7 +53,7 @@ export default function CustomFormDate({
           <FormLabel className="text-left text-xs">
             {label} {required && "*"}
           </FormLabel>
-          <Popover>
+          <Popover modal={true}>
             <FormControl>
               <PopoverTrigger asChild disabled={!allowEdit}>
                 <Button

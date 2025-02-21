@@ -26,7 +26,7 @@ interface KanbanColumnProps<T> {
   removeColumn: (index: number) => void;
   deleteColumn: (e: KanbanColumn<T>) => void;
   setSelectColumn: React.Dispatch<React.SetStateAction<number | null>>;
-  headerComponent: (e: T[]) => JSX.Element;
+  headerComponent: (e: T[],stage:KanbanColumn<T>) => JSX.Element;
   cardComponent: (e: T) => JSX.Element;
 }
 
@@ -196,7 +196,7 @@ export default function KanbanColumnComponent<T>({
             </div>
           </div>
 
-          {headerComponent(column.data)}
+          {headerComponent(column.data,column)}
           <Droppable droppableId={column.id.toString()} type="DEAL">
             {(provided) => (
               <div

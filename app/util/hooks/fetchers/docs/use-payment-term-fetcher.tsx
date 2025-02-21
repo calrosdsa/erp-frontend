@@ -1,4 +1,4 @@
-import Autocomplete from "@/components/custom/select/Autocomplete";
+import Autocomplete from "@/components/custom/select/autocomplete";
 import { useFetcher } from "@remix-run/react";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";

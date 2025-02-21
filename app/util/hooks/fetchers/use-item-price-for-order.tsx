@@ -8,7 +8,7 @@ import { PartyType, partyTypeToJSON } from "~/gen/common"
 import { Control, Form } from "react-hook-form"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import { formatCurrency } from "~/util/format/formatCurrency"
-import Autocomplete from "@/components/custom/select/Autocomplete"
+import Autocomplete from "@/components/custom/select/autocomplete"
 
 
 export const PriceAutocompleteForm = ({

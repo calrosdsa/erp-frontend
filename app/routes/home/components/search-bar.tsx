@@ -1,4 +1,4 @@
-import Autocomplete from "@/components/custom/select/Autocomplete";
+import Autocomplete from "@/components/custom/select/autocomplete";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useNavigate } from "@remix-run/react";
 import { Control } from "react-hook-form";

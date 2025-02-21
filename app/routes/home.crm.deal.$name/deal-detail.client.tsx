@@ -1,41 +1,38 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
-  SheetOverlay,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
   useFetcher,
   useLoaderData,
   useNavigate,
-  useOutletContext,
   useSearchParams,
 } from "@remix-run/react";
-import { useEffect, useRef, useState } from "react";
-import { action, loader } from "./route";
+import { useEffect, useState } from "react";
+import { loader } from "./route";
 import StagesHeader from "../home.stage/components/stages-header";
 import DealInfoTab from "./tab/deal-info";
 import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import ResponsiveSidebar from "@/components/layout/nav/responsive-sidebar";
-import { Separator } from "@/components/ui/separator";
 import { XIcon } from "lucide-react";
+import { components } from "~/sdk";
+import { useDealStore } from "./deal-store";
 
 export default function NewDealClient() {
-  const [open, setOpen] = useState(true);
+  // const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const { deal, stages } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
   const { t } = useTranslation("common");
+  const fetcherStage = useFetcher();
+  const { payload, setPayload,editPayload } = useDealStore();
 
   const toRoute = (tab: string) => {
     return route.toRoute({
@@ -48,6 +45,29 @@ export default function NewDealClient() {
     });
   };
 
+  const dealTransition = (
+    destinationStage: components["schemas"]["StageDto"]
+  ) => {
+    if (!deal?.id) return;
+    const body: components["schemas"]["DealTransitionData"] = {
+      deal_id: deal?.id,
+      destination_index: destinationStage.index,
+      destination_stage_id: destinationStage.id,
+      source_index: deal?.index,
+      source_stage_id: 0,
+    };
+    fetcherStage.submit(
+      {
+        action: "deal-transition",
+        dealTransition: body,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
+  };
+
   const navItems = [
     {
       title: t("info"),
@@ -55,38 +75,62 @@ export default function NewDealClient() {
     },
   ];
 
+  
+
   useEffect(() => {
     if (!open) {
-      navigate(-1);
+      navigate(
+        route.toRoute({
+          main: route.deal,
+        })
+      );
     }
   }, [open]);
   return (
     <div>
-       <Sheet open={open} onOpenChange={(e) => setOpen(e)} >
-        <SheetContent 
-        onInteractOutside={event => event.preventDefault()}
-        className="md:max-w-full md:w-[80%] overflow-auto [&>button]:hidden">
-          <SheetHeader>
-              <SheetClose  asChild className="  w-min ">
+      <Sheet open={payload.open} onOpenChange={(e) => editPayload({open:e})}>
+        <SheetContent
+          onInteractOutside={(event) => event.preventDefault()}
+          className="w-full md:max-w-full md:w-[80%] overflow-auto  [&>button]:hidden px-0 pb-20"
+        >
+          <div className="px-5">
+            <SheetHeader>
+              <SheetClose asChild className="  w-min ">
                 <Button size={"sm"} variant="outline">
-                <XIcon/>
+                  <XIcon />
                 </Button>
               </SheetClose>
-            <div className="flex justify-between">
-            <SheetTitle>Nuevo trato</SheetTitle>
+              <div className="flex justify-between">
+                <SheetTitle>Nuevo trato</SheetTitle>
+              </div>
+              <StagesHeader
+                stages={stages}
+                selectedStageID={deal?.stage_id || payload.stage?.id}
+                transition={(destinationID) => {}}
+              />
+              <ResponsiveSidebar navItems={navItems} />
+            </SheetHeader>
+            <div className="grid gap-4 py-4">
+              {tab == "info" && <DealInfoTab />}
             </div>
-            <StagesHeader
-            stages={stages}
-            selectedStageID={deal?.stage_id}
-            />
-            <ResponsiveSidebar
-            navItems={navItems}
-            />
-          </SheetHeader>
-          <div className="grid gap-4 py-4">
-            {tab == "info" && <DealInfoTab />}
           </div>
-          </SheetContent>
+          {payload.isEditable && (
+            <div className="fixed bottom-0 border-t md:max-w-full md:w-[80%] shadow-xl bg-background ">
+              <div className="flex justify-center items-center space-x-2 h-20 ">
+                <Button
+                  onClick={payload.onCancel}
+                  size={"lg"}
+                  variant={"outline"}
+                >
+                  Cancelar
+                </Button>
+                <Button onClick={payload.onSave} size={"lg"}>
+                  Guardar
+                </Button>
+              </div>
+            </div>
+          )}
+        </SheetContent>
       </Sheet>
     </div>
   );

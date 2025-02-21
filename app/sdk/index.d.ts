@@ -5035,6 +5035,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            contact_bulk: components["schemas"]["ContactBulkData"];
             fields: components["schemas"]["DealFields"];
             /** Format: int64 */
             id: number;
@@ -5062,6 +5063,8 @@ export interface components {
             stage: string;
             /** Format: int32 */
             stage_id: number;
+            /** Format: int32 */
+            stage_index: number;
             /** Format: date-time */
             start_date: string;
             uuid: string;

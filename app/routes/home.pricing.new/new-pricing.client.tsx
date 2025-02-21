@@ -124,10 +124,7 @@ export default function NewPricingClient() {
         fetcher={fetcher}
         onSubmit={onSubmit}
         inputRef={inputRef}
-        defaultValues={{
-          pricing_charges: defaultPricingCharges,
-          pricing_line_items: [],
-        }}
+        
       />
     </Card>
   );

@@ -13,6 +13,7 @@ import {
   setUpToolbar,
   setUpToolbarTab,
   useLoadingTypeToolbar,
+  useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { FormEvent, MutableRefObject, useEffect, useRef } from "react";
@@ -84,6 +85,8 @@ export default function PricingInfo({}: // inputRef
   });
   const confirmationDialog = useConfirmationDialog();
   const toolbar = useToolbar();
+    const { setRegister } = useSetupToolbarStore();
+  
 
   const allowEdit = permission?.edit || false;
 
@@ -145,7 +148,9 @@ export default function PricingInfo({}: // inputRef
     },
     [fetcher.state]
   );
-  setUpToolbarTab(()=>{
+
+  useEffect(() => {
+
     const state = stateFromJSON(pricing?.status);
 
     let actions: ButtonToolbar[] = [];
@@ -161,7 +166,7 @@ export default function PricingInfo({}: // inputRef
         },
       });
     }
-    if (quoPerm.create && state == State.SUBMITTED && pricing) {
+    if (quoPerm.create && state == State.SUBMITTED && pricing && pricing.customer_id) {
       actions.push({
         label: "Generar Cotización de Venta",
         onClick: () => {
@@ -173,15 +178,14 @@ export default function PricingInfo({}: // inputRef
         },
       });
     }
-    return {
+    setRegister("tab", {
       actions: actions,
       onSave: () => {
         inputRef.current?.click();
       },
-      disabledSave: !hasChanged,
-    }
-  },[allowEdit,pricing])
-
+      disabledSave: !allowEdit,
+    });
+  }, [allowEdit,pricing]);
   // useEffect(() => {
    
   //   toolbar.setToolbar({

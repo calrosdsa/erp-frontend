@@ -8,7 +8,7 @@ import {
 import { action, loader } from "../route";
 import { GlobalState } from "~/types/app";
 import { useDealStore } from "../deal-store";
-import { useForm, useWatch } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { DealData, dealSchema } from "~/util/data/schemas/crm/deal.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fullName } from "~/util/convertor/convertor";
@@ -20,6 +20,8 @@ import { formatAmount } from "~/util/format/formatCurrency";
 import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
 import { PartyContacts } from "~/routes/home.party/components/party-contacts";
 import { Entity } from "~/types/enums";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { route } from "~/util/route";
 
 export default function DealInfoTab() {
   const navigate = useNavigate();
@@ -28,16 +30,15 @@ export default function DealInfoTab() {
   const { profile, roleActions } = useOutletContext<GlobalState>();
   const [perm] = usePermission({ actions, roleActions });
   const fetcher = useFetcher<typeof action>();
-  const { payload, setPayload } = useDealStore();
+  const { payload, setPayload, editPayload } = useDealStore();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const permissions = useEntityPermission({
-    entities:entityActions,
-    roleActions:roleActions,
+    entities: entityActions,
+    roleActions: roleActions,
   });
-
-  const allowEdit = perm.edit;
+  const allowEdit = perm.edit || payload.isEditable;
   // Initialize the form with default values and schema validation.
   const form = useForm<DealData>({
     resolver: zodResolver(dealSchema),
@@ -53,7 +54,6 @@ export default function DealInfoTab() {
       index: 0,
     },
   });
-
   // Watch all form fields to update our deal store.
   const watchedFields = useWatch({ control: form.control });
 
@@ -70,20 +70,28 @@ export default function DealInfoTab() {
   };
 
   // Display toasts based on fetcher response and handle redirection.
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({ title: fetcher.data.error });
-    }
-    if (fetcher.data?.message) {
-      toast({ title: fetcher.data.message });
-      //   const redirect = searchParams.get("redirect");
-      //   if (redirect) {
-      //     navigate(redirect);
-      //   } else {
-      //     navigate(-1);
-      //   }
-    }
-  }, [fetcher.data]);
+
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        if (fetcher.data?.deal) {
+          navigate(
+            route.toRoute({
+              main: route.deal,
+              routeSufix: [fetcher.data.deal.name],
+              q: {
+                tab: "info",
+                id: fetcher.data.deal.uuid,
+              },
+            })
+          );
+        }
+      },
+    },
+    [fetcher.data]
+  );
 
   // When the deal data is available, reset the form with its values.
   useEffect(() => {
@@ -119,30 +127,38 @@ export default function DealInfoTab() {
 
   // Update our deal store whenever the form fields change.
   useEffect(() => {
-    setPayload(form.getValues());
+    editPayload(form.getValues());
   }, [watchedFields]);
 
+  useEffect(() => {
+    editPayload({
+      onSave: () => inputRef.current?.click(),
+      onCancel: () =>
+        deal?.id
+          ? editPayload({
+              isEditable: false,
+            })
+          : editPayload({
+              isEditable: false,
+              open: false,
+            }),
+    });
+  }, []);
+
   return (
-    <div className="grid grid-cols-2 gap-2">
-      <div className="grid gap-3">
+    <div className="grid grid-cols-9 gap-2">
+      <div className="grid gap-3 col-span-4">
         <DealForm
           form={form}
           fetcher={fetcher}
           inputRef={inputRef}
           onSubmit={onSubmit}
           allowEdit={allowEdit}
-        />
-
-        <PartyContacts
-          contacts={contacts}
-          onAddContact={() => {
-            // navigate(r.toCreateContact(supplier?.id));
-          }}
-          perm={permissions[Entity.CONTACT]}
+          enableEditDefault={payload.isEditable}
         />
       </div>
       {deal?.id && (
-        <div className="">
+        <div className=" col-span-5">
           <ActivityFeed activities={activities} partyID={deal?.id} />
         </div>
       )}
