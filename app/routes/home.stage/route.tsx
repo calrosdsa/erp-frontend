@@ -48,7 +48,6 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
-      actionRes = "";
       break;
     }
     case "edit": {

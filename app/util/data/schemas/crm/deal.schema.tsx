@@ -3,7 +3,7 @@ import { field, fieldRequired } from "..";
 import { components } from "~/sdk";
 import { formatAmountToInt } from "~/util/format/formatCurrency";
 import { formatRFC3339 } from "date-fns";
-import { contactBulkDataSchema, contactDataSchema, mapToContactBulkData } from "../contact/contact.schema";
+import { contactBulkDataSchema, contactDataSchema, mapToContactBulkData, mapToContactData } from "../contact/contact.schema";
 
 export type DealData = z.infer<typeof dealSchema>
 
@@ -41,7 +41,7 @@ export const mapToDealData = (e:DealData) => {
             index:e.index,
         },
         id: e.id || 0,
-        contact_bulk:e.cont
+        contacts:e.contacts.map(t=>mapToContactData(t))
     }
     return d
 }

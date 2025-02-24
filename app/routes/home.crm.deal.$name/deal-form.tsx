@@ -26,22 +26,23 @@ export default function DealForm({
   onSubmit,
   inputRef,
   allowEdit,
-  enableEditDefault = false,
+  enableEdit,
+  setEnableEdit,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<DealData>;
   onSubmit: (e: DealData) => void;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
-  enableEditDefault?: boolean;
+  enableEdit?: boolean;
+  setEnableEdit: (e: boolean) => void;
 }) {
   const { t } = useTranslation("common");
-  const [enableEdit, setEnableEdit] = useState(enableEditDefault);
   const fieldArray = useFieldArray({
     control: form.control,
     name: "contacts",
   });
-  const formValues = form.getValues()
+  const formValues = form.getValues();
   return (
     <FormLayout>
       <Form {...form}>
@@ -53,8 +54,9 @@ export default function DealForm({
           className={" grid border rounded-lg p-2"}
         >
           {/* {JSON.stringify(form.formState.errors)} */}
+          {/* {JSON.stringify(formValues)} */}
           <div className="">
-            <div className="grid gap-2">
+
               <div className=" grid gap-2">
                 <div className="flex justify-between items-center">
                   <Typography variant="subtitle2" className=" col-span-full">
@@ -81,9 +83,7 @@ export default function DealForm({
                       variant="ghost"
                       type="button"
                       size="xs"
-                      onClick={() => {
-                        setEnableEdit(true);
-                      }}
+                      onClick={() => setEnableEdit(true)}
                     >
                       <PencilIcon />
                       <span>Editar</span>
@@ -92,6 +92,13 @@ export default function DealForm({
                   {/* )} */}
                 </div>
                 <Separator />
+
+                {/* {enableEdit &&
+                  <>
+                  </>
+                } */}
+                
+                <div className="">
                 <div className="grid sm:grid-cols-2 gap-3">
                   <CustomFormFieldInput
                     control={form.control}
@@ -138,46 +145,50 @@ export default function DealForm({
                     allowEdit={enableEdit}
                   />
                 </div>
-              </div>
 
-              <div className=" col-start-1 py-3 grid gap-2">
-                <Typography variant="subtitle2" className=" col-span-full">
-                  Mas
-                </Typography>
+                <div className=" col-start-1 py-3 grid gap-2">
+                  <Typography variant="subtitle2" className=" col-span-full">
+                    Mas
+                  </Typography>
 
-                <SelectForm
-                  control={form.control}
-                  data={dealTypes}
-                  keyName="name"
-                  keyValue="value"
-                  allowEdit={enableEdit}
-                  label="Tipo de acuerdo"
-                  name={"deal_type"}
-                />
-                <CustomFormFieldInput
-                  control={form.control}
-                  name="source"
-                  label={"Fuente"}
-                  inputType="input"
-                  allowEdit={enableEdit}
-                />
+                  <SelectForm
+                    control={form.control}
+                    data={dealTypes}
+                    keyName="name"
+                    keyValue="value"
+                    allowEdit={enableEdit}
+                    label="Tipo de acuerdo"
+                    name={"deal_type"}
+                  />
+                  <CustomFormFieldInput
+                    control={form.control}
+                    name="source"
+                    label={"Fuente"}
+                    inputType="input"
+                    allowEdit={enableEdit}
+                  />
 
-                <CustomFormFieldInput
-                  control={form.control}
-                  name="source_information"
-                  label={"Información de fuente"}
-                  inputType="textarea"
-                  allowEdit={enableEdit}
-                />
-              </div>
+                  <CustomFormFieldInput
+                    control={form.control}
+                    name="source_information"
+                    label={"Información de fuente"}
+                    inputType="textarea"
+                    allowEdit={enableEdit}
+                  />
+                </div>
+                </div>
+
+
+
             </div>
 
             <PartyContacts
-              fieldArray={fieldArray}
+              fieldArray={fieldArray as any}
               form={form}
               partyID={formValues.id}
               contacts={formValues.contacts}
-              
+              enableEdit={enableEdit}
+              setEnableEdit={setEnableEdit}
               // perm={permissions[Entity.CONTACT]}
             />
 

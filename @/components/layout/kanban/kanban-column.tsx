@@ -26,7 +26,7 @@ interface KanbanColumnProps<T> {
   removeColumn: (index: number) => void;
   deleteColumn: (e: KanbanColumn<T>) => void;
   setSelectColumn: React.Dispatch<React.SetStateAction<number | null>>;
-  headerComponent: (e: T[],stage:KanbanColumn<T>) => JSX.Element;
+  headerComponent: (e: T[], stage: KanbanColumn<T>) => JSX.Element;
   cardComponent: (e: T) => JSX.Element;
 }
 
@@ -80,7 +80,7 @@ export default function KanbanColumnComponent<T>({
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className="flex min-w-64 min-h-[90vh] bg-gray-100  flex-col rounded-sm border-r border-l"
+          className="flex min-w-64  bg-secondary  h-[85vh] flex-col rounded-b-lg border-r border-l"
         >
           <div
             {...provided.dragHandleProps}
@@ -196,40 +196,37 @@ export default function KanbanColumnComponent<T>({
             </div>
           </div>
 
-          {headerComponent(column.data,column)}
+          {headerComponent(column.data, column)}
           <Droppable droppableId={column.id.toString()} type="DEAL">
             {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className="flex-1 space-y-4 overflow-y-auto p-4"
+                className="flex-1 space-y-3 overflow-auto px-3 h-[65vh]"
               >
-                {column.data.map((item, index) => {
-                  const id = (item["id" as keyof T] as number).toString()
-                  return (
-                    <Draggable
-                      key={id}
-                      draggableId={id}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <Card
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className=" "
-                          
-                        >
-                          <div className="bg-white p-4 rounded-lg border-0 border-l-2" style={{
-                            borderColor:column.color,
-                          }}>
-                          {cardComponent(item)}
-                          </div>
-                        </Card>
-                      )}
-                    </Draggable>
-                  );
-                })}
+                  {column.data.map((item, index) => {
+                    const id = (item["id" as keyof T] as number).toString();
+                    return (
+                      <Draggable key={id} draggableId={id} index={index}>
+                        {(provided) => (
+                          <Card
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <div
+                              className="p-2 rounded-lg border-0 border-l-2"
+                              style={{
+                                borderColor: column.color,
+                              }}
+                            >
+                              {cardComponent(item)}
+                            </div>
+                          </Card>
+                        )}
+                      </Draggable>
+                    );
+                  })}
 
                 {provided.placeholder}
               </div>

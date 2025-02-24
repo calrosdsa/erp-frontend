@@ -15,8 +15,8 @@ export default function CrmClient() {
     destination: DraggableLocation<string>,
     data: components["schemas"]["DealDto"]
   ) => {
-    const body:components["schemas"]["DealTransitionData"] = {
-      deal_id: data.id,
+    const body:components["schemas"]["EntityTransitionData"] = {
+      id: data.id,
       destination_index: destination.index,
       destination_stage_id: Number(destination.droppableId),
       source_index: source.index,

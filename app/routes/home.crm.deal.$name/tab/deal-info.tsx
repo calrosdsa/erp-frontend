@@ -22,6 +22,7 @@ import { PartyContacts } from "~/routes/home.party/components/party-contacts";
 import { Entity } from "~/types/enums";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
+import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
 
 export default function DealInfoTab() {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ export default function DealInfoTab() {
     entities: entityActions,
     roleActions: roleActions,
   });
-  const allowEdit = perm.edit || payload.isEditable;
+  const allowEdit = perm.edit || payload.enableEdit;
   // Initialize the form with default values and schema validation.
   const form = useForm<DealData>({
     resolver: zodResolver(dealSchema),
@@ -118,6 +119,7 @@ export default function DealInfoTab() {
           uuid: deal.uuid,
         },
         deal_type: deal.deal_type,
+        contacts:contacts?.map(t=>mapToContactSchema(t)) || [],
         source: deal.source,
         source_information: deal.source_information,
         id: deal.id,
@@ -130,16 +132,18 @@ export default function DealInfoTab() {
     editPayload(form.getValues());
   }, [watchedFields]);
 
+
+
   useEffect(() => {
     editPayload({
       onSave: () => inputRef.current?.click(),
       onCancel: () =>
         deal?.id
           ? editPayload({
-              isEditable: false,
+              enableEdit: false,
             })
           : editPayload({
-              isEditable: false,
+              enableEdit: false,
               open: false,
             }),
     });
@@ -154,7 +158,12 @@ export default function DealInfoTab() {
           inputRef={inputRef}
           onSubmit={onSubmit}
           allowEdit={allowEdit}
-          enableEditDefault={payload.isEditable}
+          enableEdit={payload.enableEdit}
+          setEnableEdit={(e)=>{
+            editPayload({
+              enableEdit:e
+            })
+          }}
         />
       </div>
       {deal?.id && (

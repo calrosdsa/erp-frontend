@@ -5035,7 +5035,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            contact_bulk: components["schemas"]["ContactBulkData"];
+            contacts: components["schemas"]["ContactData"][];
             fields: components["schemas"]["DealFields"];
             /** Format: int64 */
             id: number;
@@ -5044,6 +5044,8 @@ export interface components {
             /** Format: int64 */
             amount: number;
             available_for_everyone: boolean;
+            /** Format: date-time */
+            created_at: string;
             currency: string;
             deal_type: string | null;
             /** Format: date-time */
@@ -5088,23 +5090,6 @@ export interface components {
             stage_id: number;
             /** Format: date-time */
             start_date: string;
-        };
-        DealTransitionData: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            deal_id: number;
-            /** Format: int32 */
-            destination_index: number;
-            /** Format: int64 */
-            destination_stage_id: number;
-            /** Format: int32 */
-            source_index: number;
-            /** Format: int64 */
-            source_stage_id: number;
         };
         DeleteEventBatchRequestBody: {
             /**
@@ -6372,6 +6357,23 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntityWareHouseDto"];
+        };
+        EntityTransitionData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int32 */
+            destination_index: number;
+            /** Format: int64 */
+            destination_stage_id: number;
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            source_index: number;
+            /** Format: int64 */
+            source_stage_id: number;
         };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
@@ -13497,7 +13499,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["DealTransitionData"];
+                "application/json": components["schemas"]["EntityTransitionData"];
             };
         };
         responses: {

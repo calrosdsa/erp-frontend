@@ -3,9 +3,10 @@ import NewDealClient from "./deal-detail.client";
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
-import { MAX_SIZE } from "~/constant";
+import { LOAD_ACTION, MAX_SIZE } from "~/constant";
 import { Entity } from "~/types/enums";
 import { components } from "~/sdk";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
@@ -18,6 +19,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   let deal: components["schemas"]["DealDto"] | undefined = undefined;
+  let action = LOAD_ACTION
   switch (data.action) {
     case "edit": {
       const res = await client.PUT("/deal", {
@@ -38,11 +40,26 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
   return json({
+    action,
     error,
     message,
     deal,
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

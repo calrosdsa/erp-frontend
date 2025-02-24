@@ -23,6 +23,8 @@ import ResponsiveSidebar from "@/components/layout/nav/responsive-sidebar";
 import { XIcon } from "lucide-react";
 import { components } from "~/sdk";
 import { useDealStore } from "./deal-store";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { action } from "../home.stage/route";
 
 export default function NewDealClient() {
   // const [open, setOpen] = useState(true);
@@ -31,8 +33,8 @@ export default function NewDealClient() {
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
   const { t } = useTranslation("common");
-  const fetcherStage = useFetcher();
-  const { payload, setPayload,editPayload } = useDealStore();
+  const fetcherStage = useFetcher<typeof action>();
+  const { payload, setPayload, editPayload } = useDealStore();
 
   const toRoute = (tab: string) => {
     return route.toRoute({
@@ -49,12 +51,12 @@ export default function NewDealClient() {
     destinationStage: components["schemas"]["StageDto"]
   ) => {
     if (!deal?.id) return;
-    const body: components["schemas"]["DealTransitionData"] = {
-      deal_id: deal?.id,
+    const body: components["schemas"]["EntityTransitionData"] = {
+      id: deal?.id,
       destination_index: destinationStage.index,
       destination_stage_id: destinationStage.id,
       source_index: deal?.index,
-      source_stage_id: 0,
+      source_stage_id: deal.stage_id,
     };
     fetcherStage.submit(
       {
@@ -64,9 +66,20 @@ export default function NewDealClient() {
       {
         method: "POST",
         encType: "application/json",
+        action: route.toRoute({
+          main: route.deal,
+        }),
       }
     );
   };
+
+  useDisplayMessage(
+    {
+      success: fetcherStage.data?.message,
+      error: fetcherStage.data?.error,
+    },
+    [fetcherStage.data]
+  );
 
   const navItems = [
     {
@@ -75,20 +88,32 @@ export default function NewDealClient() {
     },
   ];
 
-  
-
   useEffect(() => {
-    if (!open) {
-      navigate(
-        route.toRoute({
-          main: route.deal,
-        })
-      );
-    }
-  }, [open]);
+    editPayload({
+      open: true,
+    });
+  }, []);
+
   return (
     <div>
-      <Sheet open={payload.open} onOpenChange={(e) => editPayload({open:e})}>
+      <Sheet
+        open={payload.open}
+        onOpenChange={(e) => {
+          if (!e) {
+            editPayload({
+              enableEdit: false,
+              open: false,
+            });
+            setTimeout(() => {
+              navigate(
+                route.toRoute({
+                  main: route.deal,
+                })
+              );
+            }, 500);
+          }
+        }}
+      >
         <SheetContent
           onInteractOutside={(event) => event.preventDefault()}
           className="w-full md:max-w-full md:w-[80%] overflow-auto  [&>button]:hidden px-0 pb-20"
@@ -106,7 +131,7 @@ export default function NewDealClient() {
               <StagesHeader
                 stages={stages}
                 selectedStageID={deal?.stage_id || payload.stage?.id}
-                transition={(destinationID) => {}}
+                transition={dealTransition}
               />
               <ResponsiveSidebar navItems={navItems} />
             </SheetHeader>
@@ -114,7 +139,7 @@ export default function NewDealClient() {
               {tab == "info" && <DealInfoTab />}
             </div>
           </div>
-          {payload.isEditable && (
+          {payload.enableEdit && (
             <div className="fixed bottom-0 border-t md:max-w-full md:w-[80%] shadow-xl bg-background ">
               <div className="flex justify-center items-center space-x-2 h-20 ">
                 <Button

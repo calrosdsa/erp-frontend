@@ -4,7 +4,7 @@ import { DealData } from "~/util/data/schemas/crm/deal.schema";
 interface Payload extends DealData {
   onSave?: () => void;
   onCancel?: () => void;
-  isEditable?: boolean;
+  enableEdit?: boolean;
   open?: boolean;
 }
 
@@ -18,7 +18,7 @@ interface DealStore {
 export const useDealStore = create<DealStore>((set) => ({
   // Optionally, you could initialize isNew if needed, e.g., { isNew: false }
   payload: {
-    open:true,
+    enableEdit:false
   },
   setPayload: (update) =>
     set((state) => ({

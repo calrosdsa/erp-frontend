@@ -29,29 +29,27 @@ import {
 import { ContactAutocomplete } from "~/util/hooks/fetchers/core/use-contact-fetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
-interface Contact<T extends FieldValues> {
+interface Contact {
   contacts: ContactData[];
 }
 
-type FieldArray<T extends FieldValues> = UseFieldArrayReturn<
-  Contact<T>,
-  ArrayPath<Contact<T>>,
-  "id"
->;
+type FieldArray = UseFieldArrayReturn<Contact, ArrayPath<Contact>, "id">;
 
-export const PartyContacts = <T extends FieldValues>({
+export const PartyContacts = ({
   partyID,
   // perm,
-  enableEditDefault,
+  enableEdit,
   fieldArray,
   form,
   contacts,
+  setEnableEdit,
 }: {
   partyID?: number;
   // perm?: Permission;
   contacts?: ContactData[];
-  enableEditDefault?: boolean;
-  fieldArray: FieldArray<T>;
+  enableEdit?: boolean;
+  setEnableEdit: (e: boolean) => void;
+  fieldArray: FieldArray;
   form: UseFormReturn<any>;
 }) => {
   const { t } = useTranslation("common");
@@ -60,7 +58,6 @@ export const PartyContacts = <T extends FieldValues>({
   const { fields, append, remove, update } = fieldArray;
   const fetcher = useFetcher<typeof action>();
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
-  const [enableEdit, setEnableEdit] = useState(enableEditDefault);
 
   const toggleItem = (itemId: string) => {
     setOpenStates((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
