@@ -34,3 +34,8 @@ type CurrencyCode = {
 
 export const DEFAULT_MIN_LENGTH = 1;
 export const DEFAULT_MAX_LENGTH = 50;
+
+
+export const CREATE = "create"
+export const DELETE = "delete"
+export const EDIT = "edit"

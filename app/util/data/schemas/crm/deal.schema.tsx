@@ -6,6 +6,13 @@ import { formatRFC3339 } from "date-fns";
 import { contactBulkDataSchema, contactDataSchema, mapToContactBulkData, mapToContactData } from "../contact/contact.schema";
 
 export type DealData = z.infer<typeof dealSchema>
+export type ParticipantData = z.infer<typeof observerSchema>
+
+export const observerSchema = z.object({
+    profile_id:z.number(),
+    name:z.string(),
+    _action:z.string().optional(),
+})
 
 export const dealSchema = z.object({
     id:z.number().optional(),
@@ -22,7 +29,16 @@ export const dealSchema = z.object({
     responsible:fieldRequired,
     contacts:z.array(contactDataSchema),
     index:z.number(),
+    observers:z.array(observerSchema),
 })
+
+export const mapToParticipantData = (e:ParticipantData) =>{
+    const d:components["schemas"]["ParticipantData"] = {
+        action: e._action,
+        id:e.profile_id,
+    }
+    return d
+}
 
 export const mapToDealData = (e:DealData) => {
     const d:components["schemas"]["DealData"] = {
@@ -41,7 +57,16 @@ export const mapToDealData = (e:DealData) => {
             index:e.index,
         },
         id: e.id || 0,
-        contacts:e.contacts.map(t=>mapToContactData(t))
+        contacts:e.contacts.map(t=>mapToContactData(t)),
+        participants:e.observers.map(t=>mapToParticipantData(t)),
+    }
+    return d
+}
+
+export const mapToParticipantSchema = (e:components["schemas"]["ProfileDto"]) =>{
+    const d:ParticipantData = {
+        name: e.full_name,
+        profile_id: e.id,
     }
     return d
 }

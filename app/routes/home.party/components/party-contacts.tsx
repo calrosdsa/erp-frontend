@@ -17,12 +17,11 @@ import {
   UseFormReturn,
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { CREATE, DELETE, EDIT } from "~/constant";
 import { action } from "~/routes/home.contact_/route";
 import { components } from "~/sdk";
 import { Permission } from "~/types/permission";
 import {
-  ContactBulkData,
-  contactBulkDataSchema,
   ContactData,
   mapToContactSchema,
 } from "~/util/data/schemas/contact/contact.schema";
@@ -43,14 +42,16 @@ export const PartyContacts = ({
   form,
   contacts,
   setEnableEdit,
+  allowEdit,
 }: {
   partyID?: number;
   // perm?: Permission;
-  contacts?: ContactData[];
+  contacts?: components["schemas"]["ContactDto"][];
   enableEdit?: boolean;
   setEnableEdit: (e: boolean) => void;
   fieldArray: FieldArray;
   form: UseFormReturn<any>;
+  allowEdit?: boolean;
 }) => {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ export const PartyContacts = ({
     if (!enableEdit) {
       setEnableEdit(true);
     }
-    append({ name: "" } as ContactData);
+    append({ name: "", action: CREATE } as ContactData);
   };
 
   useDisplayMessage(
@@ -82,91 +83,106 @@ export const PartyContacts = ({
     <div className="grid border rounded-lg p-2">
       <div className="flex justify-between items-center">
         <Typography variant="subtitle2">{t("_contact.list")}</Typography>
+
+        {allowEdit && (
+          <Button
+            variant="ghost"
+            type="button"
+            size="xs"
+            onClick={() => setEnableEdit(true)}
+          >
+            <PencilIcon />
+            <span>Editar</span>
+          </Button>
+        )}
       </div>
 
       {enableEdit ? (
         <div className="py-3 grid gap-y-3">
-          {fields.map((field, index) => {
-            return (
-              <div key={field.contact_id} className="grid gap-2">
-                {/* {JSON.stringify(field)} */}
-                <div className=" flex space-x-2 w-full items-center">
-                  <ContactAutocomplete
-                    placeholder="Nombre de Contacto"
-                    className="w-full"
-                    defaultValue={field.name}
-                    badgeLabel={
-                      field.contact_id && openStates[field.id]
-                        ? "Editar"
-                        : undefined
-                    }
-                    disableAutocomplete={field.contact_id != undefined}
-                    onBlur={(e) => {
-                      form.setValue(`contacts.${index}.name`, e);
-                      // form.trigger(`contacts.${index}`);
-                    }}
-                    actions={[
-                      ...(field.contact_id
-                        ? [
-                            ...(openStates[field.id]
-                              ? [
-                                  {
-                                    Icon: ArrowRightLeft,
-                                    onClick: () => toggleItem(field.id),
-                                  },
-                                ]
-                              : [
-                                  {
-                                    Icon: PencilIcon,
-                                    onClick: () => toggleItem(field.id),
-                                  },
-                                ]),
-                          ]
-                        : []),
-                    ]}
-                    onSelect={(e) => {
-                      const d = mapToContactSchema(e, partyID);
-                      console.log("CONTACT D", d);
-                      update(index, d);
-                      // form.setValue(`contacts.${index}`, d);
-                    }}
-                  />
-                  <XIcon
-                    className="icon-button w-4 h-4"
-                    onClick={() => {
-                      remove(index);
-                    }}
-                  />
+          {fields
+            .filter((t) => t.action != DELETE)
+            .map((field, index) => {
+              return (
+                <div key={field.contact_id} className="grid gap-2">
+                  {/* {JSON.stringify(field)} */}
+                  <div className=" flex space-x-2 w-full items-center">
+                    <ContactAutocomplete
+                      placeholder="Nombre de Contacto"
+                      className="w-full"
+                      defaultValue={field.name}
+                      excludeIds={fields.map((t) => t.contact_id || 0)}
+                      badgeLabel={
+                        field.contact_id && openStates[field.id]
+                          ? "Editar"
+                          : undefined
+                      }
+                      disableAutocomplete={field.contact_id != undefined}
+                      onBlur={(e) => {
+                        form.setValue(`contacts.${index}.name`, e);
+                        // form.trigger(`contacts.${index}`);
+                      }}
+                      actions={[
+                        ...(field.contact_id
+                          ? [
+                              ...(openStates[field.id]
+                                ? [
+                                    {
+                                      Icon: ArrowRightLeft,
+                                      onClick: () => toggleItem(field.id),
+                                    },
+                                  ]
+                                : [
+                                    {
+                                      Icon: PencilIcon,
+                                      onClick: () => toggleItem(field.id),
+                                    },
+                                  ]),
+                            ]
+                          : []),
+                      ]}
+                      onSelect={(e) => {
+                        const d = mapToContactSchema(e, partyID);
+                        console.log("CONTACT D", d);
+                        update(index, { ...d, action: EDIT });
+                        // form.setValue(`contacts.${index}`, d);
+                      }}
+                    />
+                    <XIcon
+                      className="icon-button w-4 h-4"
+                      onClick={() => {
+                        update(index, { ...field, action: DELETE });
+                      }}
+                    />
+                  </div>
+
+                  {openStates[field.id] && (
+                    <>
+                      <div>
+                        <FormLabel className="text-xs mb-1">E-mail</FormLabel>
+                        <Input
+                          className="text-xs"
+                          {...form.register(
+                            `contact_bulk.contacts.${index}.email`
+                          )}
+                          type="email"
+                        />
+                      </div>
+
+                      <div>
+                        <FormLabel className="text-xs mb-1">Teléfono</FormLabel>
+                        <Input
+                          className="text-xs"
+                          {...form.register(
+                            `contact_bulk.contacts.${index}.phone_number`
+                          )}
+                          type="tel"
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
-
-                {openStates[field.id] && (
-                  <>
-                    <div>
-                      <FormLabel className="text-xs mb-1">E-mail</FormLabel>
-                      <Input
-                        className="text-xs"
-                        {...form.register(
-                          `contact_bulk.contacts.${index}.email`
-                        )}
-                        type="email"
-                      />
-                    </div>
-
-                    <div>
-                      <FormLabel className="text-xs mb-1">Teléfono</FormLabel>
-                      <Input
-                        className="text-xs"
-                        {...form.register(
-                          `contact_bulk.contacts.${index}.phone_number`
-                        )}
-                        type="tel"
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-            );
-          })}
+              );
+            })}
           <Button
             variant={"ghost"}
             type="button"

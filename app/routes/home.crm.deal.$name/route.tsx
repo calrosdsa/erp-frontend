@@ -95,10 +95,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return json({
     stages: stagesRes.data?.result || [],
-    deal: dealRes?.data?.result.entity || null,
+    deal: dealRes?.data?.result.entity.deal || null,
+    observers:dealRes?.data?.result.entity.participants || [],
     activities: dealRes?.data?.result.activities || [],
     actions: dealRes?.data?.actions,
-    contacts: dealRes?.data?.result.contacts,
+    contacts: dealRes?.data?.result.contacts || [],
     entityActions: dealRes?.data?.associated_actions,
   });
 };

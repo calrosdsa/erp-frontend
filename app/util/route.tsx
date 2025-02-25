@@ -72,13 +72,12 @@ class Routes {
 
   manage = this.base + "/manage";
   manageM = "manage";
-  users = this.manage + "/users";
   userM = "users";
   roles = this.manage + "/roles";
-
+  
   purchases = this.base + "/purchases";
   purchaseorders = this.purchases + "/orders";
-
+  
   settings = this.base + "/settings";
   uom = this.settings + "/uom";
   profile = this.settings + "/profile";
@@ -92,19 +91,19 @@ class Routes {
 
   stockLedger = "stockLedger";
   stockBalance = "stockBalance";
-
+  
   profitAndLoss = "profitAndLoss";
   cashFlow = "cashFlow";
   balanceSheet = "balanceSheet";
-
+  
   treeView = "treeView";
   accountM = "account";
   serialNoResume = "serialNoResume";
   quotation = "quotation";
   salesQuotation = "salesQuotation";
-
+  
   stage = "stage"
-
+  
   //Party
   purchaseReceipt = "purchaseReceipt";
   deliveryNote = "deliveryNote";
@@ -129,7 +128,7 @@ class Routes {
   itemGroup = "itemGroup";
   customerGroup = "customerGroup";
   supplierGroup = "supplierGroup";
-
+  
   termsAndConditions = "terms-and-conditions";
   paymentTerms = "payment-terms";
   paymentTermsTemplate =  "payment-terms-template";
@@ -137,11 +136,12 @@ class Routes {
   cashOutflow = "cash-outflow"
   bankAccount = "bank-account"
   deal = "crm/deal"
+  users =  "manage/users";
 
   defaultTab = {
     tab: "info",
   };
-
+  
   to(href: string, q?: Record<string, string | undefined>): string {
     return `${this.base}/${this.baseRoute(href, q)}`;
     // return href;

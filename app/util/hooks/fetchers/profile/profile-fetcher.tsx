@@ -11,17 +11,17 @@ import Autocomplete, {
   AutoCompleteProps,
 } from "@/components/custom/select/autocomplete";
 
-type Contact = components["schemas"]["ContactDto"];
+type Profile = components["schemas"]["ProfileDto"];
 interface ContactFormProps
-  extends Partial<AutocompleteFormProps<Contact, keyof Contact>> {}
+  extends Partial<AutocompleteFormProps<Profile, keyof Profile>> {}
 
 interface ContactAutocompleteProps
-  extends Partial<AutoCompleteProps<Contact, keyof Contact>> {
-    excludeIds:number[]
+  extends Partial<AutoCompleteProps<Profile, keyof Profile>> {
+    excludeIds?:number[]
   }
 
-export const ContactAutocomplete = ({ ...props }: ContactAutocompleteProps) => {
-  const [fetcher, onChange] = useContactFetcher();
+export const ProfileAutocomplete = ({ ...props }: ContactAutocompleteProps) => {
+  const [fetcher, onChange] = useProfileFetcher();
   return (
     <Autocomplete
       {...props}
@@ -32,22 +32,22 @@ export const ContactAutocomplete = ({ ...props }: ContactAutocompleteProps) => {
         }
         props.onValueChange?.(e);
       }}
-      nameK="name"
+      nameK="full_name"
     />
   );
 };
 
-export const ContactAutoCompleteFormField = ({
+export const ProfileAutoCompleteFormField = ({
   ...props
 }: ContactFormProps) => {
-  const [fetcher, onChange] = useContactFetcher();
+  const [fetcher, onChange] = useProfileFetcher();
   return (
     <FormAutocompleteField
       {...props}
       data={fetcher.data?.results || []}
       onValueChange={onChange}
-      nameK="name"
-      name={props.name || "address"}
+      nameK="full_name"
+      name={props.name || "profile"}
       //   onCustomDisplay={(e) => {
       //     return (
       //       <div className="flex flex-col">
@@ -60,17 +60,16 @@ export const ContactAutoCompleteFormField = ({
   );
 };
 
-export const useContactFetcher = () => {
+export const useProfileFetcher = () => {
   const r = route;
   const fetcherDebounce = useDebounceFetcher<{
-    results: components["schemas"]["ContactDto"][];
+    results: components["schemas"]["ProfileDto"][];
     actions: components["schemas"]["ActionDto"][];
   }>();
   const onChange = (e: string) => {
-    const d: operations["contacts"]["parameters"]["query"] = {
+    const d: operations["profiles"]["parameters"]["query"] = {
       size: DEFAULT_SIZE,
-      name: formatQuery(e),
-      // name:e
+      full_name: formatQuery(e),
     };
     fetcherDebounce.submit(
       {
@@ -82,7 +81,7 @@ export const useContactFetcher = () => {
         encType: "application/json",
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         action: r.toRoute({
-          main: r.contact,
+          main: r.users,
         }),
       }
     );

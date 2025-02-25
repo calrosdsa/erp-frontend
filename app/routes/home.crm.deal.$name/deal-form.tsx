@@ -19,6 +19,9 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { PencilIcon } from "lucide-react";
 import { PartyContacts } from "../home.party/components/party-contacts";
+import Participants from "./components/observers";
+import { components } from "~/sdk";
+import { ProfileAutoCompleteFormField } from "~/util/hooks/fetchers/profile/profile-fetcher";
 
 export default function DealForm({
   fetcher,
@@ -28,6 +31,8 @@ export default function DealForm({
   allowEdit,
   enableEdit,
   setEnableEdit,
+  observers,
+  contacts,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<DealData>;
@@ -36,6 +41,8 @@ export default function DealForm({
   allowEdit?: boolean;
   enableEdit?: boolean;
   setEnableEdit: (e: boolean) => void;
+  observers:components["schemas"]["ProfileDto"][]
+  contacts:components["schemas"]["ContactDto"][]
 }) {
   const { t } = useTranslation("common");
   const fieldArray = useFieldArray({
@@ -51,54 +58,36 @@ export default function DealForm({
             onSubmit(e);
             setEnableEdit(false);
           })}
-          className={" grid border rounded-lg p-2"}
+          className={" grid p-2 gap-3"}
         >
           {/* {JSON.stringify(form.formState.errors)} */}
           {/* {JSON.stringify(formValues)} */}
-          <div className="">
+            <div className=" border rounded-lg p-2 grid gap-2">
+              <div className="flex justify-between items-center">
+                <Typography variant="subtitle2" className=" col-span-full">
+                  Acerca del acuerdo
+                </Typography>
+                {allowEdit && (
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    size="xs"
+                    onClick={() => setEnableEdit(true)}
+                  >
+                    <PencilIcon />
+                    <span>Editar</span>
+                  </Button>
+                )}
+                {/* )} */}
+              </div>
+              <Separator />
 
-              <div className=" grid gap-2">
-                <div className="flex justify-between items-center">
-                  <Typography variant="subtitle2" className=" col-span-full">
-                    Acerca del acuerdo
-                  </Typography>
-                  {/* {enableEdit ? (
-                    <div className="flex space-x-1">
-                      <Button variant="outline" type="submit" size="xs">
-                        <span>Guardar</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="xs"
-                        onClick={() => {
-                          setEnableEdit(false);
-                        }}
-                      >
-                        <span>Cancelar</span>
-                      </Button>
-                    </div>
-                  ) : ( */}
-                  {allowEdit && (
-                    <Button
-                      variant="ghost"
-                      type="button"
-                      size="xs"
-                      onClick={() => setEnableEdit(true)}
-                    >
-                      <PencilIcon />
-                      <span>Editar</span>
-                    </Button>
-                  )}
-                  {/* )} */}
-                </div>
-                <Separator />
-
-                {/* {enableEdit &&
+              {/* {enableEdit &&
                   <>
                   </>
                 } */}
-                
-                <div className="">
+
+              <div className="">
                 <div className="grid sm:grid-cols-2 gap-3">
                   <CustomFormFieldInput
                     control={form.control}
@@ -175,10 +164,17 @@ export default function DealForm({
                     inputType="textarea"
                     allowEdit={enableEdit}
                   />
-                </div>
+
+                  <ProfileAutoCompleteFormField
+                  control={form.control}
+                  name="responsible"
+                  label="Responsable"
+                  allowEdit={enableEdit}
+                  />
+
                 </div>
 
-
+              </div>
 
             </div>
 
@@ -186,53 +182,22 @@ export default function DealForm({
               fieldArray={fieldArray as any}
               form={form}
               partyID={formValues.id}
-              contacts={formValues.contacts}
+              contacts={contacts}
               enableEdit={enableEdit}
               setEnableEdit={setEnableEdit}
+              allowEdit={allowEdit}
               // perm={permissions[Entity.CONTACT]}
             />
 
-            {/* <div className="col-span-full" />
-            <Typography variant="subtitle2" className=" col-span-full">
-              Datos de la Factura
-            </Typography>
-
-            <CustomFormFieldInput
-              control={form.control}
-              name="invoice_no"
-              label={"No de factura"}
-              inputType="input"
-              allowEdit={enableEdit}
-            />
-            <CustomFormFieldInput
-              control={form.control}
-              name="nit"
-              label={"NIT"}
-              inputType="input"
-              allowEdit={enableEdit}
-            />
-            <CustomFormFieldInput
-              control={form.control}
-              name="auth_code"
-              label={"Código de autorización"}
-              inputType="input"
-              allowEdit={enableEdit}
+            <Participants
+              form={form}
+              allowEdit={allowEdit}
+              enableEdit={enableEdit}
+              setEnableEdit={setEnableEdit}
+              observers={observers}
             />
 
-            <CustomFormFieldInput
-              control={form.control}
-              name="ctrl_code"
-              label={"Código de Control"}
-              inputType="input"
-              allowEdit={enableEdit}
-            />
-            <CustomFormDate
-              control={form.control}
-              name="emision_date"
-              label={"Fecha de emisión"}
-              allowEdit={enableEdit}
-            /> */}
-          </div>
+        
 
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

@@ -9,7 +9,7 @@ import { action, loader } from "../route";
 import { GlobalState } from "~/types/app";
 import { useDealStore } from "../deal-store";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import { DealData, dealSchema } from "~/util/data/schemas/crm/deal.schema";
+import { DealData, dealSchema, mapToParticipantSchema } from "~/util/data/schemas/crm/deal.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fullName } from "~/util/convertor/convertor";
 import DealForm from "../deal-form";
@@ -23,10 +23,11 @@ import { Entity } from "~/types/enums";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
+import { components } from "~/sdk";
 
 export default function DealInfoTab() {
   const navigate = useNavigate();
-  const { deal, activities, actions, contacts, entityActions } =
+  const { deal, activities, actions, contacts, entityActions,observers } =
     useLoaderData<typeof loader>();
   const { profile, roleActions } = useOutletContext<GlobalState>();
   const [perm] = usePermission({ actions, roleActions });
@@ -95,35 +96,40 @@ export default function DealInfoTab() {
   );
 
   // When the deal data is available, reset the form with its values.
+
+  const setDeal = (e:components["schemas"]["DealDto"]) => {
+    form.reset({
+      name: e.name,
+      amount: formatAmount(e.amount),
+      currency: e.currency,
+      stage: {
+        name: e.stage,
+        id: e.stage_id,
+        uuid: "",
+      },
+      start_date: new Date(e.start_date),
+      end_date: e.end_date ? new Date(e.end_date) : undefined,
+      available_for_everyone: e.available_for_everyone,
+      index: e.index,
+      responsible: {
+        id: e.responsible_id,
+        name: fullName(
+          e.responsible_given_name,
+          e.responsible_family_name
+        ),
+        uuid: e.uuid,
+      },
+      deal_type: e.deal_type,
+      contacts:contacts?.map(t=>mapToContactSchema(t)) || [],
+      observers:observers.map(t=>mapToParticipantSchema(t)) || [],
+      source: e.source,
+      source_information: e.source_information,
+      id: e.id,
+    });
+  }
   useEffect(() => {
     if (deal) {
-      form.reset({
-        name: deal.name,
-        amount: formatAmount(deal.amount),
-        currency: deal.currency,
-        stage: {
-          name: deal.stage,
-          id: deal.stage_id,
-          uuid: "",
-        },
-        start_date: new Date(deal.start_date),
-        end_date: deal.end_date ? new Date(deal.end_date) : undefined,
-        available_for_everyone: deal.available_for_everyone,
-        index: deal.index,
-        responsible: {
-          id: deal.responsible_id,
-          name: fullName(
-            deal.responsible_given_name,
-            deal.responsible_family_name
-          ),
-          uuid: deal.uuid,
-        },
-        deal_type: deal.deal_type,
-        contacts:contacts?.map(t=>mapToContactSchema(t)) || [],
-        source: deal.source,
-        source_information: deal.source_information,
-        id: deal.id,
-      });
+      setDeal(deal)
     }
   }, [deal]);
 
@@ -157,9 +163,14 @@ export default function DealInfoTab() {
           fetcher={fetcher}
           inputRef={inputRef}
           onSubmit={onSubmit}
+          contacts={contacts}
+          observers={observers}
           allowEdit={allowEdit}
           enableEdit={payload.enableEdit}
           setEnableEdit={(e)=>{
+            if(deal){
+              setDeal(deal)
+            }
             editPayload({
               enableEdit:e
             })

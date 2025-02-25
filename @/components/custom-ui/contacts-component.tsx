@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { ContactData } from "~/util/data/schemas/contact/contact.schema";
 
 interface ContactListProps {
-  contacts?: ContactData[] | null;
+  contacts?: components["schemas"]["ContactDto"][] | null;
   onAddContact?: () => void;
 }
 
@@ -47,7 +47,6 @@ export default function ContactList({
             <Plus className="w-4 h-4" />
             <span>Agregar contacto</span>
           </Button>
-          
         </div>
       </div>
     );
@@ -60,10 +59,10 @@ export default function ContactList({
   };
 
   return (
-    <div className="w-full max-w-2xl mt-2 ">
+    <div className="w-full max-w-2xl mt-2 grid gap-3 ">
       {contacts.map((contact, index) => (
         <div
-          key={contact.contact_id}
+          key={contact.id}
           className="transition-all duration-300 ease-in-out"
         >
           <Card className="w-full overflow-hidden ">
@@ -73,13 +72,12 @@ export default function ContactList({
             >
               <div className="flex items-center space-x-2">
                 <User className="w-5 h-5 text-primary" />
-                <CardTitle className="text-lg font-semibold">
+                <CardTitle className="text-sm font-semibold">
                   {contact.name}
                 </CardTitle>
               </div>
 
               <div className="flex space-x-2">
-             
                 {/* <IconButton
                   label={expandedIndex.includes(index) ? 'collapse' : 'expand'}
                   className='text-primary transition-transform duration-300'

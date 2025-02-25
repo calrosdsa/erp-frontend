@@ -9,7 +9,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
 
 export default function UsersClient() {
-  const { paginationResult, actions } = useLoaderData<typeof loader>();
+  const { result, actions } = useLoaderData<typeof loader>();
   const state = useOutletContext<GlobalState>();
   const [permission] = usePermission({
     actions: actions,
@@ -31,7 +31,7 @@ export default function UsersClient() {
   return (
     <>
       <DataTable
-        data={paginationResult?.results || []}
+        data={result || []}
         columns={profileColumms({})}
         enableSizeSelection={true}
         hiddenColumns={{

@@ -12,6 +12,7 @@ export const contactDataSchema = z.object({
   gender: z.string().nullable().optional(),
   phone_number: z.string().nullable().optional(),
   reference_id: z.number().optional(),
+  action:z.string().optional(),
 });
 
 export const contactBulkDataSchema = z.object({
@@ -37,6 +38,7 @@ export const mapToContactData = (e: ContactData) => {
     },
     reference_id: e.reference_id,
     id: e.contact_id,
+    action:e.action,
   };
   return d;
 };
@@ -49,7 +51,6 @@ export const mapToContactSchema = (e:components["schemas"]["ContactDto"],referen
     email:e.email,
     phone_number:e.phone_number,
     reference_id:reference_id,
-
   }
   return d
 }

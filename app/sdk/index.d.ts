@@ -2411,6 +2411,61 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Profiles */
+        get: operations["profiles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/profile/detail/${id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get profile detail */
+        get: operations["get-profile-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/profile/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get profile session */
+        get: operations["get-profile-session"];
+        /**
+         * Update profile session
+         * @description Update profile base on the currency session of the user
+         */
+        put: operations["update-profile-session"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/project": {
         parameters: {
             query?: never;
@@ -3835,62 +3890,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/user/profile": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get company profile users */
-        get: operations["get company user profiles"];
-        put?: never;
-        /** Create User */
-        post: operations["create user"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/user/profile/detail/${id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get profile detail */
-        get: operations["get profile detail"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/user/profile/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get profile session */
-        get: operations["get-profile-session"];
-        /**
-         * Update profile session
-         * @description Update profile base on the currency session of the user
-         */
-        put: operations["update-profile-session"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4621,6 +4620,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            action?: string;
             fields: components["schemas"]["ContactFields"];
             /** Format: int64 */
             id?: number;
@@ -5039,6 +5039,11 @@ export interface components {
             fields: components["schemas"]["DealFields"];
             /** Format: int64 */
             id: number;
+            participants: components["schemas"]["ParticipantData"][];
+        };
+        DealDetailDto: {
+            deal: components["schemas"]["DealDto"];
+            participants: components["schemas"]["ProfileDto"][];
         };
         DealDto: {
             /** Format: int64 */
@@ -5851,7 +5856,7 @@ export interface components {
             message: string;
             result: components["schemas"]["ResultEntityCustomerDto"];
         };
-        EntityResponseResultEntityDealDtoBody: {
+        EntityResponseResultEntityDealDetailDtoBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -5862,7 +5867,7 @@ export interface components {
                 [key: string]: components["schemas"]["ActionDto"][] | undefined;
             };
             message: string;
-            result: components["schemas"]["ResultEntityDealDto"];
+            result: components["schemas"]["ResultEntityDealDetailDto"];
         };
         EntityResponseResultEntityEntityDetailDtoBody: {
             /**
@@ -7324,15 +7329,6 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListPricingDto"];
         };
-        PaginationResponsePaginationResultListProfileLBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListProfileL"];
-        };
         PaginationResponsePaginationResultListProjectDtoBody: {
             /**
              * Format: uri
@@ -7603,12 +7599,6 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        PaginationResultListProfileL: {
-            filters: components["schemas"]["FilterOptionDto"][];
-            results: components["schemas"]["ProfileL"][];
-            /** Format: int64 */
-            total: number;
-        };
         PaginationResultListProjectDto: {
             filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["ProjectDto"][];
@@ -7692,6 +7682,11 @@ export interface components {
             results: components["schemas"]["WareHouseDto"][];
             /** Format: int64 */
             total: number;
+        };
+        ParticipantData: {
+            action?: string;
+            /** Format: int64 */
+            id: number;
         };
         PartyConnections: {
             /** Format: int32 */
@@ -8188,23 +8183,11 @@ export interface components {
         ProfileDto: {
             email: string;
             family_name: string;
+            full_name: string;
             given_name: string;
             /** Format: int64 */
             id: number;
             phone_number: string | null;
-            uuid: string;
-        };
-        ProfileL: {
-            /** Format: date-time */
-            createdAt: string;
-            emailAddress: string;
-            familyName: string;
-            givenName: string;
-            /** Format: int64 */
-            id: number;
-            partyCode: string;
-            partyName: string;
-            phoneNumber: string;
             uuid: string;
         };
         ProfitAndLossEntryDto: {
@@ -8938,6 +8921,20 @@ export interface components {
             message: string;
             result: components["schemas"]["PaymentTermsTemplateDto"][];
         };
+        ResponseDataListListProfileDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["ProfileDto"][];
+        };
         ResponseDataListListStageDtoBody: {
             /**
              * Format: uri
@@ -9328,11 +9325,11 @@ export interface components {
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["CustomerDto"];
         };
-        ResultEntityDealDto: {
+        ResultEntityDealDetailDto: {
             activities: components["schemas"]["ActivityDto"][];
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
-            entity: components["schemas"]["DealDto"];
+            entity: components["schemas"]["DealDetailDto"];
         };
         ResultEntityEntityDetailDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -13476,7 +13473,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityDealDtoBody"];
+                    "application/json": components["schemas"]["EntityResponseResultEntityDealDetailDtoBody"];
                 };
             };
             /** @description Error */
@@ -16933,6 +16930,148 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    profiles: {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+                full_name?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListProfileDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-profile-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityProfileDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-profile-session": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityProfileDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-profile-session": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileRequestBody"];
             };
         };
         responses: {
@@ -21147,191 +21286,6 @@ export interface operations {
         responses: {
             /** @description Created */
             201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get company user profiles": {
-        parameters: {
-            query: {
-                page?: string;
-                size: string;
-                enabled?: string;
-                status?: string;
-                is_group?: string;
-                query?: string;
-                orientation?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListProfileLBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "create user": {
-        parameters: {
-            query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateUserRequestBody"];
-            };
-        };
-        responses: {
-            /** @description Created */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get profile detail": {
-        parameters: {
-            query?: {
-                query?: string;
-                orientation?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityProfileDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-profile-session": {
-        parameters: {
-            query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntityResponseResultEntityProfileDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "update-profile-session": {
-        parameters: {
-            query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateProfileRequestBody"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
                 headers: {
                     [name: string]: unknown;
                 };

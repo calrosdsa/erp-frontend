@@ -7,12 +7,14 @@ import { es } from "date-fns/locale";
 import { PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
+import { formatCurrency } from "~/util/format/formatCurrency";
 import { route } from "~/util/route";
 
 interface DealCardProps {
   deal: components["schemas"]["DealDto"];
+  currency: string;
 }
-export default function DealCard({ deal }: DealCardProps) {
+export default function DealCard({ deal, currency }: DealCardProps) {
   const { i18n } = useTranslation("common");
   return (
     <div className="">
@@ -31,7 +33,9 @@ export default function DealCard({ deal }: DealCardProps) {
           {deal.name}
         </Link>
 
-        <span className="text-sm text-secondary-foreground">432$</span>
+        <span className="text-sm text-secondary-foreground">
+          {formatCurrency(deal.amount, currency, i18n.language)}
+        </span>
         <div className="flex justify-between space-x-2 mt-2">
           <div className="icon-button flex cursor-pointer items-center text-xs">
             <PlusIcon className=" w-3 h-3 " />
@@ -45,7 +49,7 @@ export default function DealCard({ deal }: DealCardProps) {
             </span>
             <Avatar className="w-6 h-6 ">
               {/* <AvatarImage src={activity.profile_avatar || undefined} /> */}
-              <AvatarFallback >
+              <AvatarFallback>
                 {deal.responsible_given_name[0]}
                 {deal.responsible_family_name[0]}
               </AvatarFallback>
