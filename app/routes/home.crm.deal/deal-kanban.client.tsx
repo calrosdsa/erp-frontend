@@ -8,6 +8,7 @@ import { components } from "~/sdk";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app";
 import { DEFAULT_CURRENCY } from "~/constant";
+import MentionTextarea from "../home.activity/components/activity-comment";
 
 export default function CrmClient() {
   const { deals, stages } = useLoaderData<typeof loader>();
@@ -46,6 +47,8 @@ export default function CrmClient() {
 
   return (
     <>
+    <MentionTextarea
+    />
       <KanbanBoard
         stages={stages}
         data={deals}
