@@ -3,15 +3,9 @@ import { z } from "zod";
 import apiClient from "~/apiclient";
 import { LOAD_ACTION } from "~/constant";
 import { components, operations } from "~/sdk";
-import {
-  createCommentSchema,
-  editCommentSchema,
-} from "~/util/data/schemas/core/activity-schema";
 
 type ActionData = {
   action: string;
-  createComment: z.infer<typeof createCommentSchema>;
-  editComment: z.infer<typeof editCommentSchema>;
   activityID:number
   searchEntitiesQuery:operations["search-entities"]["parameters"]["query"]
 };
@@ -35,43 +29,43 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       searchEntities = res.data?.result || []
       break;
     }
-    case "delete-comment":{
-        const res = await client.DELETE("/activity", {
-            params: {
-                query:{
-                    id:data.activityID.toString(),
-                }
-            },
-          });
-          message = res.data?.message;
-          error = res.error?.detail;
-          break;  
-    }
-    case "edit-comment": {
-      const d = data.editComment;
-      const res = await client.PUT("/activity", {
-        body: {
-          comment: d.comment,
-          id: d.id,
-        },
-      });
-      message = res.data?.message;
-      error = res.error?.detail;
-      break;
-    }
-    case "create-comment": {
-      const d = data.createComment;
-      console.log("COMMENT",d)
-      const res = await client.POST("/activity/comment", {
-        body: {
-          comment: d.comment,
-          party_id: d.partyID,
-        },
-      });
-      error = res.error?.detail;
-      message = res.data?.message
-      break;
-    }
+    // case "delete-comment":{
+    //     const res = await client.DELETE("/activity", {
+    //         params: {
+    //             query:{
+    //                 id:data.activityID.toString(),
+    //             }
+    //         },
+    //       });
+    //       message = res.data?.message;
+    //       error = res.error?.detail;
+    //       break;  
+    // }
+    // case "edit-comment": {
+    //   const d = data.editComment;
+    //   const res = await client.PUT("/activity", {
+    //     body: {
+    //       comment: d.comment,
+    //       id: d.id,
+    //     },
+    //   });
+    //   message = res.data?.message;
+    //   error = res.error?.detail;
+    //   break;
+    // }
+    // case "create-comment": {
+    //   const d = data.createComment;
+    //   console.log("COMMENT",d)
+    //   const res = await client.POST("/activity/comment", {
+    //     body: {
+    //       comment: d.comment,
+    //       party_id: d.partyID,
+    //     },
+    //   });
+    //   error = res.error?.detail;
+    //   message = res.data?.message
+    //   break;
+    // }
   }
   return json({
     error,

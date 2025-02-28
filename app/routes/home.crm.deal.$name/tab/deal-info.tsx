@@ -15,7 +15,7 @@ import { fullName } from "~/util/convertor/convertor";
 import DealForm from "../deal-form";
 import { useEffect, useRef, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import ActivityFeed from "@/components/custom-ui/activity-feed";
+import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { formatAmount } from "~/util/format/formatCurrency";
 import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
 import { PartyContacts } from "~/routes/home.party/components/party-contacts";

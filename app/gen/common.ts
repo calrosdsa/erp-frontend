@@ -1171,6 +1171,8 @@ export enum ActivityType {
   COMMENT = 3,
   EDIT_PAID_AMOUT = 4,
   UPDATE_STATUS = 5,
+  ACTIVITY = 6,
+  STAGE = 7,
   UNRECOGNIZED = -1,
 }
 
@@ -1194,6 +1196,12 @@ export function activityTypeFromJSON(object: any): ActivityType {
     case 5:
     case "UPDATE_STATUS":
       return ActivityType.UPDATE_STATUS;
+    case 6:
+    case "ACTIVITY":
+      return ActivityType.ACTIVITY;
+    case 7:
+    case "STAGE":
+      return ActivityType.STAGE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -1215,6 +1223,10 @@ export function activityTypeToJSON(object: ActivityType): string {
       return "EDIT_PAID_AMOUT";
     case ActivityType.UPDATE_STATUS:
       return "UPDATE_STATUS";
+    case ActivityType.ACTIVITY:
+      return "ACTIVITY";
+    case ActivityType.STAGE:
+      return "STAGE";
     case ActivityType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

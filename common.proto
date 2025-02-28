@@ -208,7 +208,11 @@ enum ActivityType {
     COMMENT = 3;
     EDIT_PAID_AMOUT = 4;
     UPDATE_STATUS = 5;
+    ACTIVITY = 6;
+    STAGE = 7;
 }
+
+
 
 enum TimeUnit {
     hour = 0;

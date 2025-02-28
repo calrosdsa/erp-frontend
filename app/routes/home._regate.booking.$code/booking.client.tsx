@@ -7,7 +7,7 @@ import { BookingInfo } from "./components/tabs/booking-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import DetailLayout from "@/components/layout/detail-layout";
 import { EventState, RegatePartyType, regatePartyTypeToJSON, State, stateFromJSON, stateToJSON } from "~/gen/common";
-import ActivityFeed from "@/components/custom-ui/activity-feed";
+import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app";
 import { ButtonToolbar } from "~/types/actions";

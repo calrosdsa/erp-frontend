@@ -251,28 +251,12 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Edit Comment Activity */
-        put: operations["edit-activity-comment"];
-        post?: never;
-        /** Delete Comment Activity */
-        delete: operations["delete-activity-comment"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/activity/comment": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create Comment Activity */
-        post: operations["activity-comment"];
-        delete?: never;
+        /** Edit Activity */
+        put: operations["edit-activity"];
+        /** Create Activity */
+        post: operations["activity"];
+        /** Delete  Activity */
+        delete: operations["delete-activity"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4014,17 +3998,70 @@ export interface components {
             actionName: string;
             selected: boolean;
         };
+        ActivityCommentData: {
+            fields: components["schemas"]["ActivityCommentFields"];
+            mentions: components["schemas"]["MentionData"][];
+        };
+        ActivityCommentFields: {
+            /** Format: int32 */
+            activity_id: number;
+            comment: string;
+        };
+        ActivityData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            activity_comment?: components["schemas"]["ActivityCommentData"];
+            activity_deadline?: components["schemas"]["ActivityDeadlineData"];
+            is_pinned?: boolean | null;
+            /** Format: int64 */
+            party_id: number;
+            type: string;
+        };
+        ActivityDeadlineData: {
+            fields: components["schemas"]["ActivityDeadlineFields"];
+        };
+        ActivityDeadlineFields: {
+            /** Format: int32 */
+            activity_id: number;
+            address?: string | null;
+            color: string;
+            content?: string | null;
+            /** Format: date-time */
+            deadline: string;
+            is_completed: boolean;
+            link?: string | null;
+            /** Format: int64 */
+            party_id?: number | null;
+            title?: string | null;
+        };
         ActivityDto: {
             action: string;
+            address: string | null;
             arg1: string | null;
-            comment: string;
+            color: string | null;
+            comment: string | null;
+            content: string | null;
             /** Format: date-time */
             created_at: string;
+            /** Format: date-time */
+            deadline: string | null;
             /** Format: int32 */
             id: number;
+            is_completed: boolean | null;
+            is_pinned: boolean | null;
+            link: string | null;
+            mentions: components["schemas"]["MentionDto"][];
+            message: string;
+            /** Format: int64 */
+            party_id: number | null;
             profile_avatar: string | null;
             profile_family_name: string;
             profile_given_name: string;
+            profile_uuid: string;
+            title: string | null;
             type: string;
         };
         AddCompanyModulesBody: {
@@ -4684,16 +4721,6 @@ export interface components {
             rate: number;
             time: string;
         };
-        CreateActivityCommnetBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            comment: string;
-            /** Format: int64 */
-            party_id: number;
-        };
         CreateBookingBody: {
             /**
              * Format: uri
@@ -5200,16 +5227,6 @@ export interface components {
             payment_term_template_id?: number | null;
             /** Format: int64 */
             terms_and_condition_id?: number | null;
-        };
-        EditActivityCommnetBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            comment: string;
-            /** Format: int32 */
-            id: number;
         };
         EditChargesTemplateRequestBody: {
             /**
@@ -6977,6 +6994,35 @@ export interface components {
             source_warehouse?: number;
             /** Format: int64 */
             target_warehouse?: number;
+        };
+        MentionData: {
+            action: string;
+            fields: components["schemas"]["MentionFields"];
+            /** Format: int32 */
+            id: number;
+        };
+        MentionDto: {
+            /** Format: int32 */
+            activity_id: number;
+            /** Format: int32 */
+            end_index: number;
+            family_name: string;
+            given_name: string;
+            /** Format: int32 */
+            id: number;
+            profile_uuid: string;
+            /** Format: int32 */
+            start_index: number;
+        };
+        MentionFields: {
+            /** Format: int32 */
+            activity_id: number;
+            /** Format: int32 */
+            end_index: number;
+            /** Format: int64 */
+            profile_id: number;
+            /** Format: int32 */
+            start_index: number;
         };
         ModuleData: {
             /**
@@ -10681,7 +10727,7 @@ export interface operations {
             };
         };
     };
-    "edit-activity-comment": {
+    "edit-activity": {
         parameters: {
             query?: never;
             header?: never;
@@ -10690,7 +10736,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditActivityCommnetBody"];
+                "application/json": components["schemas"]["ActivityData"];
             };
         };
         responses: {
@@ -10714,10 +10760,45 @@ export interface operations {
             };
         };
     };
-    "delete-activity-comment": {
+    activity: {
         parameters: {
-            query?: {
-                id?: string;
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActivityData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-activity": {
+        parameters: {
+            query: {
+                id: string;
+                party_type?: string;
+                type?: string;
             };
             header?: never;
             path?: never;
@@ -10727,39 +10808,6 @@ export interface operations {
         responses: {
             /** @description OK */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "activity-comment": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateActivityCommnetBody"];
-            };
-        };
-        responses: {
-            /** @description Created */
-            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -19154,6 +19202,7 @@ export interface operations {
             query: {
                 id: string;
                 party_type?: string;
+                type?: string;
             };
             header?: never;
             path?: never;

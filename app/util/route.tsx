@@ -22,6 +22,7 @@ class Routes {
   party = this.base + "/party";
 
   address = "address";
+  activity = "activity";
   contact = "contact";
   group = "group";
   groups = this.base + "/group";

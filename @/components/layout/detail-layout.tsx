@@ -4,7 +4,7 @@
   import ResponsiveSidebar from "./nav/responsive-sidebar";
   import { Separator } from "../ui/separator";
   import { components } from "~/sdk";
-  import ActivityFeed from "../custom-ui/activity-feed";
+  import ActivityFeed from "../../../app/routes/home.activity/components/activity-feed";
 
   export default function  DetailLayout({
     children,

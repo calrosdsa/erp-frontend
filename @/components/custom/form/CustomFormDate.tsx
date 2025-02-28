@@ -32,15 +32,17 @@ export default function CustomFormDate({
   required,
   control,
   allowEdit = true,
+  disableXButtdon,
 }: {
   form?: any;
   name: string;
-  label: string;
+  label?: string;
   description?: string;
   control?: Control<any, any>;
   isDatetime?: boolean;
   required?: boolean;
   allowEdit?: boolean;
+  disableXButtdon?:boolean
 }) {
   const { t } = useTranslation("common");
 
@@ -50,9 +52,11 @@ export default function CustomFormDate({
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col">
-          <FormLabel className="text-left text-xs">
-            {label} {required && "*"}
-          </FormLabel>
+          {label && (
+            <FormLabel className="text-left text-xs">
+              {label} {required && "*"}
+            </FormLabel>
+          )}
           <Popover modal={true}>
             <FormControl>
               <PopoverTrigger asChild disabled={!allowEdit}>
@@ -78,7 +82,7 @@ export default function CustomFormDate({
                       allowEdit && <span>{t("form.pickADate")}</span>
                     )}
                   </>
-                  {field.value && allowEdit && (
+                  {(field.value && allowEdit && !disableXButtdon) && (
                     <Button
                       variant="ghost"
                       size="icon"

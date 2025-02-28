@@ -1,17 +1,26 @@
-"use client"
+"use client";
 
-import { ReactNode, useState } from "react"
-import { Check } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { ReactNode, useState } from "react";
+import { Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface ColorPickerProps {
-  onChange?: (color: string) => void
-  children:ReactNode
+  onChange?: (color: string) => void;
+  defaultColor?: string;
+  children?: ReactNode;
 }
 
-export default function ColorPicker({ onChange,children }: ColorPickerProps) {
-  const [selectedColor, setSelectedColor] = useState("#2563eb")
+export default function ColorPicker({
+  onChange,
+  children,
+  defaultColor,
+}: ColorPickerProps) {
+  const [selectedColor, setSelectedColor] = useState(defaultColor || "#2563eb");
 
   const colors = [
     "#dc2626", // red
@@ -26,33 +35,40 @@ export default function ColorPicker({ onChange,children }: ColorPickerProps) {
     "#c026d3", // fuchsia
     "#db2777", // pink
     "#475569", // slate
-  ]
+  ];
 
   const handleColorChange = (color: string) => {
-    setSelectedColor(color)
-    onChange?.(color)
-  }
+    setSelectedColor(color);
+    onChange?.(color);
+  };
 
   return (
-    <Popover>
+    <Popover modal={true}>
       <PopoverTrigger asChild>
-        {children}
-      </PopoverTrigger>
+        {children ? 
+        children
+        :
+        <div className="h-5 w-5 rounded-md cursor-pointer" style={{
+          backgroundColor:selectedColor
+        }}/>
+        }
+        </PopoverTrigger>
       <PopoverContent className="w-64">
         <div className="grid grid-cols-4 gap-2">
           {colors.map((color) => (
             <button
               key={color}
-              className="h-8 w-8 rounded-full border relative flex items-center justify-center"
+              className="h-8 w-8 rounded-full border relative cursor-pointer flex items-center justify-center"
               style={{ backgroundColor: color }}
               onClick={() => handleColorChange(color)}
             >
-              {selectedColor === color && <Check className="h-4 w-4 text-white" />}
+              {selectedColor === color && (
+                <Check className="h-4 w-4 text-white" />
+              )}
             </button>
           ))}
         </div>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
-
