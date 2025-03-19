@@ -25,6 +25,7 @@ import { components } from "~/sdk";
 import { useDealStore } from "./deal-store";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { action } from "../home.stage/route";
+import { TimePicker } from "@/components/custom/datetime/time-picker";
 
 export default function NewDealClient() {
   // const [open, setOpen] = useState(true);
@@ -57,6 +58,8 @@ export default function NewDealClient() {
       destination_stage_id: destinationStage.id,
       source_index: deal?.index,
       source_stage_id: deal.stage_id,
+      source_name: deal.stage,
+      destination_name: destinationStage.name,
     };
     fetcherStage.submit(
       {
@@ -120,13 +123,16 @@ export default function NewDealClient() {
         >
           <div className="px-5">
             <SheetHeader>
+              
+              <div className="flex justify-between">
+                <div className="flex space-x-3 items-center">
               <SheetClose asChild className="  w-min ">
                 <Button size={"sm"} variant="outline">
                   <XIcon />
                 </Button>
               </SheetClose>
-              <div className="flex justify-between">
                 <SheetTitle>Nuevo trato</SheetTitle>
+                </div>
               </div>
               <StagesHeader
                 stages={stages}

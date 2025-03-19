@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import ActivityDeadlineTab from "../tab/activity-deadline-tab";
+import CommentActivityTab from "../tab/activity-comment-tab";
 
 export default function TabNavigation({
   partyID
@@ -36,10 +37,13 @@ export default function TabNavigation({
         </TabsList>
 
         <TabsContent value="activity" className="w-full flex flex-grow">
-          
           <ActivityDeadlineTab partyID={partyID}/>
         </TabsContent>
-        <TabsContent value="comment">Commentario</TabsContent>
+        <TabsContent value="comment"  className="w-full flex flex-grow mt-0">
+        <CommentActivityTab
+        partyID={partyID}
+        />
+        </TabsContent>
       </Tabs>
     </div>
   );

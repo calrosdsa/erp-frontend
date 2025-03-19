@@ -13,14 +13,15 @@ export const mentionSchema = z.object({
     id:z.number().optional(),
     action:z.string(),
     profile_id:z.number(),
-    activity_id:z.number(),
+    activity_id:z.number().optional(),
     start_index:z.number(),
     end_index:z.number(),
+    full_name:z.string().optional(),
 })
 
 export const activityCommentSchema = z.object({
     mentions:z.array(mentionSchema),
-    activity_id:z.number(),
+    activity_id:z.number().optional(),
     comment:z.string(),
 })
 
@@ -77,7 +78,7 @@ export const mapToMentionData = (e:MentionData) =>{
     const d:components["schemas"]["MentionData"] = {
         action: e.action,
         fields: {
-            activity_id: e.activity_id,
+            activity_id: e.activity_id || 0,
             end_index: e.end_index,
             profile_id: e.profile_id,
             start_index: e.start_index,
@@ -90,7 +91,7 @@ export const mapToMentionData = (e:MentionData) =>{
 export const mapToActivityComment = (e:ActivityCommentData) =>{
     const d:components["schemas"]["ActivityCommentData"] = {
         fields: {
-            activity_id: e.activity_id,
+            activity_id: e.activity_id || 0,
             comment: e.comment
         },
         mentions: e.mentions.map(t=>mapToMentionData(t))

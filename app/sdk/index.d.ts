@@ -4040,12 +4040,12 @@ export interface components {
         ActivityDto: {
             action: string;
             address: string | null;
-            arg1: string | null;
             color: string | null;
             comment: string | null;
             content: string | null;
             /** Format: date-time */
             created_at: string;
+            data: string | null;
             /** Format: date-time */
             deadline: string | null;
             /** Format: int32 */
@@ -6388,12 +6388,14 @@ export interface components {
             readonly $schema?: string;
             /** Format: int32 */
             destination_index: number;
+            destination_name: string;
             /** Format: int64 */
             destination_stage_id: number;
             /** Format: int64 */
             id: number;
             /** Format: int32 */
             source_index: number;
+            source_name: string;
             /** Format: int64 */
             source_stage_id: number;
         };

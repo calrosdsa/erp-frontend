@@ -9,80 +9,41 @@ import {
 } from "@/components/ui/command";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
+import { useProfileFetcher } from "~/util/hooks/fetchers/profile/profile-fetcher";
+import { components } from "~/sdk";
+import {
+  ActivityData,
+  MentionData,
+} from "~/util/data/schemas/core/activity-schema";
+import { Action } from "~/types/enums";
+import { UseFormReturn } from "react-hook-form";
+import { Link } from "@remix-run/react";
 
-export interface User {
-  id: string;
-  name: string;
-  username: string;
-  avatar: string;
-}
-
-export interface MentionState {
-  id: string;
-  username: string;
-  indices: [number, number]; // [start, end] positions in text
-}
-
-// Sample user data
-const users: User[] = [
-  {
-    id: "1",
-    name: "Olivia Martin",
-    username: "Olivia Martin",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "2",
-    name: "Jackson Lee",
-    username: "jackson",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "3",
-    name: "Isabella Nguyen",
-    username: "isabella",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "4",
-    name: "William Kim",
-    username: "william",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "5",
-    name: "Sofia Davis",
-    username: "sofia",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-];
-
-export default function MentionTextarea() {
-  const [value, setValue] = React.useState("");
-  const [mentions, setMentions] = React.useState<MentionState[]>([]);
+export default function MentionTextarea({
+  setMentions,
+  setValue,
+  value,
+  mentions,
+}: {
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  value: string;
+  setMentions: React.Dispatch<React.SetStateAction<MentionData[]>>;
+  mentions: MentionData[];
+}) {
+  // const value = form.getValues().activity_comment?.comment || "";
+  // const mentions = form.getValues().activity_comment?.mentions || [];
   const [isCommandOpen, setIsCommandOpen] = React.useState(false);
   const [mentionQuery, setMentionQuery] = React.useState("");
   const [cursorPosition, setCursorPosition] = React.useState(0);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const commandRef = React.useRef<HTMLDivElement>(null);
+  const [profileFetcher, onProfileChange] = useProfileFetcher();
 
-
-  // Filter users based on mention query
-  const filteredUsers = React.useMemo(() => {
-    if (!mentionQuery) return users;
-    const query = mentionQuery.toLowerCase();
-    return users.filter(
-      (user) =>
-        user.name.toLowerCase().includes(query) ||
-        user.username.toLowerCase().includes(query)
-    );
-  }, [mentionQuery]);
-
-  // Handle textarea value change
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     const newPosition = e.target.selectionStart;
     setValue(newValue);
+    // form.setValue("activity_comment.comment", newValue);
     setCursorPosition(newPosition);
 
     // Check if we're in a mention context
@@ -91,8 +52,8 @@ export default function MentionTextarea() {
     // const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
     // const contextMention = mentions.filter((mention) => {
     //   const mentionText = newValue.substring(
-    //     mention.indices[0],
-    //     mention.indices[1]
+    //     mention.start_index,
+    //     mention.end_index
     //   );
     //   return mentionText === `@${mention.username}`;
     // });
@@ -108,16 +69,19 @@ export default function MentionTextarea() {
     // Update mentions state when text is deleted
     const updatedMentions = mentions.filter((mention) => {
       const mentionText = newValue.substring(
-        mention.indices[0],
-        mention.indices[1]
+        mention.start_index,
+        mention.end_index
       );
-      return mentionText === `@${mention.username}`;
+      return mentionText === `@${mention.full_name}`;
     });
     setMentions(updatedMentions);
+    // form.setValue("activity_comment.mentions", updatedMentions);
+    // form.trigger("activity_comment.mentions")
+    // fr
   };
 
   // Handle user selection from command menu
-  const handleSelect = (user: User) => {
+  const handleSelect = (user: components["schemas"]["ProfileDto"]) => {
     if (!textareaRef.current) return;
 
     const beforeCursor = value.substring(0, cursorPosition);
@@ -126,7 +90,7 @@ export default function MentionTextarea() {
 
     if (lastAtSymbol !== -1) {
       const newBeforeCursor = beforeCursor.substring(0, lastAtSymbol);
-      const mention = `@${user.username}`;
+      const mention = `@${user.full_name}`;
       const newValue = `${newBeforeCursor}${mention}${afterCursor}`;
       const newPosition = lastAtSymbol + mention.length + 1;
 
@@ -134,13 +98,14 @@ export default function MentionTextarea() {
       setMentions((prev) => [
         ...prev,
         {
-          id: user.id,
-          username: user.username,
-          indices: [lastAtSymbol, lastAtSymbol + mention.length],
+          action: Action.CREATE,
+          profile_id: user.id,
+          full_name: user.full_name,
+          start_index: lastAtSymbol,
+          end_index: lastAtSymbol + mention.length,
         },
       ]);
 
-      // Update cursor position
       setTimeout(() => {
         if (textareaRef.current) {
           textareaRef.current.focus();
@@ -171,30 +136,27 @@ export default function MentionTextarea() {
 
     // Sort mentions by start index to process them in order
     const sortedMentions = [...mentions].sort(
-      (a, b) => a.indices[0] - b.indices[0]
+      (a, b) => a.start_index - b.start_index
     );
 
     for (const mention of sortedMentions) {
       // Add text before mention
-      if (mention.indices[0] > lastIndex) {
-        result.push(value.substring(lastIndex, mention.indices[0]));
+      if (mention.start_index > lastIndex) {
+        result.push(value.substring(lastIndex, mention.start_index));
       }
 
       // Add styled mention
       const mentionText = value.substring(
-        mention.indices[0],
-        mention.indices[1]
+        mention.start_index,
+        mention.end_index
       );
       result.push(
-        <span
-          key={mention.id + mention.indices[0]}
-          className="text-blue-500 "
-        >
+        <span key={mention.start_index} className="text-blue-500 ">
           {mentionText}
         </span>
       );
 
-      lastIndex = mention.indices[1];
+      lastIndex = mention.end_index;
     }
 
     // Add remaining text
@@ -204,6 +166,12 @@ export default function MentionTextarea() {
 
     return result;
   };
+
+  React.useEffect(() => {
+    if (mentionQuery) {
+      onProfileChange(mentionQuery);
+    }
+  }, [mentionQuery]);
 
   return (
     <div className="relative space-y-2">
@@ -221,10 +189,11 @@ export default function MentionTextarea() {
         <Textarea
           ref={textareaRef}
           value={value}
+          autoFocus
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder="Type @ to mention someone..."
-          className="min-h-[150px] resize-none text-sm  caret-black text-transparent text
+          className="resize-none text-sm  caret-black text-transparent text
             selection:text-transparent"
         />
       </div>
@@ -237,6 +206,7 @@ export default function MentionTextarea() {
               placeholder="Search people..."
               value={mentionQuery}
               autoFocus
+              onFocus={() => onProfileChange("")}
               onValueChange={setMentionQuery}
               onKeyDown={(e) => {
                 if (e.key === "Escape") {
@@ -249,20 +219,23 @@ export default function MentionTextarea() {
             <CommandList>
               <CommandEmpty>No users found</CommandEmpty>
               <CommandGroup heading="Suggestions">
-                {filteredUsers.map((user) => (
+                {profileFetcher.data?.results.map((user) => (
                   <CommandItem
                     key={user.id}
                     onSelect={() => handleSelect(user)}
                     className="flex items-center gap-2"
                   >
                     <Avatar className="h-6 w-6">
-                      <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                      {/* <AvatarImage src={user.ava tar} alt={user.name} /> */}
+                      <AvatarFallback>
+                        {user.given_name.charAt(0)}.{user.family_name.charAt(0)}
+                        .
+                      </AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="font-medium">{user.name}</div>
+                      <div className="font-medium">{user.full_name}</div>
                       <div className="text-xs text-muted-foreground">
-                        @{user.username}
+                        @{user.full_name}
                       </div>
                     </div>
                   </CommandItem>
@@ -272,7 +245,6 @@ export default function MentionTextarea() {
           </Command>
         </div>
       )}
-      {value}
       {/* Debug information */}
       {/* {mentions.length > 0 && (
         <div className="mt-4 p-3 text-sm rounded-md bg-muted">
@@ -289,3 +261,53 @@ export default function MentionTextarea() {
     </div>
   );
 }
+
+export const RenderMentionText = ({
+  mentionText,
+  mentions,
+}: {
+  mentionText: string;
+  mentions: components["schemas"]["MentionDto"][];
+}) => {
+  // Sort mentions by start_index to process them in order
+  const sortedMentions = [...mentions].sort(
+    (a, b) => a.start_index - b.start_index
+  );
+
+  // Create an array of text segments and mentions
+  const segments: JSX.Element[] = [];
+  let lastIndex = 0;
+
+  sortedMentions.forEach((mention, index) => {
+    // Add text before the mention
+    if (mention.start_index > lastIndex) {
+      segments.push(
+        <React.Fragment key={`text-${index}`}>
+          {mentionText.substring(lastIndex, mention.start_index)}
+        </React.Fragment>
+      );
+    }
+
+    // Add the mention as a link
+    segments.push(
+      <Link
+        key={`mention-${mention.id}`}
+        to={`/profile/${mention.profile_uuid}`}
+        className="bg-blue-100 text-blue-700 rounded px-1 hover:bg-blue-200 transition-colors"
+      >
+        {mention.given_name} {mention.family_name}
+      </Link>
+    );
+
+    lastIndex = mention.end_index;
+  });
+
+  // Add any remaining text after the last mention
+  if (lastIndex < mentionText.length) {
+    segments.push(
+      <React.Fragment key="text-end">{mentionText.substring(lastIndex)}</React.Fragment>
+    );
+  }
+
+  return <div className="">{segments}</div>;
+};

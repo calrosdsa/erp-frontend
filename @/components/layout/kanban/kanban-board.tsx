@@ -1,7 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { DragDropContext, DraggableLocation, type DropResult, Droppable } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  DraggableLocation,
+  type DropResult,
+  Droppable,
+} from "@hello-pangea/dnd";
 import { components } from "~/sdk";
 import KanbanColumnComponent from "./kanban-column";
 import { useFetcher } from "@remix-run/react";
@@ -12,12 +17,14 @@ import { useConfirmationDialog } from "../drawer/ConfirmationDialog";
 interface KanbanLayout<T> {
   data?: T[];
   stages?: components["schemas"]["StageDto"][];
-  headerComponent: (e: T[],stage:StageDto) => JSX.Element;
+  headerComponent: (e: T[], stage: StageDto) => JSX.Element;
   cardComponent: (e: T) => JSX.Element;
   dataTransition: (
     source: DraggableLocation<string>,
     destination: DraggableLocation<string>,
     data: T,
+    srcColumn: string,
+    tgtColumn: string
   ) => void;
 }
 
@@ -101,7 +108,13 @@ export function KanbanBoard<T>({
     // Insert the deal in the destination
     console.log("MOVE DEAL", movedDeal);
     if (movedDeal) {
-      dataTransition(source,destination,movedDeal)
+      dataTransition(
+        source,
+        destination,
+        movedDeal,
+        sourceColumn.name,
+        destColumn.name
+      );
       destColumn.data.splice(destination.index, 0, movedDeal);
     }
 

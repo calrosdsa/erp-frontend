@@ -96,3 +96,9 @@ export enum PartyType {
   PARTY_CUSTOMER = "customer",
   PARTY_WAREHOUSE = "warehouse",
 }
+
+
+export enum Action {
+  CREATE = "create",
+  DELETE = "delete",
+}

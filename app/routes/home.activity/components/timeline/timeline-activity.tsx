@@ -5,6 +5,8 @@ import { AlertCircle, CalendarIcon, Loader2, LucideIcon } from "lucide-react";
 import { TimelineColor } from "~/types/ui-lyout";
 import { components } from "~/sdk";
 import { format } from "date-fns";
+import { ActivityType, activityTypeToJSON } from "~/gen/common";
+import Activity from "../activity";
 
 const timelineVariants = cva("flex flex-col relative", {
   variants: {
@@ -81,78 +83,19 @@ const TimelineItemActivity = React.forwardRef<HTMLLIElement, TimelineItemProps>(
   ({ className, activity, getIcon, showConnector }, ref) => {
     const commonClassName = cn("relative w-full mb-2 last:mb-0", className);
     const Icon = getIcon(activity.type);
-
     // Loading State
-
     const content = (
       <div className={cn("flex gap-4 items-start")}>
         {/* Date */}
-        <div className="flex flex-col justify-start pt-3">
+        <div className="flex flex-col justify-start pt-1">
           <TimelineTime className="text-right text-xs whitespace-nowrap">
             {format(new Date(activity.created_at), "MMM, d")}
           </TimelineTime>
         </div>
 
-        {/* Timeline dot and connector */}
-        <div className="flex flex-col items-center">
-          <div className="relative z-20 ">
-            <TimelineIcon Icon={Icon} color="#d97706" />
-          </div>
-          {/* {showConnector && (
-            <TimelineConnector color="primary" className=" w-[1px]" />
-          )} */}
-        </div>
-
-        {/* Content */}
-        <TimelineContent
-          className={cn(
-            activity.color && `bg-[${activity.color}] bg-opacity-15`
-          )}
-          >
-          <TimelineHeader>
-            <TimelineTitle>{activity.title}</TimelineTitle>
-          </TimelineHeader>
-
-          <TimelineDescription>
-          <div style={{ position: "relative", display: "inline-block" }}>
-            <div
-              className={cn(
-                " relative w-16 h-16  rounded-xl m-1 ",
-                activity.color && `bg-[${activity.color}] bg-opacity-25 `
-              )}
-            >
-              <CalendarIcon size={64} strokeWidth={0.5} className="" />
-              <span
-                style={{
-                  position: "absolute",
-                  top: "55%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  fontSize: "12px",
-                  fontWeight: 500,
-                }}
-              >
-                02
-              </span>
-              <span
-                style={{
-                  position: "absolute",
-                  top: "75%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  fontSize: "12px",
-                  color: activity.color || "",
-                  fontWeight: 500,
-                }}
-              >
-                Feb
-              </span>
-            </div>
-          </div>
-
-          </TimelineDescription>
-          
-        </TimelineContent>
+          <Activity
+          activity={activity}
+          />
       </div>
     );
 
@@ -189,7 +132,7 @@ const TimelineIcon = ({
           color: color ? "white" : "",
         }}
       >
-        <Icon />
+        <Icon className="h-6 w-6"/>
       </div>
     </div>
   );
@@ -278,7 +221,7 @@ const TimelineHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center gap-4", className)}
+    className={cn("flex items-center bg-accent gap", className)}
     {...props}
   />
 ));
@@ -307,7 +250,7 @@ const TimelineDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("max-w-sm text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-muted-foreground ", className)}
     {...props}
   />
 ));
@@ -320,7 +263,7 @@ const TimelineContent = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex flex-col gap-2 pl-2 border bg-card w-full rounded-lg",
+      "flex flex-col  border bg-card w-full rounded-lg",
       className
     )}
     {...props}

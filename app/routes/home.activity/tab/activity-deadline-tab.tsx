@@ -71,8 +71,8 @@ export default function ActivityDeadlineTab({ partyID }: { partyID: number }) {
         method: "POST",
       }
     );
-    form.reset()
-    setIsSelected(false)
+    form.reset();
+    setIsSelected(false);
   };
 
   useDisplayMessage(
@@ -111,7 +111,12 @@ export default function ActivityDeadlineTab({ partyID }: { partyID: number }) {
                         className="border-0 p-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                       />
                       <div className="flex items-center gap-2">
-                        <ColorPicker defaultColor={formValues.color} />
+                        <ColorPicker
+                          defaultColor={formValues.color}
+                          onChange={(e) => {
+                            form.setValue("color", e);
+                          }}
+                        />
                       </div>
                     </CardHeader>
 
@@ -126,13 +131,14 @@ export default function ActivityDeadlineTab({ partyID }: { partyID: number }) {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <CustomFormDate
+                            isDatetime={true}
                             disableXButtdon={true}
                             control={form.control}
                             name="deadline"
                           />
-                          <TooltipLayout content="Recordar">
+                          {/* <TooltipLayout content="Recordar">
                             <BellIcon className="icon-button w-5 h-5" />
-                          </TooltipLayout>
+                          </TooltipLayout> */}
                         </div>
                       </div>
                     </CardContent>

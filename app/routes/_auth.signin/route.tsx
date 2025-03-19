@@ -24,7 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
   if (res.response.ok && res.data != undefined) {
     session.set("access_token", res.data.access_token);
-    session.set("locale", "en");
+    session.set("locale", "es");
     if(res.data.user_relation){
       // session.set("companyUuid", res.data.user.UserRelation.Company.Uuid || "");
       session.set("sessionUuid", res.data.user_relation.uuid)

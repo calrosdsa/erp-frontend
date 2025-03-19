@@ -1,27 +1,14 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { addHours, format } from "date-fns";
-import { CalendarIcon, X } from "lucide-react";
-import { TimePicker } from "../datetime/time-picker";
-import { useTranslation } from "react-i18next";
-import { Control } from "react-hook-form";
-import { toZonedTime } from "date-fns-tz";
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { CalendarIcon, X } from "lucide-react"
+import { TimePicker } from "../datetime/time-picker"
+import { useTranslation } from "react-i18next"
+import type { Control } from "react-hook-form"
+import { toZonedTime } from "date-fns-tz"
 
 export default function CustomFormDate({
   form,
@@ -34,17 +21,17 @@ export default function CustomFormDate({
   allowEdit = true,
   disableXButtdon,
 }: {
-  form?: any;
-  name: string;
-  label?: string;
-  description?: string;
-  control?: Control<any, any>;
-  isDatetime?: boolean;
-  required?: boolean;
-  allowEdit?: boolean;
-  disableXButtdon?:boolean
+  form?: any
+  name: string
+  label?: string
+  description?: string
+  control?: Control<any, any>
+  isDatetime?: boolean
+  required?: boolean
+  allowEdit?: boolean
+  disableXButtdon?: boolean
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("common")
 
   return (
     <FormField
@@ -66,8 +53,7 @@ export default function CustomFormDate({
                   className={cn(
                     "justify-start text-left font-normal group",
                     !field.value && "text-muted-foreground",
-                    !allowEdit &&
-                      "disabled:opacity-100 disabled:cursor-default bg-secondary"
+                    !allowEdit && "disabled:opacity-100 disabled:cursor-default bg-secondary",
                   )}
                 >
                   <>
@@ -82,16 +68,15 @@ export default function CustomFormDate({
                       allowEdit && <span>{t("form.pickADate")}</span>
                     )}
                   </>
-                  {(field.value && allowEdit && !disableXButtdon) && (
+                  {field.value && allowEdit && !disableXButtdon && (
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-4 w-4 p-0 opacity-70 hover:opacity-100 ml-auto"
                       onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log("CREAR");
-                        field.onChange(null);
+                        e.preventDefault()
+                        e.stopPropagation()
+                        field.onChange(null)
                       }}
                     >
                       <X className="h-3 w-3" />
@@ -104,11 +89,25 @@ export default function CustomFormDate({
             <PopoverContent className="w-auto p-0">
               <Calendar
                 mode="single"
-                selected={toZonedTime(field.value, "Etc/UTC")}
-                onSelect={field.onChange}
+                selected={field.value ? toZonedTime(field.value, "Etc/UTC") : undefined}
+                onSelect={(date) => {
+                  if (date) {
+                    // If we already have a value, preserve the time
+                    if (field.value) {
+                      const currentDate = new Date(field.value)
+                      date.setHours(currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds())
+                    } else {
+                      // Set default time to start of day
+                      date.setHours(0, 0, 0, 0)
+                    }
+                    field.onChange(date)
+                  } else {
+                    field.onChange(null)
+                  }
+                }}
                 initialFocus
               />
-              {isDatetime && (
+              {isDatetime && field.value && (
                 <div className="p-3 border-t border-border">
                   <TimePicker setDate={field.onChange} date={field.value} />
                 </div>
@@ -120,5 +119,6 @@ export default function CustomFormDate({
         </FormItem>
       )}
     />
-  );
+  )
 }
+

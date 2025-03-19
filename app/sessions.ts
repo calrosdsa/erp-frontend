@@ -21,7 +21,7 @@ const { getSession, commitSession, destroySession } =
   createCookieSessionStorage<SessionData, SessionFlashData>(
     {
       // a Cookie from `createCookie` or the CookieOptions to create one
-      cookie: {
+      cookie: { 
         name: "__session",
         // all of these are optional
         // domain: "teclu",

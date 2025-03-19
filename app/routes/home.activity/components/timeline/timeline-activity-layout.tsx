@@ -34,10 +34,8 @@ export const TimelineActivityLayout = ({
   },[])
   return (
     <Timeline size={size} className={className}>
-      {[...activities].reverse().map((item, index) => (
-          <div
-            key={index}
-          >
+      {[...activities].map((item, index) => (
+          <div key={index}>
           <TimelineItemActivity
             getIcon={getIcon}
             activity={item}

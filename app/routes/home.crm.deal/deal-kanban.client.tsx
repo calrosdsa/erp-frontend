@@ -1,4 +1,4 @@
-import { KanbanBoard } from "@/components/layout/kanban/kanban-board";
+import { KanbanBoard, KanbanColumn } from "@/components/layout/kanban/kanban-board";
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { action, loader } from "./route";
 import DealContentHeader from "./components/deal-content-header";
@@ -9,6 +9,8 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app";
 import { DEFAULT_CURRENCY } from "~/constant";
 import MentionTextarea from "../home.activity/components/activity-comment";
+import { TimePicker } from "@/components/custom/datetime/time-picker";
+import { useState } from "react";
 
 export default function CrmClient() {
   const { deals, stages } = useLoaderData<typeof loader>();
@@ -18,7 +20,9 @@ export default function CrmClient() {
   const dataTransition = (
     source: DraggableLocation<string>,
     destination: DraggableLocation<string>,
-    data: components["schemas"]["DealDto"]
+    data: components["schemas"]["DealDto"],
+    srcColumn:string,
+    tgtColumn:string
   ) => {
     const body: components["schemas"]["EntityTransitionData"] = {
       id: data.id,
@@ -26,6 +30,8 @@ export default function CrmClient() {
       destination_stage_id: Number(destination.droppableId),
       source_index: source.index,
       source_stage_id: Number(source.droppableId),
+      source_name:srcColumn,
+      destination_name:tgtColumn,
     };
     fetcher.submit(
       {
@@ -47,8 +53,6 @@ export default function CrmClient() {
 
   return (
     <>
-    <MentionTextarea
-    />
       <KanbanBoard
         stages={stages}
         data={deals}

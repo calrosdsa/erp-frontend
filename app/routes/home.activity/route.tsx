@@ -1,5 +1,6 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import apiClient from "~/apiclient";
+import { LOAD_ACTION } from "~/constant";
 import { operations } from "~/sdk";
 import {
   ActivityData,
@@ -17,6 +18,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let error: string | undefined = undefined;
   let message: string | undefined = undefined;
+  let actionData = LOAD_ACTION;
   switch (data.action) {
     case "create": {
       const res = await client.POST("/activity", {
@@ -46,6 +48,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
   return json({
-    error,message
+    error,
+    message,
+    action: actionData,
   });
 };

@@ -3,7 +3,7 @@ import { toZonedTime } from "date-fns-tz";
 import { enUS, es } from "date-fns/locale";
 
 
-export const formatLongDate = (date:string | undefined,locale:string) =>{
+export const formatLongDate = (date:string | undefined | null,locale:string) =>{
   if(typeof date == "undefined" || date == null || date == "" ) return "-"
     const formattedDate = new Intl.DateTimeFormat(locale, {dateStyle:"long",timeStyle:"medium"}).format(
         new Date(date)
