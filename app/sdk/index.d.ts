@@ -1728,6 +1728,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/notification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Notification */
+        get: operations["notification"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order": {
         parameters: {
             query?: never;
@@ -4015,9 +4032,12 @@ export interface components {
             readonly $schema?: string;
             activity_comment?: components["schemas"]["ActivityCommentData"];
             activity_deadline?: components["schemas"]["ActivityDeadlineData"];
+            /** Format: int64 */
+            entity_id: number;
             is_pinned?: boolean | null;
             /** Format: int64 */
             party_id: number;
+            party_name: string;
             type: string;
         };
         ActivityDeadlineData: {
@@ -7078,6 +7098,33 @@ export interface components {
             name: string;
             section_name: string;
         };
+        NotificationDto: {
+            /** Format: int64 */
+            id: number;
+            mentions: components["schemas"]["NotificationMentionDto"][];
+            payload: string;
+            profile_fn: string;
+            profile_gn: string;
+            /** Format: int64 */
+            profile_id: number;
+            /** Format: date-time */
+            send_at: string;
+            type: string;
+        };
+        NotificationMentionDto: {
+            /** Format: int64 */
+            end_index: number;
+            entity_href: string;
+            /** Format: int64 */
+            entity_id: number;
+            entity_name: string;
+            /** Format: int64 */
+            notification_id: number;
+            party_id: string;
+            party_name: string;
+            /** Format: int64 */
+            start_index: number;
+        };
         OrderBody: {
             /**
              * Format: uri
@@ -8940,6 +8987,20 @@ export interface components {
             filters: components["schemas"]["FilterOptionDto"][];
             message: string;
             result: components["schemas"]["LedgerDto"][];
+        };
+        ResponseDataListListNotificationDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["NotificationDto"][];
         };
         ResponseDataListListPaymentTermsDtoBody: {
             /**
@@ -15108,6 +15169,40 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityModuleDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    notification: {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListNotificationDtoBody"];
                 };
             };
             /** @description Error */

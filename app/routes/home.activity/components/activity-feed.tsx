@@ -28,11 +28,15 @@ import { TimelineElement } from "~/types/ui-lyout";
 interface ActivityFeedProps {
   activities: components["schemas"]["ActivityDto"][] | undefined;
   partyID: number;
+  partyName?: string;
+  entityID?: number;
 }
 
 export default function ActivityFeed({
   activities = [],
   partyID,
+  partyName,
+  entityID,
 }: ActivityFeedProps) {
   const { t, i18n } = useTranslation("common");
   const r = route;
@@ -48,7 +52,11 @@ export default function ActivityFeed({
         <Card className="w-full mx-auto">
           <CardContent>
             <div className="flex justify-between items-center mb-4">
-              <TabNavigation partyID={partyID} />
+              <TabNavigation
+                partyID={partyID}
+                partyName={partyName || ""}
+                entityID={entityID || 0}
+              />
             </div>
             <div className="space-y-4">
               {/* {JSON.stringify(activities)} */}

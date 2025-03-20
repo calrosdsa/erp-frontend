@@ -9,7 +9,11 @@ import { action, loader } from "../route";
 import { GlobalState } from "~/types/app";
 import { useDealStore } from "../deal-store";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import { DealData, dealSchema, mapToParticipantSchema } from "~/util/data/schemas/crm/deal.schema";
+import {
+  DealData,
+  dealSchema,
+  mapToParticipantSchema,
+} from "~/util/data/schemas/crm/deal.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fullName } from "~/util/convertor/convertor";
 import DealForm from "../deal-form";
@@ -27,7 +31,7 @@ import { components } from "~/sdk";
 
 export default function DealInfoTab() {
   const navigate = useNavigate();
-  const { deal, activities, actions, contacts, entityActions,observers } =
+  const { deal, activities, actions, contacts, entityActions, observers } =
     useLoaderData<typeof loader>();
   const { profile, roleActions } = useOutletContext<GlobalState>();
   const [perm] = usePermission({ actions, roleActions });
@@ -97,7 +101,7 @@ export default function DealInfoTab() {
 
   // When the deal data is available, reset the form with its values.
 
-  const setDeal = (e:components["schemas"]["DealDto"]) => {
+  const setDeal = (e: components["schemas"]["DealDto"]) => {
     form.reset({
       name: e.name,
       amount: formatAmount(e.amount),
@@ -113,23 +117,20 @@ export default function DealInfoTab() {
       index: e.index,
       responsible: {
         id: e.responsible_id,
-        name: fullName(
-          e.responsible_given_name,
-          e.responsible_family_name
-        ),
+        name: fullName(e.responsible_given_name, e.responsible_family_name),
         uuid: e.uuid,
       },
       deal_type: e.deal_type,
-      contacts:contacts?.map(t=>mapToContactSchema(t)) || [],
-      observers:observers.map(t=>mapToParticipantSchema(t)) || [],
+      contacts: contacts?.map((t) => mapToContactSchema(t)) || [],
+      observers: observers.map((t) => mapToParticipantSchema(t)) || [],
       source: e.source,
       source_information: e.source_information,
       id: e.id,
     });
-  }
+  };
   useEffect(() => {
     if (deal) {
-      setDeal(deal)
+      setDeal(deal);
     }
   }, [deal]);
 
@@ -137,8 +138,6 @@ export default function DealInfoTab() {
   useEffect(() => {
     editPayload(form.getValues());
   }, [watchedFields]);
-
-
 
   useEffect(() => {
     editPayload({
@@ -167,19 +166,24 @@ export default function DealInfoTab() {
           observers={observers}
           allowEdit={allowEdit}
           enableEdit={payload.enableEdit}
-          setEnableEdit={(e)=>{
-            if(deal){
-              setDeal(deal)
+          setEnableEdit={(e) => {
+            if (deal) {
+              setDeal(deal);
             }
             editPayload({
-              enableEdit:e
-            })
+              enableEdit: e,
+            });
           }}
         />
       </div>
       {deal?.id && (
         <div className=" col-span-5">
-          <ActivityFeed activities={activities} partyID={deal?.id} />
+          <ActivityFeed
+            activities={activities}
+            partyID={deal?.id}
+            partyName={deal.name}
+            entityID={Entity.DEAL}
+          />
         </div>
       )}
     </div>

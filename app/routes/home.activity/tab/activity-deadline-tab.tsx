@@ -28,7 +28,13 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 import { ActivityType, activityTypeToJSON } from "~/gen/common";
 
-export default function ActivityDeadlineTab({ partyID }: { partyID: number }) {
+export default function ActivityDeadlineTab({ 
+  partyID,partyName,entityID,
+ }: {
+    partyID: number,
+    partyName:string,
+    entityID:number,
+  }) {
   const [isSelected, setIsSelected] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const expandedRef = useRef<HTMLDivElement>(null);
@@ -57,6 +63,8 @@ export default function ActivityDeadlineTab({ partyID }: { partyID: number }) {
   const onSubmit = (e: ActivityDeadlineData) => {
     const activityData: ActivityData = {
       party_id: partyID,
+      party_name:partyName,
+      entity_id:entityID,
       type: activityTypeToJSON(ActivityType.ACTIVITY),
       activity_deadline: e,
     };

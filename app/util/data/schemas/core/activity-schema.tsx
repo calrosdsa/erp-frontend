@@ -26,6 +26,7 @@ export const activityCommentSchema = z.object({
 })
 
 export const activityDeadlineSchema = z.object({
+
     activity_id:z.number().optional(),
     link:z.string().nullable().optional(),
     party:fieldNull,
@@ -39,6 +40,8 @@ export const activityDeadlineSchema = z.object({
 
 export const activitySchema = z.object({
     party_id:z.number(),
+    party_name:z.string(),
+    entity_id:z.number(),
     type:z.string(),
     is_pinned:z.boolean().nullable().optional(),
     activity_comment:activityCommentSchema.optional(),
@@ -48,6 +51,8 @@ export const activitySchema = z.object({
 export const mapToActivityData = (e:ActivityData)=>{
     const d:components["schemas"]["ActivityData"] = {
         party_id: e.party_id,
+        party_name:e.party_name,
+        entity_id:e.entity_id,
         type: e.type,
         is_pinned:e.is_pinned,
         activity_comment:e.activity_comment? mapToActivityComment(e.activity_comment):undefined,

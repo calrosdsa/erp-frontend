@@ -2,9 +2,7 @@ import * as React from "react";
 import { useLoaderData, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app";
-import {
-  useSessionDefaults,
-} from "./components/SessionDefaults";
+import { useSessionDefaults } from "./components/SessionDefaults";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
@@ -20,13 +18,16 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { loader } from "./route";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import SearchBar from "./components/search-bar";
+import { WsHandler } from "./ws-handler";
+import { Navbar } from "./components/navbar";
+import ChatModal from "../home.chat/components/chat-modal";
 
 type RouteItem = {
   name: string;
   link: string;
 };
 
-export default function HomeLayout({
+export default function AppLayout({
   children,
   globalState,
 }: {
@@ -36,23 +37,18 @@ export default function HomeLayout({
   const location = useLocation();
   const { t } = useTranslation("common");
   const sessionDefaults = useSessionDefaults();
-
   const [routesName, setRoutesName] = React.useState<string[]>([]);
-  const {modules} = useLoaderData<typeof loader>()
+  const { session, modules } = useLoaderData<typeof loader>();
+  const readyState = WsHandler({
+    accessToken: session.access_token,
+    sessionUUID:session.sessionUuid,
+  });
 
   const toolbar = useToolbar();
 
   const getRoutes = () => {
     const routesName = location.pathname.split("/").map((word) => word);
     setRoutesName(routesName.slice(2));
-  };
-
-  const getRoute = (index: number) => {
-    const route = location.pathname
-      .split("/")
-      .slice(0, index + 3)
-      .join("/");
-    return route;
   };
 
   const getRouteName = () => {
@@ -78,69 +74,12 @@ export default function HomeLayout({
   return (
     <>
       <GlobalDialogs globalState={globalState} />
-
+      <ChatModal/>
       <div className=" max-w-[1500px] mx-auto">
         <SidebarProvider>
-          <AppSidebar data={globalState} 
-          modules={modules}/>
+          <AppSidebar data={globalState} modules={modules} />
           <SidebarInset>
-            <header className="flex h-16 shrink-0 items-center gap-2 justify-between">
-              <div className="flex items-center gap-2 px-4">
-                <SidebarTrigger className="-ml-1" />
-                <Separator orientation="vertical" className="mr-2 h-4" />
-                {/* <Breadcrumb aria-label="breadcrumbs">
-                  <BreadcrumbList>
-                    <BreadcrumbItem key="home">
-                      <BreadcrumbLink asChild>
-                        <Link
-                          to="/home"
-                          className="hover:underline"
-                          aria-label="Home"
-                        >
-                          <HomeIcon size={15} />
-                        </Link>
-                      </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    {routesName.slice(0, -1).map((item, idx) => (
-                      <React.Fragment key={`breadcrumb-${idx}`}>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                          <BreadcrumbLink asChild>
-                            <Link
-                              to={getRoute(idx)}
-                              aria-label={item}
-                              className="hover:underline"
-                            >
-                              <Typography variant="caption">{t(item)}</Typography>
-                            </Link>
-                          </BreadcrumbLink>
-                        </BreadcrumbItem>
-                      </React.Fragment>
-                    ))}
-                    {routesName.length > 0 && (
-                      <>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                          <BreadcrumbPage>
-                            <Typography variant="caption">
-                              {t(
-                                decodeURIComponent(
-                                  routesName[routesName.length - 1] || ""
-                                )
-                              )}
-                            </Typography>
-                          </BreadcrumbPage>
-                        </BreadcrumbItem>
-                      </>
-                    )}
-                  </BreadcrumbList>
-                </Breadcrumb> */}
-              </div>
-              <div className="flex items-center space-x-4 pr-3">
-                <SearchBar/>
-                <ThemeToggle />
-              </div>
-            </header>
+            <Navbar/>
             <div
               className="
               px-2 
@@ -155,7 +94,6 @@ export default function HomeLayout({
               gap-1
             "
             >
-
               <ToolBar title={getRouteName()} />
 
               <div className="h-full  max-w-[1500px]">{children}</div>

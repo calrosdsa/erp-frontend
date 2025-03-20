@@ -7,9 +7,11 @@ import ActivityDeadlineTab from "../tab/activity-deadline-tab";
 import CommentActivityTab from "../tab/activity-comment-tab";
 
 export default function TabNavigation({
-  partyID
+  partyID,partyName,entityID,
 }:{
   partyID:number;
+  partyName:string;
+  entityID:number;
 }) {
   return (
     <div className="py-2 w-full">
@@ -37,7 +39,11 @@ export default function TabNavigation({
         </TabsList>
 
         <TabsContent value="activity" className="w-full flex flex-grow">
-          <ActivityDeadlineTab partyID={partyID}/>
+          <ActivityDeadlineTab 
+          partyID={partyID}
+          partyName={partyName}
+          entityID={entityID}
+          />
         </TabsContent>
         <TabsContent value="comment"  className="w-full flex flex-grow mt-0">
         <CommentActivityTab

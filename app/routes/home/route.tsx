@@ -1,5 +1,5 @@
 import { Outlet, ShouldRevalidateFunctionArgs, useLoaderData } from "@remix-run/react";
-import HomeLayout from "./appLayout";
+import AppLayout from "./appLayout";
 import {
   ActionFunctionArgs,
   json,
@@ -115,7 +115,7 @@ export default function Home() {
       {() => {
         return (
           <div>
-            <HomeLayout
+            <AppLayout
               globalState={{
                 // appConfig: data?.appConfig,
                 session: session,
@@ -141,7 +141,7 @@ export default function Home() {
                   } as GlobalState
                 }
               />
-            </HomeLayout>
+            </AppLayout>
           </div>
         );
       }}

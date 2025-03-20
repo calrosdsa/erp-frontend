@@ -22,8 +22,7 @@ import { useChangeLanguage } from "remix-i18next/react";
 import { useTranslation } from "react-i18next";
 import i18next from "~/i18next.server";
 import { ExternalScripts } from "remix-utils/external-scripts";
-import { Toaster } from "@/components/ui/toaster";
-
+import { Toaster } from "@/components/ui/sonner"
 import { getThemeSession } from "./util/theme/theme-server";
 import { Theme, ThemeProvider } from "./util/theme/theme-provider";
 import clsx from "clsx";

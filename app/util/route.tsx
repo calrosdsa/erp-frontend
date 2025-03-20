@@ -138,6 +138,7 @@ class Routes {
   bankAccount = "bank-account"
   deal = "crm/deal"
   users =  "manage/users";
+  notification = "notification"
 
   defaultTab = {
     tab: "info",
