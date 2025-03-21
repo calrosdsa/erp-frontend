@@ -30,6 +30,8 @@ export default function CommentActivityTab({ partyID }: { partyID: number }) {
         comment: value,
         mentions: mentions,
       },
+      entity_id: 0,
+      party_name: ""
     };
     fetcher.submit(
       {

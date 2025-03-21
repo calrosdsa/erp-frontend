@@ -134,7 +134,7 @@ export default function Autocomplete<T extends object, K extends keyof T>({
               {isSearch ? (
                 <div
                   className={cn(
-                    "flex space-x-1 items-center border  px-2",
+                    "flex space-x-1 items-center border rounded-full px-2",
                   )}
                 >
                   <SearchIcon className="p-[2px]" />

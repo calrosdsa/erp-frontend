@@ -1,12 +1,12 @@
 import { useFetcher, useSearchParams } from "@remix-run/react"
 import { action } from "./route"
 import CustomForm from "@/components/custom/form/CustomForm"
-import { createContactSchema } from "~/util/data/schemas/contact/contact.schema"
 import { z } from "zod"
 import { useTranslation } from "react-i18next"
 import { useToast } from "@/components/ui/use-toast"
 import { useEffect } from "react"
 import { getGenders } from "~/util/data/gender"
+import { contactDataSchema } from "~/util/data/schemas/contact/contact.schema"
 
 
 export default function ContactCreateClient(){
@@ -26,12 +26,12 @@ export default function ContactCreateClient(){
         <div>
             <CustomForm
             fetcher={fetcher}
-            schema={createContactSchema}
+            schema={contactDataSchema}
             className=" create-grid"
             defaultValues={{
-                partyReferenceId:Number(searchParams.get("referenceId"))
-            } as z.infer<typeof createContactSchema>}
-            onSubmit={(values:z.infer<typeof createContactSchema>)=>{
+                partyReferenceId: Number(searchParams.get("referenceId"))
+            } as unknown as z.infer<typeof contactDataSchema>}
+            onSubmit={(values:z.infer<typeof contactDataSchema>)=>{
                 fetcher.submit({
                     createContact:values,
                     action:"create-contact",

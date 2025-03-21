@@ -735,6 +735,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/chat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Chat */
+        get: operations["chat"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/chat/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Chat Detail */
+        get: operations["chat-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/chat/message": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Chat Message */
+        post: operations["create-chat-message"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/chat/message/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Chat Messages */
+        get: operations["chat-messages"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/client": {
         parameters: {
             query?: never;
@@ -4564,6 +4632,77 @@ export interface components {
             value: number;
             /** Format: double */
             value2: number | null;
+        };
+        ChatDetailDto: {
+            /** Format: date-time */
+            created_at: string;
+            entity_href: string;
+            /** Format: int64 */
+            id: number;
+            members: components["schemas"]["ChatMemberDto"][];
+            name: string;
+            /** Format: int64 */
+            party_id: number;
+            type: string;
+        };
+        ChatDto: {
+            /** Format: int64 */
+            id: number;
+            last_message_content: string | null;
+            /** Format: date-time */
+            last_message_created_at: string | null;
+            last_message_type: string | null;
+            name: string | null;
+            profile_fn: string | null;
+            profile_gn: string | null;
+            /** Format: int64 */
+            profile_id: number | null;
+            type: string;
+            /** Format: int64 */
+            unread_count: number;
+        };
+        ChatMemberDto: {
+            chat: string;
+            /** Format: int64 */
+            chat_id: number;
+            /** Format: int64 */
+            id: number;
+            /** Format: date-time */
+            last_read_at: string;
+            profile_fn: string;
+            profile_gn: string;
+            /** Format: int64 */
+            profile_id: number;
+        };
+        ChatMessageData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["ChatMessageFields"];
+            /** Format: int64 */
+            id: number;
+        };
+        ChatMessageDto: {
+            content: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
+            id: number;
+            profile_fn: string;
+            profile_gn: string;
+            /** Format: int64 */
+            profile_id: number;
+            type: string;
+        };
+        ChatMessageFields: {
+            /** Format: int64 */
+            chat_id: number;
+            content: string;
+            /** Format: int64 */
+            profile_id: number;
+            type: string;
         };
         Client: {
             ClientKeyValueData: components["schemas"]["ClientKeyValueData"][];
@@ -8643,6 +8782,32 @@ export interface components {
             message: string;
             result: components["schemas"]["ChartDashboardData"];
         };
+        ResponseDataChatDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ChatDetailDto"];
+        };
+        ResponseDataChatMessageDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ChatMessageDto"];
+        };
         ResponseDataContactDtoBody: {
             /**
              * Format: uri
@@ -8850,6 +9015,32 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ChartDataDto"][];
+        };
+        ResponseDataListChatDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ChatDto"][];
+        };
+        ResponseDataListChatMessageDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ChatMessageDto"][];
         };
         ResponseDataListCourtRateDtoBody: {
             /**
@@ -12348,6 +12539,148 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityChargesTemplateDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    chat: {
+        parameters: {
+            query?: {
+                name?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListChatDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "chat-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataChatDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-chat-message": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChatMessageData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataChatMessageDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "chat-messages": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListChatMessageDtoBody"];
                 };
             };
             /** @description Error */
