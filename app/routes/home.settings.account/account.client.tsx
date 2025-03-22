@@ -6,7 +6,7 @@ import Typography, {
 import { Button } from "@/components/ui/button";
 import { useOutletContext } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { formatLongDate } from "~/util/format/formatDate";
 import UpdatePassword from "./components/update-password";
 import { useState } from "react";

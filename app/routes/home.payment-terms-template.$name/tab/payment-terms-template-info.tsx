@@ -1,7 +1,7 @@
 import {  useOutletContext } from "react-router";
 import { action, loader } from "../route";
 import { useRef } from "react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { State, stateFromJSON } from "~/gen/common";
 import { useFetcher, useLoaderData } from "@remix-run/react";

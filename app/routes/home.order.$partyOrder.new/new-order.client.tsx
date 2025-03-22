@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { route } from "~/util/route";
 import { action } from "./route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef } from "react";

@@ -2,7 +2,7 @@ import { Outlet, useLoaderData, useNavigate, useOutletContext, useParams, useSea
 import { loader } from "./route";
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
-import { GlobalState, WarehouseGlobalState } from "~/types/app";
+import { GlobalState, WarehouseGlobalState } from "~/types/app-types";
 import { route } from "~/util/route";
 import DetailLayout from "@/components/layout/detail-layout";
 import { PartyType, partyTypeToJSON } from "~/gen/common";

@@ -2,7 +2,7 @@ import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { groupColumns } from "@/components/custom/table/columns/group/group-columns";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { PartyType } from "~/types/enums";
 import { useCreateGroup } from "../home.group.$party_/components/create-group";

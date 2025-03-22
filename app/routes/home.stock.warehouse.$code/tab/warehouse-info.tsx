@@ -1,7 +1,7 @@
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { action, loader } from "../route";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { useRef } from "react";
 import { z } from "zod";

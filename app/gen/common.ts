@@ -154,6 +154,7 @@ export enum PartyType {
   bankAccount = 50,
   cashOutflow = 51,
   deal = 52,
+  chat = 53,
   UNRECOGNIZED = -1,
 }
 
@@ -318,6 +319,9 @@ export function partyTypeFromJSON(object: any): PartyType {
     case 52:
     case "deal":
       return PartyType.deal;
+    case 53:
+    case "chat":
+      return PartyType.chat;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -433,6 +437,8 @@ export function partyTypeToJSON(object: PartyType): string {
       return "cashOutflow";
     case PartyType.deal:
       return "deal";
+    case PartyType.chat:
+      return "chat";
     case PartyType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1666,6 +1672,133 @@ export function dealTypeToJSON(object: DealType): string {
     case DealType.AfterSales:
       return "AfterSales";
     case DealType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum ChatType {
+  Conversation = 0,
+  Group = 1,
+  UNRECOGNIZED = -1,
+}
+
+export function chatTypeFromJSON(object: any): ChatType {
+  switch (object) {
+    case 0:
+    case "Conversation":
+      return ChatType.Conversation;
+    case 1:
+    case "Group":
+      return ChatType.Group;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ChatType.UNRECOGNIZED;
+  }
+}
+
+export function chatTypeToJSON(object: ChatType): string {
+  switch (object) {
+    case ChatType.Conversation:
+      return "Conversation";
+    case ChatType.Group:
+      return "Group";
+    case ChatType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum ChatMessageType {
+  Base = 0,
+  UNRECOGNIZED = -1,
+}
+
+export function chatMessageTypeFromJSON(object: any): ChatMessageType {
+  switch (object) {
+    case 0:
+    case "Base":
+      return ChatMessageType.Base;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ChatMessageType.UNRECOGNIZED;
+  }
+}
+
+export function chatMessageTypeToJSON(object: ChatMessageType): string {
+  switch (object) {
+    case ChatMessageType.Base:
+      return "Base";
+    case ChatMessageType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum NotificationType {
+  SYSTEM = 0,
+  MENTION = 1,
+  UNRECOGNIZED = -1,
+}
+
+export function notificationTypeFromJSON(object: any): NotificationType {
+  switch (object) {
+    case 0:
+    case "SYSTEM":
+      return NotificationType.SYSTEM;
+    case 1:
+    case "MENTION":
+      return NotificationType.MENTION;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return NotificationType.UNRECOGNIZED;
+  }
+}
+
+export function notificationTypeToJSON(object: NotificationType): string {
+  switch (object) {
+    case NotificationType.SYSTEM:
+      return "SYSTEM";
+    case NotificationType.MENTION:
+      return "MENTION";
+    case NotificationType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+/** For ws */
+export enum MessageType {
+  Notification = 0,
+  ChatMessage = 1,
+  UNRECOGNIZED = -1,
+}
+
+export function messageTypeFromJSON(object: any): MessageType {
+  switch (object) {
+    case 0:
+    case "Notification":
+      return MessageType.Notification;
+    case 1:
+    case "ChatMessage":
+      return MessageType.ChatMessage;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return MessageType.UNRECOGNIZED;
+  }
+}
+
+export function messageTypeToJSON(object: MessageType): string {
+  switch (object) {
+    case MessageType.Notification:
+      return "Notification";
+    case MessageType.ChatMessage:
+      return "ChatMessage";
+    case MessageType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }

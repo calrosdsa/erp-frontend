@@ -27,7 +27,7 @@ import AddItemVariant, {
   useCreateItemVariant,
 } from "./components/create-item-variant";
 import { action, loader } from "./route";
-import { ItemGlobalState } from "~/types/app";
+import { ItemGlobalState } from "~/types/app-types";
 import { route } from "~/util/route";
 import { components } from "~/sdk";
 

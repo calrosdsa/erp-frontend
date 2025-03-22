@@ -12,6 +12,7 @@ type ActionData = {
   chatID: string;
   chatQuery:operations["chat"]["parameters"]["query"];
   chatMessage:components["schemas"]["ChatMessageData"];
+  messageQuery:operations["message"]["parameters"]["query"]
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -27,26 +28,25 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let chatMessage:components["schemas"]["ChatMessageDto"] | undefined = undefined
   switch (data.action) {
     case "message":{
-      const res =await client.GET("/chat/message/detail/{id}",{
+      console.log("MESSAGE QUERY",data.messageQuery)
+      const res =await client.GET("/chat/message",{
         params:{
-          path:{
-            id:data.chatID,
-          }
+          query:data.messageQuery,
         }
       })
       chatMessages = res.data?.result || []
       break;
-    }
+    } 
     case "create-message":{
       const res =await client.POST("/chat/message",{
         body:data.chatMessage
       })
       error = res.error?.detail
       chatMessage = res.data?.result
+      console.log(res.data,res.error?.detail)
       break;
     }
     case "chat-detail": {
-      console.log("CHATID",data.chatID)
       const res = await client.GET("/chat/detail/{id}", {
         params: {
           path: {

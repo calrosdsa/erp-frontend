@@ -6,7 +6,7 @@ import {
   useOutletContext,
   useSearchParams,
 } from "@remix-run/react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { loader } from "./route";
 import { termsAndConditionsColumns } from "@/components/custom/table/columns/document/terms-and-conditions-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";

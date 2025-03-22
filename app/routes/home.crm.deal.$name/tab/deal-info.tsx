@@ -6,7 +6,7 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "../route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useDealStore } from "../deal-store";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import {

@@ -3,7 +3,7 @@ import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { costCenterColumns } from "@/components/custom/table/columns/accounting/cost-center-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { projectColumns } from "@/components/custom/table/columns/project/project-columns";
 import { batchBundleColumns } from "@/components/custom/table/columns/stock/batch-bundle-columns";

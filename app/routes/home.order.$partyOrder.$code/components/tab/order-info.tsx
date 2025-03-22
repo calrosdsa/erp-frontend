@@ -4,7 +4,7 @@ import {
   useOutletContext,
   useParams,
 } from "@remix-run/react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useTranslation } from "react-i18next";
 import {
   State,

@@ -14,7 +14,7 @@ import ModuleInfo from "./tab/module-info";
 import { setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
 import { EventState, State, stateFromJSON } from "~/gen/common";
 import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { ButtonToolbar } from "~/types/actions";
 

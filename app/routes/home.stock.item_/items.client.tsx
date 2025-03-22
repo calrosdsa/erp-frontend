@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import { route } from "~/util/route";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 

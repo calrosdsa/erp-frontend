@@ -3,7 +3,7 @@ import { MenuIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SideNav } from "@/components/layout/side-nav";
 import { NavItems } from "../constant/side-nav";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 
 export const MobileSidebar = ({data}:{
     data:GlobalState    

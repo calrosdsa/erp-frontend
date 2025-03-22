@@ -3,7 +3,7 @@ import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemStockColums } from "@/components/custom/table/columns/stock/item-stock-columns";
 import { useUpsertItemStockLevel } from "./components/upsert-item-stock-level";
-import { GlobalState, ItemGlobalState } from "~/types/app";
+import { GlobalState, ItemGlobalState } from "~/types/app-types";
 import useActionRow from "~/util/hooks/useActionRow";
 import { usePermission } from "~/util/hooks/useActions";
 

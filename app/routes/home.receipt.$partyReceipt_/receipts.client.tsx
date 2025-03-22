@@ -6,7 +6,7 @@ import {
   useParams,
 } from "@remix-run/react";
 import { loader } from "./route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { receiptColumns } from "@/components/custom/table/columns/receipt/receipt-columns";
 import { route } from "~/util/route";

@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react"
 import { loader } from "./route"
-import { GlobalState } from "~/types/app"
+import { GlobalState } from "~/types/app-types"
 import { usePermission } from "~/util/hooks/useActions"
 import { DataTable } from "@/components/custom/table/CustomTable"
 import { contactColumns } from "@/components/custom/table/columns/contact/contact-columms"

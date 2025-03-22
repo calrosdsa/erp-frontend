@@ -7,7 +7,7 @@ import {
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { action, loader } from "../route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import TaxAndCharges from "@/components/custom/shared/accounting/tax/tax-and-charges";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charges-template-schema";

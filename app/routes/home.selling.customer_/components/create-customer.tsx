@@ -10,7 +10,7 @@ import { createCustomerSchema } from "~/util/data/schemas/selling/customer-schem
 import { z } from "zod";
 import { route } from "~/util/route";
 import { GroupAutocompleteForm, useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { PartyType, partyTypeToJSON } from "~/gen/common";

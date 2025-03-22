@@ -1,4 +1,4 @@
-import { CountrySelectItem } from "~/types/app";
+import { CountrySelectItem } from "~/types/app-types";
 
 export const countries: CountrySelectItem[] = [
     { code: "AD", label: "Andorra", phone: "376" },

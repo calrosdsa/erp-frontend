@@ -5,7 +5,7 @@ import { warehouseColumns } from "@/components/custom/table/columns/stock/wareho
 import { useCreateWareHouse } from "./components/add-warehouse"
 import { ListTree } from "lucide-react"
 import { usePermission } from "~/util/hooks/useActions"
-import { GlobalState } from "~/types/app"
+import { GlobalState } from "~/types/app-types"
 import { route } from "~/util/route"
 import { useTranslation } from "react-i18next"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"

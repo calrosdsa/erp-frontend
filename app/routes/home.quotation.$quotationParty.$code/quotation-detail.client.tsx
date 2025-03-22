@@ -7,7 +7,7 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import QuotationInfoTab from "./components/tab/quotation-info";
 import { useTranslation } from "react-i18next";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";

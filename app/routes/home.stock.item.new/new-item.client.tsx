@@ -35,7 +35,7 @@ import { PriceListAutocompleteForm } from "~/util/hooks/fetchers/usePriceListDeb
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { route } from "~/util/route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";

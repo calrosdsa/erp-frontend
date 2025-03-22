@@ -16,7 +16,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { ItemLineType, itemLineTypeToJSON, StockEntryType } from "~/gen/common";
 import { Separator } from "@/components/ui/separator";
 import { stockEntryDataSchema } from "~/util/data/schemas/stock/stock-entry-schema";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,

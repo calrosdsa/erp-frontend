@@ -4,7 +4,7 @@ import apiClient from "~/apiclient";
 import { DEFAULT_ORDER, DEFAULT_SIZE, LOAD_ACTION, MAX_SIZE } from "~/constant";
 import { Entity } from "~/types/enums";
 import { Outlet, ShouldRevalidateFunctionArgs, useOutletContext } from "@remix-run/react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { components } from "~/sdk";
 
 type ActionData = {

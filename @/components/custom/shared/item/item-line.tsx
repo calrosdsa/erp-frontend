@@ -30,7 +30,7 @@ import {
   WarehouseAutocompleteForm,
 } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse";
 import { Typography } from "@/components/typography";
 import CustomFormFieldInput from "../../form/CustomFormInput";

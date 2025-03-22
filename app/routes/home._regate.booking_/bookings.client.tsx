@@ -11,7 +11,7 @@ import {
 import { action, loader } from "./route";
 import { bookingColumns } from "@/components/custom/table/columns/regate/booking-columns";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";

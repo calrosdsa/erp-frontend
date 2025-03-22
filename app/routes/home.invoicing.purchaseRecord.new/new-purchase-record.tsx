@@ -15,7 +15,7 @@ import {
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { purchaseRecordDataSchema } from "~/util/data/schemas/invoicing/purchase-record-schema";
 import PurchaseRecordData from "./purchase-record-data";
 import { usePurchaseRecordStore } from "./purchase-record-store";

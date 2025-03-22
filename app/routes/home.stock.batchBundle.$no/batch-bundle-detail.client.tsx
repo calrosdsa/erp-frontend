@@ -11,7 +11,7 @@ import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import BatchBundleInfo from "./tab/project-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { format } from "date-fns";
 import { ButtonToolbar } from "~/types/actions";

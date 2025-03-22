@@ -1,7 +1,7 @@
 import { DataTable } from "@/components/custom/table/CustomTable";
 import DataLayout from "@/components/layout/data-layout";
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { loader } from "./route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";

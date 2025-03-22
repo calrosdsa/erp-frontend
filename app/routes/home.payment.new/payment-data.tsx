@@ -14,7 +14,7 @@ import {
 } from "~/util/data/schemas/accounting/payment-schema";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
 import { MutableRefObject, useEffect } from "react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { route } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { PaymentType } from "~/gen/common";

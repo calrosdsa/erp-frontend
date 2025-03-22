@@ -4,7 +4,7 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { costCenterColumns } from "@/components/custom/table/columns/accounting/cost-center-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { NewProject, useNewProject } from "./use-new-project";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { projectColumns } from "@/components/custom/table/columns/project/project-columns";
 

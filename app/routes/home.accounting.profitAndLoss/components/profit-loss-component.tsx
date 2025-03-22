@@ -34,7 +34,7 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useTranslation } from "react-i18next";
 import { useOutletContext, useSearchParams } from "@remix-run/react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { formatCurrency } from "~/util/format/formatCurrency";
 import { AccountType, accountTypeToJSON } from "~/gen/common";

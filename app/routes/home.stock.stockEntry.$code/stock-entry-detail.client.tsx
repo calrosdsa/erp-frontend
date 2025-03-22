@@ -18,7 +18,7 @@ import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schem
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";
 import { Entity } from "~/types/enums";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { ButtonToolbar } from "~/types/actions";
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { format, toZonedTime } from "date-fns-tz";

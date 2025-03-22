@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { loader } from "./route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { companyColumns } from "./components/table/columns";
 import { useCreateCompany } from "./components/create-company";

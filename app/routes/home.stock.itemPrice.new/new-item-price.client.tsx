@@ -15,7 +15,7 @@ import { Form } from "@/components/ui/form";
 import { z } from "zod";
 import { route } from "~/util/route";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useItemPriceStore } from "./use-item-price-store";

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { action, loader } from "../route";
 import { z } from "zod";
 import { editPriceListSchema } from "~/util/data/schemas/stock/price-list-schema";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { useRef } from "react";
 import { useEditFields } from "~/util/hooks/useEditFields";

@@ -6,7 +6,7 @@ import {
   useOutletContext,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { editChargesTemplateSchema } from "~/util/data/schemas/accounting/charges-template-schema";
 import { useEffect, useRef, useState } from "react";
 import { route } from "~/util/route";

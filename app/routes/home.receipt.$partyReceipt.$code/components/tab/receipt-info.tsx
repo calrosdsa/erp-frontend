@@ -13,7 +13,7 @@ import {
   State,
   stateFromJSON,
 } from "~/gen/common";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { useEffect, useRef } from "react";
 import { z } from "zod";

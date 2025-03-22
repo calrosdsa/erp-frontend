@@ -8,7 +8,7 @@ import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { orderColumns } from "@/components/custom/table/columns/order/order-columns";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";

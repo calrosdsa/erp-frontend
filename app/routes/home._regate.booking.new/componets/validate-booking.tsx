@@ -22,7 +22,7 @@ import { MultiSelect } from "@/components/custom/select/MultiSelect";
 import { daysWeek } from "~/util/data/day-weeks";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import CustomFormField from "@/components/custom/form/CustomFormField";

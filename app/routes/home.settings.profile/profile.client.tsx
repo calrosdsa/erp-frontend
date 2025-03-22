@@ -1,5 +1,5 @@
 import { useOutletContext } from "@remix-run/react"
-import { GlobalState } from "~/types/app"
+import { GlobalState } from "~/types/app-types"
 import { Role } from "~/types/enums"
 import ProfileInfo from "./components/profile"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"

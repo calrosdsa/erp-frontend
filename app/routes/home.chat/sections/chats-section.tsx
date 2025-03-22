@@ -10,12 +10,24 @@ import { useEffect } from "react";
 import { action, ChatSection } from "~/routes/home.chat/route";
 import SearchBar from "~/routes/home/components/search-bar";
 import { route } from "~/util/route";
+import { useChatStore } from "../use-chat-store";
 
 export default function ChatsSection() {
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
   const chatID = searchParams.get("chat_id");
-
+  const {
+    payload: { chats },
+    setPayload,
+  } = useChatStore();
+  useEffect(() => {
+    if (fetcher.data?.chats) {
+      console.log("SET CHATS",fetcher.data.chats)
+      setPayload({
+        chats:fetcher.data.chats
+      })
+    }
+  }, [fetcher.data?.chats]);
   const fetchData = () => {
     fetcher.submit(
       {
@@ -45,7 +57,7 @@ export default function ChatsSection() {
         />
         <IconButton icon={EditIcon} />
       </div>
-      {fetcher.data?.chats.map((item) => {
+      {chats?.map((item) => {
         return (
           <div
             key={item.id}
@@ -70,15 +82,33 @@ export default function ChatsSection() {
               )}
             </Avatar>
             <div className="flex flex-col w-full">
-              <div className="flex justify-between">
+              <div className="flex flex-col">
                 <div className="flex justify-between">
                   <span className=" font-semibold">{item.name}</span>
-                  {item.last_message_created_at &&
-                    format(item.last_message_created_at, "d MMM, HH:mm:ss", {
-                      locale: es,
-                    })}
+                  <span className="text-xs">
+                    {item.last_message_created_at &&
+                      format(item.last_message_created_at, "d MMM, HH:mm:ss", {
+                        locale: es,
+                      })}
+                  </span>
                 </div>
-                <span className=" text-xs">{item.last_message_content}</span>
+                <div className="flex space-x-1 items-center justify-between">
+                  <p className=" text-xs line-clamp-1">
+                    {item.last_message_content}
+                  </p>
+
+                  {item.unread_count > 0 && (
+                    <span
+                      className="bg-primary p-1 text-primary-foreground rounded-full text-sm 
+                w-5 h-5 flex items-center justify-center font-semibold
+                "
+                    >
+                      {item.unread_count > 99
+                        ? `${99}+`
+                        : item.unread_count.toString()}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>

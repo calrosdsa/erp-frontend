@@ -3,7 +3,7 @@ import { action, loader } from "./route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { PartyType, partyTypeToJSON, stateFromJSON } from "~/gen/common";
 import DetailLayout from "@/components/layout/detail-layout";
 import PaymentInfoTab from "./tab/payment-info";

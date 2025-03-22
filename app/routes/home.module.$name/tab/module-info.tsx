@@ -5,7 +5,7 @@ import { moduleSectionColumns } from "@/components/custom/table/columns/core/mod
 import { useRef } from "react";
 import { setUpToolbarTab, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { EventState, State, stateFromJSON } from "~/gen/common";
 import {
     mapToModuleSectionSchema,

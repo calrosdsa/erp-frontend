@@ -1,4 +1,8 @@
-import { Outlet, ShouldRevalidateFunctionArgs, useLoaderData } from "@remix-run/react";
+import {
+  Outlet,
+  ShouldRevalidateFunctionArgs,
+  useLoaderData,
+} from "@remix-run/react";
 import AppLayout from "./appLayout";
 import {
   ActionFunctionArgs,
@@ -13,10 +17,12 @@ import {
   SessionData,
 } from "~/sessions";
 import apiClient from "~/apiclient";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { ClientOnly } from "remix-utils/client-only";
 import FallBack from "@/components/layout/Fallback";
 import { DEFAULT_PAGE, LOAD_ACTION } from "~/constant";
+import ChatModal from "../home.chat/components/chat-modal";
+import { components } from "~/sdk";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const data = await request.formData();
@@ -36,8 +42,8 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
 export function shouldRevalidate({
   formMethod,
   defaultShouldRevalidate,
-  actionResult
-}:ShouldRevalidateFunctionArgs) {
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
   if (actionResult?.actionRoot == LOAD_ACTION) {
     return defaultShouldRevalidate;
   }
@@ -47,16 +53,15 @@ export function shouldRevalidate({
   return defaultShouldRevalidate;
 }
 
-
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   console.log("API URL CONTEXT", context);
-  
+
   const session = await getSession(request.headers.get("Cookie"));
   if (!session.has("access_token")) {
     // Redirect to the home page if they are already signed in.
     return redirect("/signin");
   }
-  const client = apiClient({request})
+  const client = apiClient({ request });
   const res = await client.GET("/account");
   if (res.error) {
     if ((res.error.status = 401)) {
@@ -67,14 +72,14 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
       });
     }
   }
-  const modulesRes = await client.GET("/module",{
-    params:{
-      query:{
-        page:DEFAULT_PAGE,
-        size:"100"
-      }
-    }
-  })
+  const modulesRes = await client.GET("/module", {
+    params: {
+      query: {
+        page: DEFAULT_PAGE,
+        size: "100",
+      },
+    },
+  });
   const sessionData = session.data as SessionData;
   // console.log(modulesRes.data,modulesRes.error);
   return json(
@@ -87,7 +92,7 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
       company: res.data?.company,
       roleActions: res.data?.role_actions,
       companyDefaults: res.data?.company_defaults,
-      modules:modulesRes.data?.result
+      modules: modulesRes.data?.result,
       // activeCompany: res.data?.user.UserRelation.Company,
     },
     {
@@ -109,6 +114,16 @@ export default function Home() {
     roleActions,
     companyDefaults,
   } = useLoaderData<typeof loader>();
+  const appContext:GlobalState = {
+    user: data?.user,
+    // appConfig: data?.appConfig,
+    session: session,
+    activeCompany: company,
+    role: role,
+    profile: profile,
+    roleActions: roleActions as components["schemas"]["RoleActionDto"][],
+    companyDefaults: companyDefaults,
+  }
 
   return (
     <ClientOnly fallback={<FallBack />}>
@@ -128,19 +143,9 @@ export default function Home() {
               }}
             >
               <Outlet
-                context={
-                  {
-                    user: data?.user,
-                    // appConfig: data?.appConfig,
-                    session: session,
-                    activeCompany: company,
-                    role: role,
-                    profile: profile,
-                    roleActions: roleActions,
-                    companyDefaults: companyDefaults,
-                  } as GlobalState
-                }
+                context={appContext}
               />
+                <ChatModal appContext={appContext}/>
             </AppLayout>
           </div>
         );

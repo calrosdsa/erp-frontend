@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CountrySelectItem } from "~/types/app";
+import { CountrySelectItem } from "~/types/app-types";
 
 export default function CountrySelect({
   label,

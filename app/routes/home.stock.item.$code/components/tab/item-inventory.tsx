@@ -2,7 +2,7 @@ import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { action, loader } from "../../route";
 import { useRef } from "react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { editItemSchema } from "~/util/data/schemas/stock/item-schemas";
 import { z } from "zod";

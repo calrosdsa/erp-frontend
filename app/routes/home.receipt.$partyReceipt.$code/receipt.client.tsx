@@ -7,7 +7,7 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import ReceiptInfoTab from "./components/tab/receipt-info";
 import { useTranslation } from "react-i18next";

@@ -13,7 +13,7 @@ import {
   SessionData,
 } from "~/sessions";
 import apiClient from "~/apiclient";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { ClientOnly } from "remix-utils/client-only";
 import FallBack from "@/components/layout/Fallback";
 import { LOAD_ACTION } from "~/constant";

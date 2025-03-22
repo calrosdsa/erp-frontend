@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { UserAvatar } from "@/components/layout/avatar";
-import { UserData } from "~/types/app";
+import { UserData } from "~/types/app-types";
 import { Form, Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";

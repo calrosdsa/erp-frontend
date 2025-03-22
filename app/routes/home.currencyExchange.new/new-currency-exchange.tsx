@@ -19,7 +19,7 @@ import {
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Input } from "@/components/ui/input";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { createCurrencyExchangeSchema } from "~/util/data/schemas/core/currency-exchange-schema";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";

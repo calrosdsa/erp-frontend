@@ -8,7 +8,7 @@ import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { formatAmount, formatCurrency } from "~/util/format/formatCurrency";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { State, stateFromJSON } from "~/gen/common";
 import { action, loader } from "../route";
 import { z } from "zod";

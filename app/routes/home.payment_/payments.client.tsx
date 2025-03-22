@@ -3,7 +3,7 @@ import { useLoaderData, useNavigate, useOutletContext, useSearchParams } from "@
 import { loader } from "./route";
 import { paymentColumns } from "@/components/custom/table/columns/accounting/payment-columns";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { PartyType, partyTypeToJSON } from "~/gen/common";

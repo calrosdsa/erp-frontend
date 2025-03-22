@@ -8,7 +8,7 @@ import { PaginationState } from "@tanstack/react-table"
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
 import { useState } from "react"
 import { route } from "~/util/route"
-import { GlobalState } from "~/types/app"
+import { GlobalState } from "~/types/app-types"
 import { usePermission } from "~/util/hooks/useActions"
 
 

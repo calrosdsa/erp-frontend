@@ -9,7 +9,7 @@ import DetailLayout from "@/components/layout/detail-layout";
 import { EventState, RegatePartyType, regatePartyTypeToJSON, State, stateFromJSON, stateToJSON } from "~/gen/common";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { ButtonToolbar } from "~/types/actions";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";

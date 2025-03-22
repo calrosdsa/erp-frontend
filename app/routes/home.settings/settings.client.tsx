@@ -7,7 +7,7 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { SessionDefaultDrawer } from "../home/components/SessionDefaults";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { Separator } from "@/components/ui/separator";
 import { SideNav } from "@/components/layout/side-nav";
 

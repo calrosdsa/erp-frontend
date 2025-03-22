@@ -21,7 +21,7 @@ export default function Message({ message }: MessageProps) {
       </Avatar>
 
       <div className={`max-w-[80%] ${isCurrentUser ? "text-right" : "text-left"}`}>
-        <div className="text-sm font-medium mb-1">{fullName}</div>
+        <div className="text-sm font-medium mb-1">{fullName} {message.id}</div>
 
         <Card className={`inline-block ${isCurrentUser ? "bg-primary text-primary-foreground" : ""}`}>
           <CardContent className="p-3">

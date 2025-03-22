@@ -8,7 +8,7 @@ import {
   useParams,
   useRouteError,
 } from "@remix-run/react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { action, loader } from "./route";
 import SquarePlugin from "./plugins/square";
 import { Button } from "@/components/ui/button";

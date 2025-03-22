@@ -4,7 +4,7 @@ import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { action } from "~/routes/api.document/route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { Permission } from "~/types/permission";
 import { docTermsSchema, DocTermsType } from "~/util/data/schemas/document/doc-terms.schema";
 import { AddressAutoCompleteFormField } from "~/util/hooks/fetchers/core/use-address-fetcher";

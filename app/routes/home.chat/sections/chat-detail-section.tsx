@@ -1,25 +1,69 @@
 import IconButton from "@/components/custom-ui/icon-button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { useFetcher, useSearchParams } from "@remix-run/react";
+import {
+  useFetcher,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { ChevronDown, SendHorizonalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { action } from "~/routes/home.chat/route";
-import { components } from "~/sdk";
+import { components, operations } from "~/sdk";
 import { fullName } from "~/util/convertor/convertor";
 import { route } from "~/util/route";
 import MessageList from "../components/chat/message-list";
+import MessageInput from "../components/chat/message-input";
+import { GlobalState } from "~/types/app-types";
+import { DEFAULT_SIZE } from "~/constant";
+import { useChatStore } from "../use-chat-store";
+import { useUnmount } from "usehooks-ts";
 
-export default function ChatDetailSection() {
+export default function ChatDetailSection({
+  appContext,
+}: {
+  appContext: GlobalState;
+}) {
   const [searchParams, setSearchParams] = useSearchParams();
   const chatID = searchParams.get("chat_id");
   const fetcher = useFetcher<typeof action>();
+  const messageFetcher = useFetcher<typeof action>();
   const chat = fetcher.data?.chatDetail;
   const [showScrollButton, setShowScrollButton] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const { i18n } = useTranslation("common");
-  const message: components["schemas"]["ChatMemberDto"][] = [];
+  const {
+    payload: { lastMessage },
+    setPayload,
+    loadChat,
+  } = useChatStore();
+  const [hasMore, setHasMore] = useState(false);
+  const [page, setPage] = useState(0);
+  const [previousScrollHight, setPreviousScrollHeight] = useState(0);
+  const [messages, setMessages] = useState<
+    components["schemas"]["ChatMessageDto"][]
+  >([]);
+  const [loading, setLoading] = useState(false);
+  const fetchMessages = () => {
+    setLoading(true);
+    console.log("FETCHING MESSAGES....");
+    const body: operations["message"]["parameters"]["query"] = {
+      size: DEFAULT_SIZE,
+      page: page,
+      id: chatID || "",
+    };
+    messageFetcher.submit(
+      {
+        action: "message",
+        messageQuery: body,
+      },
+      {
+        method: "POST",
+        action: route.toRoute({ main: route.chat }),
+        encType: "application/json",
+      }
+    );
+  };
   const fetchData = () => {
     fetcher.submit(
       {
@@ -45,23 +89,68 @@ export default function ChatDetailSection() {
     if (chatContainerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } =
         chatContainerRef.current;
-
       // Show button when scrolled up more than 100px from bottom
       setShowScrollButton(scrollHeight - scrollTop - clientHeight > 100);
-
+      setPreviousScrollHeight(scrollHeight);
       // Load more messages when scrolled to top (with a small threshold)
-      if (scrollTop < 50 && fetcher.state != "submitting") {
+      if (scrollTop < 50 && hasMore && messageFetcher.state != "submitting") {
+        console.log("HANDLE SCROLL...");
+        fetchMessages();
         //Load messages here
       }
     }
   };
   useEffect(() => {
-    scrollToBottom();
-  }, []);
+    if (chatContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } =
+        chatContainerRef.current;
+      chatContainerRef.current.scrollTop = scrollHeight - previousScrollHight;
+      console.log(
+        "CHAT CONTAINER CURRENT",
+        chatContainerRef.current?.scrollHeight
+      );
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (messageFetcher.data?.chatMessages) {
+      setLoading(false);
+      const newMessages = messageFetcher.data.chatMessages;
+      setMessages((prev) => {
+        const updatedMessages = [...prev, ...newMessages];
+        if (page === 0) {
+          setTimeout(scrollToBottom, 0);
+        }
+        return updatedMessages;
+      });
+      setHasMore(newMessages.length >= Number(DEFAULT_SIZE));
+      setPage((prev) => prev + 1);
+    }
+  }, [messageFetcher.data]);
+
+  useEffect(() => {
+    if (fetcher.data?.chatDetail) {
+      loadChat(fetcher.data.chatDetail);
+    }
+  }, [fetcher.data]);
+
+  useUnmount(() => {
+    setPayload({
+      currentChat: undefined,
+    });
+  });
+
+  useEffect(() => {
+    if (lastMessage) {
+      scrollToBottom()
+      setMessages((prev) => [lastMessage,...prev]);
+    }
+  }, [lastMessage]);
 
   useEffect(() => {
     console.log("REDER NOTIFICATION SECTION...");
     if (chatID) {
+      fetchMessages();
       fetchData();
     }
   }, [chatID]);
@@ -91,17 +180,18 @@ export default function ChatDetailSection() {
         onScroll={handleScroll}
       >
         <MessageList
-          messages={fetcher.data?.chatMessages || []}
-          loading={fetcher.state == "submitting"}
+          messages={messages}
+          loading={messageFetcher.state == "submitting"}
         />
       </div>
 
-      <div className=" absolute bottom-0 p-3 bg-muted w-full">
-        <div className="flex space-x-3">
-          <Input className="w-full" />
-          <IconButton icon={SendHorizonalIcon} />
-        </div>
-      </div>
+      {chat?.id && appContext.profile?.id && (
+        <MessageInput
+          onSend={() => {}}
+          chatID={chat?.id}
+          profileID={appContext.profile?.id}
+        />
+      )}
 
       {showScrollButton && (
         <IconButton

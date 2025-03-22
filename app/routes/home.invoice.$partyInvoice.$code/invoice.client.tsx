@@ -30,7 +30,7 @@ import {
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { DownloadIcon, PlusIcon } from "lucide-react";
 import { useStatus } from "~/util/hooks/data/useStatus";
 import { format } from "date-fns";

@@ -3,7 +3,7 @@ import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { taxColumns } from "@/components/custom/table/columns/accounting/tax-columns";
 import { useCreateTax } from "./components/add-tax";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 
 export default function TaxesClient() {

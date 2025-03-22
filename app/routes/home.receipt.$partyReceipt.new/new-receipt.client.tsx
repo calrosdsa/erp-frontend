@@ -14,7 +14,7 @@ import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { useEffect, useRef } from "react";
 import { route } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { action } from "./route";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { useToolbar } from "~/util/hooks/ui/useToolbar";

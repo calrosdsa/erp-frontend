@@ -8,7 +8,7 @@ import {
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { NavItem } from "~/types";
 import { EventState, State, stateFromJSON } from "~/gen/common";

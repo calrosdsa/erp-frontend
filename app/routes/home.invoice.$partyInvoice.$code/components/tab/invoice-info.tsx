@@ -7,7 +7,7 @@ import {
 } from "@remix-run/react";
 import { action, loader } from "../../route";
 import { State, stateFromJSON, stateToJSON } from "~/gen/common";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useEffect, useRef } from "react";
 import { usePermission } from "~/util/hooks/useActions";
 import { z } from "zod";

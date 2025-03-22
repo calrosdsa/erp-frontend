@@ -11,7 +11,7 @@ import UpsertItemAttributeValue from "./upsert-item-attribute-value";
 import { useEffect, useState } from "react";
 import { components } from "~/sdk";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 
 export default function ItemAttributeInfo() {
   const { itemAttribute,actions } = useLoaderData<typeof loader>();

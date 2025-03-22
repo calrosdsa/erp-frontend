@@ -18,7 +18,7 @@ import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import SelectForm from "@/components/custom/select/SelectForm";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { Separator } from "@/components/ui/separator";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,

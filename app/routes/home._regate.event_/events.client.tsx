@@ -1,6 +1,6 @@
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { action, loader } from "./route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import {
   DataTable,

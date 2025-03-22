@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Gender } from "~/types/app";
+import { Gender } from "~/types/app-types";
 
 
 export const getGenders = ():Gender[] =>{

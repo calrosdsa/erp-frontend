@@ -7,7 +7,7 @@ import {
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { action, loader } from "../route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useRef } from "react";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import {

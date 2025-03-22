@@ -41,13 +41,12 @@ export default function MessageList({ messages, loading }: MessageListProps) {
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       )}
-
-      {groupedMessages.map((group) => (
+    {groupedMessages.map((group) => (
         <div key={group.date} className="space-y-4">
           <DateSeparator date={group.date} />
 
           <div className="space-y-3">
-            {group.messages.map((message) => (
+            {group.messages.reverse().map((message) => (
               <Message key={message.id} message={message} />
             ))}
           </div>

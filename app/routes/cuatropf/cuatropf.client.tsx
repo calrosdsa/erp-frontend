@@ -1,6 +1,6 @@
 import React, { FormEvent, Suspense, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CountrySelectItem } from "~/types/app";
+import { CountrySelectItem } from "~/types/app-types";
 import FormCuatropf from "./components/FormCuatropf";
 import FormCuatropfDetail from "./components/FormDetail";
 

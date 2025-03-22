@@ -1,5 +1,5 @@
 import { components } from "index";
-import { UserData } from "~/types/app";
+import { UserData } from "~/types/app-types";
 
 
     

@@ -20,7 +20,7 @@ import {
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Input } from "@/components/ui/input";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { DEFAULT_CURRENCY } from "~/constant";
 
 export default function NewChargesTemplateClient() {

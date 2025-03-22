@@ -76,6 +76,7 @@ enum PartyType {
     bankAccount = 50;
     cashOutflow = 51;
     deal = 52;
+    chat = 53;
 }
 
 enum PianoPartyType {
@@ -282,4 +283,24 @@ enum DealType {
     IntegratedSales = 2;
     MerchadiseSales = 3;
     AfterSales = 4;
+}
+
+enum ChatType {
+    Conversation = 0;
+    Group = 1;
+}
+
+enum ChatMessageType {
+    Base = 0;
+}
+
+enum NotificationType {
+    SYSTEM = 0;
+    MENTION = 1;
+}
+
+//For ws
+enum MessageType {
+    Notification = 0;
+    ChatMessage = 1;
 }

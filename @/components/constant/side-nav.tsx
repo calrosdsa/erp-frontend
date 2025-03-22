@@ -14,7 +14,7 @@ import { NavItem } from "~/types";
 import { Entity, Role } from "~/types/enums";
 import { title } from "../typography/Typography";
 import { route } from "~/util/route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useMemo } from "react";
 import { BuyingNav } from "./buying-nav";
 import { SellingNav } from "./selling-nav";

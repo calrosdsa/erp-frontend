@@ -15,7 +15,7 @@ import { components } from "~/sdk";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { DEFAULT_DEBOUNCE_TIME, MAX_DEFAULT_SIZE } from "~/constant";
 import { useRoleDebounceFetcher } from "~/util/hooks/fetchers/userRoleDebounceFetcher";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 
 export const CreateUser = ({
   open,

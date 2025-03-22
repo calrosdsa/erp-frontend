@@ -10,7 +10,7 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemPriceColumns } from "@/components/custom/table/columns/stock/item-price-columns";
 import { useAddItemPrice } from "./components/add-item-price";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { PartyType, partyTypeToJSON } from "~/gen/common";

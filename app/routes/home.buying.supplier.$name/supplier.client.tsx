@@ -16,7 +16,7 @@ import { EventState, PartyType, partyTypeToJSON, State, stateFromJSON } from "~/
 import { ButtonToolbar } from "~/types/actions";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { z } from "zod";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";

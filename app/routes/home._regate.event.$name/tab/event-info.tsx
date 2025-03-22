@@ -3,7 +3,7 @@ import { action, loader } from "../route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { useTranslation } from "react-i18next";
 import { useRef } from "react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { editEventSchema } from "~/util/data/schemas/regate/event-schema";
 import { z } from "zod";

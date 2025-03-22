@@ -9,7 +9,7 @@ import {
 import { loader } from "./route";
 import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import DetailLayout from "@/components/layout/detail-layout";
 import ItemInfoTab from "./components/tab/item-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";

@@ -4,7 +4,7 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import { loader } from "./route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { useTranslation } from "react-i18next";
 import DetailLayout from "@/components/layout/detail-layout";

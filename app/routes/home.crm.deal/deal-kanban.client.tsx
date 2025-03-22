@@ -6,7 +6,7 @@ import DealCard from "./components/deal-card";
 import { DraggableLocation } from "@hello-pangea/dnd";
 import { components } from "~/sdk";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { DEFAULT_CURRENCY } from "~/constant";
 import MentionTextarea from "../home.activity/components/activity-comment";
 import { TimePicker } from "@/components/custom/datetime/time-picker";

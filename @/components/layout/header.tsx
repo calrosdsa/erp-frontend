@@ -4,7 +4,7 @@ import { Boxes, LogOutIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { Form, Link } from "@remix-run/react";
-import { GlobalState, UserData } from "~/types/app";
+import { GlobalState, UserData } from "~/types/app-types";
 import { UserNav } from "./user-nav";
 
 export default function Header({ data,openSessionDefaults }: { 

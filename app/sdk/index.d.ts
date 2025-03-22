@@ -776,27 +776,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Chat Messages */
+        get: operations["message"];
         put?: never;
         /** Chat Message */
         post: operations["create-chat-message"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/chat/message/detail/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Chat Messages */
-        get: operations["chat-messages"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -4682,9 +4666,11 @@ export interface components {
             readonly $schema?: string;
             fields: components["schemas"]["ChatMessageFields"];
             /** Format: int64 */
-            id: number;
+            id?: number;
         };
         ChatMessageDto: {
+            /** Format: int64 */
+            chat_id: number;
             content: string;
             /** Format: date-time */
             created_at: string;
@@ -12622,6 +12608,42 @@ export interface operations {
             };
         };
     };
+    message: {
+        parameters: {
+            query: {
+                size: string;
+                status?: string;
+                orientation?: string;
+                column?: string;
+                id?: string;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListChatMessageDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-chat-message": {
         parameters: {
             query?: never;
@@ -12642,45 +12664,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataChatMessageDtoBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "chat-messages": {
-        parameters: {
-            query?: {
-                query?: string;
-                orientation?: string;
-                column?: string;
-                parentId?: string;
-            };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResponseDataListChatMessageDtoBody"];
                 };
             };
             /** @description Error */

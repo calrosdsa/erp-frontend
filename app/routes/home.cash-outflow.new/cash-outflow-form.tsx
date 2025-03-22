@@ -8,7 +8,7 @@ import { MutableRefObject, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { PartyAutocompleteField } from "../home.order.$partyOrder.new/components/party-autocomplete";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { CashOutflowDataType } from "~/util/data/schemas/accounting/cash-outflow.schema";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { CustomFormTime } from "@/components/custom/form/CustomFormTime";

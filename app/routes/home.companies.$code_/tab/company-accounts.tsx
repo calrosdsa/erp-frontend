@@ -18,7 +18,7 @@ import {
   AccountSettingData,
   accountSettingSchema,
 } from "~/util/data/schemas/company/account-setting.schema";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
 import { Entity } from "~/types/enums";
 import { FieldRequiredType } from "~/util/data/schemas";

@@ -3,7 +3,7 @@ import { type AvatarProps } from "@radix-ui/react-avatar"
 
 import { User as UserIcon } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { UserData } from "~/types/app"
+import { UserData } from "~/types/app-types"
 import { fullName } from "~/util/convertor/convertor"
 import { components } from "index"
 

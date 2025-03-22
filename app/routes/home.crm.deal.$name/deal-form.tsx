@@ -7,7 +7,7 @@ import { FetcherWithComponents, useOutletContext } from "@remix-run/react";
 import { MutableRefObject, useEffect, useState } from "react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { DealData } from "~/util/data/schemas/crm/deal.schema";

@@ -6,7 +6,7 @@ import { editCourtSchema } from "~/util/data/schemas/regate/court-schema";
 import { z } from "zod";
 import { useRef } from "react";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import {
   setUpToolbar,
   setUpToolbarTab,

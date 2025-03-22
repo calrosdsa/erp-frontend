@@ -2,7 +2,7 @@ import { useOutletContext } from "react-router";
 import TermsAndConditionsData from "~/routes/home.terms-and-conditions.new/terms-and-conditions-data";
 import { action, loader } from "../route";
 import { useEffect, useRef } from "react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { State, stateFromJSON } from "~/gen/common";
 import { useFetcher, useLoaderData } from "@remix-run/react";

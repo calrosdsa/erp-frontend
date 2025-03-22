@@ -6,7 +6,7 @@ import { BsArrowLeftShort } from "react-icons/bs";
 import { useSidebar } from "~/util/hooks/useSidebar";
 import { NavItems } from "../constant/side-nav";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { Button } from "../ui/button";
 import { NavAdminItems } from "../constant/side-admin-nav";
 

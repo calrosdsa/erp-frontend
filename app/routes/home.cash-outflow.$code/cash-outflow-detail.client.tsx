@@ -10,7 +10,7 @@ import { action, loader } from "./route";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useTranslation } from "react-i18next";
 import { EventState, State, stateFromJSON } from "~/gen/common";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";

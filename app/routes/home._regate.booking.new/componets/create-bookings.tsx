@@ -26,7 +26,7 @@ import Typography, { subtitle } from "@/components/typography/Typography";
 import { useEventDebounceFetcher } from "~/util/hooks/fetchers/regate/useEventDebounceFetcher";
 import AccordationLayout from "@/components/layout/accordation-layout";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useCreateEvent } from "~/routes/home._regate.event_/components/use-create-event";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Button } from "@/components/ui/button";

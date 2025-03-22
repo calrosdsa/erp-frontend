@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ItemPriceForm from "./item-price-form";
 import { route } from "~/util/route";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";

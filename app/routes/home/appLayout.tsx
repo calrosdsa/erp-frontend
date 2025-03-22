@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useLoaderData, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useSessionDefaults } from "./components/SessionDefaults";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
@@ -74,7 +74,6 @@ export default function AppLayout({
   return (
     <>
       <GlobalDialogs globalState={globalState} />
-      <ChatModal/>
       <div className=" max-w-[1500px] mx-auto">
         <SidebarProvider>
           <AppSidebar data={globalState} modules={modules} />

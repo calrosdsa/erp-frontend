@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { z } from "zod";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { createItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { useCreateTax } from "~/routes/home.accounting.taxes_/components/add-tax";
 import { create } from "zustand";

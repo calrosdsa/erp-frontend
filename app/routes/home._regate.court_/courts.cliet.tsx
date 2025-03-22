@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react"
 import Court, { loader } from "./route"
-import { GlobalState } from "~/types/app"
+import { GlobalState } from "~/types/app-types"
 import { usePermission } from "~/util/hooks/useActions"
 import { DataTable } from "@/components/custom/table/CustomTable"
 import { courtColumns } from "@/components/custom/table/columns/regate/court-columns"

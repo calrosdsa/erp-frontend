@@ -8,7 +8,7 @@ import SerialNoInfo from "./tab/serial-no-info"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
 import { stateFromJSON } from "~/gen/common"
 import { usePermission } from "~/util/hooks/useActions"
-import { GlobalState } from "~/types/app"
+import { GlobalState } from "~/types/app-types"
 import { format } from "date-fns"
 import { ButtonToolbar } from "~/types/actions"
 

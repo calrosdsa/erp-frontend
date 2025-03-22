@@ -6,7 +6,7 @@ import Typography, { subtitle } from "@/components/typography/Typography";
 import { useTranslation } from "react-i18next";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { EditRolePermission, useEditRolePermission } from "./components/edit-role-permission";
 import useActionRow from "~/util/hooks/useActionRow";
 

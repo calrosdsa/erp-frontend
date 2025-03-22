@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, useLoaderData, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import {
   SessionDefaultDrawer,
   useSessionDefaults,

@@ -24,7 +24,7 @@ import {
   JournalEntryLine,
   useJournalEntryLine,
 } from "../home.accounting.journalEntry.$name/components/journal-entry-line";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useRef } from "react";

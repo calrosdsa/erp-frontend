@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemPriceColumns } from "@/components/custom/table/columns/stock/item-price-columns";
 import useActionRow from "~/util/hooks/useActionRow";
-import { ItemGlobalState } from "~/types/app";
+import { ItemGlobalState } from "~/types/app-types";
 import { loader } from "./route";
 import { usePermission } from "~/util/hooks/useActions";
 import { useAddItemPrice } from "../home.stock.itemPrice_/components/add-item-price";

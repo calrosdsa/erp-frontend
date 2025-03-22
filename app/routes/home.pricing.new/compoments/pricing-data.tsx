@@ -44,7 +44,7 @@ import { Separator } from "@/components/ui/separator";
 import { Typography } from "@/components/typography";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 
 type EditData = z.infer<typeof pricingDataSchema>;

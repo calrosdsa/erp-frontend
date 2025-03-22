@@ -3,7 +3,7 @@ import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { pricelistItemColums } from "@/components/custom/table/columns/selling/stock/priceListItem";
 import { useCreatePriceList } from "./components/add-price-list";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 

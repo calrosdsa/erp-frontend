@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { editGroupSchema } from "~/util/data/schemas/group-schema";
 import { useRef } from "react";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import {
   setUpToolbar,

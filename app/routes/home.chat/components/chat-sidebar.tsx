@@ -1,27 +1,16 @@
 
 import { Button } from "@/components/ui/button";
 import { BadgeIcon } from "@/components/ui/custom/badge-icon";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-} from "@/components/ui/sidebar";
 import { useSearchParams } from "@remix-run/react";
 import { BellIcon, MessagesSquareIcon, XIcon } from "lucide-react";
-import { useWsStore } from "~/routes/home/ws-handler";
 import { ChatSection } from "../route";
 import { cn } from "@/lib/utils";
+import { useChatStore } from "../use-chat-store";
 
 export default function ChatSideBar({closeModal}:{
     closeModal:()=>void
 }){
-    const { payload } = useWsStore();
+    const { payload } = useChatStore();
     const [searchParams,setSearchParams] = useSearchParams()
     const chatSection = searchParams.get("chat_section")
     const changeSection = (section:ChatSection) =>{

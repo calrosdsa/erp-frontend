@@ -1,7 +1,7 @@
 import AddressAndContact from "@/components/custom/shared/document/tab/address-and-contact";
 import { useLoaderData, useOutletContext, useParams } from "@remix-run/react";
 import { loader } from "../../route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { AddressAndContactDataType } from "~/util/data/schemas/document/address-and-contact.schema";
 import DocTerms from "@/components/custom/shared/document/tab/doc-terms";

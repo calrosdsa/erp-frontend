@@ -18,7 +18,7 @@ import {
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { FormEvent, MutableRefObject, useEffect, useRef } from "react";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useTranslation } from "react-i18next";
 import PricingData from "~/routes/home.pricing.new/compoments/pricing-data";
 import { Entity } from "~/types/enums";

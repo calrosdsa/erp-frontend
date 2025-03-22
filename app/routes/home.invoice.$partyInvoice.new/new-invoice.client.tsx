@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef } from "react";
 import { route } from "~/util/route";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { action } from "./route";
 import { invoiceDataSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import { useCreatePurchaseInvoice } from "./use-purchase-invoice";

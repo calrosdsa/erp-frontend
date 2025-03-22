@@ -2,7 +2,7 @@ import { CreditCardIcon, DollarSign, SquareChartGantt } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { PartyType } from "~/gen/common";
 import { NavItem } from "~/types";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { Entity } from "~/types/enums";
 import { route } from "~/util/route";
 

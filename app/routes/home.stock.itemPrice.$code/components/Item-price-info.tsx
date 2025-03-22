@@ -3,7 +3,7 @@ import { action, loader } from "../route";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useRef } from "react";
 import { editItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";

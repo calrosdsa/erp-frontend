@@ -2,7 +2,7 @@ import { BuildingIcon, HomeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { PartyAdminType, partyAdminTypeToJSON, PartyType, partyTypeToJSON } from "~/gen/common";
 import { NavItem } from "~/types";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { routes } from "~/util/route-admin";
 
 export const NavAdminItems = (): NavItem[] => {

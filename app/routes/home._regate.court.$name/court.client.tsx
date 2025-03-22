@@ -13,7 +13,7 @@ import DetailLayout from "@/components/layout/detail-layout";
 import { NavItem } from "~/types";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
-import { CourtState, GlobalState } from "~/types/app";
+import { CourtState, GlobalState } from "~/types/app-types";
 import CourtInfoTab from "./tabs/court-info";
 import CourtSchedule from "./tabs/court-schedule";
 import { ButtonToolbar } from "~/types/actions";

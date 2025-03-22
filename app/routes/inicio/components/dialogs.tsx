@@ -32,7 +32,7 @@ import {
 import CreateItemVariant, {
   useCreateItemVariant,
 } from "~/routes/home.stock.item.$code.variants_/components/create-item-variant";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import {
   NewItemPriceDialog,
   useNewItemPrice,

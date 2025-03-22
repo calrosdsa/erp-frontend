@@ -13,7 +13,7 @@ import PartyAutocomplete, {
   PartyAutocompleteField,
 } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { Separator } from "@/components/ui/separator";
 import LineItems from "@/components/custom/shared/item/line-items";

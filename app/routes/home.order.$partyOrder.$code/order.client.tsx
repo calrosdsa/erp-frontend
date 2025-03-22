@@ -9,7 +9,7 @@ import {
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
 import { usePermission } from "~/util/hooks/useActions";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import {
   ItemLineType,
   PartyType,

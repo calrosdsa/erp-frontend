@@ -4,15 +4,13 @@ import SearchBar from "./search-bar";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { BadgeIcon } from "@/components/ui/custom/badge-icon";
 import { BellIcon } from "lucide-react";
-import { useWsStore } from "../ws-handler";
 import { Button } from "@/components/ui/button";
-import { useChatStore } from "~/routes/home.chat/components/chat-modal";
 import { useSearchParams } from "@remix-run/react";
 import { ChatSection } from "~/routes/home.chat/route";
+import { useChatStore } from "~/routes/home.chat/use-chat-store";
 
 export const Navbar = () => {
-  const { payload } = useWsStore();
-  const { onOpenChange } = useChatStore();
+  const { payload } = useChatStore();
   const [searchParams, setSearchParams] = useSearchParams();
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 justify-between">

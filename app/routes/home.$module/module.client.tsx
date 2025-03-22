@@ -2,7 +2,7 @@ import { useLoaderData, useOutletContext } from "@remix-run/react";
 import { loader } from "./route";
 import Menu from "./components/menu";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 
 export default function ModuleClient() {
   const { module } = useLoaderData<typeof loader>();

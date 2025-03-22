@@ -2,7 +2,7 @@ import DocAccounts from "@/components/custom/shared/document/tab/doc-accounts";
 import { useLoaderData, useOutletContext, useParams } from "@remix-run/react";
 
 import { DocAccountsType } from "~/util/data/schemas/document/doc-accounts.schema";
-import { GlobalState } from "~/types/app";
+import { GlobalState } from "~/types/app-types";
 import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
 import { loader } from "../../route";
 import { party } from "~/util/party";
