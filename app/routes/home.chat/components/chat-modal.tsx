@@ -10,6 +10,7 @@ import NotificationSection from "../sections/notification-section";
 import ChatsSection from "../sections/chats-section";
 import ChatDetailSection from "../sections/chat-detail-section";
 import { GlobalState } from "~/types/app-types";
+import { useMediaQuery } from "usehooks-ts";
 
 // Menu items.
 export default function ChatModal({ appContext }: { appContext: GlobalState }) {
@@ -17,6 +18,9 @@ export default function ChatModal({ appContext }: { appContext: GlobalState }) {
   // const { payload } = useWsStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const chat = searchParams.get("chat_modal");
+  const chatID = searchParams.get("chat_id");
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+
   const chatSection = searchParams.get("chat_section");
   const closeModal = () => {
     searchParams.delete("chat_modal");
@@ -27,18 +31,26 @@ export default function ChatModal({ appContext }: { appContext: GlobalState }) {
   };
   return (
     <Sheet open={chat == "1"} onOpenChange={(e) => closeModal()}>
-      <SheetContent className="w-full md:max-w-full h-screen flex p-0 [&>button]:hidden gap-0">
+      <SheetContent className="w-full sm:max-w-full h-screen flex p-0 [&>button]:hidden gap-0">
         <ChatSideBar closeModal={closeModal} />
 
-        <div className="grid grid-cols-4 w-full">
-          <ChatsSection />
-          <div className=" col-span-3 border-l">
+        <div className="grid lg:grid-cols-4 w-full">
+          <div className="hidden lg:block">
+            <ChatsSection />
+          </div>
+          <div className="lg:col-span-3 border-l">
             {chatSection == ChatSection.NOTIFICATIONS && (
               <NotificationSection />
             )}
 
             {chatSection == ChatSection.CHATS && (
-              <ChatDetailSection appContext={appContext} />
+              <>
+                {!isDesktop && !chatID ? (
+                  <ChatsSection />
+                ) : (
+                  <ChatDetailSection appContext={appContext} />
+                )}
+              </>
             )}
           </div>
         </div>

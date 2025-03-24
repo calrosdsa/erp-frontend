@@ -1,3 +1,4 @@
+import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Link, useFetcher } from "@remix-run/react"
 import { BellIcon } from "lucide-react"
@@ -40,9 +41,11 @@ export default function NotificationSection(){
                 </div>
                 <span className=" text-lg">Notificaciones</span>
             </div>
+            <div className=" overflow-auto">
+              {fetcher.state == "submitting" && <LoadingSpinner className="mt-2"/>}
             {fetcher.data?.notifications.map((item)=>{
-                return (
-                    <div key={item.id} className=" flex  space-x-2 p-2 xl:p-4 w-full">
+              return (
+                <div key={item.id} className=" flex  space-x-2 p-2 xl:p-4 w-full">
                          <Avatar className="w-12 h-12">
       {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
                         <AvatarFallback>{item.profile_gn[0]}{item.profile_fn[0]}</AvatarFallback>
@@ -57,9 +60,12 @@ export default function NotificationSection(){
                             mentions={item.mentions || []}
                             />
                         </div>
+                            
+
                     </div>
                 )
-            })}
+              })}
+              </div>
         </div>
     )
 }

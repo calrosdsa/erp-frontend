@@ -27,6 +27,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let chatMessages:components["schemas"]["ChatMessageDto"][] = []
   let chatMessage:components["schemas"]["ChatMessageDto"] | undefined = undefined
   switch (data.action) {
+    case "update-member-last-read":{
+      await client.PUT("/chat/update-member-last-read/{id}",{
+        params:{
+          path:{
+            id:data.chatID,
+          }
+        }
+      })
+      break;
+    }
     case "message":{
       console.log("MESSAGE QUERY",data.messageQuery)
       const res =await client.GET("/chat/message",{

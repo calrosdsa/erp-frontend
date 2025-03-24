@@ -7,7 +7,8 @@ import FormAutocompleteField, {
   AutocompleteFormProps,
 } from "@/components/custom/select/FormAutocompleteField";
 import { formatQuery } from "..";
-import Autocomplete, {
+import  {
+  Autocomplete,
   AutoCompleteProps,
 } from "@/components/custom/select/autocomplete";
 

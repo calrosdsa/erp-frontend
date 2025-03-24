@@ -1,11 +1,11 @@
 import IconButton from "@/components/custom-ui/icon-button";
-import Autocomplete from "@/components/custom/select/autocomplete";
+import { Autocomplete } from "@/components/custom/select/autocomplete";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useFetcher, useSearchParams } from "@remix-run/react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { EditIcon } from "lucide-react";
+import { ArrowLeftIcon, EditIcon } from "lucide-react";
 import { useEffect } from "react";
 import { action, ChatSection } from "~/routes/home.chat/route";
 import SearchBar from "~/routes/home/components/search-bar";
@@ -22,10 +22,10 @@ export default function ChatsSection() {
   } = useChatStore();
   useEffect(() => {
     if (fetcher.data?.chats) {
-      console.log("SET CHATS",fetcher.data.chats)
+      console.log("SET CHATS", fetcher.data.chats);
       setPayload({
-        chats:fetcher.data.chats
-      })
+        chats: fetcher.data.chats,
+      });
     }
   }, [fetcher.data?.chats]);
   const fetchData = () => {
@@ -46,6 +46,7 @@ export default function ChatsSection() {
   return (
     <div className="w-full">
       <div className=" border-b p-2 w-full flex space-x-4 items-center">
+        
         <Autocomplete
           className=" w-full"
           onValueChange={() => {}}

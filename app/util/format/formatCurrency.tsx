@@ -14,7 +14,7 @@ export const formatAmountToInt = (v?: number): number => {
   return Math.round(v * 100);
 };
 
-export const formatCurrency = (
+export const  formatCurrency = (
   input: number | undefined,
   currency: string | undefined,
   language: string

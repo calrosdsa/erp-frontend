@@ -1,4 +1,4 @@
-import { format, isToday, isYesterday } from "date-fns"
+import { format, isToday, isYesterday, parse } from "date-fns"
 
 type DateSeparatorProps = {
   date: string
@@ -8,7 +8,7 @@ export default function DateSeparator({ date }: DateSeparatorProps) {
   let displayDate = date
 
   try {
-    const dateObj = new Date(date)
+    const dateObj = parse(date,"yyyy-MM-dd",new Date()).toString()
 
     if (isToday(dateObj)) {
       displayDate = "Today"
@@ -23,7 +23,9 @@ export default function DateSeparator({ date }: DateSeparatorProps) {
 
   return (
     <div className="flex items-center justify-center my-4">
-      <div className="bg-muted text-muted-foreground text-xs px-3 py-1 rounded-full">{displayDate}</div>
+      <div className="bg-muted text-muted-foreground text-xs px-3 py-1 rounded-full">
+        {displayDate}
+      </div>
     </div>
   )
 }

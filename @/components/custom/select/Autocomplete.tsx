@@ -51,7 +51,7 @@ export interface AutoCompleteProps<T extends object, K extends keyof T> {
   badgeLabel?: string;
 }
 
-export default function Autocomplete<T extends object, K extends keyof T>({
+export  const Autocomplete = <T extends object, K extends keyof T>({
   data,
   nameK,
   onValueChange,
@@ -71,7 +71,7 @@ export default function Autocomplete<T extends object, K extends keyof T>({
   allowEdit = true,
   actions,
   badgeLabel,
-}: AutoCompleteProps<T, K>) {
+}: AutoCompleteProps<T, K>)=> {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState<string>(defaultValue || "");
   const [selected, setSelected] = useState<string | null>(null);

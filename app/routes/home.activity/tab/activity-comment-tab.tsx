@@ -13,8 +13,17 @@ import type { action } from "~/routes/home.activity/route";
 import { ActivityType, activityTypeToJSON } from "~/gen/common";
 import { route } from "~/util/route";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { set } from "lodash";
 
-export default function CommentActivityTab({ partyID }: { partyID: number }) {
+export default function CommentActivityTab({
+  partyID,
+  partyName,
+  entityID,
+}: {
+  partyID: number;
+  partyName: string;
+  entityID: number;
+}) {
   const [isSelected, setIsSelected] = useState(false);
   const expandedRef = useRef<HTMLDivElement>(null);
   const [value, setValue] = useState("");
@@ -25,13 +34,13 @@ export default function CommentActivityTab({ partyID }: { partyID: number }) {
     e.preventDefault();
     const body: ActivityData = {
       type: activityTypeToJSON(ActivityType.COMMENT),
-      party_id: partyID,
       activity_comment: {
         comment: value,
         mentions: mentions,
       },
-      entity_id: 0,
-      party_name: ""
+      party_id: partyID,
+      party_name: partyName,
+      entity_id: entityID,
     };
     fetcher.submit(
       {
@@ -44,6 +53,9 @@ export default function CommentActivityTab({ partyID }: { partyID: number }) {
         encType: "application/json",
       }
     );
+    setValue("")
+    setMentions([])
+    setIsSelected(false)
   };
 
   useDisplayMessage(
@@ -83,6 +95,7 @@ export default function CommentActivityTab({ partyID }: { partyID: number }) {
                 <Button
                   variant="outline"
                   size="xs"
+                  type="button"
                   className="rounded-full px-3 h-7"
                   onClick={() => setIsSelected(false)}
                 >

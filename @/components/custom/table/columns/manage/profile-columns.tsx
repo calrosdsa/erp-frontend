@@ -7,9 +7,9 @@ import { route } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 
 export const profileColumms = ({}): ColumnDef<
-  components["schemas"]["ProfileL"]
+  components["schemas"]["ProfileDto"]
 >[] => {
-  let columns: ColumnDef<components["schemas"]["ProfileL"]>[] = [];
+  let columns: ColumnDef<components["schemas"]["ProfileDto"]>[] = [];
   const { t, i18n } = useTranslation("common");
   const r = route;
   columns.push({
@@ -17,8 +17,8 @@ export const profileColumms = ({}): ColumnDef<
     header: t("form.fullName"),
     cell: ({ ...props }) => {
       const row = props.row;
-      const givenName = row.original.givenName;
-      const familyName = row.original.familyName;
+      const givenName = row.original.given_name;
+      const familyName = row.original.family_name;
       const name = fullName(givenName, familyName);
       const uuid = row.original.uuid;
       return (
@@ -30,25 +30,14 @@ export const profileColumms = ({}): ColumnDef<
       );
     },
   });
-  columns.push({
-    accessorKey: "givenName",
-    id: "givenName",
-    header: t("form.givenName"),
-  });
-  columns.push({
-    accessorKey: "familyName",
-    id: "familyName",
-    header: t("form.familyName"),
-  });
 
   columns.push({
-    accessorKey: "partyName",
-    header: t("form.type"),
+    accessorKey: "email",
+    header: t("form.email"),
   });
   columns.push({
-    accessorKey: "emailAddress",
-    header: t("form.email"),
-    id: "email",
+    accessorKey: "phone_number",
+    header: t("form.phoneNumber"),
   });
   return columns;
 };

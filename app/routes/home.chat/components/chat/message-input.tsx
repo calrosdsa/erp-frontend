@@ -14,29 +14,32 @@ import IconButton from "@/components/custom-ui/icon-button";
 
 type MessageInputProps = {
   onSend: () => void;
-  chatID: number;
-  profileID: number;
+  chatID?: number;
+  profile?: components["schemas"]["ProfileDto"];
 };
 
 export default function MessageInput({
   onSend,
   chatID,
-  profileID,
+  profile,
 }: MessageInputProps) {
   const [message, setMessage] = useState("");
   const fetcher = useFetcher<typeof action>();
 
   const handleSubmit = (e: React.FormEvent) => {
+    if(!profile || !chatID) return
     e.preventDefault();
     if (message.trim()) {
       // Here you would typically send the message to your API
       console.log("Sending message:", message);
       setMessage("");
       const body: components["schemas"]["ChatMessageData"] = {
+        profile_fn:profile.family_name,
+        profile_gn:profile.given_name,
         fields: {
           content: message,
           type: chatMessageTypeToJSON(ChatMessageType.Base),
-          profile_id: profileID,
+          profile_id: profile.id,
           chat_id: chatID,
         },
       };
@@ -65,15 +68,15 @@ export default function MessageInput({
   };
 
   return (
-    <div className=" absolute bottom-0 p-3 bg-muted w-full">
+    <div className=" absolute bottom-0 p-3 bg-muted w-full px-4 xl:px-10 z-10">
       <fetcher.Form onSubmit={handleSubmit} className="flex items-end gap-2 w-full">
-        <div className="flex space-x-3 w-full">
+        <div className="flex space-x-3 w-full items-center">
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type your message..."
-            className="w-full"
+            className="w-full h-12"
           />
           <IconButton icon={SendHorizonalIcon} type="submit" />
         </div>

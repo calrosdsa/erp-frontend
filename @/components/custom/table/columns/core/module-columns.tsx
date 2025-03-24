@@ -9,9 +9,9 @@ import { party } from "~/util/party";
 import { z } from "zod";
 import { moduleSectionDataSchema } from "~/util/data/schemas/core/module-schema";
 import TableCellEditable from "../../cells/table-cell-editable";
-import Autocomplete from "@/components/custom/select/autocomplete";
 import { useSearchEntity } from "~/util/hooks/fetchers/core/use-entity-search-fetcher";
 import { DataTableRowActions } from "../../data-table-row-actions";
+import { Autocomplete } from "@/components/custom/select/autocomplete";
 
 export const moduleColumns = ({}: {}): ColumnDef<
   components["schemas"]["ModuleDto"]

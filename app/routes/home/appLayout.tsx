@@ -21,6 +21,7 @@ import SearchBar from "./components/search-bar";
 import { WsHandler } from "./ws-handler";
 import { Navbar } from "./components/navbar";
 import ChatModal from "../home.chat/components/chat-modal";
+import AppModals from "./modals";
 
 type RouteItem = {
   name: string;
@@ -41,7 +42,7 @@ export default function AppLayout({
   const { session, modules } = useLoaderData<typeof loader>();
   const readyState = WsHandler({
     accessToken: session.access_token,
-    sessionUUID:session.sessionUuid,
+    sessionUUID: session.sessionUuid,
   });
 
   const toolbar = useToolbar();
@@ -73,12 +74,13 @@ export default function AppLayout({
   }, [location]);
   return (
     <>
+      <ChatModal appContext={globalState} />
       <GlobalDialogs globalState={globalState} />
       <div className=" max-w-[1500px] mx-auto">
         <SidebarProvider>
           <AppSidebar data={globalState} modules={modules} />
           <SidebarInset>
-            <Navbar/>
+            <Navbar />
             <div
               className="
               px-2 

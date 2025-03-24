@@ -36,6 +36,7 @@ export const activityDeadlineSchema = z.object({
     content:z.string().nullable().optional(),
     color:z.string(),
     is_completed:z.boolean().optional(),
+    profile_id:z.number(),
 })
 
 export const activitySchema = z.object({

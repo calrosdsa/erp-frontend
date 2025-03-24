@@ -5,7 +5,7 @@ import type React from "react";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useOutletContext } from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import type { action } from "~/routes/home.activity/route";
 import {
@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 import { ActivityType, activityTypeToJSON } from "~/gen/common";
+import { GlobalState } from "~/types/app-types";
 
 export default function ActivityDeadlineTab({ 
   partyID,partyName,entityID,
@@ -41,7 +42,7 @@ export default function ActivityDeadlineTab({
   const handleFocus = () => {
     setIsFocused(true);
   };
-
+  const {profile} = useOutletContext<GlobalState>()
   const handleBlur = (e: React.FocusEvent) => {
     // Check if the next focused element is within our container
     const isChildFocused = e.currentTarget.contains(e.relatedTarget as Node);
@@ -55,6 +56,7 @@ export default function ActivityDeadlineTab({
     defaultValues: {
       color: DEFAULT_COLOR,
       deadline: addDays(new Date(), 3),
+      profile_id:profile?.id,
     },
   });
   const formValues = form.getValues();
@@ -152,12 +154,13 @@ export default function ActivityDeadlineTab({
                     </CardContent>
                   </Card>
                   <div className="pt-4 flex justify-start gap-2">
-                    <Button size="xs" className="rounded-full px-3 h-7">
+                    <Button size="xs" type="submit" className="rounded-full px-3 h-7">
                       Guardar
                     </Button>
                     <Button
                       variant="outline"
                       size="xs"
+                      type="button"
                       className="rounded-full px-3 h-7"
                       onClick={() => setIsSelected(false)}
                     >

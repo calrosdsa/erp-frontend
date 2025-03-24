@@ -23,6 +23,7 @@ import FallBack from "@/components/layout/Fallback";
 import { DEFAULT_PAGE, LOAD_ACTION } from "~/constant";
 import ChatModal from "../home.chat/components/chat-modal";
 import { components } from "~/sdk";
+import AppModals from "./modals";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const data = await request.formData();
@@ -145,7 +146,7 @@ export default function Home() {
               <Outlet
                 context={appContext}
               />
-                <ChatModal appContext={appContext}/>
+                    <AppModals />  
             </AppLayout>
           </div>
         );

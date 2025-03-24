@@ -787,6 +787,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/chat/update-member-last-read/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Member Last Read */
+        put: operations["update-member-last-read"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/client": {
         parameters: {
             query?: never;
@@ -4069,7 +4086,7 @@ export interface components {
         };
         ActivityCommentData: {
             fields: components["schemas"]["ActivityCommentFields"];
-            mentions: components["schemas"]["MentionData"][];
+            mentions: components["schemas"]["ActivityMentionData"][];
         };
         ActivityCommentFields: {
             /** Format: int32 */
@@ -4107,6 +4124,8 @@ export interface components {
             link?: string | null;
             /** Format: int64 */
             party_id?: number | null;
+            /** Format: int64 */
+            profile_id: number;
             title?: string | null;
         };
         ActivityDto: {
@@ -4125,7 +4144,7 @@ export interface components {
             is_completed: boolean | null;
             is_pinned: boolean | null;
             link: string | null;
-            mentions: components["schemas"]["MentionDto"][];
+            mentions: components["schemas"]["ActivityMentionDto"][];
             message: string;
             /** Format: int64 */
             party_id: number | null;
@@ -4135,6 +4154,35 @@ export interface components {
             profile_uuid: string;
             title: string | null;
             type: string;
+        };
+        ActivityMentionData: {
+            action: string;
+            fields: components["schemas"]["ActivityMentionFields"];
+            /** Format: int32 */
+            id: number;
+        };
+        ActivityMentionDto: {
+            /** Format: int32 */
+            activity_id: number;
+            /** Format: int32 */
+            end_index: number;
+            family_name: string;
+            given_name: string;
+            /** Format: int32 */
+            id: number;
+            profile_uuid: string;
+            /** Format: int32 */
+            start_index: number;
+        };
+        ActivityMentionFields: {
+            /** Format: int32 */
+            activity_id: number;
+            /** Format: int32 */
+            end_index: number;
+            /** Format: int64 */
+            profile_id: number;
+            /** Format: int32 */
+            start_index: number;
         };
         AddCompanyModulesBody: {
             /**
@@ -4667,6 +4715,8 @@ export interface components {
             fields: components["schemas"]["ChatMessageFields"];
             /** Format: int64 */
             id?: number;
+            profile_fn?: string;
+            profile_gn?: string;
         };
         ChatMessageDto: {
             /** Format: int64 */
@@ -7142,33 +7192,18 @@ export interface components {
             /** Format: int64 */
             target_warehouse?: number;
         };
-        MentionData: {
-            action: string;
-            fields: components["schemas"]["MentionFields"];
-            /** Format: int32 */
-            id: number;
-        };
         MentionDto: {
-            /** Format: int32 */
-            activity_id: number;
-            /** Format: int32 */
-            end_index: number;
-            family_name: string;
-            given_name: string;
-            /** Format: int32 */
-            id: number;
-            profile_uuid: string;
-            /** Format: int32 */
-            start_index: number;
-        };
-        MentionFields: {
-            /** Format: int32 */
-            activity_id: number;
-            /** Format: int32 */
-            end_index: number;
             /** Format: int64 */
-            profile_id: number;
-            /** Format: int32 */
+            end_index: number;
+            entity_href: string;
+            /** Format: int64 */
+            entity_id: number;
+            entity_name: string;
+            party_id: string;
+            party_name: string;
+            /** Format: int64 */
+            reference_id: number;
+            /** Format: int64 */
             start_index: number;
         };
         ModuleData: {
@@ -7226,7 +7261,7 @@ export interface components {
         NotificationDto: {
             /** Format: int64 */
             id: number;
-            mentions: components["schemas"]["NotificationMentionDto"][];
+            mentions: components["schemas"]["MentionDto"][];
             payload: string;
             profile_fn: string;
             profile_gn: string;
@@ -7235,20 +7270,6 @@ export interface components {
             /** Format: date-time */
             send_at: string;
             type: string;
-        };
-        NotificationMentionDto: {
-            /** Format: int64 */
-            end_index: number;
-            entity_href: string;
-            /** Format: int64 */
-            entity_id: number;
-            entity_name: string;
-            /** Format: int64 */
-            notification_id: number;
-            party_id: string;
-            party_name: string;
-            /** Format: int64 */
-            start_index: number;
         };
         OrderBody: {
             /**
@@ -12664,6 +12685,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataChatMessageDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-member-last-read": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

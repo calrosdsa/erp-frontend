@@ -6,8 +6,8 @@ import {
   useOutletContext,
   useSearchParams,
 } from "@remix-run/react";
-import { ChevronDown, SendHorizonalIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowLeftIcon, ChevronDown, SendHorizonalIcon } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { action } from "~/routes/home.chat/route";
 import { components, operations } from "~/sdk";
@@ -19,6 +19,8 @@ import { GlobalState } from "~/types/app-types";
 import { DEFAULT_SIZE } from "~/constant";
 import { useChatStore } from "../use-chat-store";
 import { useUnmount } from "usehooks-ts";
+import { openUserModal } from "~/routes/home.manage.users.$id/route";
+import { ChatType, chatTypeToJSON } from "~/gen/common";
 
 export default function ChatDetailSection({
   appContext,
@@ -29,6 +31,7 @@ export default function ChatDetailSection({
   const chatID = searchParams.get("chat_id");
   const fetcher = useFetcher<typeof action>();
   const messageFetcher = useFetcher<typeof action>();
+  const updateLastReadFetcher = useFetcher<typeof action>();
   const chat = fetcher.data?.chatDetail;
   const [showScrollButton, setShowScrollButton] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -43,9 +46,22 @@ export default function ChatDetailSection({
   const [messages, setMessages] = useState<
     components["schemas"]["ChatMessageDto"][]
   >([]);
-  const [loading, setLoading] = useState(false);
+
+  const updateMemberLastRead = () => {
+    updateLastReadFetcher.submit(
+      {
+        action: "update-member-last-read",
+        chatID: chatID,
+      },
+      {
+        action: route.toRoute({ main: route.chat }),
+        encType: "application/json",
+        method: "POST",
+      }
+    );
+  };
+
   const fetchMessages = () => {
-    setLoading(true);
     console.log("FETCHING MESSAGES....");
     const body: operations["message"]["parameters"]["query"] = {
       size: DEFAULT_SIZE,
@@ -110,11 +126,10 @@ export default function ChatDetailSection({
         chatContainerRef.current?.scrollHeight
       );
     }
-  }, [messages]);
+  }, [page]);
 
   useEffect(() => {
     if (messageFetcher.data?.chatMessages) {
-      setLoading(false);
       const newMessages = messageFetcher.data.chatMessages;
       setMessages((prev) => {
         const updatedMessages = [...prev, ...newMessages];
@@ -142,10 +157,20 @@ export default function ChatDetailSection({
 
   useEffect(() => {
     if (lastMessage) {
-      scrollToBottom()
-      setMessages((prev) => [lastMessage,...prev]);
+      updateMemberLastRead();
+      setMessages((prev) => {
+        setTimeout(scrollToBottom, 0);
+        return [lastMessage, ...prev];
+      });
     }
   }, [lastMessage]);
+
+  const openModal = (key: string, value: string) => {
+    searchParams.set(key, value);
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   useEffect(() => {
     console.log("REDER NOTIFICATION SECTION...");
@@ -154,10 +179,29 @@ export default function ChatDetailSection({
       fetchData();
     }
   }, [chatID]);
+
+  const navigateToChatParty = useCallback(() => {
+    if (chat?.type == chatTypeToJSON(ChatType.Conversation)) {
+      openUserModal(chat?.party_id.toString(), openModal);
+    }
+  }, [chat]);
   return (
     <div className="w-full relative h-screen">
       <div className=" border-b p-2 w-full flex space-x-4 items-center">
-        <Avatar className="w-12 h-12">
+        <IconButton
+          icon={ArrowLeftIcon}
+          onClick={() => {
+            searchParams.delete("chat_id");
+            setSearchParams(searchParams, {
+              preventScrollReset: true,
+            });
+          }}
+          className="lg:hidden"
+        />
+        <Avatar
+          className="w-12 h-12 cursor-pointer"
+          onClick={navigateToChatParty}
+        >
           {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
           {chat?.name && (
             <AvatarFallback className=" bg-primary text-primary-foreground">
@@ -168,7 +212,12 @@ export default function ChatDetailSection({
         <div className="flex flex-col w-full">
           <div className="flex justify-between">
             <div className="flex justify-between">
-              <span className=" font-semibold">{chat?.name}</span>
+              <span
+                className=" font-semibold cursor-pointer"
+                onClick={navigateToChatParty}
+              >
+                {chat?.name}
+              </span>
             </div>
           </div>
         </div>
@@ -176,22 +225,22 @@ export default function ChatDetailSection({
 
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-auto h-full pb-32"
+        className="flex-1 overflow-auto h-full pb-36"
         onScroll={handleScroll}
       >
         <MessageList
+          openModal={openModal}
           messages={messages}
+          profile={appContext.profile}
           loading={messageFetcher.state == "submitting"}
         />
       </div>
 
-      {chat?.id && appContext.profile?.id && (
-        <MessageInput
-          onSend={() => {}}
-          chatID={chat?.id}
-          profileID={appContext.profile?.id}
-        />
-      )}
+      <MessageInput
+        onSend={() => {}}
+        chatID={chat?.id}
+        profile={appContext.profile}
+      />
 
       {showScrollButton && (
         <IconButton
