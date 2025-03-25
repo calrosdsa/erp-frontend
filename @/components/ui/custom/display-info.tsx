@@ -15,12 +15,12 @@ const DisplayValue = React.forwardRef<HTMLDivElement, DisplayProps>(
 
     return (
       <div
-        className={cn(className,"grid")}
+        className={cn(className,"flex flex-col")}
         ref={ref}
         {...props}
       >
         <span className="text-xs text-primary/60">{props.label}</span>
-        <span className="text-sm">{props.value || ""}</span>
+        <span className="text-sm">{props.value || "-"}</span>
       </div>
     );
   }

@@ -30,11 +30,12 @@ import { ActivityType, activityTypeToJSON } from "~/gen/common";
 import { GlobalState } from "~/types/app-types";
 
 export default function ActivityDeadlineTab({ 
-  partyID,partyName,entityID,
+  partyID,partyName,entityID,appContext
  }: {
     partyID: number,
     partyName:string,
     entityID:number,
+    appContext:GlobalState
   }) {
   const [isSelected, setIsSelected] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -42,7 +43,7 @@ export default function ActivityDeadlineTab({
   const handleFocus = () => {
     setIsFocused(true);
   };
-  const {profile} = useOutletContext<GlobalState>()
+  const {profile} = appContext
   const handleBlur = (e: React.FocusEvent) => {
     // Check if the next focused element is within our container
     const isChildFocused = e.currentTarget.contains(e.relatedTarget as Node);

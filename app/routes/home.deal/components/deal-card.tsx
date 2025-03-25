@@ -6,6 +6,7 @@ import { formatDate } from "date-fns";
 import { es } from "date-fns/locale";
 import { PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { openDealModal } from "~/routes/home.deal.$id/route";
 import { components } from "~/sdk";
 import { formatCurrency } from "~/util/format/formatCurrency";
 import { route } from "~/util/route";
@@ -13,25 +14,19 @@ import { route } from "~/util/route";
 interface DealCardProps {
   deal: components["schemas"]["DealDto"];
   currency: string;
+  openModal: (key: string, value: string) => void;
 }
-export default function DealCard({ deal, currency }: DealCardProps) {
+export default function DealCard({ deal, currency, openModal }: DealCardProps) {
   const { i18n } = useTranslation("common");
   return (
     <div className="">
       <div className="flex flex-col">
-        <Link
+        <span
           className=" font-medium text-sm"
-          to={route.toRoute({
-            main: route.deal,
-            routeSufix: [deal.name],
-            q: {
-              tab: "info",
-              id: deal.uuid,
-            },
-          })}
+          onClick={() => openDealModal(deal.id.toString(), openModal)}
         >
           {deal.name}
-        </Link>
+        </span>
 
         <span className="text-sm text-secondary-foreground">
           {formatCurrency(deal.amount, currency, i18n.language)}

@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import { PlusIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useDealStore } from "~/routes/home.crm.deal.$name/deal-store";
+import { useDealStore } from "~/routes/home.deal.$id/deal-store";
 import { components } from "~/sdk";
 import { formatCurrency, formatCurrencyAmount } from "~/util/format/formatCurrency";
 import { route } from "~/util/route";

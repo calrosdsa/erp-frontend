@@ -1,5 +1,5 @@
 import { KanbanBoard, KanbanColumn } from "@/components/layout/kanban/kanban-board";
-import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
+import { useFetcher, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
 import { action, loader } from "./route";
 import DealContentHeader from "./components/deal-content-header";
 import DealCard from "./components/deal-card";
@@ -16,6 +16,7 @@ export default function CrmClient() {
   const { deals, stages } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const { companyDefaults } = useOutletContext<GlobalState>();
+  const [searchParams,setSearchParams] = useSearchParams()
   const currency = companyDefaults?.currency || DEFAULT_CURRENCY;
   const dataTransition = (
     source: DraggableLocation<string>,
@@ -51,6 +52,14 @@ export default function CrmClient() {
     };
   });
 
+
+  const openModal = (key:string,value:string)=>{
+    searchParams.set(key,value)
+    setSearchParams(searchParams,{
+      preventScrollReset:true
+    })
+  }
+
   return (
     <>
       <KanbanBoard
@@ -66,7 +75,10 @@ export default function CrmClient() {
           );
         }}
         cardComponent={(deal) => {
-          return <DealCard deal={deal} currency={currency} />;
+          return <DealCard 
+          deal={deal} currency={currency} 
+          openModal={openModal}
+          />;
         }}
         dataTransition={dataTransition}
       />

@@ -115,7 +115,7 @@ export default function Home() {
     roleActions,
     companyDefaults,
   } = useLoaderData<typeof loader>();
-  const appContext:GlobalState = {
+  const appContext: GlobalState = {
     user: data?.user,
     // appConfig: data?.appConfig,
     session: session,
@@ -124,7 +124,7 @@ export default function Home() {
     profile: profile,
     roleActions: roleActions as components["schemas"]["RoleActionDto"][],
     companyDefaults: companyDefaults,
-  }
+  };
 
   return (
     <ClientOnly fallback={<FallBack />}>
@@ -143,10 +143,8 @@ export default function Home() {
                 companyDefaults: companyDefaults,
               }}
             >
-              <Outlet
-                context={appContext}
-              />
-                    <AppModals />  
+              <Outlet context={appContext} />
+              <AppModals appContext={appContext} />
             </AppLayout>
           </div>
         );

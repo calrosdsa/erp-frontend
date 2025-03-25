@@ -5,15 +5,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import ActivityDeadlineTab from "../tab/activity-deadline-tab";
 import CommentActivityTab from "../tab/activity-comment-tab";
+import { GlobalState } from "~/types/app-types";
 
 export default function TabNavigation({
   partyID,
   partyName,
   entityID,
+  appContext,
 }: {
   partyID: number;
   partyName: string;
   entityID: number;
+  appContext: GlobalState;
 }) {
   return (
     <div className="py-2 w-full">
@@ -44,6 +47,7 @@ export default function TabNavigation({
             partyID={partyID}
             partyName={partyName}
             entityID={entityID}
+            appContext={appContext}
           />
         </TabsContent>
         <TabsContent value="comment" className="w-full flex flex-grow mt-0">

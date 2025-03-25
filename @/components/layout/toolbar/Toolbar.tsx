@@ -64,7 +64,7 @@ export default function ToolBar({ title }: { title: string }) {
             </Badge>
           )}
         </div>
-
+            
         <div className=" flex space-x-3">
           {actions && actions.length > 0 && status != State.DRAFT && (
             <Popover>

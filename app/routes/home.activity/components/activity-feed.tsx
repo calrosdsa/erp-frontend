@@ -24,12 +24,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import TabNavigation from "./tab-navigation";
 import { TimelineActivityLayout } from "~/routes/home.activity/components/timeline/timeline-activity-layout";
 import { TimelineElement } from "~/types/ui-lyout";
+import { GlobalState } from "~/types/app-types";
 
 interface ActivityFeedProps {
   activities: components["schemas"]["ActivityDto"][] | undefined;
   partyID: number;
   partyName?: string;
   entityID?: number;
+  appContext: GlobalState;
 }
 
 export default function ActivityFeed({
@@ -37,6 +39,7 @@ export default function ActivityFeed({
   partyID,
   partyName,
   entityID,
+  appContext,
 }: ActivityFeedProps) {
   const { t, i18n } = useTranslation("common");
   const r = route;
@@ -48,11 +51,12 @@ export default function ActivityFeed({
 
   return (
     <>
-      <div className="px-0">
+      <div className="px-0 w-full">
         <Card className="w-full mx-auto">
           <CardContent>
             <div className="flex justify-between items-center mb-4">
               <TabNavigation
+                appContext={appContext}
                 partyID={partyID}
                 partyName={partyName || ""}
                 entityID={entityID || 0}

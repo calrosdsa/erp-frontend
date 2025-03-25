@@ -4125,7 +4125,7 @@ export interface components {
             /** Format: int64 */
             party_id?: number | null;
             /** Format: int64 */
-            profile_id: number;
+            profile_id: number | null;
             title?: string | null;
         };
         ActivityDto: {

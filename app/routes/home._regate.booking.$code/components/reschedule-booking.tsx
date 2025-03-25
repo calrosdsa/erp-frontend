@@ -47,7 +47,7 @@ export const RescheduleBooking = ({
       startTime: format(toDate(booking?.start_date || new Date()), "hh:mm a"),
       endTime: format(toDate(booking?.end_date || new Date()), "hh:mm a"),
       bookingID: booking?.id,
-      discount:formatAmount(booking?.discount),
+      discount: formatAmount(booking?.discount),
     },
   });
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
@@ -114,9 +114,9 @@ export const RescheduleBooking = ({
                 const body: components["schemas"]["BookingRescheduleBody"] = {
                   booking_id: booking?.id,
                   booking: b,
-                  booking_code:booking.code,
-                  paid_amount:booking.paid,
-                  party_id:booking.party_id,
+                  booking_code: booking.code,
+                  paid_amount: booking.paid,
+                  party_id: booking.party_id,
                 };
                 console.log("BODY", body);
                 rescheduleFetcher.submit(
@@ -127,6 +127,10 @@ export const RescheduleBooking = ({
                   {
                     method: "post",
                     encType: "application/json",
+                    action: route.toRoute({
+                      main: route.booking,
+                      routeSufix: [booking?.id.toString() || ""],
+                    }),
                   }
                 );
               }}
@@ -203,9 +207,12 @@ export const RescheduleBooking = ({
                   </div>
                 </AccordationLayout>
 
-                <Button className="col-span-full"
-                loading={fetcher.state == "submitting"}
-                >Validar Reserva</Button>
+                <Button
+                  className="col-span-full"
+                  loading={fetcher.state == "submitting"}
+                >
+                  Validar Reserva
+                </Button>
               </div>
             </fetcher.Form>
           </Form>

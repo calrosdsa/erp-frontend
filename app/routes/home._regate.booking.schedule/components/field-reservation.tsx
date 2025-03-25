@@ -148,15 +148,10 @@ export default function FieldReservation({
           }}
           onClick={() => {
             if (reservation) {
-              navigate(
-                r.toRoute({
-                  main: r.bookingM,
-                  routeSufix: [reservation.booking_code],
-                  q: {
-                    tab: "info",
-                  },
-                })
-              );
+              searchParams.set(route.booking,reservation.booking_id.toString())
+              setSearchParams(searchParams,{
+                preventScrollReset:true
+              })
             } else {
               handleSlotClick(date, time);
             }

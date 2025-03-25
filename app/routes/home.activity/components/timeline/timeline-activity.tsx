@@ -7,6 +7,7 @@ import { components } from "~/sdk";
 import { format } from "date-fns";
 import { ActivityType, activityTypeToJSON } from "~/gen/common";
 import Activity from "../activity";
+import { GlobalState } from "~/types/app-types";
 
 const timelineVariants = cva("flex flex-col relative", {
   variants: {
@@ -77,10 +78,11 @@ interface TimelineItemProps {
   getIcon: (type: string) => LucideIcon;
   showConnector: boolean;
   className?: string;
+  appContext:GlobalState
 }
 
 const TimelineItemActivity = React.forwardRef<HTMLLIElement, TimelineItemProps>(
-  ({ className, activity, getIcon, showConnector }, ref) => {
+  ({ className, activity, getIcon, showConnector,appContext }, ref) => {
     const commonClassName = cn("relative w-full mb-2 last:mb-0", className);
     const Icon = getIcon(activity.type);
     // Loading State
@@ -95,6 +97,7 @@ const TimelineItemActivity = React.forwardRef<HTMLLIElement, TimelineItemProps>(
 
           <Activity
           activity={activity}
+          appContext={appContext}
           />
       </div>
     );

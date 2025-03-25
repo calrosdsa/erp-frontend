@@ -21,6 +21,7 @@ import {
   formatCurrencyAmount,
 } from "~/util/format/formatCurrency";
 import { DEFAULT_CURRENCY } from "~/constant";
+import { route } from "~/util/route";
 
 export const EditPaidAmount = ({
   open,
@@ -51,6 +52,10 @@ export const EditPaidAmount = ({
       {
         encType: "application/json",
         method: "POST",
+        action:route.toRoute({
+          main:route.booking,
+          routeSufix:[booking?.id.toString() || ""]
+        })
       }
     );
   };

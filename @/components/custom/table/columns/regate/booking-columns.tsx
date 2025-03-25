@@ -15,10 +15,15 @@ import { format, parseISO } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import TableCellPrice from "../../cells/table-cell-price";
 import { Checkbox } from "@/components/ui/checkbox";
+import { openBookingModal } from "~/routes/home._regate.booking.$code/route";
+import TableCell from "../../cells/table-cell-update";
+import { TableCellBase } from "../../cells/table-cell";
 
-export const bookingColumns = (): ColumnDef<
-  components["schemas"]["BookingDto"]
->[] => {
+export const bookingColumns = ({
+  openModal,
+}: {
+  openModal: (key: string, value: string) => void;
+}): ColumnDef<components["schemas"]["BookingDto"]>[] => {
   const { t, i18n } = useTranslation("common");
   const r = route;
   return [
@@ -41,12 +46,16 @@ export const bookingColumns = (): ColumnDef<
     {
       accessorKey: "code",
       header: t("form.code"),
-      size:75,
+      size: 75,
       cell: ({ ...props }) => {
+        const rowData = props.row.original;
         return (
-          <TableCellNameNavigation
+          <TableCellBase
+            className="font-semibold underline cursor-pointer"
             {...props}
-            navigate={(code) => r.toBookingDetail(code)}
+            onClick={() =>
+              openBookingModal(rowData.id.toString(), openModal)
+            }
           />
         );
       },
@@ -54,7 +63,7 @@ export const bookingColumns = (): ColumnDef<
     {
       accessorKey: "party_name",
       header: t("_customer.base"),
-      size:100,
+      size: 100,
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
@@ -87,7 +96,7 @@ export const bookingColumns = (): ColumnDef<
     {
       accessorKey: "total_price",
       header: t("form.amount"),
-      size:90,
+      size: 90,
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
@@ -102,13 +111,13 @@ export const bookingColumns = (): ColumnDef<
     {
       accessorKey: "total_price",
       header: "Saldo",
-      size:90,
+      size: 90,
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
           <TableCellPrice
             i18n={i18n}
-            price={(rowData.total_price - rowData.discount)-rowData.paid}
+            price={rowData.total_price - rowData.discount - rowData.paid}
             {...props}
           />
         );
@@ -117,7 +126,7 @@ export const bookingColumns = (): ColumnDef<
     {
       id: "received",
       header: "Pagado",
-      size:90,
+      size: 90,
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
@@ -133,7 +142,7 @@ export const bookingColumns = (): ColumnDef<
     {
       accessorKey: "start_date",
       header: "Fecha",
-      size:80,
+      size: 80,
       cell: ({ ...props }) => (
         <TableCellDate {...props} i18n={i18n} formatDate="medium" />
       ),

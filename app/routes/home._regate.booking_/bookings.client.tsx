@@ -7,6 +7,7 @@ import {
   useLoaderData,
   useNavigate,
   useOutletContext,
+  useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { bookingColumns } from "@/components/custom/table/columns/regate/booking-columns";
@@ -50,6 +51,7 @@ export default function BookingsClient() {
   // >([]);
   const r = route;
   const p = party
+  const [seatchParams,setSearchParams] = useSearchParams()
   const onActions = (state: State) => {
     const body: components["schemas"]["UpdateBookingBatchRequestBody"] = {
       booking_ids: selectedRowsData.map((t) => t.id),
@@ -66,6 +68,13 @@ export default function BookingsClient() {
       }
     );
   };
+
+  const openModal = (key:string,value:string)=>{
+    seatchParams.set(key,value)
+    setSearchParams(seatchParams,{
+      preventScrollReset:true
+    })
+  }
 
   useDisplayMessage(
     {
@@ -193,7 +202,9 @@ export default function BookingsClient() {
     >
       <DataTable
         data={paginationResult?.results || []}
-        columns={bookingColumns()}
+        columns={bookingColumns({
+          openModal,
+        })}
         hiddenColumns={{
           created_at: false,
         }}

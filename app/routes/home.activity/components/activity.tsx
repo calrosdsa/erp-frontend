@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import {
   CalendarIcon,
+  InfoIcon,
   MessageSquareIcon,
   MessageSquareTextIcon,
   MoveRight,
@@ -27,18 +28,21 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { i18n } from "i18next";
 import { RenderMentionText } from "./activity-comment";
-import { parseActivityStageData } from ".";
+import { parseActivityInfoData, parseActivityStageData } from ".";
+import { GlobalState } from "~/types/app-types";
 
 export default function Activity({
   activity,
+  appContext,
 }: {
   activity: components["schemas"]["ActivityDto"];
+  appContext: GlobalState;
 }) {
   const { i18n } = useTranslation();
   const activityType = activityTypeFromJSON(activity.type);
 
   switch (activityType) {
-    case ActivityType.STAGE:
+    case ActivityType.STAGE: {
       const data = parseActivityStageData(activity.data);
       return (
         <>
@@ -74,6 +78,7 @@ export default function Activity({
           </TimelineContent>
         </>
       );
+    }
     case ActivityType.COMMENT:
       return (
         <>
@@ -183,6 +188,40 @@ export default function Activity({
           </TimelineContent>
         </>
       );
+    case ActivityType.CREATE:
+      return (
+        <>
+          <div className="flex flex-col items-center">
+            <div className="relative ">
+              <TimelineIcon Icon={InfoIcon} color="#A3A8C8" />
+            </div>
+          </div>
+
+          {/* Content */}
+          <TimelineContent className={cn()}>
+            <AcitivityHeader i18n={i18n} activity={activity} title="Creado" />
+          </TimelineContent>
+        </>
+      );
+    case ActivityType.INFO:
+      const data = parseActivityInfoData(activity.data);
+      return (
+        <>
+          <div className="flex flex-col items-center">
+            <div className="relative ">
+              <TimelineIcon Icon={InfoIcon} color="#A3A8C8" />
+            </div>
+          </div>
+
+          {/* Content */}
+          <TimelineContent className={cn()}>
+            <AcitivityHeader i18n={i18n} activity={activity} title={data?.title} />
+            <TimelineDescription>
+              {data?.description}
+            </TimelineDescription>
+          </TimelineContent>
+        </>
+      );
     default:
       return <div>-</div>;
   }
@@ -193,14 +232,14 @@ const AcitivityHeader = ({
   title,
   i18n,
 }: {
-  activity: components["schemas"]["ActivityDto"];
+  activity?: components["schemas"]["ActivityDto"];
   title?: string;
   i18n: i18n;
 }) => {
   return (
-    <TimelineHeader className="inset-x-0">
+    <TimelineHeader className="inset-x-0 py-1">
       <TimelineTitle className="flex space-x-2 font-medium text-sm items-center">
-        <span>{title || activity.title}</span>
+        <span>{title || activity?.title}</span>
         <span className="text-xs">
           {formatLongDate(activity?.created_at, i18n.language)}
         </span>

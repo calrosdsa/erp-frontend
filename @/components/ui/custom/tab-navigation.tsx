@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export type TabItem = {
   label: string;
   value: string;
-  children: ReactNode;
+  children: ReactNode;  
 };
 
 export default function TabNavigation({
@@ -43,7 +43,7 @@ export default function TabNavigation({
             <TabsContent  
               key={item.value}
               value={item.value}
-              className="w-full flex flex-grow"
+              className=""
             >
               {item.children}
             </TabsContent>

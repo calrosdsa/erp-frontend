@@ -1,5 +1,5 @@
 import { DealData, mapToDealData } from "~/util/data/schemas/crm/deal.schema";
-import NewDealClient from "./deal-detail.client";
+import DealModal from "./deal-modal";
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
@@ -7,6 +7,7 @@ import { LOAD_ACTION, MAX_SIZE } from "~/constant";
 import { Entity } from "~/types/enums";
 import { components } from "~/sdk";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { route } from "~/util/route";
 
 type ActionData = {
   action: string;
@@ -19,7 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   let deal: components["schemas"]["DealDto"] | undefined = undefined;
-  let action = LOAD_ACTION
+  let action = LOAD_ACTION;
   switch (data.action) {
     case "edit": {
       const res = await client.PUT("/deal", {
@@ -35,7 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       error = res.error?.detail;
       message = res.data?.message;
-      deal = res.data?.result
+      deal = res.data?.result;
       break;
     }
   }
@@ -61,14 +62,12 @@ export function shouldRevalidate({
   return defaultShouldRevalidate;
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-
-  const id = searchParams.get("id");
   const entityId = searchParams.get("entity_id") ?? Entity.DEAL.toString();
-
+console.log("LOAD DEAL...",params)
   // Crear promesas separadas para mejor legibilidad
   const stagesPromise = client.GET("/stage", {
     params: {
@@ -82,10 +81,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 
   // Crear promesa condicional para el detalle del deal
-  const dealPromise = id
+  const dealPromise = params.id
     ? client.GET("/deal/detail/{id}", {
         params: {
-          path: { id },
+          path: {
+            id: params.id,
+          },
         },
       })
     : Promise.resolve(undefined);
@@ -96,7 +97,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({
     stages: stagesRes.data?.result || [],
     deal: dealRes?.data?.result.entity.deal || null,
-    observers:dealRes?.data?.result.entity.participants || [],
+    observers: dealRes?.data?.result.entity.participants || [],
     activities: dealRes?.data?.result.activities || [],
     actions: dealRes?.data?.actions,
     contacts: dealRes?.data?.result.contacts || [],
@@ -104,6 +105,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 };
 
-export default function NewDeal() {
-  return <NewDealClient />;
-}
+export const openDealModal = (id?:string,callback?:(key:string,value:string)=>void) => {
+  if(id && callback){
+
+    callback(route.deal, id);
+  }
+};

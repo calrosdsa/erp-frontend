@@ -136,7 +136,7 @@ class Routes {
   bank = "bank"
   cashOutflow = "cash-outflow"
   bankAccount = "bank-account"
-  deal = "crm/deal"
+  deal = "deal"
   users =  "manage/users";
   chat = "chat"
 
@@ -191,7 +191,7 @@ class Routes {
   //   return this.baseRoute(url, q);
   // }
   toRoute(opts: {
-    main: string;
+    main?: string;
     routePrefix?: string[];
     routeSufix?: string[];
     q?: Record<string, string | undefined>;
@@ -200,7 +200,9 @@ class Routes {
     if (opts.routePrefix) {
       url += opts.routePrefix.join("/") + "/";
     }
-    url += opts.main;
+    if(opts.main){
+      url += opts.main;
+    }
     if (opts.routeSufix) {
       url += "/" + opts.routeSufix.join("/");
     }
@@ -510,7 +512,7 @@ class Routes {
   //Regate
   court = this.base + "/court";
   courtM = "court";
-  booking = this.base + "/booking";
+  booking = "booking";
   bookingM = "booking";
   event = this.base + "/event";
   eventM = "event";

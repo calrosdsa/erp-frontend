@@ -36,7 +36,7 @@ export const activityDeadlineSchema = z.object({
     content:z.string().nullable().optional(),
     color:z.string(),
     is_completed:z.boolean().optional(),
-    profile_id:z.number(),
+    profile_id:z.number().nullable().optional(),
 })
 
 export const activitySchema = z.object({
@@ -75,13 +75,14 @@ export const mapToActivityDeadline = (e:ActivityDeadlineData) =>{
             color:e.color,
             is_completed:e.is_completed ||false,
             party_id: e.party?.id,
+            profile_id:e.profile_id || null,
         }
     }
     return d
 }
 
 export const mapToMentionData = (e:MentionData) =>{
-    const d:components["schemas"]["MentionData"] = {
+    const d:components["schemas"]["ActivityMentionData"] = {
         action: e.action,
         fields: {
             activity_id: e.activity_id || 0,

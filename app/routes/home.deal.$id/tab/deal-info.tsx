@@ -29,19 +29,30 @@ import { route } from "~/util/route";
 import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { components } from "~/sdk";
 
-export default function DealInfoTab() {
+export default function DealInfoTab({
+  appContext,
+}: {
+  appContext: GlobalState;
+}) {
   const navigate = useNavigate();
-  const { deal, activities, actions, contacts, entityActions, observers } =
-    useLoaderData<typeof loader>();
-  const { profile, roleActions } = useOutletContext<GlobalState>();
-  const [perm] = usePermission({ actions, roleActions });
+  const fetcherLoader = useFetcher<typeof loader>({
+    key: "deal-modal",
+  });
+  const deal = fetcherLoader.data?.deal;
+  const data = fetcherLoader.data;
+  const  { profile, roleActions } = appContext
+  const dd = useLoaderData<typeof loader>();
+  const [perm] = usePermission({
+    actions: data?.actions,
+    roleActions,
+  });
   const fetcher = useFetcher<typeof action>();
   const { payload, setPayload, editPayload } = useDealStore();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const permissions = useEntityPermission({
-    entities: entityActions,
+    entities: data?.entityActions,
     roleActions: roleActions,
   });
   const allowEdit = perm.edit || payload.enableEdit;
@@ -121,8 +132,8 @@ export default function DealInfoTab() {
         uuid: e.uuid,
       },
       deal_type: e.deal_type,
-      contacts: contacts?.map((t) => mapToContactSchema(t)) || [],
-      observers: observers.map((t) => mapToParticipantSchema(t)) || [],
+      contacts: data?.contacts?.map((t) => mapToContactSchema(t)) || [],
+      observers: data?.observers.map((t) => mapToParticipantSchema(t)) || [],
       source: e.source,
       source_information: e.source_information,
       id: e.id,
@@ -162,8 +173,8 @@ export default function DealInfoTab() {
           fetcher={fetcher}
           inputRef={inputRef}
           onSubmit={onSubmit}
-          contacts={contacts}
-          observers={observers}
+          contacts={data?.contacts || []}
+          observers={data?.observers || []}
           allowEdit={allowEdit}
           enableEdit={payload.enableEdit}
           setEnableEdit={(e) => {
@@ -179,7 +190,8 @@ export default function DealInfoTab() {
       {deal?.id && (
         <div className=" col-span-5">
           <ActivityFeed
-            activities={activities}
+            appContext={appContext}
+            activities={data?.activities || []}
             partyID={deal?.id}
             partyName={deal.name}
             entityID={Entity.DEAL}

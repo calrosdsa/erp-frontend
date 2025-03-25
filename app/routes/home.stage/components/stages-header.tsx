@@ -50,7 +50,7 @@ export default function StagesHeader({
   };
 
   return (
-    <div className="flex space-x-1 rounded-sm">
+    <div className="flex space-x-1 rounded-sm pt-3">
       {data.map((stage) => (
         <div
           key={stage.id}

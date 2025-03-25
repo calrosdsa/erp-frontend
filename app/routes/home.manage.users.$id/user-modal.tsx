@@ -58,7 +58,7 @@ export default function UserModal() {
       }}
       title={fullName(data?.profile?.given_name,data?.profile?.family_name) || ""}
     >
-   
+  
 
       {fetcher.state == "loading" ? (
         <LoadingSpinner />

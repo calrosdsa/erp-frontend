@@ -267,7 +267,7 @@ export const RenderMentionText = ({
   mentions,
 }: {
   mentionText: string;
-  mentions: components["schemas"]["MentionDto"][];
+  mentions: components["schemas"]["ActivityMentionDto"][];
 }) => {
   // Sort mentions by start_index to process them in order
   const sortedMentions = [...mentions].sort(

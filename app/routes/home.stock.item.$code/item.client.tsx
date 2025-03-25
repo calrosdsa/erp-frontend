@@ -136,6 +136,8 @@ export default function ItemDetailClient() {
       navItems={tabNavItems}
       activities={activities}
       partyID={item?.id}
+      entityID={Entity.ITEM}
+      partyName={item?.name}
     >
       {tab == "info" && <ItemInfoTab />}
       {tab == "inventory" && <ItemInventory />}

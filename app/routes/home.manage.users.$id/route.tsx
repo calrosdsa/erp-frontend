@@ -13,7 +13,7 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
                 id:params.id || ""
             }
         }
-    })
+    })  
     return json({
         profile:res.data?.result.entity,
         actions:res.data?.actions,

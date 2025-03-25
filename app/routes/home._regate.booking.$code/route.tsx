@@ -6,7 +6,7 @@ import {
 } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
-import { BookingDetailClient } from "./booking.client";
+import { BookingModal } from "./booking-modal";
 import { z } from "zod";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
@@ -14,6 +14,7 @@ import { editPaidAmountSchema } from "~/util/data/schemas/regate/booking-schema"
 import { components } from "~/sdk";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
+import { route } from "~/util/route";
 
 type ActionData = {
   action: string;
@@ -46,6 +47,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           total_paid_amount: d.paidAmount,
         },
       });
+      console.log(d,res.error,res.data)
       message = res.data?.message;
       error = res.error?.detail;
       break;
@@ -102,10 +104,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   });
 };
 
-export default function BookingDetail() {
-  return (
-    <div>
-      <BookingDetailClient />
-    </div>
-  );
-}
+
+
+export const openBookingModal = (id?:string,callback?:(key:string,value:string)=>void) => {
+  if(id && callback){
+
+    callback(route.booking, id);
+  }
+};
+
+
+
+

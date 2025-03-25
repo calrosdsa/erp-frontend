@@ -21,9 +21,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let actionData = LOAD_ACTION;
   switch (data.action) {
     case "create": {
+      console.log("CREATE ACTIVITY",data.activityData)
       const res = await client.POST("/activity", {
         body: mapToActivityData(data.activityData),
       });
+      console.log(res.error)
       error = res.error?.detail;
       message = res.data?.message;
       break;

@@ -102,7 +102,7 @@ export default function Participants({
         </div>
       ) : (
         <div className="p-2">
-          {observers.map((observer) => {
+          {observers?.map((observer) => {
             return (
               <div
                 className="flex items-center rounded-lg space-x-3 border p-2 "
