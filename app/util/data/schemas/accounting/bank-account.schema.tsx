@@ -18,20 +18,20 @@ export const bankAccountSchema = z
     is_company_account: z.boolean().optional(),
     company_account: fieldNull,
     //for redirect after creation
-    _go_back:z.boolean(),
+    _go_back: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
     validateRequiredField({
       data: {
-        party: data.is_company_account == false,
-        partyType: data.is_company_account == false,
+        party: data.is_company_account == false && !data.party?.id,
+        partyType: data.is_company_account == false && !data.partyType,
       },
       ctx: ctx,
     });
-    if(data.is_company_account){
-        data.party = undefined
-    }else{
-        data.company_account = undefined
+    if (data.is_company_account) {
+      data.party = undefined;
+    } else {
+      data.company_account = undefined;
     }
   });
 
@@ -45,7 +45,7 @@ export const mapToBankAccountData = (e: BankAccountType) => {
       iban: e.iban,
       bank_id: e.bank.id || 0,
       party_id: e.party?.id || null,
-      is_comapny_account: e.is_company_account || false,
+      is_company_account: e.is_company_account || false,
       company_account_id: e.company_account?.id,
     },
     id: e.id || 0,

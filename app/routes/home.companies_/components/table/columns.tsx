@@ -28,7 +28,7 @@ export const companyColumns = (): ColumnDef<components["schemas"]["CompanyDto"]>
             routeSufix:[name],
             q:{
               tab:"info",
-              id:rowData.uuid,
+              id:rowData.id.toString(),
             }
           })}
           />

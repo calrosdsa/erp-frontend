@@ -7,7 +7,7 @@ import { usePermission } from "../useActions";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { Control, Form } from "react-hook-form";
 import { formatCurrency } from "~/util/format/formatCurrency";
-import { Autocomplete } from "@/components/custom/select/autocomplete";
+import { Autocomplete } from "@/components/custom/select/autocomplete-select";
 
 export const PriceAutocompleteForm = ({
   allowEdit = true,

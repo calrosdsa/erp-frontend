@@ -11,7 +11,7 @@ import { customerColumns } from "@/components/custom/table/columns/selling/custo
 import { useCreateCustomer } from "./components/create-customer";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
-import { ListLayout } from "@/components/ui/custom/list-table";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function CustomersClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();

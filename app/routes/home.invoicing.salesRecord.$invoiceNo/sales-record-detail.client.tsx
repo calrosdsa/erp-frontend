@@ -21,6 +21,7 @@ import { ButtonToolbar } from "~/types/actions";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { Entity } from "~/types/enums";
 
 export default function SalesRecordDetailClient() {
   const { salesRecord, actions, activities } = useLoaderData<typeof loader>();
@@ -117,7 +118,9 @@ export default function SalesRecordDetailClient() {
     <DetailLayout
       partyID={salesRecord?.id}
       navItems={navItems}
+      entityID={Entity.SALES_RECORD}
       activities={activities}
+      partyName={salesRecord?.invoice_code}
     >
       {tab == "info" && <CostCenterInfo />}
     </DetailLayout>

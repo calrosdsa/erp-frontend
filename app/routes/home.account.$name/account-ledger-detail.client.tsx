@@ -4,14 +4,19 @@ import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { formatLongDate } from "~/util/format/formatDate";
-import { setUpToolbar, setUpToolbarDetailPage, setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  setUpToolbarDetailPage,
+  setUpToolbarRegister,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { stateFromJSON } from "~/gen/common";
 import { NavItem } from "~/types";
 import DetailLayout from "@/components/layout/detail-layout";
 import AccountInfo from "./tabs/account-ledger-info";
+import { Entity } from "~/types/enums";
 
 export default function AccountLedgerDetailClient() {
-  const { actions, account } = useLoaderData<typeof loader>();
+  const { actions, account, activities } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
   const r = route;
   const [searchParams] = useSearchParams();
@@ -22,11 +27,10 @@ export default function AccountLedgerDetailClient() {
       routeSufix: [account?.name || ""],
       q: {
         tab: tab,
-        id: account?.uuid || "",
+        id: account?.id.toString() || "",
       },
     });
   };
-
   const navItems: NavItem[] = [
     {
       title: t("info"),
@@ -36,11 +40,18 @@ export default function AccountLedgerDetailClient() {
 
   setUpToolbarRegister(() => {
     return {
+      titleToolbar:account?.name,
       status: stateFromJSON(account?.status),
     };
   }, [account]);
   return (
-    <DetailLayout partyID={account?.id} navItems={navItems}>
+    <DetailLayout
+      partyID={account?.id}
+      navItems={navItems}
+      partyName={account?.name}
+      entityID={Entity.LEDGER}
+      activities={activities}
+    >
       {tab == "info" && <AccountInfo />}
     </DetailLayout>
   );

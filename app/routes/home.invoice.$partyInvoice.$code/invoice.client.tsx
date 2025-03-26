@@ -38,7 +38,7 @@ import { Entity } from "~/types/enums";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { useNewSalesRecord } from "../home.invoicing.salesRecord.new/use-new-sales-record";
-import {  usePaymentStore } from "../home.payment.new/payment-store";
+import { usePaymentStore } from "../home.payment.new/payment-store";
 import { party } from "~/util/party";
 import { usePurchaseRecordStore } from "../home.invoicing.purchaseRecord.new/purchase-record-store";
 import InvoiceAddressAndContactTab from "./components/tab/invoice-address-and-contact";
@@ -92,12 +92,12 @@ export default function InvoiceDetailClient() {
   const { total: totalTaxAndCharges } = useTaxAndCharges();
   const newSalesRecord = useNewSalesRecord();
   const purchaseRecordStore = usePurchaseRecordStore();
-  const {exportPdf} = useExporter()
+  const { exportPdf } = useExporter();
 
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: partyInvoice,
-      routePrefix:[r.invoiceM],
+      routePrefix: [r.invoiceM],
       routeSufix: [invoice?.code || ""],
       q: {
         tab: tab,
@@ -108,7 +108,7 @@ export default function InvoiceDetailClient() {
   const navItems = [
     {
       title: t("info"),
-      href:toRoute("info"),
+      href: toRoute("info"),
     },
     {
       title: "Términos y Condiciones",
@@ -124,7 +124,7 @@ export default function InvoiceDetailClient() {
     },
     {
       title: t("connections"),
-      href:toRoute("connections"),
+      href: toRoute("connections"),
     },
   ];
 
@@ -132,14 +132,14 @@ export default function InvoiceDetailClient() {
     switch (partyTypeFromJSON(partyInvoice)) {
       case PartyType.saleInvoice:
         return paymentTypeToJSON(PaymentType.RECEIVE);
-        case PartyType.purchaseInvoice:
+      case PartyType.purchaseInvoice:
         return paymentTypeToJSON(PaymentType.PAY);
       default:
         return "";
-      }
-    };
-    
- setUpToolbarRegister(()=>{
+    }
+  };
+
+  setUpToolbarRegister(() => {
     let actions: ButtonToolbar[] = [];
     let view: ButtonToolbar[] = [];
     const status = stateFromJSON(invoice?.status);
@@ -172,22 +172,22 @@ export default function InvoiceDetailClient() {
           const b = {
             amount: outstanding,
             party: {
-              uuid:invoice?.party_uuid,
-              id:invoice?.party_id,
-              name:invoice?.party_name
+              uuid: invoice?.party_uuid,
+              id: invoice?.party_id,
+              name: invoice?.party_name,
             },
             partyType: invoice?.party_type,
             partyReference: invoice?.id,
             paymentType: getPaymentType(partyInvoice),
-            project:{
-              id:invoice?.project_id,
-              name:invoice?.project,
-              uuid:invoice?.project_uuid,
+            project: {
+              id: invoice?.project_id,
+              name: invoice?.project,
+              uuid: invoice?.project_uuid,
             },
-            costCenter:{
-              id:invoice?.cost_center_id,
-              name:invoice?.cost_center,
-              uuid:invoice?.cost_center_uuid,
+            costCenter: {
+              id: invoice?.cost_center_id,
+              name: invoice?.cost_center,
+              uuid: invoice?.cost_center_uuid,
             },
             paymentReferences: [
               {
@@ -197,11 +197,11 @@ export default function InvoiceDetailClient() {
                 grandTotal: total,
                 outstanding: outstanding,
                 allocated: total - Number(totals?.paid),
-                currency:invoice?.currency || "",
+                currency: invoice?.currency || "",
               },
             ],
-          }
-          console.log("PAYMENT PAYLOAD",b)
+          };
+          console.log("PAYMENT PAYLOAD", b);
           paymentStore.setPayload(b);
           navigate(
             r.toRoute({
@@ -279,12 +279,12 @@ export default function InvoiceDetailClient() {
             supplier_id: invoice?.party_id,
             supplier: invoice?.party_name,
             invoice: {
-              name:invoice?.code,
-              id:invoice?.id,
+              name: invoice?.code,
+              id: invoice?.id,
             },
-            supplier_business_name:invoice?.party_name,
-            subtotal:formatAmount(invoice?.total),
-            total_purchase_amount:formatAmount(invoice?.total),
+            supplier_business_name: invoice?.party_name,
+            subtotal: formatAmount(invoice?.total),
+            total_purchase_amount: formatAmount(invoice?.total),
           });
           navigate(
             r.toRoute({
@@ -297,16 +297,16 @@ export default function InvoiceDetailClient() {
       });
     }
     actions.push({
-      label:t("form.download"),
-      Icon:DownloadIcon,
-      onClick:()=>{
-        const exportData:components["schemas"]["ExportDocumentData"] =  {
-          party_type:partyInvoice,
-          id:params.code || "",
-        }
-        exportPdf("/invoice/export/document",exportData)
-      }
-    })
+      label: t("form.download"),
+      Icon: DownloadIcon,
+      onClick: () => {
+        const exportData: components["schemas"]["ExportDocumentData"] = {
+          party_type: partyInvoice,
+          id: params.code || "",
+        };
+        exportPdf("/invoice/export/document", exportData);
+      },
+    });
     return {
       titleToolbar: `${t("_invoice.base")}(${invoice?.code})`,
       status: stateFromJSON(invoice?.status),
@@ -331,7 +331,7 @@ export default function InvoiceDetailClient() {
         );
       },
     };
-  },[
+  }, [
     paymentPermission,
     invoice,
     gLPermission,
@@ -342,8 +342,7 @@ export default function InvoiceDetailClient() {
     salesRecordPerm,
     purchaseRecordPerm,
     t,
-  ])
-
+  ]);
 
   useLoadingTypeToolbar(
     {
@@ -365,6 +364,12 @@ export default function InvoiceDetailClient() {
       navItems={navItems}
       partyID={invoice?.id}
       activities={activities}
+      partyName={invoice?.code}
+      entityID={
+        partyInvoice == party.purchaseInvoice
+          ? Entity.PURCHASE_INVOICE
+          : Entity.SALE_INVOICE
+      }
     >
       {tab == "info" && <InvoiceInfoTab />}
       {tab == "connections" && <InvoiceConnectionsTab />}

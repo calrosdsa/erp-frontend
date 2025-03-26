@@ -4,7 +4,7 @@ import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import { formatQuery } from "..";
-import { Autocomplete } from "@/components/custom/select/autocomplete";
+import { Autocomplete } from "@/components/custom/select/autocomplete-select";
 
 export const PaymentTermAutocomplete = ({allowEdit,onSelect,defaultValue}:{
     allowEdit:boolean

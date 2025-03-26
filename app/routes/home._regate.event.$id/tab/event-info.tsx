@@ -2,7 +2,7 @@ import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { action, loader } from "../route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { useTranslation } from "react-i18next";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { editEventSchema } from "~/util/data/schemas/regate/event-schema";
@@ -10,6 +10,7 @@ import { z } from "zod";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
+  useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -22,15 +23,24 @@ import { DEFAULT_CURRENCY } from "~/constant";
 import { Typography } from "@/components/typography";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import { SerializeFrom } from "@remix-run/node";
+import { route } from "~/util/route";
 
 type EditType = z.infer<typeof editEventSchema>;
-export default function EventInfoTab() {
-  const { event, actions, bookingInfo } = useLoaderData<typeof loader>();
+export default function EventInfoTab({
+  appContext,
+  data,
+}: {
+  appContext: GlobalState;
+  data: SerializeFrom<typeof loader>;
+}) {
+  const { event, actions, bookingInfo } = data;
   const { t, i18n } = useTranslation("common");
-
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { roleActions } = useOutletContext<GlobalState>();
-  const [permission] = usePermission({ roleActions, actions });
+  const [permission] = usePermission({
+    roleActions: appContext.roleActions,
+    actions,
+  });
   const fetcher = useFetcher<typeof action>();
   const defaultValues = {
     name: event?.name,
@@ -42,6 +52,8 @@ export default function EventInfoTab() {
     defaultValues: defaultValues,
   });
   const allowEdit = permission.edit;
+
+  const { setRegister } = useSetupToolbarStore();
   const onSubmit = (e: EditType) => {
     fetcher.submit(
       {
@@ -51,6 +63,7 @@ export default function EventInfoTab() {
       {
         method: "POST",
         encType: "application/json",
+        action: route.toRouteDetail(route.event, event?.id.toString() || ""),
       }
     );
   };
@@ -62,16 +75,25 @@ export default function EventInfoTab() {
     [fetcher.state]
   );
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  useEffect(() => {
+    setRegister("tab", {
+      onSave: () => {
+        inputRef.current?.click();
+      },
+      disabledSave: !hasChanged,
+    });
+  }, [hasChanged]);
+
+  // setUpToolbar(
+  //   (opts) => {
+  //     return {
+  //       ...opts,
+  //       onSave: () => inputRef.current?.click(),
+  //       disabledSave: !hasChanged,
+  //     };
+  //   },
+  //   [hasChanged]
+  // );
 
   useDisplayMessage(
     {

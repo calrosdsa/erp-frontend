@@ -10,9 +10,9 @@ import { useTranslation } from "react-i18next";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
-import { entity } from "~/data/entites";
 import { paymentTermsTemplateDataSchema, PaymentTermsTemplateType } from "~/util/data/schemas/document/payment-terms-template.schema";
 import PaymentTermsTemplateData from "./payment-terms-template-data";
+import CreateLayout from "@/components/layout/create-layout";
 
 
 export default function NewPaymentTermsTemplateClient(){
@@ -67,7 +67,7 @@ export default function NewPaymentTermsTemplateClient(){
                     routeSufix: [fetcher.data.paymentTermsTemplate?.name],
                     q: {
                       tab: "info",
-                      id:fetcher.data.paymentTermsTemplate?.uuid,
+                      id:fetcher.data.paymentTermsTemplate?.id.toString(),
                     },
                   })
                 );
@@ -77,13 +77,14 @@ export default function NewPaymentTermsTemplateClient(){
           [fetcher.data]
         );
     return (
-        <Card>
+        <CreateLayout>
             <PaymentTermsTemplateData
             fetcher={fetcher}
             form={form}
             inputRef={inputRef}
             onSubmit={onSubmit}
+            isNew={true}
             />
-        </Card>
+        </CreateLayout>
     )
 }

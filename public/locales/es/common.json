@@ -405,6 +405,7 @@
   "company": "Empresa",
   "deliveryNote": "Nota de entrega",
   "journalEntry": "Asiento contable",
+  "cashOutflow":"Salida de efectivo",
   "costCenter": "Centro de costos",
   "project": "Proyecto",
   "stockEntry": "Entrada de inventario",

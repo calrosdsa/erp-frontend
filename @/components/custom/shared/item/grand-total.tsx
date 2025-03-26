@@ -18,7 +18,7 @@ export default function GrandTotal({currency}:{
     <Typography variant="subtitle2" className="col-span-full">Total</Typography>
       <DisplayTextValue
         title="Total"
-        className=" col-start-end"
+        className=""
         value={formatCurrencyAmount((total+totalTaxAndCharges), currency, i18n.language)}
       />
     </>

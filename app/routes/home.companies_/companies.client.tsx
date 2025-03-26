@@ -7,6 +7,7 @@ import { companyColumns } from "./components/table/columns";
 import { useCreateCompany } from "./components/create-company";
 import { usePermission } from "~/util/hooks/useActions";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function CompaniesClient() {
   const { t } = useTranslation("common");
@@ -18,30 +19,21 @@ export default function CompaniesClient() {
     actions: paginationResult?.actions,
   });
 
-  setUpToolbar(()=>{
-    return {
-      titleToolbar:t("companies"),
-      // ...(permission?.create && {
-      //   addNew: () => {
-      //     createCompany.openDialog({});
-      //   },
-      // }),
-    }
-  },[permission])
-
   return (
     <>
-      <DataTable
-        columns={companyColumns()}
-        data={paginationResult?.pagination_result.results || []}
-        hiddenColumns={{
-          code: false,
-        }}
-        enableSizeSelection={true}
-        // expandedOptions={{
-        //   getSubRows: (row) => row.CompanyDepartments,
-        // }}
-      />
+      <ListLayout title="Companias">
+        <DataTable
+          columns={companyColumns()}
+          data={paginationResult?.pagination_result.results || []}
+          hiddenColumns={{
+            code: false,
+          }}
+          enableSizeSelection={true}
+          // expandedOptions={{
+          //   getSubRows: (row) => row.CompanyDepartments,
+          // }}
+        />
+      </ListLayout>
 
       {/* <OrderTable
         headerValues={[

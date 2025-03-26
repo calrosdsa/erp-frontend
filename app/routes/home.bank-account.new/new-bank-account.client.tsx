@@ -8,6 +8,7 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
   setUpToolbar,
+  setUpToolbarRegister,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
@@ -17,6 +18,7 @@ import {
   BankAccountType,
 } from "~/util/data/schemas/accounting/bank-account.schema";
 import { useBankAccountStore } from "./bank-account.store";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewBankAccountClient() {
   const fetcher = useFetcher<typeof action>();
@@ -52,7 +54,7 @@ export default function NewBankAccountClient() {
     [fetcher.state]
   );
 
-  setUpToolbar(() => {
+  setUpToolbarRegister(() => {
     return {
       titleToolbar: t("f.add-new", {
         o: t("bankAccount"),
@@ -78,7 +80,7 @@ export default function NewBankAccountClient() {
                 routeSufix: [fetcher.data.entity?.account_name],
                 q: {
                   tab: "info",
-                  id: fetcher.data.entity?.uuid,
+                  id: fetcher.data.entity?.id.toString(),
                 },
               })
             );
@@ -94,13 +96,14 @@ export default function NewBankAccountClient() {
   }, [watchedFields]);
 
   return (
-    <Card>
+    <CreateLayout>
       <BankAccountData
         fetcher={fetcher}
         form={form}
         inputRef={inputRef}
         onSubmit={onSubmit}
+        isNew={true}
       />
-    </Card>
+    </CreateLayout>
   );
 }

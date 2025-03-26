@@ -32,6 +32,7 @@ import { components } from "~/sdk";
 import ReceiptAddressAndContactTab from "./components/tab/receipt-address-and-contact";
 import ReceiptTermsAndConditionsTab from "./components/tab/receipt-terms-and-conditions";
 import ReceiptAccountsTab from "./components/tab/receipt-accounts";
+import { party } from "~/util/party";
 
 export default function ReceiptDetailClient() {
   const { receipt, actions, activities, associatedActions } =
@@ -211,6 +212,12 @@ export default function ReceiptDetailClient() {
       activities={activities}
       partyID={receipt?.id}
       navItems={navItems}
+      partyName={receipt?.code}
+      entityID={
+        partyReceipt == party.saleInvoice
+          ? Entity.PURCHASE_INVOICE
+          : Entity.SALE_INVOICE
+      }
     >
       {tab == "info" && <ReceiptInfoTab />}
       {tab == "connections" && <ReceiptConnectionsTab />}

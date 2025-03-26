@@ -39,6 +39,7 @@ import {
 import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { ReceiptData } from "./receipt-data";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewReceiptClient() {
   const fetcher = useFetcher<typeof action>();
@@ -69,7 +70,7 @@ export default function NewReceiptClient() {
         if (partyReceipt == r.deliveryNote) {
           t.lineType = itemLineTypeToJSON(ItemLineType.DELIVERY_LINE_ITEM);
         }
-        t.itemLineReferenceID = t.itemLineID
+        t.itemLineReferenceID = t.itemLineID;
         return t;
       }),
       taxLines: taxLinesStore.lines,
@@ -77,26 +78,23 @@ export default function NewReceiptClient() {
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 
-      
-      party:{
-        id:payload?.partyID,
-        name:payload?.partyName,
+      party: {
+        id: payload?.partyID,
+        name: payload?.partyName,
       },
-      priceList:{
-        id:payload?.priceListID,
-        name:payload?.priceListName,
+      priceList: {
+        id: payload?.priceListID,
+        name: payload?.priceListName,
       },
-      costCenter:{
-        name:payload?.costCenterName,
-        id:payload?.costCenterID,
+      costCenter: {
+        name: payload?.costCenterName,
+        id: payload?.costCenterID,
       },
       project: {
-        name:payload?.projectName,
-        id:payload?.projectID,
+        name: payload?.projectName,
+        id: payload?.projectID,
       },
-      warehouse:{
-
-      },
+      warehouse: {},
     },
   });
   const formValues = form.getValues();
@@ -166,17 +164,15 @@ export default function NewReceiptClient() {
   }, [formValues.lines]);
 
   return (
-    <div>
-      {/* {JSON.stringify(payload)} */}
-      <Card>
-        <ReceiptData
+    <CreateLayout>
+      <ReceiptData
         form={form}
         inputRef={inputRef}
         onSubmit={onSubmit}
         fetcher={fetcher}
-        />
-      </Card>
-    </div>
+        isNew={true}
+      />
+    </CreateLayout>
   );
 }
 

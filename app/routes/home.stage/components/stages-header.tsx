@@ -63,7 +63,7 @@ export default function StagesHeader({
           onMouseLeave={() => setHoveredStageIndex(null)}
           onClick={() => transitionToStage(stage)}
         >
-          <span className="text-sm font-medium">{stage.name}</span>
+          <span className="text-sm font-medium  line-clamp-1">{stage.name}</span>
         </div>
       ))}
     </div>

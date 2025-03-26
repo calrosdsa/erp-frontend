@@ -82,7 +82,7 @@ export const JournalEntryLine = ({ open }: { open: boolean }) => {
                 }}
               />
               <FormAutocomplete
-                data={ledgerFetcher.data?.accounts || []}
+                data={ledgerFetcher.data?.results || []}
                 nameK={"name"}
                 label={t("ledger")}
                 name="accountName"

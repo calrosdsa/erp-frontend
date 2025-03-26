@@ -81,7 +81,7 @@ export default function NewAccountClient() {
             routeSufix: [fetcher.data.accountLedger?.name || ""],
             q: {
               tab: "info",
-              id: fetcher.data.accountLedger?.uuid || "",
+              id: fetcher.data.accountLedger?.id.toString() || "",
             },
           })
         );
@@ -102,6 +102,7 @@ export default function NewAccountClient() {
           fetcher={fetcher}
           onSubmit={onSubmit}
           inputRef={inputRef}
+          isNew={true}
         />
       </Card>
     </>

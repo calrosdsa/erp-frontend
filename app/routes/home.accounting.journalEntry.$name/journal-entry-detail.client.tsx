@@ -5,14 +5,18 @@ import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import JournalEntryInfo from "./tab/journal-entry-info";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { stateFromJSON } from "~/gen/common";
 import { z } from "zod";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { Entity } from "~/types/enums";
 
 export default function JournalEntryDetailClient() {
-  const { journalEntry } = useLoaderData<typeof loader>();
+  const { journalEntry, activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const r = route;
   const [searchParams] = useSearchParams();
@@ -35,10 +39,13 @@ export default function JournalEntryDetailClient() {
     },
   ];
 
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"STATE"
-  }, [fetcher.state]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "STATE",
+    },
+    [fetcher.state]
+  );
 
   setUpToolbar(() => {
     return {
@@ -64,12 +71,21 @@ export default function JournalEntryDetailClient() {
     };
   }, [journalEntry]);
 
-  useDisplayMessage({
-    error:fetcher.data?.error,
-    success:fetcher.data?.message,
-  },[fetcher.data])
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+    },
+    [fetcher.data]
+  );
   return (
-    <DetailLayout partyID={journalEntry?.id} navItems={navItems}>
+    <DetailLayout
+      partyID={journalEntry?.id}
+      navItems={navItems}
+      partyName={journalEntry?.code}
+      activities={activities}
+      entityID={Entity.JOURNAL_ENTRY}
+    >
       {tab == "info" && <JournalEntryInfo />}
     </DetailLayout>
   );

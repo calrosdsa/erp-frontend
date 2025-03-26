@@ -6,7 +6,7 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { courtColumns } from "@/components/custom/table/columns/regate/court-columns";
 import { route } from "~/util/route";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { ListLayout } from "@/components/ui/custom/list-table";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function CourtClient() {
   const globalState = useOutletContext<GlobalState>();
@@ -26,16 +26,7 @@ export default function CourtClient() {
     })
   }
 
-  setUpToolbar(() => {
-    return {
-      titleToolbar: "Canchas",
-      ...(permission?.create && {
-        addNew: () => {
-          navigate(r.toCreateCourt());
-        },
-      }),
-    };
-  }, [permission]);
+
   return (
     <ListLayout
       title="Cancha"

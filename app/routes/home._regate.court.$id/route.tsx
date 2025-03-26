@@ -79,12 +79,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     courtRates = courtRatesRes.data?.result || [];
   }
   handleError(res.error);
-  return json({
+  return {
     court: res.data?.result.entity,
     actions: res.data?.actions,
     courtRates: courtRates,
     activities: res.data?.result.activities,
-  });
+  };
 };
 
 export const openCourtModal = (

@@ -35,7 +35,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "edit": {
-      // console.log(data.editData)
       const res = await client.PUT("/bank-account", {
         body: mapToBankAccountData(data.editData),
       });

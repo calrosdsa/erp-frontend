@@ -19,6 +19,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   setUpToolbarTab,
   useLoadingTypeToolbar,
+  useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { useEditFields } from "~/util/hooks/useEditFields";
@@ -36,7 +37,6 @@ export default function QuotationInfoTab() {
     useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const params = useParams();
-  const toolbar = useToolbar()
   const [quotationPerm] = usePermission({ roleActions, actions });
   const quotationParty = params.quotationParty || "";
   const isDraft = stateFromJSON(quotation?.status) == State.DRAFT;
@@ -81,6 +81,8 @@ export default function QuotationInfoTab() {
     },
   });
 
+  const {setRegister} = useSetupToolbarStore()
+
   const onSubmit = (e: EditData) => {
     fetcher.submit(
       {
@@ -102,15 +104,16 @@ export default function QuotationInfoTab() {
   //   })
   // },[quotation])
 
-setUpToolbarTab(() => {
-    return {
+  useEffect(()=>{
+    setRegister("tab",{
       onSave: () => {
         console.log("ON SAVE");
         inputRef.current?.click();
       },
-      disabledSave: !allowEdit,
-    };
-  }, [allowEdit,quotation]);
+      disabledSave: !allowEdit,      
+    })
+  },[allowEdit,quotation])
+
 
   
 
@@ -149,10 +152,6 @@ setUpToolbarTab(() => {
   }, [quotation]);
   return (
     <>
-    {JSON.stringify(toolbar.isMounted)}
-    {/* {JSON.stringify(previousValues.lines)}
-    <br />
-    {JSON.stringify(form.getValues().lines)} */}
    <QuotationData
    form={form}
    inputRef={inputRef}

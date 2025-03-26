@@ -2,6 +2,7 @@ import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import FormLayout from "@/components/custom/form/FormLayout";
 import PaymentTermLines from "@/components/custom/shared/document/payment-term-lines";
 import { Form } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 import { FetcherWithComponents } from "@remix-run/react";
 import { MutableRefObject } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -14,12 +15,14 @@ export default function PaymentTermsTemplateData({
   onSubmit,
   inputRef,
   allowEdit = true,
+  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<PaymentTermsTemplateType>;
   onSubmit: (e: PaymentTermsTemplateType) => void;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
+  isNew?: boolean;
 }) {
   const { t } = useTranslation("common");
   const formValues = form.getValues();
@@ -28,24 +31,22 @@ export default function PaymentTermsTemplateData({
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
+          className={cn(isNew ? "create-grid" : "detail-grid")}
         >
-          <div className="create-grid">
-            <CustomFormFieldInput
+          <CustomFormFieldInput
+            control={form.control}
+            name="name"
+            label={t("form.name")}
+            inputType="input"
+            allowEdit={allowEdit}
+            required={true}
+          />
+          <div className=" col-span-full">
+            <PaymentTermLines
               control={form.control}
-              name="name"
-              label={t("form.name")}
-              inputType="input"
+              formValues={formValues}
               allowEdit={allowEdit}
-              required={true}
             />
-            <div className=" col-span-full">
-              <PaymentTermLines
-                control={form.control}
-                formValues={formValues}
-                allowEdit={allowEdit}
-              />
-            </div>
           </div>
 
           <input ref={inputRef} type="submit" className="hidden" />

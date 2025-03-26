@@ -1,4 +1,11 @@
-import { useFetcher, useLoaderData, useNavigate, useOutletContext, useParams, useSearchParams } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+  useParams,
+  useSearchParams,
+} from "@remix-run/react";
 import { action, loader } from "./route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { route } from "~/util/route";
@@ -7,7 +14,12 @@ import { GlobalState } from "~/types/app-types";
 import { PartyType, partyTypeToJSON, stateFromJSON } from "~/gen/common";
 import DetailLayout from "@/components/layout/detail-layout";
 import PaymentInfoTab from "./tab/payment-info";
-import { setUpToolbar, setUpToolbarDetailPage, setUpToolbarRegister, setUpToolbarTab } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  setUpToolbarDetailPage,
+  setUpToolbarRegister,
+  setUpToolbarTab,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { ButtonToolbar } from "~/types/actions";
@@ -17,57 +29,65 @@ import { DownloadIcon } from "lucide-react";
 import { components } from "~/sdk";
 import { party } from "~/util/party";
 import { useExporter } from "~/util/hooks/ui/useExporter";
+import { Entity } from "~/types/enums";
 
 export default function PaymentDetailClient() {
-  const { payment, actions,activities } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher<typeof action>()
-  const globalState = useOutletContext<GlobalState>()
-  const [searchParams ] = useSearchParams()
-  const tab = searchParams.get("tab")
+  const { payment, actions, activities } = useLoaderData<typeof loader>();
+  const fetcher = useFetcher<typeof action>();
+  const globalState = useOutletContext<GlobalState>();
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get("tab");
   const { t, i18n } = useTranslation("common");
   const r = route;
   const navigate = useNavigate();
-  const params = useParams()
-  const {exportPdf} = useExporter()
+  const params = useParams();
+  const { exportPdf } = useExporter();
 
-  const tabs =[
+  const tabs = [
     {
       title: t("info"),
-      href: r.toModulePartyDetail("accounting",partyTypeToJSON(PartyType.payment), payment?.code || "", {
-        tab: "info",
-      }),
+      href: r.toModulePartyDetail(
+        "accounting",
+        partyTypeToJSON(PartyType.payment),
+        payment?.code || "",
+        {
+          tab: "info",
+        }
+      ),
     },
-  ]
+  ];
 
-  setUpToolbarRegister(()=>{
+  setUpToolbarRegister(() => {
     let actions: ButtonToolbar[] = [];
     actions.push({
-      label:t("accountingLedger"),
-      onClick:()=>{
-        navigate(r.toRoute({
-          main:"generalLedger",
-          routePrefix:[r.accountingM],
-          q:{
-            fromDate:format(payment?.created_at || "","yyyy-MM-dd"),
-            toDate:format(payment?.created_at || "","yyyy-MM-dd"),
-            voucherNo:payment?.code,
-          }
-        }))
-      }
-    })
+      label: t("accountingLedger"),
+      onClick: () => {
+        navigate(
+          r.toRoute({
+            main: "generalLedger",
+            routePrefix: [r.accountingM],
+            q: {
+              fromDate: format(payment?.created_at || "", "yyyy-MM-dd"),
+              toDate: format(payment?.created_at || "", "yyyy-MM-dd"),
+              voucherNo: payment?.code,
+            },
+          })
+        );
+      },
+    });
     actions.push({
-      label:t("form.download"),
-      Icon:DownloadIcon,
-      onClick:()=>{
-        const exportData:components["schemas"]["ExportDocumentData"] =  {
-          id:params.code || "",
-        }
-        exportPdf("/payment/export/document",exportData)
-      }
-    })
+      label: t("form.download"),
+      Icon: DownloadIcon,
+      onClick: () => {
+        const exportData: components["schemas"]["ExportDocumentData"] = {
+          id: params.code || "",
+        };
+        exportPdf("/payment/export/document", exportData);
+      },
+    });
     return {
-      actions:actions,
-      status:stateFromJSON(payment?.status),
+      actions: actions,
+      status: stateFromJSON(payment?.status),
       onChangeState: (e) => {
         const body: z.infer<typeof updateStatusWithEventSchema> = {
           current_state: payment?.status || "",
@@ -86,26 +106,24 @@ export default function PaymentDetailClient() {
         );
       },
     };
-  },[payment])
+  }, [payment]);
 
-
-   useDisplayMessage(
-      {
-        error: fetcher.data?.error,
-        success: fetcher.data?.message,
-      },
-      [fetcher.data]
-    );
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+    },
+    [fetcher.data]
+  );
   return (
     <DetailLayout
-    activities={activities}
-    partyID={payment?.id}
-    navItems={tabs}
+      activities={activities}
+      partyID={payment?.id}
+      navItems={tabs}
+      partyName={payment?.code}
+      entityID={Entity.PAYMENT}
     >
-      {tab == "info" && 
-      <PaymentInfoTab/>
-      }
-
+      {tab == "info" && <PaymentInfoTab />}
     </DetailLayout>
   );
 }

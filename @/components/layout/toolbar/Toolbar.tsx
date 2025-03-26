@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { useConfirmationDialog } from "../drawer/ConfirmationDialog";
 import { Dialog, DialogOverlay } from "@/components/ui/dialog";
 
-export default function ToolBar({ title }: { title: string }) {
+export default function ToolBar({ title }: { title?: string }) {
   const toolbarState = useToolbar();
   const {
     actions,

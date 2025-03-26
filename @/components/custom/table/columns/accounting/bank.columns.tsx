@@ -11,34 +11,32 @@ export const BankColumns = (): ColumnDef<
   const { t, i18n } = useTranslation("common");
   return [
     {
-        accessorKey: "name",
-        header: t("form.name"),
-        size:250,
-        cell: ({ ...props }) => {
-            const rowData = props.row.original
-          return (
-            <TableCellNameNavigation
-              {...props}
-              navigate={(name) =>
-                route.toRoute({
-                  main: route.termsAndConditions,
-                  routeSufix: [name],
-                  q: {
-                    tab: "info",
-                    id: rowData.uuid,
-                  },
-                })
-              }
-            />
-          );
-        },
+      accessorKey: "name",
+      header: t("form.name"),
+      size: 250,
+      cell: ({ ...props }) => {
+        const rowData = props.row.original;
+        return (
+          <TableCellNameNavigation
+            {...props}
+            navigate={(name) =>
+              route.toRoute({
+                main: route.bank,
+                routeSufix: [name],
+                q: {
+                  tab: "info",
+                  id: rowData.id.toString(),
+                },
+              })
+            }
+          />
+        );
       },
-      {
-        accessorKey: "status",
-        header: t("form.status"),
-        cell: TableCellStatus,
-      }
-  ]
-  
-
+    },
+    {
+      accessorKey: "status",
+      header: t("form.status"),
+      cell: TableCellStatus,
+    },
+  ];
 };

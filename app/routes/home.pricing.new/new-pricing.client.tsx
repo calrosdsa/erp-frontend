@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/context-menu";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import PricingData from "./compoments/pricing-data";
+import CreateLayout from "@/components/layout/create-layout";
 
 type PricingDataType = z.infer<typeof pricingDataSchema>;
 type LineItemType = z.infer<typeof pricingLineItemDataSchema>;
@@ -55,14 +56,14 @@ interface ColumnConfigOption {
   columns: string[];
 }
 const defaultPricingCharges = [
-  { name: "Flete", rate: 0.07, orderID: 1 },
-  { name: "Importacion", rate: 0.13, orderID: 2 },
-  { name: "Margen", rate: 0.2509825, orderID: 3 },
-  { name: "Impuestos", rate: 0.192, orderID: 4 },
-  { name: "Retencion", rate: 0.1429, orderID: 5 },
-  { name: "TVA", rate: 0.7, orderID: 6 },
-  { name: "TC", rate: 7.5, orderID: 7 },
-  { name: "Descuento", rate: 0.45, orderID: 8 },
+  { name: "Flete", rate: 0.07 },
+  { name: "Importacion", rate: 0.13 },
+  { name: "Margen", rate: 0.2509825 },
+  { name: "Impuestos", rate: 0.192 },
+  { name: "Retencion", rate: 0.1429 },
+  { name: "TVA", rate: 0.7 },
+  { name: "TC", rate: 7.5 },
+  { name: "Descuento", rate: 0.45 },
 ];
 export default function NewPricingClient() {
   const { t } = useTranslation("common");
@@ -117,15 +118,14 @@ export default function NewPricingClient() {
   );
 
   return (
-    <Card>
-      
+    <CreateLayout>
+      {/* {JSON.stringify(form.getValues().pricing_charges)} */}
       <PricingData
         form={form}
         fetcher={fetcher}
         onSubmit={onSubmit}
         inputRef={inputRef}
-        
       />
-    </Card>
+    </CreateLayout>
   );
 }

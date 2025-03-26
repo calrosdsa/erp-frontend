@@ -102,7 +102,7 @@ export default function AddressAndContact({
           className={"gap-y-3 grid p-3"}
         >
           {/* {JSON.stringify(formValues.shipping_address)} */}
-          <div className="create-grid">
+          <div className="detail-grid">
             {showPartyrAddress && (
               <>
                 <Typography variant="subtitle2" className=" col-span-full">

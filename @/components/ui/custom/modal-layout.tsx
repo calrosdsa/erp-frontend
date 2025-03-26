@@ -64,7 +64,7 @@ export default function ModalLayout({
                       <XIcon />
                     </Button>
                   </SheetClose>
-                  <SheetTitle>{payload.titleToolbar || title}</SheetTitle>
+                  <SheetTitle>{title || payload.titleToolbar}</SheetTitle>
 
                   {status && status != State.UNRECOGNIZED && (
                     <Badge variant={"outline"} className="">

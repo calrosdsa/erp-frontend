@@ -13,10 +13,15 @@ import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
-import { setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbarDetailPage,
+  setUpToolbarRegister,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import TermsAndConditionsInfo from "./tab/payment-terms-info";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { Entity } from "~/types/enums";
+import { party } from "~/util/party";
 
 export default function PaymentTermsDetailClient() {
   const { entity, activities, actions } = useLoaderData<typeof loader>();
@@ -74,36 +79,35 @@ export default function PaymentTermsDetailClient() {
     [fetcher.data]
   );
 
-  setUpToolbarDetailPage(
-    (opts) => {
-      let actions: ButtonToolbar[] = [];
-      if (permission.edit && status == State.ENABLED) {
-        actions.push({
-          label: "Deshabilitar",
-          onClick: () => {
-            onChangeState(EventState.DISABLED_EVENT);
-          },
-        });
-      }
-      if (permission.edit && status == State.DISABLED) {
-        actions.push({
-          label: "Habilitar",
-          onClick: () => {
-            onChangeState(EventState.ENABLED_EVENT);
-          },
-        });
-      }
-      return {
-        ...opts,
-        status: status,
-        actions: actions,
-      };
-    },
-    [entity]
-  );
+  setUpToolbarRegister(() => {
+    let actions: ButtonToolbar[] = [];
+    if (permission.edit && status == State.ENABLED) {
+      actions.push({
+        label: "Deshabilitar",
+        onClick: () => {
+          onChangeState(EventState.DISABLED_EVENT);
+        },
+      });
+    }
+    if (permission.edit && status == State.DISABLED) {
+      actions.push({
+        label: "Habilitar",
+        onClick: () => {
+          onChangeState(EventState.ENABLED_EVENT);
+        },
+      });
+    }
+    return {
+      titleToolbar: t(party.paymentTerms),
+      status: status,
+      actions: actions,
+    };
+  }, [entity]);
 
   return (
     <DetailLayout
+      partyName={entity?.name}
+      entityID={Entity.PAYMENT_TERMS}
       activities={activities}
       partyID={entity?.id}
       navItems={navItems}

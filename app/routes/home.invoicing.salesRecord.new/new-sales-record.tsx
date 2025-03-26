@@ -20,6 +20,7 @@ import { useNewSalesRecord } from "./use-new-sales-record";
 import { Separator } from "@/components/ui/separator";
 import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import SalesRecordData from "./sales-record-data";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewSalesRecord() {
   const fetcher = useFetcher<typeof action>();
@@ -104,7 +105,7 @@ export default function NewSalesRecord() {
               routeSufix: [fetcher.data.salesRecord.invoice_no],
               q: {
                 tab: "info",
-                id:fetcher.data.salesRecord.uuid,
+                id:fetcher.data.salesRecord.id.toString(),
               },
             })
           );
@@ -116,14 +117,15 @@ export default function NewSalesRecord() {
 
   return (
     <div>
-      <Card>
+      <CreateLayout>
       <SalesRecordData
       form={form}
       onSubmit={onSubmit}
       fetcher={fetcher}
       inputRef={inputRef}
+      isNew={true}
       />
-      </Card>
+      </CreateLayout>
     </div>
   );
 }

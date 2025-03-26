@@ -1,10 +1,11 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node"
 import apiClient from "~/apiclient"
-import { DEFAULT_COLUMN, DEFAULT_ORDER, DEFAULT_SIZE } from "~/constant"
+import { DEFAULT_COLUMN, DEFAULT_ORDER, DEFAULT_SIZE, LOAD_ACTION } from "~/constant"
 import { handleError } from "~/util/api/handle-status-code"
 import TermsAndConditionsClient from "./payment-terms-template.client"
 import { components, operations } from "~/sdk"
 import PaymentTermsTemplateClient from "./payment-terms-template.client"
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react"
 
 type ActionData ={
     action:string
@@ -32,6 +33,20 @@ export const action = async({request}:LoaderFunctionArgs)=>{
         results,
         actions
     })
+}
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
 }
 
 export const loader = async({request}:LoaderFunctionArgs)=>{

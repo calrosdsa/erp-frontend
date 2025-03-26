@@ -10,7 +10,10 @@ import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import CostCenterInfo from "./tab/currency-exchange-info";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { EventState, State, stateFromJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
@@ -18,9 +21,11 @@ import { ButtonToolbar } from "~/types/actions";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { Entity } from "~/types/enums";
 
 export default function CurrencyExchangeDetailClient() {
-  const { currencyExchange, actions,activities } = useLoaderData<typeof loader>();
+  const { currencyExchange, actions, activities } =
+    useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const r = route;
   const fetcher = useFetcher<typeof action>();
@@ -49,28 +54,31 @@ export default function CurrencyExchangeDetailClient() {
       href: toRoute("info"),
     },
   ];
-    const onChangeState = (e: EventState) => {
-      const body: z.infer<typeof updateStatusWithEventSchema> = {
-        current_state: currencyExchange?.status || "",
-        party_id: currencyExchange?.uuid || "",
-        events: [e],
-      };
-      fetcher.submit(
-        {
-          action: "update-status",
-          updateStatus: body,
-        },
-        {
-          method: "POST",
-          encType: "application/json",
-        }
-      );
+  const onChangeState = (e: EventState) => {
+    const body: z.infer<typeof updateStatusWithEventSchema> = {
+      current_state: currencyExchange?.status || "",
+      party_id: currencyExchange?.uuid || "",
+      events: [e],
     };
+    fetcher.submit(
+      {
+        action: "update-status",
+        updateStatus: body,
+      },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
+  };
 
- useDisplayMessage({
-    error:fetcher.data?.error,
-    success:fetcher.data?.message,
- },[fetcher.data])
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+    },
+    [fetcher.data]
+  );
 
   setUpToolbar(() => {
     const state = stateFromJSON(currencyExchange?.status);
@@ -92,12 +100,19 @@ export default function CurrencyExchangeDetailClient() {
       });
     }
     return {
+      titleToolbar:currencyExchange?.name,
       status: stateFromJSON(currencyExchange?.status),
       actions: actions,
     };
   }, [currencyExchange, permission]);
   return (
-    <DetailLayout partyID={currencyExchange?.id} navItems={navItems} activities={activities}>
+    <DetailLayout
+      partyID={currencyExchange?.id}
+      navItems={navItems}
+      activities={activities}
+      entityID={Entity.CURRENCY_EXCHANGE}
+      partyName={currencyExchange?.name}
+    >
       {tab == "info" && <CostCenterInfo />}
     </DetailLayout>
   );

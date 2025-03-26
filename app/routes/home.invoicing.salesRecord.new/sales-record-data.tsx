@@ -21,9 +21,7 @@ import {
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { GlobalState } from "~/types/app-types";
-import {
-  purchaseRecordDataSchema,
-} from "~/util/data/schemas/invoicing/purchase-record-schema";
+import { purchaseRecordDataSchema } from "~/util/data/schemas/invoicing/purchase-record-schema";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
@@ -31,6 +29,7 @@ import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-
 import { Separator } from "@/components/ui/separator";
 import Supplier from "../home.buying.supplier.$name/route";
 import { salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-record-schema";
+import { cn } from "@/lib/utils";
 type SalesRecordType = z.infer<typeof salesRecordDataSchema>;
 
 export default function SalesRecordData({
@@ -39,12 +38,14 @@ export default function SalesRecordData({
   fetcher,
   inputRef,
   allowEdit,
+  isNew,
 }: {
   form: UseFormReturn<SalesRecordType, any, undefined>;
   onSubmit: (e: SalesRecordType) => void;
   fetcher: FetcherWithComponents<any>;
   inputRef: MutableRefObject<HTMLInputElement | null>;
-  allowEdit?:boolean
+  allowEdit?: boolean;
+  isNew?: boolean;
 }) {
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
@@ -57,9 +58,8 @@ export default function SalesRecordData({
           <fetcher.Form
             method="post"
             onSubmit={form.handleSubmit(onSubmit)}
-            className={"gap-y-3 grid p-3"}
+            className={cn(isNew ? "create-grid" : "detail-grid")}
           >
-            <div className="create-grid">
             <InvoiceAutocompleteForm
               label={t("saleInvoice")}
               partyType={r.saleInvoice}
@@ -78,7 +78,7 @@ export default function SalesRecordData({
                 form.setValue("nameOrBusinessName", e.name);
               }}
             />
-            <Separator className=" col-span-full"/>
+            <Separator className=" col-span-full" />
             <CustomFormDate
               control={form.control}
               name="invoiceDate"
@@ -309,8 +309,7 @@ export default function SalesRecordData({
               required
               allowEdit={allowEdit}
             />
-              <input ref={inputRef} type="submit" className="hidden" />
-            </div>
+            <input ref={inputRef} type="submit" className="hidden" />
           </fetcher.Form>
         </Form>
       </FormLayout>

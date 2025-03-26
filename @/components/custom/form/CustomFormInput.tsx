@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import RichTextEditor from '@/components/custom-ui/rich-text/editor'
-import AutocompleteI from '../select/autocomplete'
+import AutocompleteI from '../select/autocomplete-select'
 
 interface Props<TFieldValues extends FieldValues> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name'> {
   label?: string

@@ -1,6 +1,7 @@
 import { DependencyList, useEffect } from "react";
 import { SetupToolbarOpts, useToolbar } from "./use-toolbar";
 import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface DisplayMessageProps {
   success?: string;
@@ -14,22 +15,17 @@ export const useDisplayMessage = (
   // props: DisplayMessageProps<T, K>,
   dependencyList: DependencyList = []
 ) => {
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
   useEffect(() => {
-
     if (props.error) {
-      toast({
-        title: props.error,
-      });
+      toast.error(props.error);
       if (props.onShowMessage) {
         props.onShowMessage();
       }
     }
     if (props.success) {
-      toast({
-        title: props.success as string,
-      });
+      toast.success( props.success as string);
       if (props.onSuccessMessage) {
         props.onSuccessMessage();
       }

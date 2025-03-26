@@ -18,6 +18,8 @@ import { useResetDocument } from "@/components/custom/shared/document/reset-data
 import DataLayout from "@/components/layout/data-layout";
 import { State, stateToJSON } from "~/gen/common";
 import { PartySearch } from "../home.order.$partyOrder.new/components/party-autocomplete";
+import { ListLayout } from "@/components/ui/custom/list-layout";
+import { party } from "~/util/party";
 
 export default function InvoicesClient() {
   const { results, actions, filters } = useLoaderData<typeof loader>();
@@ -33,11 +35,12 @@ export default function InvoicesClient() {
   const r = route;
   const { resetDocument } = useResetDocument();
 
-  setUpToolbar(() => {
-    return {
-      titleToolbar: t(partyInvoice),
-      ...(permission?.create && {
-        addNew: () => {
+ 
+  return (
+    <ListLayout
+      title={t(partyInvoice)}
+      {...(permission.create && {
+        onCreate: () => {
           resetDocument();
           navigate(
             r.toRoute({
@@ -47,38 +50,35 @@ export default function InvoicesClient() {
             })
           );
         },
-      }),
-    };
-  }, [permission]);
-  return (
-    <DataLayout
-    filterOptions={filters}
-      orderOptions={[
-        { name: "Fecha de Creación", value: "created_at" },
-        { name: t("form.status"), value: "status" },
-      ]}
-      fixedFilters={()=>{
-        return (
-          <>
-          <PartySearch
-          party={partyInvoice}
-          />
-          </>
-        )
-      }}
+      })}
     >
-      {/* {JSON.stringify(results)} */}
-      <DataTable
-        data={results || []}
-        columns={invoiceColumns({
-          partyType: params.partyInvoice || "",
-        })}
-        enableSizeSelection={true}
-        // paginationOptions={{
-        //   rowCount: paginationResult?.total,
-        // }}
-        // enableRowSelection={true}
-      />
-    </DataLayout>
+      <DataLayout
+        filterOptions={filters}
+        orderOptions={[
+          { name: "Fecha de Creación", value: "created_at" },
+          { name: t("form.status"), value: "status" },
+        ]}
+        fixedFilters={() => {
+          return (
+            <>
+              <PartySearch party={partyInvoice} />
+            </>
+          );
+        }}
+      >
+        {/* {JSON.stringify(results)} */}
+        <DataTable
+          data={results || []}
+          columns={invoiceColumns({
+            partyType: params.partyInvoice || "",
+          })}
+          enableSizeSelection={true}
+          // paginationOptions={{
+          //   rowCount: paginationResult?.total,
+          // }}
+          // enableRowSelection={true}
+        />
+      </DataLayout>
+    </ListLayout>
   );
 }

@@ -26,7 +26,7 @@ export const paymentTermsTemplateColumns = (): ColumnDef<
               routeSufix: [name],
               q: {
                 tab: "info",
-                id: rowData.uuid,
+                id: rowData.id.toString(),
               },
             })
           }

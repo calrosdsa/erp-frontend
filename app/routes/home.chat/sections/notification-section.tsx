@@ -116,15 +116,31 @@ const RenderMentionText = ({
 
     // Add the mention as a link
     segments.push(
-      <span
-        key={`mention-${mention.entity_id}`}
-        onClick={() => {
-          openModal(mention.entity_href, mention.party_id);
-        }}
-        className="text-blue-700 rounded px-1 cursor-pointer"
-      >
-        {mention.party_name}
-      </span>
+      mention.has_modal ? (
+        <span
+          key={`mention-${mention.entity_id}`}
+          onClick={() => {
+            openModal(mention.entity_href, mention.party_id);
+          }}
+          className="text-blue-700 rounded px-1 cursor-pointer"
+        >
+          {mention.party_name}
+        </span>
+      ) : (
+        <Link
+          key={`mention-${mention.entity_id}`}
+          to={route.toRouteDetail(mention.entity_href,mention.party_name,{
+            tab:"info",
+            id:mention.party_id,
+          })}
+          onClick={() => {
+            openModal(mention.entity_href, mention.party_id);
+          }}
+          className="text-blue-700 rounded px-1 cursor-pointer"
+        >
+          {mention.party_name}
+        </Link>
+      )
     );
 
     lastIndex = mention.end_index + 1;

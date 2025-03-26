@@ -1,6 +1,6 @@
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import FormLayout from "@/components/custom/form/FormLayout";
-import AutocompleteI from "@/components/custom/select/autocomplete";
+import AutocompleteI from "@/components/custom/select/autocomplete-select";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { moduleSectionColumns } from "@/components/custom/table/columns/core/module-columns";
 import { DataTable } from "@/components/custom/table/CustomTable";

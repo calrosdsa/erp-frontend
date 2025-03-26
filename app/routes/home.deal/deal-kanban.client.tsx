@@ -1,5 +1,13 @@
-import { KanbanBoard, KanbanColumn } from "@/components/layout/kanban/kanban-board";
-import { useFetcher, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
+import {
+  KanbanBoard,
+  KanbanColumn,
+} from "@/components/layout/kanban/kanban-board";
+import {
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { action, loader } from "./route";
 import DealContentHeader from "./components/deal-content-header";
 import DealCard from "./components/deal-card";
@@ -16,14 +24,14 @@ export default function CrmClient() {
   const { deals, stages } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const { companyDefaults } = useOutletContext<GlobalState>();
-  const [searchParams,setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
   const currency = companyDefaults?.currency || DEFAULT_CURRENCY;
   const dataTransition = (
     source: DraggableLocation<string>,
     destination: DraggableLocation<string>,
     data: components["schemas"]["DealDto"],
-    srcColumn:string,
-    tgtColumn:string
+    srcColumn: string,
+    tgtColumn: string
   ) => {
     const body: components["schemas"]["EntityTransitionData"] = {
       id: data.id,
@@ -31,8 +39,8 @@ export default function CrmClient() {
       destination_stage_id: Number(destination.droppableId),
       source_index: source.index,
       source_stage_id: Number(source.droppableId),
-      source_name:srcColumn,
-      destination_name:tgtColumn,
+      source_name: srcColumn,
+      destination_name: tgtColumn,
     };
     fetcher.submit(
       {
@@ -52,13 +60,12 @@ export default function CrmClient() {
     };
   });
 
-
-  const openModal = (key:string,value:string)=>{
-    searchParams.set(key,value)
-    setSearchParams(searchParams,{
-      preventScrollReset:true
-    })
-  }
+  const openModal = (key: string, value: string) => {
+    searchParams.set(key, value);
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   return (
     <>
@@ -70,15 +77,15 @@ export default function CrmClient() {
             <DealContentHeader
               deals={deals}
               stage={stage}
+              openModal={openModal}
               currency={currency}
             />
           );
         }}
         cardComponent={(deal) => {
-          return <DealCard 
-          deal={deal} currency={currency} 
-          openModal={openModal}
-          />;
+          return (
+            <DealCard deal={deal} currency={currency} openModal={openModal} />
+          );
         }}
         dataTransition={dataTransition}
       />

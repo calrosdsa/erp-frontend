@@ -8,9 +8,7 @@ import {
 import { MutableRefObject, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import {
-  PartyAutocompleteField,
-} from "../home.order.$partyOrder.new/components/party-autocomplete";
+import { PartyAutocompleteField } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app-types";
 import { Separator } from "@/components/ui/separator";
@@ -28,6 +26,7 @@ import CurrencyAndPriceList from "@/components/custom/shared/document/currency-a
 import { party } from "~/util/party";
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
+import { cn } from "@/lib/utils";
 
 type Data = z.infer<typeof receiptDataSchema>;
 
@@ -38,6 +37,7 @@ export const ReceiptData = ({
   form,
   allowEdit,
   allowCreate,
+  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<Data>;
@@ -45,6 +45,7 @@ export const ReceiptData = ({
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
   allowCreate?: boolean;
+  isNew?: boolean;
 }) => {
   const params = useParams();
   const partyReceipt = params.partyReceipt || "";
@@ -70,82 +71,77 @@ export const ReceiptData = ({
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
+          className={cn(isNew ? "create-grid" : "detail-grid")}
         >
-            {/* {JSON.stringify(form.formState.errors)} */}
-          <div className="create-grid">
-            <PartyAutocompleteField
-              partyType={partyReceipt}
-              roleActions={roleActions}
-              control={form.control}
-              allowEdit={allowEdit}
-            />
-            <CustomFormDate
-              control={form.control}
-              name="postingDate"
-              label={t("form.postingDate")}
-              allowEdit={allowEdit}
-            />
-            <CustomFormTime
-              control={form.control}
-              name="postingTime"
-              label={t("form.postingTime")}
-              allowEdit={allowEdit}
-              description={formValues.tz}
-            />
+          <PartyAutocompleteField
+            partyType={partyReceipt}
+            roleActions={roleActions}
+            control={form.control}
+            allowEdit={allowEdit}
+          />
+          <CustomFormDate
+            control={form.control}
+            name="postingDate"
+            label={t("form.postingDate")}
+            allowEdit={allowEdit}
+          />
+          <CustomFormTime
+            control={form.control}
+            name="postingTime"
+            label={t("form.postingTime")}
+            allowEdit={allowEdit}
+            description={formValues.tz}
+          />
 
-            <CurrencyAndPriceList
-              control={form.control}
-              allowEdit={allowEdit}
-              isSelling={partyReceipt == p.salesQuotation}
-              isBuying={partyReceipt == p.supplierQuotation}
-              
-            />
+          <CurrencyAndPriceList
+            control={form.control}
+            allowEdit={allowEdit}
+            isSelling={partyReceipt == p.salesQuotation}
+            isBuying={partyReceipt == p.supplierQuotation}
+          />
 
-            <Separator className=" col-span-full" />
+          <Separator className=" col-span-full" />
 
-            
-            <UpdateStock
-                  form={form}
-                  updateStock={true}
-                  allowEdit={allowEdit}
-                  partyType={partyReceipt}
-                />
-            <LineItems
-              onChange={(e) => {
-                form.setValue("lines", e);
-                form.trigger("lines");
-              }}
-              allowEdit={allowEdit}
-              allowCreate={allowCreate}
-              currency={formValues.currency}
-              lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)}
-              docPartyType={partyReceipt}
-              priceListID={formValues.priceList?.id || undefined}
-              // complement={
-              //   <UpdateStock
-              //     form={form}
-              //     updateStock={true}
-              //     partyType={partyReceipt}
-              //   />
-              // }
-            />
-            <TaxAndChargesLines
-              onChange={(e) => {
-                form.setValue("taxLines", e);
-                form.trigger("taxLines");
-              }}
-              docPartyType={partyReceipt}
-              allowCreate={allowCreate}
-              allowEdit={allowEdit}
-              form={form}
-              currency={formValues.currency}
-            />
-            <GrandTotal currency={formValues.currency} />
-            <TaxBreakup currency={formValues.currency} />
+          <UpdateStock
+            form={form}
+            updateStock={true}
+            allowEdit={allowEdit}
+            partyType={partyReceipt}
+          />
+          <LineItems
+            onChange={(e) => {
+              form.setValue("lines", e);
+              form.trigger("lines");
+            }}
+            allowEdit={allowEdit}
+            allowCreate={allowCreate}
+            currency={formValues.currency}
+            lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)}
+            docPartyType={partyReceipt}
+            priceListID={formValues.priceList?.id || undefined}
+            // complement={
+            //   <UpdateStock
+            //     form={form}
+            //     updateStock={true}
+            //     partyType={partyReceipt}
+            //   />
+            // }
+          />
+          <TaxAndChargesLines
+            onChange={(e) => {
+              form.setValue("taxLines", e);
+              form.trigger("taxLines");
+            }}
+            docPartyType={partyReceipt}
+            allowCreate={allowCreate}
+            allowEdit={allowEdit}
+            form={form}
+            currency={formValues.currency}
+          />
+          <GrandTotal currency={formValues.currency} />
+          <TaxBreakup currency={formValues.currency} />
 
-            <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-          </div>
+          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

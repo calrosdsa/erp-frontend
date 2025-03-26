@@ -92,7 +92,7 @@ export default function CurrencyExchangeInfo() {
     <FormLayout>
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="info-grid">
+          <div className="detail-grid">
             <CustomFormFieldInput
               label={t("form.name")}
               control={form.control}

@@ -4408,7 +4408,7 @@ export interface components {
             /** Format: int64 */
             company_account_id?: number | null;
             iban?: string | null;
-            is_comapny_account: boolean;
+            is_company_account: boolean;
             /** Format: int64 */
             party_id: number | null;
         };
@@ -7199,6 +7199,7 @@ export interface components {
             /** Format: int64 */
             entity_id: number;
             entity_name: string;
+            has_modal: boolean;
             party_id: string;
             party_name: string;
             /** Format: int64 */

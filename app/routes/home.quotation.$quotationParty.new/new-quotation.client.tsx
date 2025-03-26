@@ -32,6 +32,7 @@ import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { Card } from "@/components/ui/card";
 import { QuotationData } from "./quotation-data";
+import CreateLayout from "@/components/layout/create-layout";
 
 
 type QuotationDataType = z.infer<typeof quotationDataSchema>
@@ -129,15 +130,14 @@ export default function NewQuotationClient() {
 
   
   return (
-    <div>
-      <Card>
+      <CreateLayout>
         <QuotationData
         form={form}
         fetcher={fetcher}
         onSubmit={onSubmit}
         inputRef={inputRef}
+        isNew={true}
         />
-      </Card>
-    </div>
+      </CreateLayout>
   );
 }

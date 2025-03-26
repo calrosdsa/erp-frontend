@@ -9,6 +9,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { BankColumns } from "@/components/custom/table/columns/accounting/bank.columns";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 
 export default function BankClient (){
@@ -19,20 +20,19 @@ export default function BankClient (){
     })
     const {t} = useTranslation("common")
     const navigate = useNavigate()
-    setUpToolbar(()=>{
-        return {
-            titleToolbar:t("bank"),
-            ...(permission.create && {
-                addNew:()=>{
-                    navigate(route.toRoute({
-                        main:route.bank,
-                        routeSufix:["new"]
-                    }))
-                }
-            })
-        }
-    },[permission])
+    
     return (
+        <ListLayout
+        title={t("bank")}
+        {...permission.create && {
+            onCreate:()=>{
+                navigate(route.toRoute({
+                    main:route.bank,
+                    routeSufix:["new"]
+                })) 
+            }
+        }}
+        >
         <DataLayout
         filterOptions={filters}>
             <DataTable
@@ -41,5 +41,6 @@ export default function BankClient (){
             enableSizeSelection={true}
             />
         </DataLayout>
+        </ListLayout>
     )
 }

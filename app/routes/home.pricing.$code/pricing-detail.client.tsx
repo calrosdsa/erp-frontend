@@ -27,6 +27,7 @@ import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { Entity } from "~/types/enums";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 import PricingConnections from "./components/pricing-connections";
+import { party } from "~/util/party";
 
 export default function PricingDetailClient() {
   const { pricing, actions, activities } = useLoaderData<typeof loader>();
@@ -97,17 +98,17 @@ export default function PricingDetailClient() {
     [fetcher.data]
   );
 
-  setUpToolbarRegister(
-    () => {
-      return {
-        status: stateFromJSON(pricing?.status),
-        onChangeState: onChangeState,
-      };
-    },
-    [pricing, permission, poPerm, quoPerm]
-  );
+  setUpToolbarRegister(() => {
+    return {
+      titleToolbar: t(party.pricing),
+      status: stateFromJSON(pricing?.status),
+      onChangeState: onChangeState,
+    };
+  }, [pricing, permission, poPerm, quoPerm]);
   return (
     <DetailLayout
+      partyName={pricing?.code}
+      entityID={Entity.PRICING}
       partyID={pricing?.id}
       navItems={navItems}
       activities={activities}

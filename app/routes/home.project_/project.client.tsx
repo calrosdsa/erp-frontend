@@ -7,6 +7,7 @@ import { NewProject, useNewProject } from "./use-new-project";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { projectColumns } from "@/components/custom/table/columns/project/project-columns";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function ProjectClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -16,31 +17,31 @@ export default function ProjectClient() {
     roleActions: globalState.roleActions,
   });
   const newProject = useNewProject();
-  setUpToolbar(() => {
-    return {
-      ...(permission?.create && {
-        addNew: () => {
-            newProject.onOpenChange(true)
-        },
-      }),
-    };
-  }, [permission]);
   return (
     <>
-    {newProject.open && 
-    <NewProject
-    open={newProject.open}
-    onOpenChange={newProject.onOpenChange}
-    />
-    }
-      <DataTable
-        paginationOptions={{
-          rowCount: paginationResult?.total,
-        }}
-        data={paginationResult?.results || []}
-        columns={projectColumns({})}
-        enableSizeSelection={true}
-      />
+      {newProject.open && (
+        <NewProject
+          open={newProject.open}
+          onOpenChange={newProject.onOpenChange}
+        />
+      )}
+      <ListLayout
+        title="Proyecto"
+        {...(permission.create && {
+          onCreate: () => {
+            newProject.onOpenChange(true);
+          },
+        })}
+      >
+        <DataTable
+          paginationOptions={{
+            rowCount: paginationResult?.total,
+          }}
+          data={paginationResult?.results || []}
+          columns={projectColumns({})}
+          enableSizeSelection={true}
+        />
+      </ListLayout>
     </>
   );
 }

@@ -13,16 +13,19 @@ import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
-import { setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbarDetailPage, setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import TermsAndConditionsInfo from "./tab/bank-info";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { Entity } from "~/types/enums";
+import BankInfoTab from "./tab/bank-info";
+import TabNavigation from "@/components/ui/custom/tab-navigation";
 
 export default function BankDetailClient() {
   const { entity, activities, actions } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
-  const [searchParams] = useSearchParams();
-  const tab = searchParams.get("tab");
+  const [searchParams,setSearchParams] = useSearchParams();
+  const tab = searchParams.get("tab") || "info";
   const fetcher = useFetcher<typeof action>();
   const status = stateFromJSON(entity?.status);
   const { roleActions } = useOutletContext<GlobalState>();
@@ -36,7 +39,7 @@ export default function BankDetailClient() {
       routeSufix: [entity?.name || ""],
       q: {
         tab: tab,
-        id: entity?.uuid || "",
+        id: entity?.id.toString() || "",
       },
     });
   };
@@ -74,8 +77,8 @@ export default function BankDetailClient() {
     [fetcher.data]
   );
 
-  setUpToolbarDetailPage(
-    (opts) => {
+  setUpToolbarRegister(
+    () => {
       let actions: ButtonToolbar[] = [];
       if (permission.edit && status == State.ENABLED) {
         actions.push({
@@ -94,7 +97,7 @@ export default function BankDetailClient() {
         });
       }
       return {
-        ...opts,
+        titleToolbar: entity?.name,
         status: status,
         actions: actions,
       };
@@ -107,8 +110,13 @@ export default function BankDetailClient() {
       activities={activities}
       partyID={entity?.id}
       navItems={navItems}
+      partyName={entity?.name}
+      entityID={Entity.BANK}
     >
-      {tab == "info" && <TermsAndConditionsInfo />}
+      {tab == "info" &&
+      <BankInfoTab/>
+      }
+      
     </DetailLayout>
   );
 }

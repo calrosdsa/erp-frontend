@@ -13,42 +13,41 @@ export default function TermsAndConditionsData({
   onSubmit,
   inputRef,
   allowEdit = true,
+  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<TermsAndCondtionsDataType>;
   onSubmit: (e: TermsAndCondtionsDataType) => void;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
+  isNew?: boolean;
 }) {
-  const {t} = useTranslation("common")
+  const { t } = useTranslation("common");
   return (
     <FormLayout>
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
+          className={isNew ? "create-grid" : "detail-grid"}
         >
-          <div className="create-grid">
-            <CustomFormFieldInput
-              control={form.control}
-              name="name"
-              label={t("form.name")}
-              inputType="input"
-              allowEdit={allowEdit}
-              required={true}
-            />
+          <CustomFormFieldInput
+            control={form.control}
+            name="name"
+            label={t("form.name")}
+            inputType="input"
+            allowEdit={allowEdit}
+            required={true}
+          />
 
-              <CustomFormFieldInput
-                className=" col-span-full"
-                control={form.control}
-                name="terms_and_conditions"
-                required={true}
-                label={t("termsAndConditions")}
-                inputType="richtext"
-                allowEdit={allowEdit}
-              />
-              
-          </div>
+          <CustomFormFieldInput
+            className=" col-span-full"
+            control={form.control}
+            name="terms_and_conditions"
+            required={true}
+            label={t("termsAndConditions")}
+            inputType="richtext"
+            allowEdit={allowEdit}
+          />
 
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

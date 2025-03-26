@@ -22,6 +22,7 @@ import { UpdateCourtRate, useUpdateCourtRate } from "./use-update-court-rate";
 import {
   setUpToolbar,
   setUpToolbarDetailPage,
+  setUpToolbarRegister,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { ActivityType } from "~/gen/common";
 import ModalLayout from "@/components/ui/custom/modal-layout";
@@ -33,7 +34,7 @@ export default function CourtModal({
 }: {
   appContext: GlobalState;
 }) {
-  const fetcherLoader = useFetcher<typeof loader>({ key: route.court });
+  const fetcherLoader = useFetcher<typeof loader>();
   const data = fetcherLoader.data;
   const court = data?.court;
   const params = useParams();
@@ -47,21 +48,23 @@ export default function CourtModal({
   const [open, setOpen] = useState(true);
   const courtID = searchParams.get(route.court);
 
-  const initData = (tab:string) => {
-    fetcherLoader.load(route.toRoute({
-      main: route.court,
-      routeSufix: [courtID || ""],
-      q:{
-        tab:tab
-      }
-    }),);
+  const initData = (tab: string) => {
+    fetcherLoader.load(
+      route.toRoute({
+        main: route.court,
+        routeSufix: [courtID || ""],
+        q: {
+          tab: tab,
+        },
+      })
+    );
   };
 
   useEffect(() => {
     initData(tab);
   }, [tab]);
 
-  useEffect(() => {
+  setUpToolbarRegister(() => {
     const actions: ButtonToolbar[] = [];
     actions.push({
       label: "Editar precio por hora",
@@ -94,11 +97,10 @@ export default function CourtModal({
         });
       },
     });
-    setToolbar({
-      titleToolbar: params.name,
+    return {
       actions: actions,
-    });
-  }, [data]);
+    };
+  }, [fetcherLoader.data]);
 
   useEffect(() => {
     if (!open) {
@@ -133,7 +135,9 @@ export default function CourtModal({
               {
                 label: "Info",
                 value: "info",
-                children: <CourtInfoTab appContext={appContext} />,
+                children: (
+                  <CourtInfoTab appContext={appContext} data={data} />
+                ),
               },
               {
                 label: "Horario",
@@ -144,15 +148,12 @@ export default function CourtModal({
           />
         </>
       )}
+      {updateCourtRate.open && <UpdateCourtRate />}
     </ModalLayout>
     // <ModalLayout
 
     //   partyID={court?.id}
     // >
-    //   {updateCourtRate.open &&
-    //   <UpdateCourtRate
-    //   />
-    //   }
 
     //   {tab == "info" && <CourtInfoTab />}
     //   {tab == "schedule" && <CourtSchedule />}

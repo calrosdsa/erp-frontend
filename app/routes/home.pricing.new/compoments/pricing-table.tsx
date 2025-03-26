@@ -387,10 +387,11 @@ export function PricingTable<TData, TValue>({
                     className={cn(
                       "line-clamp-4 ",
                       // row.color != "" && " text-cyan-50",
-                      isTitle && "font-semibold  text-center line-clamp-2 leading-3"
+                      isTitle &&
+                        "font-semibold  text-center line-clamp-2 leading-3"
                     )}
                     style={{
-                      color:row.color,
+                      color: row.color,
                     }}
                   >
                     {row[cell.column.id?.replace(/_fn$/, "") as keyof any]}
@@ -454,7 +455,6 @@ export function PricingTable<TData, TValue>({
                           setSelectedColor(color);
                           tableMeta?.updateCell(cell.row.index, "color", color);
                         }}
-
                       >
                         {selectedColor === color && (
                           <Check

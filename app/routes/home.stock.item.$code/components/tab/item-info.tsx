@@ -89,7 +89,7 @@ export default function ItemInfoTab() {
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
-          <div className="info-grid">
+          <div className="grid md:grid-cols-2 gap-3">
             <CustomFormFieldInput
               control={form.control}
               name="name"

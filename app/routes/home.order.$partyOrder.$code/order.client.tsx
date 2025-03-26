@@ -43,6 +43,7 @@ import { components } from "~/sdk";
 import AddressAndContact from "@/components/custom/shared/document/tab/address-and-contact";
 import OrderAddressAndContactTab from "./components/tab/order-address-and-contact";
 import OrderTermsAndConditionsTab from "./components/tab/order-terms-and-conditions";
+import { party } from "~/util/party";
 
 export default function PurchaseOrderClient() {
   const { order, actions, associatedActions, activities } =
@@ -50,7 +51,7 @@ export default function PurchaseOrderClient() {
   const fetcher = useFetcher<typeof action>();
   const globalState = useOutletContext<GlobalState>();
   const [searchParams] = useSearchParams();
-  const tab = searchParams.get("tab");
+  const tab = searchParams.get("tab") || "info";
   const [purchaseInvoicePermission] = usePermission({
     actions: associatedActions && associatedActions[Entity.PURCHASE_INVOICE],
     roleActions: globalState.roleActions,
@@ -80,12 +81,12 @@ export default function PurchaseOrderClient() {
     status: stateFromJSON(order?.status),
   });
 
-  const {exportPdf} = useExporter()
+  const { exportPdf } = useExporter();
 
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: partyOrder,
-      routePrefix:[r.orderM],
+      routePrefix: [r.orderM],
       routeSufix: [order?.code || ""],
       q: {
         tab: tab,
@@ -122,124 +123,121 @@ export default function PurchaseOrderClient() {
     }
   };
   setUpToolbarRegister(() => {
-      console.log("SET UP TOOLBAR...");
-      const actions: ButtonToolbar[] = [];
-      const status = stateFromJSON(order?.status);
-      if (
-        saleInvoicePermission?.create &&
-        enabledOrder &&
-        status != State.TO_DELIVER
-      ) {
-        actions.push({
-          label: t("f.sale", { o: t("_invoice.base") }),
-          onClick: () => {
-            navigate(
-              r.toRoute({
-                main: getInvoicePartyType(partyOrder),
-                routePrefix: [r.invoiceM],
-                routeSufix: ["new"],
-              })
-            );
-          },
-          Icon: PlusIcon,
-        });
-      }
-      if (
-        purchaseInvoicePermission?.create &&
-        enabledOrder &&
-        status != State.TO_RECEIVE
-      ) {
-        actions.push({
-          label: t("f.purchase", { o: t("_invoice.base") }),
-          onClick: () => {
-            navigate(
-              r.toRoute({
-                main: getInvoicePartyType(partyOrder),
-                routePrefix: [r.invoiceM],
-                routeSufix: ["new"],
-              })
-            );
-          },
-          Icon: PlusIcon,
-        });
-      }
-      if (receiptPermission?.create && enabledOrder && !toBill) {
-        actions.push({
-          label: t("f.purchase", { o: t("_receipt.base") }),
-          onClick: () => {
-            navigate(
-              r.toRoute({
-                main: partyTypeToJSON(PartyType.purchaseReceipt),
-                routePrefix: [r.receiptM],
-                routeSufix: ["new"],
-              })
-            );
-          },
-          Icon: PlusIcon,
-        });
-      }
-
-      if (deliveryNotePermission?.create && enabledOrder && !toBill) {
-        actions.push({
-          label: t("deliveryNote"),
-          onClick: () => {
-            navigate(
-              r.toRoute({
-                main: partyTypeToJSON(PartyType.deliveryNote),
-                routePrefix: [r.receiptM],
-                routeSufix: ["new"],
-              })
-            );
-          },
-          Icon: PlusIcon,
-        });
-      }
+    console.log("SET UP TOOLBAR...");
+    const actions: ButtonToolbar[] = [];
+    const status = stateFromJSON(order?.status);
+    if (
+      saleInvoicePermission?.create &&
+      enabledOrder &&
+      status != State.TO_DELIVER
+    ) {
       actions.push({
-        label:t("form.download"),
-        Icon:DownloadIcon,
-        onClick:()=>{
-          const exportData:components["schemas"]["ExportDocumentData"] =  {
-            party_type:partyOrder,
-            id:params.code || "",
-          }
-          exportPdf("/order/export/document",exportData)
-        }
-      })
-
-
-      return {
-        actions: actions,
-        titleToolbar: `${t("_order.base")}(${order?.code})`,
-        status: stateFromJSON(order?.status),
-        onChangeState: (e) => {
-          const body: z.infer<typeof updateStatusWithEventSchema> = {
-            current_state: order?.status || "",
-            party_type: params.partyOrder || "",
-            party_id: order?.code || "",
-            events: [e],
-          };
-          fetcher.submit(
-            {
-              action: "update-status-with-event",
-              updateStatusWithEvent: body,
-            },
-            {
-              method: "POST",
-              encType: "application/json",
-            }
+        label: t("f.sale", { o: t("_invoice.base") }),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: getInvoicePartyType(partyOrder),
+              routePrefix: [r.invoiceM],
+              routeSufix: ["new"],
+            })
           );
         },
-      };
-    },
-    [
-      order,
-      purchaseInvoicePermission,
-      receiptPermission,
-      order,
-      deliveryNotePermission,
-      t,
-    ]
-  );
+        Icon: PlusIcon,
+      });
+    }
+    if (
+      purchaseInvoicePermission?.create &&
+      enabledOrder &&
+      status != State.TO_RECEIVE
+    ) {
+      actions.push({
+        label: t("f.purchase", { o: t("_invoice.base") }),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: getInvoicePartyType(partyOrder),
+              routePrefix: [r.invoiceM],
+              routeSufix: ["new"],
+            })
+          );
+        },
+        Icon: PlusIcon,
+      });
+    }
+    if (receiptPermission?.create && enabledOrder && !toBill) {
+      actions.push({
+        label: t("f.purchase", { o: t("_receipt.base") }),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: partyTypeToJSON(PartyType.purchaseReceipt),
+              routePrefix: [r.receiptM],
+              routeSufix: ["new"],
+            })
+          );
+        },
+        Icon: PlusIcon,
+      });
+    }
+
+    if (deliveryNotePermission?.create && enabledOrder && !toBill) {
+      actions.push({
+        label: t("deliveryNote"),
+        onClick: () => {
+          navigate(
+            r.toRoute({
+              main: partyTypeToJSON(PartyType.deliveryNote),
+              routePrefix: [r.receiptM],
+              routeSufix: ["new"],
+            })
+          );
+        },
+        Icon: PlusIcon,
+      });
+    }
+    actions.push({
+      label: t("form.download"),
+      Icon: DownloadIcon,
+      onClick: () => {
+        const exportData: components["schemas"]["ExportDocumentData"] = {
+          party_type: partyOrder,
+          id: params.code || "",
+        };
+        exportPdf("/order/export/document", exportData);
+      },
+    });
+
+    return {
+      actions: actions,
+      titleToolbar: `${t("_order.base")}(${order?.code})`,
+      status: stateFromJSON(order?.status),
+      onChangeState: (e) => {
+        const body: z.infer<typeof updateStatusWithEventSchema> = {
+          current_state: order?.status || "",
+          party_type: params.partyOrder || "",
+          party_id: order?.code || "",
+          events: [e],
+        };
+        fetcher.submit(
+          {
+            action: "update-status-with-event",
+            updateStatusWithEvent: body,
+          },
+          {
+            method: "POST",
+            encType: "application/json",
+          }
+        );
+      },
+    };
+  }, [
+    order,
+    purchaseInvoicePermission,
+    receiptPermission,
+    order,
+    deliveryNotePermission,
+    t,
+  ]);
 
   useLoadingTypeToolbar(
     {
@@ -262,6 +260,12 @@ export default function PurchaseOrderClient() {
       partyID={order?.id}
       activities={activities}
       navItems={navItems}
+      partyName={order?.code}
+      entityID={
+        partyOrder == party.purchaseOrder
+          ? Entity.PURCHASE_ORDER
+          : Entity.SALE_ORDER
+      }
     >
       {/* {JSON.stringify(order?.order_lines)} */}
       {tab == "info" && <OrderInfoTab />}

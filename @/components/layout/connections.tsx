@@ -20,7 +20,7 @@ export default function Connections({ data,q }: {
       <CardHeader className="flex flex-row items-center justify-between">
         {/* <CardTitle>{title}</CardTitle> */}
       </CardHeader>
-      <CardContent className=' info-grid'>
+      <CardContent className=' detail-grid'>
         {data.map((connection, index) => (
           <div key={index} className="flex items-center justify-between py-2">
             <div className="flex items-center space-x-2">

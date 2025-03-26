@@ -28,6 +28,7 @@ import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { party } from "~/util/party";
+import { cn } from "@/lib/utils";
 
 type QuotationData = z.infer<typeof quotationDataSchema>;
 
@@ -38,6 +39,7 @@ export const QuotationData = ({
   form,
   allowEdit,
   allowCreate,
+  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<QuotationData>;
@@ -45,6 +47,7 @@ export const QuotationData = ({
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
   allowCreate?: boolean;
+  isNew?: boolean;
 }) => {
   const params = useParams();
   const quotationParty = params.quotationParty || "";
@@ -70,81 +73,72 @@ export const QuotationData = ({
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
+          className={cn(isNew ? "create-grid" : "detail-grid")}
         >
-          <div className="create-grid">
-            <PartyAutocompleteField
-              partyType={quotationParty}
-              roleActions={roleActions}
-              control={form.control}
-              allowEdit={allowEdit}
-            />
-            <CustomFormDate
-              control={form.control}
-              name="postingDate"
-              label={t("form.postingDate")}
-              allowEdit={allowEdit}
-            />
-            <CustomFormTime
-              control={form.control}
-              name="postingTime"
-              label={t("form.postingTime")}
-              allowEdit={allowEdit}
-              description={formValues.tz}
-            />
+          <PartyAutocompleteField
+            partyType={quotationParty}
+            roleActions={roleActions}
+            control={form.control}
+            allowEdit={allowEdit}
+          />
+          <CustomFormDate
+            control={form.control}
+            name="postingDate"
+            label={t("form.postingDate")}
+            allowEdit={allowEdit}
+          />
+          <CustomFormTime
+            control={form.control}
+            name="postingTime"
+            label={t("form.postingTime")}
+            allowEdit={allowEdit}
+            description={formValues.tz}
+          />
 
-            <CustomFormDate
-              control={form.control}
-              name="validTill"
-              label={t("form.validTill")}
-              allowEdit={allowEdit}
-            />
+          <CustomFormDate
+            control={form.control}
+            name="validTill"
+            label={t("form.validTill")}
+            allowEdit={allowEdit}
+          />
 
-            {/* <CurrencyAutocompleteForm
-              control={form.control}
-              name="currency"
-              label={t("form.currency")}
-              allowEdit={allowEdit}
-            /> */}
-            <CurrencyAndPriceList
-              control={form.control}
-              allowEdit={allowEdit}
-              isSelling={quotationParty == p.salesQuotation}
-              isBuying={quotationParty == p.supplierQuotation}
-              
-            />
+          <CurrencyAndPriceList
+            control={form.control}
+            allowEdit={allowEdit}
+            isSelling={quotationParty == p.salesQuotation}
+            isBuying={quotationParty == p.supplierQuotation}
+          />
 
-            <Separator className=" col-span-full" />
+          <Separator className=" col-span-full" />
 
-            {/* <CurrencyAndPriceList form={form} /> */}
-            <LineItems
-              onChange={(e) => {
-                form.setValue("lines", e);
-                form.trigger("lines");
-              }}
-              allowEdit={allowEdit}
-              allowCreate={allowCreate}
-              currency={formValues.currency}
-              lineType={itemLineTypeToJSON(ItemLineType.QUOTATION_LINE_ITEM)}
-              docPartyType={quotationParty}
-              priceListID={formValues.priceList?.id || undefined}
-            />
-            <TaxAndChargesLines
-              onChange={(e) => {
-                form.setValue("taxLines", e);
-                form.trigger("taxLines");
-              }}
-              docPartyType={quotationParty}
-              allowCreate={allowCreate}
-              allowEdit={allowEdit}
-              form={form}
-              currency={formValues.currency}
-            />
-            <GrandTotal currency={formValues.currency} />
-            <TaxBreakup currency={formValues.currency} />
+          {/* <CurrencyAndPriceList form={form} /> */}
+          <LineItems
+            onChange={(e) => {
+              form.setValue("lines", e);
+              form.trigger("lines");
+            }}
+            allowEdit={allowEdit}
+            allowCreate={allowCreate}
+            currency={formValues.currency}
+            lineType={itemLineTypeToJSON(ItemLineType.QUOTATION_LINE_ITEM)}
+            docPartyType={quotationParty}
+            priceListID={formValues.priceList?.id || undefined}
+          />
+          <TaxAndChargesLines
+            onChange={(e) => {
+              form.setValue("taxLines", e);
+              form.trigger("taxLines");
+            }}
+            docPartyType={quotationParty}
+            allowCreate={allowCreate}
+            allowEdit={allowEdit}
+            form={form}
+            currency={formValues.currency}
+          />
+          <GrandTotal currency={formValues.currency} />
+          <TaxBreakup currency={formValues.currency} />
 
-            <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-          </div>
+          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

@@ -8,6 +8,7 @@ import { route } from "~/util/route";
 
 export default function CourtSchedule() {
   const fetcherLoader = useFetcher<typeof loader>({key:route.court});
+  
   const data = fetcherLoader.data;
   return (
     <div>

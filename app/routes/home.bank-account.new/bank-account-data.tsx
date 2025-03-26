@@ -13,6 +13,7 @@ import { route } from "~/util/route";
 import { PartyAutocompleteField } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { GlobalState } from "~/types/app-types";
 import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { cn } from "@/lib/utils";
 
 const accountTypes = [
   "Cuenta de Ahorro",
@@ -25,12 +26,14 @@ export default function BankAccountData({
   onSubmit,
   inputRef,
   allowEdit = true,
+  isNew
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<BankAccountType>;
   onSubmit: (e: BankAccountType) => void;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
+  isNew?:boolean;
 }) {
   const { t } = useTranslation("common");
   const formValues = form.getValues();
@@ -40,10 +43,11 @@ export default function BankAccountData({
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
+          className={cn(
+            isNew?"create-grid":"detail-grid"
+          )}
         >
           {/* {JSON.stringify(form.formState.errors)} */}
-          <div className="create-grid">
             <CustomFormFieldInput
               control={form.control}
               name="account_name"
@@ -162,7 +166,6 @@ export default function BankAccountData({
               inputType="input"
               allowEdit={allowEdit}
             />
-          </div>
 
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

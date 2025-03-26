@@ -4,13 +4,14 @@ import { useTranslation } from "react-i18next";
 import { action, loader } from "../route";
 import { editCourtSchema } from "~/util/data/schemas/regate/court-schema";
 import { z } from "zod";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
 import {
   setUpToolbar,
   setUpToolbarTab,
   useLoadingTypeToolbar,
+  useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -18,18 +19,26 @@ import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { route } from "~/util/route";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
+import { Entity } from "~/types/enums";
+import ActivityFeed from "~/routes/home.activity/components/activity-feed";
+import { SerializeFrom } from "@remix-run/node";
 
 type EditType = z.infer<typeof editCourtSchema>;
-export default function CourtInfoTab({appContext}:{
-  appContext:GlobalState
+export default function CourtInfoTab({
+  appContext,
+  data,
+}: {
+  data?:SerializeFrom<typeof loader>;
+  appContext: GlobalState;
 }) {
   const { t } = useTranslation("common");
-  const fetcherLoader = useFetcher<typeof loader>({key:route.court})
-  const data = fetcherLoader.data
-  const court = data?.court
-
+  const court = data?.court;
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [permission] = usePermission({ roleActions:appContext.roleActions, actions:data?.actions });
+  const [permission] = usePermission({
+    roleActions: appContext.roleActions,
+    actions: data?.actions,
+  });
   const fetcher = useFetcher<typeof action>();
   const defaultValues = {
     name: court?.name,
@@ -39,6 +48,7 @@ export default function CourtInfoTab({appContext}:{
     schema: editCourtSchema,
     defaultValues: defaultValues,
   });
+  const { setRegister } = useSetupToolbarStore();
   const onSubmit = (e: EditType) => {
     fetcher.submit(
       {
@@ -48,6 +58,10 @@ export default function CourtInfoTab({appContext}:{
       {
         method: "POST",
         encType: "application/json",
+        action:route.toRoute({
+          main:route.court,
+          routeSufix:[court?.id.toString() || ""]
+        })
       }
     );
   };
@@ -58,15 +72,15 @@ export default function CourtInfoTab({appContext}:{
     },
     [fetcher.state]
   );
-  setUpToolbarTab(
-    () => {
-      return {
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged,court]
-  );
+
+  useEffect(() => {
+    setRegister("tab", {
+      onSave: () => {
+        inputRef.current?.click();
+      },
+      disabledSave: !hasChanged,
+    });
+  }, [hasChanged]);
 
   useDisplayMessage(
     {
@@ -80,31 +94,33 @@ export default function CourtInfoTab({appContext}:{
   );
 
   return (
-    <FormLayout>
-      <Form {...form}>
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <input className="hidden" type="submit" ref={inputRef} />
-          <div className="info-grid">
-            <CustomFormField
-              form={form}
-              name="name"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    value={field.value}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      form.trigger("name");
-                    }}
-                    inputType="input"
-                    title={t("form.name")}
-                    readOnly={!permission?.edit}
-                  />
-                );
-              }}
-            />
+    <div className="grid grid-cols-9 gap-3">
+      <div className="col-span-4">
+        <FormLayout>
+          <Form {...form}>
+            <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
+              <input className="hidden" type="submit" ref={inputRef} />
+              <div className="grid md:grid-cols-2 gap-3">
+                <CustomFormField
+                  form={form}
+                  name="name"
+                  children={(field) => {
+                    return (
+                      <DisplayTextValue
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          form.trigger("name");
+                        }}
+                        inputType="input"
+                        title={t("form.name")}
+                        readOnly={!permission?.edit}
+                      />
+                    );
+                  }}
+                />
 
-            {/* <DisplayTextValue title={t("_item.code")} value={item?.code} />
+                {/* <DisplayTextValue title={t("_item.code")} value={item?.code} />
   
               <DisplayTextValue
                 title={t("form.item-group")}
@@ -113,9 +129,23 @@ export default function CourtInfoTab({appContext}:{
               />
   
               <DisplayTextValue title={t("form.uom")} value={item?.uom_name} /> */}
-          </div>
-        </fetcher.Form>
-      </Form>
-    </FormLayout>
+              </div>
+            </fetcher.Form>
+          </Form>
+        </FormLayout>
+      </div>
+
+       {court?.id && (
+              <div className=" col-span-5">
+                <ActivityFeed
+                  appContext={appContext}
+                  activities={data?.activities || []}
+                  partyID={court?.id}
+                  partyName={court?.name}
+                  entityID={Entity.COURT}
+                />
+              </div>
+            )}
+    </div>
   );
 }

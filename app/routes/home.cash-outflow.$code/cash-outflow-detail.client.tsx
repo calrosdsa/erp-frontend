@@ -129,6 +129,7 @@ export default function CashOutflowDetailClient() {
       },
     });
     return {
+      titleToolbar:entity?.code,
       actions:actions,
       view: view,
       status: status,
@@ -141,7 +142,9 @@ export default function CashOutflowDetailClient() {
     <DetailLayout
       activities={activities}
       partyID={entity?.id}
+      partyName={entity?.code}
       navItems={navItems}
+      entityID={Entity.CASH_OUTFLOW}
     >
       {tab == "info" && <CashOutflowInfoTab />}
       {tab == "defaults" && <CashOutflowDefaultsTab />}

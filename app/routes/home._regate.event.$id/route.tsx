@@ -6,13 +6,16 @@ import {
 } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
-import EventDetailClient from "./event.client";
+import EventModal from "./event-modal";
 import { components } from "~/sdk";
 import { RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
 import { FetchResponse } from "openapi-fetch";
 import { z } from "zod";
 import { editEventSchema } from "~/util/data/schemas/regate/event-schema";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
+import { route } from "~/util/route";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { LOAD_ACTION } from "~/constant";
 
 type ActionData = {
   action: string;
@@ -54,7 +57,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 };
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult
+}:ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
+
+export const loader = async ({ request,params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
@@ -64,7 +81,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const res = await client.GET("/regate/event/detail/{id}", {
     params: {
       path: {
-        id: searchParams.get("id") || "",
+        id: params.id || "",
       },
     },
   });
@@ -87,15 +104,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       }
     }
   }
-  return defer({
+  return {
     event: res.data?.result.entity.event,
     bookingInfo: res.data?.result.entity.booking_info,
     actions: res.data?.actions,
     activities: res.data?.result.activities,
     connections: resConnections,
-  });
+  };
 };
 
-export default function EventDetail() {
-  return <EventDetailClient />;
-}
+export const openEventModal = (
+  id?: string,
+  callback?: (key: string, value: string) => void
+) => {
+  if (id && callback) {
+    callback(route.event, id);
+  }
+};

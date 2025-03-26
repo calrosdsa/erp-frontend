@@ -10,6 +10,7 @@ import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToo
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 import { bankDataSchema, BankDataType } from "~/util/data/schemas/accounting/bank.schema";
+import CreateLayout from "@/components/layout/create-layout";
 
 
 export default function NewBankClient(){
@@ -62,7 +63,7 @@ export default function NewBankClient(){
                     routeSufix: [fetcher.data.bank?.name],
                     q: {
                       tab: "info",
-                      id:fetcher.data.bank?.uuid,
+                      id:fetcher.data.bank?.id.toString(),
                     },
                   })
                 );
@@ -72,13 +73,14 @@ export default function NewBankClient(){
           [fetcher.data]
         );
     return (
-        <Card>
+        <CreateLayout>
             <BankData
             fetcher={fetcher}
             form={form}
             inputRef={inputRef}
             onSubmit={onSubmit}
+            isNew={true}
             />
-        </Card>
+        </CreateLayout>
     )
 }

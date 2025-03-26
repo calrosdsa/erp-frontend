@@ -1,12 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+
 import {
   useFetcher,
   useLoaderData,
@@ -38,22 +31,13 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
   const tab = searchParams.get("tab") || "info";
   const { t } = useTranslation("common");
   const fetcherStage = useFetcher<typeof action>();
-  const { payload, setPayload, editPayload } = useDealStore();
+  const { payload, editPayload } = useDealStore();
   const [open, setOpen] = useState(true);
-  const fetcher = useFetcher<typeof loader>({
-    key: "deal-modal",
-  });
-  const deal = fetcher.data?.deal;
-  const stages = fetcher.data?.stages;
+  const fetcher = useFetcher<typeof loader>();
+  const data = fetcher.data;
+  const deal = data?.deal;
+  const stages = data?.stages;
   const id = searchParams.get(route.deal) || "";
-  const toRoute = (tab: string) => {
-    return route.toRoute({
-      q: {
-        [route.deal]: id,
-        tab: tab,
-      },
-    });
-  };
 
   const dealTransition = (
     destinationStage: components["schemas"]["StageDto"]
@@ -84,16 +68,18 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
   };
 
   const initData = () => {
-    fetcher.submit(
-      {},
-      {
-        action: route.toRoute({
-          main: route.deal,
-          routeSufix: [id],
-        }),
-      }
+    fetcher.load(route.toRoute({
+      main: route.deal,
+      routeSufix: [id],
+    })
     );
   };
+
+  useEffect(() => {
+    if (id != "0") {
+      initData();
+    }
+  }, [id]);
 
   useDisplayMessage(
     {
@@ -102,20 +88,6 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
     },
     [fetcherStage.data]
   );
-
-  const navItems = [
-    {
-      title: t("info"),
-      href: toRoute("info"),
-    },
-  ];
-
-  useEffect(() => {
-    initData();
-    editPayload({
-      open: true,
-    });
-  }, []);
 
   useEffect(() => {
     if (!open) {
@@ -146,22 +118,24 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
           <LoadingSpinner />
         ) : (
           <>
-            <TabNavigation
-              defaultValue={tab}
-              onValueChange={(value) => {
-                searchParams.set("tab", value);
-                setSearchParams(searchParams, {
-                  preventScrollReset: true,
-                });
-              }}
-              items={[
-                {
-                  label: "Info",
-                  value: "info",
-                  children: <DealInfoTab appContext={appContext} />,
-                },
-              ]}
-            />
+              <TabNavigation
+                defaultValue={tab}
+                onValueChange={(value) => {
+                  searchParams.set("tab", value);
+                  setSearchParams(searchParams, {
+                    preventScrollReset: true,
+                  });
+                }}
+                items={[
+                  {
+                    label: "Info",
+                    value: "info",
+                    children: (
+                      <DealInfoTab appContext={appContext} data={data} />
+                    ),
+                  },
+                ]}
+              />
 
             {payload.enableEdit && (
               <div className="fixed bottom-0 border-t md:max-w-full md:w-[80%] shadow-xl bg-background ">

@@ -10,9 +10,10 @@ import { NavItem } from "~/types";
 import CompanyInfo from "./tab/company-info";
 import { setUpToolbar, setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar";
 import CompanyAccounts from "./tab/company-accounts";
+import { Entity } from "~/types/enums";
 
 export default function CompanyClient() {
-  const { company } = useLoaderData<typeof loader>();
+  const { company,activities} = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
   const r = route;
   const [searchParams] = useSearchParams();
@@ -26,7 +27,7 @@ export default function CompanyClient() {
         routeSufix: [company?.name || ""],
         q: {
           tab: "info",
-          id: company?.uuid || "",
+          id: company?.id.toString() || "",
         },
       }),
     },
@@ -37,16 +38,24 @@ export default function CompanyClient() {
         routeSufix: [company?.name || ""],
         q: {
           tab: "accounts",
-          id: company?.uuid || "",
+          id: company?.id.toString() || "",
         },
       }),
     },
   ];
   setUpToolbarRegister(() => {
-    return {};
-  }, []);
+    return {
+      titleToolbar:company?.name,
+    };
+  }, [company]);
   return (
-    <DetailLayout navItems={navItems} partyID={company?.id}>
+    <DetailLayout 
+    navItems={navItems} 
+    partyID={company?.id}
+    activities={activities}
+    partyName={company?.name}
+    entityID={Entity.COMPANY}
+    >
       {tab == "info" && <CompanyInfo />}
       {tab == "accounts" && <CompanyAccounts />}
     </DetailLayout>

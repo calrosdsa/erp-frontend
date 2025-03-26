@@ -10,7 +10,7 @@ import { formatQuery } from "..";
 import  {
   Autocomplete,
   AutoCompleteProps,
-} from "@/components/custom/select/autocomplete";
+} from "@/components/custom/select/autocomplete-select";
 
 type Contact = components["schemas"]["ContactDto"];
 interface ContactFormProps

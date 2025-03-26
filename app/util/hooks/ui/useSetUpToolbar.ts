@@ -129,6 +129,7 @@ export const setUpToolbarRegister = (
     setToolbar({ ...newOpts, ...optionsFromRegisters });
 
     return () => {
+      console.log("RESET TOOLBAR REGISTER...")
       reset();
     };
   }, [...dependencies, registers]);

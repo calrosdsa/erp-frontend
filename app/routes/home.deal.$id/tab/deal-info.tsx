@@ -28,39 +28,35 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { components } from "~/sdk";
+import { SerializeFrom } from "@remix-run/node";
 
 export default function DealInfoTab({
   appContext,
+  data,
 }: {
   appContext: GlobalState;
+  data?: SerializeFrom<typeof loader>;
 }) {
   const navigate = useNavigate();
-  const fetcherLoader = useFetcher<typeof loader>({
-    key: "deal-modal",
-  });
-  const deal = fetcherLoader.data?.deal;
-  const data = fetcherLoader.data;
-  const  { profile, roleActions } = appContext
+
+  const deal = data?.deal;
+  const { profile, roleActions } = appContext;
   const dd = useLoaderData<typeof loader>();
   const [perm] = usePermission({
     actions: data?.actions,
     roleActions,
   });
   const fetcher = useFetcher<typeof action>();
-  const { payload, setPayload, editPayload } = useDealStore();
+  const { payload, editPayload } = useDealStore();
   const { toast } = useToast();
-  const [searchParams] = useSearchParams();
+  const [searchParams,setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const permissions = useEntityPermission({
-    entities: data?.entityActions,
-    roleActions: roleActions,
-  });
   const allowEdit = perm.edit || payload.enableEdit;
   // Initialize the form with default values and schema validation.
   const form = useForm<DealData>({
     resolver: zodResolver(dealSchema),
     defaultValues: {
-      ...payload,
+      ...payload.data,
       responsible: {
         id: profile?.id,
         name: fullName(profile?.given_name, profile?.family_name),
@@ -82,7 +78,11 @@ export default function DealInfoTab({
         action: submitAction,
         dealData: data as any,
       },
-      { method: "POST", encType: "application/json" }
+      {
+        method: "POST",
+        encType: "application/json",
+        action: route.toRouteDetail(route.deal, deal?.id.toString() || "0"),
+      }
     );
   };
 
@@ -94,16 +94,13 @@ export default function DealInfoTab({
       success: fetcher.data?.message,
       onSuccessMessage: () => {
         if (fetcher.data?.deal) {
-          navigate(
-            route.toRoute({
-              main: route.deal,
-              routeSufix: [fetcher.data.deal.name],
-              q: {
-                tab: "info",
-                id: fetcher.data.deal.uuid,
-              },
-            })
-          );
+          console.log("NEW DEAL",fetcher.data)
+          searchParams.set("tab","info")
+          searchParams.set(route.deal,fetcher.data.deal.id.toString())
+          setSearchParams(searchParams,{
+            preventScrollReset:true
+          })
+          
         }
       },
     },
@@ -168,6 +165,8 @@ export default function DealInfoTab({
   return (
     <div className="grid grid-cols-9 gap-2">
       <div className="grid gap-3 col-span-4">
+        {/* {JSON.stringify(payload.stage)} */}
+        {/* {JSON.stringify(form.formState.errors)} */}
         <DealForm
           form={form}
           fetcher={fetcher}
@@ -187,7 +186,7 @@ export default function DealInfoTab({
           }}
         />
       </div>
-      {deal?.id && (
+      {deal?.id != undefined && (
         <div className=" col-span-5">
           <ActivityFeed
             appContext={appContext}

@@ -127,6 +127,7 @@ export default function PaymentCreateClient() {
         fetcher={fetcher}
         allowEdit={true}
         inputRef={inputRef}
+        isNew={true}
       />
     </Card>
   );

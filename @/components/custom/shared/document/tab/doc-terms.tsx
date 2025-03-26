@@ -88,7 +88,7 @@ export default function DocTerms({
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
-          <div className="create-grid">
+          <div className="detail-grid">
               <PaymentTermTemplateFormField
                 allowEdit={allowEdit}
                 control={form.control}

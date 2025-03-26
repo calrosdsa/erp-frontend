@@ -103,6 +103,7 @@ export default function NewCashOutflowClient() {
         form={form}
         inputRef={inputRef}
         onSubmit={onSubmit}
+        isNew={true}
       />
     </Card>
   );

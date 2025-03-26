@@ -1,8 +1,9 @@
 import { Icons } from "@/components/icons";
-import { toast } from "@/components/ui/use-toast";
 import { useSearchParams } from "@remix-run/react";
 import { Check, TriangleAlert } from "lucide-react";
 import type { PathsWithMethod } from "openapi-typescript-helpers";
+import { toast } from "sonner";
+import { ERROR_EXPORT_MESSAGE, SUCCESS_EXPORT_MESSAGE } from "~/constant";
 import { components, paths } from "~/sdk";
 
 function mapSearchParamsToObject(url: string): Record<string, string> {
@@ -26,11 +27,7 @@ export const useExporter = () => {
     path: PathsWithMethod<paths, "post">,
     fileName?: string
   ) {
-    const { update } = toast({
-      title: "DOWNLOAD FILE",
-      action: <Icons.spinner />,
-      duration: Infinity,
-    });
+    const id = toast.loading("Descargando documento...");
     try {
       const paramsObject: Record<string, string> = {};
 
@@ -63,34 +60,23 @@ export const useExporter = () => {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url); // Clean up the URL
-      update(
-        toast({
-          title: "Successfully exported data",
-          action: <Check size={16} />,
-        })
-      );
+      toast.success(SUCCESS_EXPORT_MESSAGE, {
+        id: id,
+      });
     } catch (errr) {
-      update(
-        toast({
-          title: "Fail to export data",
-          action: <TriangleAlert size={16} />,
-        })
-      );
+      toast.error(ERROR_EXPORT_MESSAGE, {
+        id: id,
+      });
     }
   }
 
   async function exportPdf(
     path: PathsWithMethod<paths, "post">,
-    data:components["schemas"]["ExportDocumentData"],
+    data: components["schemas"]["ExportDocumentData"],
     fileName?: string
   ) {
-    const { update } = toast({
-      title: "DOWNLOAD FILE",
-      action: <Icons.spinner />,
-      duration: Infinity,
-    });
+    const id = toast.loading("Descargando documento...");
     try {
-
       const response = await fetch("/api/pdf", {
         method: "POST",
         body: JSON.stringify({
@@ -115,23 +101,15 @@ export const useExporter = () => {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url); // Clean up the URL
-      update(
-        toast({
-          title: "Successfully exported data",
-          action: <Check size={16} />,
-        })
-      );
+      toast.success(SUCCESS_EXPORT_MESSAGE, {
+        id: id,
+      });
     } catch (errr) {
-      update(
-        toast({
-          title: "Fail to export data",
-          action: <TriangleAlert size={16} />,
-        })
-      );
+      toast.error(ERROR_EXPORT_MESSAGE, {
+        id: id,
+      });
     }
   }
-  
-
 
   // async function exportExcel(body?: any, fileName?: string) {
   //   const { id, dismiss, update } = toast({

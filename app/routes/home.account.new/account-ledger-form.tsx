@@ -12,6 +12,7 @@ import { AccountLedgerData } from "~/util/data/schemas/accounting/account-ledger
 import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
 import { AccountType, CashFlowSection, cashFlowSectionToJSON, FinacialReport, finacialReportToJSON } from "~/gen/common";
 import AccordationLayout from "@/components/layout/accordation-layout";
+import { cn } from "@/lib/utils";
 
 export default function AccountLedgerForm({
   fetcher,
@@ -19,12 +20,14 @@ export default function AccountLedgerForm({
   onSubmit,
   inputRef,
   allowEdit = true,
+  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<AccountLedgerData>;
   onSubmit: (e: AccountLedgerData) => void;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
+  isNew?:boolean
 }) {
   const { t } = useTranslation("common");
   const formValues = form.getValues();
@@ -71,10 +74,11 @@ export default function AccountLedgerForm({
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
+          className={cn(
+            isNew? "create-grid" : "detail-grid"
+          )}
         >
           {/* {JSON.stringify(form.formState.errors)} */}
-          <div className="create-grid">
             <Typography variant="subtitle2" className=" col-span-full">
               Detalles de la Cuenta
             </Typography>
@@ -181,7 +185,6 @@ export default function AccountLedgerForm({
               />
             </AccordationLayout>
 
-          </div>
 
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

@@ -18,6 +18,7 @@ import {
   PartySearch,
   PartyTypeSearch,
 } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function BankAccountClient() {
   const { roleActions } = useOutletContext<GlobalState>();
@@ -29,11 +30,12 @@ export default function BankAccountClient() {
   });
   const { t } = useTranslation("common");
   const navigate = useNavigate();
-  setUpToolbar(() => {
-    return {
-      titleToolbar: t("bankAccount"),
-      ...(permission.create && {
-        addNew: () => {
+
+  return (
+    <ListLayout
+      title="Cuenta Bancaria"
+      {...(permission.create && {
+        onCreate: () => {
           navigate(
             route.toRoute({
               main: route.bankAccount,
@@ -41,26 +43,25 @@ export default function BankAccountClient() {
             })
           );
         },
-      }),
-    };
-  }, [permission]);
-  return (
-    <DataLayout
-      filterOptions={filters}
-      fixedFilters={() => {
-        return (
-          <>
-            <PartyTypeSearch />
-            <PartySearch partyType={searchParams.get("party_type") || ""} />
-          </>
-        );
-      }}
+      })}
     >
-      <DataTable
-        data={results || []}
-        columns={BankAccountColumns()}
-        enableSizeSelection={true}
-      />
-    </DataLayout>
+      <DataLayout
+        filterOptions={filters}
+        fixedFilters={() => {
+          return (
+            <>
+              <PartyTypeSearch />
+              <PartySearch partyType={searchParams.get("party_type") || ""} />
+            </>
+          );
+        }}
+      >
+        <DataTable
+          data={results || []}
+          columns={BankAccountColumns()}
+          enableSizeSelection={true}
+        />
+      </DataLayout>
+    </ListLayout>
   );
 }

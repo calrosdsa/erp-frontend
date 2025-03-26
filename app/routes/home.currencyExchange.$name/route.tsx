@@ -85,11 +85,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
-  return json({
+  return {
     currencyExchange: res.data?.result.entity,
     actions: res.data?.actions,
     activities:res.data?.result.activities,
-  });
+  };
 };
 
 export default function CurrencyExchangeDetail() {

@@ -25,6 +25,7 @@ import { createCurrencyExchangeSchema } from "~/util/data/schemas/core/currency-
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { Separator } from "@/components/ui/separator";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewCurrencyExchangeClient() {
   const fetcher = useFetcher<typeof action>();
@@ -83,7 +84,7 @@ export default function NewCurrencyExchangeClient() {
               routeSufix: [fetcher.data.currencyExchange.name],
               q: {
                 tab: "info",
-                id: fetcher.data.currencyExchange.uuid,
+                id: fetcher.data.currencyExchange.id.toString(),
               },
             })
           );
@@ -94,7 +95,7 @@ export default function NewCurrencyExchangeClient() {
   );
   return (
     <div>
-      <Card>
+      <CreateLayout>
         <FormLayout>
           <Form {...form}>
             <fetcher.Form
@@ -147,7 +148,7 @@ export default function NewCurrencyExchangeClient() {
             </fetcher.Form>
           </Form>
         </FormLayout>
-      </Card>
+      </CreateLayout>
     </div>
   );
 }

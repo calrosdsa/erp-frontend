@@ -15,7 +15,7 @@ export default function JournalEntryInfo() {
     return lines.map(t=>mapToJournalEntryLineSchama(t))
   },[lines])
   return (
-    <div className="info-grid">
+    <div className="detail-grid">
       <DisplayTextValue
         title={t("form.type")}
         value={t(journalEntry?.entry_type || "")}

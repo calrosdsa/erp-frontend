@@ -17,7 +17,7 @@ import { z } from "zod";
 import { useEffect } from "react";
 import DetailLayout from "@/components/layout/detail-layout";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { setUpToolbar, setUpToolbarDetailPage, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarDetailPage, setUpToolbarRegister, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { route } from "~/util/route";
 import QuotationConnections from "./components/tab/quotation-connections";
 import { format } from "date-fns";
@@ -74,9 +74,8 @@ export default function QuotationDetailClient() {
     },
   ];
 
-  setUpToolbarDetailPage((opts) => {
+  setUpToolbarRegister(() => {
     let actions: ButtonToolbar[] = [];
-    console.log("SET UP TOOLBAR...")
     if(poPermission?.create && allowActions ){
       actions.push({
         label:"Crear Orden de Compra",
@@ -162,8 +161,10 @@ export default function QuotationDetailClient() {
       activities={activities}
       partyID={quotation?.id}
       navItems={navItems}
+      entityID={Entity.QUOTATION}
+      partyName={quotation?.code}
+      
     >
-
       {tab == "info" && <QuotationInfoTab />}
       {tab == "connections" && <QuotationConnections />}
     </DetailLayout>

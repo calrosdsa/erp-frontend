@@ -4,6 +4,7 @@ import { PlusIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useDealStore } from "~/routes/home.deal.$id/deal-store";
+import { openDealModal } from "~/routes/home.deal.$id/route";
 import { components } from "~/sdk";
 import { formatCurrency, formatCurrencyAmount } from "~/util/format/formatCurrency";
 import { route } from "~/util/route";
@@ -11,10 +12,11 @@ import { route } from "~/util/route";
 interface DealCardProps {
   deals: components["schemas"]["DealDto"][];
   stage: components["schemas"]["StageDto"];
-  currency:string
+  currency:string;
+  openModal: (key: string, value: string) => void;
 }
-export default function DealContentHeader({ deals, stage,currency }: DealCardProps) {
-  const { setPayload } = useDealStore();
+export default function DealContentHeader({ deals, stage,currency,openModal }: DealCardProps) {
+  const { setData } = useDealStore();
   const navigate = useNavigate();
   const {i18n} = useTranslation("common")
   const totalAmount = useMemo(() => {
@@ -30,19 +32,13 @@ export default function DealContentHeader({ deals, stage,currency }: DealCardPro
         className="w-full rounded-full"
         variant={"outline"}
         onClick={() => {
-          setPayload({
-            enableEdit: true,
+          setData({
             stage: {
               id: stage.id,
               name: stage.name,
             },
           });
-          navigate(
-            route.toRoute({
-              main: route.deal,
-              routeSufix: ["new"],
-            })
-          );
+         openDealModal("0", openModal)
         }}
       >
         <span>Crear Trato</span>

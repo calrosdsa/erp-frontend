@@ -51,7 +51,10 @@ export const useToolbar = create<ToolbarState & ToolbarActions>((set) => ({
     }),
   setToolbar: (opts) =>
     set((state) => ({
-      payload: opts,
+      payload: {
+        ...state.payload,
+        ...opts,
+      },
     })),
   updateToolbar: (opts) =>
       set((state) => ({

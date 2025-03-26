@@ -51,6 +51,7 @@ export default function PaymentData({
   inputRef,
   allowEdit,
   allowCreate,
+  isNew,
 }: {
   form: UseFormReturn<PaymentDataType, any, undefined>;
   onSubmit: (e: PaymentDataType) => void;
@@ -58,6 +59,7 @@ export default function PaymentData({
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
   allowCreate?: boolean;
+  isNew?:boolean;
 }) {
   const { t, i18n } = useTranslation("common");
   const { roleActions } = useOutletContext<GlobalState>();
@@ -212,9 +214,10 @@ export default function PaymentData({
         <fetcher.Form
           method="post"
           onSubmit={form.handleSubmit(onSubmit)}
-          className={cn("", "gap-y-3 grid p-3")}
+          className={cn(
+            isNew? "create-grid": "detail-grid"
+          )}
         >
-          <div className="create-grid">
             <Typography className=" col-span-full" variant="subtitle2">
               {t("_payment.type")}
             </Typography>
@@ -446,7 +449,6 @@ export default function PaymentData({
             />
 
             <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-          </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

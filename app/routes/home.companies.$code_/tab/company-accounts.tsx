@@ -127,7 +127,7 @@ export default function CompanyAccounts() {
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
-          <div className="create-grid">
+          <div className="detail-grid">
             <Typography className=" col-span-full" variant="subtitle2">
               {t("f.join", { o: t("accounts"), p: t("settings") })}
             </Typography>

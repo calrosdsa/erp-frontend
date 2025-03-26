@@ -51,7 +51,7 @@ export interface AutoCompleteProps<T extends object, K extends keyof T> {
   badgeLabel?: string;
 }
 
-export  const Autocomplete = <T extends object, K extends keyof T>({
+const Autocomplete = <T extends object, K extends keyof T>({
   data,
   nameK,
   onValueChange,
@@ -250,3 +250,7 @@ export  const Autocomplete = <T extends object, K extends keyof T>({
     </div>
   );
 }
+Autocomplete.displayName = "Autocomplete";
+
+
+export { Autocomplete };

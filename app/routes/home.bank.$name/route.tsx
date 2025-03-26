@@ -20,7 +20,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let error: string | undefined = undefined;
   let message: string | undefined = undefined;
   let actionRes = LOAD_ACTION;
-
+  
+  console.log("EDIT BANK",data.editData)
   switch (data.action) {
     case "update-status": {
       const res = await client.PUT("/bank/update-status", {
@@ -31,7 +32,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "edit": {
-      // console.log(data.editData)
       const res = await client.PUT("/bank", {
         body: mapToBankData(data.editData),
       });

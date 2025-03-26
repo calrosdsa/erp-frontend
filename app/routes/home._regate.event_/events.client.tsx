@@ -1,4 +1,9 @@
-import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { action, loader } from "./route";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
@@ -16,12 +21,14 @@ import { GenericActionsDropdown } from "../home._regate.booking_/components/acti
 import { State } from "~/gen/common";
 import { components } from "~/sdk";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function EventsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const { t } = useTranslation("common");
   const createEvent = useCreateEvent();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [permission] = usePermission({
     actions: actions,
     roleActions: globalState.roleActions,
@@ -29,32 +36,35 @@ export default function EventsClient() {
   const fetcher = useFetcher<typeof action>();
   const { clear, selectedRowsData } = useTableSelectionStore();
 
+  const openModal = (key:string,value:string)=>{
+    searchParams.set(key,value)
+    setSearchParams(searchParams,{
+      preventScrollReset:true
+    })
+  }
 
   useDisplayMessage(
     {
       success: fetcher.data?.message,
       error: fetcher.data?.error,
-      onSuccessMessage:()=>{
+      onSuccessMessage: () => {
         // setSelectedBookings([])
-        clear()
-      }
+        clear();
+      },
     },
     [fetcher.data]
   );
 
 
-  setUpToolbar(() => {
-    return {
-      titleToolbar: "Eventos",
-      ...(permission?.create && {
-        addNew: () => {
+  return (
+    <ListLayout
+      title="Eventos"
+      {...(permission.create && {
+        onCreate: () => {
           createEvent.onOpenChange(true);
         },
-      }),
-    };
-  }, [permission]);
-  return (
-    <div>
+      })}
+    >
       <DataLayout
         orderOptions={[
           { name: t("table.createdAt"), value: "created_at" },
@@ -94,13 +104,15 @@ export default function EventsClient() {
       >
         <DataTable
           data={paginationResult?.results || []}
-          columns={eventBookingsColumns()}
+          columns={eventBookingsColumns({
+            openModal,
+          })}
           paginationOptions={{
             rowCount: paginationResult?.total,
           }}
           enableRowSelection={true}
         />
       </DataLayout>
-    </div>
+    </ListLayout>
   );
 }

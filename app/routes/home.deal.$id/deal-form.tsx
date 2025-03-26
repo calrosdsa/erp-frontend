@@ -61,7 +61,7 @@ export default function DealForm({
           className={" grid p-2 gap-3"}
         >
           {/* {JSON.stringify(form.formState.errors)} */}
-          {/* {JSON.stringify(formValues)} */}
+          {/* {JSON.stringify(formValues.contacts)} */}
             <div className=" border rounded-lg p-2 grid gap-2">
               <div className="flex justify-between items-center">
                 <Typography variant="subtitle2" className=" col-span-full">

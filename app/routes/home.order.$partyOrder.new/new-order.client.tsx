@@ -21,6 +21,7 @@ import { format, formatRFC3339 } from "date-fns";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
 import { Card } from "@/components/ui/card";
 import { OrderData } from "./order-data";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
@@ -43,21 +44,21 @@ export default function CreatePurchaseOrdersClient() {
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 
-      party:{
-        id:payload?.partyID,
-        name:payload?.partyName,
+      party: {
+        id: payload?.partyID,
+        name: payload?.partyName,
       },
-      priceList:{
-        id:payload?.priceListID,
-        name:payload?.priceListName,
+      priceList: {
+        id: payload?.priceListID,
+        name: payload?.priceListName,
       },
-      costCenter:{
-        name:payload?.costCenterName,
-        id:payload?.costCenterID,
+      costCenter: {
+        name: payload?.costCenterName,
+        id: payload?.costCenterID,
       },
       project: {
-        name:payload?.projectName,
-        id:payload?.projectID,
+        name: payload?.projectName,
+        id: payload?.projectID,
       },
 
       lines: lineItemsStore.lines,
@@ -118,17 +119,17 @@ export default function CreatePurchaseOrdersClient() {
   }, [formValues.lines]);
 
   return (
-    <div>
-      <Card>
-        <OrderData
+    <CreateLayout>
+      <OrderData
         form={form}
         fetcher={fetcher}
         onSubmit={onSubmit}
         inputRef={inputRef}
         allowEdit={true}
         allowCreate={true}
-        />
-      </Card>
-    </div>
+        isNew={true}
+        
+      />
+    </CreateLayout>
   );
 }

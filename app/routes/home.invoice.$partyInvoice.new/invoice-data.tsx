@@ -30,6 +30,7 @@ import CurrencyAndPriceList from "@/components/custom/shared/document/currency-a
 import { party } from "~/util/party";
 import { invoiceDataSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import UpdateStock from "@/components/custom/shared/document/update-stock";
+import { cn } from "@/lib/utils";
 
 type Data = z.infer<typeof invoiceDataSchema>;
 
@@ -40,6 +41,7 @@ export const InvoiceData = ({
   form,
   allowEdit,
   allowCreate,
+  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<Data>;
@@ -47,6 +49,7 @@ export const InvoiceData = ({
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
   allowCreate?: boolean;
+  isNew?:boolean
 }) => {
   const params = useParams();
   const partyInvoice = params.partyInvoice || "";
@@ -72,11 +75,11 @@ export const InvoiceData = ({
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
+          className={cn(
+            isNew ? "create-grid":"detail-grid"
+          )}
         >
-            {JSON.stringify(form.formState.errors)}
             {/* {JSON.stringify(form.getValues().lines)} */}
-          <div className="create-grid">
             <PartyAutocompleteField
               partyType={partyInvoice}
               roleActions={roleActions}
@@ -156,7 +159,6 @@ export const InvoiceData = ({
             <TaxBreakup currency={formValues.currency} />
 
             <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-          </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

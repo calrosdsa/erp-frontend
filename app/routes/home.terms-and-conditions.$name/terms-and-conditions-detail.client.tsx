@@ -13,10 +13,12 @@ import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
-import { setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbarDetailPage, setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import TermsAndConditionsInfo from "./tab/terms-and-conditions-info";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { Entity } from "~/types/enums";
+import { party } from "~/util/party";
 
 export default function TermsAndConditionsDetailClient() {
   const { entity, activities, actions } = useLoaderData<typeof loader>();
@@ -74,8 +76,8 @@ export default function TermsAndConditionsDetailClient() {
     [fetcher.data]
   );
 
-  setUpToolbarDetailPage(
-    (opts) => {
+  setUpToolbarRegister(
+    () => {
       let actions: ButtonToolbar[] = [];
       if (permission.edit && status == State.ENABLED) {
         actions.push({
@@ -94,7 +96,7 @@ export default function TermsAndConditionsDetailClient() {
         });
       }
       return {
-        ...opts,
+        titleToolbar:t(party.termsAndConditions),
         status: status,
         actions: actions,
       };
@@ -106,6 +108,8 @@ export default function TermsAndConditionsDetailClient() {
     <DetailLayout
       activities={activities}
       partyID={entity?.id}
+      partyName={entity?.name}
+      entityID={Entity.TERMS_AND_CONDITIONS}
       navItems={navItems}
     >
       {tab == "info" && <TermsAndConditionsInfo />}

@@ -7,40 +7,42 @@ import { termsAndConditionsColumns } from "@/components/custom/table/columns/doc
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
-import { entity } from "~/data/entites";
 import { useTranslation } from "react-i18next";
 import { paymentTermsTemplateColumns } from "@/components/custom/table/columns/document/payment-terms-template.columns";
+import { ListLayout } from "@/components/ui/custom/list-layout";
+import { party } from "~/util/party";
 
+export default function PaymentTermsTemplateClient() {
+  const { roleActions } = useOutletContext<GlobalState>();
+  const { results, actions, filters } = useLoaderData<typeof loader>();
+  const [permission] = usePermission({
+    roleActions,
+    actions,
+  });
+  const { t } = useTranslation("common");
+  const navigate = useNavigate();
 
-export default function PaymentTermsTemplateClient (){
-    const {roleActions} = useOutletContext<GlobalState>()
-    const {results,actions,filters} = useLoaderData<typeof loader>()
-    const [permission] = usePermission({
-        roleActions,actions
-    })
-    const {t} = useTranslation("common")
-    const navigate = useNavigate()
-    setUpToolbar(()=>{
-        return {
-            titleToolbar:t("paymentTermsTemplate"),
-            ...(permission.create && {
-                addNew:()=>{
-                    navigate(route.toRoute({
-                        main:route.paymentTermsTemplate,
-                        routeSufix:["new"]
-                    }))
-                }
+  return (
+    <ListLayout
+      title={t(party.paymentTermsTemplate)}
+      {...(permission.create && {
+        onCreate: () => {
+          navigate(
+            route.toRoute({
+              main: route.paymentTermsTemplate,
+              routeSufix: ["new"],
             })
-        }
-    },[permission])
-    return (
-        <DataLayout
-        filterOptions={filters}>
-            <DataTable
-            data={results || []}
-            columns={paymentTermsTemplateColumns()}
-            enableSizeSelection={true}
-            />
-        </DataLayout>
-    )
+          );
+        },
+      })}
+    >
+      <DataLayout filterOptions={filters}>
+        <DataTable
+          data={results || []}
+          columns={paymentTermsTemplateColumns()}
+          enableSizeSelection={true}
+        />
+      </DataLayout>
+    </ListLayout>
+  );
 }

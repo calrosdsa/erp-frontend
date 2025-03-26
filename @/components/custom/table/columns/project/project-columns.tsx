@@ -16,6 +16,7 @@ export const projectColumns = ({}: {}): ColumnDef<
       accessorKey: "name",
       header: t("form.name"),
       cell: ({ ...props }) => {
+        const rowData = props.row.original
         return (
           <TableCellNameNavigation
             {...props}
@@ -25,6 +26,7 @@ export const projectColumns = ({}: {}): ColumnDef<
                 routeSufix: [name],
                 q: {
                   tab: "info",
+                  id:rowData.id.toString()
                 },
               })
             }

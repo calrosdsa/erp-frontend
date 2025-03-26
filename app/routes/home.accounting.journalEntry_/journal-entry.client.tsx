@@ -6,6 +6,9 @@ import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { journalEntryColumns } from "@/components/custom/table/columns/accounting/journal-entry-columns";
 import { route } from "~/util/route";
+import { ListLayout } from "@/components/ui/custom/list-layout";
+import { party } from "~/util/party";
+import { useTranslation } from "react-i18next";
 
 export default function JournalEntryClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -14,31 +17,34 @@ export default function JournalEntryClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
-  const r =route
-  const navigate = useNavigate()
-  setUpToolbar(() => {
-    return {
-      ...(permission?.create && {
-        addNew: () => {
-          navigate(r.toRoute({
-            main:r.journalEntry,
-            routePrefix:[r.accountingM],
-            routeSufix:["new"]
-          }))
-        },
-      }),
-    };
-  }, [permission]);
+  const r = route;
+  const { t } = useTranslation("common");
+  const navigate = useNavigate();
   return (
     <>
-      <DataTable
-        paginationOptions={{
-          rowCount: paginationResult?.total,
-        }}
-        data={paginationResult?.results || []}
-        columns={journalEntryColumns({})}
-        enableSizeSelection={true}
-      />
+      <ListLayout
+        title={t(party.journalEntry)}
+        {...(permission.create && {
+          onCreate: () => {
+            navigate(
+              r.toRoute({
+                main: r.journalEntry,
+                routePrefix: [r.accountingM],
+                routeSufix: ["new"],
+              })
+            );
+          },
+        })}
+      >
+        <DataTable
+          paginationOptions={{
+            rowCount: paginationResult?.total,
+          }}
+          data={paginationResult?.results || []}
+          columns={journalEntryColumns({})}
+          enableSizeSelection={true}
+        />
+      </ListLayout>
     </>
   );
 }

@@ -56,7 +56,7 @@ export const PartyContacts = ({
   const { t } = useTranslation("common");
   const navigate = useNavigate();
   const r = route;
-  const { fields, append, remove, update } = fieldArray;
+  const { fields, append, remove, update, } = fieldArray;
   const fetcher = useFetcher<typeof action>();
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
 
@@ -150,7 +150,11 @@ export const PartyContacts = ({
                     <XIcon
                       className="icon-button w-4 h-4"
                       onClick={() => {
-                        update(index, { ...field, action: DELETE });
+                        if(field.name){
+                          update(index, { ...field, action: DELETE });
+                        }else{
+                          remove(index)
+                        }
                       }}
                     />
                   </div>

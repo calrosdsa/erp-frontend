@@ -8,37 +8,40 @@ import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { useTranslation } from "react-i18next";
 import { paymentTermsColumns } from "@/components/custom/table/columns/document/payment-terms.columns";
+import { ListLayout } from "@/components/ui/custom/list-layout";
+import { party } from "~/util/party";
 
-
-export default function PaymentTermsClient (){
-    const {roleActions} = useOutletContext<GlobalState>()
-    const {results,actions,filters} = useLoaderData<typeof loader>()
-    const [permission] = usePermission({
-        roleActions,actions
-    })
-    const {t} = useTranslation("common")
-    const navigate = useNavigate()
-    setUpToolbar(()=>{
-        return {
-            titleToolbar:t("paymentTerms"),
-            ...(permission.create && {
-                addNew:()=>{
-                    navigate(route.toRoute({
-                        main:route.paymentTerms,
-                        routeSufix:["new"]
-                    }))
-                }
+export default function PaymentTermsClient() {
+  const { roleActions } = useOutletContext<GlobalState>();
+  const { results, actions, filters } = useLoaderData<typeof loader>();
+  const [permission] = usePermission({
+    roleActions,
+    actions,
+  });
+  const { t } = useTranslation("common");
+  const navigate = useNavigate();
+  
+  return (
+    <ListLayout
+      title={t(party.paymentTerms)}
+      {...(permission.create && {
+        onCreate: () => {
+          navigate(
+            route.toRoute({
+              main: route.paymentTerms,
+              routeSufix: ["new"],
             })
-        }
-    },[permission])
-    return (
-        <DataLayout
-        filterOptions={filters}>
-            <DataTable
-            data={results || []}
-            columns={paymentTermsColumns()}
-            enableSizeSelection={true}
-            />
-        </DataLayout>
-    )
+          );
+        },
+      })}
+    >
+      <DataLayout filterOptions={filters}>
+        <DataTable
+          data={results || []}
+          columns={paymentTermsColumns()}
+          enableSizeSelection={true}
+        />
+      </DataLayout>
+    </ListLayout>
+  );
 }

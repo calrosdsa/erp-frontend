@@ -45,6 +45,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json({
     journalEntry: res.data?.result.entity.journal_entry,
     lines: res.data?.result.entity.journal_entry_lines || [],
+    activities:res.data?.result.activities,
   });
 };
 

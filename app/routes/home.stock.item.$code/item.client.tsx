@@ -52,7 +52,7 @@ export default function ItemDetailClient() {
       }),
     },
     {
-      title:"Inventario",
+      title: "Inventario",
       href: r.toRoute({
         main: partyTypeToJSON(PartyType.item),
         routePrefix: [r.stockM],
@@ -63,12 +63,11 @@ export default function ItemDetailClient() {
         },
       }),
     },
-
   ];
 
   setUpToolbar(() => {
     let view: ButtonToolbar[] = [];
-    
+
     view.push({
       label: t("stockBalance"),
       onClick: () => {
@@ -126,6 +125,7 @@ export default function ItemDetailClient() {
       });
     }
     return {
+      titleToolbar: `Articulo (${item?.code})`,
       actions: actions,
       view: view,
     };

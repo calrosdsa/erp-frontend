@@ -6,6 +6,7 @@ import { route } from "~/util/route";
 import { BookingModal } from "../home._regate.booking.$code/booking-modal";
 import CustomerModal from "../home.customer.$id/customer-modal";
 import CourtModal from "../home._regate.court.$id/court-modal";
+import EventModal from "../home._regate.event.$id/event-modal";
 
 export default function AppModals({ appContext }: { appContext: GlobalState }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,6 +15,7 @@ export default function AppModals({ appContext }: { appContext: GlobalState }) {
   const customer = searchParams.get(route.customer);
   const booking = searchParams.get(route.booking);
   const court = searchParams.get(route.court)
+  const event = searchParams.get(route.event)
   return (
     <div>
       {userModal && <UserModal />}
@@ -21,6 +23,7 @@ export default function AppModals({ appContext }: { appContext: GlobalState }) {
       {booking && <BookingModal appContext={appContext} />}
       {customer && <CustomerModal appContext={appContext} />}
       {court && <CourtModal appContext={appContext} />}
+      {event && <EventModal appContext={appContext}/>}
     </div>
   );
 }

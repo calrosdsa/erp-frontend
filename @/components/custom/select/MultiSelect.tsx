@@ -105,7 +105,7 @@ export function MultiSelect<T extends object, K extends keyof T>({
       render={({ field }) => (
         <FormItem className="flex flex-col w-full">
           <FormLabel>{label}</FormLabel>
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"

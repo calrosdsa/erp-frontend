@@ -27,6 +27,7 @@ import {
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { InvoiceData } from "./invoice-data";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function CreatePurchaseInvoiceClient() {
   const fetcher = useFetcher<typeof action>();
@@ -50,7 +51,7 @@ export default function CreatePurchaseInvoiceClient() {
       currency: payload?.currency || companyDefaults?.currency,
       lines: lineItemsStore.lines.map((t) => {
         t.lineType = itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE);
-        t.itemLineReferenceID = t.itemLineID
+        t.itemLineReferenceID = t.itemLineID;
         return t;
       }),
 
@@ -58,21 +59,21 @@ export default function CreatePurchaseInvoiceClient() {
       postingDate: new Date(),
       postingTime: format(new Date(), "HH:mm:ss"),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      party:{
-        id:payload?.partyID,
-        name:payload?.partyName,
+      party: {
+        id: payload?.partyID,
+        name: payload?.partyName,
       },
-      priceList:{
-        id:payload?.priceListID,
-        name:payload?.priceListName,
+      priceList: {
+        id: payload?.priceListID,
+        name: payload?.priceListName,
       },
-      costCenter:{
-        name:payload?.costCenterName,
-        id:payload?.costCenterID,
+      costCenter: {
+        name: payload?.costCenterName,
+        id: payload?.costCenterID,
       },
       project: {
-        name:payload?.projectName,
-        id:payload?.projectID,
+        name: payload?.projectName,
+        id: payload?.projectID,
       },
     },
   });
@@ -144,15 +145,14 @@ export default function CreatePurchaseInvoiceClient() {
   }, [formValues.lines]);
 
   return (
-    <div>
-      <Card>
-          <InvoiceData
-          form={form}
-          onSubmit={onSubmit}
-          fetcher={fetcher}
-          inputRef={inputRef}
-          />
-      </Card>
-    </div>
+    <CreateLayout>
+      <InvoiceData
+        form={form}
+        onSubmit={onSubmit}
+        fetcher={fetcher}
+        inputRef={inputRef}
+        isNew={true}
+      />
+    </CreateLayout>
   );
 }

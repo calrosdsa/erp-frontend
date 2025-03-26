@@ -32,7 +32,7 @@ export default function ResponsiveSidebar({
   }, [isOpen]);
   return (
     <div className={cn(
-        "flex space-x-2",
+        "flex space-x-2 border w-full rounded-xl px-4 py-1",
         // `${!isDesktop && "flex"}`,
         // "min-w-44 flex-grow h-full "
         )}>

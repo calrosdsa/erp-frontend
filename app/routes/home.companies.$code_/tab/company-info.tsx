@@ -13,7 +13,7 @@ export default function CompanyInfo(){
     const { t, i18n } = useTranslation("common");
     return (
         <div>
-      <div className=" info-grid">
+      <div className=" detail-grid">
 
         {company && (
           <>

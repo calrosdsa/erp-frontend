@@ -11,7 +11,7 @@ import { moduleSectionDataSchema } from "~/util/data/schemas/core/module-schema"
 import TableCellEditable from "../../cells/table-cell-editable";
 import { useSearchEntity } from "~/util/hooks/fetchers/core/use-entity-search-fetcher";
 import { DataTableRowActions } from "../../data-table-row-actions";
-import { Autocomplete } from "@/components/custom/select/autocomplete";
+import { Autocomplete } from "@/components/custom/select/autocomplete-select";
 
 export const moduleColumns = ({}: {}): ColumnDef<
   components["schemas"]["ModuleDto"]

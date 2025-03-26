@@ -18,6 +18,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 const ItemsClient = () => {
   const { t } = useTranslation("common");
@@ -28,31 +29,27 @@ const ItemsClient = () => {
     roleActions: globalState.roleActions,
     actions: actions,
   });
-  const submit = useSubmit();
-  const navigate = useNavigate();
   const r = route;
-  setUpToolbar(() => {
-    return {
-      ...(permission?.create && {
-        addNew: () => {
-          navigate(r.toRoute({
+  return (
+    <div>
+      <ListLayout 
+      title="Articulo"
+      {...(permission.create && {
+        onCreate:()=>{
+          r.toRoute({
             main:partyTypeToJSON(PartyType.item),
             routePrefix:[r.stockM],
             routeSufix:["new"]
-          }));
-        },
-      }),
-    };
-  }, [permission]);
-  return (
-    <div>
-      <div className="">
+          })
+        }
+      })}
+      >
         <DataTable
           data={paginationResult?.results || []}
           columns={itemColumns()}
           enableSizeSelection={true}
         />
-      </div>
+      </ListLayout>
     </div>
   );
 };

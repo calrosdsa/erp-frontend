@@ -13,10 +13,14 @@ import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema";
-import { setUpToolbarDetailPage } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbarDetailPage,
+  setUpToolbarRegister,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import BankAccountInfo from "./tab/bank-account-info";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { Entity } from "~/types/enums";
 
 export default function BankAccountDetailClient() {
   const { entity, activities, actions } = useLoaderData<typeof loader>();
@@ -36,7 +40,7 @@ export default function BankAccountDetailClient() {
       routeSufix: [entity?.account_name || ""],
       q: {
         tab: tab,
-        id: entity?.uuid || "",
+        id: entity?.id.toString() || "",
       },
     });
   };
@@ -74,39 +78,38 @@ export default function BankAccountDetailClient() {
     [fetcher.data]
   );
 
-  setUpToolbarDetailPage(
-    (opts) => {
-      let actions: ButtonToolbar[] = [];
-      if (permission.edit && status == State.ENABLED) {
-        actions.push({
-          label: "Deshabilitar",
-          onClick: () => {
-            onChangeState(EventState.DISABLED_EVENT);
-          },
-        });
-      }
-      if (permission.edit && status == State.DISABLED) {
-        actions.push({
-          label: "Habilitar",
-          onClick: () => {
-            onChangeState(EventState.ENABLED_EVENT);
-          },
-        });
-      }
-      return {
-        ...opts,
-        status: status,
-        actions: actions,
-      };
-    },
-    [entity]
-  );
+  setUpToolbarRegister(() => {
+    let actions: ButtonToolbar[] = [];
+    if (permission.edit && status == State.ENABLED) {
+      actions.push({
+        label: "Deshabilitar",
+        onClick: () => {
+          onChangeState(EventState.DISABLED_EVENT);
+        },
+      });
+    }
+    if (permission.edit && status == State.DISABLED) {
+      actions.push({
+        label: "Habilitar",
+        onClick: () => {
+          onChangeState(EventState.ENABLED_EVENT);
+        },
+      });
+    }
+    return {
+      titleToolbar: entity?.account_name,
+      status: status,
+      actions: actions,
+    };
+  }, [entity]);
 
   return (
     <DetailLayout
       activities={activities}
       partyID={entity?.id}
       navItems={navItems}
+      partyName={entity?.account_name}
+      entityID={Entity.BANK_ACCOUNT}
     >
       {tab == "info" && <BankAccountInfo />}
     </DetailLayout>

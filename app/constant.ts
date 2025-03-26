@@ -11,6 +11,7 @@ export const DEFAULT_ENABLED = "true";
 export const DEFAULT_ORDER = "desc"
 export const DEFAULT_COLUMN = "id"
 
+
 export const MAX_DEFAULT_SIZE = "30";
 
 export const DEFAULT_COMPANY_NAME = "ERP";
@@ -24,9 +25,9 @@ export const CURRENCY_CODES: CurrencyCode[] = [
 ];
 
 export let API_URL =
-  typeof process !== "undefined"
-    ? process.env.API_URL || "http://localhost:9090"
-    : "http://localhost:9090";
+typeof process !== "undefined"
+? process.env.API_URL || "http://localhost:9090"
+: "http://localhost:9090";
 
 type CurrencyCode = {
   Code: string;
@@ -41,3 +42,6 @@ export const DEFAULT_COLOR = "#d97706";
 export const CREATE = "create"
 export const DELETE = "delete"
 export const EDIT = "edit"
+
+export const SUCCESS_EXPORT_MESSAGE = "Documento descargado con éxito"
+export const ERROR_EXPORT_MESSAGE = "Error al descargar el documento."

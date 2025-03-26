@@ -142,7 +142,11 @@ export function DataTable<TData, TValue>({
           footerHeight = 100
         }
         const newHeight = windowHeight - containerTop - footerHeight;
-        setContainerHeight(newHeight);
+        if(newHeight > 100){
+          setContainerHeight(newHeight);
+        }else {
+          setContainerHeight(300);
+        }
       }
     };
 

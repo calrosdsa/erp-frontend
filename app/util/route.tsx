@@ -191,6 +191,15 @@ class Routes {
   //   let url = `${this.base}/${encodeURIComponent(partyType)}`;
   //   return this.baseRoute(url, q);
   // }
+  toRouteDetail(
+    main:string,
+    id:string,
+    q?: Record<string, string | undefined>
+  ): string {
+    let url = `${this.base}/${main}/${id}`;
+    
+    return this.baseRoute(url, q);
+  }
   toRoute(opts: {
     main?: string;
     routePrefix?: string[];
@@ -515,8 +524,7 @@ class Routes {
   court = "court";
   booking = "booking";
   bookingM = "booking";
-  event = this.base + "/event";
-  eventM = "event";
+  event = "event";
   rDashboard = this.base + "/bookingDashboard";
 
   toBookings(q?: { [x: string]: string | undefined }): string {

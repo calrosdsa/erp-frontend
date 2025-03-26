@@ -20,6 +20,7 @@ import GrandTotal from "@/components/custom/shared/item/grand-total";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { LineItemType } from "~/util/data/schemas/stock/line-item-schema";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
+import { cn } from "@/lib/utils";
 
 const cashOutflosTypes = [
   "Compras al contado",
@@ -34,12 +35,14 @@ export default function CashOutflowForm({
   onSubmit,
   inputRef,
   allowEdit = true,
+  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<CashOutflowDataType>;
   onSubmit: (e: CashOutflowDataType) => void;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
+  isNew?:boolean
 }) {
   const { t } = useTranslation("common");
   const formValues = form.getValues();
@@ -68,10 +71,11 @@ export default function CashOutflowForm({
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
+          className={cn(
+            isNew?"create-grid":"detail-grid"
+          )}
         >
           {/* {JSON.stringify(form.formState.errors)} */}
-          <div className="create-grid">
             {!allowEdit && (
               <>
                 <CustomFormDate
@@ -204,7 +208,6 @@ export default function CashOutflowForm({
               allowEdit={allowEdit}
             />
             <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-          </div>
 
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>

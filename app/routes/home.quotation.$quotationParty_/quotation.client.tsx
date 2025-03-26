@@ -15,6 +15,7 @@ import { quotationColumns } from "@/components/custom/table/columns/document/quo
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
 import DataLayout from "@/components/layout/data-layout";
 import { PartySearch } from "../home.order.$partyOrder.new/components/party-autocomplete";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function QuotationsClient() {
   const { paginationResult, actions, filters } = useLoaderData<typeof loader>();
@@ -30,11 +31,11 @@ export default function QuotationsClient() {
   });
   const { resetDocument } = useResetDocument();
 
-  setUpToolbar(() => {
-    return {
-      titleToolbar:t(quotationParty),
-      ...(permission?.create && {
-        addNew: () => {
+  return (
+    <ListLayout
+      title={t(quotationParty)}
+      {...(permission.create && {
+        onCreate: () => {
           resetDocument();
           navigate(
             r.toRoute({
@@ -44,31 +45,29 @@ export default function QuotationsClient() {
             })
           );
         },
-      }),
-    };
-  }, [permission]);
-
-  return (
-    <DataLayout
-      filterOptions={filters}
-      orderOptions={[
-        { name: "Fecha de Creación", value: "created_at" },
-        { name: t("form.status"), value: "status" },
-      ]}
-      fixedFilters={() => {
-        return (
-          <>
-            <PartySearch party={quotationParty} />
-          </>
-        );
-      }}
+      })}
     >
-      <DataTable
-        data={paginationResult?.results || []}
-        columns={quotationColumns({
-          quotationType: quotationParty,
-        })}
-      />
-    </DataLayout>
+      <DataLayout
+        filterOptions={filters}
+        orderOptions={[
+          { name: "Fecha de Creación", value: "created_at" },
+          { name: t("form.status"), value: "status" },
+        ]}
+        fixedFilters={() => {
+          return (
+            <>
+              <PartySearch party={quotationParty} />
+            </>
+          );
+        }}
+      >
+        <DataTable
+          data={paginationResult?.results || []}
+          columns={quotationColumns({
+            quotationType: quotationParty,
+          })}
+        />
+      </DataLayout>
+    </ListLayout>
   );
 }

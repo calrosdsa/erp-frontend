@@ -78,12 +78,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       },
     },
   });
-
   handleError(res.error);
   
   return json({
     actions: res.data?.actions,
     account: res.data?.result.entity,
+    activities:res.data?.result.activities,
   });
 };
 

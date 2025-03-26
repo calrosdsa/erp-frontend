@@ -28,7 +28,10 @@ class Parties {
   saleOrder = "saleOrder";
   supplierQuotation = "supplierQuotation";
   salesQuotation = "salesQuotation"
-  
+
+  termsAndConditions = "termsAndConditions"
+  paymentTerms="paymentTerms"
+  paymentTermsTemplate="paymentTermsTemplate"
   cashOutflow = "cashOutflow"
 
   itemGroup = "itemGroup";

@@ -8,6 +8,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { chargesTemplateColumns } from "@/components/custom/table/columns/accounting/charges-templates-columns";
 import { route } from "~/util/route";
 import { currencyExchangeColumns } from "@/components/custom/table/columns/core/currency-exchange-columns";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function CurrencyExchangeClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -16,30 +17,44 @@ export default function CurrencyExchangeClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
-  const navigate = useNavigate()
-  const r = route
-  setUpToolbar(() => {
-    return {
-      ...(permission?.create && {
-        addNew: () => {
-          navigate(r.toRoute({
-            main:r.currencyExchange,
-            routeSufix:["new"],
-          }))
-        },
-      }),
-    };
-  }, [permission]);
+  const navigate = useNavigate();
+  const r = route;
+  // setUpToolbar(() => {
+  //   return {
+  //     ...(permission?.create && {
+  //       addNew: () => {
+  //         navigate(r.toRoute({
+  //           main:r.currencyExchange,
+  //           routeSufix:["new"],
+  //         }))
+  //       },
+  //     }),
+  //   };
+  // }, [permission]);
   return (
     <>
-      <DataTable
-        paginationOptions={{
-          rowCount: paginationResult?.total,
-        }}
-        data={paginationResult?.results || []}
-        columns={currencyExchangeColumns({})}
-        enableSizeSelection={true}
-      />
+      <ListLayout
+        title="Cambio de Divisas"
+        {...(permission?.create && {
+          onCreate: () => {
+            navigate(
+              r.toRoute({
+                main: r.currencyExchange,
+                routeSufix: ["new"],
+              })
+            );
+          },
+        })}
+      >
+        <DataTable
+          paginationOptions={{
+            rowCount: paginationResult?.total,
+          }}
+          data={paginationResult?.results || []}
+          columns={currencyExchangeColumns({})}
+          enableSizeSelection={true}
+        />
+      </ListLayout>
     </>
   );
 }

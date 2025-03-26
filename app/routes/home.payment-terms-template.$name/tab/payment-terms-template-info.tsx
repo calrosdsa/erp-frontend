@@ -1,12 +1,12 @@
 import {  useOutletContext } from "react-router";
 import { action, loader } from "../route";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { State, stateFromJSON } from "~/gen/common";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { setUpToolbarTab, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbarTab, useLoadingTypeToolbar, useSetupToolbarStore } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { mapToPaymentTermsLineSchema, paymentTermsTemplateDataSchema, PaymentTermsTemplateType } from "~/util/data/schemas/document/payment-terms-template.schema";
 import PaymentTermsTemplateData from "~/routes/home.payment-terms-template.new/payment-terms-template-data";
@@ -22,6 +22,7 @@ export default function TermsAndConditionsInfo(){
       const status = stateFromJSON(entity?.status);
       const fetcher = useFetcher<typeof action>();
       const allowEdit = permission.edit || status == State.ENABLED;
+      const {setRegister} =  useSetupToolbarStore()
       const { form, updateRef } = useEditFields<PaymentTermsTemplateType>({
         schema: paymentTermsTemplateDataSchema,
         defaultValues: {
@@ -44,14 +45,15 @@ export default function TermsAndConditionsInfo(){
           }
         );
       };
-      setUpToolbarTab(() => {
-        return {
+      useEffect(()=>{
+        setRegister("tab",{
           onSave: () => {
             inputRef.current?.click();
           },
           disabledSave: !allowEdit,
-        };
-      }, [allowEdit, entity]);
+        })
+      },[allowEdit,entity])
+      
   
       useLoadingTypeToolbar(
         {

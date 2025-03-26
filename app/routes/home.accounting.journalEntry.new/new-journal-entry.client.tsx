@@ -26,8 +26,13 @@ import {
 } from "../home.accounting.journalEntry.$name/components/journal-entry-line";
 import { GlobalState } from "~/types/app-types";
 import { DEFAULT_CURRENCY } from "~/constant";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useRef } from "react";
+import CreateLayout from "@/components/layout/create-layout";
+import { party } from "~/util/party";
 
 export default function NewJournalEntryClient() {
   const { t } = useTranslation("common");
@@ -39,7 +44,7 @@ export default function NewJournalEntryClient() {
       lines: [],
     },
   });
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const journalEntryLine = useJournalEntryLine();
   const { companyDefaults } = useOutletContext<GlobalState>();
@@ -128,73 +133,81 @@ export default function NewJournalEntryClient() {
 
   setUpToolbar(() => {
     return {
+      titleToolbar: t("f.add-new", { o: t(party.journalEntry) }),
       onSave: () => {
         inputRef.current?.click();
       },
     };
   }, []);
 
-  useLoadingTypeToolbar({
-    loading:fetcher.state == "submitting",
-    loadingType:"SAVE"
-  }, [fetcher.state]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
   useDisplayMessage(
     {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
-      onSuccessMessage:()=>{
-        navigate(r.toRoute({
-          main:r.journalEntry,
-          routePrefix:[r.accountingM],
-          routeSufix:[fetcher.data?.journalEntry?.code || ""]
-        }))
-      }
+      onSuccessMessage: () => {
+        navigate(
+          r.toRoute({
+            main: r.journalEntry,
+            routePrefix: [r.accountingM],
+            routeSufix: [fetcher.data?.journalEntry?.code || ""],
+          })
+        );
+      },
     },
     [fetcher.data]
   );
   return (
-    <FormLayout>
-      {journalEntryLine.open && (
-        <JournalEntryLine open={journalEntryLine.open} />
-      )}
-      <Form {...form}>
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="create-grid">
-            {/* <Typography className=" col-span-full" variant="title2">
+    <CreateLayout>
+      <FormLayout>
+        {journalEntryLine.open && (
+          <JournalEntryLine open={journalEntryLine.open} />
+        )}
+        <Form {...form}>
+          <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="create-grid">
+              {/* <Typography className=" col-span-full" variant="title2">
               {t("_payment.type")}
-            </Typography> */}
-            <CustomFormDate
-              form={form}
-              name="postingDate"
-              label={t("form.date")}
-            />
-            <SelectForm
-              form={form}
-              data={entryTypes}
-              label={t("form.entryTypes")}
-              keyName={"name"}
-              keyValue={"value"}
-              name="entryType"
-            />
-            <Separator className=" col-span-full" />
-            <div className="col-span-full">
-              <Typography variant="subtitle2">{t("form.entries")}</Typography>
-              <DataTable
-                data={form.getValues().lines}
-                columns={journalEntryLineColumns()}
-                metaOptions={{
-                  meta: {
-                    ...metaOptions,
-                    enableTooltipMessage: false,
-                  },
-                }}
+              </Typography> */}
+              <CustomFormDate
+                form={form}
+                name="postingDate"
+                label={t("form.date")}
               />
+              <SelectForm
+                form={form}
+                data={entryTypes}
+                label={t("form.entryTypes")}
+                keyName={"name"}
+                keyValue={"value"}
+                name="entryType"
+              />
+              <Separator className=" col-span-full" />
+              <div className="col-span-full">
+                <Typography variant="subtitle2">{t("form.entries")}</Typography>
+                <DataTable
+                  data={form.getValues().lines}
+                  columns={journalEntryLineColumns()}
+                  metaOptions={{
+                    meta: {
+                      ...metaOptions,
+                      enableTooltipMessage: false,
+                    },
+                  }}
+                />
+              </div>
             </div>
-          </div>
-          <input ref={inputRef} type="submit" className="hidden" />
-        </fetcher.Form>
-      </Form>
-    </FormLayout>
+            <input ref={inputRef} type="submit" className="hidden" />
+          </fetcher.Form>
+        </Form>
+      </FormLayout>
+    </CreateLayout>
   );
 }
