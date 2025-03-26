@@ -9,8 +9,14 @@ import { route } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
+import { TableCellBase } from "../../cells/table-cell";
+import { openCustomerModal } from "~/routes/home.customer.$id/route";
 
-export const customerColumns = ({}): ColumnDef<
+export const customerColumns = ({
+  openModal,
+}: {
+  openModal: (key: string, value: string) => void;
+}): ColumnDef<
   components["schemas"]["CustomerDto"]
 >[] => {
   const { t, i18n } = useTranslation("common");
@@ -22,21 +28,14 @@ export const customerColumns = ({}): ColumnDef<
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
-          <TableCellNameNavigation
+          <TableCellBase
+            className="font-semibold underline cursor-pointer"
             {...props}
-            navigate={(name) =>
-              r.toRoute({
-                main: partyTypeToJSON(PartyType.customer),
-                routePrefix: [r.sellingM],
-                routeSufix: [name],
-                q: {
-                  tab: "info",
-                  id:rowData.uuid,
-                },
-              })
+            onClick={() =>
+                openCustomerModal(rowData.id.toString(), openModal)
             }
           />
-        );
+        )
       },
     },
     {

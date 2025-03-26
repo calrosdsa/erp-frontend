@@ -11,7 +11,7 @@ import {
 import { ChevronsUpDown, PlusIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { EventState, State } from "~/gen/common";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { Typography } from "@/components/typography";
 import { cn } from "@/lib/utils";
 import { useConfirmationDialog } from "../drawer/ConfirmationDialog";

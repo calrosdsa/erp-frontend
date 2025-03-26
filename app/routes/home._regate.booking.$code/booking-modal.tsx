@@ -42,6 +42,7 @@ import ModalLayout, {
 } from "@/components/ui/custom/modal-layout";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
+import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 
 export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
   const fetcher = useFetcher<typeof action>();
@@ -62,6 +63,7 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
     roleActions: appContext.roleActions,
     actions: data?.actions,
   });
+  const { onOpenDialog } = useConfirmationDialog();
   const { setPayload } = useModalStore();
 
   const updateStatus = (
@@ -99,7 +101,12 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
             party_id: booking?.id.toString() || "",
             events: [EventState.COMPLETED_EVENT],
           };
-          updateStatus(body);
+          onOpenDialog({
+            title: "Por favor, confirme antes de continuar con la acción requerida.",
+            onConfirm: () => {
+              updateStatus(body);
+            },
+          });
         },
       });
     }

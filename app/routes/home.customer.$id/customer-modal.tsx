@@ -15,47 +15,63 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import CustomerConnections from "./components/tab/customer-connections";
 import { ButtonToolbar } from "~/types/actions";
 import { endOfMonth, format, startOfMonth } from "date-fns";
-import { EventState, PartyType, partyTypeToJSON, State, stateFromJSON } from "~/gen/common";
+import {
+  EventState,
+  PartyType,
+  partyTypeToJSON,
+  State,
+  stateFromJSON,
+} from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import ModalLayout, {
+  useModalStore,
+} from "@/components/ui/custom/modal-layout";
+import { useEffect, useState } from "react";
+import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
+import TabNavigation from "@/components/ui/custom/tab-navigation";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 
-export default function CustomerClient() {
-  const { customer, actions, activities } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher<typeof action>()
-  const [searchParams] = useSearchParams();
-  const tab = searchParams.get("tab");
+export default function CustomerModal({
+  appContext,
+}: {
+  appContext: GlobalState;
+}) {
+  const fetcherLoader = useFetcher<typeof loader>({ key: "customer" });
+  const data = fetcherLoader.data;
+  const customer = fetcherLoader.data?.customer;
+  const [open, setOpen] = useState(true);
+  // const { customer, actions, activities } = useLoaderData<typeof loader>();
+  const fetcher = useFetcher<typeof action>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get("tab") || "info";
   const { t, i18n } = useTranslation("common");
   const r = route;
+  const customerID = searchParams.get(route.customer);
   const navigate = useNavigate();
-  const { roleActions } =  useOutletContext<GlobalState>()
+  const { setToolbar } = useToolbar();
   const [permission] = usePermission({
-    roleActions,actions,
-  })
-  
-  const toRoute = (tab: string) => {
-    return r.toRoute({
-      main: r.customerM,
-      routePrefix: [r.sellingM],
-      routeSufix: [customer?.name || ""],
-      q: {
-        tab: tab,
-        id: customer?.uuid || "",
-      },
-    });
+    roleActions: appContext.roleActions,
+    actions: data?.actions,
+  });
+
+  const initData = () => {
+    fetcherLoader.submit(
+      {},
+      {
+        action: route.toRoute({
+          main: route.customer,
+          routeSufix: [customerID || ""],
+        }),
+      }
+    );
   };
-  const navItems = [
-    {
-      title: t("info"),
-      href: toRoute("info"),
-    },
-    // {
-    //   title: t("connections"),
-    //   href: toRoute("connections"),
-    // },
-  ];
+  useEffect(() => {
+    initData();
+  }, []);
 
   const onChangeState = (e: EventState) => {
     const body: z.infer<typeof updateStatusWithEventSchema> = {
@@ -71,20 +87,27 @@ export default function CustomerClient() {
       {
         method: "POST",
         encType: "application/json",
+        action: route.toRoute({
+          main: route.customer,
+          routeSufix: [customer?.id.toString() || ""],
+        }),
       }
     );
   };
 
-  useDisplayMessage({
-    error:fetcher.data?.error,
-    success:fetcher.data?.message,
- },[fetcher.data])
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+    },
+    [fetcher.data]
+  );
 
-  setUpToolbar(() => {
+  useEffect(() => {
     const state = stateFromJSON(customer?.status);
 
     let view: ButtonToolbar[] = [];
-    let actions:ButtonToolbar[] = []
+    let actions: ButtonToolbar[] = [];
     if (permission.edit && state == State.ENABLED) {
       actions.push({
         label: "Deshabilitar",
@@ -136,22 +159,62 @@ export default function CustomerClient() {
         );
       },
     });
-    return {
+
+    console.log("SET TOOLBAR")
+    setToolbar({
       view: view,
-      triggerTabs:true,
-      actions:actions,
+      actions: actions,
       status: stateFromJSON(customer?.status),
-    };
-  }, [customer,permission]);
+    });
+  }, [fetcherLoader.data]);
+
+  useEffect(() => {
+    if (!open) {
+      searchParams.delete(route.customer);
+      setSearchParams(searchParams, {
+        preventScrollReset: true,
+      });
+    }
+  }, [open]);
 
   return (
-    <DetailLayout
-      activities={activities}
-      partyID={customer?.id}
-      navItems={navItems}
+    <ModalLayout
+      open={open}
+      onOpenChange={(e) => {
+        setOpen(e);
+      }}
+      title={customer?.name || ""}
     >
-      {tab == "info" && <CustomerInfo />}
-      {tab == "connections" && <CustomerConnections />}
-    </DetailLayout>
+      {fetcherLoader.state == "loading" && !fetcherLoader.data ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <TabNavigation
+            defaultValue={tab}
+            onValueChange={(value) => {
+              searchParams.set("tab", value);
+              setSearchParams(searchParams, {
+                preventScrollReset: true,
+              });
+            }}
+            items={[
+              {
+                label: "Info",
+                value: "info",
+                children: <CustomerInfo appContext={appContext} />,
+              },
+            ]}
+          />
+        </>
+      )}
+    </ModalLayout>
+    // <DetailLayout
+    //   activities={activities}
+    //   partyID={customer?.id}
+    //   navItems={navItems}
+    // >
+    //   {tab == "info" && <CustomerInfo />}
+    //   {tab == "connections" && <CustomerConnections />}
+    // </DetailLayout>
   );
 }

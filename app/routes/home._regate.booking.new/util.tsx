@@ -11,7 +11,7 @@ import {
 import { z } from "zod";
 import { components } from "~/sdk";
 import { validateBookingSchema } from "~/util/data/schemas/regate/booking-schema";
-import { generateTimeIntervals } from "../home._regate.court.$name/util/generate-court-rate-interval";
+import { generateTimeIntervals } from "../home._regate.court.$id/util/generate-court-rate-interval";
 
 export const mapToBookingData = (
   values: z.infer<typeof validateBookingSchema>

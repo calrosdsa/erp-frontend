@@ -26,7 +26,7 @@ import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDi
 import { State, stateFromJSON } from "~/gen/common";
 import { ButtonToolbar } from "~/types/actions";
 import { components } from "~/sdk";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 const defaultPricingCharges = [
   { name: "Flete", rate: 0.07, orderID: 1 },
   { name: "Importacion", rate: 0.13, orderID: 2 },

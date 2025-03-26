@@ -1,5 +1,5 @@
 import { DependencyList, useEffect } from "react";
-import { SetupToolbarOpts, useToolbar } from "./useToolbar";
+import { SetupToolbarOpts, useToolbar } from "./use-toolbar";
 import { useToast } from "@/components/ui/use-toast";
 
 interface DisplayMessageProps {

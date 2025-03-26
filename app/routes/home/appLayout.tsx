@@ -5,7 +5,7 @@ import { GlobalState } from "~/types/app-types";
 import { useSessionDefaults } from "./components/SessionDefaults";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { useUnmount } from "usehooks-ts";
 import {
   SidebarInset,
@@ -95,7 +95,7 @@ export default function AppLayout({
               gap-1
             "
             >
-              <ToolBar title={getRouteName()} />
+              {/* <ToolBar title={getRouteName()} /> */}
 
               <div className="h-full  max-w-[1500px]">{children}</div>
             </div>

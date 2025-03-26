@@ -49,7 +49,8 @@ class Routes {
   sellingStock = this.selling + "/stock";
   customerGroups = this.selling + "/customer-groups";
   customers = this.base + "/customer";
-  customerM = "customer";
+
+  customer = "customer";
 
   priceList = "priceList";
 
@@ -438,7 +439,7 @@ class Routes {
     switch (partyType) {
       case PartyType[PartyType.customer]:
         return `${this.base}/${this.sellingM}/${
-          this.customerM
+          this.customer
         }/${encodeURIComponent(name)}?id=${id}&tab=info`;
       case PartyType[PartyType.supplier]:
         return `${this.base}/${this.buyingM}/${
@@ -510,8 +511,8 @@ class Routes {
   }
 
   //Regate
-  court = this.base + "/court";
-  courtM = "court";
+  // court = this.base + "/court";
+  court = "court";
   booking = "booking";
   bookingM = "booking";
   event = this.base + "/event";

@@ -18,7 +18,7 @@ import { useEffect, useRef } from "react";
 import { toast, useToast } from "@/components/ui/use-toast";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { useEditFields } from "~/util/hooks/useEditFields";
 
 export default function ProfileInfo() {

@@ -7,7 +7,7 @@ import ActivityDeadlineTab from "../tab/activity-deadline-tab";
 import CommentActivityTab from "../tab/activity-comment-tab";
 import { GlobalState } from "~/types/app-types";
 
-export default function TabNavigation({
+export default function TabNavigationActivity({
   partyID,
   partyName,
   entityID,

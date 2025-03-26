@@ -23,7 +23,7 @@ import {
 import { ButtonToolbar } from "~/types/actions";
 import PricingInfo from "./components/pricing-info";
 import { useRef } from "react";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { Entity } from "~/types/enums";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 import PricingConnections from "./components/pricing-connections";

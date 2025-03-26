@@ -26,7 +26,7 @@ import {
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import PaymentData from "~/routes/home.payment.new/payment-data";
 import { isEmpty } from "lodash";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
 type PaymentDataSchema = z.infer<typeof paymentDataSchema>;

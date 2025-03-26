@@ -25,7 +25,7 @@ import {
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
 import { ReceiptData } from "~/routes/home.receipt.$partyReceipt.new/receipt-data";
 import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";

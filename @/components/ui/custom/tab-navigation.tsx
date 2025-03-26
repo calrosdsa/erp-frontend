@@ -19,7 +19,7 @@ export default function TabNavigation({
   defaultValue?:string
 }) {
   return (
-    <div className="w-full">
+    <div className="w-full pt-2">
       <Tabs defaultValue={defaultValue} onValueChange={onValueChange}>
         <TabsList
           className="h-auto w-full p-0 border rounded-xl bg-transparent px-4

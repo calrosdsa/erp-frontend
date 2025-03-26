@@ -6,7 +6,7 @@ import { GlobalState } from "~/types/app-types"
 import { usePermission } from "~/util/hooks/useActions"
 import { CreateRole, useCreateRole } from "./components/create-rol"
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar"
-import { useToolbar } from "~/util/hooks/ui/useToolbar"
+import { useToolbar } from "~/util/hooks/ui/use-toolbar"
 import { useTranslation } from "react-i18next"
 
 

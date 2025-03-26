@@ -17,15 +17,19 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { useEditFields } from "~/util/hooks/useEditFields";
+import { route } from "~/util/route";
 
 type EditType = z.infer<typeof editCourtSchema>;
-export default function CourtInfoTab() {
+export default function CourtInfoTab({appContext}:{
+  appContext:GlobalState
+}) {
   const { t } = useTranslation("common");
-  const { court, actions } = useLoaderData<typeof loader>();
+  const fetcherLoader = useFetcher<typeof loader>({key:route.court})
+  const data = fetcherLoader.data
+  const court = data?.court
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { roleActions } = useOutletContext<GlobalState>();
-  const [permission] = usePermission({ roleActions, actions });
+  const [permission] = usePermission({ roleActions:appContext.roleActions, actions:data?.actions });
   const fetcher = useFetcher<typeof action>();
   const defaultValues = {
     name: court?.name,

@@ -25,7 +25,7 @@ export default function ContactClient() {
   });
   const toRoute = (tab: string) => {
     return r.toRoute({
-      main: r.customerM,
+      main: r.customer,
       routePrefix: [r.sellingM],
       routeSufix: [contact?.name || ""],
       q: {

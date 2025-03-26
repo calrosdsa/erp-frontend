@@ -10,7 +10,7 @@ import {
 import { HomeIcon } from "lucide-react";
 import GlobalDialogs from "./components/dialogs";
 import ToolBar from "@/components/layout/toolbar/Toolbar";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { useUnmount } from "usehooks-ts";
 import { Typography } from "@/components/typography";
 import {

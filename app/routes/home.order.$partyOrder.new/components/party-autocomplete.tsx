@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier";
-import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
+import { useCreateCustomer } from "~/routes/home.customer_/components/create-customer";
 import { components } from "~/sdk";
 import { GlobalState } from "~/types/app-types";
 import { orderDataSchema } from "~/util/data/schemas/buying/order-schema";

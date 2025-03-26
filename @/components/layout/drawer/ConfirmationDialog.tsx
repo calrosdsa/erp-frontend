@@ -49,21 +49,23 @@ export function ConfirmationDialog({
           <AlertDialogTitle className="flex items-center gap-2 ">
             {payload?.title || "Por favor, confirma antes de proceder."}
           </AlertDialogTitle>
-              <AlertDialogDescription className="p-2 border rounded-md">
-                {payload?.description || ""}
-              </AlertDialogDescription>
+          {payload?.description && (
+            <AlertDialogDescription className="p-2 border rounded-md">
+              {payload?.description}
+            </AlertDialogDescription>
+          )}
         </AlertDialogHeader>
         <AlertDialogDescription className="sm:justify-start">
-            <div className="flex flex-col-reverse sm:flex-row w-full sm:justify-between gap-2">
-              <AlertDialogCancel onClick={handleCancel}>
-                {payload?.cancelLabel || "Cancelar"}
-              </AlertDialogCancel>
-          {!payload?.hideConfirmButton && (
+          <div className="flex flex-col-reverse sm:flex-row w-full sm:justify-between gap-2">
+            <AlertDialogCancel onClick={handleCancel}>
+              {payload?.cancelLabel || "Cancelar"}
+            </AlertDialogCancel>
+            {!payload?.hideConfirmButton && (
               <AlertDialogAction onClick={handleConfirm}>
                 {payload?.confirmLabel || "Confirmar"}
               </AlertDialogAction>
-          )}
-            </div>
+            )}
+          </div>
         </AlertDialogDescription>
       </AlertDialogContent>
     </AlertDialog>

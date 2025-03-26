@@ -24,7 +24,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { QuotationData } from "~/routes/home.quotation.$quotationParty.new/quotation-data";
 import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 
 type EditData = z.infer<typeof quotationDataSchema>;

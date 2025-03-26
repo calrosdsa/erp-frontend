@@ -31,7 +31,7 @@ import { useCreateEvent } from "~/routes/home._regate.event_/components/use-crea
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
+import { useCreateCustomer } from "~/routes/home.customer_/components/create-customer";
 import { useNewBooking } from "../use-new-booking";
 import { Textarea } from "@/components/ui/textarea";
 import BookingDetails from "./bookings-details";

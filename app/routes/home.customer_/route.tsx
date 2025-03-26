@@ -2,11 +2,12 @@ import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
 import CustomersClient from "./customers-client";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE, LOAD_ACTION } from "~/constant";
 import { z } from "zod";
 import { createCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
 import { components } from "~/sdk";
 import { mapToContactData } from "~/util/data/schemas/contact/contact.schema";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
@@ -45,12 +46,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const d = data.createCustomer;
       const res = await client.POST("/customer", {
         body: {
-          customer:{
+          customer: {
             name: d.name,
             customer_type: d.customerType,
             group_id: d.groupID,
           },
-          contact:mapToContactData(d.contactData)
+          contact: d.contactData ? mapToContactData(d.contactData) : undefined,
         },
       });
       message = res.data?.message;
@@ -66,6 +67,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     actions,
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

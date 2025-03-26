@@ -5,7 +5,7 @@ import {
   LoaderFunctionArgs,
   redirect,
 } from "@remix-run/node";
-import CustomerClient from "./customer.client";
+import CustomerModal from "./customer-modal";
 import apiClient from "~/apiclient";
 import { FetchResponse } from "openapi-fetch";
 import { handleError } from "~/util/api/handle-status-code";
@@ -80,14 +80,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   const tab = searchParams.get("tab");
-  console.log("NAME -----", params.name);
+  console.log(" LOADER CUSTOMER NAME -----", params.name);
   const r = route;
   let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
   const res = await client.GET("/customer/detail/{id}", {
     params: {
       path: {
-        id: searchParams.get("id") || "",
+        id: params.id || "",
       },
     },
   });
@@ -121,6 +121,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   });
 };
 
+
+export const openCustomerModal = (id?:string,callback?:(key:string,value:string)=>void) => {
+  if(id && callback){
+    callback(route.customer, id);
+  }
+};
+
 // export const shouldRevalidate: ShouldRevalidateFunction = ({
 //   actionResult,
 //   defaultShouldRevalidate,
@@ -139,6 +146,3 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 //   //
 //   // return defaultShouldRevalidate;
 // };
-export default function Customer() {
-  return <CustomerClient />;
-}

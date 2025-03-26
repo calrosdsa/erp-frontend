@@ -72,7 +72,7 @@ export const bookingColumns = ({
               {...props}
               navigate={(name) =>
                 r.toRoute({
-                  main: r.customerM,
+                  main: r.customer,
                   routePrefix: [r.sellingM],
                   routeSufix: [name || ""],
                   q: {
@@ -176,7 +176,7 @@ export const bookingColumns = ({
               {...props}
               navigate={(name) =>
                 r.toRoute({
-                  main: r.courtM,
+                  main: r.court,
                   routeSufix: [name || ""],
                   q: {
                     tab: "info",

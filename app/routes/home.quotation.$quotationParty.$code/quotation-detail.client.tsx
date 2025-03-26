@@ -10,7 +10,7 @@ import { action, loader } from "./route";
 import { GlobalState } from "~/types/app-types";
 import QuotationInfoTab from "./components/tab/quotation-info";
 import { useTranslation } from "react-i18next";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { stateFromJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";

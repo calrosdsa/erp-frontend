@@ -203,6 +203,21 @@ export default function Activity({
           </TimelineContent>
         </>
       );
+      case ActivityType.EDIT:
+        return (
+          <>
+            <div className="flex flex-col items-center">
+              <div className="relative ">
+                <TimelineIcon Icon={InfoIcon} color="#A3A8C8" />
+              </div>
+            </div>
+  
+            {/* Content */}
+            <TimelineContent className={cn()}>
+              <AcitivityHeader i18n={i18n} activity={activity} title="Editado" />
+            </TimelineContent>
+          </>
+        );
     case ActivityType.INFO:
       const data = parseActivityInfoData(activity.data);
       return (

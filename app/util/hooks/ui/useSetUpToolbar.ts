@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { LoadingType, SetupToolbarOpts, useToolbar } from "./useToolbar";
+import { LoadingType, SetupToolbarOpts, useToolbar } from "./use-toolbar";
 import { create } from "zustand";
 
 export const setUpToolbar = (

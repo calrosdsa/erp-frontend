@@ -5,7 +5,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { paymentDataSchema } from "~/util/data/schemas/accounting/payment-schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { route } from "~/util/route";
 import { action, loader } from "./route";
 import { usePaymentStore } from "./payment-store";

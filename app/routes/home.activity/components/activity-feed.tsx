@@ -21,7 +21,7 @@ import { useToast } from "../../../../@/components/ui/use-toast";
 import { ActivityType, activityTypeToJSON } from "~/gen/common";
 import { Card, CardContent } from "@/components/ui/card";
 
-import TabNavigation from "./tab-navigation";
+import TabNavigationActivity from "./tab-navigation";
 import { TimelineActivityLayout } from "~/routes/home.activity/components/timeline/timeline-activity-layout";
 import { TimelineElement } from "~/types/ui-lyout";
 import { GlobalState } from "~/types/app-types";
@@ -55,7 +55,7 @@ export default function ActivityFeed({
         <Card className="w-full mx-auto">
           <CardContent>
             <div className="flex justify-between items-center mb-4">
-              <TabNavigation
+              <TabNavigationActivity
                 appContext={appContext}
                 partyID={partyID}
                 partyName={partyName || ""}

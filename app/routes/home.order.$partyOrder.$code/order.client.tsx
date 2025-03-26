@@ -19,7 +19,7 @@ import {
   stateFromJSON,
 } from "~/gen/common";
 import { useEffect } from "react";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { DownloadIcon, PlusIcon } from "lucide-react";
 import { route } from "~/util/route";

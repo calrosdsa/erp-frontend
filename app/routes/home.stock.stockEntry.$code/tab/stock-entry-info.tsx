@@ -18,7 +18,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { action, loader } from "../route";
 import { StockEntryData } from "~/routes/home.stock.stockEntry.new/stock-entry-data";
 import { stockEntryDataSchema } from "~/util/data/schemas/stock/stock-entry-schema";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import { party } from "~/util/party";
 

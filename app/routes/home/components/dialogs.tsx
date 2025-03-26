@@ -48,7 +48,7 @@ import {
 import {
   CreateCustomer,
   useCreateCustomer,
-} from "~/routes/home.selling.customer_/components/create-customer";
+} from "~/routes/home.customer_/components/create-customer";
 import {
   AddPriceList,
   useCreatePriceList,

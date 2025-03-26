@@ -3,7 +3,7 @@ import { Control } from "react-hook-form";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { useCreateCustomer } from "~/routes/home.selling.customer_/components/create-customer";
+import { useCreateCustomer } from "~/routes/home.customer_/components/create-customer";
 import { components } from "~/sdk";
 import { route } from "~/util/route";
 import { usePermission } from "../useActions";

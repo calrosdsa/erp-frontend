@@ -13,7 +13,7 @@ import CustomFormField from "@/components/custom/form/CustomFormField";
 import { Input } from "@/components/ui/input";
 import CheckForm from "@/components/custom/input/CheckForm";
 import { useEffect, useRef } from "react";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
@@ -59,7 +59,7 @@ export default function NewCourtClient() {
           const court = fetcher.data.court;
           navigate(
             r.toRoute({
-              main: r.courtM,
+              main: r.court,
               routeSufix: [court.name],
               q: {
                 tab: "info",

@@ -17,7 +17,7 @@ import React, { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { ClientOnly } from "remix-utils/client-only";
 import { useUnmount } from "usehooks-ts";
-import { useToolbar } from "~/util/hooks/ui/useToolbar";
+import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 
 export default function AdminClient({ children }: { children: ReactNode }) {
   const location = useLocation();
