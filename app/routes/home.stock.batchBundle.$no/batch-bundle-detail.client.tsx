@@ -10,15 +10,16 @@ import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import BatchBundleInfo from "./tab/project-info";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { format } from "date-fns";
 import { ButtonToolbar } from "~/types/actions";
 import { stateFromJSON } from "~/gen/common";
+import { Entity } from "~/types/enums";
 
 export default function BatchBundleDetailClient() {
-  const { batchBundle, actions } = useLoaderData<typeof loader>();
+  const { batchBundle, actions, activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const r = route;
   const [searchParams] = useSearchParams();
@@ -30,12 +31,8 @@ export default function BatchBundleDetailClient() {
     actions: actions,
   });
   const toRoute = (tab: string) => {
-    return r.toRoute({
-      main: r.project,
-      routeSufix: [batchBundle?.batch_bundle_no || ""],
-      q: {
-        tab: tab,
-      },
+    return r.toRouteDetail(route.batchBundle,batchBundle?.batch_bundle_no || "",{
+      tab:tab
     });
   };
   const navItems: NavItem[] = [
@@ -44,7 +41,7 @@ export default function BatchBundleDetailClient() {
       href: toRoute("info"),
     },
   ];
-  setUpToolbar(() => {
+  setUpToolbarRegister(() => {
     let buttons: ButtonToolbar[] = [];
     if (permission?.view) {
       buttons.push({
@@ -67,11 +64,18 @@ export default function BatchBundleDetailClient() {
       });
     }
     return {
+      titleToolbar:batchBundle?.batch_bundle_no,
       buttons: buttons,
     };
-  }, [permission]);
+  }, [permission,batchBundle]);
   return (
-    <DetailLayout partyID={batchBundle?.id} navItems={navItems}>
+    <DetailLayout
+      partyID={batchBundle?.id}
+      partyName={batchBundle?.batch_bundle_no}
+      entityID={Entity.BATCH_BUNDLE}
+      navItems={navItems}
+      activities={activities}
+    >
       {tab == "info" && <BatchBundleInfo />}
     </DetailLayout>
   );

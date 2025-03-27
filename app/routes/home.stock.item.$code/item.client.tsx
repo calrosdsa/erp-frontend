@@ -74,7 +74,6 @@ export default function ItemDetailClient() {
         navigate(
           r.toRoute({
             main: r.stockBalance,
-            routePrefix: [r.stockM],
             q: {
               fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
               toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
@@ -91,7 +90,6 @@ export default function ItemDetailClient() {
         navigate(
           r.toRoute({
             main: r.stockLedger,
-            routePrefix: [r.stockM],
             q: {
               fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
               toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
@@ -116,8 +114,7 @@ export default function ItemDetailClient() {
           });
           navigate(
             r.toRoute({
-              main: partyTypeToJSON(PartyType.itemPrice),
-              routePrefix: [r.stockM],
+              main:route.itemPrice,
               routeSufix: ["new"],
             })
           );

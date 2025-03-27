@@ -10,6 +10,7 @@ import WarehouseInfo from "./tab/warehouse-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { endOfMonth, format, startOfMonth } from "date-fns";
+import { Entity } from "~/types/enums";
 
 export default function WareHouseClient() {
   const globalState = useOutletContext<GlobalState>()
@@ -22,14 +23,9 @@ export default function WareHouseClient() {
   const navItems = [
     {
       title: t("info"),
-      href: r.toRoute({
-        main:partyTypeToJSON(PartyType.warehouse),
-        routePrefix:[r.stockM],
-        routeSufix:[warehouse?.name || ""],
-        q:{
-          tab:"info",
-          id:warehouse?.uuid,
-        }
+      href: r.toRouteDetail(route.warehouse,warehouse?.name || "",{
+        tab:"info",
+        id:warehouse?.id.toString() || "",
       }),
     }
   ];
@@ -40,28 +36,28 @@ export default function WareHouseClient() {
       label: t("stockBalance"),
       onClick: () => {
         navigate(
-          r.toRoute({
-            main: r.stockBalance,
-            routePrefix: [r.stockM],
-            q: {
-              fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
-              toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
-              warehouseName: warehouse?.name,
-              warehouse: warehouse?.id.toString(),
-            },
+          r.to(route.stockBalance,{
+            fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
+            toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
+            warehouseName: warehouse?.name,
+            warehouse: warehouse?.id.toString(),
           })
+         
         );
       },
     });
     return {
-      view:views
+      titleToolbar:warehouse?.name,
+      view:views,
     }
-  },[])
+  },[warehouse])
   return (
    <DetailLayout 
    navItems={navItems}
+   partyName={warehouse?.name}
    partyID={warehouse?.id}
    activities={activities}
+   entityID={Entity.ITEM_WAREHOUSE}
    >
     {tab == "info" && 
     <WarehouseInfo/>

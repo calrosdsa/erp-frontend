@@ -1,14 +1,19 @@
 class Parties {
-
+  
+  contact = "contact"
+  address = "address"
   customer = "customer";
+  warehouse = 'warehouse';
   supplier = "supplier";
   purchaseInvoice = "purchaseInvoice";
   saleInvoice = "saleInvoice";
   payment = "payment";
   ledger = "ledger";
   module = "module"
-  
+  role = "role";
   accountLedger = "account";
+
+  itemPrice = "itemPrice";
 
   purchaseReceipt = "purchaseReceipt";
   deliveryNote = "deliveryNote";
@@ -21,6 +26,7 @@ class Parties {
   stockEntry = "stockEntry";
   project = "project";
   pricing = "pricing";
+  priceList = "priceList";
   serialNo = "serialNo";
   batchBundle = "batchBundle";
   invoicing = "invoicing";

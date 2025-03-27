@@ -19,6 +19,7 @@ export const pricelistItemColums = (): ColumnDef<
       accessorKey: "name",
       header: t("form.name"),
       cell: ({ ...props }) => {
+        const rowData = props.row.original
         return (
           <TableCellNameNavigation
             {...props}
@@ -29,6 +30,7 @@ export const pricelistItemColums = (): ColumnDef<
                 routeSufix: [name],
                 q: {
                   tab: "info",
+                  id:rowData.id.toString()
                 },
               })
             }

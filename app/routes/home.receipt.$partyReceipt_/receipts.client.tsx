@@ -18,12 +18,14 @@ import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
 import DataLayout from "@/components/layout/data-layout";
 import { PartySearch } from "../home.order.$partyOrder.new/components/party-autocomplete";
+import { ListLayout } from "@/components/ui/custom/list-layout";
+import { party } from "~/util/party";
 
 export default function ReceiptsClient() {
-  const { paginationResult, actions,filters } = useLoaderData<typeof loader>();
+  const { paginationResult, actions, filters } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const params = useParams();
-  const partyReceipt = params.partyReceipt || ""
+  const partyReceipt = params.partyReceipt || "";
   const r = route;
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -32,43 +34,44 @@ export default function ReceiptsClient() {
     roleActions: globalState.roleActions,
   });
   const { resetDocument } = useResetDocument();
-  setUpToolbar(() => {
-    return {
-      ...(permission?.create && {
-        addNew: () => {
+
+
+  return (
+    <ListLayout
+      title={t(partyReceipt)}
+      {...(permission?.create && {
+        onCreate: () => {
           resetDocument();
           navigate(r.toCreateReceipt(partyTypeFromJSON(partyReceipt)));
         },
-      }),
-    };
-  }, [permission]);
-
-  return (
-    <DataLayout
-      filterOptions={filters}
-      orderOptions={[
-        { name: "Fecha de Creación", value: "created_at" },
-        { name: t("form.status"), value: "status" },
-      ]}
-      fixedFilters={() => {
-        return (
-          <>
-            <PartySearch party={partyReceipt} />
-          </>
-        );
-      }}
+      })}
     >
-      <DataTable
-        paginationOptions={{
-          rowCount: paginationResult?.total,
+      <DataLayout
+        filterOptions={filters}
+        orderOptions={[
+          { name: "Fecha de Creación", value: "created_at" },
+          { name: t("form.status"), value: "status" },
+        ]}
+        fixedFilters={() => {
+          return (
+            <>
+              <PartySearch party={partyReceipt} />
+            </>
+          );
         }}
-        enableSizeSelection={true}
-        data={paginationResult?.results || []}
-        columns={receiptColumns({
-          receiptPartyType:
-            params.partyReceipt || PartyType[PartyType.purchaseReceipt],
-        })}
-      />
-    </DataLayout>
+      >
+        <DataTable
+          paginationOptions={{
+            rowCount: paginationResult?.total,
+          }}
+          enableSizeSelection={true}
+          data={paginationResult?.results || []}
+          columns={receiptColumns({
+            receiptPartyType:
+              params.partyReceipt || PartyType[PartyType.purchaseReceipt],
+          })}
+        />
+      </DataLayout>
+    </ListLayout>
   );
 }

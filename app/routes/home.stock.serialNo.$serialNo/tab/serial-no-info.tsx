@@ -7,7 +7,7 @@ export default function SerialNoInfo() {
   const { t } = useTranslation("common");
   const { serialNo } = useLoaderData<typeof loader>();
   return (
-    <div className="info-grid">
+    <div className="detail-grid">
       <DisplayTextValue title={t("serialNo")} value={serialNo?.serial_no} />
 
       <DisplayTextValue title={t("item")} value={serialNo?.item_name} />

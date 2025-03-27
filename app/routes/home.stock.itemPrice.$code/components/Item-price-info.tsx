@@ -5,13 +5,14 @@ import { route } from "~/util/route";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { editItemPriceSchema } from "~/util/data/schemas/stock/item-price-schema";
 import { z } from "zod";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
+  useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -43,10 +44,11 @@ export default function ItemPriceInfo() {
       itemQuantity: itemPrice?.item_quantity,
       priceList: itemPrice?.price_list_name,
       priceListID: itemPrice?.price_list_id,
-      uom: itemPrice?.uom,
-      uomID: itemPrice?.uom_id,
+      uom: itemPrice?.item_uom,
+      uomID: itemPrice?.item_uom_id,
     },
   });
+  const {setRegister} = useSetupToolbarStore()
   const allowEdit = currencyExchangePerm?.edit || false;
 
   const onSubmit = (e: EditData) => {
@@ -69,16 +71,14 @@ export default function ItemPriceInfo() {
     [fetcher.state]
   );
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  useEffect(()=>{
+    setRegister("tab",{
+      onSave: () => inputRef.current?.click(),
+      disabledSave: !hasChanged,
+    })
+  },[hasChanged])
+
+ 
 
   useDisplayMessage(
     {
@@ -96,7 +96,7 @@ export default function ItemPriceInfo() {
       <Form {...form}>
         {/* {JSON.stringify(form.getValues())} */}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="info-grid">
+          <div className="detail-grid">
             <CustomFormFieldInput
               name="rate"
               required={true}

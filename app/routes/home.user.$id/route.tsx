@@ -1,6 +1,7 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import UserClient from "./user.client";
 import apiClient from "~/apiclient";
+import { route } from "~/util/route";
 
 export const loader = async({request,params}:LoaderFunctionArgs) =>{
     console.log("LOAD DATA",)
@@ -26,5 +27,5 @@ export default function User(){
 
 export const openUserModal = (id:any,callback:(key:string,value:string)=>void)=>{
     if(!id) return
-    callback("user_m",id)
+    callback(route.user,id)
 }

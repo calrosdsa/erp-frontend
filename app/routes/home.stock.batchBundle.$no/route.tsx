@@ -17,6 +17,7 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
     return json({
         batchBundle:res.data?.result.entity,
         actions:res.data?.actions,
+        activities:res.data?.result.activities,
     })
 }
 

@@ -121,7 +121,10 @@ export const roleColumns = ({}): ColumnDef<
       return (
         <TableCellNameNavigation
           {...props}
-          navigate={(name) => r.toRoleDetail(name, original.uuid)}
+          navigate={(name) => r.toRouteDetail(route.role,name,{
+            tab:"info",
+            id:original.id.toString() || ""
+          })}
         />
       );
     },

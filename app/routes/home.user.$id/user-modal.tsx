@@ -5,7 +5,7 @@ import { XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { route } from "~/util/route";
 import { useFetcher } from "@remix-run/react";
-import { loader } from "~/routes/home.manage.users.$id/route";
+import { loader } from "~/routes/home.user.$id/route";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 import ProfileInfo from "./tab/user-info";
@@ -13,7 +13,7 @@ import { fullName } from "~/util/convertor/convertor";
 import ModalLayout from "@/components/ui/custom/modal-layout";
 export default function UserModal() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const userID = searchParams.get("user_m");
+  const userID = searchParams.get(route.user);
   const tab = searchParams.get("tab") || "info";
   const [open, setOpen] = useState(true);
   const fetcher = useFetcher<typeof loader>();
@@ -30,7 +30,7 @@ export default function UserModal() {
 
   const toRoute = (tab: string) => {
     return route.toRoute({
-      main: route.users,
+      main: route.user,
       routeSufix: [userID || ""],
       q: {
         tab: tab,
@@ -44,7 +44,7 @@ export default function UserModal() {
 
   useEffect(() => {
     if (!open) {
-      searchParams.delete("user_m");
+      searchParams.delete(route.user);
       setSearchParams(searchParams, {
         preventScrollReset: true,
       });

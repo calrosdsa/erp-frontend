@@ -4,11 +4,12 @@ import { useTranslation } from "react-i18next";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { Typography } from "@/components/typography";
 import { PartyReferences } from "~/routes/home.party/components/party-references";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { z } from "zod";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
+  useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -18,7 +19,10 @@ import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
-import { ContactData, contactDataSchema } from "~/util/data/schemas/contact/contact.schema";
+import {
+  ContactData,
+  contactDataSchema,
+} from "~/util/data/schemas/contact/contact.schema";
 
 export const ContactInfo = () => {
   const { contact, actions } = useLoaderData<typeof loader>();
@@ -37,6 +41,7 @@ export const ContactInfo = () => {
     },
   });
   const allowEdit = permission.edit;
+  const { setRegister } = useSetupToolbarStore();
   const onSubmit = (e: ContactData) => {
     console.log("DATA", e);
     fetcher.submit(
@@ -58,16 +63,12 @@ export const ContactInfo = () => {
     },
     [fetcher.state]
   );
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  useEffect(() => {
+    setRegister("tab", {
+      onSave: () => inputRef.current?.click(),
+      disabledSave: !hasChanged,
+    });
+  }, [hasChanged]);
 
   useDisplayMessage(
     {
@@ -85,7 +86,7 @@ export const ContactInfo = () => {
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
-          <div className="info-grid">
+          <div className="detail-grid">
             <CustomFormFieldInput
               name="name"
               control={form.control}

@@ -13,7 +13,7 @@ import { useEffect, useRef } from "react";
 import { usePermission } from "~/util/hooks/useActions";
 import { z } from "zod";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { useLoadingTypeToolbar, useSetupToolbarStore } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { action, loader } from "../route";
 import { StockEntryData } from "~/routes/home.stock.stockEntry.new/stock-entry-data";
@@ -38,8 +38,10 @@ export default function StockEntryInfoTab() {
   const isDraft = stateFromJSON(stockEntry?.status) == State.DRAFT;
   const allowEdit = isDraft && perm?.edit;
   const allowCreate = isDraft && perm.create;
+  const {setRegister} = useSetupToolbarStore()
   const toolbar = useToolbar();
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
+
     schema: stockEntryDataSchema,
     defaultValues: {
       id: stockEntry?.id,
@@ -78,12 +80,11 @@ export default function StockEntryInfoTab() {
       }
     );
   };
-
-  useEffect(() => {
-    toolbar.setToolbar({
+  useEffect(()=>{
+    setRegister("tab",{
       onSave: () => inputRef.current?.click(),
-    });
-  }, [toolbar.isMounted]);
+    })
+  },[])
 
   useLoadingTypeToolbar(
     {

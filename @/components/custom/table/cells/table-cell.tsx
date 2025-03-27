@@ -9,13 +9,14 @@ export interface DisplayProps extends React.HTMLAttributes<HTMLDivElement> {
   row: Row<any>;
   column: Column<any, unknown>;
   table: Table<any>;
+  name?:string
 }
 
 const TableCellBase = React.forwardRef<HTMLDivElement, DisplayProps>(
   ({ className, ...props }, ref) => {
     return (
       <div className={cn(className, "flex flex-col")} ref={ref} {...props}>
-        <span className="text-xs">{props.getValue() || "-"}</span>
+        <span className="text-xs">{props.getValue() || props.name || "-"}</span>
       </div>
     );
   }

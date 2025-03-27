@@ -7,7 +7,7 @@ export default function BatchBundleInfo(){
     const {t} = useTranslation("common")
     const {batchBundle} = useLoaderData<typeof loader>()
     return (
-        <div className="info-grid">
+        <div className="detail-grid">
             <DisplayTextValue
             title={t("item")}
             value={batchBundle?.item}

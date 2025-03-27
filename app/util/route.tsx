@@ -66,16 +66,16 @@ class Routes {
   stock = this.base + "/stock";
   items = this.stock + "/item";
   itemPrices = this.stock + "/item-prices";
-  itemPriceM = "itemPrice";
+  itemPrice = "stock/itemPrice";
   itemGroups = this.stock + "/item-groups";
   itemAttributes = this.stock + "/item-attributes";
   warehouses = this.stock + "/warehouse";
-  warehouseM = "warehouse";
+  warehouse = "stock/warehouse";
 
   manage = this.base + "/manage";
   manageM = "manage";
-  userM = "users";
-  roles = this.manage + "/roles";
+  user = "user";
+  role ="manage/roles";
   
   purchases = this.base + "/purchases";
   purchaseorders = this.purchases + "/orders";
@@ -91,8 +91,8 @@ class Routes {
   accountReceivable = "accountReceivable";
   accountReceivableSumary = "accountReceivableSumary";
 
-  stockLedger = "stockLedger";
-  stockBalance = "stockBalance";
+  stockLedger = "stock/stockLedger";
+  stockBalance = "stock/stockBalance";
   
   profitAndLoss = "profitAndLoss";
   cashFlow = "cashFlow";
@@ -116,11 +116,11 @@ class Routes {
   salesRecord = "salesRecord";
   ledger = "account"
   purchaseRecord = "purchaseRecord";
-  stockEntry = "stockEntry";
+  stockEntry = "stock/stockEntry";
   project = "project";
   pricing = "pricing";
-  serialNo = "serialNo";
-  batchBundle = "batchBundle";
+  serialNo = "stock/serialNo";
+  batchBundle = "stock/batchBundle";
   saleInvoice = "saleInvoice";
   invoicing = "invoicing";
   purchaseInvoice = "purchaseInvoice";
@@ -138,7 +138,6 @@ class Routes {
   cashOutflow = "cash-outflow"
   bankAccount = "bank-account"
   deal = "deal"
-  users =  "manage/users";
   chat = "chat"
 
   defaultTab = {
@@ -437,11 +436,9 @@ class Routes {
   }
 
   //Manage
-  toUserProfileDetail(name: string, id: string): string {
-    return `${this.users}/${encodeURIComponent(name)}?v=${id}`;
-  }
+ 
   toRoleDetail(name: string, id: string): string {
-    return `${this.roles}/${encodeURIComponent(name)}?v=${id}`;
+    return `${this.role}/${encodeURIComponent(name)}?v=${id}`;
   }
 
   toPartyDetailPage(name: string, id: string, partyType: string): string {

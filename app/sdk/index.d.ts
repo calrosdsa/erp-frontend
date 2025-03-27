@@ -10228,7 +10228,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            contact?: components["schemas"]["ContactFields"];
+            contact?: components["schemas"]["ContactData"];
             supplier: components["schemas"]["SupplierData"];
         };
         SupplierData: {

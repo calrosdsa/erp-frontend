@@ -238,7 +238,6 @@ export default function InvoiceDetailClient() {
           navigate(
             r.toRoute({
               main: r.stockLedger,
-              routePrefix: [r.stockM],
               q: {
                 fromDate: format(invoice?.posting_date || "", "yyyy-MM-dd"),
                 toDate: format(invoice?.posting_date || "", "yyyy-MM-dd"),

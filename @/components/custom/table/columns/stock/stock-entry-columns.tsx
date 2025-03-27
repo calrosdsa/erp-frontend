@@ -12,7 +12,6 @@ export const stockEntryColumns = ({}: {}): ColumnDef<
   const r = route;
   const { t, i18n } = useTranslation("common");
   return [
-  
     {
       accessorKey: "code",
       header: t("form.code"),
@@ -21,13 +20,8 @@ export const stockEntryColumns = ({}: {}): ColumnDef<
           <TableCellNameNavigation
             {...props}
             navigate={(code) =>
-              r.toRoute({
-                main: r.stockEntry,
-                routePrefix: [r.stockM],
-                routeSufix: [code],
-                q: {
-                  tab: "info",
-                },
+              r.toRouteDetail(r.stockEntry, code, {
+                tab: "info",
               })
             }
           />

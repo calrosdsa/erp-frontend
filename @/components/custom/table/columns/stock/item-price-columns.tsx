@@ -30,12 +30,11 @@ export const itemPriceColumns = ({
           <TableCellNameNavigation
           {...props}
           navigate={(e)=>r.toRoute({
-            main:r.itemPriceM,
-            routePrefix:[r.stockM],
+            main:r.itemPrice,
             routeSufix:[rowData.item_name],
             q:{
               tab:"info",
-              id:rowData.uuid
+              id:rowData.id.toString()
             }
           })}
           />

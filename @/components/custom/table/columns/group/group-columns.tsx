@@ -28,7 +28,7 @@ export const groupColumns = ({
               routeSufix: [name],
               q: {
                   tab: "info",
-                  id: rowD.uuid,
+                  id: rowD.id.toString(),
               },
             });
           }}

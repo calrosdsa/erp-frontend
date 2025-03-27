@@ -19,6 +19,7 @@ import { GlobalState } from "~/types/app-types";
 import { purchaseRecordDataSchema } from "~/util/data/schemas/invoicing/purchase-record-schema";
 import PurchaseRecordData from "./purchase-record-data";
 import { usePurchaseRecordStore } from "./purchase-record-store";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewPurchaseRecordClient() {
   const fetcher = useFetcher<typeof action>();
@@ -133,14 +134,15 @@ export default function NewPurchaseRecordClient() {
 
   return (
     <div>
-      <Card>
+      <CreateLayout>
         <PurchaseRecordData
           form={form}
           onSubmit={onSubmit}
           inputRef={inputRef}
           fetcher={fetcher}
+          isNew={true}
         />
-      </Card>
+      </CreateLayout>
     </div>
   );
 }

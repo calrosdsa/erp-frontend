@@ -102,7 +102,7 @@ export default function CustomerInfo() {
       <FormLayout>
         <Form {...form}>
           <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="info-grid">
+            <div className="detail-grid">
               <CustomFormFieldInput
                 name="name"
                 control={form.control}
@@ -149,12 +149,12 @@ export default function CustomerInfo() {
           }}
         />
 
-        <PartyContacts
+        {/* <PartyContacts
           contacts={contacts}
           onAddContact={() => {
             navigate(r.toCreateContact(supplier?.id));
           }}
-        />
+        /> */}
       </div>
     </div>
   );

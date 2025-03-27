@@ -18,6 +18,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   let actionRes = LOAD_ACTION;
+
   switch (data.action) {
     case "edit": {
       const d = data.editData;
@@ -60,11 +61,11 @@ export function shouldRevalidate({
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
-  // const searchParams = url.searchParams
+  const searchParams = url.searchParams;
   const res = await client.GET("/stock/item/price-list/detail/{id}", {
     params: {
       path: {
-        id: params.name || "",
+        id: searchParams.get("id") || "",
       },
     },
   });
@@ -73,6 +74,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json({
     priceList: res.data?.result.entity,
     actions: res.data?.actions,
+    activities:res.data?.result.activities,
   });
 };
 export default function PriceListDetail() {

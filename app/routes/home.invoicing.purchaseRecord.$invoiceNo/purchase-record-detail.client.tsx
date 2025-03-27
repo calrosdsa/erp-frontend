@@ -23,6 +23,7 @@ import PurchaseRecordInfo from "./tab/purchase-record-info";
 import { DownloadIcon } from "lucide-react";
 import { components } from "~/sdk";
 import { useExporter } from "~/util/hooks/ui/useExporter";
+import { Entity } from "~/types/enums";
 
 export default function PurchaseRecordDetailClient() {
   const { purchaseRecord, actions,activities } = useLoaderData<typeof loader>();
@@ -45,7 +46,7 @@ export default function PurchaseRecordDetailClient() {
       routeSufix: [purchaseRecord?.invoice_no || ""],
       q: {
         tab: tab,
-        id: purchaseRecord?.uuid || "",
+        id: purchaseRecord?.id.toString() || "",
       },
     });
   };
@@ -111,7 +112,10 @@ export default function PurchaseRecordDetailClient() {
 
   
   return (
-    <DetailLayout partyID={purchaseRecord?.id} navItems={navItems}
+    <DetailLayout 
+    partyID={purchaseRecord?.id} navItems={navItems}
+    partyName={purchaseRecord?.invoice_no}
+    entityID={Entity.PURCHASE_RECORD}
     activities={activities}>
       {tab == "info" && <PurchaseRecordInfo />}
     </DetailLayout>

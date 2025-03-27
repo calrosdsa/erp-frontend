@@ -107,7 +107,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (entities?.includes(Entity.ROLE)) {
     usersChildren.push({
       title: t("roles"),
-      href: r.roles,
+      href: r.role,
     });
   }
   if (entities?.includes(Entity.USERS)) {
@@ -121,8 +121,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
     title: t("manage"),
     icon: UserCogIcon,
     href: r.toRoute({
-      main: r.userM,
-      routePrefix: [r.manageM],
+      main: r.user,
     }),
     isChildren: true,
     children: usersChildren,

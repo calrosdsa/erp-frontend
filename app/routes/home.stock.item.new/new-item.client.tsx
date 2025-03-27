@@ -44,6 +44,7 @@ import Editor from "@/components/custom-ui/rich-text/editor";
 import Viewer from "@/components/custom-ui/rich-text/viewer";
 import RichTextEditor from "@/components/custom-ui/rich-text/editor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewItemClient() {
   const fetcher = useFetcher<typeof action>();
@@ -88,7 +89,7 @@ export default function NewItemClient() {
 
   setUpToolbar(() => {
     return {
-      title: t("new"),
+      titleToolbar: t("new"),
       onSave: () => {
         inputRef.current?.click();
       },
@@ -120,7 +121,7 @@ export default function NewItemClient() {
   );
 
   return (
-    <Card>
+    <CreateLayout>
       <FormLayout className=" p-3">
         <Form {...form}>
           {/* {JSON.stringify(form.formState.errors)} */}
@@ -311,6 +312,6 @@ export default function NewItemClient() {
           </fetcher.Form>
         </Form>
       </FormLayout>
-    </Card>
+    </CreateLayout>
   );
 }

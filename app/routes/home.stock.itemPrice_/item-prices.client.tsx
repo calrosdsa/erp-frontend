@@ -15,6 +15,9 @@ import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useNewItemPrice } from "../home.stock.itemPrice.new/components/new-item-price-dialog";
+import { ListLayout } from "@/components/ui/custom/list-layout";
+import { party } from "~/util/party";
+import { useTranslation } from "react-i18next";
 
 export default function ItemPricesClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -26,12 +29,13 @@ export default function ItemPricesClient() {
   });
   const r = route;
   const navigate = useNavigate();
-  const newItemPrice = useNewItemPrice();
+  const { t } = useTranslation("common");
 
-  setUpToolbar(() => {
-    return {
-      ...(permission?.create && {
-        addNew: () => {
+  return (
+    <ListLayout
+      title={t(party.itemPrice)}
+      {...(permission?.create && {
+        onCreate: () => {
           navigate(
             r.toRoute({
               main: partyTypeToJSON(PartyType.itemPrice),
@@ -40,11 +44,8 @@ export default function ItemPricesClient() {
             })
           );
         },
-      }),
-    };
-  }, [permission]);
-  return (
-    <div>
+      })}
+    >
       <DataTable
         data={paginationResult?.results || []}
         columns={itemPriceColumns({ includeItem: true })}
@@ -57,6 +58,6 @@ export default function ItemPricesClient() {
           Rate: true,
         }}
       />
-    </div>
+    </ListLayout>
   );
 }

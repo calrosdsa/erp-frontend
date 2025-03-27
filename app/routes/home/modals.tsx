@@ -1,5 +1,5 @@
 import { useSearchParams } from "@remix-run/react";
-import UserModal from "../home.manage.users.$id/user-modal";
+import UserModal from "../home.user.$id/user-modal";
 import DealModal from "../home.deal.$id/deal-modal";
 import { GlobalState } from "~/types/app-types";
 import { route } from "~/util/route";
@@ -10,7 +10,7 @@ import EventModal from "../home._regate.event.$id/event-modal";
 
 export default function AppModals({ appContext }: { appContext: GlobalState }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const userModal = searchParams.get("user");
+  const userModal = searchParams.get(route.user);
   const dealModal = searchParams.get(route.deal);
   const customer = searchParams.get(route.customer);
   const booking = searchParams.get(route.booking);

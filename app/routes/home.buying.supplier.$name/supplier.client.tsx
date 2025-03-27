@@ -12,7 +12,13 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import DetailLayout from "@/components/layout/detail-layout";
 import SupplierInfo from "./tab/supplier-info";
 import { NavItem } from "~/types";
-import { EventState, PartyType, partyTypeToJSON, State, stateFromJSON } from "~/gen/common";
+import {
+  EventState,
+  PartyType,
+  partyTypeToJSON,
+  State,
+  stateFromJSON,
+} from "~/gen/common";
 import { ButtonToolbar } from "~/types/actions";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
@@ -20,10 +26,10 @@ import { GlobalState } from "~/types/app-types";
 import { z } from "zod";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";
+import { Entity } from "~/types/enums";
 
 export default function SupplierClient() {
-  const { supplier, actions, activities} =
-    useLoaderData<typeof loader>();
+  const { supplier, actions, activities } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
   const r = route;
@@ -31,7 +37,7 @@ export default function SupplierClient() {
   const tab = searchParams.get("tab");
   const fetcher = useFetcher<typeof action>();
   const { roleActions } = useOutletContext<GlobalState>();
-  const [permission] = usePermission({roleActions,actions})
+  const [permission] = usePermission({ roleActions, actions });
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: r.supplier,
@@ -39,7 +45,7 @@ export default function SupplierClient() {
       routeSufix: [supplier?.name || ""],
       q: {
         tab: tab,
-        id: supplier?.uuid || "",
+        id: supplier?.id.toString() || "",
       },
     });
   };
@@ -83,7 +89,7 @@ export default function SupplierClient() {
   setUpToolbar(() => {
     const state = stateFromJSON(supplier?.status);
     let view: ButtonToolbar[] = [];
-    let actions:ButtonToolbar[] = []
+    let actions: ButtonToolbar[] = [];
     if (permission.edit && state == State.ENABLED) {
       actions.push({
         label: "Deshabilitar",
@@ -136,14 +142,20 @@ export default function SupplierClient() {
       },
     });
     return {
+      titleToolbar:supplier?.name,
       view: view,
-      actions:actions,
+      actions: actions,
       status: stateFromJSON(supplier?.status),
     };
-  }, [supplier,permission]);
+  }, [supplier, permission]);
   return (
-    <DetailLayout navItems={navItems} partyID={supplier?.id} 
-    activities={activities}>
+    <DetailLayout
+      navItems={navItems}
+      partyID={supplier?.id}
+      partyName={supplier?.name}
+      entityID={Entity.SUPPLIER}
+      activities={activities}
+    >
       {tab == "info" && <SupplierInfo />}
     </DetailLayout>
   );

@@ -7,31 +7,36 @@ import { z } from "zod";
 import { editPriceListSchema } from "~/util/data/schemas/stock/price-list-schema";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+  useSetupToolbarStore,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 
-type EditData  =z.infer<typeof editPriceListSchema>
+type EditData = z.infer<typeof editPriceListSchema>;
 export default function PriceListInfo() {
   const { t } = useTranslation("common");
-  const { priceList,actions } = useLoaderData<typeof loader>();
+  const { priceList, actions } = useLoaderData<typeof loader>();
   const { companyDefaults, roleActions } = useOutletContext<GlobalState>();
   const [currencyExchangePerm] = usePermission({ actions, roleActions });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
+  const { setRegister } = useSetupToolbarStore();
   const { form, hasChanged, updateRef } = useEditFields<EditData>({
     schema: editPriceListSchema,
     defaultValues: {
       id: priceList?.id,
       name: priceList?.name,
-      isBuying:priceList?.is_buying,
-      isSelling:priceList?.is_selling,
-      currency:priceList?.currency
+      isBuying: priceList?.is_buying,
+      isSelling: priceList?.is_selling,
+      currency: priceList?.currency,
     },
   });
   const allowEdit = currencyExchangePerm?.edit || false;
@@ -56,16 +61,12 @@ export default function PriceListInfo() {
     [fetcher.state]
   );
 
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+  useEffect(() => {
+    setRegister("tab", {
+      onSave: () => inputRef.current?.click(),
+      disabledSave: !hasChanged,
+    });
+  }, [hasChanged]);
 
   useDisplayMessage(
     {
@@ -82,7 +83,7 @@ export default function PriceListInfo() {
     <FormLayout>
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="info-grid">
+          <div className="detail-grid">
             <CustomFormFieldInput
               label={t("form.name")}
               control={form.control}
@@ -96,7 +97,7 @@ export default function PriceListInfo() {
               onSelect={(e) => {}}
               allowEdit={allowEdit}
             />
-            
+
             <CustomFormFieldInput
               label={"Para Comprar"}
               control={form.control}
@@ -111,7 +112,6 @@ export default function PriceListInfo() {
               inputType="check"
               allowEdit={allowEdit}
             />
-
           </div>
           <input className="hidden" type="submit" ref={inputRef} />
         </fetcher.Form>

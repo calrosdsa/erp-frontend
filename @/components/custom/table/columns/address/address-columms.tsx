@@ -21,7 +21,10 @@ export const addressColumns = (): ColumnDef<components["schemas"]["AddressDto"]>
         return(
           <TableCellNameNavigation
           {...props}
-          navigate={(name)=>r.toAddressDetail(name,rowData.uuid)}
+          navigate={(name)=>r.toRouteDetail(route.address,name,{
+            tab:"info",
+            id:rowData.id.toString()
+          })}
           />
         )
       }

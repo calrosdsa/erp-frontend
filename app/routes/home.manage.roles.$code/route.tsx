@@ -41,7 +41,7 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
     const res = await client.GET("/role/detail/{id}",{
         params:{
             path:{
-                id:searchParams.get("v") || ""
+                id:searchParams.get("id") || ""
             }
         }
     })
@@ -49,7 +49,7 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
     const roleActions = await client.GET("/role/role-definitions",{
         params:{
             query:{
-                parentId:searchParams.get("v") || "",
+                parentId:searchParams.get("id") || "",
                 page:DEFAULT_PAGE,
                 size:"1000",
             }
@@ -60,7 +60,8 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
         role:res.data?.result.entity,
         actions:res.data?.actions,
         roleActions:roleActions.data?.pagination_result.results || [],
-        entityActions:entityActions.data?.result
+        entityActions:entityActions.data?.result,
+        activities:res.data?.result.activities,
     })
 }
 

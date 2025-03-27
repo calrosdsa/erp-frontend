@@ -12,6 +12,9 @@ import { useDocumentStore } from "@/components/custom/shared/document/use-docume
 import { useResetDocument } from "@/components/custom/shared/document/reset-data";
 import { ButtonToolbar } from "~/types/actions";
 import { stateFromJSON } from "~/gen/common";
+import { ListLayout } from "@/components/ui/custom/list-layout";
+import { party } from "~/util/party";
+import { useTranslation } from "react-i18next";
 
 export default function StockEntryClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -20,35 +23,49 @@ export default function StockEntryClient() {
     actions: actions,
     roleActions: globalState.roleActions,
   });
-  const navigate = useNavigate()
-  const r = route
-  const { resetItems } = useResetDocument()
-  
-  setUpToolbar(() => {
-    
-    return {
-      ...(permission?.create && {
-        addNew: () => {
-          resetItems()
-          navigate(r.toRoute({
-            main:r.stockEntry,
-            routePrefix:[r.stockM],
-            routeSufix:["new"]
-          }))
-        },
-      }),
-    };
-  }, [permission]);
+  const navigate = useNavigate();
+  const r = route;
+  const { resetItems } = useResetDocument();
+  const {t} = useTranslation("common")
+
+  // setUpToolbar(() => {
+  //   return {
+  //     ...(permission?.create && {
+  //       addNew: () => {
+  //         resetItems();
+  //         navigate(
+  //           r.toRoute({
+  //             main: r.stockEntry,
+  //             routePrefix: [r.stockM],
+  //             routeSufix: ["new"],
+  //           })
+  //         );
+  //       },
+  //     }),
+  //   };
+  // }, [permission]);
   return (
     <>
-      <DataTable
-        paginationOptions={{
-          rowCount: paginationResult?.total,
-        }}
-        data={paginationResult?.results || []}
-        columns={stockEntryColumns({})}
-        enableSizeSelection={true}
-      />
+      <ListLayout
+        title={t(party.stockEntry)}
+        {...(permission?.create && {
+          onCreate: () => {
+            resetItems();
+            navigate(
+              r.toRouteDetail( r.stockEntry,"new",)
+            );
+          },
+        })}
+      >
+        <DataTable
+          paginationOptions={{
+            rowCount: paginationResult?.total,
+          }}
+          data={paginationResult?.results || []}
+          columns={stockEntryColumns({})}
+          enableSizeSelection={true}
+        />
+      </ListLayout>
     </>
   );
 }

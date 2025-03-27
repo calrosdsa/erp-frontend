@@ -30,19 +30,21 @@ const ItemsClient = () => {
     actions: actions,
   });
   const r = route;
+  const navigate = useNavigate();
   return (
     <div>
-      <ListLayout 
-      title="Articulo"
-      {...(permission.create && {
-        onCreate:()=>{
-          r.toRoute({
-            main:partyTypeToJSON(PartyType.item),
-            routePrefix:[r.stockM],
-            routeSufix:["new"]
-          })
-        }
-      })}
+      <ListLayout
+        title="Articulo"
+        {...(permission.create && {
+          onCreate: () =>
+            navigate(
+              r.toRoute({
+                main: partyTypeToJSON(PartyType.item),
+                routePrefix: [r.stockM],
+                routeSufix: ["new"],
+              })
+            ),
+        })}
       >
         <DataTable
           data={paginationResult?.results || []}

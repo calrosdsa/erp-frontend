@@ -20,13 +20,8 @@ export const batchBundleColumns = ({}: {}): ColumnDef<
           <TableCellNameNavigation
             {...props}
             navigate={(name) =>
-              r.toRoute({
-                main: r.batchBundle,
-                routePrefix:[r.stockM],
-                routeSufix: [name],
-                q: {
-                  tab: "info",
-                },
+              r.toRouteDetail(r.batchBundle, name, {
+                tab: "info",
               })
             }
           />
@@ -37,18 +32,18 @@ export const batchBundleColumns = ({}: {}): ColumnDef<
       accessorKey: "warehouse",
       header: t("warehouse"),
       cell: ({ ...props }) => {
-        const rowData = props.row.original
+        const rowData = props.row.original;
         return (
           <TableCellNameNavigation
             {...props}
             navigate={(name) =>
               r.toRoute({
                 main: r.itemM,
-                routePrefix:[r.stockM],
+                routePrefix: [r.stockM],
                 routeSufix: [name],
                 q: {
                   tab: "info",
-                  id:rowData.warehouse_uuid
+                  id: rowData.warehouse_uuid,
                 },
               })
             }
@@ -57,21 +52,21 @@ export const batchBundleColumns = ({}: {}): ColumnDef<
       },
     },
     {
-      accessorKey:"item",
+      accessorKey: "item",
       header: t("item"),
       cell: ({ ...props }) => {
-        const rowData = props.row.original
+        const rowData = props.row.original;
         return (
           <TableCellNameNavigation
             {...props}
             navigate={(name) =>
               r.toRoute({
                 main: r.itemM,
-                routePrefix:[r.stockM],
+                routePrefix: [r.stockM],
                 routeSufix: [name],
                 q: {
                   tab: "info",
-                  id:rowData.item_code
+                  id: rowData.item_code,
                 },
               })
             }

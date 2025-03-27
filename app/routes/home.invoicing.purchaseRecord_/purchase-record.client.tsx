@@ -20,6 +20,7 @@ import { ButtonToolbar } from "~/types/actions";
 import { useExporter } from "~/util/hooks/ui/useExporter";
 import { CustomerSearch } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { SupplierSearch } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function PurchaseRecordClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -34,61 +35,59 @@ export default function PurchaseRecordClient() {
   const p = party;
   const { exportExcel } = useExporter();
 
-  setUpToolbar(() => {
-    let actions: ButtonToolbar[] = [];
-    actions.push({
-      label: "Export Data",
-      onClick: () => {
-        exportExcel("/purchase-record/export");
-      },
-    });
-    return {
-      actions,
-      ...(permission?.create && {
-        addNew: () => {
-          navigate(
-            r.toRoute({
-              main: r.purchaseRecord,
-              routePrefix: [r.invoicing],
-              routeSufix: ["new"],
-            })
-          );
-        },
-      }),
-    };
-  }, [permission]);
   return (
     <>
-      <DataLayout
-        filterOptions={paginationResult?.filters}
-        orderOptions={[
-          { name: "Fecha de Creación", value: "created_at" },
-          { name: "Fecha de Facture", value: "invoice_date" },
-          { name: t("form.status"), value: "status" },
+      <ListLayout
+        title={t(party.purchaseRecord)}
+        actions={[
+          {
+            label: "Exportar Registros de Compra",
+            onClick: () => {
+              exportExcel("/purchase-record/export");
+            },
+          },
         ]}
-        fixedFilters={() => {
-          return (
-            <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
-              <InvoiceSearch
-                partyType={p.purchaseInvoice}
-                placeholder={t("purchaseInvoice")}
-              />
-              <SupplierSearch
-              placeholder={t("supplier")}
-              />
-            </div>
-          );
-        }}
+        {...(permission?.create && {
+          onCreate: () => {
+            navigate(
+              r.toRoute({
+                main: r.purchaseRecord,
+                routePrefix: [r.invoicing],
+                routeSufix: ["new"],
+              })
+            );
+          },
+        })}
       >
-        <DataTable
-          paginationOptions={{
-            rowCount: paginationResult?.total,
+        <DataLayout
+          filterOptions={paginationResult?.filters}
+          orderOptions={[
+            { name: "Fecha de Creación", value: "created_at" },
+            { name: "Fecha de Facture", value: "invoice_date" },
+            { name: t("form.status"), value: "status" },
+          ]}
+          fixedFilters={() => {
+            return (
+              <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
+                <InvoiceSearch
+                  partyType={p.purchaseInvoice}
+                  placeholder={t("purchaseInvoice")}
+                />
+                <SupplierSearch placeholder={t("supplier")} />
+              </div>
+            );
           }}
-          data={paginationResult?.results || []}
-          enableSizeSelection={true}
-          columns={purchaseRecordColumn({})}
-        />
-      </DataLayout>
+        >
+          <DataTable
+            paginationOptions={{
+              rowCount: paginationResult?.total,
+            }}
+            data={paginationResult?.results || []}
+            enableSizeSelection={true}
+            columns={purchaseRecordColumn({})}
+          />
+        </DataLayout>
+      </ListLayout>
     </>
   );
 }

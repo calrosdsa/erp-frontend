@@ -19,7 +19,7 @@ import { GlobalState } from "~/types/app-types";
 import { DEFAULT_SIZE } from "~/constant";
 import { useChatStore } from "../use-chat-store";
 import { useUnmount } from "usehooks-ts";
-import { openUserModal } from "~/routes/home.manage.users.$id/route";
+import { openUserModal } from "~/routes/home.user.$id/route";
 import { ChatType, chatTypeToJSON } from "~/gen/common";
 
 export default function ChatDetailSection({

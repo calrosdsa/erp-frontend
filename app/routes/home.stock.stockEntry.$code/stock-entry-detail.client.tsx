@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
 import StockEntryInfo from "./tab/stock-entry-info";
-import { setUpToolbar, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarRegister, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { stateFromJSON } from "~/gen/common";
 import { z } from "zod";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
@@ -24,7 +24,7 @@ import { useStatus } from "~/util/hooks/data/useStatus";
 import { format, toZonedTime } from "date-fns-tz";
 
 export default function StockEntryDetailClient() {
-  const { stockEntry, associatedActions } = useLoaderData<typeof loader>();
+  const { stockEntry, associatedActions,activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const r = route;
   const [searchParams] = useSearchParams();
@@ -41,14 +41,10 @@ export default function StockEntryDetailClient() {
     status: stateFromJSON(stockEntry?.status),
   });
   const toRoute = (tab: string) => {
-    return r.toRoute({
-      main: r.stockEntry,
-      routePrefix: [r.stock],
-      routeSufix: [stockEntry?.code || ""],
-      q: {
+    return r.toRouteDetail(r.stockEntry,stockEntry?.code || "",{
         tab: tab,
       },
-    });
+    );
   };
   const navItems: NavItem[] = [
     {
@@ -65,7 +61,7 @@ export default function StockEntryDetailClient() {
     [fetcher.state]
   );
 
-  setUpToolbar(() => {
+  setUpToolbarRegister(() => {
     let view: ButtonToolbar[] = [];
     if (isSubmitted && gLPermission?.view) {
         view.push({
@@ -89,7 +85,6 @@ export default function StockEntryDetailClient() {
           navigate(
             r.toRoute({
               main: r.stockLedger,
-              routePrefix: [r.stockM],
               q: {
                 fromDate:format(toZonedTime(stockEntry?.posting_date || "","UTC"),"yyyy-MM-dd"),
                 toDate:format(toZonedTime(stockEntry?.posting_date || "","UTC"),"yyyy-MM-dd"),
@@ -130,7 +125,11 @@ export default function StockEntryDetailClient() {
     [fetcher.data]
   );
   return (
-    <DetailLayout partyID={stockEntry?.id} navItems={navItems}>
+    <DetailLayout 
+    partyID={stockEntry?.id} navItems={navItems}
+    partyName={stockEntry?.code}
+    activities={activities}
+    entityID={Entity.STOCK_ENTRY}>
       {tab == "info" && <StockEntryInfo />}
     </DetailLayout>
   );

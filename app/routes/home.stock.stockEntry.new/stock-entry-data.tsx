@@ -30,6 +30,7 @@ import SelectForm from "@/components/custom/select/SelectForm";
 import { stockEntryDataSchema } from "~/util/data/schemas/stock/stock-entry-schema";
 import { WarehouseAutocompleteFormField } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { Typography } from "@/components/typography";
+import { cn } from "@/lib/utils";
 
 type Data = z.infer<typeof stockEntryDataSchema>;
 
@@ -40,6 +41,7 @@ export const StockEntryData = ({
   form,
   allowEdit,
   allowCreate,
+  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<Data>;
@@ -47,6 +49,7 @@ export const StockEntryData = ({
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
   allowCreate?: boolean;
+  isNew?:boolean
 }) => {
   const params = useParams();
   const { t } = useTranslation("common");
@@ -64,7 +67,6 @@ export const StockEntryData = ({
   ];
 
   useEffect(() => {
-    
     lineItemsStore.onLines(formValues.items);
     taxLinesStore.updateFromItems(formValues.items);
   }, [formValues.items]);
@@ -74,10 +76,11 @@ export const StockEntryData = ({
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={"gap-y-3 grid p-3"}
+          className={cn(
+            isNew? "create-grid":"detail-grid"
+          )}
         >
           {/* {JSON.stringify(form.formState.errors)} */}
-          <div className="create-grid">
             <SelectForm
               form={form}
               data={entryTypes}
@@ -156,7 +159,6 @@ export const StockEntryData = ({
             <TaxBreakup currency={formValues.currency} /> */}
 
             <AccountingDimensionForm form={form} allowEdit={allowEdit} />
-          </div>
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

@@ -7,19 +7,25 @@ import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { projectColumns } from "@/components/custom/table/columns/project/project-columns";
 import { serialNoColumns } from "@/components/custom/table/columns/stock/serial-no-columns";
+import { ListLayout } from "@/components/ui/custom/list-layout";
+import { useTranslation } from "react-i18next";
+import { party } from "~/util/party";
 
 export default function SerialNoClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
+  const {t} = useTranslation("common")
   // const [permission] = usePermission({
   //   actions: actions,
   //   roleActions: globalState.roleActions,
   // });
-  setUpToolbar(() => {
-    return {
-    };
-  }, []);
+  
   return (
     <>
+    <ListLayout
+    title={t(party.serialNo)}
+    >
+
+    </ListLayout>
       <DataTable
         paginationOptions={{
           rowCount: paginationResult?.total,

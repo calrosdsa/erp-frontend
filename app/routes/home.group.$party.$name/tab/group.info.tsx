@@ -8,12 +8,13 @@ import { action, loader } from "../route";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { editGroupSchema } from "~/util/data/schemas/group-schema";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
+  useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -35,6 +36,7 @@ export default function GroupInfoTab() {
   const [permission] = usePermission({ roleActions, actions });
   const fetcher = useFetcher<typeof action>();
   const allowEdit = permission.edit
+  const {setRegister} = useSetupToolbarStore()
   const { form, hasChanged, updateRef } = useEditFields<EditType>({
     schema: editGroupSchema,
     defaultValues: {
@@ -62,16 +64,14 @@ export default function GroupInfoTab() {
     },
     [fetcher.state]
   );
-  setUpToolbar(
-    (opts) => {
-      return {
-        ...opts,
-        onSave: () => inputRef.current?.click(),
-        disabledSave: !hasChanged,
-      };
-    },
-    [hasChanged]
-  );
+
+  useEffect(()=>{
+    setRegister("tab",{
+      onSave: () => inputRef.current?.click(),
+      disabledSave: !hasChanged,
+    })
+  },[hasChanged])
+  
 
   useDisplayMessage(
     {
@@ -88,7 +88,7 @@ export default function GroupInfoTab() {
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
-          <div className="info-grid">
+          <div className="detail-grid">
           <CustomFormFieldInput
               control={form.control}
               name="name"

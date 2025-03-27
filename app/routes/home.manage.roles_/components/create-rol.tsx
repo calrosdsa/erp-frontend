@@ -47,7 +47,7 @@ export const CreateRole = ({open,onOpenChange}:{
                 },{
                     encType:"application/json",
                     method:"POST",
-                    action:r.roles
+                    action:r.role
                 })
             }}
             formItemsData={[

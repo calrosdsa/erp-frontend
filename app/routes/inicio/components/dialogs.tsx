@@ -21,7 +21,7 @@ import {
 import {
   CreateUser,
   useCreateUser,
-} from "~/routes/home.manage.users_/components/create-user";
+} from "~/routes/home.user_/components/create-user";
 import AddItemPrice, {
   useAddItemPrice,
 } from "~/routes/home.stock.itemPrice_/components/add-item-price";

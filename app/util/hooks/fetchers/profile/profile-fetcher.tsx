@@ -82,7 +82,7 @@ export const useProfileFetcher = () => {
         encType: "application/json",
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         action: r.toRoute({
-          main: r.users,
+          main: r.user,
         }),
       }
     );

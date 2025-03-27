@@ -97,7 +97,7 @@ export const serialNoSumaryColumns = ({}: {}): ColumnDef<
             {...props}
             navigate={(name) =>
               r.toRoute({
-                main: r.warehouseM,
+                main: r.warehouse,
                 routePrefix: [r.stockM],
                 routeSufix: [name],
                 q: {
@@ -148,7 +148,6 @@ export const serialNoColumns = ({}: {}): ColumnDef<
   const r = route;
   const { t, i18n } = useTranslation("common");
   return [
-    
     {
       accessorKey: "serial_no",
       header: t("serialNo"),
@@ -157,13 +156,8 @@ export const serialNoColumns = ({}: {}): ColumnDef<
           <TableCellNameNavigation
             {...props}
             navigate={(name) =>
-              r.toRoute({
-                main: r.serialNo,
-                routePrefix: [r.stockM],
-                routeSufix: [name],
-                q: {
-                  tab: "info",
-                },
+              r.toRouteDetail(r.serialNo, name, {
+                tab: "info",
               })
             }
           />

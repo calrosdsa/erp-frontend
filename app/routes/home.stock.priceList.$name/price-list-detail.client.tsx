@@ -12,10 +12,11 @@ import { GlobalState } from "~/types/app-types";
 import { route } from "~/util/route";
 import DetailLayout from "@/components/layout/detail-layout";
 import PriceListInfo from "./tab/price-list-info";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar";
+import { Entity } from "~/types/enums";
 
 export default function PriceListDetailClient() {
-  const { priceList, actions } = useLoaderData<typeof loader>();
+  const { priceList, actions,activities } = useLoaderData<typeof loader>();
   const { t } = useTranslation("common");
   const globalState = useOutletContext<GlobalState>();
   const [permission] = usePermission({
@@ -31,6 +32,7 @@ export default function PriceListDetailClient() {
       routeSufix: [priceList?.name || ""],
       q: {
         tab: tab,
+        id: priceList?.id.toString() || "",
       },
     });
   };
@@ -40,12 +42,19 @@ export default function PriceListDetailClient() {
       href: toRoute("info"),
     },
   ];
-  setUpToolbar(()=>{
-    return {}
-  })
+  setUpToolbarRegister(() => {
+    return {
+      titleToolbar:priceList?.name
+    };
+  },[priceList]);
   return (
-    <DetailLayout navItems={navItems}
-    partyID={priceList?.id}>
+    <DetailLayout
+      navItems={navItems}
+      partyName={priceList?.name}
+      activities={activities}
+      entityID={Entity.PRICE_LIST}
+      partyID={priceList?.id}
+    >
       {tab == "info" && <PriceListInfo />}
     </DetailLayout>
   );

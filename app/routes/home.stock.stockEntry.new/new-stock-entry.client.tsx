@@ -27,6 +27,7 @@ import { format } from "date-fns";
 import { useFormErrorToast } from "~/util/hooks/ui/use-form-error-toast";
 import { Card } from "@/components/ui/card";
 import { StockEntryData } from "./stock-entry-data";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewStockEntryClient() {
   const { t } = useTranslation("common");
@@ -85,14 +86,10 @@ export default function NewStockEntryClient() {
       onShowMessage: () => {
         if (fetcher.data) {
           navigate(
-            r.toRoute({
-              main: r.stockEntry,
-              routePrefix: [r.stockM],
-              routeSufix: [fetcher.data.stockEntry?.code || ""],
-              q: {
+            r.toRouteDetail(r.stockEntry,fetcher.data.stockEntry?.code || "",{
                 tab: "info",
               },
-            })
+            )
           );
         }
       },
@@ -106,13 +103,14 @@ export default function NewStockEntryClient() {
     lineItemsStore.onLines(formValues.items);
   }, [formValues.items]);
   return (
-    <Card>
+    <CreateLayout>
       <StockEntryData
       form={form}
       fetcher={fetcher}
       onSubmit={onSubmit}
       inputRef={inputRef}
+      isNew={true}
       />
-    </Card>
+    </CreateLayout>
   );
 }

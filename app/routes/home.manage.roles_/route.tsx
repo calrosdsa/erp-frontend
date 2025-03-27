@@ -14,8 +14,8 @@ type ActionData = {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
-  let roles: components["schemas"]["Role"][] = [];
-  let actions: components["schemas"]["Action"][] = [];
+  let roles: components["schemas"]["RoleDto"][] = [];
+  let actions: components["schemas"]["ActionDto"][] = [];
   let message:string | undefined = undefined
   let error:string | undefined = undefined
   switch (data.action) {

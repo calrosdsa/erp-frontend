@@ -10,12 +10,13 @@ import { useTranslation } from "react-i18next";
 import DetailLayout from "@/components/layout/detail-layout";
 import { route } from "~/util/route";
 import { ContactInfo } from "./tab/contact-info";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import { setUpToolbar, setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar";
+import { Entity } from "~/types/enums";
 
 export default function ContactClient() {
   const { contact, actions, activities } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab = searchParams.get("tab") || "info"
+  const tab = searchParams.get("tab") || "info";
   const globalState = useOutletContext<GlobalState>();
   const { t } = useTranslation("common");
   const r = route;
@@ -26,11 +27,10 @@ export default function ContactClient() {
   const toRoute = (tab: string) => {
     return r.toRoute({
       main: r.customer,
-      routePrefix: [r.sellingM],
       routeSufix: [contact?.name || ""],
       q: {
         tab: tab,
-        id: contact?.uuid || "",
+        id: contact?.id.toString() || "",
       },
     });
   };
@@ -41,21 +41,21 @@ export default function ContactClient() {
     },
   ];
 
-  setUpToolbar(()=>{
+  setUpToolbarRegister(() => {
     return {
-
-    }
-  },[])
+      titleToolbar:contact?.name,
+    };
+  }, [contact]);
 
   return (
-  <DetailLayout 
-  navItems={navItems}
-  partyID={contact?.id}
-  activities={activities}
-  >
-    {tab == "info" && 
-    <ContactInfo/>
-    }
-  </DetailLayout>
-  )
+    <DetailLayout
+      navItems={navItems}
+      partyID={contact?.id}
+      partyName={contact?.name}
+      entityID={Entity.CONTACT}
+      activities={activities}
+    >
+      {tab == "info" && <ContactInfo />}
+    </DetailLayout>
+  );
 }
