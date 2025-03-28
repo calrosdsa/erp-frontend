@@ -14,13 +14,14 @@ import {
 import { cn } from "@/lib/utils";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import { useSearchParams } from "@remix-run/react";
-import { Check, LucideIcon, SearchIcon } from "lucide-react";
+import { Check, LucideIcon, PlusIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipLayout } from "@/components/layout/tooltip-layout";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface ActionButton {
   Icon: LucideIcon;
@@ -71,7 +72,7 @@ const Autocomplete = <T extends object, K extends keyof T>({
   allowEdit = true,
   actions,
   badgeLabel,
-}: AutoCompleteProps<T, K>)=> {
+}: AutoCompleteProps<T, K>) => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState<string>(defaultValue || "");
   const [selected, setSelected] = useState<string | null>(null);
@@ -97,7 +98,7 @@ const Autocomplete = <T extends object, K extends keyof T>({
   }, []);
 
   return (
-    <div className={cn("",className)}>
+    <div className={cn("", className)}>
       <Popover
         open={!disableAutocomplete && open}
         onOpenChange={setOpen}
@@ -134,7 +135,7 @@ const Autocomplete = <T extends object, K extends keyof T>({
               {isSearch ? (
                 <div
                   className={cn(
-                    "flex space-x-1 items-center border rounded-full px-2",
+                    "flex space-x-1 items-center border rounded-full px-2"
                   )}
                 >
                   <SearchIcon className="p-[2px]" />
@@ -203,7 +204,7 @@ const Autocomplete = <T extends object, K extends keyof T>({
                 e.preventDefault();
               }
             }}
-            className="w-[--radix-popover-trigger-width] p-0"
+            className="w-[--radix-popover-trigger-width] p-1"
           >
             <CommandList>
               {isLoading && (
@@ -213,6 +214,7 @@ const Autocomplete = <T extends object, K extends keyof T>({
                   </div>
                 </CommandPrimitive.Loading>
               )}
+
               {data.length > 0 && !isLoading ? (
                 <CommandGroup>
                   {data?.map((option, idx) => (
@@ -242,6 +244,20 @@ const Autocomplete = <T extends object, K extends keyof T>({
                   ))}
                 </CommandGroup>
               ) : null}
+              {addNew && (
+                <Button
+                  size={"xs"}
+                  variant={"default"}
+                  className=" py-1"
+                  onClick={() => {
+                    addNew();
+                    setOpen(false);
+                  }}
+                >
+                  <span>Crear Nuevo</span>
+                  <PlusIcon />
+                </Button>
+              )}
               {/* {!isLoading ? <CommandEmpty>{"No data."}</CommandEmpty> : null} */}
             </CommandList>
           </PopoverContent>
@@ -249,8 +265,7 @@ const Autocomplete = <T extends object, K extends keyof T>({
       </Popover>
     </div>
   );
-}
+};
 Autocomplete.displayName = "Autocomplete";
-
 
 export { Autocomplete };

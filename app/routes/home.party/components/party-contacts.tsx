@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { ArrowRightLeft, PencilIcon, PlusIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrayPath,
   FieldValues,
@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { CREATE, DELETE, EDIT } from "~/constant";
 import { action } from "~/routes/home.contact_/route";
 import { components } from "~/sdk";
+import { Action } from "~/types/enums";
 import { Permission } from "~/types/permission";
 import {
   ContactData,
@@ -56,11 +57,11 @@ export const PartyContacts = ({
   const { t } = useTranslation("common");
   const navigate = useNavigate();
   const r = route;
-  const { fields, append, remove, update, } = fieldArray;
+  const { fields, append, remove, update } = fieldArray;
   const fetcher = useFetcher<typeof action>();
-  const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
+  const [openStates, setOpenStates] = useState<Record<number, boolean>>({});
 
-  const toggleItem = (itemId: string) => {
+  const toggleItem = (itemId: number) => {
     setOpenStates((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
   };
 
@@ -68,7 +69,7 @@ export const PartyContacts = ({
     if (!enableEdit) {
       setEnableEdit(true);
     }
-    append({ name: "", action: CREATE } as ContactData);
+    append({ name: "",reference_id:partyID } as ContactData);
   };
 
   useDisplayMessage(
@@ -104,19 +105,30 @@ export const PartyContacts = ({
             .map((field, index) => {
               return (
                 <div key={field.contact_id} className="grid gap-2">
-                  {/* {JSON.stringify(field)} */}
                   <div className=" flex space-x-2 w-full items-center">
                     <ContactAutocomplete
                       placeholder="Nombre de Contacto"
                       className="w-full"
                       defaultValue={field.name}
+                      addNew={() => {
+                        toggleItem(index);
+                        update(index, {
+                          ...field,
+                          action: Action.CREATE,
+                        } as ContactData);
+                      }}
                       excludeIds={fields.map((t) => t.contact_id || 0)}
                       badgeLabel={
-                        field.contact_id && openStates[field.id]
+                        field.contact_id && openStates[index]
                           ? "Editar"
+                          : field.action == Action.CREATE
+                          ? "Nuevo"
                           : undefined
                       }
-                      disableAutocomplete={field.contact_id != undefined}
+                      disableAutocomplete={
+                        field.contact_id != undefined ||
+                        field.action == Action.CREATE
+                      }
                       onBlur={(e) => {
                         form.setValue(`contacts.${index}.name`, e);
                         // form.trigger(`contacts.${index}`);
@@ -124,19 +136,26 @@ export const PartyContacts = ({
                       actions={[
                         ...(field.contact_id
                           ? [
-                              ...(openStates[field.id]
+                              ...(openStates[index]
                                 ? [
                                     {
                                       Icon: ArrowRightLeft,
-                                      onClick: () => toggleItem(field.id),
+                                      onClick: () => toggleItem(index),
                                     },
                                   ]
                                 : [
                                     {
                                       Icon: PencilIcon,
-                                      onClick: () => toggleItem(field.id),
+                                      onClick: () => toggleItem(index),
                                     },
                                   ]),
+                            ]
+                          : field.action == Action.CREATE
+                          ? [
+                              {
+                                Icon: ArrowRightLeft,
+                                onClick: () => toggleItem(index),
+                              },
                             ]
                           : []),
                       ]}
@@ -150,37 +169,37 @@ export const PartyContacts = ({
                     <XIcon
                       className="icon-button w-4 h-4"
                       onClick={() => {
-                        if(field.name){
+                        if (field.name) {
                           update(index, { ...field, action: DELETE });
-                        }else{
-                          remove(index)
+                        } else {
+                          remove(index);
                         }
                       }}
                     />
                   </div>
 
-                  {openStates[field.id] && (
+                  {openStates[index] && (
                     <>
-                      <div>
-                        <FormLabel className="text-xs mb-1">E-mail</FormLabel>
-                        <Input
-                          className="text-xs"
-                          {...form.register(
-                            `contact_bulk.contacts.${index}.email`
-                          )}
-                          type="email"
-                        />
-                      </div>
+                      <div className="pl-3">
+                        <div>
+                          <FormLabel className="text-xs mb-1">E-mail</FormLabel>
+                          <Input
+                            className="text-xs"
+                            {...form.register(`contacts.${index}.email`)}
+                            type="email"
+                          />
+                        </div>
 
-                      <div>
-                        <FormLabel className="text-xs mb-1">Teléfono</FormLabel>
-                        <Input
-                          className="text-xs"
-                          {...form.register(
-                            `contact_bulk.contacts.${index}.phone_number`
-                          )}
-                          type="tel"
-                        />
+                        <div>
+                          <FormLabel className="text-xs mb-1">
+                            Teléfono
+                          </FormLabel>
+                          <Input
+                            className="text-xs"
+                            {...form.register(`contacts.${index}.phone_number`)}
+                            type="tel"
+                          />
+                        </div>
                       </div>
                     </>
                   )}
