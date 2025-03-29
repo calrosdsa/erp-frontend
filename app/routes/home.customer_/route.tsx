@@ -4,14 +4,14 @@ import { handleError } from "~/util/api/handle-status-code";
 import CustomersClient from "./customers-client";
 import { DEFAULT_PAGE, DEFAULT_SIZE, LOAD_ACTION } from "~/constant";
 import { z } from "zod";
-import { createCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
+import { customerSchema } from "~/util/data/schemas/selling/customer-schema";
 import { components } from "~/sdk";
 import { mapToContactData } from "~/util/data/schemas/contact/contact.schema";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
-  createCustomer: z.infer<typeof createCustomerSchema>;
+  createCustomer: z.infer<typeof customerSchema>;
   query: string;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {

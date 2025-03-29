@@ -40,7 +40,7 @@ export default function CustomerModal({
 }: {
   appContext: GlobalState;
 }) {
-  const fetcherLoader = useFetcher<typeof loader>({ key: "customer" });
+  const fetcherLoader = useFetcher<typeof loader>();
   const data = fetcherLoader.data;
   const customer = fetcherLoader.data?.customer;
   const [open, setOpen] = useState(true);
@@ -201,7 +201,9 @@ export default function CustomerModal({
               {
                 label: "Info",
                 value: "info",
-                children: <CustomerInfo appContext={appContext} />,
+                children: <CustomerInfo 
+                appContext={appContext} 
+                data={data}/>,
               },
             ]}
           />

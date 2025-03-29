@@ -9,11 +9,9 @@ import { useTranslation } from "react-i18next";
 import DetailLayout from "@/components/layout/detail-layout";
 import EventInfoTab from "./tab/event-info";
 import { useEffect, useState } from "react";
-import { NavItem } from "~/types";
 import { route } from "~/util/route";
 import EventConnectionsTab from "./tab/event-connections";
 import {
-  setUpToolbar,
   setUpToolbarRegister,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
@@ -167,7 +165,9 @@ export default function EventModal({
                 {
                   label: "Conexiones",
                   value: "connections",
-                  children: <EventConnectionsTab />,
+                  children: <EventConnectionsTab 
+                  data={data}
+                  />,
                 },
               ]}
             />

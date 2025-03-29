@@ -8,6 +8,44 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { Control } from "react-hook-form";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useCreateGroup } from "~/routes/home.group.$party_/components/create-group";
+import {
+  SmartAutocomplete,
+  SmartAutocompleteProps,
+} from "@/components/form/smart-autocomplete";
+
+interface GroupFromProps
+  extends Partial<SmartAutocompleteProps<any, keyof any>> {
+  isGroup: false;
+  partyType: string;
+  roleActions: components["schemas"]["RoleActionDto"][];
+  onSelect: (e: components["schemas"]["GroupDto"]) => void;
+}
+export const GroupSmartAutocomplete = ({ ...props }: GroupFromProps) => {
+  const [fetcher, onChange] = useGroupDebounceFetcher({
+    isGroup: props.isGroup,
+    partyType: props.partyType,
+  });
+  const [permission] = usePermission({
+    actions: fetcher.data?.actions,
+    roleActions: props.roleActions,
+  });
+  const createGroup = useCreateGroup();
+
+  return (
+    <SmartAutocomplete
+      {...props}
+      data={fetcher.data?.groups || []}
+      onValueChange={onChange}
+      nameK="name"
+      {...(permission?.create && {
+        addNew: () =>
+          createGroup.openDialog({
+            partyType: props.partyType,
+          }),
+      })}
+    />
+  );
+};
 
 export const GroupAutocompleteForm = ({
   allowEdit = true,
@@ -28,16 +66,16 @@ export const GroupAutocompleteForm = ({
   onSelect: (e: components["schemas"]["GroupDto"]) => void;
   isGroup: boolean;
   partyType: string;
-  href?:string
+  href?: string;
   roleActions?: components["schemas"]["RoleActionDto"][];
-  required?:boolean
+  required?: boolean;
 }) => {
   const [fetcherDebounce, onChange] = useGroupDebounceFetcher({
     isGroup,
     partyType,
   });
   const [permission] = usePermission({
-    actions:fetcherDebounce.data?.actions,
+    actions: fetcherDebounce.data?.actions,
     roleActions,
   });
   const createGroup = useCreateGroup();

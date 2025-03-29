@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
 import CustomForm from "@/components/custom/form/CustomForm";
-import { createCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
+import { customerSchema } from "~/util/data/schemas/selling/customer-schema";
 import { z } from "zod";
 import { route } from "~/util/route";
 import { GroupAutocompleteForm, useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
@@ -76,8 +76,8 @@ export const CreateCustomer = ({
     >
       <CustomForm
         fetcher={fetcher}
-        schema={createCustomerSchema}
-        onSubmit={(values: z.infer<typeof createCustomerSchema>) => {
+        schema={customerSchema}
+        onSubmit={(values: z.infer<typeof customerSchema>) => {
           fetcher.submit(
             {
               action: "create-customer",

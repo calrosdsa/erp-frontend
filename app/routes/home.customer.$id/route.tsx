@@ -10,7 +10,11 @@ import apiClient from "~/apiclient";
 import { FetchResponse } from "openapi-fetch";
 import { handleError } from "~/util/api/handle-status-code";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { editCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
+import {
+  CustomerData,
+  editCustomerSchema,
+  mapToCustomerData,
+} from "~/util/data/schemas/selling/customer-schema";
 import { z } from "zod";
 import { route } from "~/util/route";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
@@ -19,7 +23,7 @@ import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
-  editCustomer: z.infer<typeof editCustomerSchema>;
+  customerData: CustomerData;
   updateStatus: z.infer<typeof updateStatusWithEventSchema>;
 };
 
@@ -27,7 +31,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
   const r = route;
-  let actionRes = LOAD_ACTION
+  let actionRes = LOAD_ACTION;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   switch (data.action) {
@@ -40,14 +44,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "edit-customer": {
-      const d = data.editCustomer;
       const res = await client.PUT("/customer", {
-        body: {
-          name: d.name,
-          customer_type: d.customerType,
-          customer: d.customerID,
-          group_id: d.groupID,
-        },
+        body: mapToCustomerData(data.customerData),
       });
       error = res.error?.detail;
       message = res.data?.message;
@@ -57,15 +55,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({
     error,
     message,
-    action:actionRes,
+    action: actionRes,
   });
 };
 
 export function shouldRevalidate({
   formMethod,
   defaultShouldRevalidate,
-  actionResult
-}:ShouldRevalidateFunctionArgs) {
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
   if (actionResult?.action == LOAD_ACTION) {
     return defaultShouldRevalidate;
   }
@@ -121,9 +119,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   });
 };
 
-
-export const openCustomerModal = (id?:string,callback?:(key:string,value:string)=>void) => {
-  if(id && callback){
+export const openCustomerModal = (
+  id?: string,
+  callback?: (key: string, value: string) => void
+) => {
+  if (id && callback) {
     callback(route.customer, id);
   }
 };

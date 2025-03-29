@@ -2,75 +2,45 @@ import Typography, { subtitle } from "@/components/typography/Typography";
 import { action, loader } from "../../route";
 import {
   useFetcher,
-  useLoaderData,
-  useNavigate,
-  useOutletContext,
 } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
-import { PartyAddresses } from "~/routes/home.party/components/party-addresses";
-import { PartyContacts } from "~/routes/home.party/components/party-contacts";
-import { editCustomerSchema } from "~/util/data/schemas/selling/customer-schema";
+import {
+  CustomerData,
+  customerSchema,
+} from "~/util/data/schemas/selling/customer-schema";
 
 import { z } from "zod";
-import {
-  useLoadingTypeToolbar,
-} from "~/util/hooks/ui/useSetUpToolbar";
+import { useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef } from "react";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
-import { GroupAutocompleteForm } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
-import { useEditFields } from "~/util/hooks/useEditFields";
-import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
-import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import { Entity } from "~/types/enums";
-import ActivityFeed from "~/routes/home.activity/components/activity-feed";
-import { useToolbar } from "~/util/hooks/ui/use-toolbar";
-type EditCustomerType = z.infer<typeof editCustomerSchema>;
+import { SerializeFrom } from "@remix-run/node";
+import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
+import { SmartForm } from "@/components/form/smart-form";
+import CustomerForm from "../../customer-form";
 export default function CustomerInfo({
   appContext,
+  data,
 }: {
   appContext: GlobalState;
+  data?: SerializeFrom<typeof loader>;
 }) {
-  const fetcherLoader = useFetcher<typeof loader>({ key: "customer" });
-  const data = fetcherLoader.data;
-  const customer = fetcherLoader.data?.customer;
-  const { roleActions } = appContext;
-  // const [searchParams,setSearchParams] = useSearchParams();
-  const [permission] = usePermission({
-    roleActions: roleActions,
-    actions: data?.actions,
-  });
+  const customer = data?.customer;
+  const contacts = data?.contacts;
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
-  const { updateToolbar } = useToolbar()
-  
-  const navigate = useNavigate();
-  const r = route;
-  const { form, hasChanged, updateRef } = useEditFields<EditCustomerType>({
-    schema: editCustomerSchema,
-    defaultValues: {
-      name: customer?.name || "",
-      customerType: t(customer?.customer_type || ""),
-      customerTypeValue: customer?.customer_type,
-      customerID: customer?.id,
-      groupID: customer?.group_id,
-      groupName: customer?.group_name,
-      groupUUID: customer?.group_uuid,
-    },
-  });
-  const formValues = form.getValues();
-  const allowEdit = permission.edit || false;
 
-  const onSubmit = (e: EditCustomerType) => {
+ 
+  const onSubmit = (e: CustomerData) => {
     fetcher.submit(
       {
         action: "edit-customer",
-        editCustomer: e,
+        customerData: e,
       },
       {
         method: "POST",
@@ -90,12 +60,6 @@ export default function CustomerInfo({
     [fetcher.state]
   );
 
-  useEffect(()=>{
-    updateToolbar({
-      onSave: () => inputRef.current?.click(),
-      disabledSave: !hasChanged,
-    })
-  },[hasChanged])
 
 
   useDisplayMessage(
@@ -103,7 +67,7 @@ export default function CustomerInfo({
       error: fetcher.data?.error,
       success: fetcher.data?.message,
       onSuccessMessage: () => {
-        updateRef(form.getValues());
+
       },
     },
     [fetcher.data]
@@ -112,82 +76,25 @@ export default function CustomerInfo({
   return (
     <div className="grid grid-cols-9 gap-3">
       <div className="col-span-4">
-        <FormLayout>
-          <Form {...form}>
-            <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="grid md:grid-cols-2 gap-3">
-                <Typography className="col-span-full" fontSize={subtitle}>
-                  {t("_customer.info")}
-                </Typography>
-
-                <CustomFormFieldInput
-                  name="name"
-                  control={form.control}
-                  inputType="input"
-                  label={t("form.name")}
-                  allowEdit={allowEdit}
-                />
-
-                <FormAutocomplete
-                  control={form.control}
-                  data={
-                    [
-                      { name: t("individual"), value: "individual" },
-                      { name: t("company"), value: "company" },
-                    ] as SelectItem[]
-                  }
-                  onValueChange={() => {}}
-                  label={t("form.type")}
-                  nameK={"name"}
-                  name="customerType"
-                  onSelect={(e) => {
-                    form.setValue("customerTypeValue", e.value);
-                  }}
-                  allowEdit={allowEdit}
-                />
-
-                <GroupAutocompleteForm
-                  name="groupName"
-                  label={t("group")}
-                  href={
-                    formValues.groupUUID
-                      ? r.toRoute({
-                          main: r.customerGroup,
-                          routePrefix: [r.group],
-                          routeSufix: [formValues.groupName || ""],
-                          q: {
-                            tab: "info",
-                            id: formValues.groupUUID,
-                          },
-                        })
-                      : undefined
-                  }
-                  control={form.control}
-                  partyType={r.customerGroup}
-                  isGroup={false}
-                  onSelect={(e) => {
-                    form.setValue("groupID", e.id);
-                    form.setValue("groupUUID", e.uuid);
-                  }}
-                  allowEdit={allowEdit}
-                />
-              </div>
-              <input className="hidden" type="submit" ref={inputRef} />
-            </fetcher.Form>
-          </Form>
-        </FormLayout>
+        <SmartForm
+          title={t("_customer.info")}
+          schema={customerSchema}
+          defaultValues={{
+            name: customer?.name || "",
+            customerType: customer?.customer_type || "",
+            customerID: customer?.id,
+            group: {
+              id: customer?.group_id,
+              name: customer?.group_name,
+            },
+            contacts:
+              contacts?.map((t) => mapToContactSchema(t, customer?.id)) || [],
+          }}
+          onSubmit={onSubmit}
+        >
+          <CustomerForm contacts={contacts || []} inputRef={inputRef} />
+        </SmartForm>
       </div>
-      {customer?.id && (
-        <div className=" col-span-5">
-          <ActivityFeed
-            appContext={appContext}
-            activities={data?.activities || []}
-            partyID={customer?.id}
-            partyName={customer?.name}
-            entityID={Entity.CUSTOMER}
-          />
-        </div>
-      )}
     </div>
   );
 }

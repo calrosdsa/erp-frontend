@@ -3,7 +3,7 @@ import { field, fieldRequired } from "..";
 import { components } from "~/sdk";
 import { formatAmountToInt } from "~/util/format/formatCurrency";
 import { formatRFC3339 } from "date-fns";
-import { contactBulkDataSchema, contactDataSchema, mapToContactBulkData, mapToContactData } from "../contact/contact.schema";
+import { contactBulkDataSchema, contactDataSchema, mapToContactData } from "../contact/contact.schema";
 
 export type DealData = z.infer<typeof dealSchema>
 export type ParticipantData = z.infer<typeof observerSchema>

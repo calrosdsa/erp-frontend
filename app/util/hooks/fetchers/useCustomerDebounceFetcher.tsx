@@ -87,8 +87,7 @@ export const useCustomerDebounceFetcher = () => {
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         encType: "application/json",
         action: r.toRoute({
-          main: partyTypeToJSON(PartyType.customer),
-          routePrefix: [r.sellingM],
+          main: r.customer,
         }),
       }
     );

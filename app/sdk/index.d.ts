@@ -4972,15 +4972,6 @@ export interface components {
             name: string;
             to_currency: string;
         };
-        CreateCustomerBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            contact?: components["schemas"]["ContactData"];
-            customer: components["schemas"]["CustomerData"];
-        };
         CreateEntityRequestBody: {
             /**
              * Format: uri
@@ -5228,10 +5219,15 @@ export interface components {
             uuid: string;
         };
         CustomerData: {
-            customer_type: string;
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            contacts: components["schemas"]["ContactData"][];
+            fields: components["schemas"]["CustomerFields"];
             /** Format: int64 */
-            group_id?: number | null;
-            name: string;
+            id?: number;
         };
         CustomerDto: {
             /** Format: date-time */
@@ -5246,6 +5242,12 @@ export interface components {
             name: string;
             status: string;
             uuid: string;
+        };
+        CustomerFields: {
+            customer_type: string;
+            /** Format: int64 */
+            group_id?: number | null;
+            name: string;
         };
         CustomerType: {
             code: string;
@@ -5469,19 +5471,6 @@ export interface components {
             id: number;
             name: string;
             to_currency: string;
-        };
-        EditCustomerRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            customer: number;
-            customer_type: string;
-            /** Format: int64 */
-            group_id?: number | null;
-            name: string;
         };
         EditEventBookingBody: {
             /**
@@ -13661,13 +13650,16 @@ export interface operations {
     "edit-customer": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditCustomerRequestBody"];
+                "application/json": components["schemas"]["CustomerData"];
             };
         };
         responses: {
@@ -13703,7 +13695,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateCustomerBody"];
+                "application/json": components["schemas"]["CustomerData"];
             };
         };
         responses: {

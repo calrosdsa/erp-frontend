@@ -11,7 +11,7 @@ import TableCellDate from "../../cells/table-cell-date";
 import TableCellIndex from "../../cells/table-cell-index";
 import TableCellStatus from "../../cells/table-cell-status";
 import { TableCellBase } from "../../cells/table-cell";
-import { openEventModal } from "~/routes/home._regate.event.$name/route";
+import { openEventModal } from "~/routes/home._regate.event.$id/route";
 
 export const eventBookingsColumns = ({
   openModal,
@@ -28,7 +28,7 @@ export const eventBookingsColumns = ({
         const rowData = props.row.original;
         return (
           <TableCellBase
-            className="font-semibold underline cursor-pointer"
+            className="font-semibold underline cursor-pointer line-clamp-1"
             {...props}
             onClick={() => openEventModal(rowData.id.toString(), openModal)}
           />

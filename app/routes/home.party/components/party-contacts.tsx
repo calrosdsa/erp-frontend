@@ -4,6 +4,7 @@ import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { ArrowRightLeft, PencilIcon, PlusIcon, XIcon } from "lucide-react";
@@ -44,6 +45,7 @@ export const PartyContacts = ({
   contacts,
   setEnableEdit,
   allowEdit,
+  className,
 }: {
   partyID?: number;
   // perm?: Permission;
@@ -53,6 +55,7 @@ export const PartyContacts = ({
   fieldArray: FieldArray;
   form: UseFormReturn<any>;
   allowEdit?: boolean;
+  className?:string;
 }) => {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
@@ -81,7 +84,7 @@ export const PartyContacts = ({
   );
 
   return (
-    <div className="grid border rounded-lg p-2">
+    <div className={cn(className,"grid")}>
       <div className="flex justify-between items-center">
         <Typography variant="subtitle2">{t("_contact.list")}</Typography>
 

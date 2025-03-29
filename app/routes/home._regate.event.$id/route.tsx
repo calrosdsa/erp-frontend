@@ -76,8 +76,7 @@ export const loader = async ({ request,params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   const tab = searchParams.get("tab");
-  let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
-    undefined;
+  let connections:components["schemas"]["PartyConnections"][] = []
   const res = await client.GET("/regate/event/detail/{id}", {
     params: {
       path: {
@@ -89,7 +88,7 @@ export const loader = async ({ request,params }: LoaderFunctionArgs) => {
   if (res.data) {
     switch (tab) {
       case "connections": {
-        resConnections = client.GET("/party/connections/{id}", {
+        const resConnections =await client.GET("/party/connections/{id}", {
           params: {
             path: {
               id: res.data.result.entity.event?.id.toString(),
@@ -99,6 +98,7 @@ export const loader = async ({ request,params }: LoaderFunctionArgs) => {
             },
           },
         });
+        connections = resConnections.data?.result || []
         // console.log(resConnection.data,resConnection.error)
         break;
       }
@@ -109,7 +109,7 @@ export const loader = async ({ request,params }: LoaderFunctionArgs) => {
     bookingInfo: res.data?.result.entity.booking_info,
     actions: res.data?.actions,
     activities: res.data?.result.activities,
-    connections: resConnections,
+    connections: connections,
   };
 };
 
