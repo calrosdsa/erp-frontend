@@ -19,7 +19,7 @@ export const useEventDebounceFetcher = () =>{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,
             encType:"application/json",
-            action:r.event
+            action:r.to(r.event),       
         })
     }
     return [fetcherDebounce,onChange] as const

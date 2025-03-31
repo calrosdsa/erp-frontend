@@ -31,6 +31,7 @@ import { GenericActionsDropdown } from "./components/actions-dropdown";
 import CustomSelect from "@/components/custom/select/custom-select";
 import { ButtonToolbar } from "~/types/actions";
 import { party } from "~/util/party";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function BookingsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -50,8 +51,21 @@ export default function BookingsClient() {
   //   components["schemas"]["BookingDto"][]
   // >([]);
   const r = route;
-  const p = party
-  const [seatchParams,setSearchParams] = useSearchParams()
+  const p = party;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const setParams = (params: Record<string, any>) => {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        searchParams.set(key, value); // Update or add the parameter
+      } else {
+        searchParams.delete(key); // Remove the parameter if the value is empty
+      }
+    });
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
+
   const onActions = (state: State) => {
     const body: components["schemas"]["UpdateBookingBatchRequestBody"] = {
       booking_ids: selectedRowsData.map((t) => t.id),
@@ -69,12 +83,7 @@ export default function BookingsClient() {
     );
   };
 
-  const openModal = (key:string,value:string)=>{
-    seatchParams.set(key,value)
-    setSearchParams(seatchParams,{
-      preventScrollReset:true
-    })
-  }
+ 
 
   useDisplayMessage(
     {
@@ -88,130 +97,133 @@ export default function BookingsClient() {
     [fetcher.data]
   );
 
-  setUpToolbar(() => {
-    let buttons: ButtonToolbar[] = []
-    buttons.push({
-      label:"Calendario",
-      onClick:()=>{
-        navigate(r.toRoute({
-          main:p.booking,
-          routeSufix:["schedule"]
-        }))
-      }
-    })
-    return {
-      titleToolbar: t("regate._booking.base"),
-      buttons:buttons,
-      ...(permission?.create && {
-        addNew: () => {
-          navigate(r.toCreateBooking());
-        },
-      }),
-    };
-  }, [permission]);
+
 
   return (
-    <DataLayout
-      orderOptions={[
-        { name: t("table.createdAt"), value: "created_at" },
-        { name: t("form.status"), value: "status" },
+    <ListLayout
+      title={t("regate._booking.base")}
+      {...(permission.create && {
+        onCreate: () => {
+          navigate(r.toRouteDetail(r.booking,"new"));
+        },
+      })}
+      actions={[
+        {
+          label: "Calendario",
+          onClick: () => {
+            navigate(
+              r.toRoute({
+                main: p.booking,
+                routeSufix: ["schedule"],
+              })
+            );
+          },
+        },
       ]}
-      fixedFilters={() => {
-        return (
-          <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
-            <GenericActionsDropdown
-              selectedItems={selectedRowsData}
-              actions={[
-                {
-                  label: "Completar",
-                  onClick: () => onActions(State.COMPLETED),
-                  isEnabled: (bookings) =>
-                    bookings.every(
-                      (booking) =>
-                        booking.status === "UNPAID" ||
-                        booking.status === "PARTIALLY_PAID"
-                    ),
-                },
-                {
-                  label: "Cancelar",
-                  onClick: () => onActions(State.CANCELLED),
-                  isEnabled: (bookings) =>
-                    bookings.some((booking) =>
-                      ["UNPAID", "PARTIALLY_PAID", "COMPLETED"].includes(
-                        booking.status
-                      )
-                    ),
-                },
-                {
-                  label: "Eliminar",
-                  onClick: () => onActions(State.DELETED),
-                  isEnabled: (bookings) =>
-                    bookings.every((booking) => booking.status === "CANCELLED"),
-                },
-              ]}
-            />
-
-            <AutocompleteSearch
-              data={customerFetcher.data?.customers || []}
-              nameK={"name"}
-              valueK={"id"}
-              onValueChange={onCustomerNameChange}
-              placeholder="Cliente"
-              queryName="partyName"
-              queryValue="party"
-            />
-
-            <AutocompleteSearch
-              data={eventoFetcher.data?.events || []}
-              nameK={"name"}
-              valueK={"id"}
-              queryName="eventName"
-              queryValue="event"
-              onValueChange={onEventNameChange}
-              placeholder="Evento"
-            />
-            <AutocompleteSearch
-              data={courtFetcher.data?.courts || []}
-              nameK={"name"}
-              valueK={"id"}
-              onValueChange={onCourtNameChange}
-              placeholder="Cancha"
-              queryName="courtName"
-              queryValue="court"
-            />
-
-            <AutocompleteSearch
-              data={
-                [
-                  { name: "Completado", value: "COMPLETED" },
-                  { name: "Cancelado", value: "CANCELLED" },
-                  { name: "Pagado Parcialmente", value: "PARTIALLY_PAID" },
-                  { name: "No pagado", value: "UNPAID" },
-                ] as SelectItem[]
-              }
-              nameK={"name"}
-              valueK={"value"}
-              onValueChange={() => {}}
-              placeholder="Estado"
-              queryName="status_name"
-              queryValue="status"
-            />
-          </div>
-        );
-      }}
     >
-      <DataTable
-        data={paginationResult?.results || []}
-        columns={bookingColumns({
-          openModal,
-        })}
-        hiddenColumns={{
-          created_at: false,
+      <DataLayout
+        orderOptions={[
+          { name: t("table.createdAt"), value: "created_at" },
+          { name: t("form.status"), value: "status" },
+        ]}
+        fixedFilters={() => {
+          return (
+            <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
+              <GenericActionsDropdown
+                selectedItems={selectedRowsData}
+                actions={[
+                  {
+                    label: "Completar",
+                    onClick: () => onActions(State.COMPLETED),
+                    isEnabled: (bookings) =>
+                      bookings.every(
+                        (booking) =>
+                          booking.status === "UNPAID" ||
+                          booking.status === "PARTIALLY_PAID"
+                      ),
+                  },
+                  {
+                    label: "Cancelar",
+                    onClick: () => onActions(State.CANCELLED),
+                    isEnabled: (bookings) =>
+                      bookings.some((booking) =>
+                        ["UNPAID", "PARTIALLY_PAID", "COMPLETED"].includes(
+                          booking.status
+                        )
+                      ),
+                  },
+                  {
+                    label: "Eliminar",
+                    onClick: () => onActions(State.DELETED),
+                    isEnabled: (bookings) =>
+                      bookings.every(
+                        (booking) => booking.status === "CANCELLED"
+                      ),
+                  },
+                ]}
+              />
+
+              <AutocompleteSearch
+                data={customerFetcher.data?.customers || []}
+                nameK={"name"}
+                valueK={"id"}
+                onValueChange={onCustomerNameChange}
+                placeholder="Cliente"
+                queryName="partyName"
+                queryValue="party_id"
+              />
+
+              <AutocompleteSearch
+                data={eventoFetcher.data?.events || []}
+                nameK={"name"}
+                valueK={"id"}
+                queryName="eventName"
+                queryValue="event_id"
+                onValueChange={onEventNameChange}
+                placeholder="Evento"
+              />
+              <AutocompleteSearch
+                data={courtFetcher.data?.courts || []}
+                nameK={"name"}
+                valueK={"id"}
+                onValueChange={onCourtNameChange}
+                placeholder="Cancha"
+                queryName="courtName"
+                queryValue="court_id"
+              />
+
+              <AutocompleteSearch
+                data={
+                  [
+                    { name: "Completado", value: "COMPLETED" },
+                    { name: "Cancelado", value: "CANCELLED" },
+                    { name: "Pagado Parcialmente", value: "PARTIALLY_PAID" },
+                    { name: "No pagado", value: "UNPAID" },
+                  ] as SelectItem[]
+                }
+                nameK={"name"}
+                valueK={"value"}
+                onValueChange={() => {}}
+                placeholder="Estado"
+                queryName="status_name"
+                queryValue="status"
+              />
+            </div>
+          );
         }}
-        enableRowSelection={true}
-        enableSizeSelection={true}
-        
-      />
-    </DataLayout>
+      >
+        <DataTable
+          data={paginationResult?.results || []}
+          columns={bookingColumns({
+            setParams,
+          })}
+          hiddenColumns={{
+            created_at: false,
+          }}
+          enableRowSelection={true}
+          enableSizeSelection={true}
+        />
+      </DataLayout>
+    </ListLayout>
   );
 }

@@ -38,6 +38,8 @@ export const DEFAULT_MAX_LENGTH = 50;
 
 export const DEFAULT_COLOR = "#d97706";
 
+export const DEFAULT_ID = "0"
+
 
 export const CREATE = "create"
 export const DELETE = "delete"
@@ -45,3 +47,4 @@ export const EDIT = "edit"
 
 export const SUCCESS_EXPORT_MESSAGE = "Documento descargado con éxito"
 export const ERROR_EXPORT_MESSAGE = "Error al descargar el documento."
+export const LOADING_MESSAGE = "Cargando..."

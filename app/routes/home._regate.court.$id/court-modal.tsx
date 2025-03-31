@@ -25,7 +25,7 @@ import {
   setUpToolbarRegister,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { ActivityType } from "~/gen/common";
-import ModalLayout from "@/components/ui/custom/modal-layout";
+import ModalLayout, { setUpModalPayload } from "@/components/ui/custom/modal-layout";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 
@@ -34,6 +34,7 @@ export default function CourtModal({
 }: {
   appContext: GlobalState;
 }) {
+  const key = route.court
   const fetcherLoader = useFetcher<typeof loader>();
   const data = fetcherLoader.data;
   const court = data?.court;
@@ -64,7 +65,7 @@ export default function CourtModal({
     initData(tab);
   }, [tab]);
 
-  setUpToolbarRegister(() => {
+  setUpModalPayload(key,() => {
     const actions: ButtonToolbar[] = [];
     actions.push({
       label: "Editar precio por hora",
@@ -116,9 +117,9 @@ export default function CourtModal({
       open={open}
       onOpenChange={(e) => {
         setOpen(e);
-      }}
-      title={court?.name || ""}
-    >
+      } }
+      title={court?.name || ""}  
+      keyPayload={key}>
       {fetcherLoader.state == "loading" && !fetcherLoader.data ? (
         <LoadingSpinner />
       ) : (

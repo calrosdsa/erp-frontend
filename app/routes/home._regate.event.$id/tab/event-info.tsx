@@ -25,6 +25,7 @@ import { useEditFields } from "~/util/hooks/useEditFields";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { SerializeFrom } from "@remix-run/node";
 import { route } from "~/util/route";
+import { setUpModalTabPage } from "@/components/ui/custom/modal-layout";
 
 type EditType = z.infer<typeof editEventSchema>;
 export default function EventInfoTab({
@@ -34,6 +35,7 @@ export default function EventInfoTab({
   appContext: GlobalState;
   data: SerializeFrom<typeof loader>;
 }) {
+  const key = route.event
   const { event, actions, bookingInfo } = data;
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -75,15 +77,16 @@ export default function EventInfoTab({
     [fetcher.state]
   );
 
-  useEffect(() => {
-    setRegister("tab", {
+  setUpModalTabPage(key,()=>{
+    return {
       onSave: () => {
         inputRef.current?.click();
       },
       disabledSave: !hasChanged,
-    });
-  }, [hasChanged]);
+    }
+  },[hasChanged])
 
+  
   // setUpToolbar(
   //   (opts) => {
   //     return {

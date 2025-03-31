@@ -32,17 +32,17 @@ export default function ToolBar({ title }: { title?: string }) {
     addNew,
   } = toolbarState.payload;
   const { t } = useTranslation("common");
-  const { onOpenDialog } = useConfirmationDialog();
-  const confirmStatusChange = (event: EventState) => {
-    onOpenDialog({
-      title: "Por favor, confirme antes de continuar con la acción requerida.",
-      onConfirm: () => {
-        if (onChangeState) {
-          onChangeState(event);
-        }
-      },
-    });
-  };
+    const { onOpenDialog } = useConfirmationDialog();
+    const confirmStatusChange = (event: EventState) => {
+      onOpenDialog({
+        title: "Por favor, confirme antes de continuar con la acción requerida.",
+        onConfirm: () => {
+          if (onChangeState) {
+            onChangeState(event);
+          }
+        },
+      });
+    };
 
   return (
     <>

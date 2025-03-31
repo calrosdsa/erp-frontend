@@ -18,6 +18,7 @@ export default function EventConnectionsTab({
   return (
     <>
       <div>
+        {JSON.stringify(data.connections)}
         <Connections data={data.connections} />
       </div>
     </>

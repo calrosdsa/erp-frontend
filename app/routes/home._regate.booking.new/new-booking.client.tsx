@@ -11,6 +11,7 @@ import { components } from "~/sdk";
 import generateBookingData from "./util-new";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import { Card, CardContent } from "@/components/ui/card";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewBookingClient() {
   const fetcher = useFetcher<typeof action>({ key: "booking-data" });
@@ -19,7 +20,7 @@ export default function NewBookingClient() {
   const onBookingPayload = () => {
     if (payload) {
       const { court, selectedSlots, courtName } = payload;
-      console.log("SELECTED SLOTS",selectedSlots)
+      console.log("SELECTED SLOTS", selectedSlots);
       const body: components["schemas"]["ValidateBookingBody"] = {
         bookings: generateBookingData(court, courtName, selectedSlots),
       };
@@ -55,16 +56,16 @@ export default function NewBookingClient() {
 
   return (
     <>
-          {/* {JSON.stringify(fetcher.data)} */}
-
-          {fetcher.state == "submitting" ? (
-            <LoadingSpinner className="h-[70vh]" size="lg" />
-          ) : fetcher.data?.bookingData &&
-            fetcher.data.bookingData.length > 0 ? (
-            <CreateBookings data={fetcher.data.bookingData} />
-          ) : (
-            <ValidateBooking />
-          )}
+      {/* {JSON.stringify(fetcher.data)} */}
+      <CreateLayout>
+        {fetcher.state == "submitting" ? (
+          <LoadingSpinner className="h-[70vh]" size="lg" />
+        ) : fetcher.data?.bookingData && fetcher.data.bookingData.length > 0 ? (
+          <CreateBookings data={fetcher.data.bookingData} />
+        ) : (
+          <ValidateBooking />
+        )}
+      </CreateLayout>
     </>
   );
 }

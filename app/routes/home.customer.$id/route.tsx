@@ -18,7 +18,7 @@ import {
 import { z } from "zod";
 import { route } from "~/util/route";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
-import { LOAD_ACTION } from "~/constant";
+import { DEFAULT_ID, LOAD_ACTION } from "~/constant";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
@@ -41,6 +41,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
+      break;
+    }
+    case "create-customer": {
+      const res = await client.POST("/customer", {
+        body: mapToCustomerData(data.customerData),
+      });
+      error = res.error?.detail;
+      message = res.data?.message;
       break;
     }
     case "edit-customer": {
@@ -109,14 +117,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     }
   }
   console.log("LOAD CUSTOMER...", params.name);
-  return defer({
+  return {
     customer: res.data?.result.entity,
     actions: res.data?.actions,
     addresses: res.data?.result.addresses || [],
     contacts: res.data?.result.contacts || [],
     activities: res.data?.result.activities || [],
     connections: resConnections,
-  });
+  };
 };
 
 export const openCustomerModal = (

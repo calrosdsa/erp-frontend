@@ -38,6 +38,7 @@ import {
 } from "./components/reschedule-booking";
 import { Entity } from "~/types/enums";
 import ModalLayout, {
+  setUpModalPayload,
   useModalStore,
 } from "@/components/ui/custom/modal-layout";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
@@ -45,6 +46,7 @@ import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 
 export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
+  const key = route.booking
   const fetcher = useFetcher<typeof action>();
   const fetcherLoader = useFetcher<typeof loader>({ key: "booking" });
   const [searchParams, setSearchParams] = useSearchParams();
@@ -85,7 +87,7 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
     );
   };
 
-  useEffect(() => {
+  setUpModalPayload(key,() => {
     console.log("SET UP TOOLBAR");
     let actions: ButtonToolbar[] = [];
     const status = stateFromJSON(booking?.status);
@@ -130,7 +132,7 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
         },
       });
     }
-    setPayload({
+    return {
       titleToolbar: params.code,
       status: stateFromJSON(booking?.status),
       actions: actions,
@@ -143,7 +145,7 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
         };
         updateStatus(body);
       },
-    });
+    };
   }, [permission, booking]);
 
   const initData = () => {
@@ -189,6 +191,7 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
         setOpen(e);
       }}
       title={booking?.code || ""}
+      keyPayload={key}
     >
       {(fetcherLoader.state == "loading" && !fetcherLoader.data) ? (
         <LoadingSpinner />

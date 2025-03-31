@@ -99,6 +99,7 @@ export const loader = async ({ request,params }: LoaderFunctionArgs) => {
           },
         });
         connections = resConnections.data?.result || []
+        console.log("CONECTIONS")
         // console.log(resConnection.data,resConnection.error)
         break;
       }

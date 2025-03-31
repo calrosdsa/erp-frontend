@@ -1,8 +1,6 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import OrdersClient from "./orders.client";
-import { Laptop } from "lucide-react";
 import apiClient from "~/apiclient";
-import { PartyType } from "~/types/enums";
 import {
   DEFAULT_COLUMN,
   DEFAULT_ORDER,

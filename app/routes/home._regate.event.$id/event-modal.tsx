@@ -24,13 +24,14 @@ import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
-import ModalLayout from "@/components/ui/custom/modal-layout";
+import ModalLayout, { setUpModalPayload } from "@/components/ui/custom/modal-layout";
 
 export default function EventModal({
   appContext,
 }: {
   appContext: GlobalState;
 }) {
+  const key = route.event
   const fetcherLoader = useFetcher<typeof loader>();
   const data = fetcherLoader.data;
   const event = data?.event;
@@ -77,7 +78,7 @@ export default function EventModal({
     );
   };
 
-  setUpToolbarRegister(() => {
+  setUpModalPayload(key,() => {
     const state = stateFromJSON(event?.status);
     let actions: ButtonToolbar[] = [];
     if (eventPerm.edit && state == State.ENABLED) {
@@ -136,6 +137,7 @@ export default function EventModal({
   return (
     <ModalLayout
       open={open}
+      keyPayload={key}
       onOpenChange={(e) => {
         setOpen(e);
       }}

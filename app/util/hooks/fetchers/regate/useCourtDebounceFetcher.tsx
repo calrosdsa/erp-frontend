@@ -19,7 +19,7 @@ export const useCourtDebounceFetcher = () =>{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,
             encType:"application/json",
-            action:r.court
+            action:r.to(r.court)
         })
     }
     return [fetcherDebounce,onChange] as const

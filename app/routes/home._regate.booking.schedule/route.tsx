@@ -12,7 +12,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   const r = route;
-  let court = searchParams.get("court") || "";
+  let courtID = searchParams.get("courtID") || "";
   let courtName = searchParams.get("courtName") || "";
   let date = new Date(searchParams.get("date") || new Date());
   const fromDate = formatRFC3339(startOfWeek(date));
@@ -20,7 +20,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
  console.log(fromDate,toDate)
   let bookingSlots: components["schemas"]["BookingSlotDto"][] = [];
   let courtRates: components["schemas"]["CourtRateDto"][] = [];
-  if (!court) {
+  if (!courtID) {
     const res = await client.GET("/court", {
       params: {
         query: {
@@ -37,7 +37,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
 
     if (res.data && res.data?.pagination_result?.total > 0) {
-      court = res.data.pagination_result.results[0]?.id.toString() || "";
+      courtID = res.data.pagination_result.results[0]?.id.toString() || "";
       courtName = res.data.pagination_result.results[0]?.name || "";
     }
     return redirect(
@@ -45,7 +45,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         main: r.bookingM,
         routeSufix: ["schedule"],
         q: {
-          court: court,
+          courtID: courtID,
           courtName: courtName,
         },
       })
@@ -54,7 +54,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const bookingSchedule = await client.GET("/regate/booking-slot", {
     params: {
       query: {
-        court_id: court,
+        court_id: courtID,
         to_date: toDate,
         from_date: fromDate,
       },

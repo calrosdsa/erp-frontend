@@ -10,6 +10,8 @@ import { components } from "~/sdk";
 import { CustomerData } from "~/util/data/schemas/selling/customer-schema";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { Separator } from "@/components/ui/separator";
+import { setUpModalTabPage } from "@/components/ui/custom/modal-layout";
+import { route } from "~/util/route";
 
 export default function CustomerForm({
   contacts,
@@ -18,6 +20,7 @@ export default function CustomerForm({
   contacts: components["schemas"]["ContactDto"][];
   inputRef: MutableRefObject<HTMLInputElement | null>;
 }) {
+  const key = route.customer
   const { form, isEditing, hasChanged } = useFormContext();
   const formValues = form?.getValues() as CustomerData;
   const { t } = useTranslation("common");
@@ -26,25 +29,26 @@ export default function CustomerForm({
     name: "contacts",
   });
 
-  const { updateToolbar } = useToolbar();
-  useEffect(() => {
-    updateToolbar({
+
+  setUpModalTabPage(key,()=>{
+    return {
       onSave: () => inputRef.current?.click(),
       disabledSave: !hasChanged,
-    });
-  }, [hasChanged]);
+    }
+  },[hasChanged])
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <SmartField name="name" label={t("form.name")} />
-      <SmartField
+    <SmartField
         name="customerType"
         label={t("form.type")}
         options={[
-          { label: t("individual"), value: "individual" },
-          { label: t("company"), value: "company" },
+          { label: "Persona", value: "individual" },
+          { label: "Compania", value: "company" },
         ]}
         type="select"
-      />
+        />
       <GroupSmartAutocomplete
         label={t("group")}
         partyType={party.customerGroup}
@@ -56,7 +60,7 @@ export default function CustomerForm({
           form?.setValue("group.id", e.id);
           form?.setValue("group.name", e.name);
         }}
-      />
+        />
       <Separator className="col-span-full"/>
       {form && (
         <PartyContacts
@@ -68,8 +72,9 @@ export default function CustomerForm({
           enableEdit={isEditing}
           setEnableEdit={() => {}}
           // perm={permissions[Entity.CONTACT]}
-        />
-      )}
+          />
+        )}
+      {/* {JSON.stringify(formValues)} */}
       <input className="hidden" type="submit" ref={inputRef} />
     </div>
   );

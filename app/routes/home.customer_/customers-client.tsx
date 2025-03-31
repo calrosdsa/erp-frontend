@@ -12,6 +12,7 @@ import { useCreateCustomer } from "./components/create-customer";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
 import { ListLayout } from "@/components/ui/custom/list-layout";
+import { route } from "~/util/route";
 
 export default function CustomersClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -23,6 +24,21 @@ export default function CustomersClient() {
   const { t } = useTranslation("common");
   const createCustomer = useCreateCustomer();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const setParams = (params: Record<string, any>) => {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        searchParams.set(key, value); // Update or add the parameter
+      } else {
+        searchParams.delete(key); // Remove the parameter if the value is empty
+      }
+    });
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
+
+
   const openModal = (key: string, value: string) => {
     searchParams.set(key, value);
     setSearchParams(searchParams, {
@@ -35,7 +51,9 @@ export default function CustomersClient() {
       title="Clientes"
       {...(permission?.create && {
         onCreate: () => {
-          createCustomer.openDialog({});
+          setParams({
+            [route.customer]:"0"
+          })
         },
       })}
     >

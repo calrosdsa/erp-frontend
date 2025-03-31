@@ -1,24 +1,24 @@
-import { ChevronsUpDown, XIcon } from "lucide-react";
-import { ReactNode } from "react";
+import { ChevronsUpDownIcon, Loader2, XIcon } from "lucide-react";
+import { DependencyList, ReactNode, useEffect, useState } from "react";
+import { create } from "zustand";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "../sheet";
-import { Button } from "../button";
-import { create } from "zustand";
+} from "@/components/ui/sheet";
 import { ButtonToolbar } from "~/types/actions";
 import { EventState, State } from "~/gen/common";
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { useTranslation } from "react-i18next";
+import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 import { cn } from "@/lib/utils";
-import { Badge } from "../badge";
-import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 
 export default function ModalLayout({
+  keyPayload,
   children,
   open,
   onOpenChange,
@@ -29,52 +29,47 @@ export default function ModalLayout({
   children: ReactNode;
   className?: string;
   open: boolean;
-  title: string;
-  onOpenChange: (e: boolean) => void;
+  keyPayload: string;
+  title?: string;
+  onOpenChange?: (e: boolean) => void;
   headerSection?: () => JSX.Element;
 }) {
-  const { payload } = useToolbar();
-  const { actions, status, view, viewTitle, buttons, onChangeState,onSave,disabledSave } = payload;
+  const { editPayload } = useModalStore();
+  const payload = useModalStore((state) => state.payload[keyPayload]) || {};
   const { t } = useTranslation("common");
   const { onOpenDialog } = useConfirmationDialog();
   const confirmStatusChange = (event: EventState) => {
     onOpenDialog({
       title: "Por favor, confirme antes de continuar con la acción requerida.",
       onConfirm: () => {
-        if (onChangeState) {
-          onChangeState(event);
+        if (payload.onChangeState) {
+          payload.onChangeState(event);
         }
       },
     });
   };
   return (
-    <>
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent
-          onInteractOutside={(event) => event.preventDefault()}
-          // onInteractOutside={(event) => event.preventDefault()}
-          className="w-full  sm:max-w-full md:w-[80%] xl:w-[75%] overflow-auto  [&>button]:hidden px-0 pb-20"
-        >
-          <div className="px-5">
-            <SheetHeader>
-              <div className="flex space-x-3 items-center justify-between">
-                <div className="flex space-x-3 items-center">
-                  <SheetClose asChild className="  w-min ">
-                    <Button size={"sm"} variant="outline">
-                      <XIcon />
-                    </Button>
-                  </SheetClose>
-                  <SheetTitle>{title || payload.titleToolbar}</SheetTitle>
+    <Sheet open={open} onOpenChange={(e) => onOpenChange?.(e)}>
+      <SheetContent
+        // onInteractOutside={(event) => event.preventDefault()}
+        className="w-full md:max-w-full md:w-[80%] xl:w-[70%] overflow-auto  [&>button]:hidden px-0 pb-20"
+      >
+        <div className="px-5">
+          <SheetHeader>
+            <div className="flex space-x-3 items-center justify-between">
+              <div className="flex space-x-3 items-center">
+                <SheetClose asChild className="  w-min ">
+                  <Button size={"sm"} variant="outline">
+                    <XIcon />
+                  </Button>
+                </SheetClose>
+                <SheetTitle>{title || payload.title}</SheetTitle>
+              </div>
 
-                  {status && status != State.UNRECOGNIZED && (
-                    <Badge variant={"outline"} className="">
-                      {t(State[status])}
-                    </Badge>
-                  )}
-                </div>
-
-                <div className=" flex space-x-3">
-                  {actions && actions.length > 0 && status != State.DRAFT && (
+              <div className=" flex space-x-3">
+                {payload.actions &&
+                  payload.actions.length > 0 &&
+                  payload.status != State.DRAFT && (
                     <Popover modal={true}>
                       <PopoverTrigger asChild>
                         <Button
@@ -83,12 +78,12 @@ export default function ModalLayout({
                           className=" flex space-x-1 h-8 rounded-lg px-3 bg-muted"
                         >
                           <span>{t("actions.base")}</span>
-                          <ChevronsUpDown className="h-4 w-4" />
+                          <ChevronsUpDownIcon className="h-4 w-4" />
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-56">
                         <div className="flex flex-col space-y-1">
-                          {actions?.map((item, idx) => (
+                          {payload.actions?.map((item, idx) => (
                             <Button
                               key={idx}
                               size={"sm"}
@@ -107,7 +102,9 @@ export default function ModalLayout({
                     </Popover>
                   )}
 
-                  {view && view.length > 0 && status != State.DRAFT && (
+                {payload.view &&
+                  payload.view.length > 0 &&
+                  payload.status != State.DRAFT && (
                     <Popover modal={true}>
                       <PopoverTrigger asChild>
                         <Button
@@ -116,14 +113,16 @@ export default function ModalLayout({
                           className=" flex space-x-1 h-8 rounded-lg px-3"
                         >
                           <span>
-                            {viewTitle ? viewTitle : t("actions.view")}
+                            {payload.viewTitle
+                              ? payload.viewTitle
+                              : t("actions.view")}
                           </span>
-                          <ChevronsUpDown className="h-4 w-4" />
+                          <ChevronsUpDownIcon className="h-4 w-4" />
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent>
                         <div className="flex flex-col space-y-1">
-                          {view.map((item, idx) => (
+                          {payload.view.map((item, idx) => (
                             <Button
                               key={idx}
                               variant="ghost"
@@ -143,130 +142,220 @@ export default function ModalLayout({
                     </Popover>
                   )}
 
-                  {buttons?.map((item, idx) => (
-                    <Button
-                      key={idx}
-                      onClick={item.onClick}
-                      className=" flex space-x-1 h-8"
-                      variant={"outline"}
-                      size={"sm"}
-                    >
-                      {item.Icon && <item.Icon className="p-1" />}
-                      <span>{item.label}</span>
-                    </Button>
-                  ))}
+                {payload.buttons?.map((item, idx) => (
+                  <Button
+                    key={idx}
+                    onClick={item.onClick}
+                    className=" flex space-x-1 h-8"
+                    variant={"outline"}
+                    size={"sm"}
+                  >
+                    {item.Icon && <item.Icon className="p-1" />}
+                    <span>{item.label}</span>
+                  </Button>
+                ))}
 
-                  {status && (
-                    <>
-                      {status == State.DRAFT && onChangeState && (
+                {payload.status && (
+                  <>
+                    {payload.status == State.DRAFT && payload.onChangeState && (
+                      <Button
+                        size={"sm"}
+                        onClick={() =>
+                          confirmStatusChange(EventState.SUBMIT_EVENT)
+                        }
+                        className={cn(
+                          "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
+                          (payload.disabledSave) &&
+                            "disabled:opacity-50"
+                        )}
+                        // loading={
+                        //   toolbarState.loading && toolbarState.loadingType == "SUBMIT"
+                        // }
+                      >
+                        {t("form.submit")}
+                      </Button>
+                    )}
+
+                    {payload.status != State.CANCELLED &&
+                      payload.status != State.DRAFT &&
+                      payload.onChangeState && (
                         <Button
                           size={"sm"}
                           onClick={() =>
-                            confirmStatusChange(EventState.SUBMIT_EVENT)
+                            confirmStatusChange(EventState.CANCEL_EVENT)
                           }
                           className={cn(
-                            "flex space-x-1 h-8 rounded-lg px-3 justify-center "
+                            `flex space-x-1 h-8 rounded-lg px-3 justify-center `,
+                            (payload.disabledSave) &&
+                              "disabled:opacity-50"
                           )}
                           // loading={
-                          //   toolbarState.loading && toolbarState.loadingType == "SUBMIT"
+                          //   toolbarState.loading &&
+                          //   toolbarState.loadingType == "CANCEL"
                           // }
+                          variant={"outline"}
                         >
-                          {t("form.submit")}
+                          {t("form.cancel")}
                         </Button>
                       )}
+                  </>
+                )}
 
-                      {status != State.CANCELLED &&
-                        status != State.DRAFT &&
-                        onChangeState && (
-                          <Button
-                            size={"sm"}
-                            onClick={() =>
-                              confirmStatusChange(EventState.CANCEL_EVENT)
-                            }
-                            className={cn(
-                              `flex space-x-1 h-8 rounded-lg px-3 justify-center `
-                            )}
-                            // loading={
-                            //   toolbarState.loading &&
-                            //   toolbarState.loadingType == "CANCEL"
-                            // }
-                            variant={"outline"}
-                          >
-                            {t("form.cancel")}
-                          </Button>
-                        )}
-                    </>
-                  )}
-
-                  {onSave && !disabledSave && (
-                    <Button
-                      size={"sm"}
-                      onClick={() => {
-                        if (onSave) {
-                          onSave();
-                        } else {
-                          alert("NO ON SAVE");
-                        }
-                      }}
-                      className={cn(
-                        "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
-                        (disabledSave) &&
-                          "disabled:opacity-50"
-                      )}
-                      // loading={
-                      //   toolbarState.loading && toolbarState.loadingType == "SAVE"
-                      // }
-                      // disabled={disabledSave}
-                      variant={"outline"}
-                    >
-                      {t("form.save")}
-                    </Button>
-                  )}  
-                </div>
+                {payload.onSave && !payload.disabledSave && (
+                  <Button
+                    size={"sm"}
+                    onClick={() => {
+                      if (payload.onSave) {
+                        payload.onSave();
+                      } else {
+                        alert("NO ON SAVE");
+                      }
+                    }}
+                    className={cn(
+                      "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
+                      (payload.disabledSave) &&
+                        "disabled:opacity-50"
+                    )}
+                    // loading={
+                    //   toolbarState.loading && toolbarState.loadingType == "SAVE"
+                    // }
+                    // disabled={disabledSave}
+                    variant={"outline"}
+                  >
+                    {t("form.save")}
+                  </Button>
+                )}
               </div>
-              {/* <ResponsiveSidebar navItems={navItems} /> */}
-            </SheetHeader>
-            <div className="grid gap-4 py-1">
-              {children}
-              {/* {tab == "info" && <DealInfoTab />} */}
+            </div>
+            {/* <ResponsiveSidebar navItems={navItems} /> */}
+          </SheetHeader>
+          <div className="grid gap-4 py-1">
+            {children}
+            {/* {tab == "info" && <DealInfoTab />} */}
+          </div>
+        </div>
+
+        {payload.enableEdit && (
+          <div className="fixed  w-full right-0  md:max-w-full md:w-[80%] xl:w-[70%]  bottom-0 border-t shadow-xl bg-background">
+            <div className="flex justify-center items-center space-x-2 h-16 ">
+              <Button
+                size={"lg"}
+                type="button"
+                variant={"outline"}
+                onClick={() => {
+                  payload.onCancel?.()
+                  editPayload(keyPayload, {
+                    enableEdit: false,
+                  });
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="button"
+                disabled={payload.loading}
+                size={"lg"}
+                onClick={() => {
+                  payload.onSave?.();
+                }}
+              >
+                {payload.loading && <Loader2 className="animate-spin" />}
+                Guardar
+              </Button>
             </div>
           </div>
-          {/* <div className="fixed  w-full right-0  md:max-w-full md:w-[80%] xl:w-[70%]  bottom-0 border-t shadow-xl bg-background">
-        <div className="flex justify-center items-center space-x-2 h-16 ">
-          <Button size={"lg"} variant={"outline"}>
-            Cancelar
-          </Button>
-          <Button size={"lg"}>Guardar</Button>
-        </div>
-      </div> */}
-        </SheetContent>
-      </Sheet>
-    </>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 }
 
-interface Payload {
+export type PayloadModal = {
   actions?: ButtonToolbar[];
   buttons?: ButtonToolbar[];
+  enableEdit: boolean;
+  isNew: boolean;
+  title: string;
+  loading: boolean;
+  onSave: () => void;
+  onCancel:()=>void;
+  disabledSave?: boolean;
+  onChangeState?: (event: EventState) => void;
   view?: ButtonToolbar[];
-  loading:boolean;
   viewTitle?: string;
   status?: State;
-  titleToolbar?: string;
-  onChangeState?: (event: EventState) => void;
-  onSave?: () => void
-  disabledSave?: boolean
-}
+};
 
 interface ModalStore {
-  payload: Partial<Payload>;
-  setPayload: (opts: Partial<Payload>) => void;
+  payload: Record<string, Partial<PayloadModal>>;
+  getState: (key: string) => Partial<PayloadModal>;
+  setPayload: (key: string, e: Partial<PayloadModal>) => void;
+  resetPayload: (key: string) => void;
+  editPayload: (key: string, e: Partial<PayloadModal>) => void;
 }
 
-export const useModalStore = create<ModalStore>((set) => ({
+export const useModalStore = create<ModalStore>((set, get) => ({
   payload: {},
-  setPayload: (e) =>
+  getState: (key) => {
+    return get().payload[key] || {};
+  },
+  setPayload: (key, payload) =>
     set((state) => ({
-      payload: e,
+      payload: {
+        ...state.payload,
+        [key]: { ...state.payload[key], ...payload },
+      },
+    })),
+  resetPayload: (key) =>
+    set((state) => ({
+      payload: key
+        ? Object.fromEntries(
+            Object.entries(state.payload).filter(([k]) => k !== key)
+          )
+        : {},
+    })),
+  editPayload: (key, payload) =>
+    set((state) => ({
+      payload: {
+        ...state.payload,
+        [key]: {
+          ...state.payload[key],
+          ...payload,
+        },
+      },
     })),
 }));
+
+export const setUpModalPayload = (
+  key: string,
+  opts: () => Partial<PayloadModal>,
+  dependencies: DependencyList = []
+) => {
+  const { editPayload, setPayload, resetPayload } = useModalStore();
+
+  useEffect(() => {
+    const newOpts = opts();
+
+    // Merge new options with register options
+    setPayload(key, { ...newOpts });
+
+    return () => {
+      console.log("RESET TOOLBAR REGISTER...");
+      resetPayload(key);
+    };
+  }, [...dependencies]);
+
+  // Return the store actions for external use if needed
+};
+
+export const setUpModalTabPage = (
+  key: string,
+  opts: () => Partial<PayloadModal>,
+  dependencies: DependencyList = []
+) => {
+  const { editPayload } = useModalStore();
+
+  useEffect(() => {
+    editPayload(key, opts());
+  }, [...dependencies]); // Include key/opts in deps [[10]]
+};

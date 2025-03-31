@@ -15,6 +15,7 @@ import { useResetDocument } from "@/components/custom/shared/document/reset-data
 import DataLayout from "@/components/layout/data-layout";
 import { PartySearch } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useTranslation } from "react-i18next";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 export default function OrdersClient() {
   const { paginationResult, actions, filters } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
@@ -47,30 +48,46 @@ export default function OrdersClient() {
     };
   }, [permission]);
   return (
-    <DataLayout
-      filterOptions={filters}
-      orderOptions={[
-        { name: "Fecha de Creación", value: "created_at" },
-        { name: t("form.status"), value: "status" },
-      ]}
-      fixedFilters={() => {
-        return (
-          <>
-            <PartySearch party={partyOrder} />
-          </>
+    <ListLayout
+    title={t(partyOrder)}
+    {...(permission?.create && {
+      addNew: () => {
+        resetDocument();
+        navigate(
+          r.toRoute({
+            main: partyOrder,
+            routePrefix: ["order"],
+            routeSufix: ["new"],
+          })
         );
-      }}
+      },
+    })}
     >
-      <DataTable
-        data={paginationResult?.results || []}
-        columns={orderColumns({
-          orderPartyType: partyOrder,
-        })}
-        paginationOptions={{
-          rowCount: paginationResult?.total,
+      <DataLayout
+        filterOptions={filters}
+        orderOptions={[
+          { name: "Fecha de Creación", value: "created_at" },
+          { name: t("form.status"), value: "status" },
+        ]}
+        fixedFilters={() => {
+          return (
+            <>
+              <PartySearch party={partyOrder} />
+            </>
+          );
         }}
-        enableSizeSelection={true}
-      />
-    </DataLayout>
+      >
+        <DataTable
+          data={paginationResult?.results || []}
+          columns={orderColumns({
+            orderPartyType: partyOrder,
+          })}
+          paginationOptions={{
+            rowCount: paginationResult?.total,
+          }}
+          enableSizeSelection={true}
+        />
+      </DataLayout>
+    </ListLayout>
   );
 }

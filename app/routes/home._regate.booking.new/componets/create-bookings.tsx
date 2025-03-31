@@ -5,7 +5,12 @@ import { useForm } from "react-hook-form";
 import { createBookingsSchema } from "~/util/data/schemas/regate/booking-schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
+import {
+  useFetcher,
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { route } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -15,7 +20,7 @@ import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import BookingDisplay from "./bookings-display";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import AmountInput from "@/components/custom/input/AmountInput";
-import { DEFAULT_CURRENCY } from "~/constant";
+import { DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
 import { useEffect, useRef, useState } from "react";
 import {
   setUpToolbar,
@@ -63,6 +68,19 @@ export default function CreateBookings({
     roleActions: globalState.roleActions,
   });
   const createEvent = useCreateEvent();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const setParams = (params: Record<string, any>) => {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        searchParams.set(key, value); // Update or add the parameter
+      } else {
+        searchParams.delete(key); // Remove the parameter if the value is empty
+      }
+    });
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
   const r = route;
   const { resetPayload } = useNewBooking();
   const navigate = useNavigate();
@@ -156,6 +174,7 @@ export default function CreateBookings({
               onValueChange={onCustomerNameChange}
               nameK={"name"}
               name="customerName"
+              modal={false}
               required={true}
               form={form}
               onSelect={(e) => {
@@ -163,7 +182,10 @@ export default function CreateBookings({
               }}
               {...(customerPermission?.create && {
                 addNew: () => {
-                  createCustomer.openDialog({});
+                  setParams({
+                    [route.customer]:DEFAULT_ID
+                  })
+                  // createCustomer.openDialog({});
                 },
               })}
             />
@@ -236,9 +258,7 @@ export default function CreateBookings({
               Detalles de la Reserva
             </Typography>
             <div className="col-span-full">
-              <BookingDetails
-              bookings={bookings}
-              />
+              <BookingDetails bookings={bookings} />
               <BookingDisplay
                 bookings={bookings}
                 removeBooking={(idx) => {

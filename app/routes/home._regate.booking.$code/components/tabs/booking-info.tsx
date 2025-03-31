@@ -16,6 +16,7 @@ import { DisplayValue } from "@/components/ui/custom/display-info";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const BookingInfo = ({ appContext }: { appContext: GlobalState }) => {
+  const key = route.booking
   const fetcherLoader = useFetcher<typeof loader>({ key: "booking" });
   const data = fetcherLoader.data;
   const booking = fetcherLoader.data?.booking;

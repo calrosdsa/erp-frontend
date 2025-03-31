@@ -266,7 +266,7 @@ export default function FieldReservation({
               data={courtFetcher.data?.courts || []}
               nameK={"name"}
               queryName="courtName"
-              queryValue="court"
+              queryValue="courtID"
               valueK={"id"}
               onValueChange={onCourtNameChange}
             />
@@ -299,7 +299,7 @@ export default function FieldReservation({
               size="sm"
               onClick={() => {
                 newBooking.onPayload({
-                  court: Number(searchParams.get("court")),
+                  court: Number(searchParams.get("courtID")),
                   courtName: searchParams.get("courtName") || "",
                   selectedSlots: Array.from(selectedSlots),
                 });

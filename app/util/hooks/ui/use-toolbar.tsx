@@ -9,9 +9,9 @@ export interface SetupToolbarOpts {
   viewTitle?: string;
   status?: State;
   titleToolbar?: string;
-  onChangeState?: (event: EventState) => void;
   onSave?: () => void;
   disabledSave?: boolean;
+  onChangeState?: (event: EventState) => void;
   addNew?: () => void;
   triggerTabs?: boolean;
 }

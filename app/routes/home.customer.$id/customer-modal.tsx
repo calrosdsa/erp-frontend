@@ -28,18 +28,21 @@ import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import ModalLayout, {
+  setUpModalPayload,
   useModalStore,
 } from "@/components/ui/custom/modal-layout";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
+import { DEFAULT_ID } from "~/constant";
 
 export default function CustomerModal({
   appContext,
 }: {
   appContext: GlobalState;
 }) {
+  const key = route.customer;
   const fetcherLoader = useFetcher<typeof loader>();
   const data = fetcherLoader.data;
   const customer = fetcherLoader.data?.customer;
@@ -52,7 +55,6 @@ export default function CustomerModal({
   const r = route;
   const customerID = searchParams.get(route.customer);
   const navigate = useNavigate();
-  const { setToolbar } = useToolbar();
   const [permission] = usePermission({
     roleActions: appContext.roleActions,
     actions: data?.actions,
@@ -103,87 +105,101 @@ export default function CustomerModal({
     [fetcher.data]
   );
 
-  useEffect(() => {
-    const state = stateFromJSON(customer?.status);
-
-    let view: ButtonToolbar[] = [];
-    let actions: ButtonToolbar[] = [];
-    if (permission.edit && state == State.ENABLED) {
-      actions.push({
-        label: "Deshabilitar",
+  setUpModalPayload(
+    key,
+    () => {
+      const state = stateFromJSON(customer?.status);
+      const isNew = DEFAULT_ID == customerID;
+      let view: ButtonToolbar[] = [];
+      let actions: ButtonToolbar[] = [];
+      if (permission.edit && state == State.ENABLED) {
+        actions.push({
+          label: "Deshabilitar",
+          onClick: () => {
+            onChangeState(EventState.DISABLED_EVENT);
+          },
+        });
+      }
+      if (permission.edit && state == State.DISABLED) {
+        actions.push({
+          label: "Habilitar Evento",
+          onClick: () => {
+            onChangeState(EventState.ENABLED_EVENT);
+          },
+        });
+      }
+      view.push({
+        label: t("accountingLedger"),
         onClick: () => {
-          onChangeState(EventState.DISABLED_EVENT);
+          navigate(
+            r.toRoute({
+              main: r.generalLedger,
+              routePrefix: [r.accountingM],
+              q: {
+                fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
+                toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
+                partyName: customer?.name,
+                party: customer?.id.toString(),
+                partyType: partyTypeToJSON(PartyType.supplier),
+              },
+            })
+          );
         },
       });
-    }
-    if (permission.edit && state == State.DISABLED) {
-      actions.push({
-        label: "Habilitar Evento",
+      view.push({
+        label: t("accountReceivable"),
         onClick: () => {
-          onChangeState(EventState.ENABLED_EVENT);
+          navigate(
+            r.toRoute({
+              main: r.accountReceivable,
+              routePrefix: [r.accountingM],
+              q: {
+                fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
+                toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
+                party: customer?.id.toString(),
+                partyName: customer?.name,
+              },
+            })
+          );
         },
       });
-    }
-    view.push({
-      label: t("accountingLedger"),
-      onClick: () => {
-        navigate(
-          r.toRoute({
-            main: r.generalLedger,
-            routePrefix: [r.accountingM],
-            q: {
-              fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
-              toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
-              partyName: customer?.name,
-              party: customer?.id.toString(),
-              partyType: partyTypeToJSON(PartyType.supplier),
-            },
-          })
-        );
-      },
-    });
-    view.push({
-      label: t("accountReceivable"),
-      onClick: () => {
-        navigate(
-          r.toRoute({
-            main: r.accountReceivable,
-            routePrefix: [r.accountingM],
-            q: {
-              fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
-              toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
-              party: customer?.id.toString(),
-              partyName: customer?.name,
-            },
-          })
-        );
-      },
-    });
+      return {
+        title:isNew ? "Nuevo cliente": customer?.name,
+        view: isNew ? [] : view,
+        actions: isNew ? [] : actions,
+        status: stateFromJSON(customer?.status),
+        enableEdit: isNew,
+        isNew: isNew,
+        onCancel: isNew
+          ? () => {
+              setOpen(false);
+            }
+          : undefined,
+      };
+    },
+    [fetcherLoader.data]
+  );
 
-    console.log("SET TOOLBAR")
-    setToolbar({
-      view: view,
-      actions: actions,
-      status: stateFromJSON(customer?.status),
+  const closeModal = () => {
+    searchParams.delete(route.customer);
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
     });
-  }, [fetcherLoader.data]);
+  };
 
   useEffect(() => {
     if (!open) {
-      searchParams.delete(route.customer);
-      setSearchParams(searchParams, {
-        preventScrollReset: true,
-      });
+      closeModal();
     }
   }, [open]);
 
   return (
     <ModalLayout
+      keyPayload={key}
       open={open}
       onOpenChange={(e) => {
         setOpen(e);
       }}
-      title={customer?.name || ""}
     >
       {fetcherLoader.state == "loading" && !fetcherLoader.data ? (
         <LoadingSpinner />
@@ -201,9 +217,7 @@ export default function CustomerModal({
               {
                 label: "Info",
                 value: "info",
-                children: <CustomerInfo 
-                appContext={appContext} 
-                data={data}/>,
+                children: <CustomerInfo appContext={appContext} data={data} />,
               },
             ]}
           />

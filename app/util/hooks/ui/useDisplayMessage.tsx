@@ -4,10 +4,12 @@ import { useToast } from "@/components/ui/use-toast";
 import { toast } from "sonner";
 
 interface DisplayMessageProps {
+  toastID?:string | number
   success?: string;
   error?: string;
   onShowMessage?: () => void;
   onSuccessMessage?: () => void;
+  onErrorMessage?:()=>void; 
 }
 
 export const useDisplayMessage = (
@@ -19,13 +21,17 @@ export const useDisplayMessage = (
 
   useEffect(() => {
     if (props.error) {
-      toast.error(props.error);
+      toast.error(props.error,{
+        id:props.toastID,
+      });
       if (props.onShowMessage) {
         props.onShowMessage();
       }
     }
     if (props.success) {
-      toast.success( props.success as string);
+      toast.success( props.success as string,{
+        id:props.toastID
+      });
       if (props.onSuccessMessage) {
         props.onSuccessMessage();
       }

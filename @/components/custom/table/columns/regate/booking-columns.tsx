@@ -20,9 +20,9 @@ import TableCell from "../../cells/table-cell-update";
 import { TableCellBase } from "../../cells/table-cell";
 
 export const bookingColumns = ({
-  openModal,
+  setParams,
 }: {
-  openModal: (key: string, value: string) => void;
+  setParams:(params: Record<string, any>) => void
 }): ColumnDef<components["schemas"]["BookingDto"]>[] => {
   const { t, i18n } = useTranslation("common");
   const r = route;
@@ -54,7 +54,9 @@ export const bookingColumns = ({
             className="font-semibold underline cursor-pointer"
             {...props}
             onClick={() =>
-              openBookingModal(rowData.id.toString(), openModal)
+              setParams({
+                [route.booking]:rowData.id
+              })
             }
           />
         );
@@ -63,25 +65,19 @@ export const bookingColumns = ({
     {
       accessorKey: "party_name",
       header: t("_customer.base"),
-      size: 100,
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
           <>
-            <TableCellNameNavigation
-              {...props}
-              navigate={(name) =>
-                r.toRoute({
-                  main: r.customer,
-                  routePrefix: [r.sellingM],
-                  routeSufix: [name || ""],
-                  q: {
-                    tab: "info",
-                    id: rowData.party_uuid,
-                  },
-                })
-              }
-            />
+          <TableCellBase
+            className="font-semibold underline cursor-pointer"
+            {...props}
+            onClick={() =>
+              setParams({
+                [route.customer]:rowData.party_id
+              })
+            }
+          />
           </>
         );
       },
@@ -109,7 +105,7 @@ export const bookingColumns = ({
       },
     },
     {
-      accessorKey: "total_price",
+      accessorKey: "amount",
       header: "Saldo",
       size: 90,
       cell: ({ ...props }) => {
@@ -171,21 +167,15 @@ export const bookingColumns = ({
       cell: ({ ...props }) => {
         const rowData = props.row.original;
         return (
-          <>
-            <TableCellNameNavigation
-              {...props}
-              navigate={(name) =>
-                r.toRoute({
-                  main: r.court,
-                  routeSufix: [name || ""],
-                  q: {
-                    tab: "info",
-                    id: rowData.court_uuid,
-                  },
-                })
-              }
-            />
-          </>
+          <TableCellBase
+          className="font-semibold underline cursor-pointer"
+          {...props}
+          onClick={() =>
+            setParams({
+              [route.court]:rowData.court_id
+            })
+          }
+        />
         );
       },
     },

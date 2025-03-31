@@ -119,13 +119,13 @@ export const ContactInfo = () => {
               value={contact?.gender}
             /> */}
 
-            <Typography variant="subtitle2" className=" col-span-full">
+            {/* <Typography variant="subtitle2" className=" col-span-full">
               {t("_contact.list")}
-            </Typography>
+            </Typography> */}
 
-            <div className=" mx-2 col-span-full">
+            {/* <div className=" mx-2 col-span-full">
               {contact && <PartyReferences partyId={contact.id} />}
-            </div>
+            </div> */}
           </div>
         </fetcher.Form>
       </Form>
