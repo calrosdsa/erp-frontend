@@ -1814,6 +1814,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/notification/count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Notification Count */
+        get: operations["notification-count"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/order": {
         parameters: {
             query?: never;
@@ -5575,18 +5592,6 @@ export interface components {
             entity_actions: components["schemas"]["EntityActionsDto"];
             role_uuid: string;
         };
-        EditSupplierRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            group_id?: number | null;
-            /** Format: int64 */
-            id: number;
-            name: string;
-        };
         EditTaxLineRequestBody: {
             /**
              * Format: uri
@@ -7247,6 +7252,15 @@ export interface components {
             id: number;
             name: string;
             section_name: string;
+        };
+        NotificationCountDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            count: number;
         };
         NotificationDto: {
             /** Format: int64 */
@@ -10211,19 +10225,16 @@ export interface components {
             /** Format: int64 */
             total_paid_amount: number;
         };
-        SupplierBody: {
+        SupplierData: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            contact?: components["schemas"]["ContactData"];
-            supplier: components["schemas"]["SupplierData"];
-        };
-        SupplierData: {
+            contacts: components["schemas"]["ContactData"][];
+            fields: components["schemas"]["SupplierFields"];
             /** Format: int64 */
-            group_id?: number | null;
-            name: string;
+            id?: number;
         };
         SupplierDto: {
             created_at: string;
@@ -10238,6 +10249,11 @@ export interface components {
             phone_number: string | null;
             status: string;
             uuid: string;
+        };
+        SupplierFields: {
+            /** Format: int64 */
+            group_id?: number | null;
+            name: string;
         };
         TaxAndChargeLineData: {
             /** Format: double */
@@ -15572,6 +15588,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseDataListListNotificationDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "notification-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationCountDtoBody"];
                 };
             };
             /** @description Error */
@@ -21298,13 +21343,16 @@ export interface operations {
     "edit-supplier": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditSupplierRequestBody"];
+                "application/json": components["schemas"]["SupplierData"];
             };
         };
         responses: {
@@ -21340,7 +21388,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["SupplierBody"];
+                "application/json": components["schemas"]["SupplierData"];
             };
         };
         responses: {

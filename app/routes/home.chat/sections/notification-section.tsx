@@ -10,11 +10,13 @@ import { components, operations } from "~/sdk";
 import { fullName } from "~/util/convertor/convertor";
 import { formatLongDate } from "~/util/format/formatDate";
 import { route } from "~/util/route";
+import { useChatStore } from "../use-chat-store";
 
 export default function NotificationSection() {
   const fetcher = useFetcher<typeof action>();
   const { i18n } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
+  const {setPayload} = useChatStore()
   const fetchData = () => {
     const query: operations["notification"]["parameters"]["query"] = {
       size: "100",
@@ -42,6 +44,9 @@ export default function NotificationSection() {
   useEffect(() => {
     console.log("REDER NOTIFICATION SECTION...");
     fetchData();
+    setPayload({
+      notifications:0,
+    })
   }, []);
   return (
     <div className="w-full">
@@ -51,7 +56,7 @@ export default function NotificationSection() {
         </div>
         <span className=" text-lg">Notificaciones</span>
       </div>
-      <div className=" overflow-auto">
+      <div className=" overflow-auto h-screen">
         {fetcher.state == "submitting" && <LoadingSpinner className="mt-2" />}
         {fetcher.data?.notifications.map((item) => {
           return (
@@ -69,6 +74,7 @@ export default function NotificationSection() {
                     {fullName(item.profile_gn, item.profile_fn)}
                   </span>
                   <span className=" text-xs">
+                    {/* {item.send_at} */}
                     {formatLongDate(item.send_at, i18n.language)}
                   </span>
                 </div>

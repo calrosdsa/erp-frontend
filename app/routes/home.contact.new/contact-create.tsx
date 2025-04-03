@@ -7,6 +7,8 @@ import { useToast } from "@/components/ui/use-toast"
 import { useEffect } from "react"
 import { getGenders } from "~/util/data/gender"
 import { contactDataSchema } from "~/util/data/schemas/contact/contact.schema"
+import CreateLayout from "@/components/layout/create-layout"
+import { setUpToolbarRegister } from "~/util/hooks/ui/useSetUpToolbar"
 
 
 export default function ContactCreateClient(){
@@ -14,6 +16,12 @@ export default function ContactCreateClient(){
     const {t} = useTranslation("common")
     const {toast} = useToast()
     const [searchParams] = useSearchParams()
+
+    setUpToolbarRegister(()=>{
+        return {
+            titleToolbar:"Nuevo Contacto"
+        }
+    },[])
 
     useEffect(()=>{
         if(fetcher.data?.error){
@@ -23,7 +31,7 @@ export default function ContactCreateClient(){
         }
     },[fetcher.data])
     return (
-        <div>
+        <CreateLayout>
             <CustomForm
             fetcher={fetcher}
             schema={contactDataSchema}
@@ -42,17 +50,12 @@ export default function ContactCreateClient(){
             }}
             formItemsData={[
                 {
-                    name:"givenName",
-                    label:t("form.givenName"),
+                    name:"name",
+                    label:t("form.name"),
                     type:"string",
                     typeForm:"input"
                 },
-                {
-                    name:"familyName",
-                    label:t("form.familyName"),
-                    type:"string",
-                    typeForm:"input"
-                },
+               
                 {
                     name:"email",
                     label:t("form.email"),
@@ -60,7 +63,7 @@ export default function ContactCreateClient(){
                     typeForm:"input"
                 },
                 {
-                    name:"phoneNumber",
+                    name:"phone_number",
                     label:t("form.phoneNumber"),
                     type:"tel",
                     typeForm:"input"
@@ -75,6 +78,6 @@ export default function ContactCreateClient(){
                 }
             ]}
             />
-        </div>
+        </CreateLayout>
     )
 }

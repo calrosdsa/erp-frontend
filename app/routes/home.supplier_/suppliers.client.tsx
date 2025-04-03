@@ -1,4 +1,4 @@
-import { useLoaderData, useOutletContext } from "@remix-run/react";
+import { useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
 import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { supplierColumns } from "@/components/custom/table/columns/buying/supplier-columns";
@@ -19,6 +19,19 @@ export default function SuppliersClient() {
     roleActions: globalState.roleActions,
   });
   const { t } = useTranslation("common");
+  const [searchParams,setSearchParams] = useSearchParams()
+  const setParams = (params: Record<string, any>) => {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        searchParams.set(key, value); // Update or add the parameter
+      } else {
+        searchParams.delete(key); // Remove the parameter if the value is empty
+      }
+    });
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
   return (
     <ListLayout
       title={t(party.supplier)}
@@ -30,7 +43,9 @@ export default function SuppliersClient() {
     >
       <DataTable
         data={paginationResult?.results || []}
-        columns={supplierColumns({})}
+        columns={supplierColumns({
+          setParams, 
+        })}
         enableSizeSelection={true}
       />
     </ListLayout>

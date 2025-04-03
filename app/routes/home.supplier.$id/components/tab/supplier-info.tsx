@@ -3,10 +3,7 @@ import { action, loader } from "../../route";
 import { useFetcher, useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
-import {
-  CustomerData,
-  customerSchema,
-} from "~/util/data/schemas/selling/customer-schema";
+
 
 import { z } from "zod";
 import { useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
@@ -19,46 +16,47 @@ import { GlobalState } from "~/types/app-types";
 import { SerializeFrom } from "@remix-run/node";
 import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { SmartForm } from "@/components/form/smart-form";
-import CustomerForm from "../../customer-form";
 import { useModalStore } from "@/components/ui/custom/modal-layout";
 import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { toast } from "sonner";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { Entity } from "~/types/enums";
-export default function CustomerInfo({
+import { SupplierData, supplierSchema } from "~/util/data/schemas/buying/supplier-schema";
+import SupplierForm from "../../supplier-form";
+export default function SupplierInfo({
   appContext,
   data,
 }: {
   appContext: GlobalState;
   data?: SerializeFrom<typeof loader>;
 }) {
-  const key = route.customer;
+  const key = route.supplier;
   const payload = useModalStore((state) => state.payload[key]) || {};
   const { editPayload } = useModalStore();
-  const customer = data?.customer;
+  const supplier = data?.supplier;
   const contacts = data?.contacts;
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [toastID, setToastID] = useState<string | number>("");
-  const id = searchParams.get(route.customer);
+  const id = searchParams.get(route.supplier);
 
-  const onSubmit = (e: CustomerData) => {
+  const onSubmit = (e: SupplierData) => {
     const id = toast.loading(LOADING_MESSAGE);
     setToastID(id);
-    let action = e.customerID ? "edit-customer" : "create-customer";
+    let action = e.supplierID ? "edit-supplier" : "create-supplier";
     fetcher.submit(
       {
         action,
-        customerData: e,
+        supplierData: e,
       },
       {
         method: "POST",
         encType: "application/json",
         action: route.toRoute({
-          main: route.customer,
-          routeSufix: [customer?.id.toString() || ""],
+          main: route.supplier,
+          routeSufix: [supplier?.id.toString() || ""],
         }),
       }
     );
@@ -94,32 +92,31 @@ export default function CustomerInfo({
         <SmartForm
           isNew={payload.isNew}
           title={t("_customer.info")}
-          schema={customerSchema}
+          schema={supplierSchema}
           keyPayload={key}
           defaultValues={{
-            name: customer?.name || "",
-            customerType: customer?.customer_type || "",
-            customerID: customer?.id,
+            supplierID: supplier?.id,
+            name: supplier?.name || "",
             group: {
-              id: customer?.group_id,
-              name: customer?.group_name,
+              id: supplier?.group_id,
+              name: supplier?.group,
             },
             contacts:
-              contacts?.map((t) => mapToContactSchema(t, customer?.id)) || [],
+              contacts?.map((t) => mapToContactSchema(t, supplier?.id)) || [],
           }}
           onSubmit={onSubmit}
         >
-          <CustomerForm contacts={contacts || []} inputRef={inputRef} />
+          <SupplierForm contacts={contacts || []} inputRef={inputRef} />
         </SmartForm>
       </div>
-      {customer?.id != undefined && (
+      {supplier?.id != undefined && (
         <div className=" col-span-5">
           <ActivityFeed
             appContext={appContext}
             activities={data?.activities || []}
-            partyID={customer?.id}
-            partyName={customer.name}
-            entityID={Entity.CUSTOMER}
+            partyID={supplier?.id}
+            partyName={supplier.name}
+            entityID={Entity.SUPPLIER}
           />
         </div>
       )}

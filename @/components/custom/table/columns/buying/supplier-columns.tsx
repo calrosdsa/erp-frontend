@@ -7,36 +7,35 @@ import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import TableCellStatus from "../../cells/table-cell-status";
+import { TableCellBase } from "../../cells/table-cell";
 
-export const supplierColumns = ({}:{
-}):ColumnDef<components["schemas"]["SupplierDto"]>[] =>{
+export const supplierColumns = ({
+    setParams,
+  }: {
+    setParams: (params: Record<string, any>) => void
+  }):ColumnDef<components["schemas"]["SupplierDto"]>[] =>{
 
     let columns:ColumnDef<components["schemas"]["SupplierDto"]>[] = [];
     const r= route
     const {t,i18n} = useTranslation("common")
-    columns.push({
+    columns.push( {
         accessorKey: "name",
-        header:t("form.name"),
-        cell:({...props})=>{
-            const rowD = props.row.original
-            return (
-                <TableCellNameNavigation
-                {...props}
-                navigate={(name)=>{
-                    return r.toRoute({
-                        main:partyTypeToJSON(PartyType.supplier),
-                        routePrefix:[r.buyingM],
-                        routeSufix:[name],
-                        q:{
-                            tab:"info",
-                            id:rowD.id.toString(),
-                        }
-                    })
-                }}
-                />
-            )
-    }
-    });
+        header: t("form.name"),
+        cell: ({ ...props }) => {
+          const rowData = props.row.original;
+          return (
+            <TableCellBase
+              className="font-semibold underline cursor-pointer"
+              {...props}
+              onClick={() =>
+                  setParams({
+                    [route.supplier]:rowData.id
+                  })
+              }
+            />
+          )
+        },
+      },);
     columns.push({
         accessorKey: "status",
         header: t("form.status"),

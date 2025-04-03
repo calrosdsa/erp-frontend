@@ -3,13 +3,13 @@ import apiClient from "~/apiclient";
 import { DEFAULT_ENABLED, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
 import SuppliersClient from "./suppliers.client";
 import { z } from "zod";
-import { createSupplierSchema } from "~/util/data/schemas/buying/supplier-schema";
+import { mapToSupplierData, supplierSchema } from "~/util/data/schemas/buying/supplier-schema";
 import { components } from "~/sdk";
 import { mapToContactData } from "~/util/data/schemas/contact/contact.schema";
 
 type ActionData = {
   action: string;
-  createSupplier: z.infer<typeof createSupplierSchema>;
+  createSupplier: z.infer<typeof supplierSchema>;
   query: string;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -25,13 +25,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "create-supplier": {
       const d = data.createSupplier;
       const res = await client.POST("/supplier", {
-        body: {
-          supplier: {
-            group_id: d.groupID,
-            name: d.name,
-          },
-          contact: d.contactData ? mapToContactData(d.contactData) : undefined,
-        },
+        body: mapToSupplierData(data.createSupplier),
       });
       message = res.data?.message;
       error = res.error?.detail;

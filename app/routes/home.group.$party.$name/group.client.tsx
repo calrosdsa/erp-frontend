@@ -31,7 +31,7 @@ export default function GroupClient() {
         routeSufix: [group?.name || ""],
         q: {
           tab: "info",
-          id: group?.uuid,
+          id: group?.id,
         },
       }),
     },

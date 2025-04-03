@@ -17,7 +17,7 @@ interface GroupFromProps
   extends Partial<SmartAutocompleteProps<any, keyof any>> {
   isGroup: false;
   partyType: string;
-  roleActions: components["schemas"]["RoleActionDto"][];
+  roleActions?: components["schemas"]["RoleActionDto"][];
   onSelect: (e: components["schemas"]["GroupDto"]) => void;
 }
 export const GroupSmartAutocomplete = ({ ...props }: GroupFromProps) => {

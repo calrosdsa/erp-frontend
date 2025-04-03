@@ -201,7 +201,7 @@ export default function ModalLayout({
                   </>
                 )}
 
-                {payload.onSave && !payload.disabledSave && (
+                {/* {payload.onSave && !payload.disabledSave && (
                   <Button
                     size={"sm"}
                     onClick={() => {
@@ -224,7 +224,7 @@ export default function ModalLayout({
                   >
                     {t("form.save")}
                   </Button>
-                )}
+                )} */}
               </div>
             </div>
             {/* <ResponsiveSidebar navItems={navItems} /> */}
@@ -253,7 +253,7 @@ export default function ModalLayout({
               </Button>
               <Button
                 type="button"
-                disabled={payload.loading}
+                disabled={payload.disabledSave}
                 size={"lg"}
                 onClick={() => {
                   payload.onSave?.();

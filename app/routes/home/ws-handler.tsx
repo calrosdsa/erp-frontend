@@ -6,6 +6,9 @@ import { MessageType, messageTypeFromJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import { WsMessage } from "~/types/app-types";
 import { useChatStore } from "../home.chat/use-chat-store";
+import { useFetcher } from "@remix-run/react";
+import { action } from "../home.notification/route";
+import { route } from "~/util/route";
 export const WsHandler = ({
   accessToken,
   sessionUUID,
@@ -17,7 +20,23 @@ export const WsHandler = ({
     `ws://localhost:9090/ws/subscribe?token=${accessToken}&session_uuid=${sessionUUID}`
   );
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
-  const { addNotificationCount, setPayload,handleLastMessage } = useChatStore();
+  const { addNotificationCount, setPayload, handleLastMessage } =
+    useChatStore();
+
+  const notificationCountFetcher = useFetcher<typeof action>();
+
+  const initData = () => {
+    notificationCountFetcher.submit(
+      {
+        action: "notification-count",
+      },
+      {
+        method: "POST",
+        action: route.to(route.notification),
+        encType: "application/json",
+      }
+    );
+  };
 
   const parseMessage = (message: string) => {
     try {
@@ -38,7 +57,7 @@ export const WsHandler = ({
           const chatMessage = JSON.parse(
             message?.message
           ) as components["schemas"]["ChatMessageDto"];
-          handleLastMessage(chatMessage)
+          handleLastMessage(chatMessage);
           break;
         case MessageType.Notification:
           toast(message?.message);
@@ -54,6 +73,18 @@ export const WsHandler = ({
       handleMessage(lastMessage);
     }
   }, [lastMessage]);
+
+  useEffect(() => {
+    initData();
+  }, []);
+
+  useEffect(() => {
+    if (notificationCountFetcher.data?.notificationCount) {
+      setPayload({
+        notifications: notificationCountFetcher.data.notificationCount,
+      });
+    }
+  }, [notificationCountFetcher.data]);
   return readyState;
 };
 

@@ -89,7 +89,8 @@ export default function CustomFormDate({
             <PopoverContent className="w-auto p-0">
               <Calendar
                 mode="single"
-                selected={field.value ? toZonedTime(field.value, "Etc/UTC") : undefined}
+                // selected={field.value ? toZonedTime(field.value, "Etc/UTC") : undefined}
+                selected={field.value}
                 onSelect={(date) => {
                   if (date) {
                     // If we already have a value, preserve the time

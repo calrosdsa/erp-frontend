@@ -4,7 +4,7 @@ import { Control, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier";
+import { useCreateSupplier } from "~/routes/home.supplier_/components/create-supplier";
 import { useCreateCustomer } from "~/routes/home.customer_/components/create-customer";
 import { components } from "~/sdk";
 import { GlobalState } from "~/types/app-types";

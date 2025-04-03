@@ -12,12 +12,13 @@ import { Pencil, Save, X } from "lucide-react";
 import { FormProvider } from "./form-provider";
 import { cn } from "@/lib/utils";
 import isEqual from "lodash/isEqual";
+import { useModalStore } from "../ui/custom/modal-layout";
 interface SmartFormProps<T extends z.ZodType> {
   schema: T;
   defaultValues: z.infer<T>;
   onSubmit: (values: z.infer<T>) => void | Promise<void>;
   children: React.ReactNode;
-  defaultEditMode?: boolean;
+  keyPayload:string
   className?: string;
   title?: string;
   isNew?: boolean;
@@ -28,7 +29,7 @@ export function SmartForm<T extends z.ZodType>({
   defaultValues,
   onSubmit,
   children,
-  defaultEditMode = false,
+  keyPayload,
   className,
   title,
   isNew,
@@ -38,9 +39,11 @@ export function SmartForm<T extends z.ZodType>({
     defaultValues,
     mode: "onChange",
   });
+  const {editPayload} =  useModalStore()
+  const payload = useModalStore((state)=>state.payload[keyPayload])
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isEditing, setIsEditing] = useState(defaultEditMode);
+  // const [isEditing, setIsEditing] = useState(defaultEditMode);
 
   const [isChanged, setIsChanged] = useState(false);
 
@@ -48,6 +51,12 @@ export function SmartForm<T extends z.ZodType>({
   useEffect(() => {
     setIsChanged(!isEqual(watchedValues, defaultValues));
   }, [watchedValues, defaultValues]);
+
+  const setIsEditing = (e:boolean)=>{
+    editPayload(keyPayload,{
+      enableEdit:e
+    });
+  }
 
   const handleSubmit = async (values: z.infer<T>) => {
     try {
@@ -68,7 +77,7 @@ export function SmartForm<T extends z.ZodType>({
   return (
     <FormProvider
       form={form}
-      defaultEditMode={isEditing}
+      defaultEditMode={payload?.enableEdit}
       hasChanged={isChanged}
     >
       <Form {...form}>
@@ -80,7 +89,7 @@ export function SmartForm<T extends z.ZodType>({
             <span className="font-medium">{title}</span>
             {!isNew && (
               <div>
-                {!isEditing ? (
+                {!payload?.enableEdit ? (
                   <Button
                     type="button"
                     variant="ghost"

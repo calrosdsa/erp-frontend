@@ -5,7 +5,7 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import { route } from "~/util/route";
 import { usePermission } from "../useActions";
-import { useCreateSupplier } from "~/routes/home.buying.supplier_/components/create-supplier";
+import { useCreateSupplier } from "~/routes/home.supplier_/components/create-supplier";
 import { Control } from "react-hook-form";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 

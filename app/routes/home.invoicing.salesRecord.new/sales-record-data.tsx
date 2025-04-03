@@ -27,7 +27,7 @@ import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebou
 import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { Separator } from "@/components/ui/separator";
-import Supplier from "../home.buying.supplier.$name/route";
+import Supplier from "../home.supplier.$id/route";
 import { salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-record-schema";
 import { cn } from "@/lib/utils";
 type SalesRecordType = z.infer<typeof salesRecordDataSchema>;

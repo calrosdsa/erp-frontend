@@ -105,6 +105,7 @@ class Routes {
   salesQuotation = "salesQuotation";
   
   stage = "stage"
+  notification = "notification"
   
   //Party
   purchaseReceipt = "purchaseReceipt";
@@ -144,7 +145,7 @@ class Routes {
     tab: "info",
   };
   
-  to(href: string, q?: Record<string, string | undefined>): string {
+  to(href: string, q?: Record<string, any>): string {
     return `${this.base}/${this.baseRoute(href, q)}`;
     // return href;
   }
@@ -193,7 +194,7 @@ class Routes {
   toRouteDetail(
     main:string,
     id:string,
-    q?: Record<string, string | undefined>
+    q?: Record<string, any>
   ): string {
     let url = `${this.base}/${main}/${id}`;
     
@@ -203,7 +204,7 @@ class Routes {
     main?: string;
     routePrefix?: string[];
     routeSufix?: string[];
-    q?: Record<string, string | undefined>;
+    q?: Record<string, any>;
   }): string {
     let url = `${this.base}/`;
     if (opts.routePrefix) {

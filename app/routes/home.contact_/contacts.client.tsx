@@ -26,7 +26,7 @@ export default function ContactsClient() {
       title={t(party.contact)}
       {...(permission?.create && {
         onCreate: () => {
-          navigate(r.toCreateContact());
+          navigate(r.toRouteDetail(r.contact,"new"));
         },
       })}
     >

@@ -40,7 +40,7 @@ import {
 import {
   CreateSupplier,
   useCreateSupplier,
-} from "~/routes/home.buying.supplier_/components/create-supplier";
+} from "~/routes/home.supplier_/components/create-supplier";
 import {
   CreateWareHouse,
   useCreateWareHouse,

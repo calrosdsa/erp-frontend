@@ -2,13 +2,16 @@ import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { z } from "zod";
 import apiClient from "~/apiclient";
 import { fullName } from "~/util/convertor/convertor";
-import { createContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { route } from "~/util/route";
 import ContactCreateClient from "./contact-create";
+import {
+  contactDataSchema,
+  mapToContactData,
+} from "~/util/data/schemas/contact/contact.schema";
 
 type ActionData = {
   action: string;
-  createContact: z.infer<typeof createContactSchema>;
+  createContact: z.infer<typeof contactDataSchema>;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -21,25 +24,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const d = data.createContact;
       console.log("CREATING CONTACT", d);
       const res = await client.POST("/party/contact", {
-        body: {
-          contact: {
-            given_name: d.givenName || "",
-            family_name: d.familyName,
-            email: d.email,
-            phone_number: d.phone_number,
-            gender: d.gender,
-          },
-          party_reference: d.partyReferenceId,
-        },
+        body: mapToContactData(data.createContact),
       });
       console.log(res.data, res.error);
       if (res.data) {
         const contact = res.data.result;
         return redirect(
-          r.toContactDetail(
-            fullName(contact.given_name, contact.family_name),
-            contact.uuid
-          )
+          r.toRouteDetail(r.contact, contact.name, {
+            id: contact.id,
+            tab: "info",
+          })
         );
       }
       error = res.error?.detail;

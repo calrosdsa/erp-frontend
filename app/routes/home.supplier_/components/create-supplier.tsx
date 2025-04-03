@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
 import CustomForm from "@/components/custom/form/CustomForm";
-import { createSupplierSchema } from "~/util/data/schemas/buying/supplier-schema";
 import { z } from "zod";
 import { route } from "~/util/route";
 import { GroupAutocompleteForm, useGroupDebounceFetcher } from "~/util/hooks/fetchers/useGroupDebounceFetcher";
@@ -16,6 +15,7 @@ import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import AccordationLayout from "@/components/layout/accordation-layout";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
+import { supplierSchema } from "~/util/data/schemas/buying/supplier-schema";
 
 export const CreateSupplier = ({
   open,
@@ -52,9 +52,9 @@ export const CreateSupplier = ({
       title={t("f.add-new", { o: t("_supplier.base") })}
     >
       <CustomForm
-        schema={createSupplierSchema}
+        schema={supplierSchema}
         fetcher={fetcher}
-        onSubmit={(values: z.infer<typeof createSupplierSchema>) => {
+        onSubmit={(values: z.infer<typeof supplierSchema>) => {
           fetcher.submit(
             {
               action: "create-supplier",
@@ -89,25 +89,10 @@ export const CreateSupplier = ({
             partyType={r.supplierGroup}
             roleActions={globalState.roleActions}
             onSelect={(e) => {
-              form.setValue("groupID", e.id);
+              form.setValue("group.id", e.id);
             }}
           />
-         <AccordationLayout title={t("contact")} className="grid gap-3">
-                <CustomFormFieldInput
-                  label={t("form.phoneNumber")}
-                  name="contactData.phoneNumber"
-                  control={form.control}
-                  inputType="input"
-                  type="tel"
-                />
-                <CustomFormFieldInput
-                  label={t("form.email")}
-                  name="contactData.email"
-                  control={form.control}
-                  inputType="input"
-                  type="email"
-                />
-              </AccordationLayout>
+    
             </>
           );
         }}

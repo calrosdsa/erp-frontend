@@ -30,7 +30,7 @@ import {
   InvoiceAutocompleteFormField,
 } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { Separator } from "@/components/ui/separator";
-import Supplier from "../home.buying.supplier.$name/route";
+import Supplier from "../home.supplier.$id/route";
 import { cn } from "@/lib/utils";
 type PurchaseRecordDataType = z.infer<typeof purchaseRecordDataSchema>;
 

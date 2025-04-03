@@ -19,7 +19,6 @@ import { useEffect, useRef, useState } from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TooltipLayout } from "@/components/layout/tooltip-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "./form-provider";
@@ -101,6 +100,17 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
     console.log("MOUNT");
   }, []);
 
+  if (!isEditing) {
+    return (
+    <div className="flex flex-col py-[5px]Z">
+        {label && <span className="text-xs text-primary/60">{label}</span>}
+        <div>
+          <span className="text-sm">{query || "-"}</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("", className)}>
       <Popover
@@ -108,7 +118,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
         onOpenChange={setOpen}
         modal={true}
       >
-        <Command shouldFilter={shouldFilter} className="">
+        <Command shouldFilter={shouldFilter} className="py-[5px]">
           <PopoverAnchor asChild className="">
             <CommandPrimitive.Input
               asChild
@@ -136,65 +146,59 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
               }}
               onBlur={() => onBlur?.(query)}
             >
-              <div className="flex flex-col">
+              <div className="flex flex-col ">
                 {label && (
                   <span className="text-xs text-primary/60">{label}</span>
                 )}
 
-                {isEditing ? (
-                  isSearch ? (
-                    <div
-                      className={cn(
-                        "flex space-x-1 items-center border rounded-full px-2"
-                      )}
-                    >
-                      <SearchIcon className="p-[2px]" />
+                {isSearch ? (
+                  <div
+                    className={cn(
+                      "flex space-x-1 items-center border rounded-full px-2"
+                    )}
+                  >
+                    <SearchIcon className="p-[2px]" />
 
-                      <Input
-                        placeholder={placeholder}
-                        className={cn(
-                          "border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-0 ",
-                          inputClassName
-                        )}
-                      />
-                    </div>
-                  ) : (
-                    <div
+                    <Input
+                      placeholder={placeholder}
                       className={cn(
-                        "flex space-x-1 items-center border  px-2",
-                        className
+                        "border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-0 ",
+                        inputClassName
                       )}
-                    >
-                      <Input
-                        value={query}
-                        placeholder={placeholder}
-                        className={cn(
-                          "border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-xs",
-                          inputClassName
-                        )}
-                      />
-
-                      {badgeLabel && (
-                        <Badge variant={"secondary"} className="">
-                          {badgeLabel}
-                        </Badge>
-                      )}
-                      {actions?.map((action) => {
-                        return (
-                          <action.Icon
-                            className="h-4 w-4 icon-button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              action.onClick();
-                            }}
-                          />
-                        );
-                      })}
-                    </div>
-                  )
+                    />
+                  </div>
                 ) : (
-                  <div>
-                    <span className="text-sm">{query || "-"}</span>
+                  <div
+                    className={cn(
+                      "flex space-x-1 items-center border h-9 rounded-sm  px-2 mt-[3px]",
+                      className
+                    )}
+                  >
+                    <Input
+                      value={query}
+                      placeholder={placeholder}
+                      className={cn(
+                        "border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-8 px-0 text-sm",
+                        inputClassName
+                      )}
+                    />
+
+                    {badgeLabel && (
+                      <Badge variant={"secondary"} className="">
+                        {badgeLabel}
+                      </Badge>
+                    )}
+                    {actions?.map((action) => {
+                      return (
+                        <action.Icon
+                          className="h-4 w-4 icon-button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            action.onClick();
+                          }}
+                        />
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -258,7 +262,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
               ) : null}
               {addNew && (
                 <Button
-                  size={"xs"}
+                  size={"sm"}
                   variant={"default"}
                   className=" py-1"
                   onClick={() => {

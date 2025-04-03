@@ -28,6 +28,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 import { ActivityType, activityTypeToJSON } from "~/gen/common";
 import { GlobalState } from "~/types/app-types";
+import { toZonedTime } from "date-fns-tz";
 
 export default function ActivityDeadlineTab({ 
   partyID,partyName,entityID,appContext
@@ -71,6 +72,8 @@ export default function ActivityDeadlineTab({
       type: activityTypeToJSON(ActivityType.ACTIVITY),
       activity_deadline: e,
     };
+    // console.log("ACTIVITY DATA"activityData)
+    // return 
     fetcher.submit(
       {
         action: "create",
@@ -106,6 +109,7 @@ export default function ActivityDeadlineTab({
         <div ref={expandedRef}>
           <FormLayout className="w-full px-0 mt-2">
             <Form {...form}>
+              {/* {JSON.stringify(form.getValues())} */}
               <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="w-full">
                   <Card
@@ -142,11 +146,16 @@ export default function ActivityDeadlineTab({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <CustomFormDate
+                            control={form.control}
+                            isDatetime={true} 
+                            name={"deadline"}                          
+                          />
+                          {/* <CustomFormDate
                             isDatetime={true}
                             disableXButtdon={true}
                             control={form.control}
                             name="deadline"
-                          />
+                          /> */}
                           {/* <TooltipLayout content="Recordar">
                             <BellIcon className="icon-button w-5 h-5" />
                           </TooltipLayout> */}

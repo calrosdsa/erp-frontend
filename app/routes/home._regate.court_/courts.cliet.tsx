@@ -32,7 +32,7 @@ export default function CourtClient() {
       title="Cancha"
       {...(permission?.create && {
         onCreate: () => {
-          navigate(r.toCreateCourt());
+          navigate(r.toRouteDetail(r.court,"new"));
         },
       })}
     >

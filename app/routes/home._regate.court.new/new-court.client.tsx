@@ -1,6 +1,6 @@
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher, useNavigate } from "@remix-run/react";
+import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -16,6 +16,7 @@ import { useEffect, useRef } from "react";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewCourtClient() {
   const { t } = useTranslation("common");
@@ -57,16 +58,9 @@ export default function NewCourtClient() {
       onSuccessMessage: () => {
         if (fetcher.data?.court) {
           const court = fetcher.data.court;
-          navigate(
-            r.toRoute({
-              main: r.court,
-              routeSufix: [court.name],
-              q: {
-                tab: "info",
-                id: court.uuid,
-              },
-            })
-          );
+         navigate(route.to(route.court,{
+         [route.court]:court.id,
+         }))
         }
       },
     },
@@ -74,28 +68,30 @@ export default function NewCourtClient() {
   );
 
   return (
-    <FormLayout>
-      <Form {...form}>
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className=" create-grid">
-            <CustomFormField
-              name="name"
-              label={t("form.name")}
-              form={form}
-              children={(field) => {
-                return <Input {...field} />;
-              }}
-            />
-            {/* <CheckForm
+    <CreateLayout>
+      <FormLayout>
+        <Form {...form}>
+          <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className=" create-grid">
+              <CustomFormField
+                name="name"
+                label={t("form.name")}
+                form={form}
+                children={(field) => {
+                  return <Input {...field} />;
+                }}
+              />
+              {/* <CheckForm
               label={t("form.enabled")}
               form={form}
               name={"enabled"}
               description={t("f.enable", { o: t("regate._court.base") })}
-            /> */}
-          </div>
-          <input ref={inputRef} type="submit" className="hidden" />
-        </fetcher.Form>
-      </Form>
-    </FormLayout>
+              /> */}
+            </div>
+            <input ref={inputRef} type="submit" className="hidden" />
+          </fetcher.Form>
+        </Form>
+      </FormLayout>
+    </CreateLayout>
   );
 }

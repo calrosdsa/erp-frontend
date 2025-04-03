@@ -3,6 +3,7 @@ import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 import { fieldNull } from "..";
 import { components } from "~/sdk";
 import { formatRFC3339 } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 export type ActivityData = z.infer<typeof activitySchema>
 export type MentionData= z.infer<typeof mentionSchema>
@@ -68,7 +69,7 @@ export const mapToActivityDeadline = (e:ActivityDeadlineData) =>{
         fields: {
             activity_id: e.activity_id || 0,
             address: e.address,
-            deadline: formatRFC3339(e.deadline),
+            deadline: formatRFC3339(toZonedTime(e.deadline,"UTC")),
             link: e.link,
             title: e.title,
             content:e.content,
