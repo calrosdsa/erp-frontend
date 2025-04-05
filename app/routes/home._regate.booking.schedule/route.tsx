@@ -1,4 +1,4 @@
-import { defer, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { ActionFunctionArgs, defer, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import BookingScheduleClient from "./booking-schedule.client";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
@@ -6,6 +6,7 @@ import { FetchResponse } from "openapi-fetch";
 import { endOfMonth, endOfWeek, formatRFC3339, startOfMonth, startOfWeek, startOfYear } from "date-fns";
 import { route } from "~/util/route";
 import { components } from "~/sdk";
+
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
@@ -24,21 +25,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const res = await client.GET("/court", {
       params: {
         query: {
-          page: searchParams.get("page") || DEFAULT_PAGE,
           size: "1",
         },
       },
     });
-    if ((res.data && res.data?.pagination_result?.total == 0) || res.error) {
-      return json({
+    if(res.error){
+      return {
         bookingSlots,
-        courtRates,
-      });
+        courtRates,    
+      }
     }
+    // if ((res.data && res.data?.pagination_result?.total == 0) || res.error) {
+    //   return json({
+    //     bookingSlots,
+    //     courtRates,
+    //   });
+    // }
 
-    if (res.data && res.data?.pagination_result?.total > 0) {
-      courtID = res.data.pagination_result.results[0]?.id.toString() || "";
-      courtName = res.data.pagination_result.results[0]?.name || "";
+    if (res.data) {
+      courtID = res.data.result[0]?.id.toString() || "";
+      courtName = res.data.result[0]?.name || "";
     }
     return redirect(
       r.toRoute({
@@ -61,10 +67,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
   });
 
-  return json({
+  return {
     bookingSlots: bookingSchedule.data?.booking_slots || [],
     courtRates: bookingSchedule.data?.cour_rates || [],
-  });
+  };
 };
 
 export default function BookingSchedule() {

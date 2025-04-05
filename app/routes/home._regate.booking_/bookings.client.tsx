@@ -22,7 +22,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import { useEventDebounceFetcher } from "~/util/hooks/fetchers/regate/useEventDebounceFetcher";
-import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
+import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/use-court-debounce-fetcher";
 import { components } from "~/sdk";
 import { Button } from "@/components/ui/button";
 import { State, stateToJSON } from "~/gen/common";

@@ -13,7 +13,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { action } from "../route";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
-import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
+import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/use-court-debounce-fetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import TimeSelectInput from "@/components/custom/select/time-select-input";
 import Typography, { subtitle } from "@/components/typography/Typography";

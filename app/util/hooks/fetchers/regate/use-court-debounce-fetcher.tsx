@@ -1,6 +1,6 @@
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
-import { components } from "~/sdk"
+import { components, operations } from "~/sdk"
 import { route } from "~/util/route"
 
 
@@ -12,9 +12,13 @@ export const useCourtDebounceFetcher = () =>{
     }>()
 
     const onChange = (e:string)=>{
+        const d: operations["courts"]["parameters"]["query"] = {
+              size: "100",
+              name: e,
+            };
         fetcherDebounce.submit({
             action:"get",
-            query:e
+            query:d,
         },{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,

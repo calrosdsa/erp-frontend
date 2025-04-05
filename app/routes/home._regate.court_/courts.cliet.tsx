@@ -10,7 +10,7 @@ import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function CourtClient() {
   const globalState = useOutletContext<GlobalState>();
-  const { paginationResult, actions } = useLoaderData<typeof loader>();
+  const { results, actions } = useLoaderData<typeof loader>();
   const r = route;
   const navigate = useNavigate();
   const [permission] = usePermission({
@@ -37,14 +37,11 @@ export default function CourtClient() {
       })}
     >
       <DataTable
-        data={paginationResult?.results || []}
+        data={results || []}
         columns={courtColumns({
             openModal
         })}
         enableSizeSelection={true}
-        paginationOptions={{
-          rowCount: paginationResult?.total,
-        }}
       />
     </ListLayout>
   );

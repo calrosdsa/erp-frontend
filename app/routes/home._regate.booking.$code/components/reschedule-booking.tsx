@@ -23,7 +23,7 @@ import { mapToBookingData } from "~/routes/home._regate.booking.new/util";
 import { components } from "~/sdk";
 import { validateBookingSchema } from "~/util/data/schemas/regate/booking-schema";
 import { formatAmount } from "~/util/format/formatCurrency";
-import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
+import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/use-court-debounce-fetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 

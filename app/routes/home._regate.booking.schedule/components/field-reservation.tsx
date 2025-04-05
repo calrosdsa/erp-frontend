@@ -27,7 +27,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
-import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/useCourtDebounceFetcher";
+import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/use-court-debounce-fetcher";
 import { useNewBooking } from "~/routes/home._regate.booking.new/use-new-booking";
 import { useNavigate, useSearchParams } from "@remix-run/react";
 import { route } from "~/util/route";
@@ -314,6 +314,17 @@ export default function FieldReservation({
               CREAR RESERVA <Plus className="w-4 h-4 ml-2" />
             </Button>
           </div>
+
+          <div className="flex space-x-3">
+          {courtFetcher.data?.courts.map((item)=>{
+            return (
+              <div>
+                {item.name}
+              </div>
+            )
+          })}
+          </div>
+
           <div className="flex items-center gap-2">
             <Button
               variant={viewMode === "day" ? "default" : "outline"}

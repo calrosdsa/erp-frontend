@@ -951,11 +951,11 @@ export interface paths {
             cookie?: never;
         };
         /** get courts */
-        get: operations["get courts"];
+        get: operations["courts"];
         /** Edit court */
         put: operations["edit-court"];
         /** Create Court */
-        post: operations["create court"];
+        post: operations["create-court"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1004,7 +1004,7 @@ export interface paths {
             cookie?: never;
         };
         /** Create User */
-        get: operations["get court"];
+        get: operations["court"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7403,15 +7403,6 @@ export interface components {
             actions: components["schemas"]["ActionDto"][];
             pagination_result: components["schemas"]["PaginationResultListCostCenterDto"];
         };
-        PaginationResponsePaginationResultListCourtDtoBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            pagination_result: components["schemas"]["PaginationResultListCourtDto"];
-        };
         PaginationResponsePaginationResultListCurrencyDtoBody: {
             /**
              * Format: uri
@@ -7727,12 +7718,6 @@ export interface components {
         PaginationResultListCostCenterDto: {
             filters: components["schemas"]["FilterOptionDto"][];
             results: components["schemas"]["CostCenterDto"][];
-            /** Format: int64 */
-            total: number;
-        };
-        PaginationResultListCourtDto: {
-            filters: components["schemas"]["FilterOptionDto"][];
-            results: components["schemas"]["CourtDto"][];
             /** Format: int64 */
             total: number;
         };
@@ -9161,6 +9146,20 @@ export interface components {
             filters: components["schemas"]["FilterOptionDto"][];
             message: string;
             result: components["schemas"]["ContactDto"][];
+        };
+        ResponseDataListListCourtDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["CourtDto"][];
         };
         ResponseDataListListDealDtoBody: {
             /**
@@ -13139,23 +13138,18 @@ export interface operations {
             };
         };
     };
-    "get courts": {
+    courts: {
         parameters: {
             query: {
-                page?: string;
                 size: string;
-                enabled?: string;
                 status?: string;
-                is_group?: string;
-                query?: string;
                 orientation?: string;
                 column?: string;
-                parentId?: string;
+                name?: string;
+                created_at?: string;
+                updated_at?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -13167,7 +13161,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListCourtDtoBody"];
+                    "application/json": components["schemas"]["ResponseDataListListCourtDtoBody"];
                 };
             };
             /** @description Error */
@@ -13214,7 +13208,7 @@ export interface operations {
             };
         };
     };
-    "create court": {
+    "create-court": {
         parameters: {
             query?: never;
             header?: never;
@@ -13322,7 +13316,7 @@ export interface operations {
             };
         };
     };
-    "get court": {
+    court: {
         parameters: {
             query?: {
                 query?: string;

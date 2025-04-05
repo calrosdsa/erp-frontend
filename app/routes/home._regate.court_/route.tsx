@@ -3,12 +3,12 @@ import CourtClient from "./courts.cliet";
 import apiClient from "~/apiclient";
 import { DEFAULT_PAGE, DEFAULT_SIZE, LOAD_ACTION } from "~/constant";
 import { handleError } from "~/util/api/handle-status-code";
-import { components } from "~/sdk";
+import { components, operations } from "~/sdk";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
-  query: string;
+  query: operations["courts"]["parameters"]["query"];
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
@@ -21,14 +21,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "get": {
       const res = await client.GET("/court", {
         params: {
-          query: {
-            page: DEFAULT_PAGE,
-            size: DEFAULT_SIZE,
-            query: data.query || "",
-          },
+          query: data.query
         },
       });
-      courts = res.data?.pagination_result.results || [];
+      courts = res.data?.result || [];
       actions = res.data?.actions || [];
       break;
     }
@@ -62,7 +58,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const res = await client.GET("/court", {
     params: {
       query: {
-        page: searchParams.get("page") || DEFAULT_PAGE,
         size: searchParams.get("size") || DEFAULT_SIZE,
         query: searchParams.get("query") || "",
       },
@@ -70,7 +65,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
   handleError(res.error);
   return json({
-    paginationResult: res.data?.pagination_result,
+    results: res.data?.result,
     actions: res.data?.actions,
   });
 };
