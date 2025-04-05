@@ -89,7 +89,10 @@ export default function ModalLayout({
                               size={"sm"}
                               variant="ghost"
                               className="justify-between flex"
-                              onClick={() => item.onClick()}
+                              onClick={(e) => {
+
+                                item.onClick()
+                              }}
                             >
                               {item.label}
                               {item.Icon && (
@@ -201,7 +204,7 @@ export default function ModalLayout({
                   </>
                 )}
 
-                {/* {payload.onSave && !payload.disabledSave && (
+                {payload.onSave && !payload.disabledSave && (
                   <Button
                     size={"sm"}
                     onClick={() => {
@@ -224,7 +227,7 @@ export default function ModalLayout({
                   >
                     {t("form.save")}
                   </Button>
-                )} */}
+                )}
               </div>
             </div>
             {/* <ResponsiveSidebar navItems={navItems} /> */}
@@ -337,11 +340,11 @@ export const setUpModalPayload = (
     const newOpts = opts();
 
     // Merge new options with register options
-    setPayload(key, { ...newOpts });
+    editPayload(key, { ...newOpts });
 
     return () => {
       console.log("RESET TOOLBAR REGISTER...");
-      resetPayload(key);
+      // resetPayload(key);
     };
   }, [...dependencies]);
 

@@ -1,5 +1,5 @@
 import Typography, { subtitle } from "@/components/typography/Typography";
-import { action, loader } from "../../route";
+import { action, loader } from "../route";
 import { useFetcher, useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
@@ -19,7 +19,7 @@ import { GlobalState } from "~/types/app-types";
 import { SerializeFrom } from "@remix-run/node";
 import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { SmartForm } from "@/components/form/smart-form";
-import CustomerForm from "../../customer-form";
+import CustomerForm from "../customer-form";
 import { useModalStore } from "@/components/ui/custom/modal-layout";
 import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { toast } from "sonner";
@@ -38,13 +38,13 @@ export default function CustomerInfo({
   const customer = data?.customer;
   const contacts = data?.contacts;
   const { t, i18n } = useTranslation("common");
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [toastID, setToastID] = useState<string | number>("");
   const id = searchParams.get(route.customer);
 
   const onSubmit = (e: CustomerData) => {
+    console.log("ONSUBMIT",e)
     const id = toast.loading(LOADING_MESSAGE);
     setToastID(id);
     let action = e.customerID ? "edit-customer" : "create-customer";
@@ -109,7 +109,7 @@ export default function CustomerInfo({
           }}
           onSubmit={onSubmit}
         >
-          <CustomerForm contacts={contacts || []} inputRef={inputRef} />
+          <CustomerForm contacts={contacts || []} />
         </SmartForm>
       </div>
       {customer?.id != undefined && (

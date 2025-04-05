@@ -193,7 +193,7 @@ class Routes {
   // }
   toRouteDetail(
     main:string,
-    id:string,
+    id:any,
     q?: Record<string, any>
   ): string {
     let url = `${this.base}/${main}/${id}`;

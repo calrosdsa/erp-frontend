@@ -106,7 +106,7 @@ export default function SupplierInfo({
           }}
           onSubmit={onSubmit}
         >
-          <SupplierForm contacts={contacts || []} inputRef={inputRef} />
+          <SupplierForm contacts={contacts || []} />
         </SmartForm>
       </div>
       {supplier?.id != undefined && (

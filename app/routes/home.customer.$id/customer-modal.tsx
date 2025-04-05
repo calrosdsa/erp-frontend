@@ -10,9 +10,9 @@ import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import DetailLayout from "@/components/layout/detail-layout";
-import CustomerInfo from "./components/tab/customer-info";
+import CustomerInfo from "./tab/customer-info";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import CustomerConnections from "./components/tab/customer-connections";
+import CustomerConnections from "./tab/customer-connections";
 import { ButtonToolbar } from "~/types/actions";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import {
@@ -36,6 +36,7 @@ import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { DEFAULT_ID } from "~/constant";
+import { SerializeFrom } from "@remix-run/node";
 
 export default function CustomerModal({
   appContext,
@@ -43,9 +44,10 @@ export default function CustomerModal({
   appContext: GlobalState;
 }) {
   const key = route.customer;
-  const fetcherLoader = useFetcher<typeof loader>();
-  const data = fetcherLoader.data;
-  const customer = fetcherLoader.data?.customer;
+  const [data, setData] = useState<SerializeFrom<typeof loader>>();
+  const [loading, setLoading] = useState(false);
+  // const data = fetcherLoader.data;
+  const customer = data?.customer;
   const [open, setOpen] = useState(true);
   // const { customer, actions, activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
@@ -60,19 +62,21 @@ export default function CustomerModal({
     actions: data?.actions,
   });
 
-  const initData = () => {
-    fetcherLoader.submit(
-      {},
-      {
-        action: route.toRoute({
-          main: route.customer,
-          routeSufix: [customerID || ""],
-        }),
+  const load = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(route.toRouteDetail(route.customer, customerID));
+      if (res.ok) {
+        const body = (await res.json()) as SerializeFrom<typeof loader>;
+        setData(body);
       }
-    );
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
   };
   useEffect(() => {
-    initData();
+    load();
   }, []);
 
   const onChangeState = (e: EventState) => {
@@ -108,6 +112,7 @@ export default function CustomerModal({
   setUpModalPayload(
     key,
     () => {
+      console.log("RELOAD...");
       const state = stateFromJSON(customer?.status);
       const isNew = DEFAULT_ID == customerID;
       let view: ButtonToolbar[] = [];
@@ -164,7 +169,7 @@ export default function CustomerModal({
         },
       });
       return {
-        title:isNew ? "Nuevo cliente": customer?.name,
+        title: isNew ? "Nuevo cliente" : customer?.name,
         view: isNew ? [] : view,
         actions: isNew ? [] : actions,
         status: stateFromJSON(customer?.status),
@@ -177,7 +182,7 @@ export default function CustomerModal({
           : undefined,
       };
     },
-    [fetcherLoader.data]
+    [data]
   );
 
   const closeModal = () => {
@@ -201,7 +206,7 @@ export default function CustomerModal({
         setOpen(e);
       }}
     >
-      {fetcherLoader.state == "loading" && !fetcherLoader.data ? (
+      {loading ? (
         <LoadingSpinner />
       ) : (
         <>

@@ -5,13 +5,38 @@ import { route } from "~/util/route";
 import FormAutocompleteField, {
   AutocompleteFormProps,
 } from "@/components/custom/select/FormAutocompleteField";
-import { formatQuery } from "..";
+import {
+  SmartAutocomplete,
+  SmartAutocompleteProps,
+} from "@/components/form/smart-autocomplete";
 
 type Stage = components["schemas"]["StageDto"];
 interface StageProps
   extends Partial<AutocompleteFormProps<Stage, keyof Stage>> {
   entityID: number;
 }
+
+interface StageSmartFormProps
+  extends Partial<SmartAutocompleteProps<Stage, keyof Stage>> {
+  entityID: number;
+}
+export const StageSmartAutocomplete = ({ ...props }: StageSmartFormProps) => {
+  const [fetcher, onChange] = useStageFetcher({
+    entityID: props.entityID,
+  });
+
+  return (
+    <SmartAutocomplete
+      {...props}
+      label={props.label ? props.label : "Etapa"}
+      data={fetcher.data?.results || []}
+      onValueChange={onChange}
+      nameK="name"
+      name="stage"
+    />
+  );
+};
+
 export const StageFormField = ({ ...props }: StageProps) => {
   const [fetcher, onChange] = useStageFetcher({
     entityID: props.entityID,

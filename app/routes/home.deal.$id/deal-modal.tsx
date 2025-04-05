@@ -19,23 +19,27 @@ import { useDealStore } from "./deal-store";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { action } from "../home.stage/route";
 import { TimePicker } from "@/components/custom/datetime/time-picker";
-import ModalLayout from "@/components/ui/custom/modal-layout";
+import ModalLayout, {
+  setUpModalPayload,
+} from "@/components/ui/custom/modal-layout";
 import { GlobalState } from "~/types/app-types";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
+import { DEFAULT_ID } from "~/constant";
+import { SerializeFrom } from "@remix-run/node";
 
 export default function DealModal({ appContext }: { appContext: GlobalState }) {
   // const [open, setOpen] = useState(true);
-  const navigate = useNavigate();
+  const key = route.deal;
+  const [data, setData] = useState<SerializeFrom<typeof loader>>();
+  const [loading, setLoading] = useState(false);
+  const deal = data?.deal;
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
   const { t } = useTranslation("common");
   const fetcherStage = useFetcher<typeof action>();
   const { payload, editPayload } = useDealStore();
   const [open, setOpen] = useState(true);
-  const fetcher = useFetcher<typeof loader>();
-  const data = fetcher.data;
-  const deal = data?.deal;
   const stages = data?.stages;
   const id = searchParams.get(route.deal) || "";
 
@@ -67,17 +71,23 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
     );
   };
 
-  const initData = () => {
-    fetcher.load(route.toRoute({
-      main: route.deal,
-      routeSufix: [id],
-    })
-    );
+  const load = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(route.toRouteDetail(route.deal, id));
+      if (res.ok) {
+        const body = (await res.json()) as SerializeFrom<typeof loader>;
+        setData(body);
+      }
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     if (id != "0") {
-      initData();
+      load();
     }
   }, [id]);
 
@@ -85,6 +95,9 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
     {
       success: fetcherStage.data?.message,
       error: fetcherStage.data?.error,
+      onSuccessMessage: () => {
+        load();
+      },
     },
     [fetcherStage.data]
   );
@@ -98,14 +111,32 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
     }
   }, [open]);
 
+  setUpModalPayload(
+    key,
+    () => {
+      const isNew = DEFAULT_ID == id;
+      return {
+        title: isNew ? "Nuevo trato" : deal?.name,
+        enableEdit: isNew,
+        isNew: isNew,
+        onCancel: isNew
+          ? () => {
+              setOpen(false);
+            }
+          : undefined,
+      };
+    },
+    [data]
+  );
+
   return (
     <div>
       <ModalLayout
+        keyPayload={key}
         open={open}
         onOpenChange={(e) => {
           setOpen(e);
         }}
-        title={id == "0" ? "Nuevo trato" : deal?.name || ""}
       >
         <StagesHeader
           stages={stages || []}
@@ -114,28 +145,32 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
         />
 
         {/* <ResponsiveSidebar navItems={navItems} /> */}
-        {fetcher.state == "loading" ? (
+        {loading ? (
           <LoadingSpinner />
         ) : (
           <>
-              <TabNavigation
-                defaultValue={tab}
-                onValueChange={(value) => {
-                  searchParams.set("tab", value);
-                  setSearchParams(searchParams, {
-                    preventScrollReset: true,
-                  });
-                }}
-                items={[
-                  {
-                    label: "Info",
-                    value: "info",
-                    children: (
-                      <DealInfoTab appContext={appContext} data={data} />
-                    ),
-                  },
-                ]}
-              />
+            <TabNavigation
+              defaultValue={tab}
+              onValueChange={(value) => {
+                searchParams.set("tab", value);
+                setSearchParams(searchParams, {
+                  preventScrollReset: true,
+                });
+              }}
+              items={[
+                {
+                  label: "Info",
+                  value: "info",
+                  children: (
+                    <DealInfoTab
+                      appContext={appContext}
+                      data={data}
+                      keyPayload={key}
+                    />
+                  ),
+                },
+              ]}
+            />
 
             {payload.enableEdit && (
               <div className="fixed bottom-0 border-t md:max-w-full md:w-[80%] shadow-xl bg-background ">

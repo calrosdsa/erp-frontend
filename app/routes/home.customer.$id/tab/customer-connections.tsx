@@ -8,7 +8,7 @@ import { Connection, ConnectionModule } from "~/types/connections";
 import { components } from "~/sdk";
 import { PartyType, partyTypeToJSON, RegatePartyType, regatePartyTypeToJSON } from "~/gen/common";
 import { route } from "~/util/route";
-import { loader } from "../../route";
+import { loader } from "../route";
 
 
 export default function CustomerConnections() {

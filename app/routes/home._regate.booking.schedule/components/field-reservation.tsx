@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -29,12 +29,14 @@ import {
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/use-court-debounce-fetcher";
 import { useNewBooking } from "~/routes/home._regate.booking.new/use-new-booking";
-import { useNavigate, useSearchParams } from "@remix-run/react";
+import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react";
 import { route } from "~/util/route";
-import { components } from "~/sdk";
+import { components, operations } from "~/sdk";
 import { useTranslation } from "react-i18next";
 import { formatCurrency } from "~/util/format/formatCurrency";
 import { es } from "date-fns/locale";
+import { action } from "~/routes/home._regate.court_/route";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface FieldReservationProps {
   schedules: components["schemas"]["CourtRateDto"][];
@@ -63,9 +65,11 @@ export default function FieldReservation({
   schedules,
   reservations,
 }: FieldReservationProps) {
-  const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
+  // const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
+  const courtsFetcher = useFetcher<typeof action>();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchParams, setSearchParams] = useSearchParams();
+  const courtID = searchParams.get("courtID")
   const viewMode: "day" | "week" | string = searchParams.get("view") || "week";
   const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
   const newBooking = useNewBooking();
@@ -74,6 +78,27 @@ export default function FieldReservation({
   const { i18n } = useTranslation("common");
 
   const timeSlots = useMemo(() => generateTimeSlots(), []);
+
+  const initData = () => {  
+    const query: operations["courts"]["parameters"]["query"] = {
+      size: "100",
+    };
+    courtsFetcher.submit(
+      {
+        action: "get",
+        query: query,
+      },
+      {
+        action: route.to(route.court),
+        method: "POST",
+        encType: "application/json",
+      }
+    );
+  };
+
+  useEffect(() => {
+    initData();
+  }, []);
 
   const getDaySchedule = useCallback(
     (date: Date) => {
@@ -148,10 +173,13 @@ export default function FieldReservation({
           }}
           onClick={() => {
             if (reservation) {
-              searchParams.set(route.booking,reservation.booking_id.toString())
-              setSearchParams(searchParams,{
-                preventScrollReset:true
-              })
+              searchParams.set(
+                route.booking,
+                reservation.booking_id.toString()
+              );
+              setSearchParams(searchParams, {
+                preventScrollReset: true,
+              });
             } else {
               handleSlotClick(date, time);
             }
@@ -233,7 +261,7 @@ export default function FieldReservation({
                     className="border p-2 text-center font-semibold first-letter:uppercase "
                   >
                     <div className="w-24 h-10">
-                    {format(date, "EEE dd", { locale: es })}
+                      {format(date, "EEE dd", { locale: es })}
                     </div>
                   </th>
                 );
@@ -241,7 +269,7 @@ export default function FieldReservation({
             </tr>
           </thead>
           <tbody>
-            {timeSlots.map((time,idx) => (
+            {timeSlots.map((time, idx) => (
               <tr key={idx}>
                 <td className="border p-2 text-sm text-right sticky left-0 bg-background z-10">
                   {time.substring(0, 5)}
@@ -259,104 +287,109 @@ export default function FieldReservation({
   }, [selectedDate, timeSlots, renderTimeSlot]);
 
   return (
-    <div className="flex flex-col">
-        <div className="flex items-center justify-between mb-4 gap-2 responsive-container">
-          <div className="flex items-center gap-2">
-            <AutocompleteSearch
+    <div className="flex flex-col space-y-1">
+      <div className="flex items-center justify-between  gap-2 responsive-container">
+        <div className="flex items-center gap-2">
+          {/* <AutocompleteSearch
               data={courtFetcher.data?.courts || []}
               nameK={"name"}
               queryName="courtName"
               queryValue="courtID"
               valueK={"id"}
               onValueChange={onCourtNameChange}
-            />
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm">
-                  {format(selectedDate, "dd MMMM").toUpperCase()}
-                  <CalendarIcon className="w-4 h-4 ml-2" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => {
-                    if (date) {
-                      setSelectedDate(date);
-                      searchParams.set("date", date.toJSON());
-                      setSearchParams(searchParams, {
-                        preventScrollReset: true,
-                      });
-                    }
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => {
-                newBooking.onPayload({
-                  court: Number(searchParams.get("courtID")),
-                  courtName: searchParams.get("courtName") || "",
-                  selectedSlots: Array.from(selectedSlots),
-                });
-                navigate(
-                  r.toRoute({
-                    main: r.bookingM,
-                    routeSufix: ["new"],
-                  })
-                );
-              }}
-            >
-              CREAR RESERVA <Plus className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
-
-          <div className="flex space-x-3">
-          {courtFetcher.data?.courts.map((item)=>{
-            return (
-              <div>
-                {item.name}
-              </div>
-            )
-          })}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant={viewMode === "day" ? "default" : "outline"}
-              size="sm"
-              className="px-4"
-              onClick={() => {
-                searchParams.set("view", "day");
-                setSearchParams(searchParams, {
-                  preventScrollReset: true,
-                });
-              }}
-            >
-              Día
-            </Button>
-            <Button
-              variant={viewMode === "week" ? "default" : "outline"}
-              size="sm"
-              className="px-4"
-              onClick={() => {
-                searchParams.set("view", "week");
-                setSearchParams(searchParams, {
-                  preventScrollReset: true,
-                });
-              }}
-            >
-              Semana
-            </Button>
-          </div>
+            /> */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm">
+                {format(selectedDate, "dd MMMM").toUpperCase()}
+                <CalendarIcon className="w-4 h-4 ml-2" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => {
+                  if (date) {
+                    setSelectedDate(date);
+                    searchParams.set("date", date.toJSON());
+                    setSearchParams(searchParams, {
+                      preventScrollReset: true,
+                    });
+                  }
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => {
+              newBooking.onPayload({
+                court: Number(searchParams.get("courtID")),
+                courtName: searchParams.get("courtName") || "",
+                selectedSlots: Array.from(selectedSlots),
+              });
+              navigate(
+                r.toRoute({
+                  main: r.bookingM,
+                  routeSufix: ["new"],
+                })
+              );
+            }}
+          >
+            CREAR RESERVA <Plus className="w-4 h-4 ml-2" />
+          </Button>
         </div>
-        <div className="w-full mx-auto">
-          {viewMode === "day" ? renderDayView(selectedDate) : renderWeekView()}
+
+        <div className="flex items-center gap-2">
+          <Button
+            variant={viewMode === "day" ? "default" : "outline"}
+            size="sm"
+            className="px-4"
+            onClick={() => {
+              searchParams.set("view", "day");
+              setSearchParams(searchParams, {
+                preventScrollReset: true,
+              });
+            }}
+          >
+            Día
+          </Button>
+          <Button
+            variant={viewMode === "week" ? "default" : "outline"}
+            size="sm"
+            className="px-4"
+            onClick={() => {
+              searchParams.set("view", "week");
+              setSearchParams(searchParams, {
+                preventScrollReset: true,
+              });
+            }}
+          >
+            Semana
+          </Button>
         </div>
+      </div>
+
+      <div className="flex space-x-3  responsive-container">
+      <ToggleGroup variant={"outline"} type="single" value={courtID || ""} onValueChange={(e)=>{
+        searchParams.set("courtID",e)
+        setSearchParams(searchParams,{
+          preventScrollReset:true
+        })
+      }}>
+        {courtsFetcher.data?.courts.map((item) => {
+          return <ToggleGroupItem key={item.id} value={item.id.toString()}
+          className=" whitespace-nowrap">{item.name}</ToggleGroupItem>
+        })}
+        </ToggleGroup>
+      </div>
+
+      <div className="w-full mx-auto py-2">
+        {viewMode === "day" ? renderDayView(selectedDate) : renderWeekView()}
+      </div>
     </div>
   );
 }

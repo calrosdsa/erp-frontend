@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE, LOAD_ACTION } from "~/constant";
 import ContactsClient from "./contacts.client";
 import { handleError } from "~/util/api/handle-status-code";
 import { components, operations } from "~/sdk";
@@ -8,6 +8,7 @@ import {
   ContactBulkData,
   mapToContactBulkData,
 } from "~/util/data/schemas/contact/contact.schema";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
@@ -52,6 +53,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

@@ -29,12 +29,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
   }
-  return json({
+  return {
     message,
     error,
     courts,
     actions,
-  });
+  };
 };
 
 export function shouldRevalidate({

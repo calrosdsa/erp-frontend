@@ -1,6 +1,5 @@
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import FormLayout from "@/components/custom/form/FormLayout";
-import AutocompleteI from "@/components/custom/select/autocomplete-select";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { moduleSectionColumns } from "@/components/custom/table/columns/core/module-columns";
 import { DataTable } from "@/components/custom/table/CustomTable";
@@ -12,13 +11,10 @@ import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import icons from "~/data/icons";
 import {
-  moduleDataSchema,
   ModuleDataType,
-  ModuleSectionDataType,
 } from "~/util/data/schemas/core/module-schema";
 import { useSearchEntity } from "~/util/hooks/fetchers/core/use-entity-search-fetcher";
 import { useActionsFieldArray } from "~/util/hooks/use-actions-field-array";
-import useTableRowActions from "~/util/hooks/useTableRowActions";
 
 export default function ModuleData({
   fetcher,

@@ -11,8 +11,33 @@ import  {
   Autocomplete,
   AutoCompleteProps,
 } from "@/components/custom/select/autocomplete-select";
+import { SmartAutocomplete, SmartAutocompleteProps } from "@/components/form/smart-autocomplete";
 
 type Profile = components["schemas"]["ProfileDto"];
+
+interface ProfileSmartFormProps
+  extends Partial<SmartAutocompleteProps<Profile, keyof Profile>> {
+    excludeIds?:number[]
+  }
+
+  export const ProfileSmartField = ({ ...props }: ProfileSmartFormProps) => {
+    const [fetcher, onChange] = useProfileFetcher();
+    return (
+      <SmartAutocomplete
+        {...props}
+        data={fetcher.data?.results.filter(t=>!props.excludeIds?.includes(t.id)) || []}
+        onValueChange={(e) => {
+          if(!props.disableAutocomplete){
+            onChange(e);
+          }
+          props.onValueChange?.(e);
+        }}
+        nameK="full_name"
+      />
+    );
+  };
+
+
 interface ContactFormProps
   extends Partial<AutocompleteFormProps<Profile, keyof Profile>> {}
 

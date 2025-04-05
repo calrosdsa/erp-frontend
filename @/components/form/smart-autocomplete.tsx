@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import { useSearchParams } from "@remix-run/react";
-import { Check, LucideIcon, PlusIcon, SearchIcon } from "lucide-react";
+import { Check, LucideIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "./form-provider";
+import IconButton from "../custom-ui/icon-button";
 
 interface ActionButton {
   Icon: LucideIcon;
@@ -32,13 +33,14 @@ export interface SmartAutocompleteProps<T extends object, K extends keyof T> {
   placeholder?: string;
   data: T[];
   nameK: K;
+  name?: string;
   label?: string;
   onValueChange?: (e: string) => void;
   onSelect?: (v: T) => void;
   onBlur?: (e: string) => void;
   className?: string;
   inputClassName?: string;
-  defaultValue?: string;
+  defaultValue?: string | null;
   addNew?: () => void;
   required?: boolean;
   isSearch?: boolean;
@@ -54,6 +56,7 @@ export interface SmartAutocompleteProps<T extends object, K extends keyof T> {
 const SmartAutocomplete = <T extends object, K extends keyof T>({
   data,
   nameK,
+  name,
   onValueChange,
   onBlur,
   onSelect,
@@ -77,7 +80,10 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
     throw new Error("SmartField must be used within a SmartForm");
   }
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState<string>(defaultValue || "");
+  const fieldValue = form.getValues(name || "");
+  const [query, setQuery] = useState<string>(
+    defaultValue || fieldValue["name"] || ""
+  );
   const [selected, setSelected] = useState<string | null>(null);
   // const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -94,6 +100,12 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
     if (onSelect) {
       onSelect(item);
     }
+    if (name && name != "currency") {
+      form?.setValue(name, {
+        id: item["id" as keyof T],
+        name: item[nameK as keyof T],
+      });
+    }
     // inputRef.current?.blur();
   };
   useEffect(() => {
@@ -102,7 +114,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
 
   if (!isEditing) {
     return (
-    <div className="flex flex-col py-[5px]Z">
+      <div className="flex flex-col py-[5px]Z">
         {label && <span className="text-xs text-primary/60">{label}</span>}
         <div>
           <span className="text-sm">{query || "-"}</span>
@@ -199,6 +211,21 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
                         />
                       );
                     })}
+
+                    {selected && (
+                      <IconButton
+                        icon={XIcon}
+                        className="h-6 w-6"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (name) {
+                            setSelected(null);
+                            setQuery("");
+                            form?.setValue(name, {});
+                          }
+                        }}
+                      />
+                    )}
                   </div>
                 )}
               </div>

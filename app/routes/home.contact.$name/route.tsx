@@ -3,7 +3,12 @@ import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
 import ContactClient from "./contact.client";
 import { z } from "zod";
-import { ContactData, mapToContactData } from "~/util/data/schemas/contact/contact.schema";
+import {
+  ContactData,
+  mapToContactData,
+} from "~/util/data/schemas/contact/contact.schema";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { LOAD_ACTION } from "~/constant";
 
 type ActionData = {
   action: string;
@@ -19,11 +24,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "edit-contact": {
       const d = data.editContact;
       const res = await client.PUT("/party/contact", {
-        body: mapToContactData(data.editContact)
+        body: mapToContactData(data.editContact),
       });
       error = res.error?.detail;
       message = res.data?.message;
-      console.log(res.error)
+      console.log(res.error);
       break;
     }
   }
@@ -32,6 +37,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     message,
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
@@ -47,7 +66,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   handleError(res.error);
   return json({
     contact: res.data?.result.entity,
-    activities:res.data?.result.activities,
+    activities: res.data?.result.activities,
     actions: res.data?.actions,
   });
 };

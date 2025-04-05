@@ -142,7 +142,7 @@ export function SmartField({
                 )}
 
                 {(type === "date" || type === "calendar") && (
-                  <Popover>
+                  <Popover modal={true}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"

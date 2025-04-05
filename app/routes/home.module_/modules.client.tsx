@@ -7,6 +7,7 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { moduleColumns } from "@/components/custom/table/columns/core/module-columns";
 import { route } from "~/util/route";
 import { party } from "~/util/party";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function ModulesClient() {
   const { results, actions } = useLoaderData<typeof loader>();
@@ -16,28 +17,26 @@ export default function ModulesClient() {
     actions,
   });
   const navigate = useNavigate()
-  setUpToolbar(() => {
-    return {
-      titleToolbar:"Modulos",
-      ...(permission.create && {
-        addNew:()=>{
-          navigate(
-            route.toRoute({
-              main:party.module,
-              routeSufix:["new"]
-            })
-          )
-        }
-      })
-    }
-  },[permission]);
+
   return (
-  <div>
+  <ListLayout
+  title="Modules"
+  {...(permission.create && {
+    onCreate:()=>{
+      navigate(
+        route.toRoute({
+          main:party.module,
+          routeSufix:["new"]
+        })
+      )
+    }
+  })}
+  >
     <DataTable
     enableSizeSelection={true}
     data={results || []}
     columns={moduleColumns({})}
     />
-  </div>
+  </ListLayout>
   )
 }

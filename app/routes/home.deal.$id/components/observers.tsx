@@ -1,9 +1,17 @@
+import { useFormContext } from "@/components/form/form-provider";
 import { Typography } from "@/components/typography";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { PencilIcon, PlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
-import { useFieldArray, UseFormReturn } from "react-hook-form";
+import {
+  ArrayPath,
+  FieldArrayWithId,
+  useFieldArray,
+  UseFieldArrayReturn,
+  UseFormReturn,
+} from "react-hook-form";
 import { CREATE, DELETE } from "~/constant";
 import { components } from "~/sdk";
 import {
@@ -13,32 +21,33 @@ import {
 } from "~/util/data/schemas/crm/deal.schema";
 import { ProfileAutocomplete } from "~/util/hooks/fetchers/profile/profile-fetcher";
 
+interface Observers {
+  observers: ParticipantData[];
+}
+type FieldArray = UseFieldArrayReturn<Observers, ArrayPath<Observers>, "id">;
+
 export default function Participants({
-  enableEdit,
-  setEnableEdit,
-  form,
-  allowEdit,
   observers,
+  allowEdit,
+  className,
 }: {
-  enableEdit?: boolean;
-  setEnableEdit: (e: boolean) => void;
-  form: UseFormReturn<DealData>;
-  allowEdit?: boolean;
   observers: components["schemas"]["ProfileDto"][];
+  allowEdit: boolean;
+  className?: string;
 }) {
-  const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
+  const { form, isEditing, setIsEditing } = useFormContext();
   const { fields, append, update } = useFieldArray({
-    control: form.control,
+    control: form?.control,
     name: "observers",
-  });
+  }) as unknown as FieldArray;
   const onAddContact = () => {
-    if (!enableEdit) {
-      setEnableEdit(true);
+    if (!isEditing) {
+      setIsEditing(true);
     }
     append({ _action: CREATE } as ParticipantData);
   };
   return (
-    <div className="grid border rounded-lg p-2">
+    <div className={cn(className, "grid border rounded-lg p-2")}>
       <div className="flex justify-between items-center">
         <Typography variant="subtitle2">Observadores</Typography>
 
@@ -47,14 +56,14 @@ export default function Participants({
             variant="ghost"
             type="button"
             size="xs"
-            onClick={() => setEnableEdit(true)}
+            onClick={() => setIsEditing(true)}
           >
             <PencilIcon />
             <span>Editar</span>
           </Button>
         )}
       </div>
-      {enableEdit ? (
+      {isEditing ? (
         <div className="py-3 grid gap-y-3">
           {fields
             .filter((t) => t._action != DELETE)
@@ -70,7 +79,7 @@ export default function Participants({
                       defaultValue={field.name}
                       disableAutocomplete={field.profile_id != undefined}
                       onBlur={(e) => {
-                        form.setValue(`observers.${index}.name`, e);
+                        form?.setValue(`observers.${index}.name`, e);
                         // form.trigger(`contacts.${index}`);
                       }}
                       onSelect={(e) => {

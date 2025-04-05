@@ -1,5 +1,6 @@
 import ContactList from "@/components/custom-ui/contacts-component";
 import FormLayout from "@/components/custom/form/FormLayout";
+import { useFormContext } from "@/components/form/form-provider";
 import { Typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { FormLabel } from "@/components/ui/form";
@@ -39,27 +40,21 @@ type FieldArray = UseFieldArrayReturn<Contact, ArrayPath<Contact>, "id">;
 export const PartyContacts = ({
   partyID,
   // perm,
-  enableEdit,
-  fieldArray,
-  form,
   contacts,
-  setEnableEdit,
-  allowEdit,
   className,
 }: {
   partyID?: number;
   // perm?: Permission;
   contacts?: components["schemas"]["ContactDto"][];
-  enableEdit?: boolean;
-  setEnableEdit: (e: boolean) => void;
-  fieldArray: FieldArray;
-  form: UseFormReturn<any>;
-  allowEdit?: boolean;
-  className?:string;
+  className?: string;
 }) => {
+  const { form, isEditing, setIsEditing } = useFormContext();
+  const fieldArray = useFieldArray({
+    control: form?.control,
+    name: "contacts",
+  }) as unknown as FieldArray;
+
   const { t } = useTranslation("common");
-  const navigate = useNavigate();
-  const r = route;
   const { fields, append, remove, update } = fieldArray;
   const fetcher = useFetcher<typeof action>();
   const [openStates, setOpenStates] = useState<Record<number, boolean>>({});
@@ -69,10 +64,10 @@ export const PartyContacts = ({
   };
 
   const onAddContact = () => {
-    if (!enableEdit) {
-      setEnableEdit(true);
+    if (!isEditing) {
+      setIsEditing(true);
     }
-    append({ name: "",reference_id:partyID } as ContactData);
+    append({ name: "", reference_id: partyID } as ContactData);
   };
 
   useDisplayMessage(
@@ -84,16 +79,16 @@ export const PartyContacts = ({
   );
 
   return (
-    <div className={cn(className,"grid")}>
+    <div className={cn(className, "grid")}>
       <div className="flex justify-between items-center">
         <Typography variant="subtitle2">{t("_contact.list")}</Typography>
 
-        {allowEdit && (
+        {isEditing && (
           <Button
             variant="ghost"
             type="button"
             size="xs"
-            onClick={() => setEnableEdit(true)}
+            onClick={() => setIsEditing(true)}
           >
             <PencilIcon />
             <span>Editar</span>
@@ -101,7 +96,7 @@ export const PartyContacts = ({
         )}
       </div>
 
-      {enableEdit ? (
+      {isEditing ? (
         <div className="py-3 grid gap-y-3">
           {fields
             .filter((t) => t.action != DELETE)
@@ -133,7 +128,7 @@ export const PartyContacts = ({
                         field.action == Action.CREATE
                       }
                       onBlur={(e) => {
-                        form.setValue(`contacts.${index}.name`, e);
+                        form?.setValue(`contacts.${index}.name`, e);
                         // form.trigger(`contacts.${index}`);
                       }}
                       actions={[
@@ -188,7 +183,7 @@ export const PartyContacts = ({
                           <FormLabel className="text-xs mb-1">E-mail</FormLabel>
                           <Input
                             className="text-xs"
-                            {...form.register(`contacts.${index}.email`)}
+                            {...form?.register(`contacts.${index}.email`)}
                             type="email"
                           />
                         </div>
@@ -199,7 +194,9 @@ export const PartyContacts = ({
                           </FormLabel>
                           <Input
                             className="text-xs"
-                            {...form.register(`contacts.${index}.phone_number`)}
+                            {...form?.register(
+                              `contacts.${index}.phone_number`
+                            )}
                             type="tel"
                           />
                         </div>

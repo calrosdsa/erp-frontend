@@ -1,3 +1,4 @@
+import { SelectOption } from "@/components/form/smart-field";
 import { DealType, dealTypeToJSON } from "~/gen/common";
 
 export const dueDateBaseOnOptions: SelectItem[] = [
@@ -11,25 +12,25 @@ export const dueDateBaseOnOptions: SelectItem[] = [
   },
 ];
 
-export const dealTypes: SelectItem[] = [
+export const dealTypes: SelectOption[] = [
   {
-    name: "Ventas",
+    label: "Ventas",
     value: dealTypeToJSON(DealType.Sales),
   },
   {
-    name: "Servicios",
+    label: "Servicios",
     value: dealTypeToJSON(DealType.Services),
   },
   {
-    name: "Ventas Integradas",
+    label: "Ventas Integradas",
     value: dealTypeToJSON(DealType.IntegratedSales),
   },
   {
-    name: "Ventas de Mercancías",
+    label: "Ventas de Mercancías",
     value: dealTypeToJSON(DealType.MerchadiseSales),
   },
   {
-    name: "Postventa",
+    label: "Postventa",
     value: dealTypeToJSON(DealType.AfterSales),
   },
 ];

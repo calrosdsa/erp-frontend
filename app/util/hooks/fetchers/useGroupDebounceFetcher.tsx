@@ -36,6 +36,7 @@ export const GroupSmartAutocomplete = ({ ...props }: GroupFromProps) => {
       {...props}
       data={fetcher.data?.groups || []}
       onValueChange={onChange}
+      // onValueChange={()=>{}}
       nameK="name"
       {...(permission?.create && {
         addNew: () =>

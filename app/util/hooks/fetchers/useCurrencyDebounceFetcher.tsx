@@ -1,5 +1,6 @@
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField"
+import { SmartAutocomplete } from "@/components/form/smart-autocomplete"
 import { Control } from "react-hook-form"
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant"
@@ -11,6 +12,23 @@ type Currency = components["schemas"]["CurrencyDto"];
 interface CurrencyFormProps
   extends Partial<AutocompleteFormProps<Currency, keyof Currency>> {
 }
+interface CurrencySmartFormProps
+  extends Partial<AutocompleteFormProps<Currency, keyof Currency>> {
+}
+export const CurrencySmartAutocomplete = ({ ...props }: CurrencySmartFormProps) => {
+  const [fetcher, onChange] = useCurrencyDebounceFetcher();
+
+  return (
+    <SmartAutocomplete
+      {...props}
+      label={props.label ? props.label : "Divisa"}
+      data={fetcher.data?.currencies || []}
+      onValueChange={onChange}
+      name={props.name || "currency"}
+      nameK="code"
+    />
+  );
+};
 
 export const CurrencyAutocompleteForm = ({...props}:CurrencyFormProps) =>{
   const [currencyFetcher, onChange] = useCurrencyDebounceFetcher();

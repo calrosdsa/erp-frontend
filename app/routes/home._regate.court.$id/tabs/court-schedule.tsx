@@ -5,11 +5,18 @@ import { Suspense } from "react";
 import FallBack from "@/components/layout/Fallback";
 import { setUpToolbarTab } from "~/util/hooks/ui/useSetUpToolbar";
 import { route } from "~/util/route";
+import { SerializeFrom } from "@remix-run/node";
+import { GlobalState } from "~/types/app-types";
 
-export default function CourtSchedule() {
-  const fetcherLoader = useFetcher<typeof loader>({key:route.court});
+export default function CourtSchedule({
+    appContext,
+    data,
+  }: {
+    data?:SerializeFrom<typeof loader>;
+    appContext: GlobalState;
+  }
+) {
   
-  const data = fetcherLoader.data;
   return (
     <div>
       <TimeSchedule courtRates={data?.courtRates || []} />

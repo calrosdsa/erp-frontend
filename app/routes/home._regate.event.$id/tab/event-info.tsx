@@ -26,6 +26,8 @@ import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { SerializeFrom } from "@remix-run/node";
 import { route } from "~/util/route";
 import { setUpModalTabPage } from "@/components/ui/custom/modal-layout";
+import ActivityFeed from "~/routes/home.activity/components/activity-feed";
+import { Entity } from "~/types/enums";
 
 type EditType = z.infer<typeof editEventSchema>;
 export default function EventInfoTab({
@@ -35,7 +37,7 @@ export default function EventInfoTab({
   appContext: GlobalState;
   data: SerializeFrom<typeof loader>;
 }) {
-  const key = route.event
+  const key = route.event;
   const { event, actions, bookingInfo } = data;
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -77,16 +79,19 @@ export default function EventInfoTab({
     [fetcher.state]
   );
 
-  setUpModalTabPage(key,()=>{
-    return {
-      onSave: () => {
-        inputRef.current?.click();
-      },
-      disabledSave: !hasChanged,
-    }
-  },[hasChanged])
+  setUpModalTabPage(
+    key,
+    () => {
+      return {
+        onSave: () => {
+          inputRef.current?.click();
+        },
+        disabledSave: !hasChanged,
+      };
+    },
+    [hasChanged]
+  );
 
-  
   // setUpToolbar(
   //   (opts) => {
   //     return {
@@ -110,90 +115,87 @@ export default function EventInfoTab({
   );
 
   return (
-    <FormLayout>
-      <Form {...form}>
-        <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
-          <input className="hidden" type="submit" ref={inputRef} />
-          <div className="info-grid">
-            <CustomFormFieldInput
-              control={form.control}
-              name="name"
-              label={t("form.name")}
-              inputType="input"
-              allowEdit={allowEdit}
-              required={true}
-            />
+    <div className="grid grid-cols-9 gap-3">
+      <div className="col-span-4">
+        <FormLayout>
+          <Form {...form}>
+            <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
+              <input className="hidden" type="submit" ref={inputRef} />
+              <div className="detail-grid">
+                <CustomFormFieldInput
+                  control={form.control}
+                  name="name"
+                  label={t("form.name")}
+                  inputType="input"
+                  allowEdit={allowEdit}
+                  required={true}
+                />
 
-            {form.watch("name") && (
-              <CustomFormFieldInput
-                className=" col-span-full"
-                control={form.control}
-                name="description"
-                required={false}
-                label={t("form.description")}
-                inputType="richtext"
-                allowEdit={allowEdit}
-              />
-            )}
-
-            {/* <CustomFormField
-              form={form}
-              name="description"
-              children={(field) => {
-                return (
-                  <DisplayTextValue
-                    value={field.value}
-                    inputType="textarea"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      form.trigger("description");
-                    }}
-                    title={t("form.description")}
-                    readOnly={!permission?.edit}
+                {form.watch("name") && (
+                  <CustomFormFieldInput
+                    className=" col-span-full"
+                    control={form.control}
+                    name="description"
+                    required={false}
+                    label={t("form.description")}
+                    inputType="richtext"
+                    allowEdit={allowEdit}
                   />
-                );
-              }}
-            /> */}
-            <div className=" col-span-full" />
-            <Typography variant="subtitle2" className=" col-span-full">
-              Información de reserva del evento
-            </Typography>
-            <DisplayTextValue
-              value={formatLongDate(bookingInfo?.start_date, i18n.language)}
-              title={t("form.startDate")}
-            />
-            <DisplayTextValue
-              value={formatLongDate(bookingInfo?.end_date, i18n.language)}
-              title={t("form.endDate")}
-            />
-            <DisplayTextValue
-              value={formatCurrency(
-                bookingInfo?.total_price,
-                DEFAULT_CURRENCY,
-                i18n.language
-              )}
-              title={t("form.total")}
-            />
-            <DisplayTextValue
-              value={formatCurrency(
-                bookingInfo?.total_paid,
-                DEFAULT_CURRENCY,
-                i18n.language
-              )}
-              title={t("form.paidAmount")}
-            />
-            <DisplayTextValue
-              value={formatCurrency(
-                bookingInfo?.total_discount,
-                DEFAULT_CURRENCY,
-                i18n.language
-              )}
-              title={t("form.discount")}
-            />
-          </div>
-        </fetcher.Form>
-      </Form>
-    </FormLayout>
+                )}
+                <div className=" col-span-full" />
+                <Typography variant="subtitle2" className=" col-span-full">
+                  Información de reserva del evento
+                </Typography>
+                <DisplayTextValue
+                  value={formatLongDate(bookingInfo?.start_date, i18n.language)}
+                  title={t("form.startDate")}
+                />
+                <DisplayTextValue
+                  value={formatLongDate(bookingInfo?.end_date, i18n.language)}
+                  title={t("form.endDate")}
+                />
+                <DisplayTextValue
+                  value={formatCurrency(
+                    bookingInfo?.total_price,
+                    DEFAULT_CURRENCY,
+                    i18n.language
+                  )}
+                  title={t("form.total")}
+                />
+                <DisplayTextValue
+                  value={formatCurrency(
+                    bookingInfo?.total_paid,
+                    DEFAULT_CURRENCY,
+                    i18n.language
+                  )}
+                  title={t("form.paidAmount")}
+                />
+                <DisplayTextValue
+                  value={formatCurrency(
+                    bookingInfo?.total_discount,
+                    DEFAULT_CURRENCY,
+                    i18n.language
+                  )}
+                  title={t("form.discount")}
+                />
+              </div>
+            </fetcher.Form>
+          </Form>
+        </FormLayout>
+      </div>
+      {event?.id && (
+        <div className=" col-span-5">
+          <ActivityFeed
+            appContext={appContext}
+            activities={data?.activities || []}
+            partyID={event?.id}
+            partyName={event?.name}
+            entityID={Entity.EVENTBOOKING}
+          />
+        </div>
+      )}
+    </div>
+
     // <div className="info-grid">
     //     <DisplayTextValue
     //     title={t("form.name")}

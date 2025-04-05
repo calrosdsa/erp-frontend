@@ -8,7 +8,7 @@ import { GlobalState } from "~/types/app-types";
 import { components } from "~/sdk";
 
 type ActionData = {
-  dealTransition:components["schemas"]["DealTransitionData"]
+  dealTransition:components["schemas"]["EntityTransitionData"]
   action:string
 }
 
@@ -81,6 +81,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return {
       deals: dealsRes.data?.result,
       stages: stagesRes.data?.result,
+      dealAction:dealsRes.data?.actions,
+      actions:dealsRes.data?.actions,
     };
   } catch (error) {
     console.error("Loader error:", error);

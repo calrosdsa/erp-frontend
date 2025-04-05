@@ -43,19 +43,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "create-customer": {
-      const d = data.createCustomer;
-      const res = await client.POST("/customer", {
-        body: {
-          customer: {
-            name: d.name,
-            customer_type: d.customerType,
-            group_id: d.groupID,
-          },
-          contact: d.contactData ? mapToContactData(d.contactData) : undefined,
-        },
-      });
-      message = res.data?.message;
-      error = res.error?.detail;
+      // const d = data.createCustomer;
+      // const res = await client.POST("/customer", {
+      //   body: {
+      //     customer: {
+      //       name: d.name,
+      //       customer_type: d.customerType,
+      //       group_id: d.groupID,
+      //     },
+      //     contact: d.contactData ? mapToContactData(d.contactData) : undefined,
+      //   },
+      // });
+      // message = res.data?.message;
+      // error = res.error?.detail;
       break;
     }
   }

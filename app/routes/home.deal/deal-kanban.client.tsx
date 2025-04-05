@@ -15,16 +15,23 @@ import { DraggableLocation } from "@hello-pangea/dnd";
 import { components } from "~/sdk";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app-types";
-import { DEFAULT_CURRENCY } from "~/constant";
+import { DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
 import MentionTextarea from "../home.activity/components/activity-comment";
 import { TimePicker } from "@/components/custom/datetime/time-picker";
 import { useState } from "react";
+import { ListLayout } from "@/components/ui/custom/list-layout";
+import { usePermission } from "~/util/hooks/useActions";
+import { route } from "~/util/route";
 
 export default function CrmClient() {
-  const { deals, stages } = useLoaderData<typeof loader>();
+  const { deals, stages,actions } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
-  const { companyDefaults } = useOutletContext<GlobalState>();
+  const { companyDefaults,roleActions } = useOutletContext<GlobalState>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [permission] = usePermission({
+    actions:actions,
+    roleActions:roleActions
+  })
   const currency = companyDefaults?.currency || DEFAULT_CURRENCY;
   const dataTransition = (
     source: DraggableLocation<string>,
@@ -69,27 +76,36 @@ export default function CrmClient() {
 
   return (
     <>
-      <KanbanBoard
-        stages={stages}
-        data={deals}
-        headerComponent={(deals, stage) => {
-          return (
-            <DealContentHeader
-              deals={deals}
-              stage={stage}
-              openModal={openModal}
-              currency={currency}
-            />
-          );
-        }}
-        cardComponent={(deal) => {
-          return (
-            <DealCard deal={deal} currency={currency} openModal={openModal} />
-          );
-        }}
-        dataTransition={dataTransition}
-      />
-      {/* {JSON.stringify(stages)} */}
+      <ListLayout
+      title="Tratos"
+       {...(permission.create && {
+          onCreate:()=>{
+            openModal(route.deal,DEFAULT_ID)
+          }
+        })}
+      >
+        <KanbanBoard
+          stages={stages}
+          data={deals}
+          headerComponent={(deals, stage) => {
+            return (
+              <DealContentHeader
+                deals={deals}
+                stage={stage}
+                openModal={openModal}
+                currency={currency}
+              />
+            );
+          }}
+          cardComponent={(deal) => {
+            return (
+              <DealCard deal={deal} currency={currency} openModal={openModal} />
+            );
+          }}
+          dataTransition={dataTransition}
+        />
+        {/* {JSON.stringify(stages)} */}
+      </ListLayout>
     </>
   );
 }

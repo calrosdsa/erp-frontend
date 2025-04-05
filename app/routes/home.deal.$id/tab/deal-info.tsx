@@ -8,7 +8,6 @@ import {
 import { action, loader } from "../route";
 import { GlobalState } from "~/types/app-types";
 import { useDealStore } from "../deal-store";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import {
   DealData,
   dealSchema,
@@ -29,16 +28,19 @@ import { route } from "~/util/route";
 import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { components } from "~/sdk";
 import { SerializeFrom } from "@remix-run/node";
+import { SmartForm } from "@/components/form/smart-form";
+import { useModalStore } from "@/components/ui/custom/modal-layout";
+import { DEFAULT_CURRENCY } from "~/constant";
 
 export default function DealInfoTab({
   appContext,
   data,
+  keyPayload
 }: {
   appContext: GlobalState;
   data?: SerializeFrom<typeof loader>;
+  keyPayload:string
 }) {
-  const navigate = useNavigate();
-
   const deal = data?.deal;
   const { profile, roleActions } = appContext;
   const dd = useLoaderData<typeof loader>();
@@ -47,28 +49,16 @@ export default function DealInfoTab({
     roleActions,
   });
   const fetcher = useFetcher<typeof action>();
-  const { payload, editPayload } = useDealStore();
+  const { editPayload, payload: payloadDeal } = useDealStore();
+  const payload = useModalStore((state) => state.payload[keyPayload]);
   const { toast } = useToast();
-  const [searchParams,setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const allowEdit = perm.edit || payload.enableEdit;
+  const allowEdit = perm.edit;
+
   // Initialize the form with default values and schema validation.
-  const form = useForm<DealData>({
-    resolver: zodResolver(dealSchema),
-    defaultValues: {
-      ...payload.data,
-      responsible: {
-        id: profile?.id,
-        name: fullName(profile?.given_name, profile?.family_name),
-        uuid: profile?.uuid,
-      },
-      available_for_everyone: true,
-      start_date: new Date(),
-      index: 0,
-    },
-  });
+
   // Watch all form fields to update our deal store.
-  const watchedFields = useWatch({ control: form.control });
 
   // Handle form submission.
   const onSubmit = (data: DealData) => {
@@ -94,13 +84,12 @@ export default function DealInfoTab({
       success: fetcher.data?.message,
       onSuccessMessage: () => {
         if (fetcher.data?.deal) {
-          console.log("NEW DEAL",fetcher.data)
-          searchParams.set("tab","info")
-          searchParams.set(route.deal,fetcher.data.deal.id.toString())
-          setSearchParams(searchParams,{
-            preventScrollReset:true
-          })
-          
+          console.log("NEW DEAL", fetcher.data);
+          searchParams.set("tab", "info");
+          searchParams.set(route.deal, fetcher.data.deal.id.toString());
+          setSearchParams(searchParams, {
+            preventScrollReset: true,
+          });
         }
       },
     },
@@ -109,82 +98,58 @@ export default function DealInfoTab({
 
   // When the deal data is available, reset the form with its values.
 
-  const setDeal = (e: components["schemas"]["DealDto"]) => {
-    form.reset({
-      name: e.name,
-      amount: formatAmount(e.amount),
-      currency: e.currency,
-      stage: {
-        name: e.stage,
-        id: e.stage_id,
-        uuid: "",
-      },
-      start_date: new Date(e.start_date),
-      end_date: e.end_date ? new Date(e.end_date) : undefined,
-      available_for_everyone: e.available_for_everyone,
-      index: e.index,
-      responsible: {
-        id: e.responsible_id,
-        name: fullName(e.responsible_given_name, e.responsible_family_name),
-        uuid: e.uuid,
-      },
-      deal_type: e.deal_type,
-      contacts: data?.contacts?.map((t) => mapToContactSchema(t)) || [],
-      observers: data?.observers.map((t) => mapToParticipantSchema(t)) || [],
-      source: e.source,
-      source_information: e.source_information,
-      id: e.id,
-    });
-  };
-  useEffect(() => {
-    if (deal) {
-      setDeal(deal);
-    }
-  }, [deal]);
-
-  // Update our deal store whenever the form fields change.
-  useEffect(() => {
-    editPayload(form.getValues());
-  }, [watchedFields]);
-
-  useEffect(() => {
-    editPayload({
-      onSave: () => inputRef.current?.click(),
-      onCancel: () =>
-        deal?.id
-          ? editPayload({
-              enableEdit: false,
-            })
-          : editPayload({
-              enableEdit: false,
-              open: false,
-            }),
-    });
-  }, []);
-
   return (
     <div className="grid grid-cols-9 gap-2">
       <div className="grid gap-3 col-span-4">
-        {/* {JSON.stringify(payload.stage)} */}
-        {/* {JSON.stringify(form.formState.errors)} */}
-        <DealForm
-          form={form}
-          fetcher={fetcher}
-          inputRef={inputRef}
-          onSubmit={onSubmit}
-          contacts={data?.contacts || []}
-          observers={data?.observers || []}
-          allowEdit={allowEdit}
-          enableEdit={payload.enableEdit}
-          setEnableEdit={(e) => {
-            if (deal) {
-              setDeal(deal);
-            }
-            editPayload({
-              enableEdit: e,
-            });
+        {JSON.stringify(deal?.stage_id)}
+        <SmartForm
+          isNew={payload?.isNew}
+          title={"Información del trato"}
+          schema={dealSchema}
+          keyPayload={keyPayload}
+          defaultValues={{
+            ...payloadDeal,
+            name: deal?.name,
+            amount: formatAmount(deal?.amount),
+            currency:
+              deal?.currency ||
+              appContext.companyDefaults?.currency ||
+              DEFAULT_CURRENCY,
+            stage: {
+              name: deal?.stage,
+              id: deal?.stage_id,
+            },
+            start_date: deal?.start_date
+              ? new Date(deal?.start_date)
+              : new Date(),
+            end_date: deal?.end_date ? new Date(deal?.end_date) : undefined,
+            available_for_everyone: deal?.available_for_everyone || false,
+            index: deal?.index || 0,
+            responsible: {
+              id: deal?.responsible_id,
+              name: fullName(
+                deal?.responsible_given_name,
+                deal?.responsible_family_name
+              ),
+              uuid: deal?.uuid,
+            },
+            deal_type: deal?.deal_type,
+            contacts: data?.contacts?.map((t) => mapToContactSchema(t)) || [],
+            observers:
+              data?.observers.map((t) => mapToParticipantSchema(t)) || [],
+            source: deal?.source,
+            source_information: deal?.source_information,
+            id: deal?.id,
           }}
-        />
+          onSubmit={onSubmit}
+        >
+          <DealForm
+            keyPayload={keyPayload}
+            contacts={data?.contacts || []}
+            observers={data?.observers || []}
+            allowEdit={allowEdit}
+          />
+        </SmartForm>
       </div>
       {deal?.id != undefined && (
         <div className=" col-span-5">

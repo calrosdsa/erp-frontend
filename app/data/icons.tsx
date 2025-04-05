@@ -256,6 +256,8 @@ import {
   LayoutDashboard,
   Store,
   PartyPopper,
+  Cog,
+  CalendarPlus,
 } from "lucide-react";
 
 const icons = [
@@ -548,6 +550,9 @@ const icons = [
   { name: "Zap Apagado", value: "zapOff", icon: ZapOff },
   { name: "Acercar", value: "zoomIn", icon: ZoomIn },
   { name: "Alejar", value: "zoomOut", icon: ZoomOut },
+  { name: "Cog", value: "cog", icon:Cog },
+  { name: "Calendario Plus", value: "calendarPlus", icon:CalendarPlus },
+
 ];
 
 export default icons;

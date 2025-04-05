@@ -15,29 +15,14 @@ import { route } from "~/util/route";
 
 export default function SupplierForm({
   contacts,
-  inputRef,
 }: {
   contacts: components["schemas"]["ContactDto"][];
-  inputRef: MutableRefObject<HTMLInputElement | null>;
 }) {
   const key = route.supplier
-  const { form, isEditing, hasChanged } = useFormContext();
+  const { form} = useFormContext();
   const formValues = form?.getValues() as CustomerData;
-  const {editPayload} = useModalStore()
   const { t } = useTranslation("common");
-  const fieldArray = useFieldArray({
-    control: form?.control,
-    name: "contacts",
-  });
 
-
-  setUpModalTabPage(key,()=>{
-    return {
-      onSave: () => inputRef.current?.click(),
-      disabledSave: !hasChanged,
-      
-    }
-  },[hasChanged])
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -58,21 +43,11 @@ export default function SupplierForm({
       {form && (
         <PartyContacts
           className=" col-span-full "
-          fieldArray={fieldArray as any}
-          form={form}
           partyID={formValues?.customerID}
           contacts={contacts}
-          enableEdit={isEditing}
-          setEnableEdit={(e) => {
-            editPayload(key,{
-              enableEdit:e
-            })
-          }}
-          // perm={permissions[Entity.CONTACT]}
           />
         )}
       {/* {JSON.stringify(formValues)} */}
-      <input className="hidden" type="submit" ref={inputRef} />
     </div>
   );
 }

@@ -17,6 +17,7 @@ import {
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
 import { useRef } from "react";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewModuleClient({}) {
   const form = useForm<ModuleDataType>({
@@ -83,7 +84,8 @@ export default function NewModuleClient({}) {
     [fetcher.data]
   );
   return (
-    <Card>
+
+    <CreateLayout>
       <ModuleData
         form={form}
         allowCreate={true}
@@ -92,6 +94,6 @@ export default function NewModuleClient({}) {
         fetcher={fetcher}
         inputRef={inputRef}
       />
-    </Card>
+    </CreateLayout>
   );
 }

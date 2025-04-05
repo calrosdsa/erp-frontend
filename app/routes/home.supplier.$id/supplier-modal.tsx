@@ -35,6 +35,7 @@ import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { DEFAULT_ID } from "~/constant";
 import SupplierInfo from "./components/tab/supplier-info";
+import { SerializeFrom } from "@remix-run/node";
 
 export default function SupplierModal({
   appContext,
@@ -42,9 +43,9 @@ export default function SupplierModal({
   appContext: GlobalState;
 }) {
   const key = route.supplier;
-  const fetcherLoader = useFetcher<typeof loader>();
-  const data = fetcherLoader.data;
-  const supplier = fetcherLoader.data?.supplier;
+  const [data, setData] = useState<SerializeFrom<typeof loader>>();
+  const [loading, setLoading] = useState(false);
+  const supplier = data?.supplier;
   const [open, setOpen] = useState(true);
   // const { supplier, actions, activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
@@ -59,16 +60,18 @@ export default function SupplierModal({
     actions: data?.actions,
   });
 
-  const initData = () => {
-    fetcherLoader.submit(
-      {},
-      {
-        action: route.toRoute({
-          main: route.supplier,
-          routeSufix: [supplierID || ""],
-        }),
+  const initData = async() => {
+    try {
+      setLoading(true);
+      const res = await fetch(route.toRouteDetail(route.supplier, supplierID));
+      if (res.ok) {
+        const body = (await res.json()) as SerializeFrom<typeof loader>;
+        setData(body);
       }
-    );
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
   };
   useEffect(() => {
     initData();
@@ -163,7 +166,7 @@ export default function SupplierModal({
         },
       });
       return {
-        title:isNew ? "Nuevo proveedor": supplier?.name,
+        title: isNew ? "Nuevo proveedor" : supplier?.name,
         view: isNew ? [] : view,
         actions: isNew ? [] : actions,
         status: stateFromJSON(supplier?.status),
@@ -176,7 +179,7 @@ export default function SupplierModal({
           : undefined,
       };
     },
-    [fetcherLoader.data]
+    [data]
   );
 
   const closeModal = () => {
@@ -200,7 +203,7 @@ export default function SupplierModal({
         setOpen(e);
       }}
     >
-      {fetcherLoader.state == "loading" && !fetcherLoader.data ? (
+      {loading ? (
         <LoadingSpinner />
       ) : (
         <>

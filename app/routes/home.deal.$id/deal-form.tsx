@@ -4,64 +4,104 @@ import SelectForm from "@/components/custom/select/SelectForm";
 import { Typography } from "@/components/typography";
 import { Form } from "@/components/ui/form";
 import { FetcherWithComponents, useOutletContext } from "@remix-run/react";
-import { MutableRefObject, useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app-types";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { DealData } from "~/util/data/schemas/crm/deal.schema";
-import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
+import { CurrencySmartAutocomplete } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { dealTypes } from "~/data";
-import { StageFormField } from "~/util/hooks/fetchers/crm/use-stage.fetcher";
+import { StageSmartAutocomplete } from "~/util/hooks/fetchers/crm/use-stage.fetcher";
 import { Entity } from "~/types/enums";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { PencilIcon } from "lucide-react";
 import { PartyContacts } from "../home.party/components/party-contacts";
 import Participants from "./components/observers";
 import { components } from "~/sdk";
-import { ProfileAutoCompleteFormField } from "~/util/hooks/fetchers/profile/profile-fetcher";
+import { ProfileSmartField } from "~/util/hooks/fetchers/profile/profile-fetcher";
+import { SmartField } from "@/components/form/smart-field";
+import { useFormContext } from "@/components/form/form-provider";
 
 export default function DealForm({
-  fetcher,
-  form,
-  onSubmit,
-  inputRef,
-  allowEdit,
-  enableEdit,
-  setEnableEdit,
-  observers,
   contacts,
+  allowEdit,
+  observers,
+  keyPayload,
 }: {
-  fetcher: FetcherWithComponents<any>;
-  form: UseFormReturn<DealData>;
-  onSubmit: (e: DealData) => void;
-  inputRef: MutableRefObject<HTMLInputElement | null>;
-  allowEdit?: boolean;
-  enableEdit?: boolean;
-  setEnableEdit: (e: boolean) => void;
-  observers:components["schemas"]["ProfileDto"][]
-  contacts:components["schemas"]["ContactDto"][]
+  contacts: components["schemas"]["ContactDto"][];
+  observers: components["schemas"]["ProfileDto"][];
+  allowEdit: boolean;
+  keyPayload: string;
 }) {
   const { t } = useTranslation("common");
-  const fieldArray = useFieldArray({
-    control: form.control,
-    name: "contacts",
-  });
-  const formValues = form.getValues();
+  const { form } = useFormContext();
+  const formValues = form?.getValues() as DealData;
   return (
-    <FormLayout>
-      <Form {...form}>
-        <fetcher.Form
-          onSubmit={form.handleSubmit((e) => {
-            onSubmit(e);
-            setEnableEdit(false);
-          })}
-          className={" grid p-2 gap-3"}
-        >
-          {/* {JSON.stringify(form.formState.errors)} */}
-          {/* {JSON.stringify(formValues.contacts)} */}
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <SmartField name="name" label={t("form.name")} />
+        <SmartField name="amount" label={t("form.amount")} />
+
+        <SmartField type="date" name="start_date" label={t("form.startDate")} />
+        <SmartField type="date" name="end_data" label={t("form.endDate")} />
+
+        <StageSmartAutocomplete
+          entityID={Entity.DEAL}
+        />
+        <CurrencySmartAutocomplete
+          onSelect={(e) => {
+            form?.setValue("currency", e.code);
+          }}
+        />
+
+        <Typography variant="subtitle2" className=" col-span-full">
+          Mas
+        </Typography>
+
+        <SmartField
+          name="deal_type"
+          label="Tipo de acuerdo"
+          type="select"
+          options={dealTypes}
+        />
+
+        <SmartField name="source" label={"Fuente"} />
+        <SmartField
+          name="source_information"
+          label={"Información de fuente"}
+          type="textarea"
+          className=" col-span-full"
+        />
+        <ProfileSmartField
+          name="responsible"
+          label="Responsable"
+        />
+
+        {form && (
+          <PartyContacts
+            className=" col-span-full"
+            partyID={formValues.id}
+            contacts={contacts}
+            // perm={permissions[Entity.CONTACT]}
+          />
+        )}
+
+        <Participants
+          className=" col-span-full"
+          allowEdit={allowEdit}
+          observers={observers}
+        />
+      </div>
+
+      {/* <FormLayout>
+        <Form {...form}>
+          <fetcher.Form
+            onSubmit={form.handleSubmit((e) => {
+              onSubmit(e);
+              setEnableEdit(false);
+            })}
+            className={" grid p-2 gap-3"}
+          >
             <div className=" border rounded-lg p-2 grid gap-2">
               <div className="flex justify-between items-center">
                 <Typography variant="subtitle2" className=" col-span-full">
@@ -78,14 +118,8 @@ export default function DealForm({
                     <span>Editar</span>
                   </Button>
                 )}
-                {/* )} */}
               </div>
               <Separator />
-
-              {/* {enableEdit &&
-                  <>
-                  </>
-                } */}
 
               <div className="">
                 <div className="grid sm:grid-cols-2 gap-3">
@@ -166,16 +200,13 @@ export default function DealForm({
                   />
 
                   <ProfileAutoCompleteFormField
-                  control={form.control}
-                  name="responsible"
-                  label="Responsable"
-                  allowEdit={enableEdit}
+                    control={form.control}
+                    name="responsible"
+                    label="Responsable"
+                    allowEdit={enableEdit}
                   />
-
                 </div>
-
               </div>
-
             </div>
 
             <PartyContacts
@@ -197,11 +228,10 @@ export default function DealForm({
               observers={observers}
             />
 
-        
-
-          <input ref={inputRef} type="submit" className="hidden" />
-        </fetcher.Form>
-      </Form>
-    </FormLayout>
+            <input ref={inputRef} type="submit" className="hidden" />
+          </fetcher.Form>
+        </Form>
+      </FormLayout> */}
+    </>
   );
 }

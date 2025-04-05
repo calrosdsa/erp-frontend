@@ -1,10 +1,8 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
+import { DefaultValues, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -15,10 +13,10 @@ import isEqual from "lodash/isEqual";
 import { useModalStore } from "../ui/custom/modal-layout";
 interface SmartFormProps<T extends z.ZodType> {
   schema: T;
-  defaultValues: z.infer<T>;
+  defaultValues: DefaultValues<z.infer<T>>;
   onSubmit: (values: z.infer<T>) => void | Promise<void>;
   children: React.ReactNode;
-  keyPayload:string
+  keyPayload: string;
   className?: string;
   title?: string;
   isNew?: boolean;
@@ -36,27 +34,39 @@ export function SmartForm<T extends z.ZodType>({
 }: SmartFormProps<T>) {
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(schema),
-    defaultValues,
+    defaultValues: defaultValues,
     mode: "onChange",
   });
-  const {editPayload} =  useModalStore()
-  const payload = useModalStore((state)=>state.payload[keyPayload])
+  const { editPayload } = useModalStore();
+  const payload = useModalStore((state) => state.payload[keyPayload]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   // const [isEditing, setIsEditing] = useState(defaultEditMode);
-
-  const [isChanged, setIsChanged] = useState(false);
-
+  const [isChanged, setIsChanged] = useState(isNew || false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const watchedValues = useWatch({ control: form.control });
-  useEffect(() => {
-    setIsChanged(!isEqual(watchedValues, defaultValues));
-  }, [watchedValues, defaultValues]);
 
-  const setIsEditing = (e:boolean)=>{
-    editPayload(keyPayload,{
-      enableEdit:e
+  useEffect(() => {
+    editPayload(keyPayload, {
+      onSave: () => inputRef.current?.click(),
     });
-  }
+  }, []);
+
+  useEffect(() => {
+    if (!isNew) {
+      const equal = isEqual(watchedValues, defaultValues);
+      setIsChanged(!equal);
+      editPayload(keyPayload, {
+        disabledSave: equal,
+      });
+    }
+  }, [watchedValues]);
+
+  const setIsEditing = (e: boolean) => {
+    editPayload(keyPayload, {
+      enableEdit: e,
+    });
+  };
 
   const handleSubmit = async (values: z.infer<T>) => {
     try {
@@ -79,6 +89,11 @@ export function SmartForm<T extends z.ZodType>({
       form={form}
       defaultEditMode={payload?.enableEdit}
       hasChanged={isChanged}
+      setIsEditing={(e) => {
+        editPayload(keyPayload, {
+          enableEdit: e,
+        });
+      }}
     >
       <Form {...form}>
         <form
@@ -122,6 +137,7 @@ export function SmartForm<T extends z.ZodType>({
           </div>
 
           <div className="py-2">{children}</div>
+          <input ref={inputRef} type="submit" className="hidden" />
         </form>
       </Form>
     </FormProvider>

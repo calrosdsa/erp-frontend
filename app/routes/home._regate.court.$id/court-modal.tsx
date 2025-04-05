@@ -25,7 +25,9 @@ import {
   setUpToolbarRegister,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { ActivityType } from "~/gen/common";
-import ModalLayout, { setUpModalPayload } from "@/components/ui/custom/modal-layout";
+import ModalLayout, {
+  setUpModalPayload,
+} from "@/components/ui/custom/modal-layout";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 
@@ -34,7 +36,7 @@ export default function CourtModal({
 }: {
   appContext: GlobalState;
 }) {
-  const key = route.court
+  const key = route.court;
   const fetcherLoader = useFetcher<typeof loader>();
   const data = fetcherLoader.data;
   const court = data?.court;
@@ -65,43 +67,47 @@ export default function CourtModal({
     initData(tab);
   }, [tab]);
 
-  setUpModalPayload(key,() => {
-    const actions: ButtonToolbar[] = [];
-    actions.push({
-      label: "Editar precio por hora",
-      onClick: () => {
-        updateCourtRate.onOpenDialog({
-          court: court,
-          title: "Editar precio por hora",
-          action: ActivityType.EDIT,
-        });
-      },
-    });
-    actions.push({
-      label: "Agregar precio hora",
-      onClick: () => {
-        updateCourtRate.onOpenDialog({
-          court: court,
-          title: "Agregar precio por hora",
-          action: ActivityType.CREATE,
-        });
-      },
-    });
+  setUpModalPayload(
+    key,
+    () => {
+      const actions: ButtonToolbar[] = [];
+      actions.push({
+        label: "Editar precio por hora",
+        onClick: () => {
+          updateCourtRate.onOpenDialog({
+            court: court,
+            title: "Editar precio por hora",
+            action: ActivityType.EDIT,
+          });
+        },
+      });
+      actions.push({
+        label: "Agregar precio hora",
+        onClick: () => {
+          updateCourtRate.onOpenDialog({
+            court: court,
+            title: "Agregar precio por hora",
+            action: ActivityType.CREATE,
+          });
+        },
+      });
 
-    actions.push({
-      label: "Eliminar horas",
-      onClick: () => {
-        updateCourtRate.onOpenDialog({
-          court: court,
-          title: "Eliminar horas",
-          action: ActivityType.DELETE,
-        });
-      },
-    });
-    return {
-      actions: actions,
-    };
-  }, [fetcherLoader.data]);
+      actions.push({
+        label: "Eliminar horas",
+        onClick: () => {
+          updateCourtRate.onOpenDialog({
+            court: court,
+            title: "Eliminar horas",
+            action: ActivityType.DELETE,
+          });
+        },
+      });
+      return {
+        actions: actions,
+      };
+    },
+    [fetcherLoader.data]
+  );
 
   useEffect(() => {
     if (!open) {
@@ -117,9 +123,10 @@ export default function CourtModal({
       open={open}
       onOpenChange={(e) => {
         setOpen(e);
-      } }
-      title={court?.name || ""}  
-      keyPayload={key}>
+      }}
+      title={court?.name || ""}
+      keyPayload={key}
+    >
       {fetcherLoader.state == "loading" && !fetcherLoader.data ? (
         <LoadingSpinner />
       ) : (
@@ -136,14 +143,12 @@ export default function CourtModal({
               {
                 label: "Info",
                 value: "info",
-                children: (
-                  <CourtInfoTab appContext={appContext} data={data} />
-                ),
+                children: <CourtInfoTab appContext={appContext} data={data} />,
               },
               {
                 label: "Horario",
                 value: "schedule",
-                children: <CourtSchedule />,
+                children: <CourtSchedule appContext={appContext} data={data} />,
               },
             ]}
           />
