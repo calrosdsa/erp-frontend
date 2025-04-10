@@ -14,6 +14,7 @@ import { ActivityType, activityTypeToJSON } from "~/gen/common";
 import { route } from "~/util/route";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { set } from "lodash";
+import { useActivityStore } from "../activity-store";
 
 export default function CommentActivityTab({
   partyID,
@@ -29,7 +30,7 @@ export default function CommentActivityTab({
   const [value, setValue] = useState("");
   const [mentions, setMentions] = useState<MentionData[]>([]);
   const fetcher = useFetcher<typeof action>();
-
+  const { addActivity } = useActivityStore();
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const body: ActivityData = {
@@ -53,15 +54,21 @@ export default function CommentActivityTab({
         encType: "application/json",
       }
     );
-    setValue("")
-    setMentions([])
-    setIsSelected(false)
+    setValue("");
+    setMentions([]);
+    setIsSelected(false);
   };
 
   useDisplayMessage(
     {
       success: fetcher.data?.message,
       error: fetcher.data?.error,
+      onSuccessMessage: () => {
+        if (fetcher.data?.activity) {
+          console.log("ADDING ACITIVITY", fetcher.data.activity);
+          addActivity(fetcher.data.activity);
+        }
+      },
     },
     [fetcher.data]
   );

@@ -4,6 +4,8 @@ import {
   useNavigate,
   useOutletContext,
   useParams,
+  useRevalidator,
+  useRouteLoaderData,
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
@@ -34,7 +36,6 @@ import ModalLayout, {
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
-import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { DEFAULT_ID } from "~/constant";
 import { SerializeFrom } from "@remix-run/node";
 
@@ -44,10 +45,14 @@ export default function CustomerModal({
   appContext: GlobalState;
 }) {
   const key = route.customer;
+  const fetcherLoader = useFetcher<typeof loader>()
+  // const data = useRouteLoaderData<typeof loader>("home.customer.$id");
+  // const data = fetcherLoader.data;
+  
   const [data, setData] = useState<SerializeFrom<typeof loader>>();
   const [loading, setLoading] = useState(false);
   // const data = fetcherLoader.data;
-  const customer = data?.customer;
+  const customer = data?.customer
   const [open, setOpen] = useState(true);
   // const { customer, actions, activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
@@ -62,6 +67,10 @@ export default function CustomerModal({
     actions: data?.actions,
   });
 
+  // const load = async() =>{
+  //   fetcherLoader.load(route.toRouteDetail(route.customer,customerID))
+  // }
+
   const load = async () => {
     try {
       setLoading(true);
@@ -69,6 +78,7 @@ export default function CustomerModal({
       if (res.ok) {
         const body = (await res.json()) as SerializeFrom<typeof loader>;
         setData(body);
+        console.log("BODY",body)
       }
       setLoading(false);
     } catch (err) {
@@ -76,6 +86,7 @@ export default function CustomerModal({
     }
   };
   useEffect(() => {
+    console.log("LOAD MODAL....")
     load();
   }, []);
 

@@ -25,6 +25,7 @@ import TabNavigationActivity from "./tab-navigation";
 import { TimelineActivityLayout } from "~/routes/home.activity/components/timeline/timeline-activity-layout";
 import { TimelineElement } from "~/types/ui-lyout";
 import { GlobalState } from "~/types/app-types";
+import { useActivityStore } from "../activity-store";
 
 interface ActivityFeedProps {
   activities: components["schemas"]["ActivityDto"][] | undefined;
@@ -41,13 +42,13 @@ export default function ActivityFeed({
   entityID,
   appContext,
 }: ActivityFeedProps) {
-  const { t, i18n } = useTranslation("common");
-  const r = route;
-  const { toast } = useToast();
-  const fetcher = useFetcher<typeof action>();
-  const [activity, setActivity] = useState<
-    components["schemas"]["ActivityDto"] | null
-  >(null);
+  const { setPayload, payload } = useActivityStore();
+
+  useEffect(() => {
+    setPayload({
+      activities,
+    });
+  }, [activities]);
 
   return (
     <>
@@ -65,7 +66,8 @@ export default function ActivityFeed({
             <div className="space-y-4">
               {/* {JSON.stringify(activities)} */}
               <TimelineActivityLayout
-                activities={activities}
+                appContext={appContext}
+                activities={payload.activities || []}
                 size="sm"
                 iconColor="primary"
                 customIcon={<CalendarIcon />}

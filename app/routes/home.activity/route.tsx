@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { LOAD_ACTION } from "~/constant";
-import { operations } from "~/sdk";
+import { components, operations } from "~/sdk";
 import {
   ActivityData,
   mapToActivityData,
@@ -18,6 +18,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let error: string | undefined = undefined;
   let message: string | undefined = undefined;
+  let activity:components["schemas"]["ActivityDto"] | undefined = undefined;  
   let actionData = LOAD_ACTION;
   switch (data.action) {
     case "create": {
@@ -25,9 +26,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const res = await client.POST("/activity", {
         body: mapToActivityData(data.activityData),
       });
-      console.log(res.error)
+      console.log("ACTIVITY DATA",res.data,res.error)
       error = res.error?.detail;
       message = res.data?.message;
+      activity = res.data?.result;
       break;
     }
     case "edit": {
@@ -52,6 +54,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({
     error,
     message,
-    action: actionData,
+    // action: actionData,
+    activity,
   });
 };

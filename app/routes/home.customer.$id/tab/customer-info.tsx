@@ -71,22 +71,22 @@ export default function CustomerInfo({
     [fetcher.state]
   );
 
-  useDisplayMessage(
-    {
-      toastID: toastID,
-      error: fetcher.data?.error,
-      success: fetcher.data?.message,
-      onSuccessMessage: () => {
-        if (id == DEFAULT_ID) {
-        } else {
-          editPayload(key, {
-            enableEdit: false,
-          });
-        }
-      },
-    },
-    [fetcher.data]
-  );
+  // useDisplayMessage(
+  //   {
+  //     toastID: toastID,
+  //     error: fetcher.data?.error,
+  //     success: fetcher.data?.message,
+  //     onSuccessMessage: () => {
+  //       if (id == DEFAULT_ID) {
+  //       } else {
+  //         editPayload(key, {
+  //           enableEdit: false,
+  //         });
+  //       }
+  //     },
+  //   },
+  //   [fetcher.data]
+  // );
 
   return (
     <div className="grid grid-cols-9 gap-3">

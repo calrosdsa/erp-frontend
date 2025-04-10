@@ -4146,7 +4146,6 @@ export interface components {
             title?: string | null;
         };
         ActivityDto: {
-            action: string;
             address: string | null;
             color: string | null;
             comment: string | null;
@@ -4162,12 +4161,13 @@ export interface components {
             is_pinned: boolean | null;
             link: string | null;
             mentions: components["schemas"]["ActivityMentionDto"][];
-            message: string;
             /** Format: int64 */
             party_id: number | null;
             profile_avatar: string | null;
             profile_family_name: string;
             profile_given_name: string;
+            /** Format: int64 */
+            profile_id: number;
             profile_uuid: string;
             title: string | null;
             type: string;
@@ -8700,6 +8700,19 @@ export interface components {
             readonly $schema?: string;
             email: string;
         };
+        ResponseDataActivityDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ActivityDto"];
+        };
         ResponseDataAddressAndContactDtoBody: {
             /**
              * Format: uri
@@ -11045,7 +11058,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
+                    "application/json": components["schemas"]["ResponseDataActivityDtoBody"];
                 };
             };
             /** @description Error */
@@ -11094,8 +11107,8 @@ export interface operations {
     };
     "get-addresses": {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -11772,8 +11785,8 @@ export interface operations {
     };
     bank: {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -11875,8 +11888,8 @@ export interface operations {
     };
     "bank-account": {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -12211,8 +12224,8 @@ export interface operations {
     };
     "cash-outflow": {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -12636,8 +12649,8 @@ export interface operations {
     };
     message: {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -13140,8 +13153,8 @@ export interface operations {
     };
     courts: {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -13838,8 +13851,8 @@ export interface operations {
     };
     deal: {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -15091,8 +15104,8 @@ export interface operations {
     };
     "get-acconts": {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -15563,8 +15576,8 @@ export interface operations {
     };
     notification: {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -15880,8 +15893,8 @@ export interface operations {
     };
     contacts: {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -16350,8 +16363,8 @@ export interface operations {
     };
     "payment-terms": {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -16452,8 +16465,8 @@ export interface operations {
     };
     "payment-terms-template": {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -17508,8 +17521,8 @@ export interface operations {
     };
     profiles: {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -19603,7 +19616,7 @@ export interface operations {
     stage: {
         parameters: {
             query: {
-                size: string;
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;
@@ -21613,8 +21626,8 @@ export interface operations {
     };
     "terms-and-conditions": {
         parameters: {
-            query: {
-                size: string;
+            query?: {
+                size?: string;
                 status?: string;
                 orientation?: string;
                 column?: string;

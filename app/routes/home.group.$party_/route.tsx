@@ -1,11 +1,12 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { z } from "zod";
 import apiClient from "~/apiclient";
-import { DEFAULT_ENABLED, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_ENABLED, DEFAULT_PAGE, DEFAULT_SIZE, LOAD_ACTION } from "~/constant";
 import { components } from "~/sdk";
 import { PartyType } from "~/types/enums";
 import { createGroupSchema } from "~/util/data/schemas/group-schema";
 import GroupsClient from "./groups.client";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
@@ -20,6 +21,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  console.log("ACTION GROUPS", data);
   let groups: components["schemas"]["GroupDto"][] = [];
   let actions: components["schemas"]["ActionDto"][] = [];
   switch (data.action) {
@@ -58,13 +60,27 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
   }
-  return json({
+  return {
     message,
     error,
     groups,
     actions,
-  });
+  };
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

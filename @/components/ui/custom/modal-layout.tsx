@@ -344,7 +344,7 @@ export const setUpModalPayload = (
 
     return () => {
       console.log("RESET TOOLBAR REGISTER...");
-      // resetPayload(key);
+      resetPayload(key);
     };
   }, [...dependencies]);
 

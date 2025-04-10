@@ -116,7 +116,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       }
     }
   }
-  console.log("LOAD CUSTOMER...", params.name);
+  console.log("LOAD CUSTOMER...", res.data?.result.entity);
   return {
     customer: res.data?.result.entity,
     actions: res.data?.actions,
@@ -135,6 +135,7 @@ export const openCustomerModal = (
     callback(route.customer, id);
   }
 };
+
 
 // export const shouldRevalidate: ShouldRevalidateFunction = ({
 //   actionResult,

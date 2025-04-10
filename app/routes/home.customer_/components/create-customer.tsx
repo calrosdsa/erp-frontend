@@ -54,19 +54,19 @@ export const CreateCustomer = ({
   //     })
   // }
 
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-      onOpenChange(false);
-    }
-  }, [fetcher.data]);
+  // useEffect(() => {
+  //   if (fetcher.data?.error) {
+  //     toast({
+  //       title: fetcher.data.error,
+  //     });
+  //   }
+  //   if (fetcher.data?.message) {
+  //     toast({
+  //       title: fetcher.data.message,
+  //     });
+  //     onOpenChange(false);
+  //   }
+  // }, [fetcher.data]);
   return (
     <DrawerLayout
       open={open}
@@ -118,7 +118,7 @@ export const CreateCustomer = ({
         renderCustomInputs={(form) => {
           return (
             <>
-              <GroupAutocompleteForm
+              {/* <GroupAutocompleteForm
                 control={form.control}
                 label={t("group")}
                 roleActions={globalState.roleActions}
@@ -127,7 +127,7 @@ export const CreateCustomer = ({
                 onSelect={(e) => {
                   form.setValue("groupID", e.id);
                 }}
-              />
+              /> */}
 
               <AccordationLayout title={t("contact")} className="grid gap-3">
                 <CustomFormFieldInput
