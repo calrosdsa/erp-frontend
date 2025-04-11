@@ -60,7 +60,7 @@ export default function SupplierModal({
     actions: data?.actions,
   });
 
-  const initData = async() => {
+  const load = async () => {
     try {
       setLoading(true);
       const res = await fetch(route.toRouteDetail(route.supplier, supplierID));
@@ -74,7 +74,7 @@ export default function SupplierModal({
     }
   };
   useEffect(() => {
-    initData();
+    load();
   }, []);
 
   const onChangeState = (e: EventState) => {
@@ -219,7 +219,13 @@ export default function SupplierModal({
               {
                 label: "Info",
                 value: "info",
-                children: <SupplierInfo appContext={appContext} data={data} />,
+                children: (
+                  <SupplierInfo
+                    load={load}
+                    appContext={appContext}
+                    data={data}
+                  />
+                ),
               },
             ]}
           />

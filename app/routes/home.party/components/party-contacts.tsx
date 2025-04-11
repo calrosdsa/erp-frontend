@@ -138,13 +138,25 @@ export const PartyContacts = ({
                                 ? [
                                     {
                                       Icon: ArrowRightLeft,
-                                      onClick: () => toggleItem(index),
+                                      onClick: () => {
+                                        toggleItem(index);
+                                        update(index, {
+                                          ...field,
+                                          action: undefined,
+                                        });
+                                      },
                                     },
                                   ]
                                 : [
                                     {
                                       Icon: PencilIcon,
-                                      onClick: () => toggleItem(index),
+                                      onClick: () => {
+                                        toggleItem(index);
+                                        update(index, {
+                                          ...field,
+                                          action: EDIT,
+                                        });
+                                      },
                                     },
                                   ]),
                             ]

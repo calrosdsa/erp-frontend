@@ -26,9 +26,11 @@ import SupplierForm from "../../supplier-form";
 export default function SupplierInfo({
   appContext,
   data,
+  load,
 }: {
   appContext: GlobalState;
   data?: SerializeFrom<typeof loader>;
+  load: () => void;
 }) {
   const key = route.supplier;
   const payload = useModalStore((state) => state.payload[key]) || {};
@@ -81,6 +83,7 @@ export default function SupplierInfo({
             enableEdit: false,
           });
         }
+        load();
       },
     },
     [fetcher.data]

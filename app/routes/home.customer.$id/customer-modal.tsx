@@ -45,14 +45,14 @@ export default function CustomerModal({
   appContext: GlobalState;
 }) {
   const key = route.customer;
-  const fetcherLoader = useFetcher<typeof loader>()
+  const fetcherLoader = useFetcher<typeof loader>();
   // const data = useRouteLoaderData<typeof loader>("home.customer.$id");
   // const data = fetcherLoader.data;
-  
+
   const [data, setData] = useState<SerializeFrom<typeof loader>>();
   const [loading, setLoading] = useState(false);
   // const data = fetcherLoader.data;
-  const customer = data?.customer
+  const customer = data?.customer;
   const [open, setOpen] = useState(true);
   // const { customer, actions, activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
@@ -78,7 +78,7 @@ export default function CustomerModal({
       if (res.ok) {
         const body = (await res.json()) as SerializeFrom<typeof loader>;
         setData(body);
-        console.log("BODY",body)
+        console.log("BODY", body);
       }
       setLoading(false);
     } catch (err) {
@@ -86,7 +86,7 @@ export default function CustomerModal({
     }
   };
   useEffect(() => {
-    console.log("LOAD MODAL....")
+    console.log("LOAD MODAL....");
     load();
   }, []);
 
@@ -198,6 +198,7 @@ export default function CustomerModal({
 
   const closeModal = () => {
     searchParams.delete(route.customer);
+    searchParams.delete("action");
     setSearchParams(searchParams, {
       preventScrollReset: true,
     });
@@ -217,26 +218,35 @@ export default function CustomerModal({
         setOpen(e);
       }}
     >
-      {loading ? (
+      {loading && !data ? (
         <LoadingSpinner />
       ) : (
         <>
-          <TabNavigation
-            defaultValue={tab}
-            onValueChange={(value) => {
-              searchParams.set("tab", value);
-              setSearchParams(searchParams, {
-                preventScrollReset: true,
-              });
-            }}
-            items={[
-              {
-                label: "Info",
-                value: "info",
-                children: <CustomerInfo appContext={appContext} data={data} />,
-              },
-            ]}
-          />
+          {data && (
+            <TabNavigation
+              defaultValue={tab}
+              onValueChange={(value) => {
+                searchParams.set("tab", value);
+                setSearchParams(searchParams, {
+                  preventScrollReset: true,
+                });
+              }}
+              items={[
+                {
+                  label: "Info",
+                  value: "info",
+                  children: (
+                    <CustomerInfo
+                      appContext={appContext}
+                      data={data}
+                      load={load}
+                      closeModal={() => setOpen(false)}
+                    />
+                  ),
+                },
+              ]}
+            />
+          )}
         </>
       )}
     </ModalLayout>

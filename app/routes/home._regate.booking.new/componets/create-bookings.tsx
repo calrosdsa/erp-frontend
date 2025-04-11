@@ -20,7 +20,7 @@ import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import BookingDisplay from "./bookings-display";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import AmountInput from "@/components/custom/input/AmountInput";
-import { DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
+import { CREATE, DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
 import { useEffect, useRef, useState } from "react";
 import {
   setUpToolbar,
@@ -183,7 +183,8 @@ export default function CreateBookings({
               {...(customerPermission?.create && {
                 addNew: () => {
                   setParams({
-                    [route.customer]:DEFAULT_ID
+                    [route.customer]:DEFAULT_ID,
+                    action:CREATE,
                   })
                   // createCustomer.openDialog({});
                 },

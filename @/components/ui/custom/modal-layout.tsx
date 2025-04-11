@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 import { cn } from "@/lib/utils";
+import { Badge } from "../badge";
 
 export default function ModalLayout({
   keyPayload,
@@ -63,7 +64,14 @@ export default function ModalLayout({
                     <XIcon />
                   </Button>
                 </SheetClose>
-                <SheetTitle>{title || payload.title}</SheetTitle>
+                <SheetTitle>
+                  {title || payload.title}
+                  {payload.status && payload.status != State.UNRECOGNIZED && (
+                    <Badge variant={"outline"} className="">
+                      {t(State[payload.status])}
+                    </Badge>
+                  )}
+                </SheetTitle>
               </div>
 
               <div className=" flex space-x-3">
@@ -90,8 +98,7 @@ export default function ModalLayout({
                               variant="ghost"
                               className="justify-between flex"
                               onClick={(e) => {
-
-                                item.onClick()
+                                item.onClick();
                               }}
                             >
                               {item.label}
@@ -168,8 +175,7 @@ export default function ModalLayout({
                         }
                         className={cn(
                           "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
-                          (payload.disabledSave) &&
-                            "disabled:opacity-50"
+                          payload.disabledSave && "disabled:opacity-50"
                         )}
                         // loading={
                         //   toolbarState.loading && toolbarState.loadingType == "SUBMIT"
@@ -189,8 +195,7 @@ export default function ModalLayout({
                           }
                           className={cn(
                             `flex space-x-1 h-8 rounded-lg px-3 justify-center `,
-                            (payload.disabledSave) &&
-                              "disabled:opacity-50"
+                            payload.disabledSave && "disabled:opacity-50"
                           )}
                           // loading={
                           //   toolbarState.loading &&
@@ -216,8 +221,7 @@ export default function ModalLayout({
                     }}
                     className={cn(
                       "flex space-x-1 h-8 rounded-lg px-3 justify-center ",
-                      (payload.disabledSave) &&
-                        "disabled:opacity-50"
+                      payload.disabledSave && "disabled:opacity-50"
                     )}
                     // loading={
                     //   toolbarState.loading && toolbarState.loadingType == "SAVE"
@@ -246,7 +250,7 @@ export default function ModalLayout({
                 type="button"
                 variant={"outline"}
                 onClick={() => {
-                  payload.onCancel?.()
+                  payload.onCancel?.();
                   editPayload(keyPayload, {
                     enableEdit: false,
                   });
@@ -281,7 +285,7 @@ export type PayloadModal = {
   title: string;
   loading: boolean;
   onSave: () => void;
-  onCancel:()=>void;
+  onCancel: () => void;
   disabledSave?: boolean;
   onChangeState?: (event: EventState) => void;
   view?: ButtonToolbar[];
@@ -340,11 +344,11 @@ export const setUpModalPayload = (
     const newOpts = opts();
 
     // Merge new options with register options
-    editPayload(key, { ...newOpts });
+    setPayload(key, { ...newOpts });
 
     return () => {
       console.log("RESET TOOLBAR REGISTER...");
-      resetPayload(key);
+      // resetPayload(key);
     };
   }, [...dependencies]);
 

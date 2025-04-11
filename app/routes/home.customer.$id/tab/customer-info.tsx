@@ -21,16 +21,20 @@ import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { SmartForm } from "@/components/form/smart-form";
 import CustomerForm from "../customer-form";
 import { useModalStore } from "@/components/ui/custom/modal-layout";
-import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
+import { CREATE, DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { toast } from "sonner";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { Entity } from "~/types/enums";
 export default function CustomerInfo({
   appContext,
   data,
+  load,
+  closeModal,
 }: {
   appContext: GlobalState;
   data?: SerializeFrom<typeof loader>;
+  load: () => void;
+  closeModal:()=> void;
 }) {
   const key = route.customer;
   const payload = useModalStore((state) => state.payload[key]) || {};
@@ -42,9 +46,10 @@ export default function CustomerInfo({
   const [searchParams, setSearchParams] = useSearchParams();
   const [toastID, setToastID] = useState<string | number>("");
   const id = searchParams.get(route.customer);
+  const paramAction = searchParams.get("action");
 
   const onSubmit = (e: CustomerData) => {
-    console.log("ONSUBMIT",e)
+    console.log("ONSUBMIT", e);
     const id = toast.loading(LOADING_MESSAGE);
     setToastID(id);
     let action = e.customerID ? "edit-customer" : "create-customer";
@@ -71,22 +76,26 @@ export default function CustomerInfo({
     [fetcher.state]
   );
 
-  // useDisplayMessage(
-  //   {
-  //     toastID: toastID,
-  //     error: fetcher.data?.error,
-  //     success: fetcher.data?.message,
-  //     onSuccessMessage: () => {
-  //       if (id == DEFAULT_ID) {
-  //       } else {
-  //         editPayload(key, {
-  //           enableEdit: false,
-  //         });
-  //       }
-  //     },
-  //   },
-  //   [fetcher.data]
-  // );
+  useDisplayMessage(
+    {
+      toastID: toastID,
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        if (id == DEFAULT_ID) {
+          if(paramAction == CREATE){
+            closeModal(); 
+          }
+        } else {
+          editPayload(key, {
+            enableEdit: false,
+          });
+        }
+        load();
+      },
+    },
+    [fetcher.data]
+  );
 
   return (
     <div className="grid grid-cols-9 gap-3">

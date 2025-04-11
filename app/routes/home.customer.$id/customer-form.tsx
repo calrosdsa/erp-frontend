@@ -18,19 +18,15 @@ export default function CustomerForm({
 }: {
   contacts: components["schemas"]["ContactDto"][];
 }) {
-  const key = route.customer
+  const key = route.customer;
   const { form, isEditing, hasChanged } = useFormContext();
   const formValues = form?.getValues() as CustomerData;
   const { t } = useTranslation("common");
- 
 
- 
-  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-      {/* {JSON.stringify(formValues)} */}
       <SmartField name="name" label={t("form.name")} />
-    <SmartField
+      <SmartField
         name="customerType"
         label={t("form.type")}
         options={[
@@ -38,7 +34,7 @@ export default function CustomerForm({
           { label: "Compania", value: "company" },
         ]}
         type="select"
-        />
+      />
       <GroupSmartAutocomplete
         label={t("group")}
         partyType={party.customerGroup}
@@ -51,15 +47,14 @@ export default function CustomerForm({
           form?.setValue("group.id", e.id);
           form?.setValue("group.name", e.name);
         }}
-        />
+      />
       {form && (
         <PartyContacts
           className=" col-span-full "
           partyID={formValues?.customerID}
           contacts={contacts}
-          />
-        )}
-    
+        />
+      )}
     </div>
   );
 }

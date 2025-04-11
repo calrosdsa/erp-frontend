@@ -48,7 +48,10 @@ export function SmartForm<T extends z.ZodType>({
 
   useEffect(() => {
     editPayload(keyPayload, {
-      onSave: () => inputRef.current?.click(),
+      onSave: () => {
+        console.log("ON SAVE")
+        inputRef.current?.click()
+      },
     });
   }, []);
 
