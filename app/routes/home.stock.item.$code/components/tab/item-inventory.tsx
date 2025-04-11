@@ -89,7 +89,7 @@ export default function ItemInventory() {
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <input className="hidden" type="submit" ref={inputRef} />
-          <div className="info-grid">
+          <div className="detail-grid">
             <CustomFormFieldInput
               control={form.control}
               name="shelfLifeInDays"

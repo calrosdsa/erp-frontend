@@ -33,8 +33,7 @@ export default function useEditableTable<T>({ form }: Props<T>) {
       };
       setEditedRows((t) => [...t, editedRows.length]);
       c.push(n);
-      form.setValue("lines", c, { shouldValidate: true });
-      revalidator.revalidate();
+      form.setValue("lines", c);
     },
     removeRow: (rowIndex: number) => {
       const f = editedRows.filter((item) => item != rowIndex);

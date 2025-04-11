@@ -10,28 +10,35 @@ import { route } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 
-export const itemAttributeColumns = ():ColumnDef<components["schemas"]["ItemAttributeDto"]>[] =>{
-    const {t} = useTranslation("common")
-    const r = route
-    return [
-        {
-            header: t("form.name"),
-            accessorKey:"name",
-            cell:({...props}) =>{
-                const rowData = props.row.original
-                return <TableCellNameNavigation
-                {...props}
-                navigate={(name)=>r.toItemAttributeDetail(name,rowData.uuid)}
-                />
-                
+export const itemAttributeColumns = (): ColumnDef<
+  components["schemas"]["ItemAttributeDto"]
+>[] => {
+  const { t } = useTranslation("common");
+  const r = route;
+  return [
+    {
+      header: t("form.name"),
+      accessorKey: "name",
+      cell: ({ ...props }) => {
+        const rowData = props.row.original;
+        return (
+          <TableCellNameNavigation
+            {...props}
+            navigate={(name) =>
+              r.toRouteDetail(r.itemAttributes, name, {
+                id: rowData.uuid,
+              })
             }
-        },
-        {
-            header: t("table.createdAt"),
-            accessorKey:"created_at"
-        },
-    ]
-}
+          />
+        );
+      },
+    },
+    {
+      header: t("table.createdAt"),
+      accessorKey: "created_at",
+    },
+  ];
+};
 
 export const itemAttributeValuesColumns = (): ColumnDef<
   components["schemas"]["ItemAttributeValueDto"]
@@ -53,10 +60,9 @@ export const itemAttributeValuesColumns = (): ColumnDef<
     {
       id: "actions",
       cell: DataTableRowActions,
-    }
+    },
   ];
 };
-
 
 export const itemAttributeValuesDtoColumns = (): ColumnDef<
   components["schemas"]["ItemAttributeValueDto"]

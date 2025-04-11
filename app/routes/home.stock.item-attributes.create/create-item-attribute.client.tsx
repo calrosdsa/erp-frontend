@@ -14,6 +14,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { itemAttributeValuesDtoColumns } from "@/components/custom/table/columns/stock/item-attribute-columns";
 import useEditableTable from "~/util/hooks/useEditableTable";
+import CreateLayout from "@/components/layout/create-layout";
+import { useActionsFieldArray } from "~/util/hooks/use-actions-field-array";
 
 export const valuesSchema = z.object({
   ordinal: z.number(),
@@ -34,7 +36,24 @@ export default function CreateItemAttributeClient() {
       values: [],
     },
   });
-  const [metaOptions] = useEditableTable({form})
+  const formValues = form.getValues();
+  const [arrayFields, metaOptions] = useActionsFieldArray({
+    control: form.control,
+    name: "values",
+  });
+  const { update } = arrayFields;
+
+  const updateCell = (row: number, column: string, value: string) => {
+    let section = formValues.values[row] as any;
+    if (section) {
+      section[column as keyof any] = value;
+      // form.setValue(`sections.${row}`,section)
+      update(row, {
+        ...section,
+        ordinal: row,
+      });
+    }
+  };
   const { toast } = useToast();
 
   function onSubmit(values: z.infer<typeof createItemAttributeSchema>) {
@@ -50,8 +69,6 @@ export default function CreateItemAttributeClient() {
     );
   }
 
- 
-
   useEffect(() => {
     if (fetcher.data?.errorAction != undefined) {
       toast({
@@ -66,58 +83,65 @@ export default function CreateItemAttributeClient() {
   }, [fetcher.data]);
   return (
     <div>
-      <Form {...form}>
-        <fetcher.Form
-          className="create-grid"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
-          <CustomFormField
-            form={form}
-            name="name"
-            label={t("form.name")}
-            children={(field) => {
-              return <Input {...field} />;
-            }}
-          />
+      <CreateLayout>
+        <Form {...form}>
+          <fetcher.Form
+            className="create-grid"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            {JSON.stringify(formValues)}
+            {JSON.stringify(form.formState.errors)}
+            <CustomFormField
+              form={form}
+              name="name"
+              label={t("form.name")}
+              children={(field) => {
+                return <Input {...field} />;
+              }}
+            />
 
-        <div className=" col-span-full">
-          <DataTable
-          columns={itemAttributeValuesDtoColumns()}
-          data={form.getValues().values}
-          metaOptions={{
-            meta:metaOptions
-        }}
-          />
-        </div>
-          {/* 
+            <div className=" col-span-full">
+              <DataTable
+                columns={itemAttributeValuesDtoColumns()}
+                data={form.getValues().values}
+                metaOptions={{
+                  meta: {
+                    ...metaOptions,
+                    updateCell: updateCell,
+                  },
+                }}
+              />
+            </div>
+            {/* 
           <CustomFormField
-            form={form}
-            name="code"
-            label={t("form.code")}
-            children={(field) => {
-              return <Input {...field}/>;
+          form={form}
+          name="code"
+          label={t("form.code")}
+          children={(field) => {
+            return <Input {...field}/>;
             }}
-          />
-
-          <CustomFormField
+            />
+            
+            <CustomFormField
             form={form}
             name="abbreviation"
             label={t("form.abbreviation")}
             children={(field) => {
               return <Input {...field} />;
-            }}
-          /> */}
-          <div className=" col-span-full">
-            <Button disabled={fetcher.state == "submitting"} type="submit">
-              {fetcher.state == "submitting" ? (
-                <Icons.spinner />
-              ) : (
-                t("form.submit")
-              )}
-            </Button>
-          </div>
-        </fetcher.Form>
-      </Form>
+              }}
+              /> */}
+            <div className=" col-span-full">
+              <Button disabled={fetcher.state == "submitting"} type="submit">
+                {fetcher.state == "submitting" ? (
+                  <Icons.spinner />
+                ) : (
+                  t("form.submit")
+                )}
+              </Button>
+            </div>
+          </fetcher.Form>
+        </Form>
+      </CreateLayout>
     </div>
   );
 }

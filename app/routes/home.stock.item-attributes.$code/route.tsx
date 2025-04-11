@@ -102,7 +102,7 @@ export const loader = async({request,params}:LoaderFunctionArgs) =>{
 
         }
     })
-    
+    console.log("ITEM ATTRIBUTES",res.data,res.error)
     return json({
         error:res.error,
         itemAttribute:res.data?.result.entity,

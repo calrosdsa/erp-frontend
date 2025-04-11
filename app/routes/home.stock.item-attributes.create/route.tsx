@@ -20,8 +20,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     errorAction = res.error.detail;
   }
   if (res.data) {
-    const r = route
-    return redirect(r.toItemAttributeDetail(res.data.result.Name))
+    const r = route;
+    return redirect(r.toRouteDetail(r.itemAttributes, res.data.result.uuid));
     // successMessage = res.data.message;
   }
 
