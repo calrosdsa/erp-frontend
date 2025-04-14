@@ -34,36 +34,51 @@ export const action = async({request}:LoaderFunctionArgs)=>{
     })
 }
 
-export const loader = async({request}:LoaderFunctionArgs) =>{
-    const client = apiClient({request})
-    const url = new URL(request.url)
-    const searchParams = url.searchParams
-    const res = await client.GET("/role/detail/{id}",{
-        params:{
-            path:{
-                id:searchParams.get("id") || ""
-            }
-        }
-    })
-    
-    const roleActions = await client.GET("/role/role-definitions",{
-        params:{
-            query:{
-                parentId:searchParams.get("id") || "",
-                page:DEFAULT_PAGE,
-                size:"1000",
-            }
-        }
-    })
-    const entityActions = await client.GET("/role/entity-actions")
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+    const client = apiClient({ request });
+    const url = new URL(request.url);
+    const roleId = url.searchParams.get("id");
+  
+    // Validamos que se reciba el id
+    if (!roleId) {
+      throw new Error("Falta el parámetro requerido 'id'");
+    }
+  
+    // Ejecutamos las peticiones de forma concurrente
+    const [detailRes, roleActionsRes, entityActionsRes] = await Promise.all([
+      client.GET("/role/detail/{id}", {
+        params: {
+          path: { id: roleId },
+        },
+      }),
+      client.GET("/role/role-definitions", {
+        params: {
+          query: {
+            parentId: roleId,
+            page: DEFAULT_PAGE,
+            size: "1000",
+          },
+        },
+      }),
+      client.GET("/role/entity-actions"),
+    ]);
+  
+    // Extraemos los datos necesarios de las respuestas
+    const role = detailRes.data?.result?.entity;
+    const actions = detailRes.data?.actions;
+    const activities = detailRes.data?.result?.activities;
+    const roleActions =
+      roleActionsRes.data?.pagination_result?.results || [];
+    const entityActions = entityActionsRes.data?.result;
+  
     return json({
-        role:res.data?.result.entity,
-        actions:res.data?.actions,
-        roleActions:roleActions.data?.pagination_result.results || [],
-        entityActions:entityActions.data?.result,
-        activities:res.data?.result.activities,
-    })
-}
+      role,
+      actions,
+      roleActions,
+      entityActions,
+      activities,
+    });
+  };
 
 export default function Role(){
     return (
