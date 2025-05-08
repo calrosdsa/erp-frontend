@@ -19,6 +19,9 @@ import {
 } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { usePermission } from "~/util/hooks/useActions";
 import { party } from "~/util/party";
+import { useSearchParams } from "@remix-run/react";
+import { route } from "~/util/route";
+import { CREATE, DEFAULT_ID } from "~/constant";
 
 export default function PartyAutocomplete({
   party,
@@ -105,14 +108,14 @@ export default function PartyAutocomplete({
   );
 }
 
-export const PartyAutocompleteField= ({
+export const PartyAutocompleteField = ({
   partyType,
   control,
   roleActions,
   allowEdit,
 }: {
   partyType: string;
-  control: Control<any,any>;
+  control: Control<any, any>;
   allowEdit?: boolean;
   roleActions: components["schemas"]["RoleActionDto"][];
 }) => {
@@ -124,13 +127,26 @@ export const PartyAutocompleteField= ({
     actions: customerFetcher.data?.actions,
     roleActions: roleActions,
   });
-  const p = party
+  const p = party;
   const createCustomer = useCreateCustomer();
   const [supplierPermission] = usePermission({
     actions: supplierDebounceFetcher.data?.actions,
     roleActions: roleActions,
   });
   const createSupplier = useCreateSupplier();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const setParams = (params: Record<string, any>) => {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        searchParams.set(key, value); // Update or add the parameter
+      } else {
+        searchParams.delete(key); // Remove the parameter if the value is empty
+      }
+    });
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   return (
     <>
@@ -172,14 +188,17 @@ export const PartyAutocompleteField= ({
           allowEdit={allowEdit}
           {...(customerPermission?.create && {
             addNew: () => {
-              createCustomer.openDialog({});
+              setParams({
+                [route.customer]: DEFAULT_ID,
+                action: CREATE,
+              });
             },
           })}
         />
       )}
     </>
   );
-}
+};
 
 export const PartySearch = ({ party }: { party: string }) => {
   const { t } = useTranslation("common");

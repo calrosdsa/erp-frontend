@@ -688,6 +688,7 @@ export enum EventState {
   COMPLETED_EVENT = 4,
   ENABLED_EVENT = 5,
   DISABLED_EVENT = 6,
+  DELETED_EVENT = 7,
   UNRECOGNIZED = -1,
 }
 
@@ -714,6 +715,9 @@ export function eventStateFromJSON(object: any): EventState {
     case 6:
     case "DISABLED_EVENT":
       return EventState.DISABLED_EVENT;
+    case 7:
+    case "DELETED_EVENT":
+      return EventState.DELETED_EVENT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -737,6 +741,8 @@ export function eventStateToJSON(object: EventState): string {
       return "ENABLED_EVENT";
     case EventState.DISABLED_EVENT:
       return "DISABLED_EVENT";
+    case EventState.DELETED_EVENT:
+      return "DELETED_EVENT";
     case EventState.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

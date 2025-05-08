@@ -34,7 +34,7 @@ export default function CustomerInfo({
   appContext: GlobalState;
   data?: SerializeFrom<typeof loader>;
   load: () => void;
-  closeModal:()=> void;
+  closeModal: () => void;
 }) {
   const key = route.customer;
   const payload = useModalStore((state) => state.payload[key]) || {};
@@ -52,7 +52,7 @@ export default function CustomerInfo({
     console.log("ONSUBMIT", e);
     const id = toast.loading(LOADING_MESSAGE);
     setToastID(id);
-    let action = e.customerID ? "edit-customer" : "create-customer";
+    let action = payload.isNew ? "create-customer" : "edit-customer";
     fetcher.submit(
       {
         action,
@@ -83,15 +83,22 @@ export default function CustomerInfo({
       success: fetcher.data?.message,
       onSuccessMessage: () => {
         if (id == DEFAULT_ID) {
-          if(paramAction == CREATE){
-            closeModal(); 
+          if (paramAction == CREATE) {
+            closeModal();
+          }
+          if (fetcher.data?.customer) {
+            searchParams.set(
+              route.customer,
+              fetcher.data?.customer.id.toString()
+            );
+            setSearchParams(searchParams, {
+              preventScrollReset: true,
+              replace: true,
+            });
           }
         } else {
-          editPayload(key, {
-            enableEdit: false,
-          });
+          load();
         }
-        load();
       },
     },
     [fetcher.data]
@@ -101,7 +108,7 @@ export default function CustomerInfo({
     <div className="grid grid-cols-9 gap-3">
       <div className="col-span-4">
         <SmartForm
-          isNew={payload.isNew}
+          isNew={payload.isNew || false}
           title={t("_customer.info")}
           schema={customerSchema}
           keyPayload={key}

@@ -51,6 +51,7 @@ export interface SelectOption {
 interface SmartFieldProps {
   name: string;
   label: string;
+  required?:boolean;
   type?: FieldType;
   placeholder?: string;
   description?: string;
@@ -64,6 +65,7 @@ export function SmartField({
   label,
   type = "text",
   placeholder,
+  required,
   description,
   options = [],
   className,
@@ -106,7 +108,7 @@ export function SmartField({
       name={name}
       render={({ field }) => (
         <FormItem className={cn(className,"space-y-0")}>
-          <FormLabel className="text-xs text-primary/60">{label}</FormLabel>
+          <FormLabel className="text-xs text-primary/60">{label} {required && "*"}</FormLabel>
 
           {isEditing ? (
             <FormControl>
@@ -115,6 +117,7 @@ export function SmartField({
                   <Textarea
                     placeholder={placeholder}
                     {...field}
+                    // required={required}
                     value={field.value || ""}
                   />
                 )}
@@ -122,12 +125,15 @@ export function SmartField({
                 {type === "checkbox" && (
                   <Checkbox
                     checked={field.value}
+                    // required={required}
                     onCheckedChange={field.onChange}
                   />
                 )}
 
                 {type === "select" && (
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select value={field.value} onValueChange={field.onChange} 
+                  // required={required}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder={placeholder} />
                     </SelectTrigger>
@@ -162,6 +168,7 @@ export function SmartField({
                     <PopoverContent className="w-auto p-0">
                       <Calendar
                         mode="single"
+                        // required={required}
                         selected={
                           field.value ? new Date(field.value) : undefined
                         }
@@ -175,6 +182,7 @@ export function SmartField({
                 {["text", "email", "password", "number"].includes(type) && (
                   <Input
                     type={type}
+                    // required={required} 
                     placeholder={placeholder}
                     {...field}
                     value={field.value || ""}

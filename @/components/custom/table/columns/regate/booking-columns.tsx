@@ -164,20 +164,20 @@ export const bookingColumns = ({
     {
       accessorKey: "court_name",
       header: "Cancha",
-      cell: ({ ...props }) => {
-        const rowData = props.row.original;
-        return (
-          <TableCellBase
-          className="font-semibold underline cursor-pointer"
-          {...props}
-          onClick={() =>
-            setParams({
-              [route.court]:rowData.court_id
-            })
-          }
-        />
-        );
-      },
+      // cell: ({ ...props }) => {
+      //   const rowData = props.row.original;
+      //   return (
+      //     <TableCellBase
+      //     className="font-semibold underline cursor-pointer"
+      //     {...props}
+      //     onClick={() =>
+      //       setParams({
+      //         [route.court]:rowData.court_id
+      //       })
+      //     }
+      //   />
+      //   );
+      // },
     },
     {
       accessorKey: "created_at",

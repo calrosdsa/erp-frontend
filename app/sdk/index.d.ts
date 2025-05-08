@@ -8869,6 +8869,19 @@ export interface components {
             message: string;
             result: components["schemas"]["CurrencyExchangeDto"];
         };
+        ResponseDataCustomerDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["CustomerDto"];
+        };
         ResponseDataDealDtoBody: {
             /**
              * Format: uri
@@ -13728,7 +13741,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
+                    "application/json": components["schemas"]["ResponseDataCustomerDtoBody"];
                 };
             };
             /** @description Error */

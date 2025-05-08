@@ -50,9 +50,9 @@ export default function ModalLayout({
     });
   };
   return (
-    <Sheet open={open} onOpenChange={(e) => onOpenChange?.(e)}>
+    <Sheet open={open} onOpenChange={(e) => onOpenChange?.(e)} modal={true}>
       <SheetContent
-        // onInteractOutside={(event) => event.preventDefault()}
+        onInteractOutside={(event) => event.preventDefault()}
         className="w-full md:max-w-full md:w-[80%] xl:w-[70%] overflow-auto  [&>button]:hidden px-0 pb-20"
       >
         <div className="px-5">
@@ -206,6 +206,26 @@ export default function ModalLayout({
                           {t("form.cancel")}
                         </Button>
                       )}
+                    {payload.status == State.CANCELLED &&
+                      payload.onChangeState && (
+                        <Button
+                          size={"sm"}
+                          onClick={() =>
+                            confirmStatusChange(EventState.DELETED_EVENT)
+                          }
+                          className={cn(
+                            `flex space-x-1 h-8 rounded-lg px-3 justify-center `,
+                            payload.disabledSave && "disabled:opacity-50"
+                          )}
+                          // loading={
+                          //   toolbarState.loading &&
+                          //   toolbarState.loadingType == "CANCEL"
+                          // }
+                          variant={"outline"}
+                        >
+                          Eliminar
+                        </Button>
+                      )}
                   </>
                 )}
 
@@ -263,6 +283,7 @@ export default function ModalLayout({
                 disabled={payload.disabledSave}
                 size={"lg"}
                 onClick={() => {
+                  console.log("SAVE BUTTON CLICKED", payload.onSave);
                   payload.onSave?.();
                 }}
               >
@@ -286,6 +307,7 @@ export type PayloadModal = {
   loading: boolean;
   onSave: () => void;
   onCancel: () => void;
+  loadData: () => void;
   disabledSave?: boolean;
   onChangeState?: (event: EventState) => void;
   view?: ButtonToolbar[];
@@ -339,12 +361,13 @@ export const setUpModalPayload = (
   dependencies: DependencyList = []
 ) => {
   const { editPayload, setPayload, resetPayload } = useModalStore();
-
   useEffect(() => {
     const newOpts = opts();
 
     // Merge new options with register options
-    setPayload(key, { ...newOpts });
+    editPayload(key, {
+      ...newOpts,
+    });
 
     return () => {
       console.log("RESET TOOLBAR REGISTER...");

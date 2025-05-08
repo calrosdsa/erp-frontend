@@ -18,7 +18,7 @@ import { route } from "~/util/route";
 
 type ActionData = {
   action: string;
-  updateStatus: z.infer<typeof updateStatusWithEventSchema>;
+  updateStatus?: z.infer<typeof updateStatusWithEventSchema>;
   editPaidAmount: z.infer<typeof editPaidAmountSchema>;
   rescheduleBooking: components["schemas"]["BookingRescheduleBody"];
 };
@@ -47,29 +47,32 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           total_paid_amount: d.paidAmount,
         },
       });
-      console.log(d,res.error,res.data)
+      console.log(d, res.error, res.data);
       message = res.data?.message;
       error = res.error?.detail;
       break;
     }
     case "update-status": {
       const d = data.updateStatus;
-      const res = await client.PUT("/regate/booking/update-status", {
-        body: {
-          party_id: d.party_id,
-          party_type: d.party_type,
-          events: d.events,
-          current_state: d.current_state,
-        },
-      });
-      message = res.data?.message;
-      error = res.error?.detail;
+      if (d) {
+        const res = await client.PUT("/regate/booking/update-status", {
+          body: {
+            party_id: d.party_id,
+            party_type: d.party_type,
+            events: d.events,
+            current_state: d.current_state,
+          },
+        });
+        message = res.data?.message;
+        error = res.error?.detail;
+      }
     }
   }
   return json({
     error,
     message,
-    action:LOAD_ACTION
+    action: LOAD_ACTION,
+    eventData: data.updateStatus,
   });
 };
 
@@ -104,15 +107,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   });
 };
 
-
-
-export const openBookingModal = (id?:string,callback?:(key:string,value:string)=>void) => {
-  if(id && callback){
-
+export const openBookingModal = (
+  id?: string,
+  callback?: (key: string, value: string) => void
+) => {
+  if (id && callback) {
     callback(route.booking, id);
   }
 };
-
-
-
-

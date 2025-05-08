@@ -44,7 +44,7 @@ export function DrawerLayout({
 
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
+      <Dialog open={open} onOpenChange={onOpenChange}>
         {/* <DialogTrigger asChild>
           <Button variant="outline">Edit Profile</Button>
         </DialogTrigger> */}

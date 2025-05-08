@@ -123,6 +123,7 @@ enum EventState {
     COMPLETED_EVENT = 4; //used to transition from any state to APPROVED
     ENABLED_EVENT = 5;
     DISABLED_EVENT = 6;
+    DELETED_EVENT = 7;
 }
 
 

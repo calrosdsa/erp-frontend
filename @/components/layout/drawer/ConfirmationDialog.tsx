@@ -43,7 +43,7 @@ export function ConfirmationDialog({
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+    <AlertDialog open={isOpen} onOpenChange={onOpenChange} >
       <AlertDialogContent className="fixed top-20 left-1/2 -translate-x-1/2 m-auto w-full max-w-sm sm:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2 ">

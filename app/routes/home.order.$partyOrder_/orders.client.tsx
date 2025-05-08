@@ -30,28 +30,12 @@ export default function OrdersClient() {
   });
   const { resetDocument } = useResetDocument();
 
-  setUpToolbar(() => {
-    return {
-      titleToolbar: undefined,
-      ...(permission?.create && {
-        addNew: () => {
-          resetDocument();
-          navigate(
-            r.toRoute({
-              main: partyOrder,
-              routePrefix: ["order"],
-              routeSufix: ["new"],
-            })
-          );
-        },
-      }),
-    };
-  }, [permission]);
+
   return (
     <ListLayout
     title={t(partyOrder)}
     {...(permission?.create && {
-      addNew: () => {
+      onCreate: () => {
         resetDocument();
         navigate(
           r.toRoute({

@@ -20,14 +20,6 @@ import {
   isSameDay,
   parseISO,
 } from "date-fns";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
-import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/use-court-debounce-fetcher";
 import { useNewBooking } from "~/routes/home._regate.booking.new/use-new-booking";
 import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react";
 import { route } from "~/util/route";
@@ -69,7 +61,7 @@ export default function FieldReservation({
   const courtsFetcher = useFetcher<typeof action>();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchParams, setSearchParams] = useSearchParams();
-  const courtID = searchParams.get("courtID")
+  const courtID = searchParams.get("courtID");
   const viewMode: "day" | "week" | string = searchParams.get("view") || "week";
   const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
   const newBooking = useNewBooking();
@@ -79,9 +71,11 @@ export default function FieldReservation({
 
   const timeSlots = useMemo(() => generateTimeSlots(), []);
 
-  const initData = () => {  
+  const initData = () => {
     const query: operations["courts"]["parameters"]["query"] = {
       size: "100",
+      column: "name",
+      orientation: "asc",
     };
     courtsFetcher.submit(
       {
@@ -374,16 +368,34 @@ export default function FieldReservation({
       </div>
 
       <div className="flex space-x-3  responsive-container">
-      <ToggleGroup variant={"outline"} type="single" value={courtID || ""} onValueChange={(e)=>{
-        searchParams.set("courtID",e)
-        setSearchParams(searchParams,{
-          preventScrollReset:true
-        })
-      }}>
-        {courtsFetcher.data?.courts.map((item) => {
-          return <ToggleGroupItem key={item.id} value={item.id.toString()}
-          className=" whitespace-nowrap">{item.name}</ToggleGroupItem>
-        })}
+        <ToggleGroup
+          variant={"outline"}
+          type="single"
+          value={courtID || ""}
+          onValueChange={(e) => {
+            const court = courtsFetcher.data?.courts.find(
+              (item) => item.id.toString() === e
+            );
+            if (court) {
+              searchParams.set("courtName", court.name);
+              searchParams.set("courtID", e);
+              setSearchParams(searchParams, {
+                preventScrollReset: true,
+              });
+            }
+          }}
+        >
+          {courtsFetcher.data?.courts.map((item) => {
+            return (
+              <ToggleGroupItem
+                key={item.id}
+                value={item.id.toString()}
+                className=" whitespace-nowrap"
+              >
+                {item.name}
+              </ToggleGroupItem>
+            );
+          })}
         </ToggleGroup>
       </div>
 

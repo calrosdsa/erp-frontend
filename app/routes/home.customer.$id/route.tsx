@@ -20,6 +20,7 @@ import { route } from "~/util/route";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { DEFAULT_ID, LOAD_ACTION } from "~/constant";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
@@ -34,6 +35,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let actionRes = LOAD_ACTION;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  let customer: components["schemas"]["CustomerDto"] | undefined = undefined;
   switch (data.action) {
     case "update-status": {
       const res = await client.PUT("/customer/update-status", {
@@ -49,6 +51,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       error = res.error?.detail;
       message = res.data?.message;
+      customer = res.data?.result;
       break;
     }
     case "edit-customer": {
@@ -64,6 +67,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     message,
     action: actionRes,
+    customer
   });
 };
 

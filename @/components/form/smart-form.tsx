@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import type React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DefaultValues, useForm, useWatch } from "react-hook-form";
+import { DefaultValues, Path, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -19,7 +19,7 @@ interface SmartFormProps<T extends z.ZodType> {
   keyPayload: string;
   className?: string;
   title?: string;
-  isNew?: boolean;
+  isNew: boolean;
 }
 
 export function SmartForm<T extends z.ZodType>({
@@ -35,6 +35,7 @@ export function SmartForm<T extends z.ZodType>({
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
+    values:defaultValues,
     mode: "onChange",
   });
   const { editPayload } = useModalStore();
@@ -47,10 +48,11 @@ export function SmartForm<T extends z.ZodType>({
   const watchedValues = useWatch({ control: form.control });
 
   useEffect(() => {
+    console.log("defaultValues", "MOUNT SAVE");
     editPayload(keyPayload, {
       onSave: () => {
-        console.log("ON SAVE")
-        inputRef.current?.click()
+        console.log("ON SAVE");
+        inputRef.current?.click();
       },
     });
   }, []);
@@ -71,11 +73,19 @@ export function SmartForm<T extends z.ZodType>({
     });
   };
 
+  // useEffect(()=>{
+  //   console.log("DAFULT VALUES MOUNT...")
+  //   //   Object.entries(defaultValues).forEach(([key, value]) => {
+  //   //   form.setValue(key as keyof T as Path<T>, value)
+  //   // })
+  //   // form.setValue()
+  // },[defaultValues])
+
   const handleSubmit = async (values: z.infer<T>) => {
     try {
       setIsSubmitting(true);
       await onSubmit(values);
-      setIsEditing(false);
+      // setIsEditing(false);
     } catch (error) {
       console.error("Form submission error:", error);
     } finally {
@@ -103,6 +113,7 @@ export function SmartForm<T extends z.ZodType>({
           onSubmit={form.handleSubmit(handleSubmit)}
           className={cn(className, "card")}
         >
+          {/* {JSON.stringify(form.formState.errors)} */}
           <div className="flex justify-between items-center ">
             <span className="font-medium">{title}</span>
             {!isNew && (

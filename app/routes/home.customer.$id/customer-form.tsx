@@ -25,9 +25,10 @@ export default function CustomerForm({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-      <SmartField name="name" label={t("form.name")} />
+      <SmartField name="name" label={t("form.name")} required={true} />
       <SmartField
         name="customerType"
+        required={true}
         label={t("form.type")}
         options={[
           { label: "Persona", value: "individual" },

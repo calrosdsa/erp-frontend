@@ -88,7 +88,7 @@ export default function CustomerModal({
   useEffect(() => {
     console.log("LOAD MODAL....");
     load();
-  }, []);
+  }, [customerID]);
 
   const onChangeState = (e: EventState) => {
     const body: z.infer<typeof updateStatusWithEventSchema> = {
@@ -123,7 +123,6 @@ export default function CustomerModal({
   setUpModalPayload(
     key,
     () => {
-      console.log("RELOAD...");
       const state = stateFromJSON(customer?.status);
       const isNew = DEFAULT_ID == customerID;
       let view: ButtonToolbar[] = [];
@@ -183,9 +182,10 @@ export default function CustomerModal({
         title: isNew ? "Nuevo cliente" : customer?.name,
         view: isNew ? [] : view,
         actions: isNew ? [] : actions,
+        enableEdit:isNew,
         status: stateFromJSON(customer?.status),
-        enableEdit: isNew,
         isNew: isNew,
+        loadData:load,
         onCancel: isNew
           ? () => {
               setOpen(false);
@@ -222,6 +222,7 @@ export default function CustomerModal({
         <LoadingSpinner />
       ) : (
         <>
+        {/* {JSON.stringify(data?.customer)} */}
           {data && (
             <TabNavigation
               defaultValue={tab}

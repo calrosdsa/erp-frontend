@@ -27,7 +27,6 @@ import { ButtonToolbar } from "~/types/actions";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { useEffect, useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
 import {
   EditPaidAmount,
   useEditPaidAmount,
@@ -36,17 +35,18 @@ import {
   RescheduleBooking,
   useRescheduleBooking,
 } from "./components/reschedule-booking";
-import { Entity } from "~/types/enums";
 import ModalLayout, {
   setUpModalPayload,
-  useModalStore,
 } from "@/components/ui/custom/modal-layout";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
+import { toast } from "sonner";
+import { LOADING_MESSAGE } from "~/constant";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
-  const key = route.booking
+  const key = route.booking;
   const fetcher = useFetcher<typeof action>();
   const fetcherLoader = useFetcher<typeof loader>({ key: "booking" });
   const [searchParams, setSearchParams] = useSearchParams();
@@ -57,7 +57,6 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
   const booking = data?.booking;
   const { t } = useTranslation("common");
   const params = useParams();
-  const { toast } = useToast();
   const [open, setOpen] = useState(true);
   const editPaidAmount = useEditPaidAmount();
   const rescheduleBooking = useRescheduleBooking();
@@ -65,12 +64,14 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
     roleActions: appContext.roleActions,
     actions: data?.actions,
   });
+  const [toastID, setToastID] = useState<string | number>("");
   const { onOpenDialog } = useConfirmationDialog();
-  const { setPayload } = useModalStore();
 
   const updateStatus = (
     values: z.infer<typeof updateStatusWithEventSchema>
   ) => {
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     fetcher.submit(
       {
         action: "update-status",
@@ -87,66 +88,77 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
     );
   };
 
-  setUpModalPayload(key,() => {
-    console.log("SET UP TOOLBAR");
-    let actions: ButtonToolbar[] = [];
-    const status = stateFromJSON(booking?.status);
-    const allowEdit = permission?.edit && status != State.CANCELLED;
-    const isNotCompleted = allowEdit && status != State.COMPLETED;
-    if (isNotCompleted) {
-      actions.push({
-        label: "Completar Reserva",
-        onClick: () => {
+  setUpModalPayload(
+    key,
+    () => {
+      console.log("SET UP TOOLBAR");
+      let actions: ButtonToolbar[] = [];
+      const status = stateFromJSON(booking?.status);
+      const allowEdit = permission?.edit && status != State.CANCELLED;
+      const isNotCompleted = allowEdit && status != State.COMPLETED;
+      if (isNotCompleted) {
+        actions.push({
+          label: "Completar Reserva",
+          onClick: () => {
+            const body: z.infer<typeof updateStatusWithEventSchema> = {
+              current_state: booking?.status || "",
+              party_type: regatePartyTypeToJSON(RegatePartyType.booking),
+              party_id: booking?.id.toString() || "",
+              events: [EventState.COMPLETED_EVENT],
+            };
+            onOpenDialog({
+              title:
+                "Por favor, confirme antes de continuar con la acción requerida.",
+              onConfirm: () => {
+                updateStatus(body);
+              },
+            });
+          },
+        });
+      }
+      if (isNotCompleted) {
+        actions.push({
+          label: "Agregar pago",
+          onClick: () => {
+            editPaidAmount.onOpenDialog({
+              booking: booking,
+            });
+          },
+        });
+      }
+      if (allowEdit) {
+        actions.push({
+          label: "Reprogramar la Reserva",
+          onClick: () => {
+            rescheduleBooking.openDialog({
+              booking: booking,
+            });
+          },
+        });
+      }
+      if (status == State.CANCELLED) {
+        actions.push({
+          label: "Eliminar Reserva",
+          onClick: () => {},
+        });
+      }
+      return {
+        titleToolbar: params.code,
+        status: stateFromJSON(booking?.status),
+        actions: actions,
+        onChangeState: (e) => {
           const body: z.infer<typeof updateStatusWithEventSchema> = {
             current_state: booking?.status || "",
             party_type: regatePartyTypeToJSON(RegatePartyType.booking),
             party_id: booking?.id.toString() || "",
-            events: [EventState.COMPLETED_EVENT],
+            events: [e],
           };
-          onOpenDialog({
-            title: "Por favor, confirme antes de continuar con la acción requerida.",
-            onConfirm: () => {
-              updateStatus(body);
-            },
-          });
+          updateStatus(body);
         },
-      });
-    }
-    if (isNotCompleted) {
-      actions.push({
-        label: "Agregar pago",
-        onClick: () => {
-          editPaidAmount.onOpenDialog({
-            booking: booking,
-          });
-        },
-      });
-    }
-    if (allowEdit) {
-      actions.push({
-        label: "Reprogramar la Reserva",
-        onClick: () => {
-          rescheduleBooking.openDialog({
-            booking: booking,
-          });
-        },
-      });
-    }
-    return {
-      titleToolbar: params.code,
-      status: stateFromJSON(booking?.status),
-      actions: actions,
-      onChangeState: (e) => {
-        const body: z.infer<typeof updateStatusWithEventSchema> = {
-          current_state: booking?.status || "",
-          party_type: regatePartyTypeToJSON(RegatePartyType.booking),
-          party_id: booking?.id.toString() || "",
-          events: [e],
-        };
-        updateStatus(body);
-      },
-    };
-  }, [permission, booking]);
+      };
+    },
+    [permission, booking]
+  );
 
   const initData = () => {
     fetcherLoader.submit(
@@ -163,18 +175,19 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
     initData();
   }, []);
 
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-    }
-  }, [fetcher.data]);
+  useDisplayMessage(
+    {
+      toastID: toastID,
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        if (fetcher.data?.eventData?.events[0] == EventState.DELETED_EVENT) {
+          setOpen(false);
+        }
+      },
+    },
+    [fetcher.data]
+  );
 
   useEffect(() => {
     if (!open) {
@@ -193,7 +206,7 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
       title={booking?.code || ""}
       keyPayload={key}
     >
-      {(fetcherLoader.state == "loading" && !fetcherLoader.data) ? (
+      {fetcherLoader.state == "loading" && !fetcherLoader.data ? (
         <LoadingSpinner />
       ) : (
         <>
