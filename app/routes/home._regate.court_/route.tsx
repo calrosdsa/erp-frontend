@@ -60,6 +60,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       query: {
         size: searchParams.get("size") || DEFAULT_SIZE,
         query: searchParams.get("query") || "",
+        column:"name",
       },
     },
   });
