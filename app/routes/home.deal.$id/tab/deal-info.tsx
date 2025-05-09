@@ -101,9 +101,8 @@ export default function DealInfoTab({
   return (
     <div className="grid grid-cols-9 gap-2">
       <div className="grid gap-3 col-span-4">
-        {JSON.stringify(deal?.stage_id)}
         <SmartForm
-          isNew={payload?.isNew}
+          isNew={payload?.isNew || false}
           title={"Información del trato"}
           schema={dealSchema}
           keyPayload={keyPayload}

@@ -38,15 +38,18 @@ export default function ContactList({
       <div className="w-full flex justify-center items-center">
         <div className="text-center py-6 w-full">
           <h2 className="mb-4">{t("_contact.empty")}</h2>
-          <Button
+          {onAddContact && (
+
+            <Button
             variant={"ghost"}
             type="button"
             onClick={onAddContact}
             className="text-xs mt-4 underline flex w-full"
-          >
+            >
             <Plus className="w-4 h-4" />
             <span>Agregar contacto</span>
           </Button>
+          )}
         </div>
       </div>
     );

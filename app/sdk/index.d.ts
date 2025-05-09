@@ -4480,6 +4480,7 @@ export interface components {
         };
         BookingDto: {
             code: string;
+            contacts: components["schemas"]["ContactDto"][];
             /** Format: int64 */
             court_id: number;
             court_name: string;
@@ -15912,6 +15913,7 @@ export interface operations {
                 orientation?: string;
                 column?: string;
                 name?: string;
+                party_id?: string;
             };
             header?: never;
             path?: never;

@@ -100,10 +100,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     },
   });
   handleError(res.error);
+  console.log(res.data?.result.contacts);
   return defer({
     booking: res.data?.result.entity,
     actions: res.data?.actions,
     activities: res.data?.result.activities,
+    contacts: res.data?.result.contacts,
   });
 };
 

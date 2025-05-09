@@ -48,13 +48,14 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
   const key = route.booking;
   const fetcher = useFetcher<typeof action>();
-  const fetcherLoader = useFetcher<typeof loader>({ key: "booking" });
+  const fetcherLoader = useFetcher<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
   const bookingID = searchParams.get("booking") || "";
   const r = route;
   const data = fetcherLoader.data;
   const booking = data?.booking;
+  const contacts = data?.contacts || [];
   const { t } = useTranslation("common");
   const params = useParams();
   const [open, setOpen] = useState(true);
@@ -222,7 +223,7 @@ export const BookingModal = ({ appContext }: { appContext: GlobalState }) => {
               {
                 label: "Info",
                 value: "info",
-                children: <BookingInfo appContext={appContext} />,
+                children: <BookingInfo appContext={appContext} data={data} />,
               },
             ]}
           />

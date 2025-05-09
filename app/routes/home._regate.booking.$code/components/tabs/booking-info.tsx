@@ -14,19 +14,25 @@ import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { Entity } from "~/types/enums";
 import { DisplayValue } from "@/components/ui/custom/display-info";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ContactList from "@/components/custom-ui/contacts-component";
+import { SerializeFrom } from "@remix-run/node";
 
-export const BookingInfo = ({ appContext }: { appContext: GlobalState }) => {
-  const key = route.booking
-  const fetcherLoader = useFetcher<typeof loader>({ key: "booking" });
-  const data = fetcherLoader.data;
-  const booking = fetcherLoader.data?.booking;
+export const BookingInfo = ({
+  appContext,
+  data,
+}: {
+  appContext: GlobalState;
+  data?: SerializeFrom<typeof loader>;
+}) => {
+  const key = route.booking;
+  const booking = data?.booking;
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
 
   const r = route;
   return (
     <div className="grid grid-cols-9 gap-3">
-      <div className="col-span-4">
+      <div className="col-span-4 flex flex-col space-y-3">
         <Card>
           <CardHeader className="flex justify-between">
             <CardTitle className="text-sm">Detalles de la Reserva</CardTitle>
@@ -89,13 +95,23 @@ export const BookingInfo = ({ appContext }: { appContext: GlobalState }) => {
 
             <DisplayValue
               label={"Fecha de la Reserva"}
-              value={`${format(parseISO(booking?.start_date || ""), "p")} - ${format(parseISO(booking?.end_date || ""), "p")}`}
+              value={`${format(
+                parseISO(booking?.start_date || ""),
+                "p"
+              )} - ${format(parseISO(booking?.end_date || ""), "p")}`}
             />
-           
           </CardContent>
         </Card>
-
-  
+        {data?.contacts && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Contacto</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ContactList contacts={data?.contacts || []} />
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {booking?.id && (
