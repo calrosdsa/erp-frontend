@@ -17,7 +17,7 @@ import { useCreateEvent } from "./components/use-create-event";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
 import DataLayout from "@/components/layout/data-layout";
-import { GenericActionsDropdown } from "../home._regate.booking_/components/actions-dropdown";
+import { GenericActionsDropdown } from "../home._regate.booking/components/actions-dropdown";
 import { State } from "~/gen/common";
 import { components } from "~/sdk";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";

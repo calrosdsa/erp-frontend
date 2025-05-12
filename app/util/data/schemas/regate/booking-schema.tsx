@@ -1,11 +1,10 @@
-import { z } from "zod";
+import { custom, z } from "zod";
+import { field, fieldNull } from "..";
 
 export const createBookingsSchema = z.object({
-  customerID: z.number(),
-  customerName: z.string(),
-
-  eventID: z.number().optional(),
-  eventName: z.string().optional(),
+  customer:fieldNull,
+  event:fieldNull,
+  
 
   advancePayment: z.coerce.number().optional(),
   discount: z.coerce.number().optional(),
@@ -19,6 +18,10 @@ export const validateBookingSchema = z.object({
 
   courtID: z.number(),
   courtName: z.string(),
+
+  event:fieldNull,
+  customer: fieldNull,
+  
 
   repeat: z.enum(["DAYLY", "WEEKLY", "MONTHLY"]).optional(),
   repeatUntilDate: z.date().optional(),

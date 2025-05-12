@@ -280,7 +280,7 @@ export default function ModalLayout({
               </Button>
               <Button
                 type="button"
-                disabled={payload.disabledSave}
+              
                 size={"lg"}
                 onClick={() => {
                   console.log("SAVE BUTTON CLICKED", payload.onSave);

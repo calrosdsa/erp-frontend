@@ -148,7 +148,7 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
         {loading ? (
           <LoadingSpinner />
         ) : (
-          <>
+          <>        
             <TabNavigation
               defaultValue={tab}
               onValueChange={(value) => {

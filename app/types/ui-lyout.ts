@@ -25,3 +25,8 @@ export interface TimelineProps {
   connectorColor?: TimelineColor;
   className?: string;
 }
+
+export interface ViewOption {
+  label:string;
+  view:string;
+}

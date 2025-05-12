@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import { useSearchParams } from "@remix-run/react";
+import { Link, useParams, useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { format, parse } from "date-fns";
 import {
@@ -45,6 +45,9 @@ import { DateRange } from "react-day-picker";
 import { toZonedTime } from "date-fns-tz";
 import { Badge } from "../ui/badge";
 import AutoCompleteByParty from "../custom/select/autocomple-by-party";
+import { ButtonToolbar } from "~/types/actions";
+import { cn } from "@/lib/utils";
+import { ViewOption } from "~/types/ui-lyout";
 
 type FilterOption = components["schemas"]["FilterOptionDto"];
 type SelectItem = { name: string; value: string };
@@ -172,7 +175,6 @@ const FilterSelectorValue: React.FC<{
     return <AutoCompleteByParty partyType={filterOption.party_type} />;
   }
   if (filterOption.type === "string") {
-
     return (
       <Input
         className="w-min"
@@ -348,10 +350,18 @@ const DataLayout: React.FC<{
   fixedFilters?: () => JSX.Element;
   orderOptions?: SelectItem[];
   filterOptions?: FilterOption[] | null;
-}> = ({ children, fixedFilters, orderOptions = [], filterOptions = [] }) => {
+  views?: ViewOption[];
+}> = ({
+  children,
+  fixedFilters,
+  orderOptions = [],
+  filterOptions = [],
+  views = [],
+}) => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [filters, setFilters] = useState<FilterData[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const params = useParams();
   const { t } = useTranslation("common");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -384,8 +394,8 @@ const DataLayout: React.FC<{
   };
 
   useEffect(() => {
-    if(filterOptions?.length == 0 ){
-      return
+    if (filterOptions?.length == 0) {
+      return;
     }
 
     const filterParams = new Set(filterOptions?.map((option) => option.param));
@@ -416,51 +426,68 @@ const DataLayout: React.FC<{
 
   return (
     <div className="h-full flex flex-col pt-1">
-      <div className="grid gap-3 xl:flex xl:justify-between">
-        <div className="flex space-x-1">
-          {filterOptions != null && filterOptions.length > 0 && (
-            <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-              <div className="flex space-x-1 items-center">
-                <PopoverTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <ListFilterIcon className="mr-1 h-4 w-4" />
-                    <span>Filtros</span>
-                    {filters.length > 0 && (
-                      <Badge
-                        variant={"outline"}
-                        className=" flex items-center justify-center w-5 h-5"
-                      >
-                        {filters.length}
-                      </Badge>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                {filters.length > 0 && (
-                  <Button
-                    variant={"ghost"}
-                    className=" rounded-full"
-                    onClick={clearFilter}
-                  >
-                    <XIcon />
-                  </Button>
-                )}
-              </div>
-              <PopoverContent className="sm:w-[500px] p-0">
-                <FilterPopoverContent
-                  filters={filters}
-                  setFilters={setFilters}
-                  filterOptions={filterOptions}
-                  onApplyFilters={handleApplyFilters}
-                  setSearchParams={setSearchParams}
-                />
-              </PopoverContent>
-            </Popover>
-          )}
-          {/* {JSON.stringify(filters)} */}
-          {fixedFilters && fixedFilters()}
-        </div>
-        {/* <div></div> */}
-        <div className="flex space-x-2">
+      <div className="flex space-x-4 ">
+        {filterOptions != null && filterOptions.length > 0 && (
+          <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+            <div className="flex space-x-1 items-center">
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <ListFilterIcon className="mr-1 h-4 w-4" />
+                  <span>Filtros</span>
+                  {filters.length > 0 && (
+                    <Badge
+                      variant={"outline"}
+                      className=" flex items-center justify-center w-5 h-5"
+                    >
+                      {filters.length}
+                    </Badge>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              {filters.length > 0 && (
+                <Button
+                  variant={"ghost"}
+                  className=" rounded-full"
+                  onClick={clearFilter}
+                >
+                  <XIcon />
+                </Button>
+              )}
+            </div>
+            <PopoverContent className="sm:w-[500px] p-0">
+              <FilterPopoverContent
+                filters={filters}
+                setFilters={setFilters}
+                filterOptions={filterOptions}
+                onApplyFilters={handleApplyFilters}
+                setSearchParams={setSearchParams}
+              />
+            </PopoverContent>
+          </Popover>
+        )}
+        {/* {JSON.stringify(filters)} */}
+        {views.length > 0 && (
+          <>
+            <div className=" bg-muted rounded-full px-3 py-1 flex space-x-2">
+              {views.map((item, idx) => (
+                <Link
+                  className={cn(
+                    " cursor-pointer  px-2",
+                    params.mode == item.view &&
+                      "border-b-2 border-muted-foreground"
+                  )}
+                  to={`./view/${item.view}`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
+        {fixedFilters && fixedFilters()}
+      </div>
+      {/* <div></div> */}
+      {/* <div className="flex space-x-2">
           {orderOptions.length > 0 && (
             <DropdownMenu>
               <div className="flex items-center">
@@ -517,8 +544,7 @@ const DataLayout: React.FC<{
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-        </div>
-      </div>
+        </div> */}
       <div className="py-2 w-full">{children}</div>
     </div>
   );

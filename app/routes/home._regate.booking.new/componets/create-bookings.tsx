@@ -11,7 +11,10 @@ import {
   useOutletContext,
   useSearchParams,
 } from "@remix-run/react";
-import { useCustomerDebounceFetcher } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
+import {
+  CustomerAutoCompleteForm,
+  useCustomerDebounceFetcher,
+} from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { route } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
@@ -27,8 +30,10 @@ import {
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 
-import Typography, { subtitle } from "@/components/typography/Typography";
-import { useEventDebounceFetcher } from "~/util/hooks/fetchers/regate/useEventDebounceFetcher";
+import {
+  EventAutoCompleteForm,
+  useEventDebounceFetcher,
+} from "~/util/hooks/fetchers/regate/useEventDebounceFetcher";
 import AccordationLayout from "@/components/layout/accordation-layout";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
@@ -40,18 +45,28 @@ import { useCreateCustomer } from "~/routes/home.customer_/components/create-cus
 import { useNewBooking } from "../use-new-booking";
 import { Textarea } from "@/components/ui/textarea";
 import BookingDetails from "./bookings-details";
+import { Typography } from "@/components/typography";
 
 export default function CreateBookings({
   data,
 }: {
-  data: components["schemas"]["BookingData"][];
+  data: components["schemas"]["ValidateBookingData"];
 }) {
   const [bookings, setBookings] =
-    useState<components["schemas"]["BookingData"][]>(data);
+    useState<components["schemas"]["BookingData"][]>(data.bookings || []);
   const fetcher = useFetcher<typeof action>();
   const fetcherBookings = useFetcher<typeof action>({ key: "booking-data" });
   const form = useForm<z.infer<typeof createBookingsSchema>>({
-    defaultValues: {},
+    defaultValues: {
+      event:{
+        id: data.event_id,
+        name: data.event_name,
+      },
+      customer:{
+        id:data.customer_id,
+        name:data.customer_name
+      }
+    },
     resolver: zodResolver(createBookingsSchema),
   });
   const { t } = useTranslation("common");
@@ -91,12 +106,12 @@ export default function CreateBookings({
     if (bookings.length > 0) {
       const body: components["schemas"]["CreateBookingBody"] = {
         advance_payment: Number(values.advancePayment),
-        customer_id: values.customerID,
+        customer_id: values.customer?.id || 0,
         bookings: bookings.map((t) => {
           t.discount = values.discount;
           return t;
         }),
-        event_id: values.eventID,
+        event_id: values.event?.id,
         comment: values.comment,
       };
       console.log("BOOKING BODY", body);
@@ -168,28 +183,19 @@ export default function CreateBookings({
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
-            <FormAutocomplete
+            <CustomerAutoCompleteForm
               label={t("_customer.base")}
-              data={customerFetcher.data?.customers || []}
-              onValueChange={onCustomerNameChange}
-              nameK={"name"}
-              name="customerName"
-              modal={false}
+              roleActions={globalState.roleActions}
               required={true}
               form={form}
-              onSelect={(e) => {
-                form.setValue("customerID", e.id);
+              openModal={() => {
+                setParams({
+                  [route.customer]: DEFAULT_ID,
+                  action: CREATE,
+                });
               }}
-              {...(customerPermission?.create && {
-                addNew: () => {
-                  setParams({
-                    [route.customer]:DEFAULT_ID,
-                    action:CREATE,
-                  })
-                  // createCustomer.openDialog({});
-                },
-              })}
             />
+
             <CustomFormField
               label={t("form.advancePayment")}
               name="advancePayment"
@@ -231,31 +237,23 @@ export default function CreateBookings({
               }}
             />
 
-            <AccordationLayout
-              containerClassName="col-span-full"
-              title={t("regate._event.base")}
-            >
-              <div className="create-grid">
-                <FormAutocomplete
-                  label={t("regate._event.base")}
-                  data={eventFetcher.data?.events || []}
-                  onValueChange={onEventNameChange}
-                  nameK={"name"}
-                  name="eventName"
-                  form={form}
-                  onSelect={(e) => {
-                    form.setValue("eventID", e.id);
-                  }}
-                  {...(eventPermission?.create && {
-                    addNew: () => {
-                      createEvent.onOpenChange(true);
-                    },
-                  })}
-                />
-              </div>
-            </AccordationLayout>
+            <Typography variant="subtitle2" className="col-span-full">
+              Evento
+            </Typography>
 
-            <Typography fontSize={subtitle} className="col-span-full">
+            <EventAutoCompleteForm
+              label={t("regate._event.base")}
+              roleActions={globalState.roleActions}
+              form={form}
+              openModal={() => {
+                setParams({
+                  [route.customer]: DEFAULT_ID,
+                  action: CREATE,
+                });
+              }}
+            />
+
+            <Typography variant="subtitle2" className="col-span-full">
               Detalles de la Reserva
             </Typography>
             <div className="col-span-full">

@@ -3,6 +3,7 @@ import {
   useTableSelectionStore,
 } from "@/components/custom/table/CustomTable";
 import {
+  Outlet,
   useFetcher,
   useLoaderData,
   useNavigate,
@@ -83,8 +84,6 @@ export default function BookingsClient() {
     );
   };
 
- 
-
   useDisplayMessage(
     {
       success: fetcher.data?.message,
@@ -97,14 +96,16 @@ export default function BookingsClient() {
     [fetcher.data]
   );
 
-
-
   return (
     <ListLayout
+      orderOptions={[
+        { name: t("table.createdAt"), value: "created_at" },
+        { name: t("form.status"), value: "status" },
+      ]}
       title={t("regate._booking.base")}
       {...(permission.create && {
         onCreate: () => {
-          navigate(r.toRouteDetail(r.booking,"new"));
+          navigate(r.toRouteDetail(r.booking, "new"));
         },
       })}
       actions={[
@@ -122,9 +123,17 @@ export default function BookingsClient() {
       ]}
     >
       <DataLayout
-        orderOptions={[
-          { name: t("table.createdAt"), value: "created_at" },
-          { name: t("form.status"), value: "status" },
+        views={[
+          {
+            label: "Lista",
+            view: "list",
+            onClick: () => {},
+          },
+          {
+            label: "Calendario",
+            view: "schedule",
+            onClick: () => {},
+          },
         ]}
         fixedFilters={() => {
           return (
@@ -212,17 +221,7 @@ export default function BookingsClient() {
           );
         }}
       >
-        <DataTable
-          data={paginationResult?.results || []}
-          columns={bookingColumns({
-            setParams,
-          })}
-          hiddenColumns={{
-            created_at: false,
-          }}
-          enableRowSelection={true}
-          enableSizeSelection={true}
-        />
+        <Outlet />
       </DataLayout>
     </ListLayout>
   );

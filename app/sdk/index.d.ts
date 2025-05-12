@@ -4947,7 +4947,7 @@ export interface components {
             /** Format: int64 */
             customer_id: number;
             /** Format: int64 */
-            event_id?: number;
+            event_id?: number | null;
         };
         CreateCompanyRequestBody: {
             /**
@@ -9013,19 +9013,6 @@ export interface components {
             message: string;
             result: components["schemas"]["LedgerDto"];
         };
-        ResponseDataListBookingDataBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            associated_actions: {
-                [key: string]: components["schemas"]["ActionDto"][] | undefined;
-            };
-            message: string;
-            result: components["schemas"]["BookingData"][];
-        };
         ResponseDataListChartDataDtoBody: {
             /**
              * Format: uri
@@ -9572,6 +9559,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["TermsAndConditionsDto"];
+        };
+        ResponseDataValidateBookingDataBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ValidateBookingData"];
         };
         ResponseMessageBody: {
             /**
@@ -10453,7 +10453,7 @@ export interface components {
             role: components["schemas"]["RoleDto"];
             uuid: string;
         };
-        ValidateBookingBody: {
+        ValidateBookingData: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -10462,6 +10462,12 @@ export interface components {
             /** Format: int64 */
             booking_id?: number;
             bookings: components["schemas"]["BookingData"][];
+            /** Format: int64 */
+            customer_id?: number | null;
+            customer_name?: string | null;
+            /** Format: int64 */
+            event_id?: number | null;
+            event_name?: string | null;
         };
         WareHouseDto: {
             /** Format: date-time */
@@ -18763,7 +18769,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ValidateBookingBody"];
+                "application/json": components["schemas"]["ValidateBookingData"];
             };
         };
         responses: {
@@ -18773,7 +18779,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseDataListBookingDataBody"];
+                    "application/json": components["schemas"]["ResponseDataValidateBookingDataBody"];
                 };
             };
             /** @description Error */

@@ -6,7 +6,12 @@ import { useEffect, useRef } from "react";
 import FormLayout from "@/components/custom/form/FormLayout";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { Form } from "@/components/ui/form";
-import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
+import {
+  useFetcher,
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
@@ -16,7 +21,6 @@ import { useTranslation } from "react-i18next";
 import { useCourtDebounceFetcher } from "~/util/hooks/fetchers/regate/use-court-debounce-fetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import TimeSelectInput from "@/components/custom/select/time-select-input";
-import Typography, { subtitle } from "@/components/typography/Typography";
 import SelectForm from "@/components/custom/select/SelectForm";
 import { MultiSelect } from "@/components/custom/select/MultiSelect";
 import { daysWeek } from "~/util/data/day-weeks";
@@ -29,13 +33,16 @@ import CustomFormField from "@/components/custom/form/CustomFormField";
 import { Input } from "@/components/ui/input";
 import AccordationLayout from "@/components/layout/accordation-layout";
 import AmountInput from "@/components/custom/input/AmountInput";
-import { DEFAULT_CURRENCY } from "~/constant";
+import { CREATE, DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
 import { useNewBooking } from "../use-new-booking";
 import generateBookingData from "../util-new";
+import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
+import { Typography } from "@/components/typography";
+import { EventAutoCompleteForm } from "~/util/hooks/fetchers/regate/useEventDebounceFetcher";
 
 export const ValidateBooking = () => {
   const fetcher = useFetcher<typeof action>({ key: "booking-data" });
-  
+
   const form = useForm<z.infer<typeof validateBookingSchema>>({
     resolver: zodResolver(validateBookingSchema),
     defaultValues: {},
@@ -50,14 +57,29 @@ export const ValidateBooking = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
- 
-
+  const setParams = (params: Record<string, any>) => {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        searchParams.set(key, value); // Update or add the parameter
+      } else {
+        searchParams.delete(key); // Remove the parameter if the value is empty
+      }
+    });
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   const onSubmit = (values: z.infer<typeof validateBookingSchema>) => {
     console.log("BODY", values);
-    const body: components["schemas"]["ValidateBookingBody"] = {
+    const body: components["schemas"]["ValidateBookingData"] = {
       bookings: mapToBookingData(values),
+      event_id:values.event?.id,
+      event_name:values.event?.name,
+      customer_id: values.customer?.id,
+      customer_name: values.customer?.name,
     };
     console.log("BODY", body);
     fetcher.submit(
@@ -89,11 +111,8 @@ export const ValidateBooking = () => {
     };
   }, []);
 
-
-
   return (
     <FormLayout>
-       
       <Form {...form}>
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className=" create-grid">
@@ -115,7 +134,19 @@ export const ValidateBooking = () => {
               }}
             />
 
-            <Typography fontSize={subtitle} className="col-span-full">
+            <CustomerAutoCompleteForm
+              label={t("_customer.base")}
+              roleActions={globalState.roleActions}
+              form={form}
+              openModal={() => {
+                setParams({
+                  [route.customer]: DEFAULT_ID,
+                  action: CREATE,
+                });
+              }}
+            />
+
+            <Typography variant="subtitle2" className="col-span-full">
               Fecha y Hora
             </Typography>
 
@@ -152,62 +183,78 @@ export const ValidateBooking = () => {
             />
               </div>
             </AccordationLayout> */}
-            <AccordationLayout 
-            title="Repetir Reserva"
-            containerClassName=" col-span-full"
+            <AccordationLayout
+              title="Repetir Reserva"
+              containerClassName=" col-span-full"
             >
               <div className=" create-grid">
-              <SelectForm
-                data={
-                  [
-                    { name: "Diariamente", value: "DAYLY" },
-                    { name: "Semanalmente", value: "WEEKLY" },
-                    { name: "Mensualmente", value: "MONTHLY" },
-                  ] as SelectItem[]
-                }
-                name="repeat"
-                form={form}
-                onValueChange={(e) => {
-                  form.trigger("repeat");
-                }}
-                keyName="name"
-                keyValue="value"
-                label="Repetir"
-                />
-              <CustomFormDate
-                form={form}
-                name="repeatUntilDate"
-                label={"Repetir Hasta la Fecha"}
-              />
-              {form.getValues().repeat == "WEEKLY" && (
-                <MultiSelect
-                  label={t("form.daysWeek")}
-                  data={daysWeek}
+                <SelectForm
+                  data={
+                    [
+                      { name: "Diariamente", value: "DAYLY" },
+                      { name: "Semanalmente", value: "WEEKLY" },
+                      { name: "Mensualmente", value: "MONTHLY" },
+                    ] as SelectItem[]
+                  }
+                  name="repeat"
                   form={form}
-                  name="daySWeek"
-                  keyName="dayName"
-                  keyValue={"day"}
-                  onSelect={(e) => {
-                    form.setValue(
-                      "daysWeek",
-                      e.map((t) => t.day)
-                    );
+                  onValueChange={(e) => {
+                    form.trigger("repeat");
                   }}
+                  keyName="name"
+                  keyValue="value"
+                  label="Repetir"
                 />
-              )}
+                <CustomFormDate
+                  form={form}
+                  name="repeatUntilDate"
+                  label={"Repetir Hasta la Fecha"}
+                />
+                {form.getValues().repeat == "WEEKLY" && (
+                  <MultiSelect
+                    label={t("form.daysWeek")}
+                    data={daysWeek}
+                    form={form}
+                    name="daySWeek"
+                    keyName="dayName"
+                    keyValue={"day"}
+                    onSelect={(e) => {
+                      form.setValue(
+                        "daysWeek",
+                        e.map((t) => t.day)
+                      );
+                    }}
+                  />
+                )}
 
-              {form.getValues().repeat == "MONTHLY" && (
-                <CustomFormField
-                label="Día"
-                name="repeatOnDay"
-                  form={form}
-                  children={(field) => {
-                    return <Input {...field} type="number" />;
-                  }}
-                />
-              )}
-                </div>
+                {form.getValues().repeat == "MONTHLY" && (
+                  <CustomFormField
+                    label="Día"
+                    name="repeatOnDay"
+                    form={form}
+                    children={(field) => {
+                      return <Input {...field} type="number" />;
+                    }}
+                  />
+                )}
+              </div>
             </AccordationLayout>
+
+            <Typography variant="subtitle2" className="col-span-full">
+              Evento
+            </Typography>
+
+            <EventAutoCompleteForm
+              label={t("regate._event.base")}
+              roleActions={globalState.roleActions}
+              form={form}
+              openModal={() => {
+                setParams({
+                  [route.customer]: DEFAULT_ID,
+                  action: CREATE,
+                });
+              }}
+            />
 
             <input ref={inputRef} type="submit" className="hidden" />
           </div>

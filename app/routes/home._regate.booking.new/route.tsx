@@ -7,7 +7,7 @@ import { route } from "~/util/route"
 
 type ActionData = {
     action:string
-    validateBookingData:components["schemas"]["ValidateBookingBody"]
+    validateBookingData:components["schemas"]["ValidateBookingData"]
     createBookingData:components["schemas"]["CreateBookingBody"]
 }
 
@@ -17,14 +17,14 @@ export const action = async({request}:ActionFunctionArgs)=>{
     const r =route
     let message:string | undefined = undefined
     let error:string | undefined = undefined
-    let bookingData:components["schemas"]["BookingData"][] = []
+    let bookingData:components["schemas"]["ValidateBookingData"] | undefined = undefined
     switch(data.action){
         case "validate-booking-data":{
             const res =await client.POST("/regate/booking/validate",{
                 body:data.validateBookingData,
             })
             error = res.error?.detail
-            bookingData =  res.data?.result || []
+            bookingData =  res.data?.result 
             console.log(res.error,res.data)
             break;
         }

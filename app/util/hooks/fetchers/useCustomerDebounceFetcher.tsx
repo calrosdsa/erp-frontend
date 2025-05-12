@@ -8,27 +8,21 @@ import { components } from "~/sdk";
 import { route } from "~/util/route";
 import { usePermission } from "../useActions";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
-import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField";
+import FormAutocompleteField, {
+  AutocompleteFormProps,
+} from "@/components/custom/select/FormAutocompleteField";
 
-
+type Customer = components["schemas"]["CustomerDto"];
+interface CustomerFormProps
+  extends Partial<AutocompleteFormProps<Customer, keyof Customer>> {
+  roleActions?: components["schemas"]["RoleActionDto"][];
+  openModal?:()=>void
+}
 
 export const CustomerAutoCompleteForm = ({
-  allowEdit,
-  control,
-  label,
-  onSelect,
-  onClear,
   roleActions,
-  name,
-}: {
-  allowEdit?: boolean;
-  control?: Control<any, any>;
-  label?: string;
-  name?:string;
-  onSelect?: (e: components["schemas"]["CustomerDto"]) => void;
-  onClear?:()=>void
-  roleActions?: components["schemas"]["RoleActionDto"][];
-}) => {
+  ...props
+}: CustomerFormProps) => {
   const [fetcher, onChange] = useCustomerDebounceFetcher();
   const createCustomer = useCreateCustomer();
   const [permission] = usePermission({
@@ -37,18 +31,14 @@ export const CustomerAutoCompleteForm = ({
   });
   return (
     <FormAutocompleteField
+      {...props}
       data={fetcher.data?.customers || []}
       onValueChange={onChange}
-      label={label}
-      name={name || "customer"}
-      nameK="name"
-      onClear={onClear}
-      control={control}
-      allowEdit={allowEdit}
-      onSelect={onSelect}
+      name={props.name || "customer"}
+      nameK="name" 
       {...(permission.create && {
         addNew: () => {
-          createCustomer.openDialog({});
+          props.openModal?.()
         },
       })}
     />
@@ -94,5 +84,9 @@ export const useCustomerDebounceFetcher = () => {
       }
     );
   };
-  return [fetcherDebounce, onChange,fetcherDebounce.state == "submitting"] as const;
+  return [
+    fetcherDebounce,
+    onChange,
+    fetcherDebounce.state == "submitting",
+  ] as const;
 };

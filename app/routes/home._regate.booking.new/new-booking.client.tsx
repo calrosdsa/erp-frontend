@@ -21,7 +21,7 @@ export default function NewBookingClient() {
     if (payload) {
       const { court, selectedSlots, courtName } = payload;
       console.log("SELECTED SLOTS", selectedSlots);
-      const body: components["schemas"]["ValidateBookingBody"] = {
+      const body: components["schemas"]["ValidateBookingData"] = {
         bookings: generateBookingData(court, courtName, selectedSlots),
       };
       console.log("BOOKING SLOTS", body);
@@ -60,7 +60,7 @@ export default function NewBookingClient() {
       <CreateLayout>
         {fetcher.state == "submitting" ? (
           <LoadingSpinner className="h-[70vh]" size="lg" />
-        ) : fetcher.data?.bookingData && fetcher.data.bookingData.length > 0 ? (
+        ) : fetcher.data?.bookingData && fetcher.data.bookingData  ? (
           <CreateBookings data={fetcher.data.bookingData} />
         ) : (
           <ValidateBooking />
