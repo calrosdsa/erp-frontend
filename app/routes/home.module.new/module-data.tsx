@@ -62,6 +62,7 @@ export default function ModuleData({
               control={form.control}
               name="label"
               label={t("form.name")}
+              
               inputType="input"
               allowEdit={allowEdit}
               required={true}

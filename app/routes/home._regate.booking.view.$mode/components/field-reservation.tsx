@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, Plus, RefreshCw } from "lucide-react";
+import { CalendarIcon, Plus } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -20,7 +18,6 @@ import {
   isSameDay,
   parseISO,
 } from "date-fns";
-import { useNewBooking } from "~/routes/home._regate.booking.new/use-new-booking";
 import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react";
 import { route } from "~/util/route";
 import { components, operations } from "~/sdk";
@@ -29,6 +26,7 @@ import { formatCurrency } from "~/util/format/formatCurrency";
 import { es } from "date-fns/locale";
 import { action } from "~/routes/home._regate.court_/route";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useNewBooking } from "~/routes/home._regate.booking/store/use-new-booking";
 
 interface FieldReservationProps {
   schedules: components["schemas"]["CourtRateDto"][];
@@ -61,10 +59,10 @@ export default function FieldReservation({
   const courtsFetcher = useFetcher<typeof action>();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchParams, setSearchParams] = useSearchParams();
-  const courtID = searchParams.get("courtID");
+  const courtID = searchParams.get("court_id");
   const viewMode: "day" | "week" | string = searchParams.get("view") || "week";
-  const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
   const newBooking = useNewBooking();
+  const {selectedSlots, setSelectedSlots} = newBooking
   const navigate = useNavigate();
   const r = route;
   const { i18n } = useTranslation("common");
@@ -122,6 +120,14 @@ export default function FieldReservation({
     },
     [getDaySchedule]
   );
+
+  useEffect(() => {
+    newBooking.onPayload({
+      court: Number(searchParams.get("court_id")),
+      courtName: searchParams.get("court_name") || "",
+      slots: Array.from(selectedSlots),
+    });
+  }, [selectedSlots, courtID]);
 
   const handleSlotClick = useCallback(
     (date: Date, time: string) => {
@@ -287,8 +293,8 @@ export default function FieldReservation({
           {/* <AutocompleteSearch
               data={courtFetcher.data?.courts || []}
               nameK={"name"}
-              queryName="courtName"
-              queryValue="courtID"
+              queryName="court_name"
+              queryValue="court_id"
               valueK={"id"}
               onValueChange={onCourtNameChange}
             /> */}
@@ -316,13 +322,13 @@ export default function FieldReservation({
               />
             </PopoverContent>
           </Popover>
-          <Button
+          {/* <Button
             variant="default"
             size="sm"
             onClick={() => {
               newBooking.onPayload({
-                court: Number(searchParams.get("courtID")),
-                courtName: searchParams.get("courtName") || "",
+                court: Number(searchParams.get("court_id")),
+                courtName: searchParams.get("court_name") || "",
                 selectedSlots: Array.from(selectedSlots),
               });
               navigate(
@@ -334,7 +340,7 @@ export default function FieldReservation({
             }}
           >
             CREAR RESERVA <Plus className="w-4 h-4 ml-2" />
-          </Button>
+          </Button> */}
         </div>
 
         <div className="flex items-center gap-2">
@@ -377,8 +383,8 @@ export default function FieldReservation({
               (item) => item.id.toString() === e
             );
             if (court) {
-              searchParams.set("courtName", court.name);
-              searchParams.set("courtID", e);
+              searchParams.set("court_name", court.name);
+              searchParams.set("court_id", e);
               setSearchParams(searchParams, {
                 preventScrollReset: true,
               });

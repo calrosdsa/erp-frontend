@@ -140,6 +140,8 @@ class Routes {
   bankAccount = "bank-account"
   deal = "deal"
   chat = "chat"
+  workspace = "workspace"
+  
 
   defaultTab = {
     tab: "info",

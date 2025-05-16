@@ -24,8 +24,7 @@ export default function ModalLayout({
   open,
   onOpenChange,
   title,
-  className,
-  headerSection,
+  
 }: {
   children: ReactNode;
   className?: string;
@@ -262,7 +261,7 @@ export default function ModalLayout({
           </div>
         </div>
 
-        {payload.enableEdit && (
+        {(payload.enableEdit || payload.isNew) && (
           <div className="fixed  w-full right-0  md:max-w-full md:w-[80%] xl:w-[70%]  bottom-0 border-t shadow-xl bg-background">
             <div className="flex justify-center items-center space-x-2 h-16 ">
               <Button

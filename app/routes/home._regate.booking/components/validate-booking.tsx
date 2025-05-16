@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { components } from "~/sdk";
 import { validateBookingSchema } from "~/util/data/schemas/regate/booking-schema";
-import { mapToBookingData } from "../util";
+import { mapToBookingData } from "../../home._regate.booking/util";
 import { useEffect, useRef } from "react";
 import FormLayout from "@/components/custom/form/FormLayout";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
@@ -32,15 +32,17 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { Input } from "@/components/ui/input";
 import AccordationLayout from "@/components/layout/accordation-layout";
-import AmountInput from "@/components/custom/input/AmountInput";
 import { CREATE, DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
-import { useNewBooking } from "../use-new-booking";
-import generateBookingData from "../util-new";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { Typography } from "@/components/typography";
 import { EventAutoCompleteForm } from "~/util/hooks/fetchers/regate/useEventDebounceFetcher";
+import { setUpModalPayload } from "@/components/ui/custom/modal-layout";
 
-export const ValidateBooking = () => {
+export const ValidateBooking = ({
+  keyPayload,
+}:{
+  keyPayload:string
+}) => {
   const fetcher = useFetcher<typeof action>({ key: "booking-data" });
 
   const form = useForm<z.infer<typeof validateBookingSchema>>({
@@ -51,7 +53,7 @@ export const ValidateBooking = () => {
   const [courtFetcher, onCourtNameChange] = useCourtDebounceFetcher();
   const [courtPermission] = usePermission({
     actions: courtFetcher.data?.actions,
-    roleActions: globalState.roleActions,
+    roleActions: globalState?.roleActions || [],
   });
   const r = route;
   const navigate = useNavigate();
@@ -76,8 +78,8 @@ export const ValidateBooking = () => {
     console.log("BODY", values);
     const body: components["schemas"]["ValidateBookingData"] = {
       bookings: mapToBookingData(values),
-      event_id:values.event?.id,
-      event_name:values.event?.name,
+      event_id: values.event?.id,
+      event_name: values.event?.name,
       customer_id: values.customer?.id,
       customer_name: values.customer?.name,
     };
@@ -102,7 +104,7 @@ export const ValidateBooking = () => {
     [fetcher.data]
   );
 
-  setUpToolbar(() => {
+  setUpModalPayload(keyPayload,() => {
     return {
       titleToolbar: "Crear Nueva Reserva",
       onSave: () => {
@@ -135,8 +137,9 @@ export const ValidateBooking = () => {
             />
 
             <CustomerAutoCompleteForm
+              modal={true}
               label={t("_customer.base")}
-              roleActions={globalState.roleActions}
+              roleActions={globalState?.roleActions || []}
               form={form}
               openModal={() => {
                 setParams({
@@ -246,8 +249,9 @@ export const ValidateBooking = () => {
 
             <EventAutoCompleteForm
               label={t("regate._event.base")}
-              roleActions={globalState.roleActions}
+              roleActions={globalState?.roleActions || []}
               form={form}
+              modal={true}
               openModal={() => {
                 setParams({
                   [route.customer]: DEFAULT_ID,

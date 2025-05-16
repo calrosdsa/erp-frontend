@@ -1,7 +1,7 @@
 import Typography from "@/components/typography/Typography";
 import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { TFunction } from "i18next";
+import { i18n, TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { components } from "~/sdk";
 import { formatLongDate } from "~/util/format/formatDate";
@@ -20,12 +20,12 @@ import TableCell from "../../cells/table-cell-update";
 import { TableCellBase } from "../../cells/table-cell";
 
 export const bookingColumns = ({
-  setParams,
+  setParams,t,i18n
 }: {
-  setParams:(params: Record<string, any>) => void
+  setParams: (params: Record<string, any>) => void;
+  t: TFunction<"common", undefined>;
+  i18n: i18n;
 }): ColumnDef<components["schemas"]["BookingDto"]>[] => {
-  const { t, i18n } = useTranslation("common");
-  const r = route;
   return [
     // {
     //   id: "select",
@@ -55,7 +55,7 @@ export const bookingColumns = ({
             {...props}
             onClick={() =>
               setParams({
-                [route.booking]:rowData.id
+                [route.booking]: rowData.id,
               })
             }
           />
@@ -69,15 +69,15 @@ export const bookingColumns = ({
         const rowData = props.row.original;
         return (
           <>
-          <TableCellBase
-            className="font-semibold underline cursor-pointer"
-            {...props}
-            onClick={() =>
-              setParams({
-                [route.customer]:rowData.party_id
-              })
-            }
-          />
+            <TableCellBase
+              className="font-semibold underline cursor-pointer"
+              {...props}
+              onClick={() =>
+                setParams({
+                  [route.customer]: rowData.party_id,
+                })
+              }
+            />
           </>
         );
       },

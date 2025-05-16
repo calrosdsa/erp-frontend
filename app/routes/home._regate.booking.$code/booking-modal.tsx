@@ -20,7 +20,6 @@ import {
   stateFromJSON,
   stateToJSON,
 } from "~/gen/common";
-import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
 import { ButtonToolbar } from "~/types/actions";

@@ -17,9 +17,9 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { create } from "zustand";
 import { DEFAULT_CURRENCY } from "~/constant";
-import BookingDisplay from "~/routes/home._regate.booking.new/componets/bookings-display";
-import { action } from "~/routes/home._regate.booking.new/route";
-import { mapToBookingData } from "~/routes/home._regate.booking.new/util";
+import BookingDisplay from "~/routes/home._regate.booking/components/bookings-display";
+import { action } from "~/routes/home._regate.booking/route";
+import { mapToBookingData } from "~/routes/home._regate.booking/util";
 import { components } from "~/sdk";
 import { validateBookingSchema } from "~/util/data/schemas/regate/booking-schema";
 import { formatAmount } from "~/util/format/formatCurrency";
@@ -56,7 +56,7 @@ export const RescheduleBooking = ({
 
   const onSubmit = (values: z.infer<typeof validateBookingSchema>) => {
     console.log("BODY", values);
-    const body: components["schemas"]["ValidateBookingBody"] = {
+    const body: components["schemas"]["ValidateBookingData"] = {
       bookings: mapToBookingData(values),
       booking_id: values.bookingID,
     };
@@ -109,7 +109,7 @@ export const RescheduleBooking = ({
                 console.log("ONSUBMIT");
                 if (!booking?.id) return;
                 if (!fetcher.data?.bookingData) return;
-                const b = fetcher.data?.bookingData[0];
+                const b = fetcher.data?.bookingData?.bookings[0];
                 if (!b) return;
                 const body: components["schemas"]["BookingRescheduleBody"] = {
                   booking_id: booking?.id,
@@ -136,7 +136,9 @@ export const RescheduleBooking = ({
               }}
             >
               {/* {JSON.stringify(booking?.paid)} */}
-              <BookingDisplay bookings={fetcher.data?.bookingData || []} />
+              <BookingDisplay
+                bookings={fetcher.data?.bookingData.bookings || []}
+              />
               <Button
                 type="submit"
                 loading={rescheduleFetcher.state == "submitting"}

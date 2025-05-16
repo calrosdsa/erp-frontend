@@ -90,7 +90,7 @@ export default function FormAutocompleteField<
               {label} {required && "*"}
             </FormLabel>
           )}
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={open} onOpenChange={setOpen} modal={modal}>
             {href && !allowEdit ? (
               <Button
                 variant="outline"

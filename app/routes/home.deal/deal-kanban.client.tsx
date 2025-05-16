@@ -1,6 +1,5 @@
 import {
   KanbanBoard,
-  KanbanColumn,
 } from "@/components/layout/kanban/kanban-board";
 import {
   useFetcher,
@@ -16,9 +15,6 @@ import { components } from "~/sdk";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app-types";
 import { DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
-import MentionTextarea from "../home.activity/components/activity-comment";
-import { TimePicker } from "@/components/custom/datetime/time-picker";
-import { useState } from "react";
 import { ListLayout } from "@/components/ui/custom/list-layout";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";

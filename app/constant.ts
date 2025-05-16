@@ -11,6 +11,9 @@ export const DEFAULT_ENABLED = "true";
 export const DEFAULT_ORDER = "desc"
 export const DEFAULT_COLUMN = "id"
 
+export const ASC = "asc"
+export  const DESC = "desc"
+
 
 export const MAX_DEFAULT_SIZE = "30";
 

@@ -1,7 +1,5 @@
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { action, loader } from "../route";
-import { DataTable } from "@/components/custom/table/CustomTable";
-import { moduleSectionColumns } from "@/components/custom/table/columns/core/module-columns";
 import { useRef } from "react";
 import { setUpToolbarTab, useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { usePermission } from "~/util/hooks/useActions";
@@ -26,7 +24,7 @@ export default function ModuleInfo() {
   });
   const status = stateFromJSON(module?.status);
   const fetcher = useFetcher<typeof action>();
-  const allowEdit = permission.edit || status == State.ENABLED;
+  const allowEdit = permission.edit
   const { form, updateRef } = useEditFields<ModuleDataType>({
     schema: moduleDataSchema,
     defaultValues: {
@@ -92,7 +90,7 @@ export default function ModuleInfo() {
       form={form}
       fetcher={fetcher}
       inputRef={inputRef}
-      allowEdit={allowEdit}
+      allowEdit={permission.edit}
       onSubmit={onSubmit}
       />
     </div>

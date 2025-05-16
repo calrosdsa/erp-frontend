@@ -20,8 +20,7 @@ import apiClient from "~/apiclient";
 import { GlobalState } from "~/types/app-types";
 import { ClientOnly } from "remix-utils/client-only";
 import FallBack from "@/components/layout/Fallback";
-import { DEFAULT_PAGE, LOAD_ACTION } from "~/constant";
-import ChatModal from "../home.chat/components/chat-modal";
+import { ASC, DEFAULT_ORDER, DEFAULT_PAGE, LOAD_ACTION } from "~/constant";
 import { components } from "~/sdk";
 import AppModals from "./modals";
 
@@ -57,8 +56,6 @@ export function shouldRevalidate({
 }
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
-  console.log("API URL CONTEXT", context);
-
   const session = await getSession(request.headers.get("Cookie"));
   if (!session.has("access_token")) {
     // Redirect to the home page if they are already signed in.
@@ -80,6 +77,8 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
       query: {
         page: DEFAULT_PAGE,
         size: "100",
+        column:"priority",
+        orientation:ASC,
       },
     },
   });
@@ -96,7 +95,6 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
       roleActions: res.data?.role_actions,
       companyDefaults: res.data?.company_defaults,
       modules: modulesRes.data?.result,
-      // activeCompany: res.data?.user.UserRelation.Company,
     },
     {
       headers: {

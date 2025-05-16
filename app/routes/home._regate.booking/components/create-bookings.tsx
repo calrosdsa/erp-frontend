@@ -20,7 +20,6 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { useTranslation } from "react-i18next";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import BookingDisplay from "./bookings-display";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import AmountInput from "@/components/custom/input/AmountInput";
 import { CREATE, DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
@@ -42,48 +41,44 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useCreateCustomer } from "~/routes/home.customer_/components/create-customer";
-import { useNewBooking } from "../use-new-booking";
 import { Textarea } from "@/components/ui/textarea";
-import BookingDetails from "./bookings-details";
 import { Typography } from "@/components/typography";
+import { useNewBooking } from "../store/use-new-booking";
+import BookingDisplay from "./bookings-display";
+import BookingDetails from "./bookings-details";
+import { setUpModalPayload } from "@/components/ui/custom/modal-layout";
 
 export default function CreateBookings({
   data,
+  keyPayload,
+  closeModal,
 }: {
   data: components["schemas"]["ValidateBookingData"];
+  keyPayload: string;
+  closeModal: () => void;
 }) {
-  const [bookings, setBookings] =
-    useState<components["schemas"]["BookingData"][]>(data.bookings || []);
+  const [bookings, setBookings] = useState<
+    components["schemas"]["BookingData"][]
+  >(data.bookings || []);
   const fetcher = useFetcher<typeof action>();
   const fetcherBookings = useFetcher<typeof action>({ key: "booking-data" });
   const form = useForm<z.infer<typeof createBookingsSchema>>({
     defaultValues: {
-      event:{
+      event: {
         id: data.event_id,
         name: data.event_name,
       },
-      customer:{
-        id:data.customer_id,
-        name:data.customer_name
-      }
+      customer: {
+        id: data.customer_id,
+        name: data.customer_name,
+      },
     },
     resolver: zodResolver(createBookingsSchema),
   });
   const { t } = useTranslation("common");
   const globalState = useOutletContext<GlobalState>();
-  const [customerFetcher, onCustomerNameChange] = useCustomerDebounceFetcher();
-  const [customerPermission] = usePermission({
-    actions: customerFetcher.data?.actions,
-    roleActions: globalState.roleActions,
-  });
-  const createCustomer = useCreateCustomer();
-  const [eventFetcher, onEventNameChange] = useEventDebounceFetcher();
-  const [eventPermission] = usePermission({
-    actions: eventFetcher.data?.actions,
-    roleActions: globalState.roleActions,
-  });
-  const createEvent = useCreateEvent();
   const [searchParams, setSearchParams] = useSearchParams();
+  const newBooking = useNewBooking();
   const setParams = (params: Record<string, any>) => {
     Object.entries(params).forEach(([key, value]) => {
       if (value) {
@@ -127,33 +122,28 @@ export default function CreateBookings({
       );
     }
   };
-  useLoadingTypeToolbar(
-    {
-      loading: fetcher.state == "submitting",
-      loadingType: "SAVE",
-    },
-    [fetcher.state]
-  );
 
-  setUpToolbar(() => {
-    return {
-      titleToolbar: "Crear Nueva Reserva",
-      onSave: () => {
-        inputRef.current?.click();
-      },
-    };
-  }, []);
+  setUpModalPayload(
+    keyPayload,
+    () => {
+      return {
+        titleToolbar: "Crear Nueva Reserva",
+        onSave: () => {
+          inputRef.current?.click();
+        },
+      };
+    },
+    []
+  );
 
   useDisplayMessage(
     {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
       onSuccessMessage: () => {
-        navigate(
-          r.toRoute({
-            main: r.bookingM,
-          })
-        );
+        closeModal();
+        newBooking.resetPayload();
+        newBooking.setSelectedSlots(new Set());
       },
     },
     [fetcher.data]
@@ -187,6 +177,7 @@ export default function CreateBookings({
               label={t("_customer.base")}
               roleActions={globalState.roleActions}
               required={true}
+              modal={true}
               form={form}
               openModal={() => {
                 setParams({
@@ -245,6 +236,7 @@ export default function CreateBookings({
               label={t("regate._event.base")}
               roleActions={globalState.roleActions}
               form={form}
+              modal={true}
               openModal={() => {
                 setParams({
                   [route.customer]: DEFAULT_ID,

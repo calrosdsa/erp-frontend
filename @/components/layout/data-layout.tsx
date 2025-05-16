@@ -351,12 +351,14 @@ const DataLayout: React.FC<{
   orderOptions?: SelectItem[];
   filterOptions?: FilterOption[] | null;
   views?: ViewOption[];
+  onChangeView?: () => void;
 }> = ({
   children,
   fixedFilters,
   orderOptions = [],
   filterOptions = [],
   views = [],
+  onChangeView,
 }) => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [filters, setFilters] = useState<FilterData[]>([]);
@@ -471,6 +473,9 @@ const DataLayout: React.FC<{
             <div className=" bg-muted rounded-full px-3 py-1 flex space-x-2">
               {views.map((item, idx) => (
                 <Link
+                  onClick={() => {
+                    onChangeView?.();
+                  }}
                   className={cn(
                     " cursor-pointer  px-2",
                     params.mode == item.view &&

@@ -8,6 +8,7 @@ import {
   useLoaderData,
   useNavigate,
   useOutletContext,
+  useParams,
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
@@ -33,6 +34,8 @@ import CustomSelect from "@/components/custom/select/custom-select";
 import { ButtonToolbar } from "~/types/actions";
 import { party } from "~/util/party";
 import { ListLayout } from "@/components/ui/custom/list-layout";
+import { CreateBookingModal } from "./components/modal/create-booking-modal";
+import { useNewBooking } from "./store/use-new-booking";
 
 export default function BookingsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -48,12 +51,10 @@ export default function BookingsClient() {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
   const { clear, selectedRowsData } = useTableSelectionStore();
-  // const [selectedBookings, setSelectedBookings] = useState<
-  //   components["schemas"]["BookingDto"][]
-  // >([]);
-  const r = route;
-  const p = party;
   const [searchParams, setSearchParams] = useSearchParams();
+  const params = useParams();
+  const newBooking = useNewBooking();
+  const [openCreateModal, setOpenCreateModal] = useState(true);
   const setParams = (params: Record<string, any>) => {
     Object.entries(params).forEach(([key, value]) => {
       if (value) {
@@ -96,130 +97,126 @@ export default function BookingsClient() {
     [fetcher.data]
   );
 
+  useEffect(() => {
+    if (!params.mode) {
+      navigate("./view/list");
+    }
+  }, []);
+
   return (
     <ListLayout
-      orderOptions={[
-        { name: t("table.createdAt"), value: "created_at" },
-        { name: t("form.status"), value: "status" },
-      ]}
       title={t("regate._booking.base")}
       {...(permission.create && {
         onCreate: () => {
-          navigate(r.toRouteDetail(r.booking, "new"));
+          setOpenCreateModal(true);
         },
       })}
-      actions={[
-        {
-          label: "Calendario",
-          onClick: () => {
-            navigate(
-              r.toRoute({
-                main: p.booking,
-                routeSufix: ["schedule"],
-              })
-            );
-          },
-        },
-      ]}
     >
+      <CreateBookingModal
+        open={openCreateModal}
+        onOpenChange={setOpenCreateModal}
+      />
       <DataLayout
+        onChangeView={() => {
+          newBooking.resetPayload();
+        }}
         views={[
           {
             label: "Lista",
             view: "list",
-            onClick: () => {},
           },
           {
             label: "Calendario",
             view: "schedule",
-            onClick: () => {},
           },
         ]}
-        fixedFilters={() => {
-          return (
-            <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
-              <GenericActionsDropdown
-                selectedItems={selectedRowsData}
-                actions={[
-                  {
-                    label: "Completar",
-                    onClick: () => onActions(State.COMPLETED),
-                    isEnabled: (bookings) =>
-                      bookings.every(
-                        (booking) =>
-                          booking.status === "UNPAID" ||
-                          booking.status === "PARTIALLY_PAID"
-                      ),
-                  },
-                  {
-                    label: "Cancelar",
-                    onClick: () => onActions(State.CANCELLED),
-                    isEnabled: (bookings) =>
-                      bookings.some((booking) =>
-                        ["UNPAID", "PARTIALLY_PAID", "COMPLETED"].includes(
-                          booking.status
-                        )
-                      ),
-                  },
-                  {
-                    label: "Eliminar",
-                    onClick: () => onActions(State.DELETED),
-                    isEnabled: (bookings) =>
-                      bookings.every(
-                        (booking) => booking.status === "CANCELLED"
-                      ),
-                  },
-                ]}
-              />
+        {...(params.mode == "list" && {
+          fixedFilters: () => {
+            return (
+              <div className="grid gap-2 sm:flex sm:space-x-2 sm:overflow-auto  ">
+                <GenericActionsDropdown
+                  selectedItems={selectedRowsData}
+                  actions={[
+                    {
+                      label: "Completar",
+                      onClick: () => onActions(State.COMPLETED),
+                      isEnabled: (bookings) =>
+                        bookings.every(
+                          (booking) =>
+                            booking.status === "UNPAID" ||
+                            booking.status === "PARTIALLY_PAID"
+                        ),
+                    },
+                    {
+                      label: "Cancelar",
+                      onClick: () => onActions(State.CANCELLED),
+                      isEnabled: (bookings) =>
+                        bookings.some((booking) =>
+                          ["UNPAID", "PARTIALLY_PAID", "COMPLETED"].includes(
+                            booking.status
+                          )
+                        ),
+                    },
+                    {
+                      label: "Eliminar",
+                      onClick: () => onActions(State.DELETED),
+                      isEnabled: (bookings) =>
+                        bookings.every(
+                          (booking) => booking.status === "CANCELLED"
+                        ),
+                    },
+                  ]}
+                />
 
-              <AutocompleteSearch
-                data={customerFetcher.data?.customers || []}
-                nameK={"name"}
-                valueK={"id"}
-                onValueChange={onCustomerNameChange}
-                placeholder="Cliente"
-                queryName="partyName"
-                queryValue="party_id"
-              />
+                <AutocompleteSearch
+                  data={customerFetcher.data?.customers || []}
+                  nameK={"name"}
+                  valueK={"id"}
+                  onValueChange={onCustomerNameChange}
+                  placeholder="Cliente"
+                  queryName="partyName"
+                  queryValue="party_id"
+                />
 
-              <AutocompleteSearch
-                data={eventoFetcher.data?.events || []}
-                nameK={"name"}
-                valueK={"id"}
-                queryName="eventName"
-                queryValue="event_id"
-                onValueChange={onEventNameChange}
-                placeholder="Evento"
-              />
-              <AutocompleteSearch
-                data={courtFetcher.data?.courts || []}
-                nameK={"name"}
-                valueK={"id"}
-                onValueChange={onCourtNameChange}
-                placeholder="Cancha"
-                queryName="courtName"
-                queryValue="court_id"
-              />
+                <AutocompleteSearch
+                  data={eventoFetcher.data?.events || []}
+                  nameK={"name"}
+                  valueK={"id"}
+                  queryName="eventName"
+                  queryValue="event_id"
+                  onValueChange={onEventNameChange}
+                  placeholder="Evento"
+                />
+                <AutocompleteSearch
+                  data={courtFetcher.data?.courts || []}
+                  nameK={"name"}
+                  valueK={"id"}
+                  onValueChange={onCourtNameChange}
+                  placeholder="Cancha"
+                  queryName="courtName"
+                  queryValue="court_id"
+                />
 
-              <AutocompleteSearch
-                data={
-                  [
-                    { name: "Completado", value: "COMPLETED" },
-                    { name: "Cancelado", value: "CANCELLED" },
-                    { name: "Pagado Parcialmente", value: "PARTIALLY_PAID" },
-                    { name: "No pagado", value: "UNPAID" },
-                  ] as SelectItem[]
-                }
-                nameK={"name"}
-                valueK={"value"}
-                onValueChange={() => {}}
-                placeholder="Estado"
-                queryName="status_name"
-                queryValue="status"
-              />
-            </div>
-          );
-        }}
+                <AutocompleteSearch
+                  data={
+                    [
+                      { name: "Completado", value: "COMPLETED" },
+                      { name: "Cancelado", value: "CANCELLED" },
+                      { name: "Pagado Parcialmente", value: "PARTIALLY_PAID" },
+                      { name: "No pagado", value: "UNPAID" },
+                    ] as SelectItem[]
+                  }
+                  nameK={"name"}
+                  valueK={"value"}
+                  onValueChange={() => {}}
+                  placeholder="Estado"
+                  queryName="status_name"
+                  queryValue="status"
+                />
+              </div>
+            );
+          },
+        })}
       >
         <Outlet />
       </DataLayout>

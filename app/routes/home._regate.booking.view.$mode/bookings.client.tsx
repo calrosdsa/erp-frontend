@@ -5,6 +5,7 @@ import {
 import {
   useFetcher,
   useLoaderData,
+  useParams,
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
@@ -14,17 +15,17 @@ import { components } from "~/sdk";
 import { State, stateToJSON } from "~/gen/common";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { party } from "~/util/party";
+import { useTranslation } from "react-i18next";
+import FieldReservation from "./components/field-reservation";
 
 export default function BookingsClient() {
-  const { paginationResult, actions } = useLoaderData<typeof loader>();
-
-  const fetcher = useFetcher<typeof action>();  
+  const { paginationResult, actions, bookingSlots, courtRates } =
+    useLoaderData<typeof loader>();
+  const { t, i18n } = useTranslation("common");
+  const fetcher = useFetcher<typeof action>();
   const { clear, selectedRowsData } = useTableSelectionStore();
-  // const [selectedBookings, setSelectedBookings] = useState<
-  //   components["schemas"]["BookingDto"][]
-  // >([]);
-  const r = route;
-  const p = party;
+  const params = useParams();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const setParams = (params: Record<string, any>) => {
     Object.entries(params).forEach(([key, value]) => {
@@ -39,45 +40,15 @@ export default function BookingsClient() {
     });
   };
 
-  const onActions = (state: State) => {
-    const body: components["schemas"]["UpdateBookingBatchRequestBody"] = {
-      booking_ids: selectedRowsData.map((t) => t.id),
-      target_state: stateToJSON(state),
-    };
-    fetcher.submit(
-      {
-        action: "update-bookings-batch",
-        updateBookingsBatch: body,
-      },
-      {
-        method: "POST",
-        encType: "application/json",
-      }
-    );
-  };
-
- 
-
-  useDisplayMessage(
-    {
-      success: fetcher.data?.message,
-      error: fetcher.data?.error,
-      onSuccessMessage: () => {
-        // setSelectedBookings([])
-        clear();
-      },
-    },
-    [fetcher.data]
-  );
-
-
-
   return (
-  
+    <>
+      {params.mode == "list" && (
         <DataTable
           data={paginationResult?.results || []}
           columns={bookingColumns({
             setParams,
+            i18n,
+            t,
           })}
           hiddenColumns={{
             created_at: false,
@@ -85,6 +56,10 @@ export default function BookingsClient() {
           enableRowSelection={true}
           enableSizeSelection={true}
         />
-      
+      )}
+      {params.mode == "schedule" && (
+        <FieldReservation schedules={courtRates} reservations={bookingSlots} />
+      )}
+    </>
   );
 }
