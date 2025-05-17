@@ -29,22 +29,34 @@ import { route } from "~/util/route";
 import { ActivityType, activityTypeToJSON } from "~/gen/common";
 import { GlobalState } from "~/types/app-types";
 import { toZonedTime } from "date-fns-tz";
+import { cn } from "@/lib/utils";
 
-export default function ActivityDeadlineTab({ 
-  partyID,partyName,entityID,appContext
- }: {
-    partyID: number,
-    partyName:string,
-    entityID:number,
-    appContext:GlobalState
-  }) {
-  const [isSelected, setIsSelected] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+export default function ActivityDeadlineTab({
+  partyID,
+  partyName,
+  entityID,
+  appContext,
+  defaultSelected = false,
+  defaultFocused = false,
+  className,
+  onClose,
+}: {
+  partyID: number;
+  partyName: string;
+  entityID: number;
+  appContext: GlobalState;
+  defaultSelected?: boolean;
+  defaultFocused?: boolean;
+  className?: string;
+  onClose?:()=>void;
+}) {
+  const [isSelected, setIsSelected] = useState(defaultSelected);
+  const [isFocused, setIsFocused] = useState(defaultFocused);
   const expandedRef = useRef<HTMLDivElement>(null);
   const handleFocus = () => {
     setIsFocused(true);
   };
-  const {profile} = appContext
+  const { profile } = appContext;
   const handleBlur = (e: React.FocusEvent) => {
     // Check if the next focused element is within our container
     const isChildFocused = e.currentTarget.contains(e.relatedTarget as Node);
@@ -58,7 +70,7 @@ export default function ActivityDeadlineTab({
     defaultValues: {
       color: DEFAULT_COLOR,
       deadline: addDays(new Date(), 3),
-      profile_id:profile?.id,
+      profile_id: profile?.id,
     },
   });
   const formValues = form.getValues();
@@ -67,13 +79,13 @@ export default function ActivityDeadlineTab({
   const onSubmit = (e: ActivityDeadlineData) => {
     const activityData: ActivityData = {
       party_id: partyID,
-      party_name:partyName,
-      entity_id:entityID,
+      party_name: partyName,
+      entity_id: entityID,
       type: activityTypeToJSON(ActivityType.ACTIVITY),
       activity_deadline: e,
     };
     // console.log("ACTIVITY DATA"activityData)
-    // return 
+    // return
     fetcher.submit(
       {
         action: "create",
@@ -87,18 +99,27 @@ export default function ActivityDeadlineTab({
     );
     form.reset();
     setIsSelected(false);
+    
   };
 
   useDisplayMessage(
     {
       success: fetcher.data?.message,
       error: fetcher.data?.error,
+      onShowMessage:()=>{
+        onClose?.()
+      }
     },
     [fetcher.data]
   );
 
   return (
-    <div className="w-full transition-all duration-500 ease-in-out">
+    <div
+      className={cn(
+        "w-full transition-all duration-500 ease-in-out",
+        className
+      )}
+    >
       <div
         className={`transition-all duration-500 ease-in-out ${
           isSelected
@@ -147,8 +168,8 @@ export default function ActivityDeadlineTab({
                         <div className="flex items-center gap-4">
                           <CustomFormDate
                             control={form.control}
-                            isDatetime={true} 
-                            name={"deadline"}                          
+                            isDatetime={true}
+                            name={"deadline"}
                           />
                           {/* <CustomFormDate
                             isDatetime={true}
@@ -164,7 +185,11 @@ export default function ActivityDeadlineTab({
                     </CardContent>
                   </Card>
                   <div className="pt-4 flex justify-start gap-2">
-                    <Button size="xs" type="submit" className="rounded-full px-3 h-7">
+                    <Button
+                      size="xs"
+                      type="submit"
+                      className="rounded-full px-3 h-7"
+                    >
                       Guardar
                     </Button>
                     <Button

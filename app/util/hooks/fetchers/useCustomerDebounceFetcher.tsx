@@ -11,6 +11,27 @@ import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import FormAutocompleteField, {
   AutocompleteFormProps,
 } from "@/components/custom/select/FormAutocompleteField";
+import { SmartAutocomplete, SmartAutocompleteProps } from "@/components/form/smart-autocomplete";
+
+interface CustomerSmartAutocomplete
+  extends Partial<SmartAutocompleteProps<Customer, keyof Customer>> {
+}
+export const CustomerSmartAutocomplete = ({ ...props }: CustomerSmartAutocomplete) => {
+  const [fetcher, onChange] = useCustomerDebounceFetcher();
+
+  return (
+    <SmartAutocomplete
+      {...props}
+      label={props.label ? props.label : "Cliente"}
+      data={fetcher.data?.customers || []}
+      onValueChange={onChange}
+      nameK="name"
+      name="customer"
+    />
+  );
+};
+
+
 
 type Customer = components["schemas"]["CustomerDto"];
 interface CustomerFormProps

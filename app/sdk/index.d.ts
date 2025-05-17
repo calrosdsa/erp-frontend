@@ -5347,6 +5347,9 @@ export interface components {
             /** Format: date-time */
             created_at: string;
             currency: string;
+            customer: string | null;
+            /** Format: int64 */
+            customer_id: number | null;
             deal_type: string | null;
             /** Format: date-time */
             end_date: string | null;
@@ -5376,6 +5379,8 @@ export interface components {
             amount: number;
             available_for_everyone: boolean;
             currency: string;
+            /** Format: int64 */
+            customer_id?: number | null;
             deal_type?: string | null;
             /** Format: date-time */
             end_date?: string | null;

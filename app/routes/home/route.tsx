@@ -23,6 +23,7 @@ import FallBack from "@/components/layout/Fallback";
 import { ASC, DEFAULT_ORDER, DEFAULT_PAGE, LOAD_ACTION } from "~/constant";
 import { components } from "~/sdk";
 import AppModals from "./modals";
+import { State, stateToJSON } from "~/gen/common";
 
 
 
@@ -79,6 +80,7 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
         size: "100",
         column:"priority",
         orientation:ASC,
+        status:stateToJSON(State.ENABLED),
       },
     },
   });

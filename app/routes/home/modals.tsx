@@ -8,6 +8,7 @@ import CustomerModal from "../home.customer.$id/customer-modal";
 import CourtModal from "../home._regate.court.$id/court-modal";
 import EventModal from "../home._regate.event.$id/event-modal";
 import SupplierModal from "../home.supplier.$id/supplier-modal";
+import WorkspaceModal from "../home.workspace.$id/workspace-modal";
 
 export default function AppModals({ appContext }: { appContext: GlobalState }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,6 +19,7 @@ export default function AppModals({ appContext }: { appContext: GlobalState }) {
   const booking = searchParams.get(route.booking);
   const court = searchParams.get(route.court);
   const event = searchParams.get(route.event);
+  const workspace = searchParams.get(route.workspace);
   return (
     <div>
       {userModal && <UserModal />}
@@ -27,6 +29,7 @@ export default function AppModals({ appContext }: { appContext: GlobalState }) {
       {court && <CourtModal appContext={appContext} />}
       {event && <EventModal appContext={appContext} />}
       {supplier && <SupplierModal appContext={appContext} />}
+      {workspace && <WorkspaceModal appContext={appContext} />}
     </div>
   );
 }

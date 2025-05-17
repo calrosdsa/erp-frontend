@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { field, fieldRequired } from "..";
+import { field, fieldNull, fieldRequired } from "..";
 import { components } from "~/sdk";
 import { formatAmountToInt } from "~/util/format/formatCurrency";
 import { formatRFC3339 } from "date-fns";
@@ -18,6 +18,7 @@ export const dealSchema = z.object({
     id:z.number().optional(),
     name:z.string(),
     stage:fieldRequired,
+    customer:fieldNull,
     amount:z.coerce.number(),
     currency:z.string(),
     deal_type:z.string().nullable().optional(),
@@ -55,6 +56,7 @@ export const mapToDealData = (e:DealData) => {
             end_date:e.end_date ? formatRFC3339(e.end_date) : undefined,
             available_for_everyone:e.available_for_everyone,
             index:e.index,
+            customer_id:e.customer?.id,
         },
         id: e.id || 0,
         contacts:e.contacts.map(t=>mapToContactData(t)),

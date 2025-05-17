@@ -3,14 +3,8 @@ import { action, loader } from "../route";
 import CustomForm from "@/components/custom/form/CustomForm";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
-import Typography, {
-  subtitle,
-  title,
-} from "@/components/typography/Typography";
+
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import { updateClientSchema } from "~/util/data/schemas/client/client-schema";

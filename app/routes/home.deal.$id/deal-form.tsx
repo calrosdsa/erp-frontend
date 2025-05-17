@@ -1,15 +1,5 @@
-import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
-import FormLayout from "@/components/custom/form/FormLayout";
-import SelectForm from "@/components/custom/select/SelectForm";
 import { Typography } from "@/components/typography";
-import { Form } from "@/components/ui/form";
-import { FetcherWithComponents, useOutletContext } from "@remix-run/react";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { GlobalState } from "~/types/app-types";
-import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import { DEFAULT_CURRENCY } from "~/constant";
 import { DealData } from "~/util/data/schemas/crm/deal.schema";
 import { CurrencySmartAutocomplete } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { dealTypes } from "~/data";
@@ -21,6 +11,7 @@ import { components } from "~/sdk";
 import { ProfileSmartField } from "~/util/hooks/fetchers/profile/profile-fetcher";
 import { SmartField } from "@/components/form/smart-field";
 import { useFormContext } from "@/components/form/form-provider";
+import { CustomerSmartAutocomplete } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 
 export default function DealForm({
   contacts,
@@ -39,6 +30,7 @@ export default function DealForm({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* {JSON.stringify(form?.getValues())} */}
         <SmartField name="name" label={t("form.name")} />
         <SmartField name="amount" label={t("form.amount")} />
 
@@ -58,12 +50,17 @@ export default function DealForm({
           Mas
         </Typography>
 
+        <CustomerSmartAutocomplete
+        />
+
         <SmartField
           name="deal_type"
           label="Tipo de acuerdo"
           type="select"
           options={dealTypes}
         />
+
+        
 
         <SmartField name="source" label={"Fuente"} />
         <SmartField

@@ -19,10 +19,10 @@ const ListLayout = React.forwardRef<HTMLDivElement, FlexboxProps>(
   ({ className, onCreate, actions,orderOptions = [], ...props }, ref) => {
     const [searchParams, setSearchParams] = useSearchParams();
     return (
-      <div className={cn(className)} ref={ref} {...props}>
+      <div className={cn(className)} ref={ref} {...props} title="">
         <div className="flex justify-between">
           <div className="pt-2 pb-4 flex space-x-2">
-            <span className="text-xl font-medium">{props.title}</span>
+            <div className="text-xl font-medium">{props.title}</div>
             {onCreate && (
               <Button
                 variant={"outline"}

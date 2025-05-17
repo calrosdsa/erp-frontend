@@ -51,6 +51,7 @@ export interface SmartAutocompleteProps<T extends object, K extends keyof T> {
   actions?: ActionButton[];
   disableAutocomplete?: boolean;
   badgeLabel?: string;
+  modal?:boolean
 }
 
 const SmartAutocomplete = <T extends object, K extends keyof T>({
@@ -74,6 +75,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
   actions,
   label,
   badgeLabel,
+  modal= true,
 }: SmartAutocompleteProps<T, K>) => {
   const { form, isEditing } = useFormContext();
   if (!form) {
@@ -128,7 +130,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
       <Popover
         open={!disableAutocomplete && open}
         onOpenChange={setOpen}
-        modal={true}
+        modal={modal}
       >
         <Command shouldFilter={shouldFilter} className="py-[5px]">
           <PopoverAnchor asChild className="">

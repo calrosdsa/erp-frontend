@@ -45,9 +45,6 @@ export default function CustomerModal({
   appContext: GlobalState;
 }) {
   const key = route.customer;
-  const fetcherLoader = useFetcher<typeof loader>();
-  // const data = useRouteLoaderData<typeof loader>("home.customer.$id");
-  // const data = fetcherLoader.data;
 
   const [data, setData] = useState<SerializeFrom<typeof loader>>();
   const [loading, setLoading] = useState(false);

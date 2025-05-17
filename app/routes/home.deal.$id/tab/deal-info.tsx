@@ -118,6 +118,10 @@ export default function DealInfoTab({
               name: deal?.stage,
               id: deal?.stage_id,
             },
+            customer:{
+              name:deal?.customer,
+              id:deal?.customer_id,
+            },
             start_date: deal?.start_date
               ? new Date(deal?.start_date)
               : new Date(),

@@ -1,6 +1,4 @@
-import {
-  KanbanBoard,
-} from "@/components/layout/kanban/kanban-board";
+import { KanbanBoard } from "@/components/layout/kanban/kanban-board";
 import {
   useFetcher,
   useLoaderData,
@@ -18,16 +16,25 @@ import { DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
 import { ListLayout } from "@/components/ui/custom/list-layout";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
+import { DrawerLayout } from "@/components/layout/drawer/DrawerLayout";
+import { useState } from "react";
+import ActivityDeadlineTab from "../home.activity/tab/activity-deadline-tab";
+import { Entity } from "~/types/enums";
 
 export default function CrmClient() {
-  const { deals, stages,actions } = useLoaderData<typeof loader>();
+  const { deals, stages, actions } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
-  const { companyDefaults,roleActions } = useOutletContext<GlobalState>();
+  const appContext = useOutletContext<GlobalState>();
+  const { companyDefaults, roleActions } = appContext;
   const [searchParams, setSearchParams] = useSearchParams();
   const [permission] = usePermission({
-    actions:actions,
-    roleActions:roleActions
-  })
+    actions: actions,
+    roleActions: roleActions,
+  });
+
+  const [selectedDeal, setSelectedDeal] = useState<
+    components["schemas"]["DealDto"] | undefined
+  >(undefined);
   const currency = companyDefaults?.currency || DEFAULT_CURRENCY;
   const dataTransition = (
     source: DraggableLocation<string>,
@@ -72,12 +79,30 @@ export default function CrmClient() {
 
   return (
     <>
+      {selectedDeal && (
+        <DrawerLayout
+          open={selectedDeal != undefined}
+          onOpenChange={() => setSelectedDeal(undefined)}
+          className=""
+        >
+          <ActivityDeadlineTab
+            partyID={selectedDeal.id}
+            partyName={selectedDeal.name}
+            entityID={Entity.DEAL}
+            appContext={appContext}
+            defaultSelected={true}
+            className="p-1"
+            defaultFocused={true}
+            onClose={() => setSelectedDeal(undefined)}
+          />
+        </DrawerLayout>
+      )}
       <ListLayout
-      title="Tratos"
-       {...(permission.create && {
-          onCreate:()=>{
-            openModal(route.deal,DEFAULT_ID)
-          }
+        title="Tratos"
+        {...(permission.create && {
+          onCreate: () => {
+            openModal(route.deal, DEFAULT_ID);
+          },
         })}
       >
         <KanbanBoard
@@ -95,7 +120,12 @@ export default function CrmClient() {
           }}
           cardComponent={(deal) => {
             return (
-              <DealCard deal={deal} currency={currency} openModal={openModal} />
+              <DealCard
+                deal={deal}
+                currency={currency}
+                openModal={openModal}
+                openActivity={(deal) => setSelectedDeal(deal)}
+              />
             );
           }}
           dataTransition={dataTransition}

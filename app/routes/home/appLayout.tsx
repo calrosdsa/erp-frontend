@@ -4,24 +4,17 @@ import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app-types";
 import { useSessionDefaults } from "./components/SessionDefaults";
 import GlobalDialogs from "./components/dialogs";
-import ToolBar from "@/components/layout/toolbar/Toolbar";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
 import { useUnmount } from "usehooks-ts";
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
-import { Separator } from "@/components/ui/separator";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { loader } from "./route";
-import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
-import SearchBar from "./components/search-bar";
 import { WsHandler } from "./ws-handler";
 import { Navbar } from "./components/navbar";
 import ChatModal from "../home.chat/components/chat-modal";
-import AppModals from "./modals";
 
 type RouteItem = {
   name: string;
