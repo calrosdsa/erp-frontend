@@ -83,7 +83,7 @@ export const PartyContacts = ({
       <div className="flex justify-between items-center">
         <Typography variant="subtitle2">{t("_contact.list")}</Typography>
 
-        {isEditing && (
+        {/* {isEditing && (
           <Button
             variant="ghost"
             type="button"
@@ -93,7 +93,7 @@ export const PartyContacts = ({
             <PencilIcon />
             <span>Editar</span>
           </Button>
-        )}
+        )} */}
       </div>
 
       {isEditing ? (

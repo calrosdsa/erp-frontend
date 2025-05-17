@@ -17,6 +17,7 @@ import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema"
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { ButtonToolbar } from "~/types/actions";
+import { Entity } from "~/types/enums";
 
 export default function ModuleDetailClient() {
   const { module, sections, activities, actions } =
@@ -53,9 +54,10 @@ export default function ModuleDetailClient() {
   ];
 
   const onChangeState = (e: EventState) => {
+    console.log("ON CHANGE STATE",e)
     const body: UpdateStatusWithEventType = {
       current_state: module?.status || "",
-      party_id: module?.uuid || "",
+      party_id: module?.id.toString() || "",
       events: [e],
     };
     fetcher.submit(
@@ -91,6 +93,7 @@ export default function ModuleDetailClient() {
       }
       return {
         ...opts,
+        titleToolbar: module?.label,
         status: status,
         actions: actions,
       };
@@ -100,6 +103,7 @@ export default function ModuleDetailClient() {
 
   return (
     <DetailLayout
+      entityID={Entity.MODULE}
       activities={activities}
       partyID={module?.id}
       navItems={navItems}

@@ -68,13 +68,7 @@ export default function CustomerInfo({
       }
     );
   };
-  useLoadingTypeToolbar(
-    {
-      loading: fetcher.state == "submitting",
-      loadingType: "SAVE",
-    },
-    [fetcher.state]
-  );
+
 
   useDisplayMessage(
     {

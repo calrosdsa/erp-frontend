@@ -145,32 +145,35 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
         />
 
         {/* <ResponsiveSidebar navItems={navItems} /> */}
-        {loading ? (
+        {loading && !data ? (
           <LoadingSpinner />
         ) : (
-          <>        
-            <TabNavigation
-              defaultValue={tab}
-              onValueChange={(value) => {
-                searchParams.set("tab", value);
-                setSearchParams(searchParams, {
-                  preventScrollReset: true,
-                });
-              }}
-              items={[
-                {
-                  label: "Info",
-                  value: "info",
-                  children: (
-                    <DealInfoTab
-                      appContext={appContext}
-                      data={data}
-                      keyPayload={key}
-                    />
-                  ),
-                },
-              ]}
-            />
+          <>
+            {data && (
+              <TabNavigation
+                defaultValue={tab}
+                onValueChange={(value) => {
+                  searchParams.set("tab", value);
+                  setSearchParams(searchParams, {
+                    preventScrollReset: true,
+                  });
+                }}
+                items={[
+                  {
+                    label: "Info",
+                    value: "info",
+                    children: (
+                      <DealInfoTab
+                        appContext={appContext}
+                        data={data}
+                        keyPayload={key}
+                        load={load}
+                      />
+                    ),
+                  },
+                ]}
+              />
+            )}
 
             {payload.enableEdit && (
               <div className="fixed bottom-0 border-t md:max-w-full md:w-[80%] shadow-xl bg-background ">

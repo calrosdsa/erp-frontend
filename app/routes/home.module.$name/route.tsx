@@ -29,6 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
+      console.log("UPDATE STATUS",res.error,res.data)
       break;
     }
     case "edit": {

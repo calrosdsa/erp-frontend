@@ -51,7 +51,7 @@ export default function Participants({
       <div className="flex justify-between items-center">
         <Typography variant="subtitle2">Observadores</Typography>
 
-        {allowEdit && (
+        {/* {allowEdit && (
           <Button
             variant="ghost"
             type="button"
@@ -61,7 +61,7 @@ export default function Participants({
             <PencilIcon />
             <span>Editar</span>
           </Button>
-        )}
+        )} */}
       </div>
       {isEditing ? (
         <div className="py-3 grid gap-y-3">

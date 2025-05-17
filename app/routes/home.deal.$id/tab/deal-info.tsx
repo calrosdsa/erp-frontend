@@ -16,8 +16,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fullName } from "~/util/convertor/convertor";
 import DealForm from "../deal-form";
-import { useEffect, useRef, useCallback } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useEffect, useRef, useCallback, useState } from "react";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { formatAmount } from "~/util/format/formatCurrency";
 import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
@@ -30,16 +29,20 @@ import { components } from "~/sdk";
 import { SerializeFrom } from "@remix-run/node";
 import { SmartForm } from "@/components/form/smart-form";
 import { useModalStore } from "@/components/ui/custom/modal-layout";
-import { DEFAULT_CURRENCY } from "~/constant";
+import { DEFAULT_CURRENCY, LOADING_MESSAGE } from "~/constant";
+import { toast } from "sonner";
 
 export default function DealInfoTab({
   appContext,
   data,
-  keyPayload
+  keyPayload,
+  load,
 }: {
   appContext: GlobalState;
   data?: SerializeFrom<typeof loader>;
-  keyPayload:string
+  keyPayload: string;
+  load: () => void;
+
 }) {
   const deal = data?.deal;
   const { profile, roleActions } = appContext;
@@ -51,10 +54,10 @@ export default function DealInfoTab({
   const fetcher = useFetcher<typeof action>();
   const { editPayload, payload: payloadDeal } = useDealStore();
   const payload = useModalStore((state) => state.payload[keyPayload]);
-  const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const allowEdit = perm.edit;
+  const [toastID, setToastID] = useState<string | number>("");
 
   // Initialize the form with default values and schema validation.
 
@@ -62,6 +65,8 @@ export default function DealInfoTab({
 
   // Handle form submission.
   const onSubmit = (data: DealData) => {
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     const submitAction = data.id ? "edit" : "create";
     fetcher.submit(
       {
@@ -80,6 +85,7 @@ export default function DealInfoTab({
 
   useDisplayMessage(
     {
+      toastID: toastID,
       error: fetcher.data?.error,
       success: fetcher.data?.message,
       onSuccessMessage: () => {
@@ -91,6 +97,7 @@ export default function DealInfoTab({
             preventScrollReset: true,
           });
         }
+        load()
       },
     },
     [fetcher.data]
@@ -118,9 +125,9 @@ export default function DealInfoTab({
               name: deal?.stage,
               id: deal?.stage_id,
             },
-            customer:{
-              name:deal?.customer,
-              id:deal?.customer_id,
+            customer: {
+              name: deal?.customer,
+              id: deal?.customer_id,
             },
             start_date: deal?.start_date
               ? new Date(deal?.start_date)
