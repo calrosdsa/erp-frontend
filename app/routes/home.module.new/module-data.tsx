@@ -33,15 +33,15 @@ export default function ModuleData({
 }) {
   const { t } = useTranslation("common");
   const formValues = form.getValues();
+  const [entityFetcher, onEntityChange] = useSearchEntity({
+    loadModules: false,
+  });
+  
   const [arrayFields, metaOptions] = useActionsFieldArray({
     control: form.control,
     name: "sections",
   });
-  const [entityFetcher, onEntityChange] = useSearchEntity({
-    loadModules: false,
-  });
   const { update } = arrayFields;
-
   const updateCell = (row: number, column: string, value: string) => {
     let section = formValues.sections[row] as any;
     if (section) {

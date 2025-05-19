@@ -6,7 +6,7 @@ import { DefaultValues, Path, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { Pencil, Save, X } from "lucide-react";
+import { Pencil, Save, SaveIcon, X } from "lucide-react";
 import { FormProvider } from "./form-provider";
 import { cn } from "@/lib/utils";
 import isEqual from "lodash/isEqual";
@@ -20,12 +20,14 @@ interface SmartFormProps<T extends z.ZodType> {
   className?: string;
   title?: string;
   isNew: boolean;
+  enableSaveButton?: boolean;
 }
 
 export function SmartForm<T extends z.ZodType>({
   schema,
   defaultValues,
   onSubmit,
+  enableSaveButton,
   children,
   keyPayload,
   className,
@@ -35,7 +37,7 @@ export function SmartForm<T extends z.ZodType>({
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
-    values:defaultValues,
+    values: defaultValues,
     mode: "onChange",
   });
   const { editPayload } = useModalStore();
@@ -116,38 +118,51 @@ export function SmartForm<T extends z.ZodType>({
           {/* {JSON.stringify(form.formState.errors)} */}
           <div className="flex justify-between items-center ">
             <span className="font-medium">{title}</span>
-            {!isNew && (
-              <div>
-                {!payload?.enableEdit ? (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsEditing(true)}
-                  >
-                    <Pencil className="h-4 w-4 mr-2" />
-                    Editar
-                  </Button>
-                ) : (
-                  <>
+            <div className="flex space-x-2">
+              {enableSaveButton && payload?.enableEdit && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => inputRef.current?.click()}
+                >
+                  <SaveIcon className="h-4 w-4" />
+                  Guardar
+                </Button>
+              )}
+              {!isNew && (
+                <div>
+                  {!payload?.enableEdit ? (
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      onClick={handleCancel}
-                      disabled={isSubmitting}
+                      onClick={() => setIsEditing(true)}
                     >
-                      <X className="h-4 w-4 mr-2" />
-                      Cancelar
+                      <Pencil className="h-4 w-4" />
+                      Editar
                     </Button>
-                    {/* <Button type="submit" variant={"ghost"} size="sm" disabled={isSubmitting || !form.formState.isDirty}>
-                  <Save className="h-4 w-4 mr-2" />
+                  ) : (
+                    <>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleCancel}
+                        disabled={isSubmitting}
+                      >
+                        <X className="h-4 w-4" />
+                        Cancelar
+                      </Button>
+                      {/* <Button type="submit" variant={"ghost"} size="sm" disabled={isSubmitting || !form.formState.isDirty}>
+                  <Save className="h-4 w-4" />
                   Save
                   </Button> */}
-                  </>
-                )}
-              </div>
-            )}
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="py-2">{children}</div>

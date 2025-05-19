@@ -1,9 +1,23 @@
 import { RefinementCtx, z } from "zod";
+import { components } from "~/sdk";
 
-export type FieldNullType = z.infer<typeof fieldNull>
+export type FieldNullType = z.infer<typeof fieldNull>;
 
-export type FieldRequiredType = z.infer<typeof fieldRequired>
+export type FieldRequiredType = z.infer<typeof fieldRequired>;
 
+export type ItemActionSchema = z.infer<typeof itemActionSchema>;
+export type ItemSchema = z.infer<typeof itemSchema>;
+
+export const itemSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+});
+
+export const itemActionSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  action: z.string().optional(),
+});
 
 export const fieldRequired = z.object({
   id: z.coerce.number(),
@@ -27,9 +41,17 @@ export const fieldNull = z
   .nullable();
 
 export const selectItemSchema = z.object({
-  name:z.string(),
-  value:z.string(),
-})
+  name: z.string(),
+  value: z.string(),
+});
+
+export const mapToItemActionData = (e: z.infer<typeof itemActionSchema>) => {
+  const d: components["schemas"]["ItemActionData"] = {
+    id: e.id,
+    action: e.action || "",
+  };
+  return d;
+};
 // interface ValidateProps<T extends object, K extends keyof T> {
 //   data: Record<string, boolean>;
 //   ctx: RefinementCtx;

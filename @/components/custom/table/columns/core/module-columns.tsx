@@ -7,11 +7,19 @@ import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellStatus from "../../cells/table-cell-status";
 import { party } from "~/util/party";
 import { z } from "zod";
-import { moduleSectionDataSchema } from "~/util/data/schemas/core/module-schema";
+import {
+  moduleDataSchema,
+  moduleSectionDataSchema,
+} from "~/util/data/schemas/core/module-schema";
 import TableCellEditable from "../../cells/table-cell-editable";
 import { useSearchEntity } from "~/util/hooks/fetchers/core/use-entity-search-fetcher";
 import { DataTableRowActions } from "../../data-table-row-actions";
-import { Autocomplete } from "@/components/custom/select/autocomplete-select";
+import { Autocomplete } from "@/components/custom/select/autocomplete";
+import {
+  ModuleAutocomplete,
+  useModuleFetcher,
+} from "~/util/hooks/fetchers/core/use-module-fetcher";
+import { ItemActionSchema, itemActionSchema } from "~/util/data/schemas";
 
 export const moduleColumns = ({}: {}): ColumnDef<
   components["schemas"]["ModuleDto"]
@@ -43,13 +51,57 @@ export const moduleColumns = ({}: {}): ColumnDef<
       },
     },
     {
-      accessorKey:"status",
+      accessorKey: "status",
       header: t("form.status"),
       cell: TableCellStatus,
     },
     {
-      accessorKey:"priority",
+      accessorKey: "priority",
       header: "Prioridad",
+    },
+  ];
+};
+
+export const moduleSelectionColumn = ({
+  allowEdit,
+}: {
+  allowEdit: boolean;
+}): ColumnDef<ItemActionSchema>[] => {
+  return [
+    {
+      accessorKey: "name",
+      header: "Modulo",
+      size: 250,
+      cell: ({ ...props }) => {
+        const tableMeta: any = props.table.options.meta;
+        const [fetcher, onChange] = useModuleFetcher();
+        return (
+          <>
+            <Autocomplete
+              defaultValue={props.row.original.name}
+              onValueChange={onChange}
+              data={fetcher.data?.results || []}
+              // isLoading={fetcher.state == "submitting"}
+              nameK={"label"}
+              placeholder="Buscar o crear un nuevo módulo"
+              // isLoading={fetcher.state == "submitting"}
+              // className=" border-none h-8"
+              // inputClassName=""
+              onSelect={(e) => {
+                // console.log("SELECTED",e)
+                tableMeta?.updateCell(props.row.index, "id", e.id);
+                tableMeta?.updateCell(props.row.index, "name", e.label);
+                // navigate(r.to(e.href));
+              }}
+            />
+          </>
+        );
+      },
+    },
+    {
+      id: "actions",
+      cell: DataTableRowActions,
+      size: 35,
     },
   ];
 };
@@ -57,12 +109,11 @@ export const moduleColumns = ({}: {}): ColumnDef<
 export const moduleSectionColumns = ({}: {}): ColumnDef<
   z.infer<typeof moduleSectionDataSchema>
 >[] => {
- 
   return [
     {
       accessorKey: "name",
       header: "Entidad",
-      size:200,
+      size: 200,
       cell: ({ ...props }) => {
         const tableMeta: any = props.table.options.meta;
         const [entityFetcher, onChangeEntity] = useSearchEntity({
@@ -94,10 +145,10 @@ export const moduleSectionColumns = ({}: {}): ColumnDef<
       cell: TableCellEditable,
     },
 
-     {
-        id: "actions",
-        cell: DataTableRowActions,
-        size:35,
-      }
+    {
+      id: "actions",
+      cell: DataTableRowActions,
+      size: 35,
+    },
   ];
 };

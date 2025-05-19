@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "./form-provider";
 import IconButton from "../custom-ui/icon-button";
+import { FormLabel } from "../ui/form";
 
 interface ActionButton {
   Icon: LucideIcon;
@@ -51,7 +52,8 @@ export interface SmartAutocompleteProps<T extends object, K extends keyof T> {
   actions?: ActionButton[];
   disableAutocomplete?: boolean;
   badgeLabel?: string;
-  modal?:boolean
+  modal?: boolean;
+  navigate?: (e: any) => void;
 }
 
 const SmartAutocomplete = <T extends object, K extends keyof T>({
@@ -75,7 +77,9 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
   actions,
   label,
   badgeLabel,
-  modal= true,
+  required,
+  modal = true,
+  navigate,
 }: SmartAutocompleteProps<T, K>) => {
   const { form, isEditing } = useFormContext();
   if (!form) {
@@ -116,10 +120,19 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
 
   if (!isEditing) {
     return (
-      <div className="flex flex-col py-[5px]Z">
-        {label && <span className="text-xs text-primary/60">{label}</span>}
+      <div className="flex flex-col py-[5px]">
+        {label && (
+          <FormLabel className="text-xs text-primary/60">
+            {label} {required && "*"}
+          </FormLabel>
+        )}
         <div>
-          <span className="text-sm">{query || "-"}</span>
+          <span
+            className={cn("text-sm", navigate && "underline cursor-pointer")}
+            onClick={() => navigate && navigate(fieldValue["id" as keyof T])}
+          >
+            {query || "-"}
+          </span>
         </div>
       </div>
     );
@@ -162,7 +175,9 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
             >
               <div className="flex flex-col ">
                 {label && (
-                  <span className="text-xs text-primary/60">{label}</span>
+                  <FormLabel className="text-xs text-primary/60">
+                    {label} {required && "*"}
+                  </FormLabel>
                 )}
 
                 {isSearch ? (
@@ -254,8 +269,9 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
             <CommandList>
               {isLoading && (
                 <CommandPrimitive.Loading>
-                  <div className="p-1">
-                    <Skeleton className="h-6 w-full" />
+                  <div className="p-1 flex flex-col space-y-2">
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
                   </div>
                 </CommandPrimitive.Loading>
               )}

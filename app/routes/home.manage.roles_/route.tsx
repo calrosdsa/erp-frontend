@@ -1,23 +1,29 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import RolesClient from "./roles.client";
 import apiClient from "~/apiclient";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE, LOAD_ACTION } from "~/constant";
 import { components } from "~/sdk";
 import { z } from "zod";
-import { createRoleSchema } from "~/util/data/schemas/manage/role-schema";
+import {
+  createRoleSchema,
+  mapToRoleData,
+  RoleSchema,
+} from "~/util/data/schemas/manage/role-schema";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 
 type ActionData = {
   action: string;
   query: string;
-  createRole:z.infer<typeof createRoleSchema>
+  roleData: RoleSchema;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
   let roles: components["schemas"]["RoleDto"][] = [];
   let actions: components["schemas"]["ActionDto"][] = [];
-  let message:string | undefined = undefined
-  let error:string | undefined = undefined
+  let message: string | undefined = undefined;
+  let error: string | undefined = undefined;
+  let role: components["schemas"]["RoleDto"] | undefined = undefined;
   switch (data.action) {
     case "get": {
       const res = await client.GET("/role", {
@@ -31,20 +37,42 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       roles = res.data?.pagination_result.results || [];
       actions = res.data?.actions || [];
-      break
-    }
-    case "create-role":{
-        const d = data.createRole
-        const res= await client.POST("/role",{
-            body:d
-        })
-        message= res.data?.message
-        error = res.error?.detail
       break;
     }
+    case "create-role": {
+      const res = await client.POST("/role", {
+        body: mapToRoleData(data.roleData),
+      });
+      message = res.data?.message;
+      error = res.error?.detail;
+      role = res.data?.result;
+      break;
+    }
+    case "edit-role": {
+      const res = await client.PUT("/role", {
+        body: mapToRoleData(data.roleData),
+      });
+      message = res.data?.message;
+      error = res.error?.detail;
+    }
   }
-  return json({ roles, actions,message,error });
+  console.log("MESSAGE ------", message, error, data.roleData);
+  return json({ roles, actions, message, error, role });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult,
+}: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.action == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
@@ -61,7 +89,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
   return json({
     paginationResult: res.data?.pagination_result,
-    actions:res.data?.actions,
+    actions: res.data?.actions,
   });
 };
 

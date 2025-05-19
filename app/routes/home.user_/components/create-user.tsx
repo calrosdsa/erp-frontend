@@ -47,7 +47,7 @@ export const CreateUser = ({
       {
         method: "POST",
         encType: "application/json",
-        action: r.users,
+        action: r.user,
       }
     );
   };
@@ -103,7 +103,7 @@ export const CreateUser = ({
             {
               method: "POST",
               encType: "application/json",
-              action: r.users,
+              action: r.user,
             }
           );
         }}

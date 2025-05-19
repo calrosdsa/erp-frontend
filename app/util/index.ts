@@ -19,3 +19,4 @@ export const isZeroValue = <T>(value: T): T extends ZeroValue ? undefined : T =>
   // Return the value if it's not a "zero value"
   return value as T extends ZeroValue ? undefined : T;
 };
+

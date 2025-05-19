@@ -7,7 +7,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CornerLeftDownIcon, CornerRightUpIcon, Pencil, TrashIcon } from "lucide-react";
+import {
+  CornerLeftDownIcon,
+  CornerRightUpIcon,
+  Pencil,
+  TrashIcon,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Separator } from "@/components/ui/separator";
 
@@ -26,10 +31,10 @@ export function DataTableRowActions<TData>({
 }: TableCellProps<TData>) {
   const { t } = useTranslation("common");
   const tableMeta: any = table.options.meta;
-  const rowLength = table.getCoreRowModel().rows.length
-  const [open,setOpen] = useState(false)
+  const rowLength = table.getCoreRowModel().rows.length;
+  const [open, setOpen] = useState(false);
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
@@ -46,8 +51,8 @@ export function DataTableRowActions<TData>({
               variant="ghost"
               className="justify-start"
               onClick={() => {
-                tableMeta.onEdit(row.index)
-                setOpen(false)
+                tableMeta.onEdit(row.index);
+                setOpen(false);
               }}
             >
               <Pencil size={12} className="mr-2" />
@@ -62,8 +67,8 @@ export function DataTableRowActions<TData>({
               variant="ghost"
               className="justify-start"
               onClick={() => {
-                tableMeta.onDelete(row.index)
-                setOpen(false)
+                tableMeta.onDelete(row.index);
+                setOpen(false);
               }}
             >
               <TrashIcon size={12} className="mr-2" />
@@ -75,23 +80,23 @@ export function DataTableRowActions<TData>({
               variant="ghost"
               className="justify-start "
               onClick={() => {
-                tableMeta.removeRow(row.index)
-                setOpen(false)
+                tableMeta.removeRow(row.index);
+                setOpen(false);
               }}
             >
               <TrashIcon size={12} className="mr-2" />
               Remove
             </Button>
           )}
-       
+
           {tableMeta.moveRow != undefined && (
             <Button
               variant="ghost"
               disabled={row.index == 0}
               className="justify-start "
               onClick={() => {
-                tableMeta.moveRow(row.index,row.index-1)
-                setOpen(false)
+                tableMeta.moveRow(row.index, row.index - 1);
+                setOpen(false);
               }}
             >
               <CornerRightUpIcon size={12} className="mr-2" />
@@ -101,15 +106,15 @@ export function DataTableRowActions<TData>({
           {tableMeta.moveRow != undefined && (
             <Button
               variant="ghost"
-              disabled={(rowLength-1) == row.index}
+              disabled={rowLength - 1 == row.index}
               className="justify-start "
               onClick={() => {
-                tableMeta.moveRow(row.index,row.index+1)
-                setOpen(false)
+                tableMeta.moveRow(row.index, row.index + 1);
+                setOpen(false);
               }}
             >
               <CornerLeftDownIcon size={12} className="mr-2" />
-              Insertar hacia abajo 
+              Insertar hacia abajo
             </Button>
           )}
         </div>

@@ -32,6 +32,8 @@ export function DrawerLayout({
   title,
   description,
   className,
+  modal = true,
+  isDrawer,
 }: {
   children: React.ReactNode;
   open: boolean;
@@ -39,33 +41,42 @@ export function DrawerLayout({
   title?: string;
   description?: string;
   className?: string;
+  modal?: boolean;
+  isDrawer?: boolean;
 }) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  if (isDesktop) {
+  if (isDesktop && !isDrawer) {
     return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog
+        open={open}
+        modal={modal}
+        onOpenChange={(open) => {
+          onOpenChange(open);
+          setTimeout(() => {
+            if (!open) {
+              document.body.style.pointerEvents = "";
+            }
+          }, 100);
+        }}
+      >
         {/* <DialogTrigger asChild>
           <Button variant="outline">Edit Profile</Button>
         </DialogTrigger> */}
-        <DialogContent
-          className={cn(" max-w-lg", className)}
-          onPointerDownOutside={(e) => {
-            e.preventDefault();
-          }}
-        >
+        <DialogContent className={cn(" max-w-lg", className)}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <div className="overflow-auto ">{children}</div>
+          {/* <div className="overflow-auto ">{children}</div> */}
+          {children}
         </DialogContent>
       </Dialog>
     );
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={onOpenChange} modal={modal}>
       {/* <DrawerTrigger asChild>
         <Button variant="outline">Edit Profile</Button>
       </DrawerTrigger> */}

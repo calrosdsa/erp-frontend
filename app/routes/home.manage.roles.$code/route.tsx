@@ -18,6 +18,7 @@ export const action = async({request}:LoaderFunctionArgs)=>{
     let error:string | undefined = undefined
     let actionRes = LOAD_ACTION
     switch(data.action){
+        
         case "update-role-actions":{
             const res=  await client.POST("/role/permision/actions",{
                 body:data.updateRoleActions,

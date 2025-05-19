@@ -10,7 +10,7 @@ import { formatQuery } from "..";
 import  {
   Autocomplete,
   AutoCompleteProps,
-} from "@/components/custom/select/autocomplete-select";
+} from "@/components/custom/select/autocomplete";
 import { SmartAutocomplete, SmartAutocompleteProps } from "@/components/form/smart-autocomplete";
 
 type Profile = components["schemas"]["ProfileDto"];

@@ -28,7 +28,7 @@ export default function WorkspaceModal({
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<SerializeFrom<typeof loader>>();
   const workspace = data?.result?.entity;
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
@@ -40,6 +40,7 @@ export default function WorkspaceModal({
     roleActions: appContext.roleActions,
     actions: data?.actions,
   });
+  const allowEdit = permission.edit
   const load = async () => {
     try {
       setLoading(true);
@@ -113,6 +114,7 @@ export default function WorkspaceModal({
         actions: isNew ? [] : actions,
         status: stateFromJSON(workspace?.status),
         isNew: isNew,
+        enableEdit:isNew, 
         loadData: load,
         onCancel: isNew
           ? () => {
@@ -167,6 +169,7 @@ export default function WorkspaceModal({
                     data={data}
                     load={load}
                     closeModal={closeModal}
+                    allowEdit={allowEdit}
                   />
                 ),
               },

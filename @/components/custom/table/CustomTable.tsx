@@ -317,8 +317,9 @@ export function DataTable<TData, TValue>({
   );
 
   return (
-    <div className="flex flex-col h-full space-y-4 w-full">
+    <div className="flex flex-col h-full space-y-2 w-full">
       {metaActions && <DataTableToolbar table={table} />}
+      {metaOptions && <DataTableEditFooter table={table} />}
       <div
         ref={containerRef}
         className="flex-grow rounded-md border w-full overflow-hidden"
@@ -347,7 +348,6 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       <div className="flex justify-between items-center">
-        {metaOptions && <DataTableEditFooter table={table} />}
         {enableSizeSelection && <DataTablePagination table={table} />}
       </div>
     </div>

@@ -1,10 +1,13 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { z } from "zod";
-import apiClient from "~/apiclient"
-import { LOAD_ACTION } from "~/constant";
+import apiClient from "~/apiclient";
+import { DEFAULT_ID, LOAD_ACTION } from "~/constant";
 import { components } from "~/sdk";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
-import { mapToWorkSpaceData, WorkSpaceData } from "~/util/data/schemas/core/workspace-schema";
+import {
+  mapToWorkSpaceData,
+  WorkSpaceData,
+} from "~/util/data/schemas/core/workspace-schema";
 
 type ActionData = {
   action: string;
@@ -50,23 +53,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     message,
     action: actionRes,
-    workspace
+    workspace,
   };
 };
 
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const client = apiClient({ request });
+  let result: components["schemas"]["ResultEntityWorkSpaceDto"] | undefined =
+    undefined;
+  let actions: components["schemas"]["ActionDto"][] = [];
+  if (params.id != DEFAULT_ID) {
+    const res = await client.GET("/workspace/detail/{id}", {
+      params: {
+        path: {
+          id: params.id || "",
+        },
+      },
+    });
+    result = res.data?.result;
+    actions = res.data?.actions || [];
+  }
 
-export const loader = async({request,params}:LoaderFunctionArgs)=>{
-    const client = apiClient({request})
-    const res =await client.GET("/workspace/detail/{id}",{
-        params:{
-            path:{
-                id:params.id || "",
-            }
-        }
-    })
-
-    return {
-        result:res.data?.result,
-        actions:res.data?.actions,
-    }
-}
+  return {
+    result,
+    actions,
+  };
+};

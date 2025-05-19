@@ -25,8 +25,6 @@ import { components } from "~/sdk";
 import AppModals from "./modals";
 import { State, stateToJSON } from "~/gen/common";
 
-
-
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const data = await request.formData();
   switch (data.get("action")) {
@@ -73,18 +71,20 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
       });
     }
   }
+  const sessionData = session.data as SessionData;
+  console.log("ROLE WORKSPACE-----",res.data?.role)
   const modulesRes = await client.GET("/module", {
     params: {
       query: {
         page: DEFAULT_PAGE,
         size: "100",
-        column:"priority",
-        orientation:ASC,
-        status:stateToJSON(State.ENABLED),
+        column: "priority",
+        orientation: ASC,
+        status: stateToJSON(State.ENABLED),
+        workspace_id: res.data?.role.workspace_id?.toString() || undefined,
       },
     },
   });
-  const sessionData = session.data as SessionData;
   // console.log(modulesRes.data,modulesRes.error);
   return json(
     {

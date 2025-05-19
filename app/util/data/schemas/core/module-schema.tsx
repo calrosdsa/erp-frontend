@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { components } from "~/sdk";
 import slugify from 'react-slugify';
+import { ItemActionSchema, ItemSchema } from "..";
 
 export type ModuleDataType = z.infer<typeof moduleDataSchema>
 export type ModuleSectionDataType = z.infer<typeof moduleSectionDataSchema>
@@ -33,6 +34,15 @@ export const mapToModuleSectionSchema = (e:components["schemas"]["ModuleSectionD
     }
     return d
 }
+
+export const mapModuleDtoToItem = (e:components["schemas"]["ModuleDto"]) =>{
+    const d:ItemSchema = {
+        id:e.id,
+        name:e.label,
+    }
+    return d
+}
+
 
 export const mapToModuleSectionData = (e:ModuleSectionDataType):components["schemas"]["ModuleSectionData"] =>{
     const d:components["schemas"]["ModuleSectionData"] = {

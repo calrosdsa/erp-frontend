@@ -13,7 +13,7 @@ export const workspaceColumns = ({
   const { t, i18n } = useTranslation("common");
   return [
     {
-      accessorKey: "label",
+      accessorKey: "name",
       header: t("form.name"),
       cell: ({ ...props }) => {
         const rowData = props.row.original;

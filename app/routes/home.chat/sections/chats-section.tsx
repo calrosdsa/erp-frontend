@@ -1,5 +1,5 @@
 import IconButton from "@/components/custom-ui/icon-button";
-import { Autocomplete } from "@/components/custom/select/autocomplete-select";
+import { Autocomplete } from "@/components/custom/select/autocomplete";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useFetcher, useSearchParams } from "@remix-run/react";

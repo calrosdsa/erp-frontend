@@ -30,7 +30,7 @@ export default function RolesClient() {
         />
       )}
       <ListLayout
-        title={t(party.role)}
+        title={"Rol"}
         {...(permission?.create && {
           onCreate: () => {
             createRole.openDialog({});
@@ -38,9 +38,7 @@ export default function RolesClient() {
         })}
       >
         <DataTable
-          metaActions={{
-            meta: {},
-          }}
+          
           data={paginationResult?.results || []}
           columns={roleColumns({})}
           enableSizeSelection={true}

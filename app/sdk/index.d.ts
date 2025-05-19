@@ -3097,9 +3097,10 @@ export interface paths {
         };
         /** Get roles */
         get: operations["get roles"];
-        put?: never;
+        /** Edit Role */
+        put: operations["edit-role"];
         /** Create Role */
-        post: operations["create role"];
+        post: operations["create-role"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5185,15 +5186,6 @@ export interface components {
             lines: components["schemas"]["LineItemData"][];
             party_type: string;
             party_uuid: string;
-        };
-        CreateRoleRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            description: string;
-            name: string;
         };
         CreateRoleTemplateRequestBody: {
             /**
@@ -9593,6 +9585,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ReceiptDto"];
         };
+        ResponseDataRoleDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["RoleDto"];
+        };
         ResponseDataSalesRecordDtoBody: {
             /**
              * Format: uri
@@ -10007,6 +10012,16 @@ export interface components {
             /** Format: int64 */
             role_id: number;
         };
+        RoleData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["RoleFields"];
+            /** Format: int64 */
+            id?: number;
+        };
         RoleDto: {
             code: string;
             /** Format: date-time */
@@ -10017,6 +10032,15 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
             uuid: string;
+            workspace: string | null;
+            /** Format: int64 */
+            workspace_id: number | null;
+        };
+        RoleFields: {
+            code: string;
+            description?: string | null;
+            /** Format: int64 */
+            workspace_id?: number | null;
         };
         RoleTemplateDto: {
             /** Format: date-time */
@@ -10592,6 +10616,7 @@ export interface components {
             fields: components["schemas"]["WorkSpaceFields"];
             /** Format: int64 */
             id?: number;
+            modules: number[];
         };
         WorkSpaceDto: {
             /** Format: date-time */
@@ -11223,7 +11248,7 @@ export interface operations {
             query: {
                 id: string;
                 party_type?: string;
-                type?: string;
+                " required:"?: string;
             };
             header?: never;
             path?: never;
@@ -15471,6 +15496,8 @@ export interface operations {
                 status?: string;
                 orientation?: string;
                 column?: string;
+                label?: string;
+                workspace_id?: string;
             };
             header?: never;
             path?: never;
@@ -19237,19 +19264,49 @@ export interface operations {
             };
         };
     };
-    "create role": {
+    "edit-role": {
         parameters: {
             query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateRoleRequestBody"];
+                "application/json": components["schemas"]["RoleData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoleData"];
             };
         };
         responses: {
@@ -19259,7 +19316,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
+                    "application/json": components["schemas"]["ResponseDataRoleDtoBody"];
                 };
             };
             /** @description Error */
@@ -19859,7 +19916,7 @@ export interface operations {
             query: {
                 id: string;
                 party_type?: string;
-                type?: string;
+                " required:"?: string;
             };
             header?: never;
             path?: never;

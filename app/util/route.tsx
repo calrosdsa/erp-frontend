@@ -141,6 +141,7 @@ class Routes {
   deal = "deal"
   chat = "chat"
   workspace = "workspace"
+  module = "module"
   
 
   defaultTab = {
