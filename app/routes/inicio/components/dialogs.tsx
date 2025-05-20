@@ -6,10 +6,7 @@ import {
   ExporterData,
   useExporterData,
 } from "~/routes/api.exporter/components/use-exporter-data";
-import {
-  CreateEvent,
-  useCreateEvent,
-} from "~/routes/home._regate.event_/components/use-create-event";
+
 import {
   AddTax,
   useCreateTax,
@@ -97,7 +94,7 @@ export default function GlobalDialogs({
   const exporterData = useExporterData();
 
   //Regate
-  const createEvent = useCreateEvent();
+  // const createEvent = useCreateEvent();
 
   const confirmationDialog = useConfirmationDialog();
   return (
@@ -227,12 +224,12 @@ export default function GlobalDialogs({
       )}
 
       {/* REGATE */}
-      {createEvent.open && (
+      {/* {createEvent.open && (
         <CreateEvent
           open={createEvent.open}
           onOpenChange={createEvent.onOpenChange}
         />
-      )}
+      )} */}
     </>
   );
 }

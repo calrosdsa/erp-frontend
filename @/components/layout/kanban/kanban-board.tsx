@@ -235,9 +235,11 @@ export function KanbanBoard<T>({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex h-full w-full gap-2 p-2"
+            className="flex w-96 h-full gap-2  overflow-auto"
           >
             {columns.map((column, index) => (
+              <div className="w-64">
+
               <KanbanColumnComponent
                 column={column}
                 index={index}
@@ -250,6 +252,7 @@ export function KanbanBoard<T>({
                 headerComponent={headerComponent}
                 cardComponent={cardComponent}
               />
+                </div>
             ))}
             {provided.placeholder}
           </div>

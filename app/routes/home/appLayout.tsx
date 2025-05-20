@@ -70,7 +70,7 @@ export default function AppLayout({
       <ChatModal appContext={globalState} />
       <GlobalDialogs globalState={globalState} />
       <div className=" max-w-[1500px] mx-auto">
-        <SidebarProvider>
+        <SidebarProvider >
           <AppSidebar data={globalState} modules={modules} />
           <SidebarInset>
             <Navbar />

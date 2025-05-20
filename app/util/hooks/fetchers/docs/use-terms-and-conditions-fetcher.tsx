@@ -4,7 +4,7 @@ import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import FormAutocompleteField, {
   AutocompleteFormProps,
-} from "@/components/custom/select/FormAutocompleteField";
+} from "@/components/custom/select/form-autocomplete";
 import { formatQuery } from "..";
 
 type TermsAndConditions = components["schemas"]["TermsAndConditionsDto"];

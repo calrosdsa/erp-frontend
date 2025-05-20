@@ -25,6 +25,7 @@ import { CREATE, DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { toast } from "sonner";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { Entity } from "~/types/enums";
+import {  useCustomerStore } from "../customer-store";
 export default function CustomerInfo({
   appContext,
   data,
@@ -47,6 +48,7 @@ export default function CustomerInfo({
   const [toastID, setToastID] = useState<string | number>("");
   const id = searchParams.get(route.customer);
   const paramAction = searchParams.get("action");
+  const customerStore = useCustomerStore();
 
   const onSubmit = (e: CustomerData) => {
     console.log("ONSUBMIT", e);
@@ -69,7 +71,6 @@ export default function CustomerInfo({
     );
   };
 
-
   useDisplayMessage(
     {
       toastID: toastID,
@@ -78,6 +79,7 @@ export default function CustomerInfo({
       onSuccessMessage: () => {
         if (id == DEFAULT_ID) {
           if (paramAction == CREATE) {
+            customerStore.onCreateCustomer(fetcher.data?.customer);
             closeModal();
           }
           if (fetcher.data?.customer) {

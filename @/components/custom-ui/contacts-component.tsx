@@ -39,16 +39,15 @@ export default function ContactList({
         <div className="text-center py-6 w-full">
           <h2 className="mb-4">{t("_contact.empty")}</h2>
           {onAddContact && (
-
             <Button
-            variant={"ghost"}
-            type="button"
-            onClick={onAddContact}
-            className="text-xs mt-4 underline flex w-full"
+              variant={"ghost"}
+              type="button"
+              onClick={onAddContact}
+              className="text-xs mt-4 underline flex w-full"
             >
-            <Plus className="w-4 h-4" />
-            <span>Agregar contacto</span>
-          </Button>
+              <Plus className="w-4 h-4" />
+              <span>Agregar contacto</span>
+            </Button>
           )}
         </div>
       </div>
@@ -68,7 +67,17 @@ export default function ContactList({
           key={contact.id}
           className="transition-all duration-300 ease-in-out"
         >
-          <Card className="w-full overflow-hidden ">
+          <Card
+            className="w-full overflow-hidden cursor-pointer"
+            onClick={() => {
+              navigate(
+                route.toRouteDetail(route.contact, contact.name, {
+                  tab: "info",
+                  id: contact.id,
+                })
+              );
+            }}
+          >
             <CardHeader
               className="flex flex-row items-center justify-between cursor-pointer"
               onClick={() => toggleExpand(index)}

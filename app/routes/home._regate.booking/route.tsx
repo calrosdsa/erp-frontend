@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
+import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node"
 import apiClient from "~/apiclient"
 import { DEFAULT_COLUMN, DEFAULT_CURRENCY, DEFAULT_ORDER, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant"
 import { handleError } from "~/util/api/handle-status-code"
@@ -49,11 +49,15 @@ export const action = async({request}:ActionFunctionArgs) =>{
     return json({message,error,bookingData})
 }
 
-export const loader = async({request}:LoaderFunctionArgs)=>{
+export const loader = async({request,params}:LoaderFunctionArgs)=>{
     const client = apiClient({request})
     const url = new URL(request.url)
     const searchParams = url.searchParams
-    const res = await client.GET("/regate/booking",{
+    if(!params.mode){
+        return redirect("./view/list")
+    }
+
+        const res = await client.GET("/regate/booking",{
         params:{
             query:{
                 page:searchParams.get("page") || DEFAULT_PAGE,

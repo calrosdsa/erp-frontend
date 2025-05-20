@@ -18,7 +18,7 @@ import {
   DealData,
   mapToParticipantSchema,
   ParticipantData,
-} from "~/util/data/schemas/crm/deal.schema";
+} from "~/util/data/schemas/crm/deal-schema";
 import { ProfileAutocomplete } from "~/util/hooks/fetchers/profile/profile-fetcher";
 
 interface Observers {

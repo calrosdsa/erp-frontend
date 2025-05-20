@@ -1,20 +1,11 @@
-import {
-  useFetcher,
-  useLoaderData,
-  useOutletContext,
-  useSearchParams,
-} from "@remix-run/react";
+import { useFetcher, useSearchParams } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
-import DetailLayout from "@/components/layout/detail-layout";
 import EventInfoTab from "./tab/event-info";
 import { useEffect, useState } from "react";
 import { route } from "~/util/route";
 import EventConnectionsTab from "./tab/event-connections";
-import {
-  setUpToolbarRegister,
-  useLoadingTypeToolbar,
-} from "~/util/hooks/ui/useSetUpToolbar";
+import { useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { EventState, State, stateFromJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
@@ -24,16 +15,21 @@ import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
-import ModalLayout, { setUpModalPayload } from "@/components/ui/custom/modal-layout";
+import ModalLayout, {
+  setUpModalPayload,
+} from "@/components/ui/custom/modal-layout";
+import { SerializeFrom } from "@remix-run/node";
+import { useEventStore } from "./event-store";
+import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
+import { toast } from "sonner";
 
 export default function EventModal({
   appContext,
 }: {
   appContext: GlobalState;
 }) {
-  const key = route.event
-  const fetcherLoader = useFetcher<typeof loader>();
-  const data = fetcherLoader.data;
+  const key = route.event;
+  const [data, setData] = useState<SerializeFrom<typeof loader>>();
   const event = data?.event;
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
@@ -42,24 +38,37 @@ export default function EventModal({
     roleActions: appContext.roleActions,
   });
   const fetcher = useFetcher<typeof action>();
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation("common");
   const r = route;
   const [open, setOpen] = useState(true);
   const eventID = searchParams.get(route.event);
-  const initData = (tab: string) => {
-    fetcherLoader.load(
-      route.toRouteDetail(route.event, eventID || "", {
-        tab: tab,
-      })
-    );
-  };
+  const eventStore = useEventStore();
+  const [toastID, setToastID] = useState<string | number>();
 
+  const load = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(route.toRouteDetail(route.event, eventID));
+      if (res.ok) {
+        const body = (await res.json()) as SerializeFrom<typeof loader>;
+        setData(body);
+        console.log("BODY", body);
+      }
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    console.log("LOAD EVENT...");
-    initData(tab);
-  }, [tab]);
+    if(eventID){
+      load();
+    }
+  }, [eventID]);
 
   const onChangeState = (e: EventState) => {
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     const body: z.infer<typeof updateStatusWithEventSchema> = {
       current_state: event?.status || "",
       party_id: event?.uuid || "",
@@ -78,60 +87,75 @@ export default function EventModal({
     );
   };
 
-  setUpModalPayload(key,() => {
-    const state = stateFromJSON(event?.status);
-    let actions: ButtonToolbar[] = [];
-    if (eventPerm.edit && state == State.ENABLED) {
-      actions.push({
-        label: "Completar Evento",
-        onClick: () => {
-          onChangeState(EventState.COMPLETED_EVENT);
-        },
-      });
-      actions.push({
-        label: "Cancelar Evento",
-        onClick: () => {
-          onChangeState(EventState.CANCEL_EVENT);
-        },
-      });
-    } else {
-      actions.push({
-        label: "Habilitar Evento",
-        onClick: () => {
-          onChangeState(EventState.ENABLED_EVENT);
-        },
-      });
-    }
+  setUpModalPayload(
+    key,
+    () => {
+      const state = stateFromJSON(event?.status);
+      const isNew = eventID == DEFAULT_ID;
+      let actions: ButtonToolbar[] = [];
+      if (eventPerm.edit && state == State.ENABLED) {
+        actions.push({
+          label: "Completar Evento",
+          onClick: () => {
+            onChangeState(EventState.COMPLETED_EVENT);
+          },
+        });
+        actions.push({
+          label: "Cancelar Evento",
+          onClick: () => {
+            onChangeState(EventState.CANCEL_EVENT);
+          },
+        });
+      } else {
+        actions.push({
+          label: "Habilitar Evento",
+          onClick: () => {
+            onChangeState(EventState.ENABLED_EVENT);
+          },
+        });
+      }
 
-    return {
-      status: stateFromJSON(event?.status),
-      actions: actions,
-    };
-  }, [fetcherLoader.data, eventPerm]);
-
-  useLoadingTypeToolbar(
-    {
-      loading: fetcher.state == "submitting",
-      loadingType: "STATE",
+      return {
+        title: isNew ? "Nuevo Evento" : event?.name,
+        status: stateFromJSON(event?.status),
+        actions: actions,
+        enableEdit: isNew,
+        isNew: isNew,
+        onCancel: isNew
+          ? () => {
+              setOpen(false);
+            }
+          : undefined,
+      };
     },
-    [fetcher.state]
+    [data, eventPerm]
   );
 
   useDisplayMessage(
     {
+      toastID: toastID,
       error: fetcher.data?.error,
       success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        load();
+      },
     },
     [fetcher.data]
   );
 
+  const closeModal = () => {
+    eventStore.reset();
+    searchParams.delete(route.event);
+    searchParams.delete("tab");
+    searchParams.delete("action");
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
+
   useEffect(() => {
     if (!open) {
-      searchParams.delete(route.event);
-      searchParams.delete("tab");
-      setSearchParams(searchParams, {
-        preventScrollReset: true,
-      });
+      closeModal();
     }
   }, [open]);
   return (
@@ -143,7 +167,7 @@ export default function EventModal({
       }}
       title={event?.name || ""}
     >
-      {fetcherLoader.state == "loading" && !fetcherLoader.data ? (
+      {loading && !data ? (
         <LoadingSpinner />
       ) : (
         <>
@@ -161,15 +185,19 @@ export default function EventModal({
                   label: "Info",
                   value: "info",
                   children: (
-                    <EventInfoTab appContext={appContext} data={data} />
+                    <EventInfoTab
+                      appContext={appContext}
+                      data={data}
+                      load={load}
+                      closeModal={() => setOpen(false)}
+                      // closeModal={closeModal}
+                    />
                   ),
                 },
                 {
                   label: "Conexiones",
                   value: "connections",
-                  children: <EventConnectionsTab 
-                  data={data}
-                  />,
+                  children: <EventConnectionsTab data={data} />,
                 },
               ]}
             />

@@ -6,7 +6,7 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField";
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete";
 
 export const InvoiceAutocompleteFormField = ({
   allowEdit = true,

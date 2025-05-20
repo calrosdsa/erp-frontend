@@ -37,8 +37,7 @@ export function SmartForm<T extends z.ZodType>({
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
-    values: defaultValues,
-    mode: "onChange",
+    // values: defaultValues,
   });
   const { editPayload } = useModalStore();
   const payload = useModalStore((state) => state.payload[keyPayload]);

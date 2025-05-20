@@ -80,7 +80,7 @@ export default function KanbanColumnComponent<T>({
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className="flex min-w-64  bg-secondary  h-[85vh] flex-col rounded-b-lg border-r border-l"
+          className="w-64  bg-secondary  h-[80vh] flex-col rounded-b-lg border-r border-l"
         >
           <div
             {...provided.dragHandleProps}

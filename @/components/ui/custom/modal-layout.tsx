@@ -17,6 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 import { cn } from "@/lib/utils";
 import { Badge } from "../badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../dropdown-menu";
 
 export default function ModalLayout({
   keyPayload,
@@ -24,7 +25,6 @@ export default function ModalLayout({
   open,
   onOpenChange,
   title,
-  
 }: {
   children: ReactNode;
   className?: string;
@@ -77,38 +77,41 @@ export default function ModalLayout({
                 {payload.actions &&
                   payload.actions.length > 0 &&
                   payload.status != State.DRAFT && (
-                    <Popover modal={true}>
-                      <PopoverTrigger asChild>
+                    <DropdownMenu modal={true}>
+                      <DropdownMenuTrigger asChild>
                         <Button
                           size={"sm"}
                           variant={"outline"}
-                          className=" flex space-x-1 h-8 rounded-lg px-3 bg-muted"
+                          className="flex space-x-1 h-8 rounded-lg px-3 bg-muted"
                         >
                           <span>{t("actions.base")}</span>
                           <ChevronsUpDownIcon className="h-4 w-4" />
                         </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-56">
-                        <div className="flex flex-col space-y-1">
-                          {payload.actions?.map((item, idx) => (
-                            <Button
-                              key={idx}
-                              size={"sm"}
-                              variant="ghost"
-                              className="justify-between flex"
-                              onClick={(e) => {
-                                item.onClick();
-                              }}
-                            >
-                              {item.label}
-                              {item.Icon && (
-                                <item.Icon className="h-3 w-3 ml-2" />
-                              )}
-                            </Button>
-                          ))}
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56">
+                        {payload.actions?.map((item, idx) => (
+                          <DropdownMenuItem
+                            key={idx}
+                            className="flex justify-between"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              onOpenDialog({
+                                title:
+                                  "Por favor, confirme antes de continuar con la acción requerida.",
+                                onConfirm: () => {
+                                  item.onClick();
+                                },
+                              });
+                            }}
+                          >
+                            {item.label}
+                            {item.Icon && (
+                              <item.Icon className="h-3 w-3 ml-2" />
+                            )}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   )}
 
                 {payload.view &&
@@ -251,8 +254,6 @@ export default function ModalLayout({
                     {t("form.save")}
                   </Button>
                 )} */}
-
-                
               </div>
             </div>
             {/* <ResponsiveSidebar navItems={navItems} /> */}
@@ -281,7 +282,6 @@ export default function ModalLayout({
               </Button>
               <Button
                 type="button"
-              
                 size={"lg"}
                 onClick={() => {
                   console.log("SAVE BUTTON CLICKED", payload.onSave);

@@ -1,5 +1,5 @@
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
-import { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField"
+import { AutocompleteFormProps } from "@/components/custom/select/form-autocomplete"
 import { SmartAutocomplete } from "@/components/form/smart-autocomplete"
 import { Control } from "react-hook-form"
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher"

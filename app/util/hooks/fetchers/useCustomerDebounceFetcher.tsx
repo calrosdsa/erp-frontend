@@ -10,13 +10,17 @@ import { usePermission } from "../useActions";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import FormAutocompleteField, {
   AutocompleteFormProps,
-} from "@/components/custom/select/FormAutocompleteField";
-import { SmartAutocomplete, SmartAutocompleteProps } from "@/components/form/smart-autocomplete";
+} from "@/components/custom/select/form-autocomplete";
+import {
+  SmartAutocomplete,
+  SmartAutocompleteProps,
+} from "@/components/form/smart-autocomplete";
 
 interface CustomerSmartAutocomplete
-  extends Partial<SmartAutocompleteProps<Customer, keyof Customer>> {
-}
-export const CustomerSmartAutocomplete = ({ ...props }: CustomerSmartAutocomplete) => {
+  extends Partial<SmartAutocompleteProps<Customer, keyof Customer>> {}
+export const CustomerSmartAutocomplete = ({
+  ...props
+}: CustomerSmartAutocomplete) => {
   const [fetcher, onChange] = useCustomerDebounceFetcher();
 
   return (
@@ -31,13 +35,11 @@ export const CustomerSmartAutocomplete = ({ ...props }: CustomerSmartAutocomplet
   );
 };
 
-
-
 type Customer = components["schemas"]["CustomerDto"];
 interface CustomerFormProps
   extends Partial<AutocompleteFormProps<Customer, keyof Customer>> {
   roleActions?: components["schemas"]["RoleActionDto"][];
-  openModal?:()=>void
+  openModal?: () => void;
 }
 
 export const CustomerAutoCompleteForm = ({
@@ -56,10 +58,12 @@ export const CustomerAutoCompleteForm = ({
       data={fetcher.data?.customers || []}
       onValueChange={onChange}
       name={props.name || "customer"}
-      nameK="name" 
+      placeholder="Buscar o crear un nuevo cliente"
+      loading={fetcher.state == "submitting"}
+      nameK="name"
       {...(permission.create && {
         addNew: () => {
-          props.openModal?.()
+          props.openModal?.();
         },
       })}
     />

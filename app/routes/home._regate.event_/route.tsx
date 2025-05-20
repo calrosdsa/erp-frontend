@@ -1,16 +1,22 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE, LOAD_ACTION } from "~/constant";
 import { handleError } from "~/util/api/handle-status-code";
 import EventsClient from "./events.client";
 import { z } from "zod";
-import { createEventSchema } from "~/util/data/schemas/regate/event-schema";
 import { components } from "~/sdk";
 import { State, stateToJSON } from "~/gen/common";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { route } from "~/util/route";
+import {
+  EventBookingSchema,
+  mapToEventBookingData,
+} from "~/util/data/schemas/regate/event-schema";
+import { mapToBookingData } from "../home._regate.booking/util";
 
 type ActionData = {
   action: string;
-  createEvent: z.infer<typeof createEventSchema>;
+  eventData: EventBookingSchema;
   query: string;
   deleteInBatch: components["schemas"]["DeleteEventBatchRequestBody"];
 };
@@ -20,6 +26,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   let events: components["schemas"]["EventBookingDto"][] = [];
+  let event: components["schemas"]["EventBookingDto"] | undefined = undefined;
   let actions: components["schemas"]["ActionDto"][] = [];
   switch (data.action) {
     case "delete-in-batch": {
@@ -47,12 +54,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "create-event": {
-      const d = data.createEvent;
       const res = await client.POST("/regate/event", {
-        body: {
-          name: d.name,
-          description: d.description,
-        },
+        body: mapToEventBookingData(data.eventData),
+      });
+      error = res.error?.detail;
+      message = res.data?.message;
+      event = res.data?.result;
+      break;
+    }
+    case "edit-event": {
+      const res = await client.PUT("/regate/event", {
+        body: mapToEventBookingData(data.eventData),
       });
       error = res.error?.detail;
       message = res.data?.message;
@@ -64,8 +76,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     actions,
     events,
+    event,
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult,
+  nextUrl,
+}: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.actionRoot == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  const nextParams = new URL(nextUrl.href).searchParams;
+  const event = nextParams.get(route.event);
+  if (event) {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });

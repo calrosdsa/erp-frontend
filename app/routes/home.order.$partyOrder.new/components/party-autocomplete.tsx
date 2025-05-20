@@ -1,5 +1,5 @@
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
-import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField";
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete";
 import { Control, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";

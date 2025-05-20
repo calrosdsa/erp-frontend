@@ -1,9 +1,9 @@
-import { DealData, mapToDealData } from "~/util/data/schemas/crm/deal.schema";
+import { DealData, mapToDealData } from "~/util/data/schemas/crm/deal-schema";
 import DealModal from "./deal-modal";
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
 import { handleError } from "~/util/api/handle-status-code";
-import { LOAD_ACTION, MAX_SIZE } from "~/constant";
+import { DEFAULT_ID, LOAD_ACTION, MAX_SIZE } from "~/constant";
 import { Entity } from "~/types/enums";
 import { components } from "~/sdk";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
@@ -21,6 +21,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let error: string | undefined = undefined;
   let deal: components["schemas"]["DealDto"] | undefined = undefined;
   let action = LOAD_ACTION;
+  let shouldRevalidate: boolean = false;
   switch (data.action) {
     case "edit": {
       const res = await client.PUT("/deal", {
@@ -28,6 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       error = res.error?.detail;
       message = res.data?.message;
+      shouldRevalidate = true;
       break;
     }
     case "create": {
@@ -37,6 +39,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       error = res.error?.detail;
       message = res.data?.message;
       deal = res.data?.result;
+      shouldRevalidate = true;
       break;
     }
   }
@@ -45,6 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     message,
     deal,
+    shouldRevalidate,
   });
 };
 
@@ -53,13 +57,7 @@ export function shouldRevalidate({
   defaultShouldRevalidate,
   actionResult,
 }: ShouldRevalidateFunctionArgs) {
-  if (actionResult?.action == LOAD_ACTION) {
-    return defaultShouldRevalidate;
-  }
-  if (formMethod === "POST") {
-    return false;
-  }
-  return defaultShouldRevalidate;
+  return false;
 }
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -67,47 +65,58 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   const entityId = searchParams.get("entity_id") ?? Entity.DEAL.toString();
-console.log("LOAD DEAL...",params)
-  // Crear promesas separadas para mejor legibilidad
-  const stagesPromise = client.GET("/stage", {
-    params: {
-      query: {
-        size: MAX_SIZE,
-        entity_id: entityId,
-        column: "index",
-        orientation: "ASC",
-      },
-    },
-  });
-
-  // Crear promesa condicional para el detalle del deal
-  const dealPromise = params.id
-    ? client.GET("/deal/detail/{id}", {
-        params: {
-          path: {
-            id: params.id,
-          },
+  let stages: components["schemas"]["StageDto"][] = [];
+  let dealData:
+    | components["schemas"]["EntityResponseResultEntityDealDetailDtoBody"]
+    | undefined = undefined;
+  if (params.id != DEFAULT_ID) {
+    // Crear promesas separadas para mejor legibilidad
+    const stagesPromise = client.GET("/stage", {
+      params: {
+        query: {
+          size: MAX_SIZE,
+          entity_id: entityId,
+          column: "index",
+          orientation: "ASC",
         },
-      })
-    : Promise.resolve(undefined);
+      },
+    });
 
-  // Ejecutar promesas en paralelo
-  const [stagesRes, dealRes] = await Promise.all([stagesPromise, dealPromise]);
+    // Crear promesa condicional para el detalle del deal
+    const dealPromise = params.id
+      ? client.GET("/deal/detail/{id}", {
+          params: {
+            path: {
+              id: params.id,
+            },
+          },
+        })
+      : Promise.resolve(undefined);
 
+    // Ejecutar promesas en paralelo
+    const [stagesRes, dealRes] = await Promise.all([
+      stagesPromise,
+      dealPromise,
+    ]);
+    stages = stagesRes.data?.result || [];
+    dealData = dealRes?.data;
+  }
   return json({
-    stages: stagesRes.data?.result || [],
-    deal: dealRes?.data?.result.entity.deal || null,
-    observers: dealRes?.data?.result.entity.participants || [],
-    activities: dealRes?.data?.result.activities || [],
-    actions: dealRes?.data?.actions,
-    contacts: dealRes?.data?.result.contacts || [],
-    entityActions: dealRes?.data?.associated_actions,
+    stages: stages || [],
+    deal: dealData?.result.entity.deal || null,
+    observers: dealData?.result.entity.participants || [],
+    activities: dealData?.result.activities || [],
+    actions: dealData?.actions,
+    contacts: dealData?.result.contacts || [],
+    entityActions: dealData?.associated_actions,
   });
 };
 
-export const openDealModal = (id?:string,callback?:(key:string,value:string)=>void) => {
-  if(id && callback){
-
+export const openDealModal = (
+  id?: string,
+  callback?: (key: string, value: string) => void
+) => {
+  if (id && callback) {
     callback(route.deal, id);
   }
 };

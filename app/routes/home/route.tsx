@@ -45,13 +45,14 @@ export function shouldRevalidate({
   defaultShouldRevalidate,
   actionResult,
 }: ShouldRevalidateFunctionArgs) {
-  if (actionResult?.actionRoot == LOAD_ACTION) {
-    return defaultShouldRevalidate;
-  }
-  if (formMethod === "POST") {
-    return false;
-  }
-  return defaultShouldRevalidate;
+  // if (actionResult?.actionRoot == LOAD_ACTION) {
+  //   return defaultShouldRevalidate;
+  // }
+  // if (formMethod === "POST") {
+  //   return false;
+  // }
+  // return defaultShouldRevalidate;
+  return false
 }
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {

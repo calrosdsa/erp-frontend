@@ -19,15 +19,15 @@ import { route } from "~/util/route";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { useTranslation } from "react-i18next";
-import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import CustomFormField from "@/components/custom/form/CustomFormField";
 import AmountInput from "@/components/custom/input/AmountInput";
-import { CREATE, DEFAULT_CURRENCY, DEFAULT_ID } from "~/constant";
-import { useEffect, useRef, useState } from "react";
 import {
-  setUpToolbar,
-  useLoadingTypeToolbar,
-} from "~/util/hooks/ui/useSetUpToolbar";
+  CREATE,
+  DEFAULT_CURRENCY,
+  DEFAULT_ID,
+  LOADING_MESSAGE,
+} from "~/constant";
+import { useEffect, useRef, useState } from "react";
 
 import {
   EventAutoCompleteForm,
@@ -36,7 +36,7 @@ import {
 import AccordationLayout from "@/components/layout/accordation-layout";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
-import { useCreateEvent } from "~/routes/home._regate.event_/components/use-create-event";
+
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -47,6 +47,9 @@ import { useNewBooking } from "../store/use-new-booking";
 import BookingDisplay from "./bookings-display";
 import BookingDetails from "./bookings-details";
 import { setUpModalPayload } from "@/components/ui/custom/modal-layout";
+import { useCustomerStore } from "~/routes/home.customer.$id/customer-store";
+import { toast } from "sonner";
+import { useEventStore } from "~/routes/home._regate.event.$id/event-store";
 
 export default function CreateBookings({
   data,
@@ -79,6 +82,7 @@ export default function CreateBookings({
   const globalState = useOutletContext<GlobalState>();
   const [searchParams, setSearchParams] = useSearchParams();
   const newBooking = useNewBooking();
+  const [toastID, setToastID] = useState<string | number>("");
   const setParams = (params: Record<string, any>) => {
     Object.entries(params).forEach(([key, value]) => {
       if (value) {
@@ -91,13 +95,14 @@ export default function CreateBookings({
       preventScrollReset: true,
     });
   };
-  const r = route;
   const { resetPayload } = useNewBooking();
-  const navigate = useNavigate();
+  const eventStore = useEventStore();
+  const customerStore = useCustomerStore();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const onSubmit = (values: z.infer<typeof createBookingsSchema>) => {
-    console.log("OINSUBMIT", values);
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     if (bookings.length > 0) {
       const body: components["schemas"]["CreateBookingBody"] = {
         advance_payment: Number(values.advancePayment),
@@ -138,6 +143,7 @@ export default function CreateBookings({
 
   useDisplayMessage(
     {
+      toastID: toastID,
       error: fetcher.data?.error,
       success: fetcher.data?.message,
       onSuccessMessage: () => {
@@ -148,6 +154,25 @@ export default function CreateBookings({
     },
     [fetcher.data]
   );
+
+  useEffect(() => {
+    if (customerStore.newCustomer) {
+      form.setValue("customer", {
+        id: customerStore.newCustomer.id,
+        name: customerStore.newCustomer.name,
+      });
+    }
+  }, [customerStore.newCustomer]);
+
+  useEffect(() => {
+    if (eventStore.newEvent) {
+      console.log("NEW EVENT ....",eventStore.newEvent)
+      form.setValue("event", {
+        id: eventStore.newEvent.id,
+        name: eventStore.newEvent.name,
+      });
+    }
+  }, [eventStore.newEvent]);
 
   return (
     <FormLayout>
@@ -171,6 +196,7 @@ export default function CreateBookings({
         </Button>
       </div>
       <Form {...form}>
+        {JSON.stringify(form.getValues().event)}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
             <CustomerAutoCompleteForm
@@ -239,7 +265,7 @@ export default function CreateBookings({
               modal={true}
               openModal={() => {
                 setParams({
-                  [route.customer]: DEFAULT_ID,
+                  [route.event]: DEFAULT_ID,
                   action: CREATE,
                 });
               }}

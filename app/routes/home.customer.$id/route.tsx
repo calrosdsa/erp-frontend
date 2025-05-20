@@ -67,7 +67,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     message,
     action: actionRes,
-    customer
+    customer,
   });
 };
 
@@ -90,43 +90,48 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   const tab = searchParams.get("tab");
-  console.log(" LOADER CUSTOMER NAME -----", params.name);
-  const r = route;
   let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
-  const res = await client.GET("/customer/detail/{id}", {
-    params: {
-      path: {
-        id: params.id || "",
+  let customerResult:
+    | components["schemas"]["EntityResponseResultEntityCustomerDtoBody"]
+    | undefined = undefined;
+
+  if (params.id != DEFAULT_ID) {
+    const res = await client.GET("/customer/detail/{id}", {
+      params: {
+        path: {
+          id: params.id || "",
+        },
       },
-    },
-  });
-  handleError(res.error);
-  if (res.data) {
-    switch (tab) {
-      case "connections": {
-        resConnections = client.GET("/party/connections/{id}", {
-          params: {
-            path: {
-              id: res.data.result.entity.id.toString(),
+    });
+    customerResult = res.data;
+    handleError(res.error);
+    if (res.data) {
+      switch (tab) {
+        case "connections": {
+          resConnections = client.GET("/party/connections/{id}", {
+            params: {
+              path: {
+                id: res.data.result.entity.id.toString(),
+              },
+              query: {
+                party: partyTypeToJSON(PartyType.customer),
+              },
             },
-            query: {
-              party: partyTypeToJSON(PartyType.customer),
-            },
-          },
-        });
-        // console.log(resConnection.data,resConnection.error)
-        break;
+          });
+          // console.log(resConnection.data,resConnection.error)
+          break;
+        }
       }
     }
   }
-  console.log("LOAD CUSTOMER...", res.data?.result.entity);
+  // console.log("LOAD CUSTOMER...", res.data?.result.entity);
   return {
-    customer: res.data?.result.entity,
-    actions: res.data?.actions,
-    addresses: res.data?.result.addresses || [],
-    contacts: res.data?.result.contacts || [],
-    activities: res.data?.result.activities || [],
+    customer: customerResult?.result.entity,
+    actions: customerResult?.actions,
+    addresses: customerResult?.result.addresses || [],
+    contacts: customerResult?.result.contacts || [],
+    activities: customerResult?.result.activities || [],
     connections: resConnections,
   };
 };
@@ -139,7 +144,6 @@ export const openCustomerModal = (
     callback(route.customer, id);
   }
 };
-
 
 // export const shouldRevalidate: ShouldRevalidateFunction = ({
 //   actionResult,

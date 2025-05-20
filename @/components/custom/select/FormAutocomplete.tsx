@@ -34,7 +34,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Control } from "react-hook-form";
-import { AutocompleteFormProps } from "./FormAutocompleteField";
+import { AutocompleteFormProps } from "./form-autocomplete";
 
 
 export default function FormAutocomplete<T extends object, K extends keyof T>({

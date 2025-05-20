@@ -88,7 +88,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
   const [open, setOpen] = useState(false);
   const fieldValue = form.getValues(name || "");
   const [query, setQuery] = useState<string>(
-    defaultValue || fieldValue["name"] || ""
+    defaultValue || fieldValue?.name || ""
   );
   const [selected, setSelected] = useState<string | null>(null);
   // const inputRef = useRef<HTMLInputElement | null>(null);

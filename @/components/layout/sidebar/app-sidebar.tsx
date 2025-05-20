@@ -45,7 +45,7 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
   //   return NavItems({ data:props.data });
   // }, [data]);
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props}  >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

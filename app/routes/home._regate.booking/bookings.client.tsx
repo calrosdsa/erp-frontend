@@ -54,7 +54,7 @@ export default function BookingsClient() {
   const [searchParams, setSearchParams] = useSearchParams();
   const params = useParams();
   const newBooking = useNewBooking();
-  const [openCreateModal, setOpenCreateModal] = useState(false    );
+  const [openCreateModal, setOpenCreateModal] = useState(false);
   const setParams = (params: Record<string, any>) => {
     Object.entries(params).forEach(([key, value]) => {
       if (value) {
@@ -97,11 +97,11 @@ export default function BookingsClient() {
     [fetcher.data]
   );
 
-  useEffect(() => {
-    if (!params.mode) {
-      navigate("./view/list");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!params.mode) {
+  //     navigate("./view/list");
+  //   }
+  // }, []);
 
   return (
     <ListLayout

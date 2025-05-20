@@ -4,7 +4,7 @@ import { components, operations } from "~/sdk"
 import { route } from "~/util/route"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
 import { Control } from "react-hook-form"
-import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/FormAutocompleteField"
+import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/form-autocomplete"
 import { formatQuery } from "."
 
 type Ledger = components["schemas"]["LedgerDto"]

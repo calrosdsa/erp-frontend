@@ -18,7 +18,6 @@ export default function CustomerForm({
 }: {
   contacts: components["schemas"]["ContactDto"][];
 }) {
-  const key = route.customer;
   const { form, isEditing, hasChanged } = useFormContext();
   const formValues = form?.getValues() as CustomerData;
   const { t } = useTranslation("common");

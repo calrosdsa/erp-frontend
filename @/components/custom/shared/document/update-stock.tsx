@@ -8,7 +8,7 @@ import FormAutocomplete from "../../select/FormAutocomplete";
 import { useTranslation } from "react-i18next";
 import { useWarehouseDebounceFetcher, WarehouseAutocompleteFormField } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";
 import { useMemo } from "react";
-import FormAutocompleteField from "../../select/FormAutocompleteField";
+import FormAutocompleteField from "../../select/form-autocomplete";
 import CustomFormFieldInput from "../../form/CustomFormInput";
 
 interface UpdateStockProps {

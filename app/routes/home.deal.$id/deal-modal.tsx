@@ -25,8 +25,9 @@ import ModalLayout, {
 import { GlobalState } from "~/types/app-types";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
-import { DEFAULT_ID } from "~/constant";
+import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { SerializeFrom } from "@remix-run/node";
+import { toast } from "sonner";
 
 export default function DealModal({ appContext }: { appContext: GlobalState }) {
   // const [open, setOpen] = useState(true);
@@ -42,11 +43,14 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
   const [open, setOpen] = useState(true);
   const stages = data?.stages;
   const id = searchParams.get(route.deal) || "";
+  const [toastID, setToastID] = useState<string | number>("");
 
   const dealTransition = (
     destinationStage: components["schemas"]["StageDto"]
   ) => {
     if (!deal?.id) return;
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     const body: components["schemas"]["EntityTransitionData"] = {
       id: deal?.id,
       destination_index: destinationStage.index,
@@ -86,13 +90,15 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
   };
 
   useEffect(() => {
-    if (id != "0") {
+    if (id) {
       load();
     }
   }, [id]);
 
+  
   useDisplayMessage(
     {
+      toastID:toastID,
       success: fetcherStage.data?.message,
       error: fetcherStage.data?.error,
       onSuccessMessage: () => {
@@ -114,6 +120,7 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
   setUpModalPayload(
     key,
     () => {
+      console.log("MOUNT DEAL...");
       const isNew = DEFAULT_ID == id;
       return {
         title: isNew ? "Nuevo trato" : deal?.name,
@@ -173,23 +180,6 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
                   },
                 ]}
               />
-            )}
-
-            {payload.enableEdit && (
-              <div className="fixed bottom-0 border-t md:max-w-full md:w-[80%] shadow-xl bg-background ">
-                <div className="flex justify-center items-center space-x-2 h-20 ">
-                  <Button
-                    onClick={payload.onCancel}
-                    size={"lg"}
-                    variant={"outline"}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button onClick={payload.onSave} size={"lg"}>
-                    Guardar
-                  </Button>
-                </div>
-              </div>
             )}
           </>
         )}

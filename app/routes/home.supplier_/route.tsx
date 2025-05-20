@@ -1,15 +1,27 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
-import { DEFAULT_ENABLED, DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import {
+  DEFAULT_ENABLED,
+  DEFAULT_ID,
+  DEFAULT_PAGE,
+  DEFAULT_SIZE,
+  LOAD_ACTION,
+} from "~/constant";
 import SuppliersClient from "./suppliers.client";
 import { z } from "zod";
-import { mapToSupplierData, supplierSchema } from "~/util/data/schemas/buying/supplier-schema";
+import {
+  mapToSupplierData,
+  SupplierData,
+  supplierSchema,
+} from "~/util/data/schemas/buying/supplier-schema";
 import { components } from "~/sdk";
 import { mapToContactData } from "~/util/data/schemas/contact/contact.schema";
+import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { route } from "~/util/route";
 
 type ActionData = {
   action: string;
-  createSupplier: z.infer<typeof supplierSchema>;
+  supplierData: SupplierData;
   query: string;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -18,17 +30,26 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   let suppliers: components["schemas"]["SupplierDto"][] = [];
+  let supplier:components["schemas"]["SupplierDto"] | undefined = undefined
   let actions: components["schemas"]["ActionDto"][] = [];
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   switch (data.action) {
     case "create-supplier": {
-      const d = data.createSupplier;
       const res = await client.POST("/supplier", {
-        body: mapToSupplierData(data.createSupplier),
+        body: mapToSupplierData(data.supplierData),
       });
-      message = res.data?.message;
       error = res.error?.detail;
+      message = res.data?.message;
+      supplier = res.data?.result
+      break;
+    }
+    case "edit-supplier": {
+      const res = await client.PUT("/supplier", {
+        body: mapToSupplierData(data.supplierData),
+      });
+      error = res.error?.detail;
+      message = res.data?.message;
       break;
     }
     case "get": {
@@ -52,8 +73,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     suppliers,
     actions,
+    supplier,
   });
 };
+
+export function shouldRevalidate({
+  formMethod,
+  defaultShouldRevalidate,
+  actionResult,
+  nextUrl,
+}: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.actionRoot == LOAD_ACTION) {
+    return defaultShouldRevalidate;
+  }
+  if (formMethod === "POST") {
+    return false;
+  }
+  const nextParams = new URL(nextUrl.href).searchParams;
+  const supplier = nextParams.get(route.supplier);
+  if (supplier) {
+    return false;
+  }
+  return defaultShouldRevalidate;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
@@ -68,6 +110,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       },
     },
   });
+
+  console.log("LOAD SUPPLIERS...");
   return json({
     paginationResult: res.data?.pagination_result,
     actions: res.data?.actions,

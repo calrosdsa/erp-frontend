@@ -8,7 +8,7 @@ import { route } from "~/util/route"
 import { usePermission } from "../useActions"
 import { useCreateWareHouse } from "~/routes/home.stock.warehouse_/components/add-warehouse"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
-import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField"
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete"
 
 
 

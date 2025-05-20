@@ -12,20 +12,17 @@ import {
   DealData,
   dealSchema,
   mapToParticipantSchema,
-} from "~/util/data/schemas/crm/deal.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from "~/util/data/schemas/crm/deal-schema";
 import { fullName } from "~/util/convertor/convertor";
 import DealForm from "../deal-form";
 import { useEffect, useRef, useCallback, useState } from "react";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { formatAmount } from "~/util/format/formatCurrency";
 import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
-import { PartyContacts } from "~/routes/home.party/components/party-contacts";
 import { Entity } from "~/types/enums";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
-import { components } from "~/sdk";
 import { SerializeFrom } from "@remix-run/node";
 import { SmartForm } from "@/components/form/smart-form";
 import { useModalStore } from "@/components/ui/custom/modal-layout";
@@ -42,7 +39,6 @@ export default function DealInfoTab({
   data?: SerializeFrom<typeof loader>;
   keyPayload: string;
   load: () => void;
-
 }) {
   const deal = data?.deal;
   const { profile, roleActions } = appContext;
@@ -55,7 +51,6 @@ export default function DealInfoTab({
   const { editPayload, payload: payloadDeal } = useDealStore();
   const payload = useModalStore((state) => state.payload[keyPayload]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const allowEdit = perm.edit;
   const [toastID, setToastID] = useState<string | number>("");
 
@@ -97,7 +92,7 @@ export default function DealInfoTab({
             preventScrollReset: true,
           });
         }
-        load()
+        load();
       },
     },
     [fetcher.data]
@@ -136,12 +131,12 @@ export default function DealInfoTab({
             available_for_everyone: deal?.available_for_everyone || false,
             index: deal?.index || 0,
             responsible: {
-              id: deal?.responsible_id,
+              id: deal?.responsible_id || appContext.profile?.id,
               name: fullName(
-                deal?.responsible_given_name,
-                deal?.responsible_family_name
+                deal?.responsible_given_name || appContext.profile?.given_name,
+                deal?.responsible_family_name || appContext.profile?.family_name
               ),
-              uuid: deal?.uuid,
+              uuid: deal?.uuid || appContext.profile?.uuid,
             },
             deal_type: deal?.deal_type,
             contacts: data?.contacts?.map((t) => mapToContactSchema(t)) || [],

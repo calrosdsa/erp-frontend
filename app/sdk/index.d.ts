@@ -4545,8 +4545,9 @@ export interface components {
             discount: number;
             /** Format: date-time */
             end_date: string;
-            evento_name: string;
-            evento_uuid: string;
+            /** Format: int64 */
+            event_id: number | null;
+            evento_name: string | null;
             /** Format: int64 */
             id: number;
             /** Format: int64 */
@@ -5052,15 +5053,6 @@ export interface components {
             readonly $schema?: string;
             name: string;
         };
-        CreateEventBookingBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            description?: string | null;
-            name: string;
-        };
         CreateGroupRequestBody: {
             /**
              * Format: uri
@@ -5539,17 +5531,6 @@ export interface components {
             id: number;
             name: string;
             to_currency: string;
-        };
-        EditEventBookingBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            description?: string;
-            /** Format: int64 */
-            event_id: number;
-            name: string;
         };
         EditGroupRequestBody: {
             /**
@@ -6689,6 +6670,16 @@ export interface components {
              */
             type: string;
         };
+        EventBookingData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["EventBookingFields"];
+            /** Format: int64 */
+            id?: number;
+        };
         EventBookingDetail: {
             booking_info: components["schemas"]["EventBookingInfo"];
             event: components["schemas"]["EventBookingDto"];
@@ -6702,6 +6693,10 @@ export interface components {
             name: string;
             status: string;
             uuid: string;
+        };
+        EventBookingFields: {
+            description?: string | null;
+            name: string;
         };
         EventBookingInfo: {
             end_date: string;
@@ -9636,6 +9631,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["StockEntryDto"];
+        };
+        ResponseDataSupplierDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["SupplierDto"];
         };
         ResponseDataTermsAndConditionsDtoBody: {
             /**
@@ -19057,7 +19065,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditEventBookingBody"];
+                "application/json": components["schemas"]["EventBookingData"];
             };
         };
         responses: {
@@ -19090,7 +19098,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateEventBookingBody"];
+                "application/json": components["schemas"]["EventBookingData"];
             };
         };
         responses: {
@@ -21601,7 +21609,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseMessageBody"];
+                    "application/json": components["schemas"]["ResponseDataSupplierDtoBody"];
                 };
             };
             /** @description Error */

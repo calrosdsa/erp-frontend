@@ -7,7 +7,7 @@ import { route } from "~/util/route"
 import { usePermission } from "../useActions"
 import { Control } from "react-hook-form"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
-import FormAutocompleteField from "@/components/custom/select/FormAutocompleteField"
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete"
 
 
 

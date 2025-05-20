@@ -9,6 +9,8 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ListLayout } from "@/components/ui/custom/list-layout";
 import { party } from "~/util/party";
 import { useTranslation } from "react-i18next";
+import { route } from "~/util/route";
+import { DEFAULT_ID } from "~/constant";
 
 export default function SuppliersClient() {
   const globalState = useOutletContext<GlobalState>();
@@ -37,7 +39,9 @@ export default function SuppliersClient() {
       title={t(party.supplier)}
       {...(permission.create && {
         onCreate: () => {
-          createSupplier.openDialog({});
+          setParams({
+            [route.supplier]:DEFAULT_ID
+          })
         },
       })}
     >

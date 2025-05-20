@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { DealData } from "~/util/data/schemas/crm/deal.schema";
+import { DealData } from "~/util/data/schemas/crm/deal-schema";
 
 interface Payload extends DealData {
   onSave?: () => void;

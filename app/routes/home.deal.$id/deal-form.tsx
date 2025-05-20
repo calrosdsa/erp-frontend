@@ -1,6 +1,6 @@
 import { Typography } from "@/components/typography";
 import { useTranslation } from "react-i18next";
-import { DealData } from "~/util/data/schemas/crm/deal.schema";
+import { DealData } from "~/util/data/schemas/crm/deal-schema";
 import { CurrencySmartAutocomplete } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { dealTypes } from "~/data";
 import { StageSmartAutocomplete } from "~/util/hooks/fetchers/crm/use-stage.fetcher";
@@ -30,28 +30,31 @@ export default function DealForm({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {/* {JSON.stringify(form?.getValues())} */}
-        <SmartField name="name" label={t("form.name")} />
-        <SmartField name="amount" label={t("form.amount")} />
+        {/* {JSON.stringify(form?.formState.errors)} */}
+        <SmartField name="name" label={t("form.name")} required />
+        <SmartField name="amount" label={t("form.amount")} required />
 
-        <SmartField type="date" name="start_date" label={t("form.startDate")} />
+        <SmartField
+          type="date"
+          name="start_date"
+          label={t("form.startDate")}
+          required
+        />
         <SmartField type="date" name="end_data" label={t("form.endDate")} />
 
-        <StageSmartAutocomplete
-          entityID={Entity.DEAL}
-        />
+        <StageSmartAutocomplete entityID={Entity.DEAL} required={true} />
         <CurrencySmartAutocomplete
           onSelect={(e) => {
             form?.setValue("currency", e.code);
           }}
+          required={true}
         />
 
         <Typography variant="subtitle2" className=" col-span-full">
           Mas
         </Typography>
 
-        <CustomerSmartAutocomplete
-        />
+        <CustomerSmartAutocomplete />
 
         <SmartField
           name="deal_type"
@@ -59,8 +62,6 @@ export default function DealForm({
           type="select"
           options={dealTypes}
         />
-
-        
 
         <SmartField name="source" label={"Fuente"} />
         <SmartField
@@ -72,6 +73,7 @@ export default function DealForm({
         <ProfileSmartField
           name="responsible"
           label="Responsable"
+          required={true}
         />
 
         {form && (

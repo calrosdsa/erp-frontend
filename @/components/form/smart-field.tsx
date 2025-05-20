@@ -181,10 +181,10 @@ export function SmartField({
 
                 {["text", "email", "password", "number"].includes(type) && (
                   <Input
+                  {...field}
                     type={type}
                     // required={required} 
                     placeholder={placeholder}
-                    {...field}
                     value={field.value || ""}
                   />
                 )}

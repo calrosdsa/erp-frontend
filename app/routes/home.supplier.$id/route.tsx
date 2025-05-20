@@ -20,7 +20,11 @@ import { route } from "~/util/route";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { DEFAULT_ID, LOAD_ACTION } from "~/constant";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
-import { mapToSupplierData, SupplierData } from "~/util/data/schemas/buying/supplier-schema";
+import {
+  mapToSupplierData,
+  SupplierData,
+} from "~/util/data/schemas/buying/supplier-schema";
+import { components } from "~/sdk";
 
 type ActionData = {
   action: string;
@@ -35,6 +39,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let actionRes = LOAD_ACTION;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  console.log("SUPPLIER  DATA", data.supplierData);
   switch (data.action) {
     case "update-status": {
       const res = await client.PUT("/supplier/update-status", {
@@ -42,22 +47,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
-      break;
-    }
-    case "create-supplier": {
-      const res = await client.POST("/supplier", {
-        body: mapToSupplierData(data.supplierData),
-      });
-      error = res.error?.detail;
-      message = res.data?.message;
-      break;
-    }
-    case "edit-supplier": {
-      const res = await client.PUT("/supplier", {
-        body: mapToSupplierData(data.supplierData),
-      });
-      error = res.error?.detail;
-      message = res.data?.message;
       break;
     }
   }
@@ -68,18 +57,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 };
 
-export function shouldRevalidate({
-  formMethod,
-  defaultShouldRevalidate,
-  actionResult,
-}: ShouldRevalidateFunctionArgs) {
-  if (actionResult?.action == LOAD_ACTION) {
-    return defaultShouldRevalidate;
-  }
-  if (formMethod === "POST") {
-    return false;
-  }
-  return defaultShouldRevalidate;
+export function shouldRevalidate({}: ShouldRevalidateFunctionArgs) {
+  return false;
 }
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -87,43 +66,49 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   const tab = searchParams.get("tab");
-  console.log(" LOADER CUSTOMER NAME -----", params.name);
-  const r = route;
   let resConnections: Promise<FetchResponse<any, any, any>> | undefined =
     undefined;
-  const res = await client.GET("/supplier/detail/{id}", {
-    params: {
-      path: {
-        id: params.id || "",
+  let supplier: components["schemas"]["ResultEntitySupplierDto"] | undefined =
+    undefined;
+  let actions: components["schemas"]["ActionDto"][] = [];
+  if (params.id != DEFAULT_ID) {
+    console.log("GETTING SUPPLIER");
+    const res = await client.GET("/supplier/detail/{id}", {
+      params: {
+        path: {
+          id: params.id || "",
+        },
       },
-    },
-  });
-  handleError(res.error);
-  if (res.data) {
-    switch (tab) {
-      case "connections": {
-        resConnections = client.GET("/party/connections/{id}", {
-          params: {
-            path: {
-              id: res.data.result.entity.id.toString(),
+    });
+    supplier = res.data?.result;
+    actions = res.data?.actions || [];
+    handleError(res.error);
+    if (res.data) {
+      switch (tab) {
+        case "connections": {
+          resConnections = client.GET("/party/connections/{id}", {
+            params: {
+              path: {
+                id: res.data.result.entity.id.toString(),
+              },
+              query: {
+                party: partyTypeToJSON(PartyType.supplier),
+              },
             },
-            query: {
-              party: partyTypeToJSON(PartyType.supplier),
-            },
-          },
-        });
-        // console.log(resConnection.data,resConnection.error)
-        break;
+          });
+          // console.log(resConnection.data,resConnection.error)
+          break;
+        }
       }
     }
   }
-  console.log("LOAD Supplier...", params.name);
+
   return {
-    supplier: res.data?.result.entity,
-    actions: res.data?.actions,
-    addresses: res.data?.result.addresses || [],
-    contacts: res.data?.result.contacts || [],
-    activities: res.data?.result.activities || [],
+    supplier: supplier?.entity,
+    actions: actions,
+    addresses: supplier?.addresses || [],
+    contacts: supplier?.contacts || [],
+    activities: supplier?.activities || [],
     connections: resConnections,
   };
 };

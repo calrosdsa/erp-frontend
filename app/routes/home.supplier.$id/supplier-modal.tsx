@@ -1,11 +1,4 @@
-import {
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-  useOutletContext,
-  useParams,
-  useSearchParams,
-} from "@remix-run/react";
+import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
@@ -74,8 +67,10 @@ export default function SupplierModal({
     }
   };
   useEffect(() => {
-    load();
-  }, []);
+    if(supplierID){
+      load();
+    }
+  }, [supplierID]);
 
   const onChangeState = (e: EventState) => {
     const body: z.infer<typeof updateStatusWithEventSchema> = {
@@ -172,6 +167,7 @@ export default function SupplierModal({
         status: stateFromJSON(supplier?.status),
         enableEdit: isNew,
         isNew: isNew,
+        loadData: load,
         onCancel: isNew
           ? () => {
               setOpen(false);
@@ -222,6 +218,7 @@ export default function SupplierModal({
                 children: (
                   <SupplierInfo
                     load={load}
+                    closeModal={closeModal}
                     appContext={appContext}
                     data={data}
                   />

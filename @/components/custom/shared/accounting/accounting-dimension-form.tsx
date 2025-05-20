@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useCostCenterFetcher } from "~/util/hooks/fetchers/accounting/useCostCenterFetcher";
 import { useProjectFetcher } from "~/util/hooks/fetchers/accounting/useProjectFetcher";
 import FormAutocomplete from "../../select/FormAutocomplete";
-import FormAutocompleteField from "../../select/FormAutocompleteField";
+import FormAutocompleteField from "../../select/form-autocomplete";
 
 export default function AccountingDimensionForm({
   form,

@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import { loader } from "../../route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,13 @@ export const BookingInfo = ({
   const booking = data?.booking;
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
+  const [searchParams,setSearchParams] = useSearchParams()
+  const openModal =  (key:string,value:any)=> {
+    searchParams.set(key,value)
+    setSearchParams(searchParams,{
+      preventScrollReset:true
+    })
+  }
 
   const r = route;
   return (
@@ -41,14 +48,18 @@ export const BookingInfo = ({
             <DisplayValue
               label={t("_customer.base")}
               value={booking?.party_name}
+              navigate={()=>openModal(route.customer,booking?.party_id)}
             />
 
             <DisplayValue
               label={t("regate._court.base")}
               value={booking?.court_name}
+              navigate={()=>openModal(route.court,booking?.court_id)}
             />
 
-            <DisplayValue label={"Evento"} value={booking?.evento_name} />
+            <DisplayValue label={"Evento"} value={booking?.evento_name}
+            navigate={()=>openModal(route.event,booking?.event_id)}
+             />
 
             <DisplayValue
               label={"Precio de la Reserva"}

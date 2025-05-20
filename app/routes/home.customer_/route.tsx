@@ -8,6 +8,7 @@ import { customerSchema } from "~/util/data/schemas/selling/customer-schema";
 import { components } from "~/sdk";
 import { mapToContactData } from "~/util/data/schemas/contact/contact.schema";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { route } from "~/util/route";
 
 type ActionData = {
   action: string;
@@ -72,16 +73,21 @@ export function shouldRevalidate({
   formMethod,
   defaultShouldRevalidate,
   actionResult,
+  nextUrl,
 }: ShouldRevalidateFunctionArgs) {
-  if (actionResult?.action == LOAD_ACTION) {
+  if (actionResult?.actionRoot == LOAD_ACTION) {
     return defaultShouldRevalidate;
   }
   if (formMethod === "POST") {
     return false;
   }
+  const nextParams = new URL(nextUrl.href).searchParams;
+  const customer = nextParams.get(route.customer);
+  if (customer) {
+    return false;
+  }
   return defaultShouldRevalidate;
 }
-
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);

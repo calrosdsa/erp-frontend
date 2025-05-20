@@ -12,22 +12,19 @@ import {
   useTableSelectionStore,
 } from "@/components/custom/table/CustomTable";
 import { eventBookingsColumns } from "@/components/custom/table/columns/regate/event-columns";
-import { route } from "~/util/route";
-import { useCreateEvent } from "./components/use-create-event";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useTranslation } from "react-i18next";
 import DataLayout from "@/components/layout/data-layout";
 import { GenericActionsDropdown } from "../home._regate.booking/components/actions-dropdown";
-import { State } from "~/gen/common";
 import { components } from "~/sdk";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { ListLayout } from "@/components/ui/custom/list-layout";
+import { route } from "~/util/route";
+import { DEFAULT_ID } from "~/constant";
 
 export default function EventsClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
   const globalState = useOutletContext<GlobalState>();
   const { t } = useTranslation("common");
-  const createEvent = useCreateEvent();
   const [searchParams, setSearchParams] = useSearchParams();
   const [permission] = usePermission({
     actions: actions,
@@ -36,12 +33,12 @@ export default function EventsClient() {
   const fetcher = useFetcher<typeof action>();
   const { clear, selectedRowsData } = useTableSelectionStore();
 
-  const openModal = (key:string,value:string)=>{
-    searchParams.set(key,value)
-    setSearchParams(searchParams,{
-      preventScrollReset:true
-    })
-  }
+  const openModal = (key: string, value: string) => {
+    searchParams.set(key, value);
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   useDisplayMessage(
     {
@@ -55,13 +52,12 @@ export default function EventsClient() {
     [fetcher.data]
   );
 
-
   return (
     <ListLayout
       title="Eventos"
       {...(permission.create && {
         onCreate: () => {
-          createEvent.onOpenChange(true);
+          openModal(route.event, DEFAULT_ID);
         },
       })}
     >

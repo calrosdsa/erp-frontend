@@ -105,6 +105,8 @@ export default function CrmClient() {
           },
         })}
       >
+        <div className="w-full relative">
+
         <KanbanBoard
           stages={stages}
           data={deals}
@@ -121,15 +123,16 @@ export default function CrmClient() {
           cardComponent={(deal) => {
             return (
               <DealCard
-                deal={deal}
-                currency={currency}
-                openModal={openModal}
-                openActivity={(deal) => setSelectedDeal(deal)}
+              deal={deal}
+              currency={currency}
+              openModal={openModal}
+              openActivity={(deal) => setSelectedDeal(deal)}
               />
             );
           }}
           dataTransition={dataTransition}
-        />
+          />
+          </div>
         {/* {JSON.stringify(stages)} */}
       </ListLayout>
     </>

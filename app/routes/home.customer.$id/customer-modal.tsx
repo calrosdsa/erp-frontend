@@ -36,8 +36,10 @@ import ModalLayout, {
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
-import { DEFAULT_ID } from "~/constant";
+import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { SerializeFrom } from "@remix-run/node";
+import { useCustomerStore } from "./customer-store";
+import { toast } from "sonner";
 
 export default function CustomerModal({
   appContext,
@@ -63,10 +65,8 @@ export default function CustomerModal({
     roleActions: appContext.roleActions,
     actions: data?.actions,
   });
-
-  // const load = async() =>{
-  //   fetcherLoader.load(route.toRouteDetail(route.customer,customerID))
-  // }
+  const [toastID,setToastID]= useState<string | number>("")
+  const customerStore = useCustomerStore();
 
   const load = async () => {
     try {
@@ -83,11 +83,14 @@ export default function CustomerModal({
     }
   };
   useEffect(() => {
-    console.log("LOAD MODAL....");
-    load();
+    if(customerID){
+      load();
+    }
   }, [customerID]);
 
   const onChangeState = (e: EventState) => {
+    const id = toast.loading(LOADING_MESSAGE)
+    setToastID(id)
     const body: z.infer<typeof updateStatusWithEventSchema> = {
       current_state: customer?.status || "",
       party_id: customer?.uuid || "",
@@ -111,8 +114,12 @@ export default function CustomerModal({
 
   useDisplayMessage(
     {
+      toastID:toastID,
       error: fetcher.data?.error,
       success: fetcher.data?.message,
+      onSuccessMessage:()=>{
+        load()
+      },
     },
     [fetcher.data]
   );
@@ -134,7 +141,7 @@ export default function CustomerModal({
       }
       if (permission.edit && state == State.DISABLED) {
         actions.push({
-          label: "Habilitar Evento",
+          label: "Habilitar",
           onClick: () => {
             onChangeState(EventState.ENABLED_EVENT);
           },
@@ -179,10 +186,10 @@ export default function CustomerModal({
         title: isNew ? "Nuevo cliente" : customer?.name,
         view: isNew ? [] : view,
         actions: isNew ? [] : actions,
-        enableEdit:isNew,
         status: stateFromJSON(customer?.status),
+        enableEdit: isNew,
         isNew: isNew,
-        loadData:load,
+        loadData: load,
         onCancel: isNew
           ? () => {
               setOpen(false);
@@ -194,6 +201,7 @@ export default function CustomerModal({
   );
 
   const closeModal = () => {
+    customerStore.reset();
     searchParams.delete(route.customer);
     searchParams.delete("action");
     setSearchParams(searchParams, {
@@ -219,7 +227,7 @@ export default function CustomerModal({
         <LoadingSpinner />
       ) : (
         <>
-        {/* {JSON.stringify(data?.customer)} */}
+          {/* {JSON.stringify(data?.customer)} */}
           {data && (
             <TabNavigation
               defaultValue={tab}
