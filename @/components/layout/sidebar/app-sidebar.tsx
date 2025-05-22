@@ -56,7 +56,7 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
                   routeSufix: [props.data.activeCompany?.name || ""],
                   q: {
                     tab: "info",
-                    id:props.data.activeCompany?.uuid
+                    id:props.data.activeCompany?.id
                   },
                 })}
               >

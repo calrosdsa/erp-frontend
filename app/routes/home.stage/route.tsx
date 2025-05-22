@@ -20,6 +20,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   let actionRes = LOAD_ACTION;
   let results :components["schemas"]["StageDto"][] = []
   let actions:components["schemas"]["ActionDto"][] = []
+  let shouldRevalidate = false
   switch (data.action) {
     case "get":{
       const res =await client.GET("/stage",{
@@ -40,6 +41,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
       })
       message = res.data?.message
       error = res.error?.detail
+      shouldRevalidate = true
       break
     }
     case "stage-transition": {
@@ -48,6 +50,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
+      shouldRevalidate = true
       break;
     }
     case "edit": {
@@ -57,6 +60,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
       message = res.data?.message;
       error = res.error?.detail;
       actionRes = "";
+      shouldRevalidate = true
       break;
     }
     case "create": {
@@ -65,6 +69,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
+      shouldRevalidate = true
       break;
     }
   }

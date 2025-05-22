@@ -106,9 +106,10 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
     if (onSelect) {
       onSelect(item);
     }
-    if (name && name != "currency") {
+    if (name) {
+      //Fallback to ID 0 if no valid ID is provided
       form?.setValue(name, {
-        id: item["id" as keyof T],
+        id: item["id" as keyof T] || 0,
         name: item[nameK as keyof T],
       });
     }

@@ -32,36 +32,30 @@ export default function CompanyAccounts() {
   const form = useForm<AccountSettingData>({
     resolver: zodResolver(accountSettingSchema),
     defaultValues: {
-      cash_account:{
-        id:accountSettings?.cash_acct_id,
-        name:accountSettings?.cash_acct,
-        uuid:accountSettings?.cash_acct_uuid,
+      cash_account: {
+        id: accountSettings?.cash_acct_id,
+        name: accountSettings?.cash_acct,
       },
       bank_account: {
         id: accountSettings?.bank_acct_id,
         name: accountSettings?.bank_acct,
-        uuid: accountSettings?.bank_acct_uuid,
       },
       payable_account: {
         id: accountSettings?.payable_acct_id,
         name: accountSettings?.payable_acct,
-        uuid: accountSettings?.payable_acct_uuid,
       },
       cost_of_good_sold_account: {
         id: accountSettings?.cost_of_goods_sold_acct_id,
         name: accountSettings?.cost_of_goods_sold_acct,
-        uuid: accountSettings?.cost_of_goods_sold_acct_uuid,
       },
       receivable_account: {
         id: accountSettings?.receivable_acct_id,
         name: accountSettings?.receivable_acct,
-        uuid: accountSettings?.receivable_acct_uuid,
       },
       income_account: {
         id: accountSettings?.income_acct_id,
         name: accountSettings?.income_acct,
-        uuid: accountSettings?.income_acct_uuid,
-      }
+      },
     },
   });
 
@@ -119,7 +113,6 @@ export default function CompanyAccounts() {
     });
   }, [allowEdit]);
 
-  
   return (
     <FormLayout>
       <Form {...form}>
@@ -127,6 +120,7 @@ export default function CompanyAccounts() {
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
+          {JSON.stringify(formValues)}
           <div className="detail-grid">
             <Typography className=" col-span-full" variant="subtitle2">
               {t("f.join", { o: t("accounts"), p: t("settings") })}
@@ -135,7 +129,7 @@ export default function CompanyAccounts() {
               <LedgerAutocompleteFormField
                 key={name}
                 allowEdit={allowEdit}
-                control={form.control}
+                form={form}
                 name={name}
                 label={label}
                 {...(ledgerPerm?.create && {

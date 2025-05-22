@@ -235,7 +235,7 @@ export function KanbanBoard<T>({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex w-96 h-full gap-2  overflow-auto"
+            className="flex w-[95vw] md:w-[1200px] h-full gap-2  overflow-auto"
           >
             {columns.map((column, index) => (
               <div className="w-64">

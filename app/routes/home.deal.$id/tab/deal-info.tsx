@@ -42,7 +42,6 @@ export default function DealInfoTab({
 }) {
   const deal = data?.deal;
   const { profile, roleActions } = appContext;
-  const dd = useLoaderData<typeof loader>();
   const [perm] = usePermission({
     actions: data?.actions,
     roleActions,
@@ -112,10 +111,12 @@ export default function DealInfoTab({
             ...payloadDeal,
             name: deal?.name,
             amount: formatAmount(deal?.amount),
-            currency:
-              deal?.currency ||
-              appContext.companyDefaults?.currency ||
-              DEFAULT_CURRENCY,
+            currency:{
+              name:
+                deal?.currency ||
+                appContext.companyDefaults?.currency ||
+                DEFAULT_CURRENCY,
+            },
             stage: {
               name: deal?.stage,
               id: deal?.stage_id,

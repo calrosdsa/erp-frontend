@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
+import { useFetcher, useLoaderData, useOutletContext, useSearchParams } from "@remix-run/react";
 import { loader } from "./route";
 import { SmartForm } from "@/components/form/smart-form";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,7 @@ import { LOADING_MESSAGE } from "~/constant";
 import { route } from "~/util/route";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import RoleForm from "./role-form";
+import { GlobalState } from "~/types/app-types";
 
 export default function RoleInfo({
   keyPayload,
@@ -28,6 +29,7 @@ export default function RoleInfo({
   const [toastID, setToastID] = useState<string | number>("");
   const id = searchParams.get(route.workspace);
   const { t } = useTranslation("common");
+  const appContext = useOutletContext<GlobalState>()
 
   const openModal = (key: string, value: any) => {
     searchParams.set(route.workspace, value);
@@ -82,7 +84,8 @@ export default function RoleInfo({
         }}
         onSubmit={onSubmit}
       >
-        <RoleForm allowEdit={allowEdit} openModal={openModal} />
+        <RoleForm allowEdit={allowEdit} openModal={openModal}
+        appContext={appContext} />
       </SmartForm>
     </>
   );

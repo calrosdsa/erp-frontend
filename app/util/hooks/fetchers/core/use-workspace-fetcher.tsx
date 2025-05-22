@@ -1,5 +1,5 @@
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_DEBOUNCE_TIME, DEFAULT_ID, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import { formatQuery } from "..";
@@ -8,18 +8,21 @@ import {
   SmartAutocompleteProps,
 } from "@/components/form/smart-autocomplete";
 import { OpenModal } from "~/types";
+import { usePermission } from "../../useActions";
 
 type WorkSpace = components["schemas"]["WorkSpaceDto"];
 
 interface WorkspaceFormProps
   extends Partial<SmartAutocompleteProps<WorkSpace, keyof WorkSpace>> {
-    openModal:OpenModal
-  }
-export const WorkspaceForm = ({
-  ...props
-}: WorkspaceFormProps) => {
+  openModal: OpenModal;
+  roleActions: components["schemas"]["RoleActionDto"][];
+}
+export const WorkspaceForm = ({ ...props }: WorkspaceFormProps) => {
   const [fetcher, onChange] = useWokspaceFetcher();
-
+  const [permission] = usePermission({
+    actions: fetcher.data?.actions || [],
+    roleActions: props.roleActions,
+  });
   return (
     <SmartAutocomplete
       {...props}
@@ -29,7 +32,15 @@ export const WorkspaceForm = ({
       isLoading={fetcher.state == "submitting"}
       name={"workspace"}
       nameK="name"
-      navigate={(e)=>props.openModal(route.workspace,e)}
+      // addNew={() => {
+      //   props.openModal(route.workspace, DEFAULT_ID);
+      // }}
+      {...(permission.create && {
+        addNew: () => {
+          props.openModal(route.workspace, DEFAULT_ID);
+        },
+      })}
+      navigate={(e) => props.openModal(route.workspace, e)}
     />
   );
 };

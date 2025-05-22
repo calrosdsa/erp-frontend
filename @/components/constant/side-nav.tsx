@@ -113,7 +113,7 @@ export const NavItems = ({ data }: { data: GlobalState }): NavItem[] => {
   if (entities?.includes(Entity.USERS)) {
     usersChildren.push({
       title: t("users"),
-      href: r.users,
+      href: r.user,
     });
   }
 

@@ -20,7 +20,7 @@ export const dealSchema = z.object({
     stage:fieldRequired,
     customer:fieldNull,
     amount:z.coerce.number(),
-    currency:z.string(),
+    currency:fieldRequired,
     deal_type:z.string().nullable().optional(),
     source:z.string().nullable().optional(),
     source_information:z.string().nullable().optional(),
@@ -45,7 +45,7 @@ export const mapToDealData = (e:DealData) => {
     const d:components["schemas"]["DealData"] = {
         fields: {
             amount: formatAmountToInt(e.amount),
-            currency: e.currency,
+            currency: e.currency.name,
             deal_type: e.deal_type,
             name: e.name,
             responsible_id: e.responsible.id,
