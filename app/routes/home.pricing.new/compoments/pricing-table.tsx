@@ -47,10 +47,14 @@ import {
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { FormulaEngine } from "../util/formula";
-import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
+import {
+  SupplierAutoCompleteForm,
+  useSupplierDebounceFetcher,
+} from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { Control } from "react-hook-form";
 import PalettePicker from "./palette-picker";
 import { components } from "~/sdk";
+import { Autocomplete } from "@/components/custom/select/autocomplete";
 
 export interface PaginationOptions {
   rowCount?: number;
@@ -283,6 +287,7 @@ export function PricingTable<TData, TValue>({
   ];
   const rowContent = useCallback(
     (_index: number, row: any) => {
+      const [fetcher, onChange] = useSupplierDebounceFetcher();
       const tableRow = table.getRowModel().rows[_index];
       const tableMeta: any = table.options.meta;
       const isTitle = row.is_title;
@@ -348,19 +353,15 @@ export function PricingTable<TData, TValue>({
                 }}
               >
                 {columnMeta?.inputType == "autocomplete" && !isTitle ? (
-                  <SupplierAutoCompleteForm
-                    className="text-xs h-7"
-                    name={`pricing_line_items.${cell.row.index}.${cell.column.id}`}
-                    control={control}
+                  <Autocomplete
+                    data={fetcher.data?.suppliers || []}
+                    onValueChange={onChange}
+                    nameK={"name"}
+                    defaultValue={cell.row.original["supplier" as keyof TData] || ""}
                     onSelect={(e) => {
                       tableMeta?.updateCell(cell.row.index, "supplier", e.name);
-                      tableMeta?.updateCell(
-                        cell.row.index,
-                        "supplier_id",
-                        e.id
-                      );
+                      tableMeta?.updateCell(cell.row.index, "supplier_id", e.id);
                     }}
-                    roleActions={roleActions}
                   />
                 ) : currentCell == id ? (
                   <Input

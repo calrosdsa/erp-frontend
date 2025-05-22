@@ -2,11 +2,8 @@ import { moduleSelectionColumn } from "@/components/custom/table/columns/core/mo
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { useFormContext } from "@/components/form/form-provider";
 import { SmartField } from "@/components/form/smart-field";
-import { useModalStore } from "@/components/ui/custom/modal-layout";
-import { useEffect } from "react";
+
 import { useTranslation } from "react-i18next";
-import { CREATE } from "~/constant";
-import { ModuleDataType } from "~/util/data/schemas/core/module-schema";
 import { WorkSpaceData } from "~/util/data/schemas/core/workspace-schema";
 import { useActionsFieldArray } from "~/util/hooks/use-actions-field-array";
 

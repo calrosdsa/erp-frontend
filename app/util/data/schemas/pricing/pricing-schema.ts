@@ -4,6 +4,9 @@ import { isZeroValue } from "~/util";
 import { formatAmount } from "~/util/format/formatCurrency";
 import { field, fieldNull } from "..";
 
+export type PricingSchema = z.infer<typeof pricingDataSchema>;
+export type PricingLineItemSchema = z.infer<typeof pricingLineItemDataSchema>;
+
 export const pricingChargeDataSchema = z.object({
   name: z.string(),
   rate: z.coerce.number(),
@@ -57,22 +60,25 @@ export const columnConfig = z.object({});
 
 export const pricingDataSchema = z.object({
   id: z.number().optional(),
-  customer:fieldNull.optional().nullable(),
+  customer: fieldNull.optional().nullable(),
   pricing_line_items: z.array(pricingLineItemDataSchema),
   pricing_charges: z.array(pricingChargeDataSchema),
 
-  project:fieldNull.optional().nullable(),
-  costCenter:fieldNull.optional().nullable(),
+  project: fieldNull.optional().nullable(),
+  costCenter: fieldNull.optional().nullable(),
 });
 
-// export const editPricingSchema = z.object({
-//   // id: z.number(),
-//   id: z.number().optional(),
-//   customer_id: z.number().optional(),
-//   customer: z.string().optional(),
-//   pricing_line_items: z.array(pricingLineItemDataSchema),
-//   pricing_charges: z.array(pricingChargeDataSchema),
-// });
+export const mapLineItemToPricingItem = (
+  lineItem: components["schemas"]["LineItemDto"]
+) => {
+  const d:PricingLineItemSchema = {
+    description:lineItem,
+    quantity:lineItem.quantity,
+    part_number:lineItem.item_code,
+    pl_unit:lineItem.rate,
+  }
+  return d
+};
 
 export const mapPricingChargeData = (
   input: z.infer<typeof pricingChargeDataSchema>
@@ -173,7 +179,7 @@ export const mapToPricingData = (
   );
   const pricingCharges = e.pricing_charges.map((t) => mapPricingChargeData(t));
   const d: components["schemas"]["PricingData"] = {
-    id:e.id,
+    id: e.id,
     fields: {
       cost_center_id: e.costCenter?.id,
       customer_id: e.customer?.id || null,

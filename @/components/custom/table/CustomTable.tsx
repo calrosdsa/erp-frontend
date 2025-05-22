@@ -31,7 +31,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTablePagination } from "./DataTablePagination";
 import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
@@ -45,6 +44,7 @@ import { TableVirtuoso } from "react-virtuoso";
 import React from "react";
 import { useUnmount } from "usehooks-ts";
 import { cn } from "@/lib/utils";
+import { LoadingSpinner } from "../loaders/loading-spinner";
 
 export interface PaginationOptions {
   rowCount?: number;
@@ -72,6 +72,7 @@ interface DataTableProps<TData, TValue> {
   fullHeight?: boolean;
   onSelectionChange?: (selectedRows: TData[]) => void;
   maxTableHeight?: number;
+  loading?: boolean;
 }
 export const useTableSelectionStore = create<{
   selection: Set<string>;
@@ -111,7 +112,8 @@ export function DataTable<TData, TValue>({
   metaActions,
   enableRowSelection = false,
   enableSizeSelection = false,
-  fullHeight=true,
+  fullHeight = true,
+  loading = false,
   onSelectionChange,
   rowHeight = 51,
 }: DataTableProps<TData, TValue>) {
@@ -138,13 +140,13 @@ export function DataTable<TData, TValue>({
         const windowHeight = window.innerHeight;
         const containerTop = containerRef.current.getBoundingClientRect().top;
         let footerHeight = 0; // Approximate height for the footer
-        if(fullHeight){
-          footerHeight = 100
+        if (fullHeight) {
+          footerHeight = 100;
         }
         const newHeight = windowHeight - containerTop - footerHeight;
-        if(newHeight > 100){
+        if (newHeight > 100) {
           setContainerHeight(newHeight);
-        }else {
+        } else {
           setContainerHeight(300);
         }
       }
@@ -320,6 +322,8 @@ export function DataTable<TData, TValue>({
     <div className="flex flex-col h-full space-y-2 w-full">
       {metaActions && <DataTableToolbar table={table} />}
       {metaOptions && <DataTableEditFooter table={table} />}
+      
+      {loading && <LoadingSpinner />}
       <div
         ref={containerRef}
         className="flex-grow rounded-md border w-full overflow-hidden"

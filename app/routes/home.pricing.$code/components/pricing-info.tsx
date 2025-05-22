@@ -186,16 +186,7 @@ export default function PricingInfo({}: // inputRef
       disabledSave: !allowEdit,
     });
   }, [allowEdit,pricing]);
-  // useEffect(() => {
-   
-  //   toolbar.setToolbar({
-  //     onSave: () => {
-  //       inputRef.current?.click();
-  //     },
-  //     disabledSave: !hasChanged,
-  //   });
-  // }, [hasChanged, pricing]);
-
+  
   return (
     <>
       {form.getValues().pricing_charges && (

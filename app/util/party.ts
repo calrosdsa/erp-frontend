@@ -40,11 +40,14 @@ class Parties {
   paymentTermsTemplate="paymentTermsTemplate"
   cashOutflow = "cashOutflow"
 
+  deal = "deal"
+
   itemGroup = "itemGroup";
   customerGroup = "customerGroup";
   supplierGroup = "supplierGroup";
 
   accounting = "accounting"
+
 
   //Regate
   booking = "booking";

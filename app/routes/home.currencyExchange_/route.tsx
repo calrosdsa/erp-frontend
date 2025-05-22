@@ -31,7 +31,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
         },
       });
-      console.log(res.data?.pagination_result.results)
       currencyExchanges = res.data?.pagination_result.results || [];
       actions = res.data?.actions || [];
       break;

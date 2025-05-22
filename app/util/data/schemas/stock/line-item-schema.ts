@@ -89,7 +89,7 @@ export const toLineItemSchema = (
 
 export const schemaToLineItemData = (
   line: LineItemType,
-  opts: {
+  opts?: {
     updateStock?: boolean;
   }
 ): components["schemas"]["LineItemData"] => {
@@ -101,7 +101,7 @@ export const schemaToLineItemData = (
     rate: line.rate,
   };
   const lineType = itemLineTypeFromJSON(line.lineType);
-  if (lineType == ItemLineType.ITEM_LINE_RECEIPT || opts.updateStock) {
+  if (lineType == ItemLineType.ITEM_LINE_RECEIPT || opts?.updateStock) {
     lineItemData.line_receipt = {
       accepted_warehouse: line.lineItemReceipt?.acceptedWarehouseID,
       rejected_warehouse: line.lineItemReceipt?.rejectedWarehouseID,
@@ -115,7 +115,7 @@ export const schemaToLineItemData = (
       target_warehouse: line.lineItemStockEntry?.targetWarehouse,
     };
   }
-  if (lineType == ItemLineType.DELIVERY_LINE_ITEM || opts.updateStock) {
+  if (lineType == ItemLineType.DELIVERY_LINE_ITEM || opts?.updateStock) {
     lineItemData.delivery_line_item = {
       source_warehouse: line.lineItemStockEntry?.sourceWarehouse || 0,
     };
@@ -144,46 +144,41 @@ export const deliveryLineItem = z.object({
   sourceWarehouse: z.string().optional(),
 });
 
-export const lineItemSchema = z
-  .object({
-    itemLineID: z.number().optional(),
-    quantity: z.coerce.number().optional(),
-    rate: z.coerce.number(),
-    itemID: z.number(),
-    unitOfMeasureID: z.number(),
+export const lineItemSchema = z.object({
+  itemLineID: z.number().optional(),
+  quantity: z.coerce.number().optional(),
+  rate: z.coerce.number(),
+  itemID: z.number(),
+  unitOfMeasureID: z.number(),
 
-    lineType: z.string(),
-    itemLineReferenceID: z.number().optional().nullable(),
-    lineItemReceipt: lineItemReceipt.optional(),
-    lineItemStockEntry: lineItemStockEntry.optional(),
-    deliveryLineItem: deliveryLineItem.optional(),
-    amount: z.number().optional(),
+  lineType: z.string(),
+  itemLineReferenceID: z.number().optional().nullable(),
+  lineItemReceipt: lineItemReceipt.optional(),
+  lineItemStockEntry: lineItemStockEntry.optional(),
+  deliveryLineItem: deliveryLineItem.optional(),
+  amount: z.number().optional(),
 
-    uom: z.string(),
+  uom: z.string(),
 
-    item_name: z.string(),
-    item_code: z.string(),
+  item_name: z.string(),
+  item_code: z.string(),
 
-    party_type: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    // const lineType = itemLineTypeFromJSON(data.lineType);
-    // if (ItemLineType.ITEM_LINE_ORDER == lineType) {
-    //   if (data.quantity == undefined && data.quantity == "") {
-    //     ctx.addIssue({
-    //       code: z.ZodIssueCode.custom,
-    //       params: {
-    //         i18n: { key: "custom.required" },
-    //       },
-    //       path: ["quantity"],
-    //     });
-    //   } else {
-    //     data.amount = Number(data.quantity) * data.rate;
-    //   }
-    // }
-    // if (data.lineItemReceipt != undefined) {
-    //   data.quantity =
-    //     data.lineItemReceipt.acceptedQuantity +
-    //     data.lineItemReceipt.rejectedQuantity;
-    // }
-  });
+  party_type: z.string().optional(),
+});
+
+export type ProductListSchema = z.infer<typeof productListSchema>;
+
+export const productListSchema = z.object({
+  party_id: z.number(),
+  party_type: z.string(),
+  lines: z.array(lineItemSchema),
+});
+
+export const mapToProductListData = (e: ProductListSchema) => {
+  const d: components["schemas"]["ProductListData"] = {
+    party_id: e.party_id,
+    party_type: e.party_type,
+    lines: e.lines.map((t) => schemaToLineItemData(t)),
+  };
+  return d;
+};

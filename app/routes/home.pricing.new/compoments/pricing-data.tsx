@@ -1,9 +1,4 @@
-import {
-  Control,
-  useFieldArray,
-  useForm,
-  UseFormReturn,
-} from "react-hook-form";
+import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import {
   pricingChargeDataSchema,
@@ -33,7 +28,6 @@ import {
 import { PlusIcon } from "lucide-react";
 import { DataTable } from "@/components/custom/table/CustomTable";
 import { zodResolver } from "@hookform/resolvers/zod";
-import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { FetcherWithComponents, useOutletContext } from "@remix-run/react";
@@ -42,10 +36,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useTableRowActions from "~/util/hooks/useTableRowActions";
 import { Separator } from "@/components/ui/separator";
 import { Typography } from "@/components/typography";
-import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app-types";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
+import FormLayout from "@/components/custom/form/FormLayout";
+import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 
 type EditData = z.infer<typeof pricingDataSchema>;
 type LineItemType = z.infer<typeof pricingLineItemDataSchema>;
@@ -262,7 +257,6 @@ export default function PricingData({
               data={form.getValues("pricing_line_items")}
               // enableRowSelection={true}
               fixedHeight={400}
-              control={form.control}
               roleActions={roleActions}
               metaOptions={{
                 meta: {
@@ -354,9 +348,9 @@ export default function PricingData({
               <Separator className=" col-span-full" />
               <div className=" create-grid col-span-full">
                 <CustomerAutoCompleteForm
-                  control={form.control}
                   label={t("customer")}
-                  roleActions={roleActions}                  
+                  form={form}
+                  roleActions={roleActions}
                   name="customer"
                 />
                 <AccountingDimensionForm form={form} />

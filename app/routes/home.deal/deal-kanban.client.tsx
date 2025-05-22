@@ -22,7 +22,8 @@ import ActivityDeadlineTab from "../home.activity/tab/activity-deadline-tab";
 import { Entity } from "~/types/enums";
 
 export default function CrmClient() {
-  const { deals, stages, actions } = useLoaderData<typeof loader>();
+  const { deals, stages, actions, currencyExchange } =
+    useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const appContext = useOutletContext<GlobalState>();
   const { companyDefaults, roleActions } = appContext;
@@ -106,33 +107,33 @@ export default function CrmClient() {
         })}
       >
         <div className="w-full relative">
-
-        <KanbanBoard
-          stages={stages}
-          data={deals}
-          headerComponent={(deals, stage) => {
-            return (
-              <DealContentHeader
-                deals={deals}
-                stage={stage}
-                openModal={openModal}
-                currency={currency}
-              />
-            );
-          }}
-          cardComponent={(deal) => {
-            return (
-              <DealCard
-              deal={deal}
-              currency={currency}
-              openModal={openModal}
-              openActivity={(deal) => setSelectedDeal(deal)}
-              />
-            );
-          }}
-          dataTransition={dataTransition}
+          <KanbanBoard
+            stages={stages}
+            data={deals}
+            headerComponent={(deals, stage) => {
+              return (
+                <DealContentHeader
+                  deals={deals}
+                  stage={stage}
+                  currencyExchange={currencyExchange}
+                  openModal={openModal}
+                  currency={currency}
+                />
+              );
+            }}
+            cardComponent={(deal) => {
+              return (
+                <DealCard
+                  deal={deal}
+                  currency={currency}
+                  openModal={openModal}
+                  openActivity={(deal) => setSelectedDeal(deal)}
+                />
+              );
+            }}
+            dataTransition={dataTransition}
           />
-          </div>
+        </div>
         {/* {JSON.stringify(stages)} */}
       </ListLayout>
     </>

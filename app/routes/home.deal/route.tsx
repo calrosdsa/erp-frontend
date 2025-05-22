@@ -62,7 +62,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const searchParams = url.searchParams;
     console.log("LOAD DEALS...");
     // Parallelize requests with proper error handling
-    const [dealsRes, stagesRes] = await Promise.all([
+    const [dealsRes, stagesRes,currencyExchange] = await Promise.all([
       client.GET("/deal", {
         params: {
           query: {
@@ -82,6 +82,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
           },
         },
       }),
+      client.GET("/currency-exchange",{
+        params:{
+          query:{
+            size:DEFAULT_SIZE,
+          }
+        }
+      })
     ]);
 
     // const stagesRes =
@@ -90,6 +97,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       stages: stagesRes.data?.result,
       dealAction: dealsRes.data?.actions,
       actions: dealsRes.data?.actions,
+      currencyExchange:currencyExchange.data?.pagination_result.results || [],
     };
   } catch (error) {
     console.error("Loader error:", error);

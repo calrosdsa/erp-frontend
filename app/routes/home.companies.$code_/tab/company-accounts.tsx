@@ -3,6 +3,7 @@ import {
   useLoaderData,
   useNavigate,
   useOutletContext,
+  useParams,
 } from "@remix-run/react";
 import { action, loader } from "../route";
 import DisplayTextValue from "@/components/custom/display/DisplayTextValue";
@@ -23,7 +24,10 @@ import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
 import { Entity } from "~/types/enums";
 import { FieldRequiredType } from "~/util/data/schemas";
 import { useSetupToolbarStore } from "~/util/hooks/ui/useSetUpToolbar";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import { toast } from "sonner";
+import { LOADING_MESSAGE } from "~/constant";
 
 export default function CompanyAccounts() {
   const { accountSettings, actions, company } = useLoaderData<typeof loader>();
@@ -67,14 +71,10 @@ export default function CompanyAccounts() {
   const ledgerPerm = entityPermissions[Entity.LEDGER];
   const companyPerm = entityPermissions[Entity.COMPANY];
   const allowEdit = companyPerm?.edit;
+  const params = useParams();
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
-  const onSubmit = (e: AccountSettingData) => {
-    fetcher.submit({
-      action: "edit-account-setting",
-      accountSettingData: e,
-    });
-  };
+  const [toastID, setToastID] = useState<string | number>("");
   const formValues = form.getValues();
   const { setRegister } = useSetupToolbarStore();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -106,6 +106,31 @@ export default function CompanyAccounts() {
     },
   ];
 
+  const onSubmit = (e: AccountSettingData) => {
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
+    fetcher.submit(
+      {
+        action: "edit-account-setting",
+        accountSettingData: e,
+      },
+      {
+        action: route.toRouteDetail(route.company, params.code),
+        method: "POST",
+        encType: "application/json",
+      }
+    );
+  };
+
+  useDisplayMessage(
+    {
+      toastID: toastID,
+      success: fetcher.data?.message,
+      error: fetcher.data?.error,
+    },
+    [fetcher.data]
+  );
+
   useEffect(() => {
     setRegister("tab", {
       onSave: () => inputRef.current?.click(),
@@ -120,7 +145,7 @@ export default function CompanyAccounts() {
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
-          {JSON.stringify(formValues)}
+          {JSON.stringify(form.formState.errors)}
           <div className="detail-grid">
             <Typography className=" col-span-full" variant="subtitle2">
               {t("f.join", { o: t("accounts"), p: t("settings") })}

@@ -112,6 +112,7 @@ export default function PricingDetailClient() {
       partyID={pricing?.id}
       navItems={navItems}
       activities={activities}
+      fullWidth={true}
     >
       {/* {JSON.stringify(pricing)} */}
       {tab == "info" && <PricingInfo />}

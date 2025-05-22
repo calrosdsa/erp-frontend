@@ -8,6 +8,7 @@ import ActivityFeed from "../../../app/routes/home.activity/components/activity-
 import { useOutletContext } from "@remix-run/react";
 import { GlobalState } from "~/types/app-types";
 import ToolBar from "./toolbar/Toolbar";
+import { cn } from "@/lib/utils";
 
 export default function DetailLayout({
   children,
@@ -16,6 +17,7 @@ export default function DetailLayout({
   partyID,
   partyName,
   entityID,
+  fullWidth = false,
 }: {
   children: ReactNode;
   navItems: NavItem[];
@@ -23,6 +25,7 @@ export default function DetailLayout({
   partyID?: number;
   partyName?: string;
   entityID: number;
+  fullWidth?: boolean;
 }) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const appContext = useOutletContext<GlobalState>();
@@ -31,14 +34,17 @@ export default function DetailLayout({
     <div>
       <ToolBar />
       <ResponsiveSidebar navItems={navItems} />
-      <div className={`h-full grid pt-2 xl:grid-cols-7 gap-2`}>
-        <div className="border rounded-xl p-2 col-span-4">
-
+      <div
+        className={cn(`h-full grid pt-2 gap-2`, !fullWidth && "xl:grid-cols-6")}
+      >
+        <div className={cn("border rounded-xl p-2 col-span-1",
+          !fullWidth && "xl:col-span-3"
+        )}>
           <div className="px-1 sm:px-2 py-2 w-full">{children}</div>
         </div>
 
         {partyID && (
-          <div className=" col-span-3">
+          <div className={cn("col-span-1",!fullWidth && "xl: col-span-3")}>
             <ActivityFeed
               activities={activities}
               partyID={partyID}

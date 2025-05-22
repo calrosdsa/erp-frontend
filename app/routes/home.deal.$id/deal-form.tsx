@@ -30,7 +30,6 @@ export default function DealForm({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {/* {JSON.stringify(form?.formState.errors)} */}
         <SmartField name="name" label={t("form.name")} required />
         <SmartField name="amount" label={t("form.amount")} required />
 
@@ -44,9 +43,6 @@ export default function DealForm({
 
         <StageSmartAutocomplete entityID={Entity.DEAL} required={true} />
         <CurrencySmartAutocomplete
-          onSelect={(e) => {
-            form?.setValue("currency", e.code);
-          }}
           required={true}
         />
 

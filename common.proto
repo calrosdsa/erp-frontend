@@ -77,6 +77,7 @@ enum PartyType {
     cashOutflow = 51;
     deal = 52;
     chat = 53;
+    workspace = 54;
 }
 
 enum PianoPartyType {
@@ -190,6 +191,7 @@ enum ItemLineType {
     DELIVERY_LINE_ITEM = 3;
     ITEM_LINE_STOCK_ENTRY = 4;
     QUOTATION_LINE_ITEM = 5;
+    DEAL_LINE_ITEM = 6;
 }
 enum TaxChargeLineType {
     ON_NET_TOTAL = 0;

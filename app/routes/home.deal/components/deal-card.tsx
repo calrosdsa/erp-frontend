@@ -36,7 +36,7 @@ export default function DealCard({ deal, currency, openModal,openActivity }: Dea
         </span>
 
         <span className="text-sm text-secondary-foreground">
-          {formatCurrency(deal.amount, currency, i18n.language)}
+          {formatCurrency(deal.amount, deal.currency, i18n.language)}
         </span>
 
         <div

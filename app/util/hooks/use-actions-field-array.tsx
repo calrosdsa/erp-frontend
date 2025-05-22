@@ -2,6 +2,7 @@ import {
   FieldArrayPath,
   FieldValues,
   useFieldArray,
+  UseFieldArrayAppend,
   UseFieldArrayProps,
 } from "react-hook-form";
 
@@ -12,6 +13,7 @@ interface ActionsFieldArrayProps<
   TKeyName extends string
 > extends UseFieldArrayProps<TFieldValues, TFieldArrayName, TKeyName> {
   onChange?: () => void;
+  addRow?:(append: UseFieldArrayAppend<TFieldValues, TFieldArrayName>)=>void
 }
 
 // Custom hook for field array actions
@@ -34,7 +36,11 @@ export function useActionsFieldArray<
     addRow: (
       defaultValues: Partial<TFieldValues[TFieldArrayName][number]> = {}
     ) => {
-      append(defaultValues as TFieldValues[TFieldArrayName][number]);
+      if(props.addRow){
+        props.addRow(append)
+      }else{
+        append(defaultValues as TFieldValues[TFieldArrayName][number]);
+      }
     },
     removeRow: (index: number | number[]) => {
       remove(index);

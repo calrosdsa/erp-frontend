@@ -20,6 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
+  console.log("EDIT ACCOUNT SETTING...")
   switch (data.action) {
     case "edit-account-setting": {
       const res = await client.PUT("/company/setting/account", {

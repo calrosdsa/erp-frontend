@@ -6,7 +6,6 @@ export type AccountSettingData = z.infer<typeof accountSettingSchema>;
 
 export const accountSettingSchema = z
   .object({
-    id: z.number(),
     bank_account: fieldRequired,
     cash_account: fieldRequired,
     payable_account: fieldRequired,
@@ -26,7 +25,7 @@ export const mapToAccountSettingData = (e: AccountSettingData) => {
       payable_account: e.payable_account.id,
       receivable_account: e.receivable_account.id,
     },
-    id: e.id,
+    id: 0,
   };
   return d
 };

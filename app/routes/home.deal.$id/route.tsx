@@ -64,11 +64,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
+  
   const entityId = searchParams.get("entity_id") ?? Entity.DEAL.toString();
   let stages: components["schemas"]["StageDto"][] = [];
   let dealData:
     | components["schemas"]["EntityResponseResultEntityDealDetailDtoBody"]
     | undefined = undefined;
+  let lineItems: components["schemas"]["LineItemDto"][] = [];
   if (params.id != DEFAULT_ID) {
     // Crear promesas separadas para mejor legibilidad
     const stagesPromise = client.GET("/stage", {
@@ -81,7 +83,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         },
       },
     });
-
     // Crear promesa condicional para el detalle del deal
     const dealPromise = params.id
       ? client.GET("/deal/detail/{id}", {
@@ -101,6 +102,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     stages = stagesRes.data?.result || [];
     dealData = dealRes?.data;
   }
+
   return json({
     stages: stages || [],
     deal: dealData?.result.entity.deal || null,

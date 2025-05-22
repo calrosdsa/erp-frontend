@@ -57,6 +57,7 @@ export const pricingLineItemColumns = (): ColumnDef<
       cell:TableCellEditable,
       meta: {
         inputType: "autocomplete",
+        name:"supplier"
       },
     },
     {

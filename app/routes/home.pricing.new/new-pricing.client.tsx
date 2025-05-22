@@ -2,10 +2,6 @@
 
 import React, {
   useRef,
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
   FormEvent,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,14 +10,6 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { Card } from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import FormLayout from "@/components/custom/form/FormLayout";
-import {
-  pricingChargeColumns,
-  pricingLineItemColumns,
-} from "@/components/custom/table/columns/pricing/pricing-columns";
 
 import { action } from "./route";
 import { route } from "~/util/route";
@@ -32,17 +20,6 @@ import {
   pricingDataSchema,
   pricingLineItemDataSchema,
 } from "~/util/data/schemas/pricing/pricing-schema";
-import { FormulaEngine } from "./util/formula";
-import { cn } from "@/lib/utils";
-import { PricingTable } from "./compoments/pricing-table";
-import { PlusIcon } from "lucide-react";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
-import { DataTable } from "@/components/custom/table/CustomTable";
 import PricingData from "./compoments/pricing-data";
 import CreateLayout from "@/components/layout/create-layout";
 

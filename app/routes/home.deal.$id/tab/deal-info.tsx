@@ -1,10 +1,4 @@
-import {
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-  useOutletContext,
-  useSearchParams,
-} from "@remix-run/react";
+import { useFetcher, useSearchParams } from "@remix-run/react";
 import { action, loader } from "../route";
 import { GlobalState } from "~/types/app-types";
 import { useDealStore } from "../deal-store";
@@ -46,8 +40,9 @@ export default function DealInfoTab({
     actions: data?.actions,
     roleActions,
   });
+  const { editPayload } = useModalStore();
   const fetcher = useFetcher<typeof action>();
-  const { editPayload, payload: payloadDeal } = useDealStore();
+  const { editPayload: editDealPayload, payload: payloadDeal } = useDealStore();
   const payload = useModalStore((state) => state.payload[keyPayload]);
   const [searchParams, setSearchParams] = useSearchParams();
   const allowEdit = perm.edit;
@@ -73,6 +68,10 @@ export default function DealInfoTab({
         action: route.toRouteDetail(route.deal, deal?.id.toString() || "0"),
       }
     );
+
+    editPayload(keyPayload, {
+      enableEdit: false,
+    });
   };
 
   // Display toasts based on fetcher response and handle redirection.
@@ -111,7 +110,8 @@ export default function DealInfoTab({
             ...payloadDeal,
             name: deal?.name,
             amount: formatAmount(deal?.amount),
-            currency:{
+            currency: {
+              id: 0,
               name:
                 deal?.currency ||
                 appContext.companyDefaults?.currency ||

@@ -38,7 +38,7 @@ export interface AutoCompleteProps<T extends object, K extends keyof T> {
   onBlur?: (e: string) => void;
   className?: string;
   inputClassName?: string;
-  defaultValue?: string;
+  defaultValue?: any;
   addNew?: () => void;
   required?: boolean;
   isSearch?: boolean;

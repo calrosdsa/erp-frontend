@@ -52,7 +52,7 @@ export default function ModalLayout({
     <Sheet open={open} onOpenChange={(e) => onOpenChange?.(e)} modal={true}>
       <SheetContent
         onInteractOutside={(event) => event.preventDefault()}
-        className="w-full md:max-w-full md:w-[80%] xl:w-[70%] overflow-auto  [&>button]:hidden px-0 pb-20"
+        className="w-full md:max-w-full md:w-[80%] xl:w-[80%] overflow-auto  [&>button]:hidden px-0 pb-20"
       >
         <div className="px-5">
           <SheetHeader>
@@ -77,7 +77,7 @@ export default function ModalLayout({
                 {payload.actions &&
                   payload.actions.length > 0 &&
                   payload.status != State.DRAFT && (
-                    <DropdownMenu modal={true}>
+                    <DropdownMenu >
                       <DropdownMenuTrigger asChild>
                         <Button
                           size={"sm"}
@@ -265,7 +265,7 @@ export default function ModalLayout({
         </div>
 
         {(payload.enableEdit || payload.isNew) && (
-          <div className="fixed  w-full right-0  md:max-w-full md:w-[80%] xl:w-[70%]  bottom-0 border-t shadow-xl bg-background">
+          <div className="fixed  w-full right-0  md:max-w-full md:w-[80%] xl:w-[80%]  bottom-0 border-t shadow-xl bg-background">
             <div className="flex justify-center items-center space-x-2 h-16 ">
               <Button
                 size={"lg"}

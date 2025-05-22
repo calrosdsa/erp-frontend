@@ -28,9 +28,7 @@ import {
   lineItemSchema,
 } from "~/util/data/schemas/stock/line-item-schema";
 import DisplayTextValue from "../../display/DisplayTextValue";
-import { Separator } from "@/components/ui/separator";
-import { PriceAutocompleteForm } from "~/util/hooks/fetchers/use-item-price-for-order";
-import useEditableTable from "~/util/hooks/useEditableTable";
+
 
 export default function LineItems({
   status,

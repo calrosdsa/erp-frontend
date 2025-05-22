@@ -17,7 +17,7 @@ interface TableCellProps<TData> {
   data?: SelectItem[];
 }
 
-export default function TableCellEditable<TData>({
+export default function   TableCellEditable<TData>({
   getValue,
   row,
   column,
@@ -44,7 +44,7 @@ export default function TableCellEditable<TData>({
   const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     // displayValidationMessage(e);
     setValue(e.target.value);
-    tableMeta?.updateCell(
+    tableMeta?.updateCell(    
       row.index,
       column.id,
       e.target.value,

@@ -891,23 +891,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/company/{uuid}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get company by uuid */
-        get: operations["get-company-by-uuid"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/cost-center": {
         parameters: {
             query?: never;
@@ -1583,6 +1566,23 @@ export interface paths {
         post: operations["add-line-item"];
         /** Delete Line Item */
         delete: operations["delete-line-item"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/item-line/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upsert Product List */
+        post: operations["upsert-product-list"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -5704,19 +5704,6 @@ export interface components {
             message: string;
             result: components["schemas"]["Client"];
         };
-        EntityResponseCompanyBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            actions: components["schemas"]["ActionDto"][];
-            associated_actions: {
-                [key: string]: components["schemas"]["ActionDto"][] | undefined;
-            };
-            message: string;
-            result: components["schemas"]["Company"];
-        };
         EntityResponseGeneralLedgerDataBody: {
             /**
              * Format: uri
@@ -8468,6 +8455,17 @@ export interface components {
             supplier_id: number;
             tva_fn: string;
             tva_total_fn: string;
+        };
+        ProductListData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            lines: components["schemas"]["LineItemData"][];
+            /** Format: int64 */
+            party_id: number;
+            party_type: string;
         };
         ProfileDto: {
             email: string;
@@ -13183,39 +13181,6 @@ export interface operations {
             };
         };
     };
-    "get-company-by-uuid": {
-        parameters: {
-            query?: never;
-            header?: {
-                "Accept-Language"?: string;
-            };
-            path: {
-                uuid: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntityResponseCompanyBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
     "cost-centers": {
         parameters: {
             query: {
@@ -15108,6 +15073,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["DeleteLineItemRequestBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "upsert-product-list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductListData"];
             };
         };
         responses: {

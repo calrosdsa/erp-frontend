@@ -27,6 +27,7 @@ class Routes {
   group = "group";
   groups = this.base + "/group";
   companies = this.base + "/companies";
+  company = "companies"
   companiesM = "companies";
 
   invoice = this.base + "/invoice";

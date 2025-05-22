@@ -28,6 +28,12 @@ import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { SerializeFrom } from "@remix-run/node";
 import { toast } from "sonner";
+import DealItemsTab from "./tab/deal-items";
+import { useEntityPermission } from "~/util/hooks/useActions";
+import { ButtonToolbar } from "~/types/actions";
+import { Entity } from "~/types/enums";
+import { party } from "~/util/party";
+import { usePricingStore } from "../home.pricing.new/pricing-store";
 
 export default function DealModal({ appContext }: { appContext: GlobalState }) {
   // const [open, setOpen] = useState(true);
@@ -44,6 +50,11 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
   const stages = data?.stages;
   const id = searchParams.get(route.deal) || "";
   const [toastID, setToastID] = useState<string | number>("");
+  const entityPermission = useEntityPermission({
+    entities: data?.entityActions,
+    roleActions: appContext.roleActions,
+  });
+  const pricingStore = usePricingStore()
 
   const dealTransition = (
     destinationStage: components["schemas"]["StageDto"]
@@ -95,10 +106,9 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
     }
   }, [id]);
 
-  
   useDisplayMessage(
     {
-      toastID:toastID,
+      toastID: toastID,
       success: fetcherStage.data?.message,
       error: fetcherStage.data?.error,
       onSuccessMessage: () => {
@@ -120,11 +130,43 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
   setUpModalPayload(
     key,
     () => {
-      console.log("MOUNT DEAL...");
+      let actions: ButtonToolbar[] = [];
       const isNew = DEFAULT_ID == id;
+      const pricingPerm = entityPermission[Entity.PRICING];
+      const quotationPerm = entityPermission[Entity.QUOTATION];
+      const supplierQuotationPerm = entityPermission[Entity.SUPPLIER_QUOTATION];
+      if (pricingPerm?.create) {
+        actions.push({
+          onClick: () => {
+              pricingStore.onPayload({
+                customer:{
+                  id:deal?.customer_id,
+                  name:deal?.customer
+                }
+              })
+          },
+          label: "Crear Pricing",
+        });
+      }
+      if (quotationPerm?.create) {
+        actions.push({
+          onClick: () => {},
+          label: t("f.add-new", { o: t(party.salesQuotation) }),
+        });
+      }
+      if (supplierQuotationPerm?.create) {
+        actions.push({
+          onClick: () => {},
+          label: t("f.add-new", { o: t(party.supplierQuotation) }),
+        });
+      }
+
+      console.log("MOUNT DEAL...", deal);
+
       return {
         title: isNew ? "Nuevo trato" : deal?.name,
         enableEdit: isNew,
+        actions: actions,
         isNew: isNew,
         onCancel: isNew
           ? () => {
@@ -150,8 +192,6 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
           selectedStageID={deal?.stage_id || payload.stage?.id}
           transition={dealTransition}
         />
-
-        {/* <ResponsiveSidebar navItems={navItems} /> */}
         {loading && !data ? (
           <LoadingSpinner />
         ) : (
@@ -175,6 +215,17 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
                         data={data}
                         keyPayload={key}
                         load={load}
+                      />
+                    ),
+                  },
+                  {
+                    label: "Productos",
+                    value: "products",
+                    children: (
+                      <DealItemsTab
+                        appContext={appContext}
+                        data={data}
+                        keyPayload={key}
                       />
                     ),
                   },

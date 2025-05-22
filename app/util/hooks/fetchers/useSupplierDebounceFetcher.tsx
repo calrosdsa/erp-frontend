@@ -8,50 +8,31 @@ import { usePermission } from "../useActions";
 import { useCreateSupplier } from "~/routes/home.supplier_/components/create-supplier";
 import { Control } from "react-hook-form";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
+import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/form-autocomplete";
 
-export const SupplierAutoCompleteForm = ({
-  allowEdit,
-  control,
-  label,
-  onSelect,
-  onClear,
-  roleActions,
-  required,
-  className,
-  name,
-}: {
-  allowEdit?: boolean;
-  control?: Control<any, any>;
-  label?: string;
-  required?:boolean;
-  onSelect: (e: components["schemas"]["SupplierDto"]) => void;
-  onClear?:()=>void,
+type Supplier = components["schemas"]["SupplierDto"];
+interface SupplierFormProps
+  extends Partial<AutocompleteFormProps<Supplier, keyof Supplier>> {
   roleActions?: components["schemas"]["RoleActionDto"][];
-  className?:string
-  name?:string
-}) => {
+  openModal?: () => void;
+}
+
+export const SupplierAutoCompleteForm = ({ ...props }: SupplierFormProps) => {
   const [fetcher, onChange] = useSupplierDebounceFetcher();
-  const createSupplier = useCreateSupplier();
   const [permission] = usePermission({
-    roleActions,
+    roleActions: props.roleActions,
     actions: fetcher.data?.actions,
   });
   return (
-    <FormAutocomplete
+    <FormAutocompleteField
+      {...props}
       data={fetcher.data?.suppliers || []}
       onValueChange={onChange}
-      label={label}
-      required={required}
-      name={name || "supplier"}
+      name={props.name || "supplier"}
       nameK="name"
-      control={control}
-      className={className}
-      onClear={onClear}
-      allowEdit={allowEdit}
-      onSelect={onSelect}
       {...(permission.create && {
         addNew: () => {
-          createSupplier.openDialog({});
+          props.openModal?.();
         },
       })}
     />
@@ -91,10 +72,7 @@ export const useSupplierDebounceFetcher = () => {
         method: "POST",
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         encType: "application/json",
-        action: r.toRoute({
-          main: partyTypeToJSON(PartyType.supplier),
-          routePrefix: [r.buyingM],
-        }),
+        action: r.to(route.supplier),
       }
     );
   };
