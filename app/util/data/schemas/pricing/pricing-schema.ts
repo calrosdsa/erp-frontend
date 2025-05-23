@@ -72,7 +72,7 @@ export const mapLineItemToPricingItem = (
   lineItem: components["schemas"]["LineItemDto"]
 ) => {
   const d:PricingLineItemSchema = {
-    description:lineItem,
+    description:lineItem.item_description,
     quantity:lineItem.quantity,
     part_number:lineItem.item_code,
     pl_unit:lineItem.rate,

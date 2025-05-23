@@ -10,6 +10,7 @@ import {
   setUpToolbarRegister,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { Entity } from "~/types/enums";
+import { stateFromJSON } from "~/gen/common";
 
 export default function CostCenterDetailClient() {
   const { costCenter, activities } = useLoaderData<typeof loader>();
@@ -24,6 +25,7 @@ export default function CostCenterDetailClient() {
       routeSufix: [costCenter?.name || ""],
       q: {
         tab: tab,
+        id:costCenter?.id,
       },
     });
   };
@@ -36,6 +38,8 @@ export default function CostCenterDetailClient() {
   setUpToolbarRegister(() => {
     return {
       titleToolbar: costCenter?.name,
+      status: stateFromJSON(costCenter?.status),
+    
     };
   }, [costCenter]);
   return (

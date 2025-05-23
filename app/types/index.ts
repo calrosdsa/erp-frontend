@@ -10,4 +10,8 @@ export interface NavItem {
   children?: NavItem[];
 }
 
-export type OpenModal = (key: string, value: any) => void;
+export type OpenModalFunc = (
+  key: string,
+  value: any,
+  args?: Record<string, any>
+) => void;

@@ -4,6 +4,7 @@ import {
   FetcherWithComponents,
   useOutletContext,
   useParams,
+  useSearchParams,
 } from "@remix-run/react";
 import { MutableRefObject, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -27,6 +28,7 @@ import { party } from "~/util/party";
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import { receiptDataSchema } from "~/util/data/schemas/receipt/receipt-schema";
 import { cn } from "@/lib/utils";
+import { DocumentRegisters } from "@/components/custom/shared/document/document-registers";
 
 type Data = z.infer<typeof receiptDataSchema>;
 
@@ -37,7 +39,6 @@ export const ReceiptData = ({
   form,
   allowEdit,
   allowCreate,
-  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<Data>;
@@ -45,7 +46,6 @@ export const ReceiptData = ({
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
   allowCreate?: boolean;
-  isNew?: boolean;
 }) => {
   const params = useParams();
   const partyReceipt = params.partyReceipt || "";
@@ -55,6 +55,19 @@ export const ReceiptData = ({
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
   const p = party;
+  const [searchParams,setSearchParams] = useSearchParams()
+
+  const openModal = (key: string, value: any, args?: Record<string, any>) => {
+    searchParams.set(key, value);
+    if (args) {
+      Object.entries(args).forEach(([key, value]) => {
+        searchParams.set(key, value);
+      });
+    }
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
@@ -66,18 +79,24 @@ export const ReceiptData = ({
     taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.lines]);
 
+  DocumentRegisters({form})
+
   return (
     <FormLayout>
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={cn(isNew ? "create-grid" : "detail-grid")}
+          className={cn(
+            // isNew ? "create-grid" : "detail-grid"
+            "create-grid"
+          )}
         >
           <PartyAutocompleteField
             partyType={partyReceipt}
             roleActions={roleActions}
-            control={form.control}
+            form={form}
             allowEdit={allowEdit}
+            openModal={openModal}
           />
           <CustomFormDate
             control={form.control}
@@ -94,7 +113,7 @@ export const ReceiptData = ({
           />
 
           <CurrencyAndPriceList
-            control={form.control}
+            form={form}
             allowEdit={allowEdit}
             isSelling={partyReceipt == p.salesQuotation}
             isBuying={partyReceipt == p.supplierQuotation}

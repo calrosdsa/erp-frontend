@@ -200,6 +200,7 @@ export default function LineItems({
           }}
         />
       </div>
+      
       <DisplayTextValue
         title="Total"
         value={formatCurrencyAmount(total, currency, i18n.language)}

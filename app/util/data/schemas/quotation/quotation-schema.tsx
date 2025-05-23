@@ -6,7 +6,7 @@ import { components } from "~/sdk";
 import { formatRFC3339 } from "date-fns";
 import { lineItemSchemaToLineData } from "../buying/order-schema";
 
-
+export type QuotationSchema = z.infer<typeof quotationDataSchema>
 
   export const quotationDataSchema = z.object({
     id:z.number().optional(),

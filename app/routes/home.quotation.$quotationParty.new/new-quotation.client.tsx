@@ -12,30 +12,20 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { route } from "~/util/route";
 import { action } from "./route";
-import { Form } from "@/components/ui/form";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import SelectForm from "@/components/custom/select/SelectForm";
-import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
-import { Separator } from "@/components/ui/separator";
 import { GlobalState } from "~/types/app-types";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
-import { useEffect, useMemo, useRef } from "react";
+import { useRef } from "react";
 import { quotationDataSchema } from "~/util/data/schemas/quotation/quotation-schema";
-import { addMonths, format, formatRFC3339 } from "date-fns";
-
-import { useLineItems } from "@/components/custom/shared/item/use-line-items";
-import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
-import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
-import { Card } from "@/components/ui/card";
+import { addMonths, format } from "date-fns";
 import { QuotationData } from "./quotation-data";
 import CreateLayout from "@/components/layout/create-layout";
+import { useQuotationStore } from "./quotation-store";
 
-
-type QuotationDataType = z.infer<typeof quotationDataSchema>
+type QuotationDataType = z.infer<typeof quotationDataSchema>;
 
 export default function NewQuotationClient() {
   const { t } = useTranslation("common");
@@ -46,33 +36,19 @@ export default function NewQuotationClient() {
   const r = route;
   const params = useParams();
   const quotationParty = params.quotationParty || "";
-  const lineItemsStore = useLineItems();
-  const taxLinesStore = useTaxAndCharges();
-  const { payload } = useDocumentStore();
+  
+  const { payload } = useQuotationStore();
   const form = useForm<QuotationDataType>({
     resolver: zodResolver(quotationDataSchema),
     defaultValues: {
+      ...payload,
       validTill: addMonths(new Date(), 1),
       postingTime: format(new Date(), "HH:mm:ss"),
       postingDate: new Date(),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
       currency: payload?.currency || companyDefaults?.currency,
-      
-      party:{
-        id:payload?.partyID,
-        name:payload?.partyName,
-      },
-      costCenter:{
-        name:payload?.costCenterName,
-        id:payload?.costCenterID,
-      },
-      project: {
-        name:payload?.projectName,
-        id:payload?.projectID,
-      },
-
-      lines: lineItemsStore.lines,
-      taxLines: taxLinesStore.lines,
+      lines: payload.lines || [],
+      taxLines: payload.taxLines || [],
     },
   });
 
@@ -128,16 +104,14 @@ export default function NewQuotationClient() {
     [fetcher.data]
   );
 
-  
   return (
-      <CreateLayout>
-        <QuotationData
+    <CreateLayout>
+      <QuotationData
         form={form}
         fetcher={fetcher}
         onSubmit={onSubmit}
         inputRef={inputRef}
-        isNew={true}
-        />
-      </CreateLayout>
+      />
+    </CreateLayout>
   );
 }

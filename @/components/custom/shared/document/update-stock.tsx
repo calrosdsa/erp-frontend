@@ -59,7 +59,7 @@ export default function UpdateStock({
       )}
       {((updateStock && isSaleInvoice) || isDeliveryNote) && (
         <WarehouseAutocompleteFormField
-          control={form.control}
+          form={form}
           label={t("f.source", { o: t("_warehouse.base") })}
           isGroup={false}
           allowEdit={allowEdit}
@@ -69,7 +69,7 @@ export default function UpdateStock({
       {((updateStock && isPurchaseInvoice) || isPurchaseReceipt) && (
         <>
         <WarehouseAutocompleteFormField
-          control={form.control}
+          form={form}
           label={t("warehouse")}
           isGroup={false}
           allowEdit={allowEdit}

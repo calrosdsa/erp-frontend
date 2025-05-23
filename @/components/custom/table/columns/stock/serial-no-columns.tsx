@@ -32,7 +32,6 @@ export const serialNoSumaryColumns = ({}: {}): ColumnDef<
             navigate={(name) =>
               r.toRoute({
                 main: r.serialNo,
-                routePrefix: [r.stockM],
                 routeSufix: [name],
                 q: {
                   tab: "info",
@@ -53,7 +52,6 @@ export const serialNoSumaryColumns = ({}: {}): ColumnDef<
             navigate={(name) =>
               r.toRoute({
                 main: r.batchBundle,
-                routePrefix: [r.stockM],
                 routeSufix: [name],
                 q: {
                   tab: "info",
@@ -98,11 +96,10 @@ export const serialNoSumaryColumns = ({}: {}): ColumnDef<
             navigate={(name) =>
               r.toRoute({
                 main: r.warehouse,
-                routePrefix: [r.stockM],
                 routeSufix: [name],
                 q: {
                   tab: "info",
-                  id: rowData.warehouse_uuid,
+                  id: rowData.warehouse_id,
                 },
               })
             }

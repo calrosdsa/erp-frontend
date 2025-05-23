@@ -38,8 +38,7 @@ export const lineItemDefault = (opts: {
 
 export const toLineItemSchema = (
   line: components["schemas"]["LineItemDto"],
-  opts: {
-    to?: string;
+  opts?: {
     partyType?: string;
     updateStock?: boolean;
   }
@@ -57,14 +56,14 @@ export const toLineItemSchema = (
     item_name: line.item_name,
     item_code: line.item_code,
     uom: line.uom,
-    party_type: opts.partyType,
+    party_type: opts?.partyType,
   };
   const lineType = itemLineTypeFromJSON(line.line_type);
-  const partyType = partyTypeFromJSON(opts.partyType);
+  const partyType = partyTypeFromJSON(opts?.partyType);
 
   if (
     lineType == ItemLineType.ITEM_LINE_RECEIPT ||
-    (opts.updateStock && partyType == PartyType.purchaseInvoice)
+    (opts?.updateStock && partyType == PartyType.purchaseInvoice)
   ) {
     lineItem.lineItemReceipt = {
       acceptedQuantity: line.accepted_quantity,
@@ -77,7 +76,7 @@ export const toLineItemSchema = (
   }
   if (
     lineType == ItemLineType.DELIVERY_LINE_ITEM ||
-    (opts.updateStock && partyType == PartyType.saleInvoice)
+    (opts?.updateStock && partyType == PartyType.saleInvoice)
   ) {
     lineItem.deliveryLineItem = {
       sourceWarehouseID: line.source_warehouse_id,

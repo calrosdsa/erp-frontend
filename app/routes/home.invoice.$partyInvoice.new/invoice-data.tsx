@@ -1,18 +1,15 @@
-
-
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Form } from "@/components/ui/form";
 import {
   FetcherWithComponents,
   useOutletContext,
   useParams,
+  useSearchParams,
 } from "@remix-run/react";
 import { MutableRefObject, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import {
-  PartyAutocompleteField,
-} from "../home.order.$partyOrder.new/components/party-autocomplete";
+import { PartyAutocompleteField } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app-types";
 import { Separator } from "@/components/ui/separator";
@@ -31,6 +28,7 @@ import { party } from "~/util/party";
 import { invoiceDataSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import { cn } from "@/lib/utils";
+import { DocumentRegisters } from "@/components/custom/shared/document/document-registers";
 
 type Data = z.infer<typeof invoiceDataSchema>;
 
@@ -41,7 +39,6 @@ export const InvoiceData = ({
   form,
   allowEdit,
   allowCreate,
-  isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<Data>;
@@ -49,7 +46,6 @@ export const InvoiceData = ({
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
   allowCreate?: boolean;
-  isNew?:boolean
 }) => {
   const params = useParams();
   const partyInvoice = params.partyInvoice || "";
@@ -59,6 +55,19 @@ export const InvoiceData = ({
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
   const p = party;
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const openModal = (key: string, value: any, args?: Record<string, any>) => {
+    searchParams.set(key, value);
+    if (args) {
+      Object.entries(args).forEach(([key, value]) => {
+        searchParams.set(key, value);
+      });
+    }
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
@@ -70,95 +79,99 @@ export const InvoiceData = ({
     taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.lines]);
 
+  DocumentRegisters({ form });
+
   return (
     <FormLayout>
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
           className={cn(
-            isNew ? "create-grid":"detail-grid"
+            // isNew ? "create-grid":"detail-grid"
+            "create-grid"
           )}
         >
-            {/* {JSON.stringify(form.getValues().lines)} */}
-            <PartyAutocompleteField
-              partyType={partyInvoice}
-              roleActions={roleActions}
-              control={form.control}
-              allowEdit={allowEdit}
-            />
-            <CustomFormDate
-              control={form.control}
-              name="postingDate"
-              label={t("form.postingDate")}
-              allowEdit={allowEdit}
-            />
-            <CustomFormTime
-              control={form.control}
-              name="postingTime"
-              label={t("form.postingTime")}
-              allowEdit={allowEdit}
-              description={formValues.tz}
-            />
+          {/* {JSON.stringify(form.getValues().lines)} */}
+          <PartyAutocompleteField
+            partyType={partyInvoice}
+            roleActions={roleActions}
+            form={form}
+            allowEdit={allowEdit}
+            openModal={openModal}
+          />
+          <CustomFormDate
+            control={form.control}
+            name="postingDate"
+            label={t("form.postingDate")}
+            allowEdit={allowEdit}
+          />
+          <CustomFormTime
+            control={form.control}
+            name="postingTime"
+            label={t("form.postingTime")}
+            allowEdit={allowEdit}
+            description={formValues.tz}
+          />
 
-            <CustomFormDate
-              control={form.control}
-              name="dueDate"
-              label={t("form.dueDate")}
-              allowEdit={allowEdit}
-            />
+          <CustomFormDate
+            control={form.control}
+            name="dueDate"
+            label={t("form.dueDate")}
+            allowEdit={allowEdit}
+          />
 
-            {/* <CurrencyAutocompleteForm
+          {/* <CurrencyAutocompleteForm
               control={form.control}
               name="currency"
               label={t("form.currency")}
               allowEdit={allowEdit}
             /> */}
-            <CurrencyAndPriceList
-              control={form.control}
-              allowEdit={allowEdit}
-              isSelling={partyInvoice == p.saleInvoice}
-              isBuying={partyInvoice == p.purchaseInvoice}
-            />
+          <CurrencyAndPriceList
+            form={form}
+            allowEdit={allowEdit}
+            isSelling={partyInvoice == p.saleInvoice}
+            isBuying={partyInvoice == p.purchaseInvoice}
+          />
 
-            <Separator className=" col-span-full" />
+          <Separator className=" col-span-full" />
 
-            {/* <CurrencyAndPriceList form={form} /> */}
-            <LineItems
-              onChange={(e) => {
-                form.setValue("lines", e);
-                form.trigger("lines");
-              }}
-              allowEdit={allowEdit}
-              allowCreate={allowCreate}
-              currency={formValues.currency}
-              lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
-              docPartyType={partyInvoice}
-              priceListID={formValues.priceList?.id || undefined}
-              complement={
-                <UpdateStock
-                  form={form}
-                  allowEdit={allowEdit}
-                  updateStock={formValues.updateStock}
-                  partyType={partyInvoice}
-                  isInvoice={true}
-                />
-              }
-            />
-            <TaxAndChargesLines
-              onChange={(e) => {
-                form.setValue("taxLines", e);
-                form.trigger("taxLines");
-              }}
-              docPartyType={partyInvoice}
-              allowCreate={allowCreate}
-              allowEdit={allowEdit}
-              form={form}
-              currency={formValues.currency}
-            />
-            <GrandTotal currency={formValues.currency} />
-            <TaxBreakup currency={formValues.currency} />
+          {/* <CurrencyAndPriceList form={form} /> */}
+          <LineItems
+            onChange={(e) => {
+              form.setValue("lines", e);
+              form.trigger("lines");
+            }}
+            allowEdit={allowEdit}
+            allowCreate={allowCreate}
+            currency={formValues.currency}
+            lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
+            docPartyType={partyInvoice}
+            priceListID={formValues.priceList?.id || undefined}
+            complement={
+              <UpdateStock
+                form={form}
+                allowEdit={allowEdit}
+                updateStock={formValues.updateStock}
+                partyType={partyInvoice}
+                isInvoice={true}
+              />
+            }
+          />
+          <TaxAndChargesLines
+            onChange={(e) => {
+              form.setValue("taxLines", e);
+              form.trigger("taxLines");
+            }}
+            docPartyType={partyInvoice}
+            allowCreate={allowCreate}
+            allowEdit={allowEdit}
+            form={form}
+            currency={formValues.currency}
+          />
+          <GrandTotal currency={formValues.currency} />
+          <TaxBreakup currency={formValues.currency} />
 
-            <AccountingDimensionForm form={form} allowEdit={allowEdit} />
+          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

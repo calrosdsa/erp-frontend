@@ -7,13 +7,18 @@ import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import { z } from "zod";
 import TableCellPrice from "../../cells/table-cell-price";
 import TableCellIndex from "../../cells/table-cell-index";
-import { formatAmount, formatTax, getTaxPorcent } from "~/util/format/formatCurrency";
+import {
+  formatAmount,
+  formatTax,
+  getTaxPorcent,
+} from "~/util/format/formatCurrency";
 import { lineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { Input } from "@/components/ui/input";
 import TableCellEditable from "../../cells/table-cell-editable";
 import { PriceAutocompleteForm } from "~/util/hooks/fetchers/use-item-price-for-order";
+import { Link } from "@remix-run/react";
 
 export const lineItemsColumns = ({
   currency,
@@ -33,11 +38,17 @@ export const lineItemsColumns = ({
   const { t, i18n } = useTranslation("common");
   columns.push({
     id: "item",
-    size: 200,
+    size: 250,
     header: t("item"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       const tableMeta: any = props.table.options.meta;
+      if (!allowEdit) {
+        return <Link className=" underline" to={route.toRouteDetail(route.item,rowData.item_name,{
+          tab:"info",
+          id:rowData.item_code
+        })}>{rowData.item_name}</Link>;
+      }
       return (
         <PriceAutocompleteForm
           allowEdit={allowEdit}
@@ -48,9 +59,17 @@ export const lineItemsColumns = ({
             tableMeta?.updateCell(props.row.index, "item_code", e.item_code);
             tableMeta?.updateCell(props.row.index, "uom", e.item_uom);
             tableMeta?.updateCell(props.row.index, "itemID", e.item_id);
-            tableMeta?.updateCell(props.row.index, "unitOfMeasureID", e.item_uom_id);
+            tableMeta?.updateCell(
+              props.row.index,
+              "unitOfMeasureID",
+              e.item_uom_id
+            );
             tableMeta?.updateCell(props.row.index, "quantity", 1);
-            tableMeta?.updateCell(props.row.index, "rate", formatAmount(e.rate));
+            tableMeta?.updateCell(
+              props.row.index,
+              "rate",
+              formatAmount(e.rate)
+            );
             // tableMeta?.updateCell(props.row.index, "payment_term_id", e.id);
           }}
           priceListID={priceListID}

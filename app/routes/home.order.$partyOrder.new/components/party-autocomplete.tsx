@@ -10,10 +10,12 @@ import { components } from "~/sdk";
 import { GlobalState } from "~/types/app-types";
 import { orderDataSchema } from "~/util/data/schemas/buying/order-schema";
 import {
+  CustomerAutoCompleteForm,
   CustomerSearch,
   useCustomerDebounceFetcher,
 } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import {
+  SupplierAutoCompleteForm,
   SupplierSearch,
   useSupplierDebounceFetcher,
 } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
@@ -22,6 +24,7 @@ import { party } from "~/util/party";
 import { useSearchParams } from "@remix-run/react";
 import { route } from "~/util/route";
 import { CREATE, DEFAULT_ID } from "~/constant";
+import { OpenModalFunc } from "~/types";
 
 export default function PartyAutocomplete({
   party,
@@ -110,44 +113,20 @@ export default function PartyAutocomplete({
 
 export const PartyAutocompleteField = ({
   partyType,
-  control,
   roleActions,
+  form,
   allowEdit,
+  openModal,
 }: {
   partyType: string;
-  control: Control<any, any>;
   allowEdit?: boolean;
+  form: any;
   roleActions: components["schemas"]["RoleActionDto"][];
+  openModal: OpenModalFunc;
 }) => {
   const { t } = useTranslation("common");
-  const [supplierDebounceFetcher, onSupplierChange] =
-    useSupplierDebounceFetcher();
-  const [customerFetcher, onCustomerChange] = useCustomerDebounceFetcher();
-  const [customerPermission] = usePermission({
-    actions: customerFetcher.data?.actions,
-    roleActions: roleActions,
-  });
   const p = party;
-  const createCustomer = useCreateCustomer();
-  const [supplierPermission] = usePermission({
-    actions: supplierDebounceFetcher.data?.actions,
-    roleActions: roleActions,
-  });
-  const createSupplier = useCreateSupplier();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const setParams = (params: Record<string, any>) => {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value) {
-        searchParams.set(key, value); // Update or add the parameter
-      } else {
-        searchParams.delete(key); // Remove the parameter if the value is empty
-      }
-    });
-    setSearchParams(searchParams, {
-      preventScrollReset: true,
-    });
-  };
-
+  const formValues = form.getValues();
   return (
     <>
       {(partyType == p.purchaseOrder ||
@@ -155,21 +134,27 @@ export const PartyAutocompleteField = ({
         partyType == p.supplier ||
         partyType == p.purchaseReceipt ||
         partyType == p.supplierQuotation) && (
-        <FormAutocompleteField
-          required={true}
-          data={supplierDebounceFetcher.data?.suppliers || []}
-          control={control}
-          name="party"
-          nameK={"name"}
-          allowEdit={allowEdit}
-          onValueChange={onSupplierChange}
-          label={t("supplier")}
-          {...(supplierPermission?.create && {
-            addNew: () => {
-              createSupplier.openDialog({});
-            },
-          })}
-        />
+        <>
+          <SupplierAutoCompleteForm
+            required={true}
+            form={form}
+            name="party"
+            allowEdit={allowEdit}
+            label={t("supplier")}
+            openModal={() => {
+              openModal(route.supplier, DEFAULT_ID, {
+                action: CREATE,
+              });
+            }}
+            roleActions={roleActions}
+            // navigate={()=>}
+            {...(formValues.party?.id && {
+              navigate: () => {
+                openModal(route.supplier, formValues.party.id);
+              },
+            })}
+          />
+        </>
       )}
 
       {(partyType == p.saleOrder ||
@@ -177,21 +162,21 @@ export const PartyAutocompleteField = ({
         partyType == p.deliveryNote ||
         partyType == p.customer ||
         partyType == p.salesQuotation) && (
-        <FormAutocompleteField
+        <CustomerAutoCompleteForm
           required={true}
-          data={customerFetcher.data?.customers || []}
-          control={control}
+          form={form}
           name="party"
-          nameK={"name"}
-          onValueChange={onCustomerChange}
           label={t("customer")}
           allowEdit={allowEdit}
-          {...(customerPermission?.create && {
-            addNew: () => {
-              setParams({
-                [route.customer]: DEFAULT_ID,
-                action: CREATE,
-              });
+          openModal={() => {
+            openModal(route.supplier, DEFAULT_ID, {
+              action: CREATE,
+            });
+          }}
+          roleActions={roleActions}
+          {...(formValues.party?.id && {
+            navigate: () => {
+              openModal(route.customer, formValues.party.id);
             },
           })}
         />

@@ -98,7 +98,7 @@ export default function PaymentTermsDetailClient() {
       });
     }
     return {
-      titleToolbar: t(party.paymentTerms),
+      titleToolbar: entity?.name,
       status: status,
       actions: actions,
     };

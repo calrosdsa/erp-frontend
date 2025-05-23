@@ -38,7 +38,7 @@ export default function PaymentTermsTemplateDetailClient() {
       routeSufix: [entity?.name || ""],
       q: {
         tab: tab,
-        id: entity?.uuid || "",
+        id: entity?.id || "",
       },
     });
   };
@@ -96,7 +96,7 @@ export default function PaymentTermsTemplateDetailClient() {
         });
       }
       return {
-        titleToolbar:t(party.paymentTermsTemplate),
+        titleToolbar:entity?.name,
         status: status,
         actions: actions,
       };
@@ -109,6 +109,7 @@ export default function PaymentTermsTemplateDetailClient() {
       activities={activities}
       partyID={entity?.id}
       navItems={navItems}
+      fullWidth={true}
       partyName={entity?.name}
       entityID={Entity.PAYMENT_TERMS_TEMPLATE}
     >

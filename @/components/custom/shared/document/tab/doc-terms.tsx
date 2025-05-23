@@ -88,10 +88,10 @@ export default function DocTerms({
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
-          <div className="detail-grid">
+          <div className="info-grid">
               <PaymentTermTemplateFormField
                 allowEdit={allowEdit}
-                control={form.control}
+                form={form}
                 name="payment_term_template"
                 label="Plantilla de Condiciones de Pago"
                 {...(paymentTermsTemplatePerm?.create && {
@@ -114,7 +114,7 @@ export default function DocTerms({
               />
               <TermsAndConditionsFormField
                 allowEdit={allowEdit}
-                control={form.control}
+                form={form}
                 name="terms_and_conditions"
                 label="Términos y condiciones"
                 {...(termsAndConditionsPerm?.create && {

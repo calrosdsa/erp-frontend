@@ -19,6 +19,7 @@ import {
   setUpToolbarDetailPage,
   setUpToolbarRegister,
   setUpToolbarTab,
+  useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
@@ -57,6 +58,9 @@ export default function PaymentDetailClient() {
     },
   ];
 
+
+
+
   setUpToolbarRegister(() => {
     let actions: ButtonToolbar[] = [];
     actions.push({
@@ -87,6 +91,7 @@ export default function PaymentDetailClient() {
     });
     return {
       actions: actions,
+      titleToolbar:payment?.code,
       status: stateFromJSON(payment?.status),
       onChangeState: (e) => {
         const body: z.infer<typeof updateStatusWithEventSchema> = {
@@ -108,6 +113,14 @@ export default function PaymentDetailClient() {
     };
   }, [payment]);
 
+   useLoadingTypeToolbar(
+      {
+        loading: fetcher.state == "submitting",
+        loadingType: "STATE",
+      },
+      [fetcher.state]
+    );
+
   useDisplayMessage(
     {
       error: fetcher.data?.error,
@@ -120,6 +133,7 @@ export default function PaymentDetailClient() {
       activities={activities}
       partyID={payment?.id}
       navItems={tabs}
+      fullWidth={true}
       partyName={payment?.code}
       entityID={Entity.PAYMENT}
     >

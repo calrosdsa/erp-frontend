@@ -13,15 +13,17 @@ import { route } from "~/util/route";
 import { action } from "./route";
 import { GlobalState } from "~/types/app-types";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef } from "react";
 import { useLineItems } from "@/components/custom/shared/item/use-line-items";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { format, formatRFC3339 } from "date-fns";
 import { useDocumentStore } from "@/components/custom/shared/document/use-document-store";
-import { Card } from "@/components/ui/card";
-import { OrderData } from "./order-data";
 import CreateLayout from "@/components/layout/create-layout";
+import OrderData from "./order-data";
 
 export default function CreatePurchaseOrdersClient() {
   const fetcher = useFetcher<typeof action>();
@@ -80,6 +82,13 @@ export default function CreatePurchaseOrdersClient() {
     );
   };
 
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
   setUpToolbar(() => {
     return {
       titleToolbar: t("f.add-new", { o: t("_order.base") }),
@@ -108,6 +117,9 @@ export default function CreatePurchaseOrdersClient() {
     },
     [fetcher.data]
   );
+
+
+
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
     taxLinesStore.updateFromItems(formValues.lines);
@@ -127,8 +139,6 @@ export default function CreatePurchaseOrdersClient() {
         inputRef={inputRef}
         allowEdit={true}
         allowCreate={true}
-        isNew={true}
-        
       />
     </CreateLayout>
   );

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFetcher } from "@remix-run/react";
 import { useForm, useWatch } from "react-hook-form";
 import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
-import { operations } from "~/sdk";
+import { components, operations } from "~/sdk";
 import {
   lineItemDefault,
   productListSchema,
@@ -35,6 +35,7 @@ export default function ProductList({
   priceListID,
   keyPayload,
   updateStock,
+  items,
 }: {
   partyID: number;
   partyType: string;
@@ -44,8 +45,9 @@ export default function ProductList({
   priceListID?: number;
   keyPayload?: string;
   updateStock?: boolean;
+  items:components["schemas"]["LineItemDto"][];
 }) {
-  const fetcher = useFetcher<typeof action>();
+
   const submitFetcher = useFetcher<typeof action>();
   const { editPayload } = useModalStore();
   const { total, lines: lineItems, totalQuantity, onLines } = useLineItems();
@@ -56,13 +58,13 @@ export default function ProductList({
       party_id: partyID,
       party_type: partyType,
       lines:
-        fetcher.data?.lineItems?.map((t) =>
+        items?.map((t) =>
           toLineItemSchema(t, {
             partyType: partyType,
           })
         ) || [],
     };
-  }, [fetcher.data]);
+  }, [items]);
   const form = useForm<ProductListSchema>({
     resolver: zodResolver(productListSchema),
     defaultValues: defaultValues,
@@ -121,25 +123,7 @@ export default function ProductList({
     );
   }, [formValues]);
 
-  const loadData = () => {
-    const params: operations["item-lines"]["parameters"] = {
-      query: {
-        line_type: itemLineTypeToJSON(ItemLineType.DEAL_LINE_ITEM),
-        id: partyID.toString(),
-      },
-    };
-    fetcher.submit(
-      {
-        params: params as any,
-        action: "list",
-      },
-      {
-        action: route.apiItemLine,
-        encType: "application/json",
-        method: "POST",
-      }
-    );
-  };
+
 
   useDisplayMessage(
     {
@@ -158,24 +142,23 @@ export default function ProductList({
   }, [watchedValues]);
 
   useEffect(() => {
-    if (fetcher.data) {
+    
       form.setValue(
         "lines",
-        fetcher.data?.lineItems?.map((t) =>
+        items.map((t) =>
           toLineItemSchema(t, {
             partyType: partyType,
           })
         ) || []
       );
-    }
-  }, [fetcher.data]);
+    
+  }, [items]);
 
   useEffect(() => {
     onLines(formValues.lines);
   }, [formValues.lines]);
 
   useEffect(() => {
-    loadData();
     if (keyPayload) {
       editPayload(keyPayload, {
         onSave: () => {
@@ -190,7 +173,6 @@ export default function ProductList({
       {/* {JSON.stringify(formValues)} */}
       <submitFetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
         <DataTable
-          loading={fetcher.state == "submitting"}
           data={formValues.lines}
           columns={lineItemsColumns({
             currency: currency,

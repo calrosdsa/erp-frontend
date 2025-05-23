@@ -1,9 +1,9 @@
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import {
   FetcherWithComponents,
-  useFetcher,
   useNavigate,
   useOutletContext,
+  useSearchParams,
 } from "@remix-run/react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -51,15 +51,15 @@ export default function PaymentData({
   inputRef,
   allowEdit,
   allowCreate,
-  isNew,
-}: {
+}: // isNew,
+{
   form: UseFormReturn<PaymentDataType, any, undefined>;
   onSubmit: (e: PaymentDataType) => void;
   fetcher: FetcherWithComponents<any>;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
   allowCreate?: boolean;
-  isNew?:boolean;
+  // isNew?: boolean;
 }) {
   const { t, i18n } = useTranslation("common");
   const { roleActions } = useOutletContext<GlobalState>();
@@ -101,6 +101,19 @@ export default function PaymentData({
   });
   const navigate = useNavigate();
   const bankAccountStore = useBankAccountStore();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const openModal = (key: string, value: any, args?: Record<string, any>) => {
+    searchParams.set(key, value);
+    if (args) {
+      Object.entries(args).forEach(([key, value]) => {
+        searchParams.set(key, value);
+      });
+    }
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   const updateAmountFromReferences = () => {
     if (formValues.paymentReferences.length == 0) return;
@@ -202,7 +215,6 @@ export default function PaymentData({
   //   useEffect(() => {
   //     onPartyTypeChange(formValues);
   //   }, [formValues.partyType, paymentAccounts]);
-
   useEffect(() => {
     taxLinesStore.reset();
     // setUpToolbar();
@@ -214,241 +226,273 @@ export default function PaymentData({
         <fetcher.Form
           method="post"
           onSubmit={form.handleSubmit(onSubmit)}
-          className={cn(
-            isNew? "create-grid": "detail-grid"
-          )}
+          // className={cn(isNew ? "create-grid" : "detail-grid")}
+          className={cn("create-grid")}
         >
-            <Typography className=" col-span-full" variant="subtitle2">
-              {t("_payment.type")}
-            </Typography>
-            {!allowEdit && (
-              <CustomFormDate
-                control={form.control}
-                name="postingDate"
-                label={t("form.date")}
-                allowEdit={allowEdit}
-              />
-            )}
-            <SelectForm
-              control={form.control}
-              data={paymentTypes}
-              label={t("form.paymentType")}
-              keyName={"name"}
-              keyValue={"value"}
-              allowEdit={allowEdit}
-              onValueChange={() => {
-                form.trigger("partyType");
-              }}
-              name="paymentType"
-            />
-            <Separator className=" col-span-full" />
-
-            <Typography className=" col-span-full" variant="subtitle2">
-              {t("_payment.paymentFromTo")}
-            </Typography>
-
-            <SelectForm
-              form={form}
-              data={r.p.paymentOptions}
-              allowEdit={allowEdit}
-              label={t("form.partyType")}
-              keyName={"name"}
-              onValueChange={() => {
-                form.trigger("partyType");
-              }}
-              keyValue={"value"}
-              name="partyType"
-            />
-
-            {formValues.partyType && (
-              <div>
-                <PartyAutocompleteField
-                  control={form.control}
-                  partyType={formValues.partyType}
-                  allowEdit={allowEdit}
-                  roleActions={roleActions}
-                />
-              </div>
-            )}
-            {formValues.party?.id && (
-              <>
-                <BankAccountForm
-                  partyID={formValues.party.id}
-                  control={form.control}
-                  name="party_bank_account"
-                  label="Cuenta bancaria del partido"
-                  allowEdit={allowEdit}
-                  roleActions={roleActions}
-                  addNew={navigateToCreateNewBankAccount}
-                />
-                <BankAccountForm
-                  isCompanyAccount={true}
-                  control={form.control}
-                  name="company_bank_account"
-                  label="Cuenta bancaria de la empresa"
-                  allowEdit={allowEdit}
-                  roleActions={roleActions}
-                  addNew={navigateToCreateNewBankAccount}
-                  onSelect={(e: components["schemas"]["BankAccountDto"]) => {
-                    form.setValue("company_bank_account_ledger", {
-                      name: e.company_account,
-                      id: e.company_account_id,
-                      uuid: e.company_account_uuid,
-                    });
-                    form.setValue(
-                      "company_bank_account_currency",
-                      e.company_account_currency
-                    );
-                  }}
-                />
-              </>
-            )}
-            <Separator className=" col-span-full" />
-            <Typography className=" col-span-full" variant="subtitle2">
-              {t("form.amount")}
-            </Typography>
-
-            <CustomFormFieldInput
-              allowEdit={allowEdit}
-              label={t("form.paidAmount", { o: "BOB" })}
-              control={form.control}
-              name="amount"
-              inputType="input"
-            />
-
-            <Separator className=" col-span-full" />
-            <AccordationLayout
-              open={true}
-              title={t("accounts")}
-              containerClassName=" col-span-full"
-              className="create-grid"
-            >
-              <LedgerAutocompleteFormField
-                control={form.control}
-                label={t("_ledger.paidFrom")}
-                name="accountPaidFrom"
-                description={accountBalanceService.formatAmountBalance(
-                  formValues?.accountPaidFromBalance,
-                  formValues?.accountPaidFromCurrency
-                )}
-                allowEdit={allowEdit}
-                onSelect={async (e) => {
-                  const openingData =
-                    await accountBalanceService.getAccountBalance(e.name, e.id);
-                  accountBalanceService.setAccountValue({
-                    accountPaidFromBalance: openingData?.opening_balance,
-                    accountPaidFromCurrency: e.currency,
-                  });
-                }}
-              />
-              <LedgerAutocompleteFormField
-                control={form.control}
-                label={t("_ledger.paidTo")}
-                name="accountPaidTo"
-                description={accountBalanceService.formatAmountBalance(
-                  formValues?.accountPaidToBalance,
-                  formValues?.accountPaidToCurrency
-                )}
-                allowEdit={allowEdit}
-                onSelect={async (e) => {
-                  const openingData =
-                    await accountBalanceService.getAccountBalance(e.name, e.id);
-                  accountBalanceService.setAccountValue({
-                    accountPaidToBalance: openingData?.opening_balance,
-                    accountPaidToCurrency: e.currency,
-                  });
-                }}
-              />
-            </AccordationLayout>
-            {formValues.partyType && formValues.party?.id && (
-              <>
-                <Separator className=" col-span-full" />
-                <Typography className=" col-span-full" variant="subtitle2">
-                  {t("table.reference")}
-                </Typography>
-                {allowEdit && (
-                  <InvoiceAutocompleteForm
-                    label="Facturas"
-                    partyType={r.p.paymentParties[formValues.partyType] || ""}
-                    partyID={formValues.party.id}
-                    allowEdit={allowEdit}
-                    onSelect={(e) => {
-                      const n: z.infer<typeof paymentReferceSchema> = {
-                        partyID: e.id,
-                        currency: e.currency,
-                        partyType:
-                          r.p.paymentParties[formValues.partyType] || "",
-                        partyName: e.code,
-                        grandTotal: formatAmount(e.total_amount),
-                        outstanding: formatAmount(
-                          e.total_amount - e.paid_amount
-                        ),
-                        allocated: formatAmount(e.total_amount - e.paid_amount),
-                      };
-                      const nl = [...formValues.paymentReferences, n];
-                      form.setValue("paymentReferences", nl);
-                      form.trigger("paymentReferences");
-                    }}
-                  />
-                )}
-                <div className=" col-span-full">
-                  <DataTable
-                    data={formValues.paymentReferences}
-                    columns={paymentReferencesColumns({ t, i18n })}
-                    fullHeight={false}
-                    metaOptions={{
-                      meta: {
-                        updateCell: (
-                          row: number,
-                          column: string,
-                          value: string
-                        ) => {
-                          form.setValue(
-                            `paymentReferences.${row}.${column}` as any,
-                            value
-                          );
-                          form.trigger(`paymentReferences`);
-                          updateAmountFromReferences();
-                        },
-                        ...rowActions,
-                      },
-                    }}
-                  />
-                </div>
-              </>
-            )}
-
-            <TaxAndChargesLines
-              onChange={(e) => {
-                form.setValue("taxLines", e);
-                form.trigger("taxLines");
-              }}
-              currency={companyDefaults?.currency || DEFAULT_CURRENCY}
-              showTotal={false}
-              allowCreate={allowCreate}
-              allowEdit={allowEdit}
-            />
-
-            <Separator className=" col-span-full" />
-            <Typography className=" col-span-full" variant="subtitle2">
-              ID de transacción
-            </Typography>
-            
-            <CustomFormFieldInput
-              control={form.control}
-              name="cheque_reference_no"
-              label={"Cheque / No. de Referencia"}
-              inputType="input"
-              allowEdit={allowEdit}
-            />
+          {/* {JSON.stringify(form.formState.errors)} */}
+          <Typography className=" col-span-full" variant="subtitle2">
+            {t("_payment.type")}
+          </Typography>
+          {!allowEdit && (
             <CustomFormDate
               control={form.control}
-              name="cheque_reference_date"
-              label={"Cheque / Fecha de referencia"}
+              name="postingDate"
+              label={t("form.date")}
               allowEdit={allowEdit}
             />
+          )}
 
-            <AccountingDimensionForm form={form} allowEdit={allowEdit} />
+          <SelectForm
+            control={form.control}
+            data={paymentTypes}
+            label={t("form.paymentType")}
+            keyName={"name"}
+            keyValue={"value"}
+            allowEdit={allowEdit}
+            onValueChange={() => {
+              form.trigger("partyType");
+            }}
+            name="paymentType"
+          />
+
+          <Separator className=" col-span-full" />
+
+          <Typography className=" col-span-full" variant="subtitle2">
+            {t("_payment.paymentFromTo")}
+          </Typography>
+
+          <SelectForm
+            form={form}
+            data={r.p.paymentOptions}
+            allowEdit={allowEdit}
+            label={t("form.partyType")}
+            keyName={"name"}
+            onValueChange={() => {
+              form.trigger("partyType");
+            }}
+            keyValue={"value"}
+            name="partyType"
+          />
+
+          {formValues.partyType && (
+            <div>
+              <PartyAutocompleteField
+                form={form}
+                partyType={formValues.partyType}
+                allowEdit={allowEdit}
+                roleActions={roleActions}
+                openModal={openModal}
+              />
+            </div>
+          )}
+          {formValues.party?.id && (
+            <>
+              <BankAccountForm
+                partyID={formValues.party.id}
+                form={form}
+                name="party_bank_account"
+                label="Cuenta bancaria del partido"
+                allowEdit={allowEdit}
+                roleActions={roleActions}
+                addNew={navigateToCreateNewBankAccount}
+              />
+              <BankAccountForm
+                isCompanyAccount={true}
+                form={form}
+                name="company_bank_account"
+                label="Cuenta bancaria de la empresa"
+                allowEdit={allowEdit}
+                roleActions={roleActions}
+                addNew={navigateToCreateNewBankAccount}
+                onSelect={(e: components["schemas"]["BankAccountDto"]) => {
+                  form.setValue("company_bank_account_ledger", {
+                    name: e.company_account,
+                    id: e.company_account_id,
+                    uuid: e.company_account_uuid,
+                  });
+                  form.setValue(
+                    "company_bank_account_currency",
+                    e.company_account_currency
+                  );
+                }}
+              />
+            </>
+          )}
+          <Separator className=" col-span-full" />
+          <Typography className=" col-span-full" variant="subtitle2">
+            {t("form.amount")}
+          </Typography>
+
+          <CustomFormFieldInput
+            allowEdit={allowEdit}
+            label={t("form.paidAmount", { o: "BOB" })}
+            control={form.control}
+            name="amount"
+            inputType="input"
+          />
+
+          <Separator className=" col-span-full" />
+          <AccordationLayout
+            open={true}
+            title={t("accounts")}
+            containerClassName=" col-span-full"
+            className="create-grid"
+          >
+            <LedgerAutocompleteFormField
+              form={form}
+              label={t("_ledger.paidFrom")}
+              name="accountPaidFrom"
+              description={accountBalanceService.formatAmountBalance(
+                formValues?.accountPaidFromBalance,
+                formValues?.accountPaidFromCurrency
+              )}
+              allowEdit={allowEdit}
+              onSelect={async (e) => {
+                const openingData =
+                  await accountBalanceService.getAccountBalance(e.name, e.id);
+                accountBalanceService.setAccountValue({
+                  accountPaidFromBalance: openingData?.opening_balance,
+                  accountPaidFromCurrency: e.currency,
+                });
+              }}
+              {...(formValues.accountPaidFrom?.id && {
+                navigate: () => {
+                  navigate(
+                    route.toRouteDetail(
+                      route.accountLedger,
+                      formValues.accountPaidFrom?.name,
+                      {
+                        tab: "info",
+                        id: formValues.accountPaidFrom?.id,
+                      }
+                    )
+                  );
+                },
+              })}
+            />
+            <LedgerAutocompleteFormField
+              form={form}
+              label={t("_ledger.paidTo")}
+              name="accountPaidTo"
+              description={accountBalanceService.formatAmountBalance(
+                formValues?.accountPaidToBalance,
+                formValues?.accountPaidToCurrency
+              )}
+              allowEdit={allowEdit}
+              onSelect={async (e) => {
+                const openingData =
+                  await accountBalanceService.getAccountBalance(e.name, e.id);
+                accountBalanceService.setAccountValue({
+                  accountPaidToBalance: openingData?.opening_balance,
+                  accountPaidToCurrency: e.currency,
+                });
+              }}
+              {...(formValues.accountPaidTo?.id && {
+                navigate: () => {
+                  navigate(
+                    route.toRouteDetail(
+                      route.accountLedger,
+                      formValues.accountPaidTo?.name,
+                      {
+                        tab: "info",
+                        id: formValues.accountPaidTo?.id,
+                      }
+                    )
+                  );
+                },
+              })}
+            />
+          </AccordationLayout>
+          {formValues.partyType && formValues.party?.id && (
+            <>
+              <Separator className=" col-span-full" />
+              <Typography className=" col-span-full" variant="subtitle2">
+                {t("table.reference")}
+              </Typography>
+              {allowEdit && (
+                <InvoiceAutocompleteForm
+                  label="Facturas"
+                  partyType={r.p.paymentParties[formValues.partyType] || ""}
+                  partyID={formValues.party.id}
+                  allowEdit={allowEdit}
+                  onSelect={(e) => {
+                    const n: z.infer<typeof paymentReferceSchema> = {
+                      partyID: e.id,
+                      currency: e.currency,
+                      partyType: r.p.paymentParties[formValues.partyType] || "",
+                      partyName: e.code,
+                      grandTotal: formatAmount(e.total_amount),
+                      outstanding: formatAmount(e.total_amount - e.paid_amount),
+                      allocated: formatAmount(e.total_amount - e.paid_amount),
+                    };
+                    const nl = [...formValues.paymentReferences, n];
+                    form.setValue("paymentReferences", nl);
+                    form.trigger("paymentReferences");
+                  }}
+                />
+              )}
+              <div className=" col-span-full">
+                <DataTable
+                  data={formValues.paymentReferences}
+                  columns={paymentReferencesColumns({ t, i18n })}
+                  fullHeight={false}
+                  metaOptions={{
+                    meta: {
+                      updateCell: (
+                        row: number,
+                        column: string,
+                        value: string
+                      ) => {
+                        form.setValue(
+                          `paymentReferences.${row}.${column}` as any,
+                          value
+                        );
+                        form.trigger(`paymentReferences`);
+                        updateAmountFromReferences();
+                      },
+                      ...rowActions,
+                    },
+                  }}
+                />
+              </div>
+            </>
+          )}
+
+          <TaxAndChargesLines
+            onChange={(e) => {
+              form.setValue("taxLines", e);
+              form.trigger("taxLines");
+            }}
+            currency={companyDefaults?.currency || DEFAULT_CURRENCY}
+            showTotal={false}
+            allowCreate={allowCreate}
+            allowEdit={allowEdit}
+          />
+
+          <Separator className=" col-span-full" />
+          <Typography className=" col-span-full" variant="subtitle2">
+            ID de transacción
+          </Typography>
+
+          <CustomFormFieldInput
+            control={form.control}
+            name="cheque_reference_no"
+            label={"Cheque / No. de Referencia"}
+            inputType="input"
+            allowEdit={allowEdit}
+          />
+          <CustomFormDate
+            control={form.control}
+            name="cheque_reference_date"
+            label={"Cheque / Fecha de referencia"}
+            allowEdit={allowEdit}
+          />
+
+          <AccountingDimensionForm
+            form={form}
+            allowEdit={allowEdit}
+            openModal={openModal}
+          />
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

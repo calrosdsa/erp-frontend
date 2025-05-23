@@ -6,10 +6,7 @@ import {
 } from "@remix-run/react";
 import { GlobalState } from "~/types/app-types";
 import { useTranslation } from "react-i18next";
-import {
-  State,
-  stateFromJSON,
-} from "~/gen/common";
+import { State, stateFromJSON } from "~/gen/common";
 import { action, loader } from "../../route";
 
 import { useEffect, useRef } from "react";
@@ -24,9 +21,9 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { usePermission } from "~/util/hooks/useActions";
 import { useEditFields } from "~/util/hooks/useEditFields";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
-import { OrderData } from "~/routes/home.order.$partyOrder.new/order-data";
 import { toTaxAndChargeLineSchema } from "~/util/data/schemas/accounting/tax-and-charge-schema";
 import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
+import OrderData from "~/routes/home.order.$partyOrder.new/order-data";
 
 type EditData = z.infer<typeof orderDataSchema>;
 export default function OrderInfoTab() {

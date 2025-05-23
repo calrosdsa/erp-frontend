@@ -13,57 +13,65 @@ import { Card } from "@/components/ui/card";
 import { party } from "~/util/party";
 import PaymentData from "./payment-data";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import { FormService, PartyTypeStrategyFactory, usePaymentData } from "./use-payment-data";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  FormService,
+  PartyTypeStrategyFactory,
+  usePaymentData,
+} from "./use-payment-data";
+import CreateLayout from "@/components/layout/create-layout";
 export default function PaymentCreateClient() {
   const { paymentAccounts } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
-  const {i18n} = useTranslation("common")
-  const toolbar = useToolbar()  
+  const { t, i18n } = useTranslation("common");
+  const toolbar = useToolbar();
   const { payload, setPayload } = usePaymentStore();
   const form = useForm<z.infer<typeof paymentDataSchema>>({
     resolver: zodResolver(paymentDataSchema),
-    defaultValues:{
+    defaultValues: {
       ...payload,
-      taxLines:payload.taxLines ?  payload.taxLines : [],
-      paymentReferences:payload.paymentReferences ?  payload.paymentReferences : [],
-      postingDate:new Date(),
-    },  
+      taxLines: payload.taxLines ? payload.taxLines : [],
+      paymentReferences: payload.paymentReferences
+        ? payload.paymentReferences
+        : [],
+      postingDate: new Date(),
+    },
   });
   const formValues = form.getValues();
   const inputRef = useRef<HTMLInputElement | null>(null);
- const watchedFields = useWatch({
+  const watchedFields = useWatch({
     control: form.control,
   });
   const navigate = useNavigate();
   const r = route;
   const p = party;
- const {accountBalanceService} = usePaymentData({
-    form:form,
-    i18n:i18n
-  })
+  const { accountBalanceService } = usePaymentData({
+    form: form,
+    i18n: i18n,
+  });
 
   const formService: FormService = {
     setValue: (field: any, value: any) => form.setValue(field, value),
     trigger: (field: any) => form.trigger(field),
-  }
+  };
 
   const onPartyTypeChange = async (data: z.infer<typeof paymentDataSchema>) => {
-    console.log("PAYMENT ACCOUNTS",paymentAccounts)
-    if(paymentAccounts == undefined) return
+    console.log("PAYMENT ACCOUNTS", paymentAccounts);
+    if (paymentAccounts == undefined) return;
     const strategy = PartyTypeStrategyFactory.createStrategy(
       data.partyType,
       paymentAccounts,
       accountBalanceService,
       formService
-    )
-    await strategy.updateAccounts()
-  }
-
-
+    );
+    await strategy.updateAccounts();
+  };
 
   const onSubmit = (values: z.infer<typeof paymentDataSchema>) => {
-    console.log("SUBMIT PAYMENT")
+    console.log("SUBMIT PAYMENT");
     fetcher.submit(
       {
         action: "create-payment",
@@ -76,20 +84,21 @@ export default function PaymentCreateClient() {
     );
   };
 
-  // const setUpToolbar = () => {
-  //   toolbar.setToolbar({
-  //     onSave: () => {
-  //       inputRef.current?.click();
-  //     },
-  //   });
-  // };
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
 
   useEffect(() => {
     toolbar.setToolbar({
+      titleToolbar: t("f.add-new", { o: t("payment") }),
       onSave: () => {
         inputRef.current?.click();
       },
-    })
+    });
   }, []);
 
   useEffect(() => {
@@ -120,15 +129,14 @@ export default function PaymentCreateClient() {
   }, [watchedFields]);
 
   return (
-    <Card>
+    <CreateLayout>
       <PaymentData
         form={form}
         onSubmit={onSubmit}
         fetcher={fetcher}
         allowEdit={true}
         inputRef={inputRef}
-        isNew={true}
       />
-    </Card>
+    </CreateLayout>
   );
 }

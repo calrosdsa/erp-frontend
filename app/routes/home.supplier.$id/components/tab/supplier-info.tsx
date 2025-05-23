@@ -1,4 +1,3 @@
-import Typography, { subtitle } from "@/components/typography/Typography";
 import { loader } from "../../route";
 import { useFetcher, useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
@@ -8,9 +7,6 @@ import { z } from "zod";
 import { useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef, useState } from "react";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import FormLayout from "@/components/custom/form/FormLayout";
-import { Form } from "@/components/ui/form";
-import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
 import { SerializeFrom } from "@remix-run/node";
 import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
@@ -26,6 +22,7 @@ import {
 } from "~/util/data/schemas/buying/supplier-schema";
 import SupplierForm from "../../supplier-form";
 import { action } from "~/routes/home.supplier_/route";
+import { useSupplierStore } from "../../supplier-store";
 export default function SupplierInfo({
   appContext,
   data,
@@ -49,6 +46,7 @@ export default function SupplierInfo({
   const [toastID, setToastID] = useState<string | number>("");
   const id = searchParams.get(route.supplier);
   const paramAction = searchParams.get("action");
+  const supplierStore = useSupplierStore();
 
   const onSubmit = (e: SupplierData) => {
     const id = toast.loading(LOADING_MESSAGE);
@@ -65,14 +63,10 @@ export default function SupplierInfo({
         action: route.to(route.supplier),
       }
     );
+    editPayload(key, {
+      enableEdit: false,
+    });
   };
-  useLoadingTypeToolbar(
-    {
-      loading: fetcher.state == "submitting",
-      loadingType: "SAVE",
-    },
-    [fetcher.state]
-  );
 
   useDisplayMessage(
     {
@@ -82,6 +76,7 @@ export default function SupplierInfo({
       onSuccessMessage: () => {
         if (id == DEFAULT_ID) {
           if (paramAction == CREATE) {
+            supplierStore.onCreateSupplier(fetcher.data?.supplier);
             closeModal();
           }
           if (fetcher.data?.supplier) {

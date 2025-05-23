@@ -36,6 +36,7 @@ export default function ProjectDetailClient() {
   ];
   setUpToolbarRegister(() => {
     return {
+      titleToolbar:project?.name,
       status: stateFromJSON(project?.status),
     };
   }, []);

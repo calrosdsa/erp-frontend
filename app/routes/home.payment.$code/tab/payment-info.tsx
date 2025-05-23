@@ -142,7 +142,7 @@ export default function PaymentInfoTab() {
 
   return (
     <>
-      {/* {JSON.stringify(payment?.paid_from_name)} */}
+      {JSON.stringify(form.getValues().cheque_reference_date)}
       <PaymentData
         form={form}
         onSubmit={onSubmit}

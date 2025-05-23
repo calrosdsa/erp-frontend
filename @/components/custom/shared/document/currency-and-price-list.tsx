@@ -6,15 +6,15 @@ import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDeb
 import { PriceListAutocompleteFormField } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
 
 export default function CurrencyAndPriceList({
-  control,
+  form,
   allowEdit,
   isSelling,
   isBuying,
 }: {
-  control: Control<any,any>;
+  form: any;
   allowEdit?: boolean;
-  isSelling?:boolean
-  isBuying?:boolean
+  isSelling?: boolean;
+  isBuying?: boolean;
 }) {
   const [currencyDebounceFetcher, onCurrencyChange] =
     useCurrencyDebounceFetcher();
@@ -27,7 +27,7 @@ export default function CurrencyAndPriceList({
     >
       <FormAutocomplete
         data={currencyDebounceFetcher.data?.currencies || []}
-        control={control}
+        form={form}
         name="currency"
         allowEdit={allowEdit}
         required={true}
@@ -36,12 +36,12 @@ export default function CurrencyAndPriceList({
         label={t("form.currency")}
       />
       <PriceListAutocompleteFormField
-      control={control}
-      allowEdit={allowEdit}
-      name="priceList"
-      label={t("priceList")}
-      isBuying={isBuying}
-      isSelling={isSelling}
+        form={form}
+        allowEdit={allowEdit}
+        name="priceList"
+        label={t("priceList")}
+        isBuying={isBuying}
+        isSelling={isSelling}
       />
     </AccordationLayout>
   );

@@ -7194,6 +7194,7 @@ export interface components {
             /** Format: int32 */
             id: number;
             item_code: string;
+            item_description: string;
             /** Format: int64 */
             item_id: number;
             /** Format: int32 */
@@ -10184,6 +10185,8 @@ export interface components {
             valuation_rate: number;
             voucher_code: string;
             voucher_type: string;
+            /** Format: int64 */
+            warehouse_id: number;
             warehouse_name: string;
             warehouse_uuid: string;
         };

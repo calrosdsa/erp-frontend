@@ -16,15 +16,15 @@ export default function DealItemsTab({
 }: {
   appContext: GlobalState;
   data?: SerializeFrom<typeof loader>;
-  keyPayload:string
+  keyPayload: string;
 }) {
   const deal = data?.deal;
-  
 
   return (
     <div>
       {deal && (
         <ProductList
+          items={data.lineItems}
           partyID={deal.id}
           partyType={party.deal}
           currency="USD"

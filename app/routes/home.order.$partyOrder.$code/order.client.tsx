@@ -18,8 +18,7 @@ import {
   State,
   stateFromJSON,
 } from "~/gen/common";
-import { useEffect } from "react";
-import { useToolbar } from "~/util/hooks/ui/use-toolbar";
+
 import { ButtonToolbar } from "~/types/actions";
 import { DownloadIcon, PlusIcon } from "lucide-react";
 import { route } from "~/util/route";
@@ -122,6 +121,9 @@ export default function PurchaseOrderClient() {
         return "";
     }
   };
+
+  
+
   setUpToolbarRegister(() => {
     console.log("SET UP TOOLBAR...");
     const actions: ButtonToolbar[] = [];
@@ -137,7 +139,7 @@ export default function PurchaseOrderClient() {
           navigate(
             r.toRoute({
               main: getInvoicePartyType(partyOrder),
-              routePrefix: [r.invoiceM],
+              routePrefix: [r.invoice],
               routeSufix: ["new"],
             })
           );
@@ -156,7 +158,7 @@ export default function PurchaseOrderClient() {
           navigate(
             r.toRoute({
               main: getInvoicePartyType(partyOrder),
-              routePrefix: [r.invoiceM],
+              routePrefix: [r.invoice],
               routeSufix: ["new"],
             })
           );
@@ -171,7 +173,7 @@ export default function PurchaseOrderClient() {
           navigate(
             r.toRoute({
               main: partyTypeToJSON(PartyType.purchaseReceipt),
-              routePrefix: [r.receiptM],
+              routePrefix: [r.receipt],
               routeSufix: ["new"],
             })
           );
@@ -187,7 +189,7 @@ export default function PurchaseOrderClient() {
           navigate(
             r.toRoute({
               main: partyTypeToJSON(PartyType.deliveryNote),
-              routePrefix: [r.receiptM],
+              routePrefix: [r.receipt],
               routeSufix: ["new"],
             })
           );
@@ -261,6 +263,7 @@ export default function PurchaseOrderClient() {
       activities={activities}
       navItems={navItems}
       partyName={order?.code}
+      fullWidth={true}
       entityID={
         partyOrder == party.purchaseOrder
           ? Entity.PURCHASE_ORDER

@@ -7,9 +7,7 @@ import { usePermission } from "~/util/hooks/useActions";
 import { State, stateFromJSON } from "~/gen/common";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { TermsAndCondtionsDataType } from "~/util/data/schemas/document/terms-and-conditions.schema";
 import {
-  setUpToolbarTab,
   useLoadingTypeToolbar,
   useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";

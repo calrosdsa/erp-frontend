@@ -151,7 +151,6 @@ export default function CreatePurchaseInvoiceClient() {
         onSubmit={onSubmit}
         fetcher={fetcher}
         inputRef={inputRef}
-        isNew={true}
       />
     </CreateLayout>
   );

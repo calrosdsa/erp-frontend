@@ -20,6 +20,7 @@ export const accountLedgerDataSchema = z.object({
 
 export const mapToAccountLedgerData = (e:AccountLedgerData) =>{
     const d :components["schemas"]["LedgerData"] = {
+        id:e.id,
         fields: {
             account_root_type: e.account_root_type,
             account_type: e.account_type,

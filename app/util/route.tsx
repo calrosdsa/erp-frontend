@@ -27,14 +27,14 @@ class Routes {
   group = "group";
   groups = this.base + "/group";
   companies = this.base + "/companies";
-  company = "companies"
+  company = "companies";
   companiesM = "companies";
 
-  invoice = this.base + "/invoice";
+  invoice = "invoice";
   invoiceM = "invoice";
-  order = this.base + "/order";
+  order = "order";
   orderM = "order";
-  receipt = this.base + "/receipt";
+  receipt = "receipt";
   receiptM = "receipt";
 
   buying = this.base + "/buying";
@@ -59,13 +59,15 @@ class Routes {
   accountingM = "accounting";
   taxes = this.accounting + "/taxes";
   chartOfAccount = this.accounting + "/account";
-  payment = this.accounting + "/payment";
+  accountLedger = "account"
+  payment = "payment";
 
   stockM = "stock";
   itemM = "item";
 
   stock = this.base + "/stock";
   items = this.stock + "/item";
+  item = "stock/item";
   itemPrices = this.stock + "/item-prices";
   itemPrice = "stock/itemPrice";
   itemGroups = this.stock + "/item-groups";
@@ -76,11 +78,11 @@ class Routes {
   manage = this.base + "/manage";
   manageM = "manage";
   user = "user";
-  role ="manage/roles";
-  
+  role = "manage/roles";
+
   purchases = this.base + "/purchases";
   purchaseorders = this.purchases + "/orders";
-  
+
   settings = this.base + "/settings";
   uom = this.settings + "/uom";
   profile = this.settings + "/profile";
@@ -94,20 +96,20 @@ class Routes {
 
   stockLedger = "stock/stockLedger";
   stockBalance = "stock/stockBalance";
-  
+
   profitAndLoss = "profitAndLoss";
   cashFlow = "cashFlow";
   balanceSheet = "balanceSheet";
-  
+
   treeView = "treeView";
   accountM = "account";
   serialNoResume = "serialNoResume";
   quotation = "quotation";
   salesQuotation = "salesQuotation";
-  
-  stage = "stage"
-  notification = "notification"
-  
+
+  stage = "stage";
+  notification = "notification";
+
   //Party
   purchaseReceipt = "purchaseReceipt";
   deliveryNote = "deliveryNote";
@@ -116,7 +118,7 @@ class Routes {
   chargesTemplate = "chargesTemplate";
   currencyExchange = "currencyExchange";
   salesRecord = "salesRecord";
-  ledger = "account"
+  ledger = "account";
   purchaseRecord = "purchaseRecord";
   stockEntry = "stock/stockEntry";
   project = "project";
@@ -132,23 +134,22 @@ class Routes {
   itemGroup = "itemGroup";
   customerGroup = "customerGroup";
   supplierGroup = "supplierGroup";
-  
+
   termsAndConditions = "terms-and-conditions";
   paymentTerms = "payment-terms";
-  paymentTermsTemplate =  "payment-terms-template";
-  bank = "bank"
-  cashOutflow = "cash-outflow"
-  bankAccount = "bank-account"
-  deal = "deal"
-  chat = "chat"
-  workspace = "workspace"
-  module = "module"
-  
+  paymentTermsTemplate = "payment-terms-template";
+  bank = "bank";
+  cashOutflow = "cash-outflow";
+  bankAccount = "bank-account";
+  deal = "deal";
+  chat = "chat";
+  workspace = "workspace";
+  module = "module";
 
   defaultTab = {
     tab: "info",
   };
-  
+
   to(href: string, q?: Record<string, any>): string {
     return `${this.base}/${this.baseRoute(href, q)}`;
     // return href;
@@ -195,13 +196,9 @@ class Routes {
   //   let url = `${this.base}/${encodeURIComponent(partyType)}`;
   //   return this.baseRoute(url, q);
   // }
-  toRouteDetail(
-    main:string,
-    id:any,
-    q?: Record<string, any>
-  ): string {
+  toRouteDetail(main: string, id: any, q?: Record<string, any>): string {
     let url = `${this.base}/${main}/${id}`;
-    
+
     return this.baseRoute(url, q);
   }
   toRoute(opts: {
@@ -214,7 +211,7 @@ class Routes {
     if (opts.routePrefix) {
       url += opts.routePrefix.join("/") + "/";
     }
-    if(opts.main){
+    if (opts.main) {
       url += opts.main;
     }
     if (opts.routeSufix) {
@@ -441,7 +438,7 @@ class Routes {
   }
 
   //Manage
- 
+
   toRoleDetail(name: string, id: string): string {
     return `${this.role}/${encodeURIComponent(name)}?v=${id}`;
   }
@@ -512,6 +509,12 @@ class Routes {
         return this.toRoute({
           main: this.bookingM,
           routeSufix: [voucherCode],
+          q: {
+            tab: "info",
+          },
+        });
+      case this.payment:
+        return this.toRouteDetail(this.payment, voucherCode, {
           q: {
             tab: "info",
           },

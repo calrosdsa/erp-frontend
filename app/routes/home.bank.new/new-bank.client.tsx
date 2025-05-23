@@ -65,7 +65,9 @@ export default function NewBankClient(){
                       tab: "info",
                       id:fetcher.data.bank?.id.toString(),
                     },
-                  })
+                  }),{
+                    replace:true
+                  }
                 );
               }
             },

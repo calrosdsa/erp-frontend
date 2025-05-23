@@ -5,6 +5,8 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import { route } from "~/util/route";
 
+
+
 export const ProjectSearch = ({placeholder}:{
   placeholder:string  
 })  =>{

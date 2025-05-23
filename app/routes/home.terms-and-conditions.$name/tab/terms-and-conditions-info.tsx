@@ -48,7 +48,7 @@ export default function TermsAndConditionsInfo(){
           onSave: () => {
             inputRef.current?.click();
           },
-          disabledSave: !allowEdit,
+          
         };
       }, [allowEdit, entity]);
   

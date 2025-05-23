@@ -83,7 +83,6 @@ export default function NewPaymentTermsTemplateClient(){
             form={form}
             inputRef={inputRef}
             onSubmit={onSubmit}
-            isNew={true}
             />
         </CreateLayout>
     )

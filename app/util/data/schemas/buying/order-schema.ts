@@ -9,6 +9,9 @@ import {
 import validateRequiredField, { field, fieldNull } from "..";
 import { formatRFC3339 } from "date-fns";
 
+export type OrderSchema = z.infer<typeof orderDataSchema>
+
+
 export const orderDataSchema = z.object({
   id:z.number().optional(),
   party: field.optional(),

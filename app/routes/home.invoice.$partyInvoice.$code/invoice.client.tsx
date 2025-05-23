@@ -363,6 +363,7 @@ export default function InvoiceDetailClient() {
       navItems={navItems}
       partyID={invoice?.id}
       activities={activities}
+      fullWidth={true}
       partyName={invoice?.code}
       entityID={
         partyInvoice == party.purchaseInvoice

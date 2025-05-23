@@ -57,7 +57,7 @@ export const PriceAutocompleteForm = ({
             <div className="flex flex-col text-xs">
               <div className="flex font-medium space-x-1">
                 <span>{e.item_name}</span>
-                <span className=" uppercase"> {e.uuid.slice(0, 5)}</span>
+                <span className="uppercase"> {e.uuid.slice(0, 5)}</span>
               </div>
               {e.price_list_name && (
                 <div className="flexspace-x-1">

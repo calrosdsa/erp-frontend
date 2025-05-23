@@ -14,7 +14,7 @@ import FormAutocompleteField from "@/components/custom/select/form-autocomplete"
 export const PriceListAutocompleteFormField = ({
     allowEdit =true,
     required,
-    control,
+    form,
     label,
     // onSelect,
     name,
@@ -22,7 +22,7 @@ export const PriceListAutocompleteFormField = ({
 }:{
     allowEdit?: boolean;
     required?:boolean;
-    control?: Control<any, any>;
+    form:any,
     label?: string;
     name?:string
     isSelling?:boolean
@@ -39,7 +39,7 @@ export const PriceListAutocompleteFormField = ({
       required={required}
       name={name || "priceList"}
       nameK="name"
-      control={control}
+      form={form}
       allowEdit={allowEdit}
       onSelect={(e)=>{
         console.log("PRICE LIST",e)

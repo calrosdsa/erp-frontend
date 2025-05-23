@@ -65,6 +65,7 @@ export interface AutocompleteFormProps<T extends object, K extends keyof T> {
   href?: string;
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
   inputClassName?: string;
+  navigate?: (e: any) => void;
 }
 
 export default function FormAutocompleteField<
@@ -94,6 +95,7 @@ export default function FormAutocompleteField<
   disableAutocomplete,
   inputClassName,
   defaultValue,
+  navigate,
 }: AutocompleteFormProps<T, K>) {
   const [open, setOpen] = useState(false);
   const fieldValue = form.getValues(name || "");
@@ -121,17 +123,39 @@ export default function FormAutocompleteField<
     });
     // inputRef.current?.blur();
   };
+
   return (
     <FormField
-      control={control || (form && form?.control)}
-      name={name}
-      render={({ field }) => {
-        useEffect(() => {
-          if (field.value?.id && field.value?.name)
-            setQuery(field.value?.name || "");
-          setSelected(field.value?.name);
-        }, [field]);
-
+    control={control || (form && form?.control)}
+    name={name}
+    render={({ field }) => {
+      useEffect(() => {
+        if (field.value?.id && field.value?.name)
+          setQuery(field.value?.name || "");
+        setSelected(field.value?.name);
+      }, [field]);
+      
+      if (!allowEdit) {
+        return (
+          <>
+            <div className="flex flex-col">
+              {label && (
+                <FormLabel className="text-xs">
+                  {label} {required && "*"}
+                </FormLabel>
+              )}
+              <div>
+                <span
+                  className={cn("text-sm", navigate && "underline cursor-pointer")}
+                  onClick={() => navigate && navigate(fieldValue["id" as keyof T])}
+                >
+                  {query || "-"}
+                </span>
+              </div>
+            </div>
+          </>
+        );
+      }
         return (
           <FormItem className="flex flex-col w-full  ">
             <Popover open={open} onOpenChange={setOpen} modal={modal}>
@@ -182,6 +206,7 @@ export default function FormAutocompleteField<
                       >
                         <Input
                           value={query}
+                          disabled={!allowEdit}
                           placeholder={placeholder}
                           className={cn(
                             "border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-8 px-0 text-sm",
@@ -209,6 +234,7 @@ export default function FormAutocompleteField<
                         {selected && (
                           <IconButton
                             icon={XIcon}
+                            disabled={!allowEdit}
                             className="h-6 w-6"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -286,7 +312,7 @@ export default function FormAutocompleteField<
                         <Separator className="py-1 shadow-lg w-full" />
                         <Button
                           size={"sm"}
-                          variant={"default"}
+                          variant={"outline"}
                           className=" py-1"
                           onClick={() => {
                             addNew();

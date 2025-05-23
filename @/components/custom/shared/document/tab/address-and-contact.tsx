@@ -102,7 +102,7 @@ export default function AddressAndContact({
           className={"gap-y-3 grid p-3"}
         >
           {/* {JSON.stringify(formValues.shipping_address)} */}
-          <div className="detail-grid">
+          <div className="info-grid">
             {showPartyrAddress && (
               <>
                 <Typography variant="subtitle2" className=" col-span-full">
@@ -110,7 +110,7 @@ export default function AddressAndContact({
                 </Typography>
                 <AddressAutoCompleteFormField
                   allowEdit={allowEdit}
-                  control={form.control}
+                  form={form}
                   name="party_address"
                   label={partyLabel}
                   {...(addressPerm?.create && {
@@ -141,7 +141,7 @@ export default function AddressAndContact({
                 </Typography>
                 <AddressAutoCompleteFormField
                   allowEdit={allowEdit}
-                  control={form.control}
+                  form={form}
                   name="shipping_address"
                   label="Seleccione la dirección de envío"
                   {...(addressPerm?.create && {
@@ -173,7 +173,7 @@ export default function AddressAndContact({
                 <AddressAutoCompleteFormField
                   allowEdit={allowEdit}
                   name="billing_address"
-                  control={form.control}
+                  form={form}
                   label="Seleccione dirección de facturación"
                   {...(addressPerm?.create && {
                     addNew: () => {

@@ -7,14 +7,14 @@ import {
   SmartAutocomplete,
   SmartAutocompleteProps,
 } from "@/components/form/smart-autocomplete";
-import { OpenModal } from "~/types";
+import { OpenModalFunc } from "~/types";
 import { usePermission } from "../../useActions";
 
 type WorkSpace = components["schemas"]["WorkSpaceDto"];
 
 interface WorkspaceFormProps
   extends Partial<SmartAutocompleteProps<WorkSpace, keyof WorkSpace>> {
-  openModal: OpenModal;
+  openModal: OpenModalFunc;
   roleActions: components["schemas"]["RoleActionDto"][];
 }
 export const WorkspaceForm = ({ ...props }: WorkspaceFormProps) => {

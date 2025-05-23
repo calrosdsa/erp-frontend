@@ -7,9 +7,6 @@ import {
   CustomerData,
   customerSchema,
 } from "~/util/data/schemas/selling/customer-schema";
-
-import { z } from "zod";
-import { useLoadingTypeToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEffect, useRef, useState } from "react";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -51,7 +48,6 @@ export default function CustomerInfo({
   const customerStore = useCustomerStore();
 
   const onSubmit = (e: CustomerData) => {
-    console.log("ONSUBMIT", e);
     const id = toast.loading(LOADING_MESSAGE);
     setToastID(id);
     let action = payload.isNew ? "create-customer" : "edit-customer";
@@ -69,6 +65,9 @@ export default function CustomerInfo({
         }),
       }
     );
+    editPayload(key, {
+      enableEdit: false,
+    });
   };
 
   useDisplayMessage(

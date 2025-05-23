@@ -14,15 +14,15 @@ import FormAutocompleteField from "@/components/custom/select/form-autocomplete"
 
 export const WarehouseAutocompleteFormField = ({
   allowEdit = true,
-  control,
   label,
   onSelect,
   name,
   isGroup,
   roleActions,
+  form,
 }: {
   allowEdit?: boolean;
-  control: Control<any, any>;
+  form:any,
   label?: string;
   name?: string;
   onSelect?: (e: components["schemas"]["WareHouseDto"]) => void;
@@ -45,7 +45,7 @@ export const WarehouseAutocompleteFormField = ({
       label={label}
       name={name || "warehouse"}
       nameK="name"
-      control={control}
+      form={form}
       allowEdit={allowEdit}
       onSelect={onSelect}
       {...(permission?.create && {

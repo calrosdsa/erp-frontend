@@ -24,7 +24,7 @@ export default function QuotationsClient() {
   const quotationParty = params.quotationParty || "";
   const r = route;
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const [permission] = usePermission({
     actions: actions,
     roleActions: globalState.roleActions,

@@ -1,7 +1,7 @@
 import { useFormContext } from "@/components/form/form-provider";
 import { SmartField } from "@/components/form/smart-field";
 import { useTranslation } from "react-i18next";
-import { OpenModal } from "~/types";
+import { OpenModalFunc } from "~/types";
 import { GlobalState } from "~/types/app-types";
 import { RoleSchema } from "~/util/data/schemas/manage/role-schema";
 import { WorkspaceForm } from "~/util/hooks/fetchers/core/use-workspace-fetcher";
@@ -13,7 +13,7 @@ export default function RoleForm({
   appContext,
 }: {
   allowEdit: boolean;
-  openModal: OpenModal;
+  openModal: OpenModalFunc;
   appContext:GlobalState
 }) {
   const key = route.role;

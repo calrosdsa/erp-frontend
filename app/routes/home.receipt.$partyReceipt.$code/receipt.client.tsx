@@ -210,6 +210,7 @@ export default function ReceiptDetailClient() {
     <DetailLayout
       activities={activities}
       partyID={receipt?.id}
+      fullWidth={true}
       navItems={navItems}
       partyName={receipt?.code}
       entityID={

@@ -15,14 +15,14 @@ export default function PaymentTermsTemplateData({
   onSubmit,
   inputRef,
   allowEdit = true,
-  isNew,
+  // isNew,
 }: {
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<PaymentTermsTemplateType>;
   onSubmit: (e: PaymentTermsTemplateType) => void;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
-  isNew?: boolean;
+  // isNew?: boolean;
 }) {
   const { t } = useTranslation("common");
   const formValues = form.getValues();
@@ -31,7 +31,8 @@ export default function PaymentTermsTemplateData({
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={cn(isNew ? "create-grid" : "detail-grid")}
+          // className={cn(isNew ? "create-grid" : "detail-grid")}
+          className={cn("create-grid")}
         >
           <CustomFormFieldInput
             control={form.control}

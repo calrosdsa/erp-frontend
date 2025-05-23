@@ -8,6 +8,7 @@ import { Entity } from "~/types/enums";
 import { components } from "~/sdk";
 import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { route } from "~/util/route";
+import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 
 type ActionData = {
   action: string;
@@ -71,6 +72,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     | components["schemas"]["EntityResponseResultEntityDealDetailDtoBody"]
     | undefined = undefined;
   let lineItems: components["schemas"]["LineItemDto"][] = [];
+
   if (params.id != DEFAULT_ID) {
     // Crear promesas separadas para mejor legibilidad
     const stagesPromise = client.GET("/stage", {
@@ -84,23 +86,32 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       },
     });
     // Crear promesa condicional para el detalle del deal
-    const dealPromise = params.id
-      ? client.GET("/deal/detail/{id}", {
+    const dealPromise = client.GET("/deal/detail/{id}", {
           params: {
             path: {
-              id: params.id,
+              id: params.id || "",
             },
           },
         })
-      : Promise.resolve(undefined);
+
+    const lineItemsPromise = client.GET("/item-line",{
+      params:{
+        query:{
+          line_type:itemLineTypeToJSON(ItemLineType.DEAL_LINE_ITEM),
+          id:params.id
+        }
+      }
+    })
 
     // Ejecutar promesas en paralelo
-    const [stagesRes, dealRes] = await Promise.all([
+    const [stagesRes, dealRes,lineItemsRes] = await Promise.all([
       stagesPromise,
       dealPromise,
+      lineItemsPromise,
     ]);
     stages = stagesRes.data?.result || [];
     dealData = dealRes?.data;
+    lineItems = lineItemsRes.data?.result || []
   }
 
   return json({
@@ -111,6 +122,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     actions: dealData?.actions,
     contacts: dealData?.result.contacts || [],
     entityActions: dealData?.associated_actions,
+    lineItems,
   });
 };
 

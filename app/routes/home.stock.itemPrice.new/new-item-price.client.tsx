@@ -19,21 +19,22 @@ import { GlobalState } from "~/types/app-types";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { useItemPriceStore } from "./use-item-price-store";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewItemPriceClient({}: {}) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fetcher = useFetcher<typeof action>();
   const globalState = useOutletContext<GlobalState>();
   const navigate = useNavigate();
-  const {payload} = useItemPriceStore()
+  const { payload } = useItemPriceStore();
   const form = useForm<z.infer<typeof createItemPriceSchema>>({
     resolver: zodResolver(createItemPriceSchema),
     defaultValues: {
-      itemQuantity:1,
-      item:payload?.item,
-      itemID:payload?.itemID,
-      uom:payload?.uom,
-      uomID:payload?.uomID,
+      itemQuantity: 1,
+      item: payload?.item,
+      itemID: payload?.itemID,
+      uom: payload?.uom,
+      uomID: payload?.uomID,
     },
   });
   const r = route;
@@ -68,7 +69,7 @@ export default function NewItemPriceClient({}: {}) {
               routeSufix: [form.getValues().item],
               q: {
                 tab: "info",
-                id:fetcher.data.itemPrice.uuid,
+                id: fetcher.data.itemPrice.uuid,
               },
             })
           );
@@ -87,19 +88,18 @@ export default function NewItemPriceClient({}: {}) {
   }, []);
 
   return (
-    <FormLayout>
-      <Form {...form}>
-        <fetcher.Form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className=" create-grid"
-        >
-          <input type="submit" className="hidden" ref={inputRef} />
-          <ItemPriceForm
-            form={form}
-            globalState={globalState}
-          />
-        </fetcher.Form>
-      </Form>
-    </FormLayout>
+    <CreateLayout>
+      <FormLayout>
+        <Form {...form}>
+          <fetcher.Form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className=" create-grid"
+          >
+            <input type="submit" className="hidden" ref={inputRef} />
+            <ItemPriceForm form={form} globalState={globalState} />
+          </fetcher.Form>
+        </Form>
+      </FormLayout>
+    </CreateLayout>
   );
 }

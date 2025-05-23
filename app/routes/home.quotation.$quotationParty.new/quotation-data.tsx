@@ -4,6 +4,7 @@ import {
   FetcherWithComponents,
   useOutletContext,
   useParams,
+  useSearchParams,
 } from "@remix-run/react";
 import { MutableRefObject, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -14,7 +15,6 @@ import PartyAutocomplete, {
 } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app-types";
-import { CurrencyAutocompleteForm } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
 import { Separator } from "@/components/ui/separator";
 import LineItems from "@/components/custom/shared/item/line-items";
 import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
@@ -29,6 +29,7 @@ import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-
 import CurrencyAndPriceList from "@/components/custom/shared/document/currency-and-price-list";
 import { party } from "~/util/party";
 import { cn } from "@/lib/utils";
+import { DocumentRegisters } from "@/components/custom/shared/document/document-registers";
 
 type QuotationData = z.infer<typeof quotationDataSchema>;
 
@@ -39,15 +40,15 @@ export const QuotationData = ({
   form,
   allowEdit,
   allowCreate,
-  isNew,
-}: {
+}: // isNew,
+{
   fetcher: FetcherWithComponents<any>;
   form: UseFormReturn<QuotationData>;
   onSubmit: (e: QuotationData) => void;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   allowEdit?: boolean;
   allowCreate?: boolean;
-  isNew?: boolean;
+  // isNew?: boolean;
 }) => {
   const params = useParams();
   const quotationParty = params.quotationParty || "";
@@ -56,7 +57,20 @@ export const QuotationData = ({
   const formValues = form.getValues();
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
+  const [searchParams, setSearchParams] = useSearchParams();
   const p = party;
+
+  const openModal = (key: string, value: any, args?: Record<string, any>) => {
+    searchParams.set(key, value);
+    if (args) {
+      Object.entries(args).forEach(([key, value]) => {
+        searchParams.set(key, value);
+      });
+    }
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
@@ -68,18 +82,22 @@ export const QuotationData = ({
     taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.lines]);
 
+  DocumentRegisters({ form });
+
   return (
     <FormLayout>
       <Form {...form}>
         <fetcher.Form
           onSubmit={form.handleSubmit(onSubmit)}
-          className={cn(isNew ? "create-grid" : "detail-grid")}
+          // className={cn(isNew ? "create-grid" : "detail-grid")}
+          className={cn("create-grid")}
         >
           <PartyAutocompleteField
             partyType={quotationParty}
             roleActions={roleActions}
-            control={form.control}
+            form={form}
             allowEdit={allowEdit}
+            openModal={openModal}
           />
           <CustomFormDate
             control={form.control}
@@ -103,7 +121,7 @@ export const QuotationData = ({
           />
 
           <CurrencyAndPriceList
-            control={form.control}
+            form={form}
             allowEdit={allowEdit}
             isSelling={quotationParty == p.salesQuotation}
             isBuying={quotationParty == p.supplierQuotation}

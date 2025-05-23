@@ -24,7 +24,6 @@ export const costCenterColumns = ({}: {}): ColumnDef<
             navigate={(name) =>
               r.toRoute({
                 main: r.costCenter,
-                routePrefix: [r.accountingM],
                 routeSufix: [name],
                 q: {
                   tab: "info",

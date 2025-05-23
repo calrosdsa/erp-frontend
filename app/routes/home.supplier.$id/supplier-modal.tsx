@@ -26,9 +26,11 @@ import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
-import { DEFAULT_ID } from "~/constant";
+import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import SupplierInfo from "./components/tab/supplier-info";
 import { SerializeFrom } from "@remix-run/node";
+import { toast } from "sonner";
+import { useSupplierStore } from "./supplier-store";
 
 export default function SupplierModal({
   appContext,
@@ -52,6 +54,8 @@ export default function SupplierModal({
     roleActions: appContext.roleActions,
     actions: data?.actions,
   });
+  const [toastID, setToastID] = useState<string | number>("");
+  const supplierStore = useSupplierStore();
 
   const load = async () => {
     try {
@@ -67,12 +71,14 @@ export default function SupplierModal({
     }
   };
   useEffect(() => {
-    if(supplierID){
+    if (supplierID) {
       load();
     }
   }, [supplierID]);
 
   const onChangeState = (e: EventState) => {
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     const body: z.infer<typeof updateStatusWithEventSchema> = {
       current_state: supplier?.status || "",
       party_id: supplier?.uuid || "",
@@ -179,7 +185,10 @@ export default function SupplierModal({
   );
 
   const closeModal = () => {
+    supplierStore.reset();
     searchParams.delete(route.supplier);
+    searchParams.delete("action");
+
     setSearchParams(searchParams, {
       preventScrollReset: true,
     });
@@ -218,7 +227,7 @@ export default function SupplierModal({
                 children: (
                   <SupplierInfo
                     load={load}
-                    closeModal={closeModal}
+                    closeModal={() => setOpen(false)}
                     appContext={appContext}
                     data={data}
                   />

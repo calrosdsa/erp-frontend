@@ -38,7 +38,7 @@ export default function TermsAndConditionsDetailClient() {
       routeSufix: [entity?.name || ""],
       q: {
         tab: tab,
-        id: entity?.uuid || "",
+        id: entity?.id || "",
       },
     });
   };
@@ -96,7 +96,7 @@ export default function TermsAndConditionsDetailClient() {
         });
       }
       return {
-        titleToolbar:t(party.termsAndConditions),
+        titleToolbar:entity?.name,
         status: status,
         actions: actions,
       };
