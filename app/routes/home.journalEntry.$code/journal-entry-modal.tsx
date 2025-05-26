@@ -1,29 +1,14 @@
 import {
   useFetcher,
-  useLoaderData,
   useNavigate,
-  useOutletContext,
   useParams,
-  useRevalidator,
-  useRouteLoaderData,
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
-import DetailLayout from "@/components/layout/detail-layout";
-import CustomerInfo from "./tab/customer-info";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import CustomerConnections from "./tab/customer-connections";
 import { ButtonToolbar } from "~/types/actions";
-import { endOfMonth, format, startOfMonth } from "date-fns";
-import {
-  EventState,
-  PartyType,
-  partyTypeToJSON,
-  State,
-  stateFromJSON,
-} from "~/gen/common";
+import { EventState, State, stateFromJSON } from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { GlobalState } from "~/types/app-types";
@@ -31,47 +16,49 @@ import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import ModalLayout, {
   setUpModalPayload,
-  useModalStore,
 } from "@/components/ui/custom/modal-layout";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
-import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
+import { DEFAULT_ID, fromDate, LOADING_MESSAGE, toDate, voucherNo } from "~/constant";
 import { SerializeFrom } from "@remix-run/node";
-import { useCustomerStore } from "./customer-store";
-import { toast } from "sonner";
 
-export default function CustomerModal({
+import { toast } from "sonner";
+import { JournalEntryInfo } from "./tab/journal-entry-info";
+import { format } from "date-fns";
+
+export default function JournalEntryModal({
   appContext,
 }: {
   appContext: GlobalState;
 }) {
-  const key = route.customer;
+  const key = route.journalEntry;
 
   const [data, setData] = useState<SerializeFrom<typeof loader>>();
   const [loading, setLoading] = useState(false);
   // const data = fetcherLoader.data;
-  const customer = data?.customer;
+  const journalEntry = data?.journalEntry;
   const [open, setOpen] = useState(true);
-  // const { customer, actions, activities } = useLoaderData<typeof loader>();
+  // const { journalEntry, actions, activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab = searchParams.get("tab") || "info";
+  const [tab, setTab] = useState("info");
+
   const { t, i18n } = useTranslation("common");
-  const r = route;
-  const customerID = searchParams.get(route.customer);
+  const journalEntryCode = searchParams.get(key);
   const navigate = useNavigate();
   const [permission] = usePermission({
     roleActions: appContext.roleActions,
     actions: data?.actions,
   });
-  const [toastID,setToastID]= useState<string | number>("")
-  const customerStore = useCustomerStore();
+  const [toastID, setToastID] = useState<string | number>("");
 
   const load = async () => {
     try {
       setLoading(true);
-      const res = await fetch(route.toRouteDetail(route.customer, customerID));
+      const res = await fetch(
+        route.toRouteDetail(route.journalEntry, journalEntryCode)
+      );
       if (res.ok) {
         const body = (await res.json()) as SerializeFrom<typeof loader>;
         setData(body);
@@ -83,17 +70,17 @@ export default function CustomerModal({
     }
   };
   useEffect(() => {
-    if(customerID){
+    if (journalEntryCode) {
       load();
     }
-  }, [customerID]);
+  }, [journalEntryCode]);
 
   const onChangeState = (e: EventState) => {
-    const id = toast.loading(LOADING_MESSAGE)
-    setToastID(id)
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     const body: z.infer<typeof updateStatusWithEventSchema> = {
-      current_state: customer?.status || "",
-      party_id: customer?.id.toString() || "",
+      current_state: journalEntry?.status || "",
+      party_id: journalEntry?.id.toString() || "",
       events: [e],
     };
     fetcher.submit(
@@ -105,8 +92,8 @@ export default function CustomerModal({
         method: "POST",
         encType: "application/json",
         action: route.toRoute({
-          main: route.customer,
-          routeSufix: [customer?.id.toString() || ""],
+          main: route.journalEntry,
+          routeSufix: [journalEntry?.id.toString() || ""],
         }),
       }
     );
@@ -114,11 +101,11 @@ export default function CustomerModal({
 
   useDisplayMessage(
     {
-      toastID:toastID,
+      toastID: toastID,
       error: fetcher.data?.error,
       success: fetcher.data?.message,
-      onSuccessMessage:()=>{
-        load()
+      onSuccessMessage: () => {
+        load();
       },
     },
     [fetcher.data]
@@ -127,68 +114,47 @@ export default function CustomerModal({
   setUpModalPayload(
     key,
     () => {
-      const state = stateFromJSON(customer?.status);
-      const isNew = DEFAULT_ID == customerID;
+      const status = stateFromJSON(journalEntry?.status);
+      const isNew = DEFAULT_ID == journalEntryCode;
       let view: ButtonToolbar[] = [];
-      let actions: ButtonToolbar[] = [];
-      if (permission.edit && state == State.ENABLED) {
-        actions.push({
-          label: "Deshabilitar",
-          onClick: () => {
-            onChangeState(EventState.DISABLED_EVENT);
-          },
-        });
+      if(status == State.SUBMITTED){
+        view.push({
+          label:t("generalLedger"),
+          onClick:()=>{
+            navigate(route.to(route.generalLedger,{
+              [voucherNo]:data?.journalEntry?.code,
+              [fromDate]:format(new Date(journalEntry?.posting_date || new Date()),"yyyy-MM-dd"),
+              [toDate]:format(new Date(journalEntry?.posting_date || new Date()),"yyyy-MM-dd"),
+            }))
+          }
+        })
       }
-      if (permission.edit && state == State.DISABLED) {
-        actions.push({
-          label: "Habilitar",
-          onClick: () => {
-            onChangeState(EventState.ENABLED_EVENT);
-          },
-        });
-      }
-      view.push({
-        label: t("accountingLedger"),
-        onClick: () => {
-          navigate(
-            r.toRoute({
-              main: r.generalLedger,
-              routePrefix: [r.accountingM],
-              q: {
-                fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
-                toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
-                partyName: customer?.name,
-                party: customer?.id.toString(),
-                partyType: partyTypeToJSON(PartyType.supplier),
-              },
-            })
-          );
-        },
-      });
-      view.push({
-        label: t("accountReceivable"),
-        onClick: () => {
-          navigate(
-            r.toRoute({
-              main: r.accountReceivable,
-              routePrefix: [r.accountingM],
-              q: {
-                fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
-                toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
-                party: customer?.id.toString(),
-                partyName: customer?.name,
-              },
-            })
-          );
-        },
-      });
+      // let actions: ButtonToolbar[] = [];
+      // if (permission.edit && state == State.ENABLED) {
+      //   actions.push({
+      //     label: "Deshabilitar",
+      //     onClick: () => {
+      //       onChangeState(EventState.DISABLED_EVENT);
+      //     },
+      //   });
+      // }
+      // if (permission.edit && state == State.DISABLED) {
+      //   actions.push({
+      //     label: "Habilitar",
+      //     onClick: () => {
+      //       onChangeState(EventState.ENABLED_EVENT);
+      //     },
+      //   });
+      // }
+
       return {
-        title: isNew ? "Nuevo cliente" : customer?.name,
+        title: isNew ? "Nuevo asiento contable" : journalEntry?.code,
         view: isNew ? [] : view,
-        actions: isNew ? [] : actions,
-        status: stateFromJSON(customer?.status),
+        // actions: isNew ? [] : actions,
+        status: stateFromJSON(journalEntry?.status),
         enableEdit: isNew,
         isNew: isNew,
+        onChangeState:onChangeState,
         loadData: load,
         onCancel: isNew
           ? () => {
@@ -201,8 +167,7 @@ export default function CustomerModal({
   );
 
   const closeModal = () => {
-    customerStore.reset();
-    searchParams.delete(route.customer);
+    searchParams.delete(route.journalEntry);
     searchParams.delete("action");
     setSearchParams(searchParams, {
       preventScrollReset: true,
@@ -222,32 +187,33 @@ export default function CustomerModal({
       onOpenChange={(e) => {
         setOpen(e);
       }}
+      className="xl:w-[90%]"
     >
       {loading && !data ? (
         <LoadingSpinner />
       ) : (
         <>
-          {/* {JSON.stringify(data?.customer)} */}
           {data && (
             <TabNavigation
               defaultValue={tab}
               onValueChange={(value) => {
-                searchParams.set("tab", value);
-                setSearchParams(searchParams, {
-                  preventScrollReset: true,
-                });
+                setTab(value);
+                // searchParams.set("tab", value);
+                // setSearchParams(searchParams, {
+                //   preventScrollReset: true,
+                // });
               }}
               items={[
                 {
                   label: "Info",
                   value: "info",
                   children: (
-                    <CustomerInfo
+                    <JournalEntryInfo
                       appContext={appContext}
                       data={data}
                       load={load}
-                      closeModal={() => setOpen(false)}
                       permission={permission}
+                      closeModal={() => setOpen(false)}
                     />
                   ),
                 },
@@ -259,7 +225,7 @@ export default function CustomerModal({
     </ModalLayout>
     // <DetailLayout
     //   activities={activities}
-    //   partyID={customer?.id}
+    //   partyID={journalEntry?.id}
     //   navItems={navItems}
     // >
     //   {tab == "info" && <CustomerInfo />}

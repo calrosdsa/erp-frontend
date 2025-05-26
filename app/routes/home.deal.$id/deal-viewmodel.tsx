@@ -7,7 +7,7 @@ import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { action } from "../home.stage/route";
 import { useDealStore } from "./deal-store";
-import { useEntityPermission } from "~/util/hooks/useActions";
+import { useEntityPermission, usePermission } from "~/util/hooks/useActions";
 import { useQuotationStore } from "../home.quotation.$quotationParty.new/quotation-store";
 import { components } from "~/sdk";
 import { toast } from "sonner";
@@ -39,6 +39,10 @@ export const DealViewModel = ({ appContext }: { appContext: GlobalState }) => {
     entities: data?.entityActions,
     roleActions: appContext.roleActions,
   });
+  const [permission] = usePermission({
+    roleActions:appContext.roleActions,
+    actions:data?.actions,
+  })
   const quotationStore = useQuotationStore();
   const navigate = useNavigate();
 
@@ -179,5 +183,6 @@ export const DealViewModel = ({ appContext }: { appContext: GlobalState }) => {
     tab,
     searchParams,
     setSearchParams,
+    permission,
   };
 };

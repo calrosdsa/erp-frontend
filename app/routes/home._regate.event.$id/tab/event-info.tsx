@@ -12,7 +12,7 @@ import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import {
   EventBookingSchema,
-  eventBookingShema,
+  eventBookingSchema,
 } from "~/util/data/schemas/regate/event-schema";
 import { z } from "zod";
 import {
@@ -49,26 +49,25 @@ import { SmartForm } from "@/components/form/smart-form";
 import { action } from "~/routes/home._regate.event_/route";
 import { toast } from "sonner";
 import { useEventStore } from "../event-store";
+import { Permission } from "~/types/permission";
 
 export default function EventInfoTab({
   appContext,
   data,
   closeModal,
   load,
+  permission,
 }: {
   appContext: GlobalState;
   data: SerializeFrom<typeof loader>;
   closeModal: () => void;
   load: () => void;
+  permission:Permission
 }) {
   const key = route.event;
   const { event, actions, bookingInfo } = data;
   const { t, i18n } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [permission] = usePermission({
-    roleActions: appContext.roleActions,
-    actions,
-  });
   const payload = useModalStore((state) => state.payload[key]) || {};
   const fetcher = useFetcher<typeof action>();
   const [toastID, setToastID] = useState<string | number>("");
@@ -130,8 +129,9 @@ export default function EventInfoTab({
       <div className="col-span-4">
         <SmartForm
           isNew={payload.isNew || false}
-          title={t("_customer.info")}
-          schema={eventBookingShema}
+          title={t("info")}
+          permission={permission}
+          schema={eventBookingSchema}
           keyPayload={key}
           defaultValues={{
             eventID: event?.id,

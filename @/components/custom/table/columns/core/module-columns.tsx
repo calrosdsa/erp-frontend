@@ -81,17 +81,11 @@ export const moduleSelectionColumn = ({
               defaultValue={props.row.original.name}
               onValueChange={onChange}
               data={fetcher.data?.results || []}
-              // isLoading={fetcher.state == "submitting"}
               nameK={"label"}
               placeholder="Buscar o crear un nuevo módulo"
-              // isLoading={fetcher.state == "submitting"}
-              // className=" border-none h-8"
-              // inputClassName=""
               onSelect={(e) => {
-                // console.log("SELECTED",e)
                 tableMeta?.updateCell(props.row.index, "id", e.id);
                 tableMeta?.updateCell(props.row.index, "name", e.label);
-                // navigate(r.to(e.href));
               }}
             />
           </>

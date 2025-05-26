@@ -29,6 +29,7 @@ import { orderDataSchema } from "~/util/data/schemas/buying/order-schema";
 import { cn } from "@/lib/utils";
 import { useSupplierStore } from "../home.supplier.$id/supplier-store";
 import { DocumentRegisters } from "@/components/custom/shared/document/document-registers";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 
 type Data = z.infer<typeof orderDataSchema>;
 
@@ -57,20 +58,7 @@ export default function OrderData({
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
   const p = party;
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  
-  const openModal = (key: string, value: any, args?: Record<string, any>) => {
-    searchParams.set(key, value);
-    if (args) {
-      Object.entries(args).forEach(([key, value]) => {
-        searchParams.set(key, value);
-      });
-    }
-    setSearchParams(searchParams, {
-      preventScrollReset: true,
-    });
-  };
+  const { openModal } = useModalNav();
 
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
@@ -81,7 +69,7 @@ export default function OrderData({
     lineItemsStore.onLines(formValues.lines);
     taxLinesStore.updateFromItems(formValues.lines);
   }, [formValues.lines]);
-  
+
   DocumentRegisters({ form });
   return (
     <FormLayout>
@@ -164,8 +152,11 @@ export default function OrderData({
           <GrandTotal currency={formValues.currency} />
           <TaxBreakup currency={formValues.currency} />
 
-          <AccountingDimensionForm form={form} allowEdit={allowEdit} 
-          openModal={openModal}/>
+          <AccountingDimensionForm
+            form={form}
+            allowEdit={allowEdit}
+            openModal={openModal}
+          />
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

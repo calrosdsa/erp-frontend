@@ -1,12 +1,8 @@
 import Typography, { subtitle } from "@/components/typography/Typography";
 import { action, loader } from "../route";
-import { useFetcher, useSearchParams } from "@remix-run/react";
+import { useFetcher, useParams, useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
-import {
-  CustomerData,
-  customerSchema,
-} from "~/util/data/schemas/selling/customer-schema";
 import { useEffect, useRef, useState } from "react";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import FormLayout from "@/components/custom/form/FormLayout";
@@ -16,15 +12,19 @@ import { GlobalState } from "~/types/app-types";
 import { SerializeFrom } from "@remix-run/node";
 import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { SmartForm } from "@/components/form/smart-form";
-import CustomerForm from "../customer-form";
 import { useModalStore } from "@/components/ui/custom/modal-layout";
 import { CREATE, DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { toast } from "sonner";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { Entity } from "~/types/enums";
-import {  useCustomerStore } from "../customer-store";
+import { useAddressStore } from "../address-store";
+import {
+  AddressSchema,
+  addressSchema,
+} from "~/util/data/schemas/core/address.schema";
+import AddressForm from "../address-form";
 import { Permission } from "~/types/permission";
-export default function CustomerInfo({
+export default function AddressInfo({
   appContext,
   data,
   load,
@@ -37,35 +37,32 @@ export default function CustomerInfo({
   closeModal: () => void;
   permission:Permission
 }) {
-  const key = route.customer;
+  const key = route.address;
   const payload = useModalStore((state) => state.payload[key]) || {};
   const { editPayload } = useModalStore();
-  const customer = data?.customer;
-  const contacts = data?.contacts;
+  const address = data?.address;
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [toastID, setToastID] = useState<string | number>("");
-  const id = searchParams.get(route.customer);
+  const id = searchParams.get(route.address);
+  const params = useParams();
   const paramAction = searchParams.get("action");
-  const customerStore = useCustomerStore();
+  const addressStore = useAddressStore();
 
-  const onSubmit = (e: CustomerData) => {
+  const onSubmit = (e: AddressSchema) => {
     const id = toast.loading(LOADING_MESSAGE);
     setToastID(id);
-    let action = payload.isNew ? "create-customer" : "edit-customer";
+    let action = payload.isNew ? "create-address" : "edit-address";
     fetcher.submit(
       {
         action,
-        customerData: e,
+        addressData: e,
       },
       {
         method: "POST",
         encType: "application/json",
-        action: route.toRoute({
-          main: route.customer,
-          routeSufix: [customer?.id.toString() || ""],
-        }),
+        action: route.toRouteDetail(route.address, params.id),
       }
     );
     editPayload(key, {
@@ -81,13 +78,13 @@ export default function CustomerInfo({
       onSuccessMessage: () => {
         if (id == DEFAULT_ID) {
           if (paramAction == CREATE) {
-            customerStore.onCreateCustomer(fetcher.data?.customer);
+            addressStore.onCreateAddress(fetcher.data?.address);
             closeModal();
           }
-          if (fetcher.data?.customer) {
+          if (fetcher.data?.address) {
             searchParams.set(
-              route.customer,
-              fetcher.data?.customer.id.toString()
+              route.address,
+              fetcher.data?.address.id.toString()
             );
             setSearchParams(searchParams, {
               preventScrollReset: true,
@@ -107,33 +104,38 @@ export default function CustomerInfo({
       <div className="col-span-4">
         <SmartForm
           isNew={payload.isNew || false}
-          title={t("_customer.info")}
-          schema={customerSchema}
-          permission={permission}
+          title={t("info")}
+          schema={addressSchema}
           keyPayload={key}
+          permission={permission}
           defaultValues={{
-            name: customer?.name || "",
-            customerType: customer?.customer_type || "",
-            customerID: customer?.id,
-            group: {
-              id: customer?.group_id,
-              name: customer?.group_name,
-            },
-            contacts:
-              contacts?.map((t) => mapToContactSchema(t, customer?.id)) || [],
+            addressID: address?.id,
+            title: address?.title || "",
+            city: address?.city,
+            streetLine1: address?.street_line1,
+            streetLine2: address?.street_line2,
+            province: address?.province,
+            company: address?.company,
+            postalCode: address?.postal_code,
+            phoneNumber: address?.phone_number,
+            identificationNumber: address?.identification_number,
+            email: address?.email,
+            countryCode: address?.country_code,
+            isShippingAddress: address?.is_shipping_address || false,
+            isBillingAddress: address?.is_billing_address || false,
           }}
           onSubmit={onSubmit}
         >
-          <CustomerForm contacts={contacts || []} />
+          <AddressForm />
         </SmartForm>
       </div>
-      {customer?.id != undefined && (
+      {address?.id != undefined && (
         <div className=" col-span-5">
           <ActivityFeed
             appContext={appContext}
             activities={data?.activities || []}
-            partyID={customer?.id}
-            partyName={customer.name}
+            partyID={address?.id}
+            partyName={address.title}
             entityID={Entity.CUSTOMER}
           />
         </div>

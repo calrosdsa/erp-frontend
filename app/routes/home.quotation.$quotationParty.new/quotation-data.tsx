@@ -30,6 +30,7 @@ import CurrencyAndPriceList from "@/components/custom/shared/document/currency-a
 import { party } from "~/util/party";
 import { cn } from "@/lib/utils";
 import { DocumentRegisters } from "@/components/custom/shared/document/document-registers";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 
 type QuotationData = z.infer<typeof quotationDataSchema>;
 
@@ -57,21 +58,8 @@ export const QuotationData = ({
   const formValues = form.getValues();
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
-  const [searchParams, setSearchParams] = useSearchParams();
   const p = party;
-
-  const openModal = (key: string, value: any, args?: Record<string, any>) => {
-    searchParams.set(key, value);
-    if (args) {
-      Object.entries(args).forEach(([key, value]) => {
-        searchParams.set(key, value);
-      });
-    }
-    setSearchParams(searchParams, {
-      preventScrollReset: true,
-    });
-  };
-
+  const { openModal } = useModalNav();
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
     taxLinesStore.updateFromItems(formValues.lines);
@@ -156,7 +144,7 @@ export const QuotationData = ({
           <GrandTotal currency={formValues.currency} />
           <TaxBreakup currency={formValues.currency} />
 
-          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
+          <AccountingDimensionForm form={form} allowEdit={allowEdit} openModal={openModal} />
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

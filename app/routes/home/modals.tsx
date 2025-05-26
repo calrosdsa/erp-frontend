@@ -9,6 +9,8 @@ import CourtModal from "../home._regate.court.$id/court-modal";
 import EventModal from "../home._regate.event.$id/event-modal";
 import SupplierModal from "../home.supplier.$id/supplier-modal";
 import WorkspaceModal from "../home.workspace.$id/workspace-modal";
+import AddressModal from "../home.address.$id/address-modal";
+import JournalEntryModal from "../home.journalEntry.$code/journal-entry-modal";
 
 export default function AppModals({ appContext }: { appContext: GlobalState }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,8 +22,12 @@ export default function AppModals({ appContext }: { appContext: GlobalState }) {
   const court = searchParams.get(route.court);
   const event = searchParams.get(route.event);
   const workspace = searchParams.get(route.workspace);
+  const address = searchParams.get(route.address);
+  const journalEntry = searchParams.get(route.journalEntry)
+
   return (
     <div>
+      {address && <AddressModal appContext={appContext} />}
       {userModal && <UserModal />}
       {dealModal && <DealModal appContext={appContext} />}
       {booking && <BookingModal appContext={appContext} />}
@@ -30,6 +36,7 @@ export default function AppModals({ appContext }: { appContext: GlobalState }) {
       {event && <EventModal appContext={appContext} />}
       {supplier && <SupplierModal appContext={appContext} />}
       {workspace && <WorkspaceModal appContext={appContext} />}
+      {journalEntry && <JournalEntryModal appContext={appContext}/>}
     </div>
   );
 }

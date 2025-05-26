@@ -11,32 +11,33 @@ import { z } from "zod";
 import { DataTableRowActions } from "../../data-table-row-actions";
 import { formatCurrencyAmount } from "~/util/format/formatCurrency";
 import TableCellTranslate from "../../cells/table-cell-translate";
+import { OpenModalFunc } from "~/types";
+import { TableCellBase } from "../../cells/table-cell";
+import TableCellEditable from "../../cells/table-cell-editable";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
+import { Autocomplete } from "@/components/custom/select/autocomplete";
 
-export const journalEntryColumns = ({}: {}): ColumnDef<
-  components["schemas"]["JournalEntryDto"]
->[] => {
+export const journalEntryColumns = ({
+  openModal,
+}: {
+  openModal: OpenModalFunc;
+}): ColumnDef<components["schemas"]["JournalEntryDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["JournalEntryDto"]>[] = [];
   const r = route;
   const { t, i18n } = useTranslation("common");
   return [
-  
     {
       accessorKey: "code",
       header: t("form.code"),
       cell: ({ ...props }) => {
+        const rowData = props.row.original;
         return (
-          <TableCellNameNavigation
+          <TableCellBase
+            className="font-semibold underline cursor-pointer"
             {...props}
-            navigate={(code) =>
-              r.toRoute({
-                main: r.journalEntry,
-                routePrefix: [r.accountingM],
-                routeSufix: [code],
-                q: {
-                  tab: "info",
-                },
-              })
-            }
+            onClick={() => {
+              openModal(route.journalEntry, rowData.code);
+            }}
           />
         );
       },
@@ -44,11 +45,8 @@ export const journalEntryColumns = ({}: {}): ColumnDef<
     {
       accessorKey: "entry_type",
       header: t("form.type"),
-      cell: ({...props})=>{
-        return <TableCellTranslate
-        {...props}
-        t={t}
-        />
+      cell: ({ ...props }) => {
+        return <TableCellTranslate {...props} t={t} />;
       },
     },
     {
@@ -65,13 +63,35 @@ export const journalEntryLineColumns = (): ColumnDef<
   let columns: ColumnDef<z.infer<typeof journalEntryLineSchema>>[] = [];
   const r = route;
   const { t, i18n } = useTranslation("common");
-  columns.push({
-    header: t("table.no"),
-    cell: TableCellIndex,
-  });
+
   columns.push({
     accessorKey: "accountName",
     header: t("_ledger.base"),
+    size:200,
+    cell: ({ ...props }) => {
+      const tableMeta: any = props.table.options.meta;
+      const [fetcher, onChange] = useAccountLedgerFetcher({});
+      return (
+        <>
+          <Autocomplete
+            defaultValue={props.row.original.accountName}
+            onValueChange={onChange}
+            data={fetcher.data?.results || []}
+            nameK={"name"}
+            placeholder="Buscar o crear un nueva cuenta"
+            onSelect={(e) => {
+              tableMeta?.updateCell(props.row.index, "accountName", e.name);
+              tableMeta?.updateCell(props.row.index, "accountID", e.id);
+              tableMeta?.updateCell(props.row.index, "currency", e.currency);
+              tableMeta?.updateCell(props.row.index, "debit", 0);
+              tableMeta?.updateCell(props.row.index, "credit", 0);
+
+
+            }}
+          />
+        </>
+      );
+    },
   });
   columns.push({
     accessorKey: "costCenterName",
@@ -80,37 +100,52 @@ export const journalEntryLineColumns = (): ColumnDef<
 
   columns.push({
     accessorKey: "debit",
+    size:100,
     header: t("form.debit"),
-    cell: ({ ...props }) => {
-      const rowData = props.row.original;
-      return (
-        <div>
-          {formatCurrencyAmount(
-            rowData.debit,
-            rowData.currency,
-            i18n.language
-          )}
-        </div>
-      );
+    cell: TableCellEditable,
+    meta: {
+      type: "number",
+    },
+  });
+  columns.push({
+    accessorKey: "credit",
+    size:100,
+    header: t("form.credit"),
+    cell: TableCellEditable,
+    meta: {
+      type: "number",
     },
   });
 
-  columns.push({
-    accessorKey: "credit",
-    header: t("form.credit"),
-    cell: ({ ...props }) => {
-      const rowData = props.row.original;
-      return (
-        <div>
-          {formatCurrencyAmount(
-            rowData.credit,
-            rowData.currency,
-            i18n.language
-          )}
-        </div>
-      );
-    },
-  });
+  // columns.push({
+  //   accessorKey: "debit",
+  //   header: t("form.debit"),
+  //   cell: ({ ...props }) => {
+  //     const rowData = props.row.original;
+  //     return (
+  //       <div>
+  //         {formatCurrencyAmount(rowData.debit, rowData.currency, i18n.language)}
+  //       </div>
+  //     );
+  //   },
+  // });
+
+  // columns.push({
+  //   accessorKey: "credit",
+  //   header: t("form.credit"),
+  //   cell: ({ ...props }) => {
+  //     const rowData = props.row.original;
+  //     return (
+  //       <div>
+  //         {formatCurrencyAmount(
+  //           rowData.credit,
+  //           rowData.currency,
+  //           i18n.language
+  //         )}
+  //       </div>
+  //     );
+  //   },
+  // });
 
   columns.push({
     id: "actions",

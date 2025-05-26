@@ -88,7 +88,7 @@ class Routes {
   profile = this.settings + "/profile";
   account = this.settings + "/account";
 
-  generalLedger = "generalLedger";
+  generalLedger = "accounting/generalLedger";
   accountPayable = "accountPayable";
   accountPayableSumary = "accountPayableSumary";
   accountReceivable = "accountReceivable";

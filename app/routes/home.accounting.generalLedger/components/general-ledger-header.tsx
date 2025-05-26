@@ -10,13 +10,13 @@ import { useTranslation } from "react-i18next";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { CostCenterSearch, useCostCenterFetcher } from "~/util/hooks/fetchers/accounting/useCostCenterFetcher";
 import { ProjectSearch, useProjectFetcher } from "~/util/hooks/fetchers/accounting/useProjectFetcher";
-import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 
 export default function GeneralLedgerHeader() {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
-  const [ledgerFetcher, onLedgerChange] = useAccountLedgerDebounceFetcher({
+  const [ledgerFetcher, onLedgerChange] = useAccountLedgerFetcher({
     isGroup: false,
   });
   const defaultValue = format(new Date(), "yyyy-MM-dd");

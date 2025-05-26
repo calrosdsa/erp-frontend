@@ -8,40 +8,39 @@ import { formatLongDate } from "~/util/format/formatDate";
 import { route } from "~/util/route";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellDate from "../../cells/table-cell-date";
+import { OpenModalFunc } from "~/types";
+import { TableCellBase } from "../../cells/table-cell";
 
-export const addressColumns = (): ColumnDef<components["schemas"]["AddressDto"]>[] => {
+export const addressColumns = ({
+  openModal,
+}: {
+  openModal: OpenModalFunc;
+}): ColumnDef<components["schemas"]["AddressDto"]>[] => {
   const { t, i18n } = useTranslation("common");
   const r = route;
   return [
     {
       accessorKey: "title",
       header: t("form.name"),
-      cell:({...props})=>{
-        const rowData = props.row.original
-        return(
-          <TableCellNameNavigation
-          {...props}
-          navigate={(name)=>r.toRouteDetail(route.address,name,{
-            tab:"info",
-            id:rowData.id.toString()
-          })}
+      cell: ({ ...props }) => {
+        const rowData = props.row.original;
+        return (
+          <TableCellBase
+            className="font-semibold underline cursor-pointer"
+            {...props}
+            onClick={() => openModal(r.address, rowData.id)}
           />
-        )
-      }
+        );
+      },
     },
     {
-        accessorKey:"city",
-        header:t("form.city")
+      accessorKey: "city",
+      header: t("form.city"),
     },
     {
       accessorKey: "created_at",
       header: t("table.createdAt"),
-      cell: ({ ...props }) => <TableCellDate
-      {...props}
-      i18n={i18n}
-      />
+      cell: ({ ...props }) => <TableCellDate {...props} i18n={i18n} />,
     },
   ];
 };
-
-

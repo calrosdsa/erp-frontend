@@ -1,20 +1,11 @@
 import {
   useFetcher,
-  useLoaderData,
   useNavigate,
-  useOutletContext,
-  useParams,
-  useRevalidator,
-  useRouteLoaderData,
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
-import DetailLayout from "@/components/layout/detail-layout";
-import CustomerInfo from "./tab/customer-info";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
-import CustomerConnections from "./tab/customer-connections";
 import { ButtonToolbar } from "~/types/actions";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import {
@@ -31,47 +22,48 @@ import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import ModalLayout, {
   setUpModalPayload,
-  useModalStore,
 } from "@/components/ui/custom/modal-layout";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
 import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { SerializeFrom } from "@remix-run/node";
-import { useCustomerStore } from "./customer-store";
-import { toast } from "sonner";
 
-export default function CustomerModal({
+import { toast } from "sonner";
+import { useAddressStore } from "./address-store";
+import AddressInfo from "./tab/address-info";
+
+export default function AddressModal({
   appContext,
 }: {
   appContext: GlobalState;
 }) {
-  const key = route.customer;
+  const key = route.address;
 
   const [data, setData] = useState<SerializeFrom<typeof loader>>();
   const [loading, setLoading] = useState(false);
   // const data = fetcherLoader.data;
-  const customer = data?.customer;
+  const address = data?.address;
   const [open, setOpen] = useState(true);
-  // const { customer, actions, activities } = useLoaderData<typeof loader>();
+  // const { address, actions, activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab = searchParams.get("tab") || "info";
+  const [tab,setTab] = useState("info")
+  
   const { t, i18n } = useTranslation("common");
-  const r = route;
-  const customerID = searchParams.get(route.customer);
+  const addressID = searchParams.get(key);
   const navigate = useNavigate();
   const [permission] = usePermission({
     roleActions: appContext.roleActions,
     actions: data?.actions,
   });
   const [toastID,setToastID]= useState<string | number>("")
-  const customerStore = useCustomerStore();
+  const addressStore = useAddressStore();
 
   const load = async () => {
     try {
       setLoading(true);
-      const res = await fetch(route.toRouteDetail(route.customer, customerID));
+      const res = await fetch(route.toRouteDetail(route.address, addressID));
       if (res.ok) {
         const body = (await res.json()) as SerializeFrom<typeof loader>;
         setData(body);
@@ -83,17 +75,17 @@ export default function CustomerModal({
     }
   };
   useEffect(() => {
-    if(customerID){
+    if(addressID){
       load();
     }
-  }, [customerID]);
+  }, [addressID]);
 
   const onChangeState = (e: EventState) => {
     const id = toast.loading(LOADING_MESSAGE)
     setToastID(id)
     const body: z.infer<typeof updateStatusWithEventSchema> = {
-      current_state: customer?.status || "",
-      party_id: customer?.id.toString() || "",
+      current_state: address?.status || "",
+      party_id: address?.id.toString() || "",
       events: [e],
     };
     fetcher.submit(
@@ -105,8 +97,8 @@ export default function CustomerModal({
         method: "POST",
         encType: "application/json",
         action: route.toRoute({
-          main: route.customer,
-          routeSufix: [customer?.id.toString() || ""],
+          main: route.address,
+          routeSufix: [address?.id.toString() || ""],
         }),
       }
     );
@@ -127,8 +119,8 @@ export default function CustomerModal({
   setUpModalPayload(
     key,
     () => {
-      const state = stateFromJSON(customer?.status);
-      const isNew = DEFAULT_ID == customerID;
+      const state = stateFromJSON(address?.status);
+      const isNew = DEFAULT_ID == addressID;
       let view: ButtonToolbar[] = [];
       let actions: ButtonToolbar[] = [];
       if (permission.edit && state == State.ENABLED) {
@@ -147,46 +139,12 @@ export default function CustomerModal({
           },
         });
       }
-      view.push({
-        label: t("accountingLedger"),
-        onClick: () => {
-          navigate(
-            r.toRoute({
-              main: r.generalLedger,
-              routePrefix: [r.accountingM],
-              q: {
-                fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
-                toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
-                partyName: customer?.name,
-                party: customer?.id.toString(),
-                partyType: partyTypeToJSON(PartyType.supplier),
-              },
-            })
-          );
-        },
-      });
-      view.push({
-        label: t("accountReceivable"),
-        onClick: () => {
-          navigate(
-            r.toRoute({
-              main: r.accountReceivable,
-              routePrefix: [r.accountingM],
-              q: {
-                fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
-                toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),
-                party: customer?.id.toString(),
-                partyName: customer?.name,
-              },
-            })
-          );
-        },
-      });
+    
       return {
-        title: isNew ? "Nuevo cliente" : customer?.name,
+        title: isNew ? "Nuevo dirección" : address?.title,
         view: isNew ? [] : view,
         actions: isNew ? [] : actions,
-        status: stateFromJSON(customer?.status),
+        status: stateFromJSON(address?.status),
         enableEdit: isNew,
         isNew: isNew,
         loadData: load,
@@ -201,8 +159,8 @@ export default function CustomerModal({
   );
 
   const closeModal = () => {
-    customerStore.reset();
-    searchParams.delete(route.customer);
+   addressStore.reset();
+    searchParams.delete(route.address);
     searchParams.delete("action");
     setSearchParams(searchParams, {
       preventScrollReset: true,
@@ -227,22 +185,23 @@ export default function CustomerModal({
         <LoadingSpinner />
       ) : (
         <>
-          {/* {JSON.stringify(data?.customer)} */}
+          {/* {JSON.stringify(data?.address)} */}
           {data && (
             <TabNavigation
               defaultValue={tab}
               onValueChange={(value) => {
-                searchParams.set("tab", value);
-                setSearchParams(searchParams, {
-                  preventScrollReset: true,
-                });
+                setTab(value)
+                // searchParams.set("tab", value);
+                // setSearchParams(searchParams, {
+                //   preventScrollReset: true,
+                // });
               }}
               items={[
                 {
                   label: "Info",
                   value: "info",
                   children: (
-                    <CustomerInfo
+                    <AddressInfo
                       appContext={appContext}
                       data={data}
                       load={load}
@@ -259,7 +218,7 @@ export default function CustomerModal({
     </ModalLayout>
     // <DetailLayout
     //   activities={activities}
-    //   partyID={customer?.id}
+    //   partyID={address?.id}
     //   navItems={navItems}
     // >
     //   {tab == "info" && <CustomerInfo />}

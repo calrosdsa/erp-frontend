@@ -41,6 +41,9 @@ export default function DocTerms({
   const r = route
   const navigate = useNavigate()
   const formValues = form.getValues()
+  
+
+
   const onSubmit = (e: DocTermsType) => {
     fetcher.submit({
         docTermsData: e,

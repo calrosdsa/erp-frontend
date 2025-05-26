@@ -1,27 +1,30 @@
 import { GlobalState } from "~/types/app-types";
-import { action, loader } from "./route";
 import { SerializeFrom } from "@remix-run/node";
 import { route } from "~/util/route";
 import { useModalStore } from "@/components/ui/custom/modal-layout";
 import { useFetcher, useSearchParams } from "@remix-run/react";
 import { useState } from "react";
-import {
-  workSpaceSchema,
-  WorkSpaceData,
-} from "~/util/data/schemas/core/workspace-schema";
+
 import { toast } from "sonner";
 import { CREATE, DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import ActivityFeed from "../home.activity/components/activity-feed";
 import { Entity } from "~/types/enums";
-import WorkspaceForm from "./workspace-form";
 import { SmartForm } from "@/components/form/smart-form";
 import { useTranslation } from "react-i18next";
 import { usePermission } from "~/util/hooks/useActions";
 import { mapModuleDtoToItem } from "~/util/data/schemas/core/module-schema";
+import { action, loader } from "../route";
+import {
+  JournalEntrySchema,
+  journalEntrySchema,
+  mapToJournalEntryLineSchama,
+} from "~/util/data/schemas/accounting/journal-entry-schema";
+import JournalEntryForm from "../journal-entry-form";
+import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { Permission } from "~/types/permission";
+import { toZonedTime } from "date-fns-tz";
 
-export const WorkSpaceInfo = ({
+export const JournalEntryInfo = ({
   appContext,
   data,
   load,
@@ -34,30 +37,29 @@ export const WorkSpaceInfo = ({
   closeModal: () => void;
   permission: Permission;
 }) => {
-  const key = route.workspace;
+  const key = route.journalEntry;
   const payload = useModalStore((state) => state.payload[key]) || {};
-  const workspace = data?.result?.entity;
+  const journalEntry = data?.journalEntry;
   const fetcher = useFetcher<typeof action>();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [toastID, setToastID] = useState<string | number>("");
-  const id = searchParams.get(route.workspace);
-  const paramAction = searchParams.get("action");
+  const id = searchParams.get(route.journalEntry);
   const { t } = useTranslation("common");
-  const onSubmit = (e: WorkSpaceData) => {
+  const onSubmit = (e: JournalEntrySchema) => {
     console.log("ONSUBMIT", e);
     const id = toast.loading(LOADING_MESSAGE);
     setToastID(id);
-    let action = payload.isNew ? "create-workspace" : "edit-workspace";
+    let action = payload.isNew ? "create-journalEntry" : "edit-journalEntry";
     fetcher.submit(
       {
         action,
-        workspaceData: e,
+        journalEntryData: e as any,
       },
       {
         method: "POST",
         encType: "application/json",
-        action: route.toRouteDetail(route.workspace, workspace?.id),
+        action: route.toRouteDetail(route.journalEntry, journalEntry?.code),
       }
     );
   };
@@ -69,13 +71,10 @@ export const WorkSpaceInfo = ({
       success: fetcher.data?.message,
       onSuccessMessage: () => {
         if (id == DEFAULT_ID) {
-          if (paramAction == CREATE) {
-            closeModal();
-          }
-          if (fetcher.data?.workspace) {
+          if (fetcher.data?.journalEntry) {
             searchParams.set(
-              route.workspace,
-              fetcher.data?.workspace.id.toString()
+              route.journalEntry,
+              fetcher.data?.journalEntry.code.toString()
             );
             setSearchParams(searchParams, {
               preventScrollReset: true,
@@ -91,33 +90,37 @@ export const WorkSpaceInfo = ({
   );
   return (
     <div className="grid grid-cols-9 gap-3">
-      <div className="col-span-4">
+      <div className="col-span-6">
+      {JSON.stringify(journalEntry?.posting_date)}
         <SmartForm
           isNew={payload.isNew || false}
           title={t("info")}
-          permission={permission}
-          schema={workSpaceSchema}
+          schema={journalEntrySchema}
           keyPayload={key}
+          permission={permission}
           defaultValues={{
-            id: workspace?.id,
-            name: workspace?.name || "",
-            modules: workspace?.modules?.map((item) =>
-              mapModuleDtoToItem(item)
+            id: journalEntry?.id,
+            postingDate: journalEntry?.posting_date
+              ? toZonedTime(journalEntry.posting_date, "UTC")
+              : new Date(),
+            entryType: journalEntry?.entry_type,
+            lines: data?.lines?.map((item) =>
+              mapToJournalEntryLineSchama(item)
             ),
           }}
           onSubmit={onSubmit}
         >
-          <WorkspaceForm  keyPayload={key} />
+          <JournalEntryForm permission={permission} />
         </SmartForm>
       </div>
-      {workspace?.id != undefined && (
-        <div className=" col-span-5">
+      {journalEntry?.id != undefined && (
+        <div className=" col-span-3">
           <ActivityFeed
             appContext={appContext}
-            activities={data?.result?.activities || []}
-            partyID={workspace?.id}
-            partyName={workspace.name}
-            entityID={Entity.WORKSPACE}
+            activities={data?.activities || []}
+            partyID={journalEntry?.id}
+            partyName={journalEntry.code}
+            entityID={Entity.JOURNAL_ENTRY}
           />
         </div>
       )}

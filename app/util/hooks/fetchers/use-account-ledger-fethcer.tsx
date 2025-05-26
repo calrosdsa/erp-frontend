@@ -19,7 +19,7 @@ export const LedgerAutocompleteFormField = ({
   roleActions,
   ...props
 }: LedgerFormProps) => {
-  const [fetcherDebounce, onChange] = useAccountLedgerDebounceFetcher({
+  const [fetcherDebounce, onChange] = useAccountLedgerFetcher({
     isGroup,
   });
   
@@ -54,7 +54,7 @@ export const LedgerAutocompleteForm = ({
     roleActions?: components["schemas"]["RoleActionDto"][];
     onClear?:()=>void
   }) => {
-    const [fetcherDebounce, onChange] = useAccountLedgerDebounceFetcher({
+    const [fetcherDebounce, onChange] = useAccountLedgerFetcher({
       isGroup,
     });
     // const [permission] = usePermission({
@@ -77,9 +77,9 @@ export const LedgerAutocompleteForm = ({
     );
   };
 
-export const useAccountLedgerDebounceFetcher = ({isGroup}:{
+export const useAccountLedgerFetcher = ({isGroup=false}:{
     //Pass  isGroup=true  for  filter only ledger groups
-    isGroup:boolean
+    isGroup?:boolean
 }) =>{
    const r = route;
     const fetcherDebounce = useDebounceFetcher<{

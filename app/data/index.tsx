@@ -34,3 +34,5 @@ export const dealTypes: SelectOption[] = [
     value: dealTypeToJSON(DealType.AfterSales),
   },
 ];
+
+

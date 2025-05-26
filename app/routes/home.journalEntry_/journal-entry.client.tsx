@@ -9,6 +9,8 @@ import { route } from "~/util/route";
 import { ListLayout } from "@/components/ui/custom/list-layout";
 import { party } from "~/util/party";
 import { useTranslation } from "react-i18next";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
+import { DEFAULT_ID } from "~/constant";
 
 export default function JournalEntryClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -19,20 +21,14 @@ export default function JournalEntryClient() {
   });
   const r = route;
   const { t } = useTranslation("common");
-  const navigate = useNavigate();
+  const {openModal} = useModalNav()
   return (
     <>
       <ListLayout
         title={t(party.journalEntry)}
         {...(permission.create && {
           onCreate: () => {
-            navigate(
-              r.toRoute({
-                main: r.journalEntry,
-                routePrefix: [r.accountingM],
-                routeSufix: ["new"],
-              })
-            );
+            openModal(route.journalEntry,DEFAULT_ID)
           },
         })}
       >
@@ -41,7 +37,9 @@ export default function JournalEntryClient() {
             rowCount: paginationResult?.total,
           }}
           data={paginationResult?.results || []}
-          columns={journalEntryColumns({})}
+          columns={journalEntryColumns({
+            openModal:openModal,
+          })}
           enableSizeSelection={true}
         />
       </ListLayout>

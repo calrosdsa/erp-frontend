@@ -29,6 +29,7 @@ import { invoiceDataSchema } from "~/util/data/schemas/invoice/invoice-schema";
 import UpdateStock from "@/components/custom/shared/document/update-stock";
 import { cn } from "@/lib/utils";
 import { DocumentRegisters } from "@/components/custom/shared/document/document-registers";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 
 type Data = z.infer<typeof invoiceDataSchema>;
 
@@ -55,19 +56,7 @@ export const InvoiceData = ({
   const lineItemsStore = useLineItems();
   const taxLinesStore = useTaxAndCharges();
   const p = party;
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const openModal = (key: string, value: any, args?: Record<string, any>) => {
-    searchParams.set(key, value);
-    if (args) {
-      Object.entries(args).forEach(([key, value]) => {
-        searchParams.set(key, value);
-      });
-    }
-    setSearchParams(searchParams, {
-      preventScrollReset: true,
-    });
-  };
+  const { openModal } = useModalNav();
 
   useEffect(() => {
     taxLinesStore.onLines(formValues.taxLines);
@@ -171,7 +160,11 @@ export const InvoiceData = ({
           <GrandTotal currency={formValues.currency} />
           <TaxBreakup currency={formValues.currency} />
 
-          <AccountingDimensionForm form={form} allowEdit={allowEdit} />
+          <AccountingDimensionForm
+            form={form}
+            allowEdit={allowEdit}
+            openModal={openModal}
+          />
           <input ref={inputRef} type="submit" className="hidden" />
         </fetcher.Form>
       </Form>

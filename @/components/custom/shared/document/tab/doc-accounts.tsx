@@ -11,7 +11,7 @@ import {
   docAccountsSchema,
   DocAccountsType,
 } from "~/util/data/schemas/document/doc-accounts.schema";
-import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   useLoadingTypeToolbar,

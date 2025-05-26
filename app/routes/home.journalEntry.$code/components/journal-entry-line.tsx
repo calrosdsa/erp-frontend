@@ -15,7 +15,7 @@ import { z } from "zod";
 import { create } from "zustand";
 import { components } from "~/sdk";
 import { journalEntryLineSchema } from "~/util/data/schemas/accounting/journal-entry-schema";
-import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
 
 export const JournalEntryLine = ({ open }: { open: boolean }) => {
   const journalEntryLine = useJournalEntryLine();
@@ -28,7 +28,7 @@ export const JournalEntryLine = ({ open }: { open: boolean }) => {
       ...line,
     },
   });
-  const [ledgerFetcher, onLedgerChange] = useAccountLedgerDebounceFetcher({
+  const [ledgerFetcher, onLedgerChange] = useAccountLedgerFetcher({
     isGroup: false,
   });
   const onSubmit = (values: z.infer<typeof journalEntryLineSchema>) => {

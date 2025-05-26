@@ -271,7 +271,8 @@ export interface paths {
         };
         /** Get Addresses */
         get: operations["get-addresses"];
-        put?: never;
+        /** Edit Address */
+        put: operations["edit-address"];
         /** Create Address */
         post: operations["create-address"];
         delete?: never;
@@ -307,6 +308,23 @@ export interface paths {
         /** Get Address References */
         get: operations["get-address-references"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/address/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Address */
+        put: operations["update-status-address"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1597,7 +1615,8 @@ export interface paths {
         };
         /** Journal Entries */
         get: operations["journal-entries"];
-        put?: never;
+        /** Edit Journal Entry */
+        put: operations["edit-journal-entry"];
         /** Create Journal Entry */
         post: operations["create-journal-entry"];
         delete?: never;
@@ -4381,6 +4400,19 @@ export interface components {
             /** Format: int64 */
             shipping_address_id?: number | null;
         };
+        AddressData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            action?: string;
+            fields: components["schemas"]["AddressFields"];
+            /** Format: int64 */
+            id?: number;
+            /** Format: int64 */
+            reference_id?: number | null;
+        };
         AddressDto: {
             city: string;
             company: string | null;
@@ -4389,28 +4421,30 @@ export interface components {
             /** Format: int64 */
             id: number;
             identification_number: string | null;
+            is_billing_address: boolean;
+            is_shipping_address: boolean;
             phone_number: string | null;
             postal_code: string | null;
             province: string | null;
+            status: string;
             street_line1: string;
             street_line2: string;
             title: string;
             uuid: string;
         };
-        AddressRequestData: {
+        AddressFields: {
             city: string;
-            company?: string;
-            country_code?: string;
-            email?: string;
-            enabled: boolean;
-            identification_number?: string;
+            company?: string | null;
+            country_code?: string | null;
+            email?: string | null;
+            identification_number?: string | null;
             is_billing_address: boolean;
             is_shipping_address: boolean;
-            phone_number?: string;
-            postal_code?: string;
-            province?: string;
-            street_line_1: string;
-            street_line_2: string;
+            phone_number?: string | null;
+            postal_code?: string | null;
+            province?: string | null;
+            street_line1: string;
+            street_line2: string;
             title: string;
         };
         AvailableCourtDto: {
@@ -5094,27 +5128,6 @@ export interface components {
             attribute_value_id: number;
             item_uuid: string;
             name: string;
-        };
-        CreateJorunalEntryBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            entry_lines: components["schemas"]["JournalEntryLineData"][];
-            entry_type: string;
-            /** Format: date-time */
-            posting_date: string;
-        };
-        CreatePartyAddressRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            address: components["schemas"]["AddressRequestData"];
-            /** Format: int64 */
-            party_reference?: number | null;
         };
         CreatePaymentReference: {
             /** Format: double */
@@ -7050,6 +7063,17 @@ export interface components {
             name: string;
             uuid: string;
         };
+        JournalEntryData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            entry_lines: components["schemas"]["JournalEntryLineData"][];
+            fields: components["schemas"]["JournalEntryFields"];
+            /** Format: int64 */
+            id?: number;
+        };
         JournalEntryDetailDto: {
             journal_entry: components["schemas"]["JournalEntryDto"];
             journal_entry_lines: components["schemas"]["JournalEntryLineDto"][];
@@ -7062,6 +7086,11 @@ export interface components {
             id: number;
             posting_date: string;
             status: string;
+        };
+        JournalEntryFields: {
+            entry_type: string;
+            /** Format: date-time */
+            posting_date: string;
         };
         JournalEntryLineData: {
             /** Format: int64 */
@@ -8783,6 +8812,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["AddressAndContactDto"];
+        };
+        ResponseDataAddressDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["AddressDto"];
         };
         ResponseDataBankAccountDtoBody: {
             /**
@@ -11320,19 +11362,16 @@ export interface operations {
             };
         };
     };
-    "create-address": {
+    "edit-address": {
         parameters: {
             query?: never;
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreatePartyAddressRequestBody"];
+                "application/json": components["schemas"]["AddressData"];
             };
         };
         responses: {
@@ -11343,6 +11382,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-address": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddressData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataAddressDtoBody"];
                 };
             };
             /** @description Error */
@@ -11414,6 +11486,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityListPartyTypeDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-address": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */
@@ -15174,6 +15282,39 @@ export interface operations {
             };
         };
     };
+    "edit-journal-entry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JournalEntryData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataJournalEntryDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "create-journal-entry": {
         parameters: {
             query?: never;
@@ -15183,7 +15324,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateJorunalEntryBody"];
+                "application/json": components["schemas"]["JournalEntryData"];
             };
         };
         responses: {

@@ -1,6 +1,9 @@
+import { formatRFC3339 } from "date-fns";
 import { z } from "zod";
 import { components } from "~/sdk";
 import { formatAmount } from "~/util/format/formatCurrency";
+
+export type JournalEntrySchema = z.infer<typeof journalEntrySchema>
 
 export const journalEntryLineSchema = z.object({
   debit: z.coerce.number(),
@@ -13,11 +16,25 @@ export const journalEntryLineSchema = z.object({
   costCenterName: z.string().optional(),
   costCenterID: z.number().optional(),
 });
-export const createJournalEntrySchema = z.object({
+
+export const journalEntrySchema = z.object({
+  id:z.number().optional(),
   entryType: z.string(),
   postingDate: z.date(),
   lines: z.array(journalEntryLineSchema),
 });
+
+export const mapToJournalEntryData = (e:JournalEntrySchema)=>{
+  const d:components["schemas"]["JournalEntryData"] = {
+    id:e.id,
+    fields:{
+      entry_type:e.entryType,
+      posting_date:formatRFC3339(e.postingDate),
+    },
+    entry_lines:e.lines.map(t=>mapToJournalEntryLineData(t))
+  }
+  return d
+}
 
 export const mapToJournalEntryLineData = (
   e: z.infer<typeof journalEntryLineSchema>

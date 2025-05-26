@@ -6,13 +6,13 @@ import { useSearchParams } from "@remix-run/react";
 import { format, parse } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 
 export default function AccountPayableHeader() {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
-  const [ledgerFetcher, onLedgerChange] = useAccountLedgerDebounceFetcher({
+  const [ledgerFetcher, onLedgerChange] = useAccountLedgerFetcher({
     isGroup: false,
   });
   const defaultValue = format(new Date(), "yyyy-MM-dd");

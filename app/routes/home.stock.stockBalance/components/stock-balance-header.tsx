@@ -9,7 +9,7 @@ import { format, parse } from "date-fns";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
 import { useItemDebounceFetcher } from "~/util/hooks/fetchers/useItemDebounceFetcher";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 import { useWarehouseDebounceFetcher } from "~/util/hooks/fetchers/useWarehouseDebounceFetcher";

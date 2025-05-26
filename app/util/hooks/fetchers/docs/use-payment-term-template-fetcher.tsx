@@ -8,9 +8,11 @@ import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/form-autocomplete";
 import { formatQuery } from "..";
+import { Permission } from "~/types/permission";
 
 type PaymentTermsTemplate = components["schemas"]["PaymentTermsTemplateDto"]
 interface PaymentTermsTemplateFormProps extends Partial<AutocompleteFormProps<PaymentTermsTemplate, keyof PaymentTermsTemplate>> {
+  
 }
 
 export const PaymentTermTemplateFormField = ({

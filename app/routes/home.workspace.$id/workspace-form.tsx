@@ -10,10 +10,8 @@ import { useActionsFieldArray } from "~/util/hooks/use-actions-field-array";
 import { route } from "~/util/route";
 
 export default function WorkspaceForm({
-  allowEdit,
   keyPayload,
 }: {
-  allowEdit: boolean;
   keyPayload: string;
 }) {
   const { form, isEditing, hasChanged, setIsEditing } =

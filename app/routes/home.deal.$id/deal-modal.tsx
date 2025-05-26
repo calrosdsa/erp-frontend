@@ -25,6 +25,7 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
     tab,
     searchParams,
     setSearchParams,
+    permission,
   } = DealViewModel({
     appContext: appContext,
   });
@@ -66,6 +67,7 @@ export default function DealModal({ appContext }: { appContext: GlobalState }) {
                         data={data}
                         keyPayload={key}
                         load={load}
+                        permission={permission}
                       />
                     ),
                   },

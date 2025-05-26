@@ -33,7 +33,7 @@ export default function EventModal({
   const event = data?.event;
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "info";
-  const [eventPerm] = usePermission({
+  const [permission] = usePermission({
     actions: data?.actions,
     roleActions: appContext.roleActions,
   });
@@ -93,7 +93,7 @@ export default function EventModal({
       const state = stateFromJSON(event?.status);
       const isNew = eventID == DEFAULT_ID;
       let actions: ButtonToolbar[] = [];
-      if (eventPerm.edit && state == State.ENABLED) {
+      if (permission.edit && state == State.ENABLED) {
         actions.push({
           label: "Completar Evento",
           onClick: () => {
@@ -128,7 +128,7 @@ export default function EventModal({
           : undefined,
       };
     },
-    [data, eventPerm]
+    [data, permission]
   );
 
   useDisplayMessage(
@@ -190,6 +190,7 @@ export default function EventModal({
                       data={data}
                       load={load}
                       closeModal={() => setOpen(false)}
+                      permission={permission}
                       // closeModal={closeModal}
                     />
                   ),

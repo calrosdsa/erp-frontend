@@ -51,3 +51,8 @@ export const EDIT = "edit"
 export const SUCCESS_EXPORT_MESSAGE = "Documento descargado con éxito"
 export const ERROR_EXPORT_MESSAGE = "Error al descargar el documento."
 export const LOADING_MESSAGE = "Cargando..."
+
+//General Ledger Search params names
+export const voucherNo = "voucherNo"
+export const fromDate = "fromDate"
+export const toDate = "toDate"

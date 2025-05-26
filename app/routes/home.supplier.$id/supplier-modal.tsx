@@ -230,6 +230,7 @@ export default function SupplierModal({
                     closeModal={() => setOpen(false)}
                     appContext={appContext}
                     data={data}
+                    permission={permission}
                   />
                 ),
               },

@@ -14,7 +14,7 @@ import SelectForm from "../../../select/SelectForm";
 import FormAutocomplete from "../../../select/FormAutocomplete";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
-import { useAccountLedgerDebounceFetcher } from "~/util/hooks/fetchers/useAccountLedgerDebounceFethcer";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 import { useTotal } from "../../document/use-total";
@@ -107,7 +107,7 @@ function AccountSelect({
   form: any;
   allowEdit?: boolean;
 }) {
-  const [accountFetcher, onAccountChange] = useAccountLedgerDebounceFetcher({
+  const [accountFetcher, onAccountChange] = useAccountLedgerFetcher({
     isGroup: false,
   });
 

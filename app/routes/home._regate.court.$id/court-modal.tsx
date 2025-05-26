@@ -30,6 +30,7 @@ import ModalLayout, {
 } from "@/components/ui/custom/modal-layout";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
+import { usePermission } from "~/util/hooks/useActions";
 
 export default function CourtModal({
   appContext,
@@ -50,6 +51,10 @@ export default function CourtModal({
   const { setToolbar } = useToolbar();
   const [open, setOpen] = useState(true);
   const courtID = searchParams.get(route.court);
+  const [permission] = usePermission({
+    roleActions:appContext.roleActions,
+    actions:data?.actions,
+  })
 
   const initData = (tab: string) => {
     fetcherLoader.load(
@@ -143,7 +148,9 @@ export default function CourtModal({
               {
                 label: "Info",
                 value: "info",
-                children: <CourtInfoTab appContext={appContext} data={data} />,
+                children: <CourtInfoT
+                ab appContext={appContext} data={data}
+                permission={permission} />,
               },
               {
                 label: "Horario",

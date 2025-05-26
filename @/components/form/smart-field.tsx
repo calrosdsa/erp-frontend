@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { useFormContext } from "./form-provider";
+import { toZonedTime } from "date-fns-tz";
 
 export type FieldType =
   | "text"
@@ -88,13 +89,13 @@ export function SmartField({
 
     switch (type) {
       case "checkbox":
-        return value ? "Yes" : "No";
+        return value ? "Si" : "No";
       case "select":
         const option = options.find((opt) => opt.value === value);
         return option?.label || value;
       case "date":
       case "calendar":
-        return value ? format(new Date(value), "PPP") : "";
+        return value ? format(toZonedTime(value, "UTC"), "PPP") : "";
       case "textarea":
         return <div className="whitespace-pre-wrap">{value}</div>;
       default:
@@ -107,8 +108,8 @@ export function SmartField({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className={cn(className,"space-y-0")}>
-          <FormLabel className="text-xs text-primary/60">{label} {required && "*"}</FormLabel>
+        <FormItem className={cn(className,"flex flex-col space-y-1")}>
+          <FormLabel className="text-xs text-primary/60">{label} {(required && isEditing) && "*"}</FormLabel>
 
           {isEditing ? (
             <FormControl>
@@ -159,7 +160,7 @@ export function SmartField({
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {field.value ? (
-                          format(new Date(field.value), "PPP")
+                          format(toZonedTime(field.value, "UTC"), "PPP")
                         ) : (
                           <span>Seleciona una fecha</span>
                         )}

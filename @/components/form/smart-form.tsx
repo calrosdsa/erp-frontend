@@ -11,6 +11,7 @@ import { FormProvider } from "./form-provider";
 import { cn } from "@/lib/utils";
 import isEqual from "lodash/isEqual";
 import { useModalStore } from "../ui/custom/modal-layout";
+import { Permission } from "~/types/permission";
 interface SmartFormProps<T extends z.ZodType> {
   schema: T;
   defaultValues: DefaultValues<z.infer<T>>;
@@ -21,6 +22,7 @@ interface SmartFormProps<T extends z.ZodType> {
   title?: string;
   isNew: boolean;
   enableSaveButton?: boolean;
+  permission:Permission;
 }
 
 export function SmartForm<T extends z.ZodType>({
@@ -33,6 +35,7 @@ export function SmartForm<T extends z.ZodType>({
   className,
   title,
   isNew,
+  permission,
 }: SmartFormProps<T>) {
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(schema),
@@ -129,7 +132,7 @@ export function SmartForm<T extends z.ZodType>({
                   Guardar
                 </Button>
               )}
-              {!isNew && (
+              {(!isNew&& permission?.edit) && (
                 <div>
                   {!payload?.enableEdit ? (
                     <Button

@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import apiClient from "~/apiclient";
-import { createJournalEntrySchema } from "~/util/data/schemas/accounting/journal-entry-schema";
+import { journalEntrySchema } from "~/util/data/schemas/accounting/journal-entry-schema";
 import NewStockEntryClient from "./new-stock-entry.client";
 import { mapToStockEntryBody, stockEntryDataSchema } from "~/util/data/schemas/stock/stock-entry-schema";
 import { lineItemSchemaToLineData } from "~/util/data/schemas/buying/order-schema";

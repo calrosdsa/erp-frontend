@@ -1,4 +1,9 @@
-import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
+import {
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { loader } from "./route";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
@@ -9,6 +14,7 @@ import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ListLayout } from "@/components/ui/custom/list-layout";
 import { useTranslation } from "react-i18next";
 import { party } from "~/util/party";
+import { DEFAULT_ID } from "~/constant";
 
 export default function AddressesClient() {
   const { paginationResult, actions } = useLoaderData<typeof loader>();
@@ -19,26 +25,28 @@ export default function AddressesClient() {
   });
   const r = route;
   const { t } = useTranslation("common");
-
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const openModal = (key: string, value: any) => {
+    searchParams.set(key, value);
+    setSearchParams(searchParams, {
+      preventScrollReset: true,
+    });
+  };
 
   return (
     <ListLayout
       title={t(party.address)}
       {...(permission?.create && {
         addNew: () => {
-          navigate(
-            r.toRoute({
-              main: r.address,
-              routeSufix: ["new"],
-            })
-          );
+          openModal(route.address, DEFAULT_ID);
         },
       })}
     >
       <DataTable
         data={paginationResult || []}
-        columns={addressColumns()}
+        columns={addressColumns({
+          openModal: openModal,
+        })}
         enableSizeSelection={true}
       />
     </ListLayout>

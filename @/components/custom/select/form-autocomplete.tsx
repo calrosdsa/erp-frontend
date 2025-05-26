@@ -52,6 +52,7 @@ export interface AutocompleteFormProps<T extends object, K extends keyof T> {
   onValueChange?: (e: string) => void;
   onSelect?: (v: T) => void;
   onClear?: () => void;
+  onFocus?: () => void;
   className?: string;
   allowEdit?: boolean;
   addNew?: () => void;
@@ -81,6 +82,7 @@ export default function FormAutocompleteField<
   name,
   onValueChange,
   onSelect,
+  onFocus,
   onClear,
   onCustomDisplay,
   className,
@@ -126,36 +128,42 @@ export default function FormAutocompleteField<
 
   return (
     <FormField
-    control={control || (form && form?.control)}
-    name={name}
-    render={({ field }) => {
-      useEffect(() => {
-        if (field.value?.id && field.value?.name)
-          setQuery(field.value?.name || "");
-        setSelected(field.value?.name);
-      }, [field]);
-      
-      if (!allowEdit) {
-        return (
-          <>
-            <div className="flex flex-col">
-              {label && (
-                <FormLabel className="text-xs">
-                  {label} {required && "*"}
-                </FormLabel>
-              )}
-              <div>
-                <span
-                  className={cn("text-sm", navigate && "underline cursor-pointer")}
-                  onClick={() => navigate && navigate(fieldValue["id" as keyof T])}
-                >
-                  {query || "-"}
-                </span>
+      control={control || (form && form?.control)}
+      name={name}
+      render={({ field }) => {
+        const fieldID = field?.value?.id
+        useEffect(() => {
+          if (field.value?.id && field.value?.name)
+            setQuery(field.value?.name || "");
+          setSelected(field.value?.name);
+        }, [fieldID]);
+
+        if (!allowEdit) {
+          return (
+            <>
+              <div className="flex flex-col">
+                {label && (
+                  <FormLabel className="text-xs">
+                    {label} {required && "*"}
+                  </FormLabel>
+                )}
+                <div>
+                  <span
+                    className={cn(
+                      "text-sm",
+                      navigate && "underline cursor-pointer"
+                    )}
+                    onClick={() =>
+                      navigate && navigate(fieldValue["id" as keyof T])
+                    }
+                  >
+                    {query || "-"}
+                  </span>
+                </div>
               </div>
-            </div>
-          </>
-        );
-      }
+            </>
+          );
+        }
         return (
           <FormItem className="flex flex-col w-full  ">
             <Popover open={open} onOpenChange={setOpen} modal={modal}>
@@ -166,7 +174,7 @@ export default function FormAutocompleteField<
                     // ref={inputRef}
                     value={query}
                     onFocus={() => {
-                      console.log("FOCUS INPUT...");
+                      onFocus?.();
                       onValueChange?.("");
                     }}
                     onValueChange={onQueryChange}

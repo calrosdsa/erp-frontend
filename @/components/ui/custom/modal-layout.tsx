@@ -25,6 +25,7 @@ export default function ModalLayout({
   open,
   onOpenChange,
   title,
+  className,
 }: {
   children: ReactNode;
   className?: string;
@@ -52,7 +53,10 @@ export default function ModalLayout({
     <Sheet open={open} onOpenChange={(e) => onOpenChange?.(e)} modal={true}>
       <SheetContent
         onInteractOutside={(event) => event.preventDefault()}
-        className="w-full md:max-w-full md:w-[80%] xl:w-[80%] overflow-auto  [&>button]:hidden px-0 pb-20"
+        className={cn(
+          "w-full md:max-w-full md:w-[80%] xl:w-[80%] overflow-auto  [&>button]:hidden px-0 pb-20",
+          className
+        )}
       >
         <div className="px-5">
           <SheetHeader>
@@ -264,8 +268,12 @@ export default function ModalLayout({
           </div>
         </div>
 
-        {(payload.enableEdit || payload.isNew) && (
-          <div className="fixed  w-full right-0  md:max-w-full md:w-[80%] xl:w-[80%]  bottom-0 border-t shadow-xl bg-background">
+        {/* {(payload.enableEdit || payload.isNew) && ( */}
+        {(payload.enableEdit) && (
+          <div className={cn(
+            "fixed  w-full right-0  md:max-w-full md:w-[80%] xl:w-[80%]  bottom-0 border-t shadow-xl bg-background",
+            className,
+          )}>
             <div className="flex justify-center items-center space-x-2 h-16 ">
               <Button
                 size={"lg"}

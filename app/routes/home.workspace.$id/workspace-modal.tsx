@@ -169,7 +169,7 @@ export default function WorkspaceModal({
                     data={data}
                     load={load}
                     closeModal={closeModal}
-                    allowEdit={allowEdit}
+                    permission={permission}
                   />
                 ),
               },

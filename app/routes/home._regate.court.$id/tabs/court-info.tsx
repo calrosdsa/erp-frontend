@@ -24,23 +24,23 @@ import { Entity } from "~/types/enums";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { SerializeFrom } from "@remix-run/node";
 import { setUpModalTabPage } from "@/components/ui/custom/modal-layout";
+import { Permission } from "~/types/permission";
 
 type EditType = z.infer<typeof editCourtSchema>;
 export default function CourtInfoTab({
   appContext,
   data,
+  permission,
 }: {
   data?:SerializeFrom<typeof loader>;
   appContext: GlobalState;
+  permission:Permission;
 }) {
   const { t } = useTranslation("common");
   const court = data?.court;
   const key = route.court
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [permission] = usePermission({
-    roleActions: appContext.roleActions,
-    actions: data?.actions,
-  });
+  
   const fetcher = useFetcher<typeof action>();
   const defaultValues = {
     name: court?.name,

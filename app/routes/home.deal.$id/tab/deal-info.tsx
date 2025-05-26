@@ -22,17 +22,20 @@ import { SmartForm } from "@/components/form/smart-form";
 import { useModalStore } from "@/components/ui/custom/modal-layout";
 import { DEFAULT_CURRENCY, LOADING_MESSAGE } from "~/constant";
 import { toast } from "sonner";
+import { Permission } from "~/types/permission";
 
 export default function DealInfoTab({
   appContext,
   data,
   keyPayload,
   load,
+  permission,
 }: {
   appContext: GlobalState;
   data?: SerializeFrom<typeof loader>;
   keyPayload: string;
   load: () => void;
+  permission: Permission;
 }) {
   const deal = data?.deal;
   const { profile, roleActions } = appContext;
@@ -102,6 +105,7 @@ export default function DealInfoTab({
     <div className="grid grid-cols-9 gap-2">
       <div className="grid gap-3 col-span-4">
         <SmartForm
+          permission={permission}
           isNew={payload?.isNew || false}
           title={"Información del trato"}
           schema={dealSchema}

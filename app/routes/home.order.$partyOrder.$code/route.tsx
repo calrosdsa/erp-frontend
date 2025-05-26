@@ -61,13 +61,14 @@ export function shouldRevalidate({
   defaultShouldRevalidate,
   actionResult,
 }: ShouldRevalidateFunctionArgs) {
-  if (actionResult?.action == LOAD_ACTION) {
-    return defaultShouldRevalidate;
-  }
-  if (formMethod === "POST") {
-    return false;
-  }
-  return defaultShouldRevalidate;
+  return false
+  // if (actionResult?.action == LOAD_ACTION) {
+  //   return defaultShouldRevalidate;
+  // }
+  // if (formMethod === "POST") {
+  //   return false;
+  // }
+  // return defaultShouldRevalidate;
 }
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

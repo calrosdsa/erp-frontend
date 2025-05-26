@@ -23,16 +23,19 @@ import {
 import SupplierForm from "../../supplier-form";
 import { action } from "~/routes/home.supplier_/route";
 import { useSupplierStore } from "../../supplier-store";
+import { Permission } from "~/types/permission";
 export default function SupplierInfo({
   appContext,
   data,
   load,
   closeModal,
+  permission,
 }: {
   appContext: GlobalState;
   data?: SerializeFrom<typeof loader>;
   load: () => void;
   closeModal: () => void;
+  permission:Permission;
 }) {
   const key = route.supplier;
   const payload = useModalStore((state) => state.payload[key]) || {};
@@ -103,7 +106,8 @@ export default function SupplierInfo({
         <SmartForm
           isNew={payload.isNew || false}
           title={"Info"}
-          schema={supplierSchema}
+          permission={permission}
+          schema={supplierSchema}           
           keyPayload={key}
           defaultValues={{
             supplierID: supplier?.id,

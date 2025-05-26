@@ -2,15 +2,16 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import { Typography } from "@/components/typography";
 import { Form } from "@/components/ui/form";
 import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { action } from "~/routes/api.document/route";
-import { GlobalState } from "~/types/app-types";
+import { useAddressStore } from "~/routes/home.address.$id/address-store";
 import { Permission } from "~/types/permission";
 import {
   AddressAndContactDataType,
   addressAndContactSchema,
 } from "~/util/data/schemas/document/address-and-contact.schema";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 import { AddressAutoCompleteFormField } from "~/util/hooks/fetchers/core/use-address-fetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
@@ -49,8 +50,10 @@ export default function AddressAndContact({
   const { setRegister } = useSetupToolbarStore();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const r = route;
+  const [focusedField,setFocusedField] = useState<string | null>(null)
   const formValues = form.getValues();
-  const navigate = useNavigate();
+  const {newAddress} = useAddressStore()
+  const {openModal} = useModalNav()
   const onSubmit = (e: AddressAndContactDataType) => {
     fetcher.submit(
       {
@@ -94,6 +97,17 @@ export default function AddressAndContact({
     });
   }, [allowEdit]);
 
+  useEffect(()=>{
+    if(newAddress){
+      console.log("NEW ADDRESS",newAddress)
+      form.setValue(focusedField as any,{
+        id:newAddress.id,
+        name:newAddress.title,
+      })
+      form.trigger(focusedField as any)
+    }
+  },[newAddress])
+
   return (
     <FormLayout>
       <Form {...form}>
@@ -101,8 +115,8 @@ export default function AddressAndContact({
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
-          {/* {JSON.stringify(formValues.shipping_address)} */}
           <div className="info-grid">
+            {/* {JSON.stringify(formValues.party_address)} */}
             {showPartyrAddress && (
               <>
                 <Typography variant="subtitle2" className=" col-span-full">
@@ -111,15 +125,13 @@ export default function AddressAndContact({
                 <AddressAutoCompleteFormField
                   allowEdit={allowEdit}
                   form={form}
+                  onFocus={()=>{
+                    setFocusedField("party_address")
+                  }}
                   name="party_address"
                   label={partyLabel}
-                  {...(addressPerm?.create && {
-                    addNew: () => {
-                      navigate(
-                        r.toRoute({ main: r.address, routeSufix: ["new"] })
-                      );
-                    },
-                  })}
+                  permission={addressPerm}
+                  openModal={openModal}
                   {...(addressPerm?.view && {
                     href: route.toRoute({
                       main: r.address,
@@ -143,14 +155,12 @@ export default function AddressAndContact({
                   allowEdit={allowEdit}
                   form={form}
                   name="shipping_address"
+                  onFocus={()=>{
+                    setFocusedField("shipping_address")
+                  }}
                   label="Seleccione la dirección de envío"
-                  {...(addressPerm?.create && {
-                    addNew: () => {
-                      navigate(
-                        r.toRoute({ main: r.address, routeSufix: ["new"] })
-                      );
-                    },
-                  })}
+                  permission={addressPerm}
+                  openModal={openModal}
                   {...(addressPerm?.view && {
                     href: route.toRoute({
                       main: r.address,
@@ -173,15 +183,13 @@ export default function AddressAndContact({
                 <AddressAutoCompleteFormField
                   allowEdit={allowEdit}
                   name="billing_address"
+                  onFocus={()=>{
+                    setFocusedField("billing_address")
+                  }}
                   form={form}
                   label="Seleccione dirección de facturación"
-                  {...(addressPerm?.create && {
-                    addNew: () => {
-                      navigate(
-                        r.toRoute({ main: r.address, routeSufix: ["new"] })
-                      );
-                    },
-                  })}
+                  permission={addressPerm}
+                  openModal={openModal}
                   {...(addressPerm?.view && {
                     href: route.toRoute({
                       main: r.address,

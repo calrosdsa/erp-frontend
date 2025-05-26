@@ -2,9 +2,9 @@ import { z } from "zod";
 import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 import { components } from "~/sdk";
 
-export type EventBookingSchema = z.infer<typeof eventBookingShema>
+export type EventBookingSchema = z.infer<typeof eventBookingSchema>
 
-export const eventBookingShema = z.object({
+export const eventBookingSchema = z.object({
     eventID:z.number().optional(),
     name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
     description:z.string().optional().nullable(),
