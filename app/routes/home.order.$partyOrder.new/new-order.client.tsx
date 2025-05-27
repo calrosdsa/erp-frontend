@@ -111,7 +111,9 @@ export default function CreatePurchaseOrdersClient() {
             q: {
               tab: "info",
             },
-          })
+          }),{
+            replace:true
+          }
         );
       },
     },

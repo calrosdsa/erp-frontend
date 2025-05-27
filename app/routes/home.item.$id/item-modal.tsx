@@ -1,14 +1,20 @@
 import {
   useFetcher,
   useNavigate,
-  useParams,
   useSearchParams,
 } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import { ButtonToolbar } from "~/types/actions";
-import { EventState, State, stateFromJSON } from "~/gen/common";
+import { endOfMonth, format, startOfMonth } from "date-fns";
+import {
+  EventState,
+  PartyType,
+  partyTypeToJSON,
+  State,
+  stateFromJSON,
+} from "~/gen/common";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import { z } from "zod";
 import { GlobalState } from "~/types/app-types";
@@ -20,45 +26,45 @@ import ModalLayout, {
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/custom/loaders/loading-spinner";
 import TabNavigation from "@/components/ui/custom/tab-navigation";
-import { DEFAULT_ID, fromDate, LOADING_MESSAGE, toDate, voucherNo } from "~/constant";
+import { DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { SerializeFrom } from "@remix-run/node";
 
 import { toast } from "sonner";
-import { JournalEntryInfo } from "./tab/journal-entry-info";
-import { format } from "date-fns";
+import { useItemStore } from "./item-store";
+import ItemInfo from "./components/tab/item-info";
 
-export default function JournalEntryModal({
+
+export default function ItemModal({
   appContext,
 }: {
   appContext: GlobalState;
 }) {
-  const key = route.journalEntry;
+  const key = route.item;
 
   const [data, setData] = useState<SerializeFrom<typeof loader>>();
   const [loading, setLoading] = useState(false);
   // const data = fetcherLoader.data;
-  const journalEntry = data?.journalEntry;
+  const item = data?.item;
   const [open, setOpen] = useState(true);
-  // const { journalEntry, actions, activities } = useLoaderData<typeof loader>();
+  // const { item, actions, activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [tab, setTab] = useState("info");
-
+  const [tab,setTab] = useState("info")
+  
   const { t, i18n } = useTranslation("common");
-  const journalEntryCode = searchParams.get(key);
+  const itemID = searchParams.get(key);
   const navigate = useNavigate();
   const [permission] = usePermission({
     roleActions: appContext.roleActions,
     actions: data?.actions,
   });
-  const [toastID, setToastID] = useState<string | number>("");
+  const [toastID,setToastID]= useState<string | number>("")
+  const itemStore = useItemStore();
 
   const load = async () => {
     try {
       setLoading(true);
-      const res = await fetch(
-        route.toRouteDetail(route.journalEntry, journalEntryCode)
-      );
+      const res = await fetch(route.toRouteDetail(route.item, itemID));
       if (res.ok) {
         const body = (await res.json()) as SerializeFrom<typeof loader>;
         setData(body);
@@ -70,17 +76,17 @@ export default function JournalEntryModal({
     }
   };
   useEffect(() => {
-    if (journalEntryCode) {
+    if(itemID){
       load();
     }
-  }, [journalEntryCode]);
+  }, [itemID]);
 
   const onChangeState = (e: EventState) => {
-    const id = toast.loading(LOADING_MESSAGE);
-    setToastID(id);
+    const id = toast.loading(LOADING_MESSAGE)
+    setToastID(id)
     const body: z.infer<typeof updateStatusWithEventSchema> = {
-      current_state: journalEntry?.status || "",
-      party_id: journalEntry?.id.toString() || "",
+      current_state: item?.status || "",
+      party_id: item?.id.toString() || "",
       events: [e],
     };
     fetcher.submit(
@@ -92,8 +98,8 @@ export default function JournalEntryModal({
         method: "POST",
         encType: "application/json",
         action: route.toRoute({
-          main: route.journalEntry,
-          routeSufix: [journalEntry?.id.toString() || ""],
+          main: route.item,
+          routeSufix: [item?.id.toString() || ""],
         }),
       }
     );
@@ -101,11 +107,11 @@ export default function JournalEntryModal({
 
   useDisplayMessage(
     {
-      toastID: toastID,
+      toastID:toastID,
       error: fetcher.data?.error,
       success: fetcher.data?.message,
-      onSuccessMessage: () => {
-        load();
+      onSuccessMessage:()=>{
+        load()
       },
     },
     [fetcher.data]
@@ -114,48 +120,34 @@ export default function JournalEntryModal({
   setUpModalPayload(
     key,
     () => {
-      const status = stateFromJSON(journalEntry?.status);
-      const isNew = DEFAULT_ID == journalEntryCode;
-      let buttons: ButtonToolbar[] = [];
-      if(status == State.SUBMITTED){
-        buttons.push({
-          label:t("generalLedger"),
-          onClick:()=>{
-            navigate(route.to(route.generalLedger,{
-              [voucherNo]:data?.journalEntry?.code,
-              [fromDate]:format(new Date(journalEntry?.posting_date || new Date()),"yyyy-MM-dd"),
-              [toDate]:format(new Date(journalEntry?.posting_date || new Date()),"yyyy-MM-dd"),
-            }))
-          }
-        })
+      const state = stateFromJSON(item?.status);
+      const isNew = DEFAULT_ID == itemID;
+      let view: ButtonToolbar[] = [];
+      let actions: ButtonToolbar[] = [];
+      if (permission.edit && state == State.ENABLED) {
+        actions.push({
+          label: "Deshabilitar",
+          onClick: () => {
+            onChangeState(EventState.DISABLED_EVENT);
+          },
+        });
       }
-      // let actions: ButtonToolbar[] = [];
-      // if (permission.edit && state == State.ENABLED) {
-      //   actions.push({
-      //     label: "Deshabilitar",
-      //     onClick: () => {
-      //       onChangeState(EventState.DISABLED_EVENT);
-      //     },
-      //   });
-      // }
-      // if (permission.edit && state == State.DISABLED) {
-      //   actions.push({
-      //     label: "Habilitar",
-      //     onClick: () => {
-      //       onChangeState(EventState.ENABLED_EVENT);
-      //     },
-      //   });
-      // }
-
+      if (permission.edit && state == State.DISABLED) {
+        actions.push({
+          label: "Habilitar",
+          onClick: () => {
+            onChangeState(EventState.ENABLED_EVENT);
+          },
+        });
+      }
+    
       return {
-        title: isNew ? "Nuevo asiento contable" : journalEntry?.code,
-        view: isNew ? [] : buttons,
-        buttons:buttons,
-        // actions: isNew ? [] : buttons,
-        status: stateFromJSON(journalEntry?.status),
+        title: isNew ? "Nuevo dirección" : item?.name,
+        view: isNew ? [] : view,
+        actions: isNew ? [] : actions,
+        status: stateFromJSON(item?.status),
         enableEdit: isNew,
         isNew: isNew,
-        onChangeState:onChangeState,
         loadData: load,
         onCancel: isNew
           ? () => {
@@ -168,7 +160,8 @@ export default function JournalEntryModal({
   );
 
   const closeModal = () => {
-    searchParams.delete(route.journalEntry);
+   itemStore.reset();
+    searchParams.delete(route.item);
     searchParams.delete("action");
     setSearchParams(searchParams, {
       preventScrollReset: true,
@@ -188,17 +181,17 @@ export default function JournalEntryModal({
       onOpenChange={(e) => {
         setOpen(e);
       }}
-      className="xl:w-[95%]"
     >
       {loading && !data ? (
         <LoadingSpinner />
       ) : (
         <>
+          {/* {JSON.stringify(data?.item)} */}
           {data && (
             <TabNavigation
               defaultValue={tab}
               onValueChange={(value) => {
-                setTab(value);
+                setTab(value)
                 // searchParams.set("tab", value);
                 // setSearchParams(searchParams, {
                 //   preventScrollReset: true,
@@ -209,12 +202,12 @@ export default function JournalEntryModal({
                   label: "Info",
                   value: "info",
                   children: (
-                    <JournalEntryInfo
+                    <ItemInfo
                       appContext={appContext}
                       data={data}
                       load={load}
-                      permission={permission}
                       closeModal={() => setOpen(false)}
+                      permission={permission}
                     />
                   ),
                 },
@@ -226,7 +219,7 @@ export default function JournalEntryModal({
     </ModalLayout>
     // <DetailLayout
     //   activities={activities}
-    //   partyID={journalEntry?.id}
+    //   partyID={item?.id}
     //   navItems={navItems}
     // >
     //   {tab == "info" && <CustomerInfo />}

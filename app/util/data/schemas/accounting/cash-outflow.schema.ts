@@ -29,7 +29,7 @@ export const cashOutflowDataSchema = z.object({
   amount: z.coerce.number(),
 
   project: fieldNull,
-  cost_center: fieldNull,
+  costCenter: fieldNull,
   taxLines: z.array(taxAndChargeSchema),
 });
 
@@ -40,7 +40,7 @@ export const mapToCashOutflowData = (e: CashOutflowDataType) => {
       auth_code: e.auth_code,
       cash_outflow_type: e.cash_outflow_type,
       concept: e.concept,
-      cost_center_id: e.cost_center?.id,
+      cost_center_id: e.costCenter?.id,
       ctrl_code: e.ctrl_code || null,
       emision_date: e.emision_date ? formatRFC3339(e.emision_date) : null,
       invoice_no: e.invoice_no,

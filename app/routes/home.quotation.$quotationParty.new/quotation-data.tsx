@@ -10,7 +10,7 @@ import { MutableRefObject, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { quotationDataSchema } from "~/util/data/schemas/quotation/quotation-schema";
-import PartyAutocomplete, {
+import {
   PartyAutocompleteField,
 } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { useTranslation } from "react-i18next";
@@ -129,6 +129,7 @@ export const QuotationData = ({
             lineType={itemLineTypeToJSON(ItemLineType.QUOTATION_LINE_ITEM)}
             docPartyType={quotationParty}
             priceListID={formValues.priceList?.id || undefined}
+            roleActions={roleActions}
           />
           <TaxAndChargesLines
             onChange={(e) => {

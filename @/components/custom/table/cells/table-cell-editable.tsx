@@ -74,7 +74,7 @@ export default function   TableCellEditable<TData>({
   //   };
 
   // if (tableMeta?.editedRows.includes(row.index)) {
-  if (tableMeta?.updateCell) {
+  if (tableMeta?.updateCell && !tableMeta?.disableEdit) {
     if (columnMeta?.inputType == "textarea") {
       return (
         <AutosizeTextarea

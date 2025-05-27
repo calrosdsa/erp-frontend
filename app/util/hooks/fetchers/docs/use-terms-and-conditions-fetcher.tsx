@@ -2,15 +2,14 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
-import FormAutocompleteField, {
-  AutocompleteFormProps,
-} from "@/components/custom/select/form-autocomplete";
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete";
 import { formatQuery } from "..";
+import { AutoCompleteProps } from "@/components/custom/select/autocomplete";
 
 type TermsAndConditions = components["schemas"]["TermsAndConditionsDto"];
 interface TermsAndConditionsProps
   extends Partial<
-    AutocompleteFormProps<TermsAndConditions, keyof TermsAndConditions>
+    AutoCompleteProps<TermsAndConditions, keyof TermsAndConditions>
   > {}
 export const TermsAndConditionsFormField = ({
   ...props

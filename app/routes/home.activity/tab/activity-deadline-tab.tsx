@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import ColorPicker from "@/components/custom/popover/color-picker";
-import { DEFAULT_COLOR } from "~/constant";
+import { DEFAULT_COLOR, LOADING_MESSAGE } from "~/constant";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { addDays } from "date-fns";
 import { TooltipLayout } from "@/components/layout/tooltip-layout";
@@ -30,6 +30,8 @@ import { ActivityType, activityTypeToJSON } from "~/gen/common";
 import { GlobalState } from "~/types/app-types";
 import { toZonedTime } from "date-fns-tz";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useActivityStore } from "../activity-store";
 
 export default function ActivityDeadlineTab({
   partyID,
@@ -48,7 +50,7 @@ export default function ActivityDeadlineTab({
   defaultSelected?: boolean;
   defaultFocused?: boolean;
   className?: string;
-  onClose?:()=>void;
+  onClose?: () => void;
 }) {
   const [isSelected, setIsSelected] = useState(defaultSelected);
   const [isFocused, setIsFocused] = useState(defaultFocused);
@@ -75,8 +77,12 @@ export default function ActivityDeadlineTab({
   });
   const formValues = form.getValues();
   const fetcher = useFetcher<typeof action>();
+  const [toastID, setToastID] = useState<string | number>("");
+  const { addActivity } = useActivityStore();
 
   const onSubmit = (e: ActivityDeadlineData) => {
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     const activityData: ActivityData = {
       party_id: partyID,
       party_name: partyName,
@@ -99,16 +105,23 @@ export default function ActivityDeadlineTab({
     );
     form.reset();
     setIsSelected(false);
-    
   };
 
   useDisplayMessage(
     {
+      toastID: toastID,
       success: fetcher.data?.message,
       error: fetcher.data?.error,
-      onShowMessage:()=>{
-        onClose?.()
-      }
+      onShowMessage: () => {
+        //If the activity is created from a dialog, close the dialog; otherwise, add the new activity to the list of activities.
+        if (onClose) {
+          onClose();
+        } else {
+          if (fetcher.data?.activity) {
+            addActivity(fetcher.data.activity);
+          }
+        }
+      },
     },
     [fetcher.data]
   );

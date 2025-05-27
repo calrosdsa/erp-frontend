@@ -36,7 +36,7 @@ export default function NewQuotationClient() {
   const r = route;
   const params = useParams();
   const quotationParty = params.quotationParty || "";
-  
+
   const { payload } = useQuotationStore();
   const form = useForm<QuotationDataType>({
     resolver: zodResolver(quotationDataSchema),
@@ -96,7 +96,10 @@ export default function NewQuotationClient() {
               q: {
                 tab: "info",
               },
-            })
+            }),
+            {
+              replace: true,
+            }
           );
         }
       },

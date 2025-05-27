@@ -26,9 +26,9 @@ export const purchaseRecordDataSchema = z.object({
   other_not_subject_to_tax_credit: z.coerce.number(), // Format: int32
   purchase_type: z.string(),
   subtotal: z.coerce.number(), // Format: int32
-  supplier: z.string(),
   supplier_business_name: z.string(),
-  supplier_id: z.coerce.number(), // Format: int64 (use BigInt if necessary)
+  supplier: fieldNull,
+  // supplier_id: z.coerce.number(), // Format: int64 (use BigInt if necessary)
   tax_credit: z.coerce.number(), // Format: int32
   tax_rates: z.coerce.number(), // Format: int32
   total_purchase_amount: z.coerce.number(), // Format: int32
@@ -63,7 +63,7 @@ export const mapToPurchaseRecordData = (
       purchase_type: data.purchase_type,
       subtotal: formatAmountToInt(data.subtotal),
       supplier_business_name: data.supplier_business_name,
-      supplier_id: data.supplier_id,
+      supplier_id: data.supplier?.id || 0,
       supplier_nit: data.supplier_nit,
       tax_credit: formatAmountToInt(data.tax_credit),
       tax_rates: formatAmountToInt(data.tax_rates),

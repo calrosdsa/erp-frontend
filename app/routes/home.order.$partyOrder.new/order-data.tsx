@@ -137,6 +137,7 @@ export default function OrderData({
             lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
             docPartyType={partyOrder}
             priceListID={formValues.priceList?.id || undefined}
+            roleActions={roleActions}
           />
           <TaxAndChargesLines
             onChange={(e) => {

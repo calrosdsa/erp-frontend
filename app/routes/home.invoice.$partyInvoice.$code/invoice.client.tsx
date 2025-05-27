@@ -275,8 +275,10 @@ export default function InvoiceDetailClient() {
         Icon: PlusIcon,
         onClick: () => {
           purchaseRecordStore.setPayload({
-            supplier_id: invoice?.party_id,
-            supplier: invoice?.party_name,
+            supplier: {
+              id:invoice?.party_id,
+              name:invoice?.party_name
+            },
             invoice: {
               name: invoice?.code,
               id: invoice?.id,

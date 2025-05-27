@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { components } from "~/sdk";
-import { itemActionSchema, itemSchema, mapToItemActionData } from "..";
+import { itemActionSchema, itemFieldSchema } from "..";
 
 export type WorkSpaceData = z.infer<typeof workSpaceSchema>;
 
 export const workSpaceSchema = z.object({
   id: z.number().optional(),
   name: z.string(),
-  modules: z.array(itemSchema),
+  modules: z.array(itemFieldSchema),
 });
 
 export const mapToWorkSpaceData = (e: WorkSpaceData) => {

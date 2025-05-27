@@ -1,5 +1,5 @@
 import {
-    Outlet,
+  Outlet,
   useActionData,
   useLoaderData,
   useNavigate,
@@ -19,26 +19,23 @@ import { useTranslation } from "react-i18next";
 import DetailLayout from "@/components/layout/detail-layout";
 
 export default function SettingClient() {
-    const r = route 
-    const {t} = useTranslation("common")
-    const globalState = useOutletContext<GlobalState>()
-    const navItems = [
-      {
-        title: t("profile"),
-        href: r.profile,
-      },
-      {
-        title: t("account"),
-        href: r.account,
-      },
-    ];
+  const r = route;
+  const { t } = useTranslation("common");
+  const globalState = useOutletContext<GlobalState>();
+  const navItems = [
+    {
+      title: t("profile"),
+      href: r.profile,
+    },
+    {
+      title: t("account"),
+      href: r.account,
+    },
+  ];
   return (
     <>
-      <DetailLayout 
-      navItems={navItems}>
-      <Outlet
-      context={globalState}
-      />
+      <DetailLayout navItems={navItems} entityID={0}>
+        <Outlet context={globalState} />
       </DetailLayout>
     </>
   );

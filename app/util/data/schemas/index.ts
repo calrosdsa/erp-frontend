@@ -1,14 +1,13 @@
 import { RefinementCtx, z } from "zod";
-import { components } from "~/sdk";
 
 export type FieldNullType = z.infer<typeof fieldNull>;
 
 export type FieldRequiredType = z.infer<typeof fieldRequired>;
 
 export type ItemActionSchema = z.infer<typeof itemActionSchema>;
-export type ItemSchema = z.infer<typeof itemSchema>;
-
-export const itemSchema = z.object({
+export type ItemFieldSchema = z.infer<typeof itemFieldSchema>;
+// 
+export const itemFieldSchema = z.object({
   id: z.number(),
   name: z.string(),
 });
@@ -45,13 +44,7 @@ export const selectItemSchema = z.object({
   value: z.string(),
 });
 
-export const mapToItemActionData = (e: z.infer<typeof itemActionSchema>) => {
-  const d: components["schemas"]["ItemActionData"] = {
-    id: e.id,
-    action: e.action || "",
-  };
-  return d;
-};
+
 // interface ValidateProps<T extends object, K extends keyof T> {
 //   data: Record<string, boolean>;
 //   ctx: RefinementCtx;

@@ -7,6 +7,48 @@ import { route } from "~/util/route"
 import { usePermission } from "../useActions"
 import { Control } from "react-hook-form"
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete"
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete"
+import { AutoCompleteProps } from "@/components/custom/select/autocomplete"
+import { SmartAutocomplete } from "@/components/form/smart-autocomplete"
+
+type Uom =  components["schemas"]["UOMDto"]
+
+interface UomAutocompleteProps
+  extends Partial<AutoCompleteProps<Uom, keyof Uom>> {
+}
+
+export const UomFormField = ({
+  name,
+  ...props
+}: UomAutocompleteProps) => {
+  const [fetcherDebounce, onChange] = useUomDebounceFetcher();
+  return (
+    <FormAutocompleteField
+      {...props}
+      data={fetcherDebounce.data?.uoms || []}
+      onValueChange={onChange}
+      name={name || "uom"}
+      nameK="name"
+    />
+  );
+};
+
+export const UomSmartField = ({
+    name,
+    ...props
+  }: UomAutocompleteProps) => {
+    const [fetcherDebounce, onChange] = useUomDebounceFetcher();
+    return (
+      <SmartAutocomplete
+        {...props}
+        data={fetcherDebounce.data?.uoms || []}
+        label={props.label ? props.label : "Unidad de Medida"}
+        onValueChange={onChange}
+        name={name || "uom"}
+        nameK="name"
+      />
+    );
+  };
 
 export const UomAutocompleteForm = ({
     allowEdit =true,
@@ -25,7 +67,7 @@ export const UomAutocompleteForm = ({
   }) =>{
   const [fetcherDebounce, onChange] = useUomDebounceFetcher();
   return (
-    <FormAutocomplete
+    <FormAutocompleteField
       data={fetcherDebounce.data?.uoms || []}
       onValueChange={onChange}
       label={label}

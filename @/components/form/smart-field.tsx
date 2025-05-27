@@ -108,7 +108,7 @@ export function SmartField({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className={cn(className,"flex flex-col space-y-1")}>
+        <FormItem className={cn(className,"flex flex-col space-y-[3px]")}>
           <FormLabel className="text-xs text-primary/60">{label} {(required && isEditing) && "*"}</FormLabel>
 
           {isEditing ? (

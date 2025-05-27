@@ -47,14 +47,21 @@ export default function CashOutflowInfoTab() {
       party_type: entity?.party_type,
       concept: entity?.concept,
       cash_outflow_type: entity?.cash_outflow_type,
-      ctrl_code:entity?.ctrl_code,
+      ctrl_code: entity?.ctrl_code,
       invoice_no: entity?.invoice_no,
       nit: entity?.nit,
       auth_code: entity?.auth_code,
       emision_date: entity?.emision_date ? new Date(entity.emision_date) : null,
-
-      taxLines:  taxLines.map((t) => toTaxAndChargeLineSchema(t)),
+      taxLines: taxLines.map((t) => toTaxAndChargeLineSchema(t)),
       amount: formatAmount(entity?.amount),
+      project: {
+        id: entity?.project_id,
+        name: entity?.project,
+      },
+      costCenter: {
+        id: entity?.cost_center_id,
+        name: entity?.cost_center,
+      },
     },
   });
   const { setRegister } = useSetupToolbarStore();
@@ -101,6 +108,7 @@ export default function CashOutflowInfoTab() {
 
   return (
     <>
+      {/* {JSON.stringify(form.getValues())} */}
       <CashOutflowForm
         fetcher={fetcher}
         form={form}

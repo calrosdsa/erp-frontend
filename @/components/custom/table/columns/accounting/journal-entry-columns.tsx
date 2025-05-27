@@ -14,8 +14,13 @@ import TableCellTranslate from "../../cells/table-cell-translate";
 import { OpenModalFunc } from "~/types";
 import { TableCellBase } from "../../cells/table-cell";
 import TableCellEditable from "../../cells/table-cell-editable";
-import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
+import {
+  LedgerAutcomplete,
+  useAccountLedgerFetcher,
+} from "~/util/hooks/fetchers/use-account-ledger-fetcher";
 import { Autocomplete } from "@/components/custom/select/autocomplete";
+import { CostCenterAutocomplete } from "~/util/hooks/fetchers/accounting/use-cost-center-fetcher";
+import { ProjectAutocomplete } from "~/util/hooks/fetchers/accounting/use-project-fetcher";
 
 export const journalEntryColumns = ({
   openModal,
@@ -54,12 +59,21 @@ export const journalEntryColumns = ({
       header: t("form.status"),
       cell: TableCellStatus,
     },
+    {
+      accessorKey: "posting_date",
+      header: t("form.postingDate"),
+      cell: ({ ...props }) => {
+        return <TableCellBase {...props} cellType="date" />;
+      },
+    },
   ];
 };
 
-export const journalEntryLineColumns = (): ColumnDef<
-  z.infer<typeof journalEntryLineSchema>
->[] => {
+export const journalEntryLineColumns = ({
+  allowEdit,
+}: {
+  allowEdit: boolean;
+}): ColumnDef<z.infer<typeof journalEntryLineSchema>>[] => {
   let columns: ColumnDef<z.infer<typeof journalEntryLineSchema>>[] = [];
   const r = route;
   const { t, i18n } = useTranslation("common");
@@ -67,13 +81,23 @@ export const journalEntryLineColumns = (): ColumnDef<
   columns.push({
     accessorKey: "accountName",
     header: t("_ledger.base"),
-    size:200,
+    size: 200,
     cell: ({ ...props }) => {
-      const tableMeta: any = props.table.options.meta;
-      const [fetcher, onChange] = useAccountLedgerFetcher({});
+      const tableMeta: any = props.table.options.meta;  
       return (
         <>
-          <Autocomplete
+          <LedgerAutcomplete
+            defaultValue={props.row.original.accountName}
+            allowEdit={!tableMeta?.disableEdit}
+            onSelect={(e) => {
+              tableMeta?.updateCell(props.row.index, "accountName", e.name);
+              tableMeta?.updateCell(props.row.index, "accountID", e.id);
+              tableMeta?.updateCell(props.row.index, "currency", e.currency);
+              tableMeta?.updateCell(props.row.index, "debit", 0);
+              tableMeta?.updateCell(props.row.index, "credit", 0);
+            }}
+          />
+          {/* <Autocomplete
             defaultValue={props.row.original.accountName}
             onValueChange={onChange}
             data={fetcher.data?.results || []}
@@ -85,10 +109,8 @@ export const journalEntryLineColumns = (): ColumnDef<
               tableMeta?.updateCell(props.row.index, "currency", e.currency);
               tableMeta?.updateCell(props.row.index, "debit", 0);
               tableMeta?.updateCell(props.row.index, "credit", 0);
-
-
             }}
-          />
+          /> */}
         </>
       );
     },
@@ -96,11 +118,42 @@ export const journalEntryLineColumns = (): ColumnDef<
   columns.push({
     accessorKey: "costCenterName",
     header: t("costCenter"),
+    cell: ({ ...props }) => {
+      const tableMeta: any = props.table.options.meta;
+      return (
+        <CostCenterAutocomplete
+          defaultValue={props.row.original.costCenterName}
+          allowEdit={!tableMeta?.disableEdit}
+          onSelect={(e) => {
+            tableMeta?.updateCell(props.row.index, "costCenterName", e.name);
+            tableMeta?.updateCell(props.row.index, "costCenterID", e.id);
+          }}
+        />
+      );
+    },
+  });
+
+  columns.push({
+    accessorKey: "projectName",
+    header: t("project"),
+    cell: ({ ...props }) => {
+      const tableMeta: any = props.table.options.meta;
+      return (
+        <ProjectAutocomplete
+          defaultValue={props.row.original.projectName}
+          allowEdit={!tableMeta?.disableEdit}
+          onSelect={(e) => {
+            tableMeta?.updateCell(props.row.index, "projectName", e.name);
+            tableMeta?.updateCell(props.row.index, "projectID", e.id);
+          }}
+        />
+      );
+    },
   });
 
   columns.push({
     accessorKey: "debit",
-    size:100,
+    size: 100,
     header: t("form.debit"),
     cell: TableCellEditable,
     meta: {
@@ -109,7 +162,7 @@ export const journalEntryLineColumns = (): ColumnDef<
   });
   columns.push({
     accessorKey: "credit",
-    size:100,
+    size: 100,
     header: t("form.credit"),
     cell: TableCellEditable,
     meta: {

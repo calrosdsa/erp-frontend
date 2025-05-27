@@ -17,7 +17,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 import { cn } from "@/lib/utils";
 import { Badge } from "../badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../dropdown-menu";
+import { useTimeout } from "usehooks-ts";
 
 export default function ModalLayout({
   keyPayload,
@@ -67,8 +73,8 @@ export default function ModalLayout({
                     <XIcon />
                   </Button>
                 </SheetClose>
-                <SheetTitle>
-                  {title || payload.title}
+                <SheetTitle className=" flex space-x-2 items-center">
+                  <span>{title || payload.title}</span>
                   {payload.status && payload.status != State.UNRECOGNIZED && (
                     <Badge variant={"outline"} className="">
                       {t(State[payload.status])}
@@ -81,7 +87,7 @@ export default function ModalLayout({
                 {payload.actions &&
                   payload.actions.length > 0 &&
                   payload.status != State.DRAFT && (
-                    <DropdownMenu >
+                    <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
                           size={"sm"}
@@ -98,7 +104,7 @@ export default function ModalLayout({
                             key={idx}
                             className="flex justify-between"
                             onClick={(e) => {
-                              e.preventDefault();
+                              // e.preventDefault();
                               onOpenDialog({
                                 title:
                                   "Por favor, confirme antes de continuar con la acción requerida.",
@@ -121,8 +127,8 @@ export default function ModalLayout({
                 {payload.view &&
                   payload.view.length > 0 &&
                   payload.status != State.DRAFT && (
-                    <Popover modal={true}>
-                      <PopoverTrigger asChild>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
                         <Button
                           size={"sm"}
                           variant={"outline"}
@@ -135,27 +141,47 @@ export default function ModalLayout({
                           </span>
                           <ChevronsUpDownIcon className="h-4 w-4" />
                         </Button>
-                      </PopoverTrigger>
-                      <PopoverContent>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
                         <div className="flex flex-col space-y-1">
                           {payload.view.map((item, idx) => (
-                            <Button
+                            <DropdownMenuItem
                               key={idx}
-                              variant="ghost"
-                              className="justify-start"
-                              onClick={() => item.onClick()}
+                              
+                              className="flex justify-between hover:bg-muted cursor-pointer"
+                              onClick={(e) => {
+                                item.onClick();
+                                // e.preventDefault();
+                                // useTimeout(()=>{
+                                // },100)
+                              }}
                             >
-                              <span className=" whitespace-normal">
-                                {item.label}
-                              </span>
+                              {item.label}
                               {item.Icon && (
                                 <item.Icon className="h-3 w-3 ml-2" />
                               )}
-                            </Button>
+                            </DropdownMenuItem>
+                            // <Button
+                            //   key={idx}
+                            //   variant="ghost"
+                            //   className="justify-start"
+                            //   onClick={() => {
+                            //     useTimeout(()=>{
+                            //       item.onClick()
+                            //     },100)
+                            //   }}
+                            // >
+                            //   <span className=" whitespace-normal">
+                            //     {item.label}
+                            //   </span>
+                            //   {item.Icon && (
+                            //     <item.Icon className="h-3 w-3 ml-2" />
+                            //   )}
+                            // </Button>
                           ))}
                         </div>
-                      </PopoverContent>
-                    </Popover>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   )}
 
                 {payload.buttons?.map((item, idx) => (
@@ -269,11 +295,13 @@ export default function ModalLayout({
         </div>
 
         {/* {(payload.enableEdit || payload.isNew) && ( */}
-        {(payload.enableEdit) && (
-          <div className={cn(
-            "fixed  w-full right-0  md:max-w-full md:w-[80%] xl:w-[80%]  bottom-0 border-t shadow-xl bg-background",
-            className,
-          )}>
+        {payload.enableEdit && (
+          <div
+            className={cn(
+              "fixed  w-full right-0  md:max-w-full md:w-[80%] xl:w-[80%]  bottom-0 border-t shadow-xl bg-background",
+              className
+            )}
+          >
             <div className="flex justify-center items-center space-x-2 h-16 ">
               <Button
                 size={"lg"}

@@ -321,7 +321,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="flex flex-col h-full space-y-2 w-full">
       {metaActions && <DataTableToolbar table={table} />}
-      {metaOptions && <DataTableEditFooter table={table} />}
+      {metaOptions &&  <DataTableEditFooter table={table} />}
       
       {loading && <LoadingSpinner />}
       <div

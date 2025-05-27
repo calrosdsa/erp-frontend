@@ -14,7 +14,7 @@ import SelectForm from "../../../select/SelectForm";
 import FormAutocomplete from "../../../select/FormAutocomplete";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 
-import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { useConfirmationDialog } from "@/components/layout/drawer/ConfirmationDialog";
 import { useTotal } from "../../document/use-total";

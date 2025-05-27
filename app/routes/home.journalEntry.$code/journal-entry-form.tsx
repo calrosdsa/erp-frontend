@@ -14,14 +14,14 @@ import { usePermission } from "~/util/hooks/useActions";
 
 export default function JournalEntryForm({
   permission,
-}:{
-  permission:Permission,
+}: {
+  permission: Permission;
 }) {
-  const { form, isEditing, hasChanged, setIsEditing } =
+  const { form, isEditing, disableEdit, setIsEditing } =
     useFormContext<JournalEntrySchema>();
   const formValues = form?.getValues();
   const { t } = useTranslation("common");
-  const allowEdit = permission.edit && isEditing
+  const allowEdit = permission.edit && isEditing;
   const [arrayFields, metaOptions] = useActionsFieldArray({
     control: form?.control,
     name: "lines",
@@ -62,7 +62,6 @@ export default function JournalEntryForm({
   };
   return (
     <>
-    
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <SmartField
           type="date"
@@ -79,11 +78,15 @@ export default function JournalEntryForm({
         <div className="col-span-full">
           <DataTable
             data={formValues?.lines || []}
-            columns={journalEntryLineColumns()}
+            columns={journalEntryLineColumns({
+              allowEdit: isEditing,
+            })}
             metaOptions={{
+
               meta: {
-                ...metaOptions,
-                updateCell: updateCell
+                ...metaOptions,                
+                updateCell: updateCell,
+                disableEdit:disableEdit,
               },
             }}
           />

@@ -2,17 +2,16 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
-import FormAutocompleteField, {
-  AutocompleteFormProps,
-} from "@/components/custom/select/form-autocomplete";
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete";
 import {
   SmartAutocomplete,
   SmartAutocompleteProps,
 } from "@/components/form/smart-autocomplete";
+import { AutoCompleteProps } from "@/components/custom/select/autocomplete";
 
 type Stage = components["schemas"]["StageDto"];
 interface StageProps
-  extends Partial<AutocompleteFormProps<Stage, keyof Stage>> {
+  extends Partial<AutoCompleteProps<Stage, keyof Stage>> {
   entityID: number;
 }
 

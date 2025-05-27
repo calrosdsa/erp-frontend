@@ -30,7 +30,6 @@ import {
   InvoiceAutocompleteFormField,
 } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { Separator } from "@/components/ui/separator";
-import Supplier from "../home.supplier.$id/route";
 import { cn } from "@/lib/utils";
 type PurchaseRecordDataType = z.infer<typeof purchaseRecordDataSchema>;
 
@@ -65,22 +64,18 @@ export default function PurchaseRecordData({
           >
             <SupplierAutoCompleteForm
               label={t("supplier")}
-              control={form.control}
+              form={form}
               roleActions={roleActions}
               required={true}
               allowEdit={allowEdit}
-              onSelect={(e) => {
-                form.setValue("supplier_id", e.id);
-                form.setValue("supplier_business_name", e.name);
-              }}
             />
 
             <InvoiceAutocompleteFormField
               label={t("purchaseInvoice")}
               partyType={r.purchaseInvoice}
-              partyID={formValues.supplier_id}
+              partyID={formValues.supplier?.id || 0}
               allowEdit={allowEdit}
-              control={form.control}
+              form={form}
             />
 
             <Separator className=" col-span-full" />

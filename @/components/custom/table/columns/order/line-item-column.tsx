@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import TableCellEditable from "../../cells/table-cell-editable";
 import { PriceAutocompleteForm } from "~/util/hooks/fetchers/use-item-price-for-order";
 import { Link } from "@remix-run/react";
+import { OpenModalFunc } from "~/types";
 
 export const lineItemsColumns = ({
   currency,
@@ -26,33 +27,49 @@ export const lineItemsColumns = ({
   allowEdit,
   docPartyType,
   priceListID,
+  roleActions,
+  onClickAddNew,
+  openModal,
 }: {
   currency: string;
   lineType: string;
   allowEdit?: boolean;
   docPartyType?: string;
   priceListID?: number;
+  roleActions?: components["schemas"]["RoleActionDto"][];
+  onClickAddNew?: () => void;
+  openModal: OpenModalFunc;
 }): ColumnDef<z.infer<typeof lineItemSchema>>[] => {
   let columns: ColumnDef<z.infer<typeof lineItemSchema>>[] = [];
   const r = route;
   const { t, i18n } = useTranslation("common");
   columns.push({
     id: "item",
-    size: 250,
+    size: 350,
     header: t("item"),
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       const tableMeta: any = props.table.options.meta;
       if (!allowEdit) {
-        return <Link className=" underline" to={route.toRouteDetail(route.item,rowData.item_name,{
-          tab:"info",
-          id:rowData.item_code
-        })}>{rowData.item_name}</Link>;
+        return (
+          <Link
+            className=" underline"
+            to={route.toRouteDetail(route.item, rowData.item_name, {
+              tab: "info",
+              id: rowData.item_code,
+            })}
+          >
+            {rowData.item_name}
+          </Link>
+        );
       }
       return (
         <PriceAutocompleteForm
           allowEdit={allowEdit}
           currency={currency}
+          openModal={openModal}
+          roleActions={roleActions}
+          onClickAddNew={onClickAddNew}
           defaultValue={rowData.item_name}
           onSelect={(e) => {
             tableMeta?.updateCell(props.row.index, "item_name", e.item_name);
@@ -80,10 +97,10 @@ export const lineItemsColumns = ({
     },
   });
 
-  columns.push({
-    accessorKey: "item_code",
-    header: t("_item.code"),
-  });
+  // columns.push({
+  //   accessorKey: "item_code",
+  //   header: t("_item.code"),
+  // });
   // columns.push({
   //   accessorKey: "item_name",
   //   header: t("form.name"),

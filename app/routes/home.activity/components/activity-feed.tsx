@@ -1,29 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { addDays, format, formatDistance, parseISO } from "date-fns";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-// import { Switch } from "@/components/ui/switch"
 import { CalendarIcon, MoreHorizontal, Paperclip } from "lucide-react";
 import { components } from "~/sdk";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useFetcher } from "@remix-run/react";
-import { action } from "~/routes/api.core/route";
-import FormLayout from "../../../../@/components/custom/form/FormLayout";
-import CustomFormField from "../../../../@/components/custom/form/CustomFormField";
-import { Form } from "../../../../@/components/ui/form";
-import { route } from "~/util/route";
-import { useTranslation } from "react-i18next";
-
-import { useToast } from "../../../../@/components/ui/use-toast";
-import { ActivityType, activityTypeToJSON } from "~/gen/common";
 import { Card, CardContent } from "@/components/ui/card";
 
 import TabNavigationActivity from "./tab-navigation";
 import { TimelineActivityLayout } from "~/routes/home.activity/components/timeline/timeline-activity-layout";
-import { TimelineElement } from "~/types/ui-lyout";
 import { GlobalState } from "~/types/app-types";
 import { useActivityStore } from "../activity-store";
 

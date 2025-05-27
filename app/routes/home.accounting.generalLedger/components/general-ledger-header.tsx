@@ -8,9 +8,9 @@ import { format, parse } from "date-fns";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
-import { CostCenterSearch, useCostCenterFetcher } from "~/util/hooks/fetchers/accounting/useCostCenterFetcher";
-import { ProjectSearch, useProjectFetcher } from "~/util/hooks/fetchers/accounting/useProjectFetcher";
-import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
+import { CostCenterSearch, useCostCenterFetcher } from "~/util/hooks/fetchers/accounting/use-cost-center-fetcher";
+import { ProjectSearch, useProjectFetcher } from "~/util/hooks/fetchers/accounting/use-project-fetcher";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fetcher";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 
 export default function GeneralLedgerHeader() {

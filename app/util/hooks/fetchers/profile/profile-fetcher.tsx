@@ -3,9 +3,7 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
-import FormAutocompleteField, {
-  AutocompleteFormProps,
-} from "@/components/custom/select/form-autocomplete";
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete";
 import { formatQuery } from "..";
 import  {
   Autocomplete,
@@ -16,7 +14,7 @@ import { SmartAutocomplete, SmartAutocompleteProps } from "@/components/form/sma
 type Profile = components["schemas"]["ProfileDto"];
 
 interface ProfileSmartFormProps
-  extends Partial<SmartAutocompleteProps<Profile, keyof Profile>> {
+  extends Partial<AutoCompleteProps<Profile, keyof Profile>> {
     excludeIds?:number[]
   }
 
@@ -38,8 +36,6 @@ interface ProfileSmartFormProps
   };
 
 
-interface ContactFormProps
-  extends Partial<AutocompleteFormProps<Profile, keyof Profile>> {}
 
 interface ContactAutocompleteProps
   extends Partial<AutoCompleteProps<Profile, keyof Profile>> {
@@ -65,7 +61,7 @@ export const ProfileAutocomplete = ({ ...props }: ContactAutocompleteProps) => {
 
 export const ProfileAutoCompleteFormField = ({
   ...props
-}: ContactFormProps) => {
+}: ContactAutocompleteProps) => {
   const [fetcher, onChange] = useProfileFetcher();
   return (
     <FormAutocompleteField

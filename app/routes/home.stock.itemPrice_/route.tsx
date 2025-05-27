@@ -25,6 +25,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let error: string | undefined = undefined;
   let itemPrices: components["schemas"]["ItemPriceDto"][] = [];
   let itemPriceForOrders:components["schemas"]["ItemPriceDto"][] = [];
+  let actions:components["schemas"]["ActionDto"][] = []
   switch (data.action) {
     case "item-price-for-orders":{
       console.log(data)
@@ -34,6 +35,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         }
       })
       itemPriceForOrders = res.data?.result.entity || []
+      actions = res.data?.actions || []
       break;
     }
     case "get": {
@@ -71,6 +73,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     error,
     itemPrices,
     itemPriceForOrders,
+    actions,
   });
 };
 

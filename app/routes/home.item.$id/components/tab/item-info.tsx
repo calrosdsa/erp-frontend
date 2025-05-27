@@ -1,5 +1,5 @@
 import Typography, { subtitle } from "@/components/typography/Typography";
-import { action, loader } from "../route";
+
 import { useFetcher, useParams, useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
@@ -17,14 +17,13 @@ import { CREATE, DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
 import { toast } from "sonner";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { Entity } from "~/types/enums";
-import { useAddressStore } from "../address-store";
-import {
-  AddressSchema,
-  addressSchema,
-} from "~/util/data/schemas/core/address.schema";
-import AddressForm from "../address-form";
+
 import { Permission } from "~/types/permission";
-export default function AddressInfo({
+import { action, loader } from "../../route";
+import { useItemStore } from "../../item-store";
+import { itemSchema, ItemSchema } from "~/util/data/schemas/stock/item-schemas";
+import ItemForm from "../item-form";
+export default function ItemInfo({
   appContext,
   data,
   load,
@@ -35,34 +34,34 @@ export default function AddressInfo({
   data?: SerializeFrom<typeof loader>;
   load: () => void;
   closeModal: () => void;
-  permission:Permission
+  permission: Permission;
 }) {
-  const key = route.address;
+  const key = route.item;
   const payload = useModalStore((state) => state.payload[key]) || {};
   const { editPayload } = useModalStore();
-  const address = data?.address;
+  const item = data?.item;
   const { t, i18n } = useTranslation("common");
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [toastID, setToastID] = useState<string | number>("");
-  const id = searchParams.get(route.address);
+  const id = searchParams.get(route.item);
   const params = useParams();
   const paramAction = searchParams.get("action");
-  const addressStore = useAddressStore();
+  const itemStore = useItemStore();
 
-  const onSubmit = (e: AddressSchema) => {
+  const onSubmit = (e: ItemSchema) => {
     const id = toast.loading(LOADING_MESSAGE);
     setToastID(id);
-    let action = payload.isNew ? "create-address" : "edit-address";
+    let action = payload.isNew ? "create-item" : "edit-item";
     fetcher.submit(
       {
         action,
-        addressData: e,
+        itemData: e,
       },
       {
         method: "POST",
         encType: "application/json",
-        action: route.toRouteDetail(route.address, params.id),
+        action: route.toRouteDetail(route.item, params.id),
       }
     );
     editPayload(key, {
@@ -78,14 +77,11 @@ export default function AddressInfo({
       onSuccessMessage: () => {
         if (id == DEFAULT_ID) {
           if (paramAction == CREATE) {
-            addressStore.onCreateAddress(fetcher.data?.address);
+            itemStore.onCreateItem(fetcher.data?.item);
             closeModal();
           }
-          if (fetcher.data?.address) {
-            searchParams.set(
-              route.address,
-              fetcher.data?.address.id.toString()
-            );
+          if (fetcher.data?.item) {
+            searchParams.set(route.item, fetcher.data?.item.id.toString());
             setSearchParams(searchParams, {
               preventScrollReset: true,
               replace: true,
@@ -105,38 +101,47 @@ export default function AddressInfo({
         <SmartForm
           isNew={payload.isNew || false}
           title={t("info")}
-          schema={addressSchema}
+          schema={itemSchema}
           keyPayload={key}
           permission={permission}
           defaultValues={{
-            addressID: address?.id,
-            title: address?.title || "",
-            city: address?.city,
-            streetLine1: address?.street_line1,
-            streetLine2: address?.street_line2,
-            province: address?.province,
-            company: address?.company,
-            postalCode: address?.postal_code,
-            phoneNumber: address?.phone_number,
-            identificationNumber: address?.identification_number,
-            email: address?.email,
-            countryCode: address?.country_code,
-            isShippingAddress: address?.is_shipping_address || false,
-            isBillingAddress: address?.is_billing_address || false,
+            id: item?.id,
+            name: item?.name,
+            pn: item?.pn,
+            group: {
+              id: item?.group_id,
+              name: item?.group_name,
+            },
+            uom: {
+              id: item?.uom_id,
+              name: item?.uom_name,
+            },
+            maintainStock: item?.maintain_stock || false,
+            description: item?.description,
+            //Inventary settings
+            shelfLifeInDays: item?.shelf_life_in_days,
+            warrantyPeriodInDays: item?.warranty_period_in_days,
+            hasSerialNo: item?.has_serial_no,
+            serialNoTemplate: item?.serial_no_template,
+            weightUom: {
+              id: item?.weight_uom_id,
+              name: item?.weight_uom,
+            },
+            weightPerUnit: item?.weight_per_unit,
           }}
           onSubmit={onSubmit}
         >
-          <AddressForm />
+          <ItemForm />
         </SmartForm>
       </div>
-      {address?.id != undefined && (
+      {item?.id != undefined && (
         <div className=" col-span-5">
           <ActivityFeed
             appContext={appContext}
             activities={data?.activities || []}
-            partyID={address?.id}
-            partyName={address.title}
-            entityID={Entity.ADDRESS}
+            partyID={item?.id}
+            partyName={item.name}
+            entityID={Entity.ITEM}
           />
         </div>
       )}

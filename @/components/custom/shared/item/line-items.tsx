@@ -28,6 +28,7 @@ import {
   lineItemSchema,
 } from "~/util/data/schemas/stock/line-item-schema";
 import DisplayTextValue from "../../display/DisplayTextValue";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 
 
 export default function LineItems({
@@ -42,6 +43,7 @@ export default function LineItems({
   complement,
   updateStock,
   priceListID,
+  roleActions,
 }: {
   onChange?: (e: z.infer<typeof lineItemSchema>[]) => void;
   status?: string;
@@ -54,6 +56,7 @@ export default function LineItems({
   complement?: JSX.Element;
   updateStock?: boolean;
   priceListID?:number
+  roleActions?:components["schemas"]["RoleActionDto"][];
 }) {
   const { t, i18n } = useTranslation("common");
   const { total, lines: lineItems, totalQuantity } = useLineItems();
@@ -65,6 +68,7 @@ export default function LineItems({
     allowEdit: allowEdit,
     updateStock: updateStock,
   };
+  const {openModal} = useModalNav()
 
   const [metaOptions] = useTableRowActions({
     ...(allowCreate && {
@@ -172,7 +176,9 @@ export default function LineItems({
             lineType: lineType,
             allowEdit:allowEdit,
             priceListID:priceListID,
-            docPartyType:docPartyType
+            docPartyType:docPartyType,
+            openModal:openModal,
+            roleActions:roleActions,
           })}
           fullHeight={false}
           metaOptions={{

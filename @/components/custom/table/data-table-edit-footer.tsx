@@ -15,7 +15,7 @@ export default function DataTableEditFooter<TData>({
   const meta: any = table.options.meta;
   return (
     <div className="">
-      {meta.addRow && (
+      {meta.addRow && !meta.disableEdit && (
         <Button variant={"outline"}
         size={"xs"}
         type="button"

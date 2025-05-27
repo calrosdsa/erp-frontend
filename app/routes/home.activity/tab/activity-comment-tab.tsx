@@ -15,6 +15,8 @@ import { route } from "~/util/route";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { set } from "lodash";
 import { useActivityStore } from "../activity-store";
+import { toast } from "sonner";
+import { LOADING_MESSAGE } from "~/constant";
 
 export default function CommentActivityTab({
   partyID,
@@ -31,8 +33,12 @@ export default function CommentActivityTab({
   const [mentions, setMentions] = useState<MentionData[]>([]);
   const fetcher = useFetcher<typeof action>();
   const { addActivity } = useActivityStore();
+  const [toastID, setToastID] = useState<string | number>("");
+
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     const body: ActivityData = {
       type: activityTypeToJSON(ActivityType.COMMENT),
       activity_comment: {
@@ -61,11 +67,11 @@ export default function CommentActivityTab({
 
   useDisplayMessage(
     {
+      toastID: toastID,
       success: fetcher.data?.message,
       error: fetcher.data?.error,
       onSuccessMessage: () => {
         if (fetcher.data?.activity) {
-          console.log("ADDING ACITIVITY", fetcher.data.activity);
           addActivity(fetcher.data.activity);
         }
       },

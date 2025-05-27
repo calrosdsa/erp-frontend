@@ -14,10 +14,15 @@ import { accountLedgerDataSchema } from "~/util/data/schemas/accounting/account-
 import { action } from "./route";
 import { route } from "~/util/route";
 import { useNewAccount } from "./use-new-account";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import AccountLedgerForm from "./account-ledger-form";
 import { useAccounLedgerStore } from "./account-ledger-store";
 import { Card } from "@/components/ui/card";
+import CreateLayout from "@/components/layout/create-layout";
+import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 
 export default function NewAccountClient() {
   const fetcher = useFetcher<typeof action>();
@@ -26,7 +31,10 @@ export default function NewAccountClient() {
   const { payload, setPayload } = useAccounLedgerStore();
   const form = useForm<z.infer<typeof accountLedgerDataSchema>>({
     resolver: zodResolver(accountLedgerDataSchema),
-    defaultValues: payload,
+    defaultValues: {
+      ...payload,
+      is_group: payload.is_group || false,
+    },
   });
   const watchedFields = useWatch({
     control: form.control,
@@ -61,33 +69,67 @@ export default function NewAccountClient() {
     };
   }, []);
 
-  useEffect(() => {
-    if (fetcher.data?.error) {
-      toast({
-        title: fetcher.data.error,
-      });
-    }
-    if (fetcher.data?.message) {
-      toast({
-        title: fetcher.data.message,
-      });
-      const redirect = searchParams.get("redirect");
-      if (redirect) {
-        navigate(redirect);
-      } else {
-        navigate(
-          r.toRoute({
-            main: r.accountM,
-            routeSufix: [fetcher.data.accountLedger?.name || ""],
-            q: {
-              tab: "info",
-              id: fetcher.data.accountLedger?.id.toString() || "",
-            },
-          })
-        );
-      }
-    }
-  }, [fetcher.data]);
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
+  );
+  useDisplayMessage(
+    {
+      error: fetcher.data?.error,
+      success: fetcher.data?.message,
+      onSuccessMessage: () => {
+        const redirect = searchParams.get("redirect");
+        if (redirect) {
+          navigate(redirect);
+        } else {
+          if (fetcher.data) {
+            navigate(
+              r.toRoute({
+                main: r.accountM,
+                routeSufix: [fetcher.data.accountLedger?.name || ""],
+                q: {
+                  tab: "info",
+                  id: fetcher.data.accountLedger?.id.toString() || "",
+                },
+              })
+            );
+          }
+        }
+      },
+    },
+    [fetcher.data]
+  );
+
+  // useEffect(() => {
+  //   if (fetcher.data?.error) {
+  //     toast({
+  //       title: fetcher.data.error,
+  //     });
+  //   }
+  //   if (fetcher.data?.message) {
+  //     toast({
+  //       title: fetcher.data.message,
+  //     });
+  //     const redirect = searchParams.get("redirect");
+  //     if (redirect) {
+  //       navigate(redirect);
+  //     } else {
+  //       navigate(
+  //         r.toRoute({
+  //           main: r.accountM,
+  //           routeSufix: [fetcher.data.accountLedger?.name || ""],
+  //           q: {
+  //             tab: "info",
+  //             id: fetcher.data.accountLedger?.id.toString() || "",
+  //           },
+  //         })
+  //       );
+  //     }
+  //   }
+  // }, [fetcher.data]);
 
   useEffect(() => {
     setPayload(form.getValues());
@@ -95,7 +137,7 @@ export default function NewAccountClient() {
 
   return (
     <>
-      <Card>
+      <CreateLayout>
         <AccountLedgerForm
           allowEdit={allowEdit}
           form={form}
@@ -104,7 +146,7 @@ export default function NewAccountClient() {
           inputRef={inputRef}
           isNew={true}
         />
-      </Card>
+      </CreateLayout>
     </>
   );
 }

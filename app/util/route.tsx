@@ -67,7 +67,7 @@ class Routes {
 
   stock = this.base + "/stock";
   items = this.stock + "/item";
-  item = "stock/item";
+  item = "item";
   itemPrices = this.stock + "/item-prices";
   itemPrice = "stock/itemPrice";
   itemGroups = this.stock + "/item-groups";

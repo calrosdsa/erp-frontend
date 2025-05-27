@@ -1,8 +1,8 @@
 import AccordationLayout from "@/components/layout/accordation-layout";
 import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useCostCenterFetcher } from "~/util/hooks/fetchers/accounting/useCostCenterFetcher";
-import { useProjectFetcher } from "~/util/hooks/fetchers/accounting/useProjectFetcher";
+import { useCostCenterFetcher } from "~/util/hooks/fetchers/accounting/use-cost-center-fetcher";
+import { useProjectFetcher } from "~/util/hooks/fetchers/accounting/use-project-fetcher";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import FormAutocompleteField from "../../select/form-autocomplete";
 import { components } from "~/sdk";

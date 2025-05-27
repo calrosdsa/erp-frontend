@@ -6,9 +6,9 @@ import { useSearchParams } from "@remix-run/react";
 import { format, parse } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { PartyType, partyTypeToJSON, TimeUnit, timeUnitToJSON } from "~/gen/common";
-import { CostCenterSearch } from "~/util/hooks/fetchers/accounting/useCostCenterFetcher";
-import { ProjectSearch } from "~/util/hooks/fetchers/accounting/useProjectFetcher";
-import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
+import { CostCenterSearch } from "~/util/hooks/fetchers/accounting/use-cost-center-fetcher";
+import { ProjectSearch } from "~/util/hooks/fetchers/accounting/use-project-fetcher";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fetcher";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 
 export default function FinancialStatementHeader() {

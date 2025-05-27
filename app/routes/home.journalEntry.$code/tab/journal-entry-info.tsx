@@ -12,7 +12,7 @@ import { Entity } from "~/types/enums";
 import { SmartForm } from "@/components/form/smart-form";
 import { useTranslation } from "react-i18next";
 import { usePermission } from "~/util/hooks/useActions";
-import { mapModuleDtoToItem } from "~/util/data/schemas/core/module-schema";
+
 import { action, loader } from "../route";
 import {
   JournalEntrySchema,
@@ -23,6 +23,7 @@ import JournalEntryForm from "../journal-entry-form";
 import ActivityFeed from "~/routes/home.activity/components/activity-feed";
 import { Permission } from "~/types/permission";
 import { toZonedTime } from "date-fns-tz";
+import { State } from "~/gen/common";
 
 export const JournalEntryInfo = ({
   appContext,
@@ -89,15 +90,15 @@ export const JournalEntryInfo = ({
     [fetcher.data]
   );
   return (
-    <div className="grid grid-cols-9 gap-3">
-      <div className="col-span-6">
-      {JSON.stringify(journalEntry?.posting_date)}
+    <div className="grid grid-cols-8 gap-3">
+      <div className="col-span-5">
         <SmartForm
           isNew={payload.isNew || false}
           title={t("info")}
           schema={journalEntrySchema}
           keyPayload={key}
           permission={permission}
+          disableEdit={payload.status == State.SUBMITTED}
           defaultValues={{
             id: journalEntry?.id,
             postingDate: journalEntry?.posting_date

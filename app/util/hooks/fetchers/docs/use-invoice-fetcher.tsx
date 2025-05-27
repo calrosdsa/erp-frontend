@@ -16,12 +16,14 @@ export const InvoiceAutocompleteFormField = ({
   name,
   partyType,
   partyID,
+  form,
 }: {
   allowEdit?: boolean;
   control?: Control<any, any>;
   label?: string;
   name?: string;
   partyType: string;
+  form?:any
   partyID?: number;
   onSelect?: (e: components["schemas"]["InvoiceDto"]) => void;
 }) => {
@@ -38,6 +40,7 @@ export const InvoiceAutocompleteFormField = ({
       nameK="code"
       control={control}
       allowEdit={allowEdit}
+      form={form}
       onSelect={onSelect}
       onCustomDisplay={(e) => {
         return (

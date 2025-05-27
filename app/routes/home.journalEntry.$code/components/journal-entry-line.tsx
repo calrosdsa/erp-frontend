@@ -15,7 +15,7 @@ import { z } from "zod";
 import { create } from "zustand";
 import { components } from "~/sdk";
 import { journalEntryLineSchema } from "~/util/data/schemas/accounting/journal-entry-schema";
-import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
+import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fetcher";
 
 export const JournalEntryLine = ({ open }: { open: boolean }) => {
   const journalEntryLine = useJournalEntryLine();

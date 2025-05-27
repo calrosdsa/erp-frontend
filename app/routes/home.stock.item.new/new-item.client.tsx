@@ -12,12 +12,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -110,7 +104,7 @@ export default function NewItemClient() {
               routeSufix: [newItem.name],
               q: {
                 tab: "info",
-                id: newItem.code,
+                id: newItem.id,
               },
             })
           );

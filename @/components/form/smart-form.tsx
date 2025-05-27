@@ -21,21 +21,23 @@ interface SmartFormProps<T extends z.ZodType> {
   className?: string;
   title?: string;
   isNew: boolean;
+  permission: Permission;
   enableSaveButton?: boolean;
-  permission:Permission;
+  disableEdit?: boolean;
 }
 
 export function SmartForm<T extends z.ZodType>({
   schema,
   defaultValues,
   onSubmit,
-  enableSaveButton,
   children,
+  enableSaveButton,
   keyPayload,
   className,
   title,
   isNew,
   permission,
+  disableEdit,
 }: SmartFormProps<T>) {
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(schema),
@@ -73,7 +75,7 @@ export function SmartForm<T extends z.ZodType>({
 
   const setIsEditing = (e: boolean) => {
     editPayload(keyPayload, {
-      enableEdit: e,
+      enableEdit: e &&  !disableEdit,
     });
   };
 
@@ -106,10 +108,12 @@ export function SmartForm<T extends z.ZodType>({
       form={form}
       defaultEditMode={payload?.enableEdit}
       hasChanged={isChanged}
+      disableEdit={disableEdit}
       setIsEditing={(e) => {
-        editPayload(keyPayload, {
-          enableEdit: e,
-        });
+        setIsEditing(e)
+        // editPayload(keyPayload, {
+        //   enableEdit: e,
+        // });
       }}
     >
       <Form {...form}>
@@ -132,7 +136,7 @@ export function SmartForm<T extends z.ZodType>({
                   Guardar
                 </Button>
               )}
-              {(!isNew&& permission?.edit) && (
+              {!isNew && permission?.edit && !disableEdit && (
                 <div>
                   {!payload?.enableEdit ? (
                     <Button

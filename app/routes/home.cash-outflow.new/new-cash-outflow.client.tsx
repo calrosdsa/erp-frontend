@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import BankAccountData from "./cash-outflow-form";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { action } from "./route";
 import { useForm, useWatch } from "react-hook-form";
@@ -13,24 +12,28 @@ import {
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { route } from "~/util/route";
 import { useCashOutflowStore } from "./cash-outflow.store";
-import { cashOutflowDataSchema, CashOutflowDataType } from "~/util/data/schemas/accounting/cash-outflow.schema";
+import {
+  cashOutflowDataSchema,
+  CashOutflowDataType,
+} from "~/util/data/schemas/accounting/cash-outflow.schema";
 import CashOutflowForm from "./cash-outflow-form";
 import { useTaxAndCharges } from "@/components/custom/shared/accounting/tax/use-tax-charges";
 import { format } from "date-fns";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewCashOutflowClient() {
   const fetcher = useFetcher<typeof action>();
   const { payload, setPayload } = useCashOutflowStore();
-    const taxLinesStore = useTaxAndCharges();
-  
+  const taxLinesStore = useTaxAndCharges();
+
   const form = useForm<CashOutflowDataType>({
     resolver: zodResolver(cashOutflowDataSchema),
     defaultValues: {
       ...payload,
-      posting_date:new Date(),
-      posting_time:format(new Date(), "HH:mm:ss"),
+      posting_date: new Date(),
+      posting_time: format(new Date(), "HH:mm:ss"),
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      taxLines:taxLinesStore.lines,
+      taxLines: taxLinesStore.lines,
     },
   });
   const watchedFields = useWatch({
@@ -76,16 +79,19 @@ export default function NewCashOutflowClient() {
       error: fetcher.data?.error,
       success: fetcher.data?.message,
       onSuccessMessage: () => {
-        if (fetcher.data?.entity) {          
-            navigate(
-              route.toRoute({
-                main: route.cashOutflow,
-                routeSufix: [fetcher.data.entity?.code],
-                q: {
-                  tab: "info",
-                },
-              })
-            );
+        if (fetcher.data?.entity) {
+          navigate(
+            route.toRoute({
+              main: route.cashOutflow,
+              routeSufix: [fetcher.data.entity?.code],
+              q: {
+                tab: "info",
+              },
+            }),
+            {
+              replace: true,
+            }
+          );
         }
       },
     },
@@ -97,7 +103,7 @@ export default function NewCashOutflowClient() {
   }, [watchedFields]);
 
   return (
-    <Card>
+    <CreateLayout>
       <CashOutflowForm
         fetcher={fetcher}
         form={form}
@@ -105,6 +111,6 @@ export default function NewCashOutflowClient() {
         onSubmit={onSubmit}
         isNew={true}
       />
-    </Card>
+    </CreateLayout>
   );
 }

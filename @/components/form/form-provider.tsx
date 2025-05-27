@@ -7,6 +7,7 @@ interface FormContextProps<T extends FieldValues> {
   isEditing: boolean;
   hasChanged: boolean;
   setIsEditing: (e: boolean) => void;
+  disableEdit?: boolean;
   //   setIsEditing: (value: boolean) => void
 }
 
@@ -25,12 +26,14 @@ export function FormProvider<T extends FieldValues>({
   form,
   defaultEditMode = false,
   hasChanged = false,
+  disableEdit,
   setIsEditing,
 }: {
   children: React.ReactNode;
   form: UseFormReturn<T>;
   defaultEditMode?: boolean;
   hasChanged: boolean;
+  disableEdit?:boolean;
   setIsEditing: (e: boolean) => void;
 }) {
   //   const [isEditing, setIsEditing] = useState(defaultEditMode)
@@ -42,6 +45,7 @@ export function FormProvider<T extends FieldValues>({
         isEditing: defaultEditMode,
         hasChanged: hasChanged,
         setIsEditing,
+        disableEdit,
       }}
     >
       {children}

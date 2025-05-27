@@ -13,7 +13,7 @@ import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { GlobalState } from "~/types/app-types";
 import { AccountLedgerData } from "~/util/data/schemas/accounting/account-ledger.schema";
-import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
+import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/use-account-ledger-fetcher";
 import {
   AccountType,
   CashFlowSection,

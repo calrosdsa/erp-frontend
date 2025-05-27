@@ -6,8 +6,9 @@ import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
-import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/form-autocomplete";
-interface BankFormProps extends Partial<AutocompleteFormProps<any, keyof any>> {
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete";
+import { AutoCompleteProps } from "@/components/custom/select/autocomplete";
+interface BankFormProps extends Partial<AutoCompleteProps<any, keyof any>> {
 }
 export const BankForm = ({
   ...props

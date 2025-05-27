@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { DEFAULT_CURRENCY, DEFAULT_DEBOUNCE_TIME } from "~/constant";
+import {
+  CREATE,
+  DEFAULT_CURRENCY,
+  DEFAULT_DEBOUNCE_TIME,
+  DEFAULT_ID,
+} from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
 import { usePermission } from "../useActions";
@@ -8,6 +13,7 @@ import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { Control, Form } from "react-hook-form";
 import { formatCurrency } from "~/util/format/formatCurrency";
 import { Autocomplete } from "@/components/custom/select/autocomplete";
+import { OpenModalFunc } from "~/types";
 
 export const PriceAutocompleteForm = ({
   allowEdit = true,
@@ -18,6 +24,9 @@ export const PriceAutocompleteForm = ({
   lang,
   priceListID,
   defaultValue,
+  openModal,
+  onClickAddNew,
+  roleActions,
 }: {
   allowEdit?: boolean;
   label?: string;
@@ -27,6 +36,11 @@ export const PriceAutocompleteForm = ({
   lang: string;
   priceListID?: number;
   defaultValue?: string;
+  openModal: OpenModalFunc;
+  // The onClickAddNew method is used to track the currently focused input.
+  // When an item is created, it will be populated with the corresponding data.
+  onClickAddNew?: () => void;
+  roleActions?: components["schemas"]["RoleActionDto"][];
 }) => {
   const [fetcher, onChange] = useItemPriceForOrders({
     isBuying:
@@ -42,6 +56,10 @@ export const PriceAutocompleteForm = ({
     currency: currency || DEFAULT_CURRENCY,
     priceListID: priceListID,
   });
+  const [permission] = usePermission({
+    roleActions: roleActions,
+    actions: fetcher.data?.actions,
+  });
   return (
     <>
       <Autocomplete
@@ -52,6 +70,14 @@ export const PriceAutocompleteForm = ({
         onValueChange={onChange}
         onSelect={onSelect}
         defaultValue={defaultValue}
+        {...(permission.create && {
+          addNew: () => {
+            onClickAddNew?.();
+            openModal(route.item, DEFAULT_ID, {
+              action: CREATE,
+            });
+          },
+        })}
         onCustomDisplay={(e) => {
           return (
             <div className="flex flex-col text-xs">

@@ -16,7 +16,7 @@ import { BankForm } from "~/util/hooks/fetchers/accounting/use-bank-fetcher";
 import { route } from "~/util/route";
 import { PartyAutocompleteField } from "../home.order.$partyOrder.new/components/party-autocomplete";
 import { GlobalState } from "~/types/app-types";
-import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
+import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/use-account-ledger-fetcher";
 import { cn } from "@/lib/utils";
 
 const accountTypes = [

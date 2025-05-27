@@ -22,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipLayout } from "@/components/layout/tooltip-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Control } from "react-hook-form";
 
 interface ActionButton {
   Icon: LucideIcon;
@@ -29,27 +30,45 @@ interface ActionButton {
 }
 
 export interface AutoCompleteProps<T extends object, K extends keyof T> {
-  placeholder?: string;
-  data: T[];
-  nameK: K;
-  label?: string;
-  onValueChange?: (e: string) => void;
-  onSelect?: (v: T) => void;
-  onBlur?: (e: string) => void;
-  className?: string;
-  inputClassName?: string;
-  defaultValue?: any;
-  addNew?: () => void;
-  required?: boolean;
-  isSearch?: boolean;
-  onCustomDisplay?: (e: T, idx: number) => JSX.Element;
-  isLoading?: boolean;
-  enableSelected?: boolean;
-  shouldFilter?: boolean;
-  allowEdit?: boolean;
-  actions?: ActionButton[];
-  disableAutocomplete?: boolean;
-  badgeLabel?: string;
+   // Basic properties
+   placeholder?: string;
+   data: T[];
+   nameK: K;
+   name?: string;
+   label?: string;
+   description?: string;
+   defaultValue?: string | null | any;
+   required?: boolean;
+   badgeLabel?: string;
+ 
+   // Event handlers
+   onValueChange?: (e: string) => void;
+   onSelect?: (v: T) => void;
+   onBlur?: (e: string) => void;
+   onClear?: () => void;
+   onFocus?: () => void;
+   navigate?: (e: any) => void;
+ 
+   // Styling and display
+   className?: string;
+   inputClassName?: string;
+   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
+ 
+   // Advanced options
+   isSearch?: boolean;
+   loading?: boolean;
+   enableSelected?: boolean;
+   shouldFilter?: boolean;
+   allowEdit?: boolean;
+   disableAutocomplete?: boolean;
+   modal?: boolean;
+   href?: string;
+ 
+   // Additional functionality
+   addNew?: () => void;
+   actions?: ActionButton[];
+   form?: any;
+   control?: Control<any, any>;
 }
 
 const Autocomplete = <T extends object, K extends keyof T>({
@@ -61,7 +80,7 @@ const Autocomplete = <T extends object, K extends keyof T>({
   onCustomDisplay,
   className,
   addNew,
-  isLoading,
+  loading,
   defaultValue,
   placeholder,
   isSearch,
@@ -97,6 +116,13 @@ const Autocomplete = <T extends object, K extends keyof T>({
     console.log("MOUNT");
   }, []);
   
+  if(!allowEdit){
+    return (
+      <>
+      <span>{query}</span>
+      </>
+    )
+  }
 
   return (
     <div className={cn("", className)}>
@@ -206,18 +232,20 @@ const Autocomplete = <T extends object, K extends keyof T>({
               }
             }}
             className="w-[--radix-popover-trigger-width] p-1"
+            // className="w-[calc(var(--radix-popover-trigger-width)+100px)] p-1"
           >
-            <CommandList>
-              {isLoading && (
+            <div>
+            <CommandList className=" h-64  overflow-auto">
+              {loading && (
                 <CommandPrimitive.Loading>
                   <div className="p-1">
                     <Skeleton className="h-6 w-full" />
                   </div>
                 </CommandPrimitive.Loading>
               )}
-
-              {data.length > 0 && !isLoading ? (
-                <CommandGroup>
+              
+              {data.length > 0 && !loading ? (
+                <CommandGroup >
                   {data?.map((option, idx) => (
                     <CommandItem
                       key={(option[nameK] as string) || ""}
@@ -245,11 +273,13 @@ const Autocomplete = <T extends object, K extends keyof T>({
                   ))}
                 </CommandGroup>
               ) : null}
+              {/* {!loading ? <CommandEmpty>{"No data."}</CommandEmpty> : null} */}
+            </CommandList>
               {addNew && (
+                <div className="w-full pt-2 pb-1 flex justify-end">
                 <Button
                   size={"xs"}
-                  variant={"default"}
-                  className=" py-1"
+                  variant={"outline"}
                   onClick={() => {
                     addNew();
                     setOpen(false);
@@ -258,9 +288,9 @@ const Autocomplete = <T extends object, K extends keyof T>({
                   <span>Crear Nuevo</span>
                   <PlusIcon />
                 </Button>
+                    </div>
               )}
-              {/* {!isLoading ? <CommandEmpty>{"No data."}</CommandEmpty> : null} */}
-            </CommandList>
+                </div>
           </PopoverContent>
         </Command>
       </Popover>

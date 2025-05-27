@@ -64,8 +64,11 @@ export default function PurchaseRecordInfo() {
       purchase_type: purchaseRecord?.purchase_type,
       with_tax_credit_right: purchaseRecord?.with_tax_credit_right || false,
       consolidation_status: purchaseRecord?.consolidation_status,
-      supplier: purchaseRecord?.supplier,
-      supplier_id: purchaseRecord?.supplier_id,
+      supplier:{
+        id:purchaseRecord?.supplier_id,
+        name:purchaseRecord?.supplier,
+      },
+      
       other_not_subject_to_tax_credit:purchaseRecord?.other_not_subject_to_tax_credit,
     },
   });

@@ -57,6 +57,9 @@ export default function SelectForm<
   onDelete,
 }: Props<T, K, V>) {
   const {t} = useTranslation("common")
+  if(!allowEdit){
+    
+  }
   return (
     <FormField
       control={control || form.control}

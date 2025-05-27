@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { useFormContext } from "./form-provider";
 import IconButton from "../custom-ui/icon-button";
 import { FormLabel } from "../ui/form";
+import { AutoCompleteProps } from "../custom/select/autocomplete";
 
 interface ActionButton {
   Icon: LucideIcon;
@@ -46,7 +47,7 @@ export interface SmartAutocompleteProps<T extends object, K extends keyof T> {
   required?: boolean;
   isSearch?: boolean;
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
-  isLoading?: boolean;
+  loading?: boolean;
   enableSelected?: boolean;
   shouldFilter?: boolean;
   actions?: ActionButton[];
@@ -66,7 +67,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
   onCustomDisplay,
   className,
   addNew,
-  isLoading,
+  loading,
   defaultValue,
   placeholder,
   isSearch,
@@ -80,7 +81,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
   required,
   modal = true,
   navigate,
-}: SmartAutocompleteProps<T, K>) => {
+}: AutoCompleteProps<T, K>) => {
   const { form, isEditing } = useFormContext();
   if (!form) {
     throw new Error("SmartField must be used within a SmartForm");
@@ -121,7 +122,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
 
   if (!isEditing) {
     return (
-      <div className="flex flex-col py-[5px]">
+      <div className="flex flex-col ">
         {label && (
           <FormLabel className="text-xs text-primary/60">
             {label} {required && "*"}
@@ -146,7 +147,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
         onOpenChange={setOpen}
         modal={modal}
       >
-        <Command shouldFilter={shouldFilter} className="py-[5px]">
+        <Command shouldFilter={shouldFilter} className="">
           <PopoverAnchor asChild className="">
             <CommandPrimitive.Input
               asChild
@@ -174,7 +175,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
               }}
               onBlur={() => onBlur?.(query)}
             >
-              <div className="flex flex-col ">
+              <div className="flex flex-col space-y-[3px]">
                 {label && (
                   <FormLabel className="text-xs text-primary/60">
                     {label} {required && "*"}
@@ -268,7 +269,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
             className="w-[--radix-popover-trigger-width] p-1"
           >
             <CommandList>
-              {isLoading && (
+              {loading && (
                 <CommandPrimitive.Loading>
                   <div className="p-1 flex flex-col space-y-2">
                     <Skeleton className="h-8 w-full" />
@@ -277,7 +278,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
                 </CommandPrimitive.Loading>
               )}
 
-              {data.length > 0 && !isLoading ? (
+              {data.length > 0 && !loading ? (
                 <CommandGroup>
                   {data?.map((option, idx) => (
                     <CommandItem
@@ -320,7 +321,7 @@ const SmartAutocomplete = <T extends object, K extends keyof T>({
                   <PlusIcon />
                 </Button>
               )}
-              {/* {!isLoading ? <CommandEmpty>{"No data."}</CommandEmpty> : null} */}
+              {/* {!loading ? <CommandEmpty>{"No data."}</CommandEmpty> : null} */}
             </CommandList>
           </PopoverContent>
         </Command>

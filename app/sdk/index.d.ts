@@ -3749,6 +3749,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/stock/item/update-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Status Item */
+        put: operations["update-status-item"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/stock/item/variant": {
         parameters: {
             query?: never;
@@ -4544,6 +4561,8 @@ export interface components {
             id: number;
             item: string;
             item_code: string;
+            /** Format: int64 */
+            item_id: number;
             voucher_type: string;
             warehouse: string;
             warehouse_uuid: string;
@@ -5105,16 +5124,6 @@ export interface components {
             name: string;
             values: components["schemas"]["ItemAttributeValueDto"][];
         };
-        CreateItemData: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            item: components["schemas"]["ItemData"];
-            item_inventory: components["schemas"]["ItemInventoryData"];
-            item_price_lines: components["schemas"]["ItemPriceLine"][];
-        };
         CreateItemLines: {
             lines: components["schemas"]["LineItemData"][];
         };
@@ -5572,23 +5581,6 @@ export interface components {
             price_list_id: number;
             /** Format: double */
             rate: number;
-            /** Format: int64 */
-            uom_id: number;
-        };
-        EditItemRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            description?: string | null;
-            /** Format: int64 */
-            group_id?: number;
-            /** Format: int64 */
-            id: number;
-            item_code: string;
-            maintain_stock: boolean;
-            name: string;
             /** Format: int64 */
             uom_id: number;
         };
@@ -6910,65 +6902,71 @@ export interface components {
             value: string;
         };
         ItemData: {
-            description?: string | null;
-            /** Format: int64 */
-            group_id?: number;
-            item_code: string;
-            maintain_stock: boolean;
-            name: string;
-            /** Format: int64 */
-            uom_id: number;
-        };
-        ItemDetailDto: {
-            code: string;
-            /** Format: date-time */
-            created_at: string;
-            description: string | null;
-            /** Format: int64 */
-            group_id: number;
-            group_name: string;
-            group_uuid: string;
-            /** Format: int64 */
-            id: number;
-            item_type: string;
-            maintain_stock: boolean;
-            name: string;
-            uom_code: string;
-            /** Format: int64 */
-            uom_id: number;
-            uom_name: string;
-            uuid: string;
-        };
-        ItemDto: {
-            code: string;
-            /** Format: date-time */
-            created_at: string;
-            /** Format: int64 */
-            id: number;
-            item_type: string;
-            name: string;
-            /** Format: int64 */
-            uom_id: number;
-            uuid: string;
-        };
-        ItemInventoryData: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            has_serial_no?: boolean | null;
+            fields: components["schemas"]["ItemFields"];
             /** Format: int64 */
-            item_id?: number;
-            serial_no_template?: string | null;
-            /** Format: int32 */
-            shelf_life_in_days?: number | null;
-            /** Format: int32 */
-            warranty_period_in_days?: number | null;
+            id?: number;
+            item_inventory: components["schemas"]["ItemInventoryFields"];
+            item_price_lines: components["schemas"]["ItemPriceLine"][];
+        };
+        ItemDetailDto: {
+            /** Format: date-time */
+            created_at: string;
+            description: string | null;
             /** Format: int64 */
-            weight_uom_id?: number | null;
+            group_id: number | null;
+            group_name: string | null;
+            group_uuid: string | null;
+            has_serial_no: boolean | null;
+            /** Format: int64 */
+            id: number;
+            item_type: string;
+            maintain_stock: boolean;
+            name: string;
+            pn: string | null;
+            serial_no_template: string | null;
             /** Format: int32 */
-            wight_per_unit?: number | null;
+            shelf_life_in_days: number | null;
+            status: string;
+            uom_code: string;
+            /** Format: int64 */
+            uom_id: number;
+            uom_name: string;
+            uuid: string;
+            /** Format: int32 */
+            warranty_period_in_days: number | null;
+            /** Format: int32 */
+            weight_per_unit: number | null;
+            weight_uom: string | null;
+            /** Format: int64 */
+            weight_uom_id: number | null;
+        };
+        ItemDto: {
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
+            id: number;
+            item_type: string;
+            name: string;
+            pn: string | null;
+            status: string;
+            /** Format: int64 */
+            uom_id: number;
+            uuid: string;
+        };
+        ItemFields: {
+            description?: string | null;
+            /** Format: int64 */
+            group_id?: number | null;
+            maintain_stock: boolean;
+            name: string;
+            pn?: string | null;
+            /** Format: int64 */
+            unit_of_measure_id: number;
         };
         ItemInventoryDto: {
             has_serial_no: boolean | null;
@@ -6982,6 +6980,25 @@ export interface components {
             weight_uom: string | null;
             /** Format: int64 */
             weight_uom_id: number | null;
+        };
+        ItemInventoryFields: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            has_serial_no?: boolean | null;
+            /** Format: int64 */
+            item_id?: number;
+            serial_no_template?: string | null;
+            /** Format: int32 */
+            shelf_life_in_days?: number | null;
+            /** Format: int32 */
+            warranty_period_in_days?: number | null;
+            /** Format: int32 */
+            weight_per_unit?: number | null;
+            /** Format: int64 */
+            weight_uom_id?: number | null;
         };
         ItemLineDto: {
             /** Format: int64 */
@@ -7045,6 +7062,7 @@ export interface components {
             uuid: string;
         };
         ItemPriceLine: {
+            action: string;
             /** Format: int32 */
             item_quantity: number;
             /** Format: int64 */
@@ -10205,6 +10223,8 @@ export interface components {
             /** Format: int64 */
             id: number;
             item_code: string;
+            /** Format: int64 */
+            item_id: number;
             item_name: string;
             serial_no: string;
             status: string;
@@ -15295,8 +15315,8 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Created */
-            201: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -20430,13 +20450,16 @@ export interface operations {
     "edit-item": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditItemRequestBody"];
+                "application/json": components["schemas"]["ItemData"];
             };
         };
         responses: {
@@ -20472,7 +20495,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateItemData"];
+                "application/json": components["schemas"]["ItemData"];
             };
         };
         responses: {
@@ -20534,7 +20557,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ItemInventoryData"];
+                "application/json": components["schemas"]["ItemInventoryFields"];
             };
         };
         responses: {
@@ -21342,6 +21365,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EntityResponseResultEntityPriceListDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "update-status-item": {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
                 };
             };
             /** @description Error */

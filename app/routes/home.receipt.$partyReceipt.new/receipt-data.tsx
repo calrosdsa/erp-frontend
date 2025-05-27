@@ -126,6 +126,7 @@ export const ReceiptData = ({
             currency={formValues.currency}
             lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_RECEIPT)}
             docPartyType={partyReceipt}
+            roleActions={roleActions}
             priceListID={formValues.priceList?.id || undefined}
             // complement={
             //   <UpdateStock

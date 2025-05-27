@@ -126,7 +126,9 @@ export default function CreatePurchaseInvoiceClient() {
               q: {
                 tab: "info",
               },
-            })
+            }),{
+              replace:true
+            }
           );
         }
       },

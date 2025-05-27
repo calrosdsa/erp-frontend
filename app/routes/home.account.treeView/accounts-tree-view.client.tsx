@@ -60,7 +60,7 @@ export default function AccountsTreeViewClient() {
               routeSufix: [e.name],
               q: {
                 tab: "info",
-                id: e.uuid,
+                id: e.id,
               },
             })
           );

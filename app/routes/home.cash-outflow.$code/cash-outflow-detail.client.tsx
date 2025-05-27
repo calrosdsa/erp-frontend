@@ -18,6 +18,7 @@ import { UpdateStatusWithEventType } from "~/util/data/schemas/base/base-schema"
 import {
   setUpToolbarDetailPage,
   setUpToolbarRegister,
+  useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import CashOutflowInfoTab from "./tab/cash-outflow-info";
@@ -28,6 +29,8 @@ import { format } from "date-fns";
 import { useExporter } from "~/util/hooks/ui/useExporter";
 import { DownloadIcon } from "lucide-react";
 import { components } from "~/sdk";
+import { fromDate, toDate, voucherNo } from "~/constant";
+import { toZonedTime } from "date-fns-tz";
 
 export default function CashOutflowDetailClient() {
   const { entity, activities, actions, associatedActions } =
@@ -89,6 +92,14 @@ export default function CashOutflowDetailClient() {
     );
   };
 
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "STATE",
+    },
+    [fetcher.state]
+  );
+
   useDisplayMessage(
     {
       error: fetcher.data?.error,
@@ -109,9 +120,15 @@ export default function CashOutflowDetailClient() {
               main: "generalLedger",
               routePrefix: [route.accountingM],
               q: {
-                fromDate: format(entity?.posting_date || "", "yyyy-MM-dd"),
-                toDate: format(entity?.posting_date || "", "yyyy-MM-dd"),
-                voucherNo: entity?.code,
+                [voucherNo]: entity?.code,
+                [fromDate]: format(
+                  toZonedTime(entity?.posting_date || new Date(), "UTC"),
+                  "yyyy-MM-dd"
+                ),
+                [toDate]: format(
+                  toZonedTime(entity?.posting_date || new Date(), "UTC"),
+                  "yyyy-MM-dd"
+                ),
               },
             })
           );
@@ -129,8 +146,8 @@ export default function CashOutflowDetailClient() {
       },
     });
     return {
-      titleToolbar:entity?.code,
-      actions:actions,
+      titleToolbar: entity?.code,
+      actions: actions,
       view: view,
       status: status,
       onChangeState: onChangeState,
@@ -144,6 +161,7 @@ export default function CashOutflowDetailClient() {
       partyID={entity?.id}
       partyName={entity?.code}
       navItems={navItems}
+      fullWidth={true}
       entityID={Entity.CASH_OUTFLOW}
     >
       {tab == "info" && <CashOutflowInfoTab />}

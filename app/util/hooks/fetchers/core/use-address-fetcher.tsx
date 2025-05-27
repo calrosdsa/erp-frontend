@@ -8,16 +8,15 @@ import {
 } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
-import FormAutocompleteField, {
-  AutocompleteFormProps,
-} from "@/components/custom/select/form-autocomplete";
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete";
 import { formatQuery } from "..";
 import { Permission } from "~/types/permission";
 import { OpenModalFunc } from "~/types";
+import { AutoCompleteProps } from "@/components/custom/select/autocomplete";
 
 type Address = components["schemas"]["AddressDto"];
 interface AddressFormProps
-  extends Partial<AutocompleteFormProps<Address, keyof Address>> {
+  extends Partial<AutoCompleteProps<Address, keyof Address>> {
   permission?: Permission;
   openModal?: OpenModalFunc;
 }

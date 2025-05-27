@@ -136,6 +136,7 @@ export const InvoiceData = ({
             lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_INVOICE)}
             docPartyType={partyInvoice}
             priceListID={formValues.priceList?.id || undefined}
+            roleActions={roleActions}
             complement={
               <UpdateStock
                 form={form}

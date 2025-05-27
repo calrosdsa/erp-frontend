@@ -55,7 +55,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         invoice_date: searchParams.get("invoice_date") || undefined,
         order: searchParams.get("order") || "",
         column: searchParams.get("column") || "",
-        invoice_id: searchParams.get("invoice") || "",
+        invoice_id: searchParams.get("invoice_id") || "",
         supplier_id: searchParams.get("party") || "",
       },
     },

@@ -40,6 +40,7 @@ import { Command as CommandPrimitive } from "cmdk";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@radix-ui/react-select";
+import { AutoCompleteProps } from "./autocomplete";
 
 export interface AutocompleteFormProps<T extends object, K extends keyof T> {
   data: T[];
@@ -98,7 +99,7 @@ export default function FormAutocompleteField<
   inputClassName,
   defaultValue,
   navigate,
-}: AutocompleteFormProps<T, K>) {
+}: AutoCompleteProps<T, K>) {
   const [open, setOpen] = useState(false);
   const fieldValue = form.getValues(name || "");
   const [query, setQuery] = useState<string>(defaultValue || "");
@@ -129,9 +130,9 @@ export default function FormAutocompleteField<
   return (
     <FormField
       control={control || (form && form?.control)}
-      name={name}
+      name={name || ""}
       render={({ field }) => {
-        const fieldID = field?.value?.id
+        const fieldID = field?.value?.id;
         useEffect(() => {
           if (field.value?.id && field.value?.name)
             setQuery(field.value?.name || "");

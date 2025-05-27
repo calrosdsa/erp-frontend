@@ -29,7 +29,7 @@ export default function NewPurchaseRecordClient() {
   const r = route;
   const { roleActions } = useOutletContext<GlobalState>();
   // Default values for the form
-  const { payload,setPayload } = usePurchaseRecordStore();
+  const { payload, setPayload } = usePurchaseRecordStore();
   const form = useForm<z.infer<typeof purchaseRecordDataSchema>>({
     resolver: zodResolver(purchaseRecordDataSchema),
     defaultValues: {
@@ -118,9 +118,12 @@ export default function NewPurchaseRecordClient() {
               routeSufix: [fetcher.data.purchaseRecord.invoice_no],
               q: {
                 tab: "info",
-                id: fetcher.data.purchaseRecord.uuid,
+                id: fetcher.data.purchaseRecord.id,
               },
-            })
+            }),
+            {
+              replace: true,
+            }
           );
         }
       },
@@ -135,6 +138,7 @@ export default function NewPurchaseRecordClient() {
   return (
     <div>
       <CreateLayout>
+        {/* {JSON.stringify(form.getValues())} */}
         <PurchaseRecordData
           form={form}
           onSubmit={onSubmit}

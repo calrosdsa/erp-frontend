@@ -122,8 +122,6 @@ export default function PurchaseOrderClient() {
     }
   };
 
-  
-
   setUpToolbarRegister(() => {
     console.log("SET UP TOOLBAR...");
     const actions: ButtonToolbar[] = [];
@@ -134,7 +132,7 @@ export default function PurchaseOrderClient() {
       status != State.TO_DELIVER
     ) {
       actions.push({
-        label: t("f.sale", { o: t("_invoice.base") }),
+        label: t(party.saleInvoice),
         onClick: () => {
           navigate(
             r.toRoute({
@@ -153,7 +151,7 @@ export default function PurchaseOrderClient() {
       status != State.TO_RECEIVE
     ) {
       actions.push({
-        label: t("f.purchase", { o: t("_invoice.base") }),
+        label: t(party.purchaseInvoice),
         onClick: () => {
           navigate(
             r.toRoute({
@@ -168,7 +166,7 @@ export default function PurchaseOrderClient() {
     }
     if (receiptPermission?.create && enabledOrder && !toBill) {
       actions.push({
-        label: t("f.purchase", { o: t("_receipt.base") }),
+        label: t(party.purchaseReceipt),
         onClick: () => {
           navigate(
             r.toRoute({
@@ -184,7 +182,7 @@ export default function PurchaseOrderClient() {
 
     if (deliveryNotePermission?.create && enabledOrder && !toBill) {
       actions.push({
-        label: t("deliveryNote"),
+        label: t(party.deliveryNote),
         onClick: () => {
           navigate(
             r.toRoute({

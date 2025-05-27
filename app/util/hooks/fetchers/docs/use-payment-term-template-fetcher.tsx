@@ -1,23 +1,22 @@
-
-
-
 import { Control } from "react-hook-form";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME, DEFAULT_SIZE } from "~/constant";
 import { components, operations } from "~/sdk";
 import { route } from "~/util/route";
-import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/form-autocomplete";
+import FormAutocompleteField from "@/components/custom/select/form-autocomplete";
 import { formatQuery } from "..";
 import { Permission } from "~/types/permission";
+import { AutoCompleteProps } from "@/components/custom/select/autocomplete";
 
-type PaymentTermsTemplate = components["schemas"]["PaymentTermsTemplateDto"]
-interface PaymentTermsTemplateFormProps extends Partial<AutocompleteFormProps<PaymentTermsTemplate, keyof PaymentTermsTemplate>> {
-  
-}
+type PaymentTermsTemplate = components["schemas"]["PaymentTermsTemplateDto"];
+interface PaymentTermsTemplateFormProps
+  extends Partial<
+    AutoCompleteProps<PaymentTermsTemplate, keyof PaymentTermsTemplate>
+  > {}
 
 export const PaymentTermTemplateFormField = ({
   ...props
-}:PaymentTermsTemplateFormProps ) => {
+}: PaymentTermsTemplateFormProps) => {
   const [fetcher, onChange] = usePaymentTermTemplate();
   return (
     <FormAutocompleteField
@@ -51,7 +50,7 @@ export const usePaymentTermTemplate = () => {
         encType: "application/json",
         debounceTimeout: DEFAULT_DEBOUNCE_TIME,
         action: r.toRoute({
-            main:r.paymentTermsTemplate
+          main: r.paymentTermsTemplate,
         }),
       }
     );

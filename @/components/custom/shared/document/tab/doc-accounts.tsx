@@ -1,7 +1,12 @@
 import FormLayout from "@/components/custom/form/FormLayout";
 import { Typography } from "@/components/typography";
 import { Form } from "@/components/ui/form";
-import { useFetcher, useLocation, useNavigate, useOutletContext } from "@remix-run/react";
+import {
+  useFetcher,
+  useLocation,
+  useNavigate,
+  useOutletContext,
+} from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { action } from "~/routes/api.document/route";
@@ -11,7 +16,7 @@ import {
   docAccountsSchema,
   DocAccountsType,
 } from "~/util/data/schemas/document/doc-accounts.schema";
-import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/use-account-ledger-fethcer";
+import { LedgerAutocompleteFormField } from "~/util/hooks/fetchers/use-account-ledger-fetcher";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   useLoadingTypeToolbar,
@@ -43,10 +48,10 @@ export default function DocAccounts({
     });
   const navigate = useNavigate();
   const { setRegister } = useSetupToolbarStore();
-  const inputRef = useRef<HTMLInputElement | null>(null); 
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const r = route;
   const formValues = form.getValues();
-  const location = useLocation()
+  const location = useLocation();
   const fieldsConfig = [
     {
       show: showCreditAccount,
@@ -102,26 +107,27 @@ export default function DocAccounts({
           onSubmit={form.handleSubmit(onSubmit)}
           className={"gap-y-3 grid p-3"}
         >
-          <div className="detail-grid">
+          <div className="create-grid">
             <Typography variant="subtitle2" className=" col-span-full">
-              Detalles de Contabilidad
+              Detalles de Contabilidad 
             </Typography>
             {fieldsConfig.map(({ show, name, label }) =>
               show ? (
                 <LedgerAutocompleteFormField
                   key={name}
                   allowEdit={allowEdit}
-                  control={form.control}
+                  form={form}
                   name={name}
                   label={label}
                   {...(ledgerPerm?.create && {
                     addNew: () =>
-
                       navigate(
-                        r.toRoute({ main: r.ledger, routeSufix: ["new"],
-                          q:{
-                            redirect:location.pathname + location.search
-                          }
+                        r.toRoute({
+                          main: r.ledger,
+                          routeSufix: ["new"],
+                          q: {
+                            redirect: location.pathname + location.search,
+                          },
                         })
                       ),
                   })}
