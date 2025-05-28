@@ -24,12 +24,14 @@ import { GlobalState } from "~/types/app-types";
 import { purchaseRecordDataSchema } from "~/util/data/schemas/invoicing/purchase-record-schema";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
-import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
+import {
+  InvoiceAutocompleteForm,
+  InvoiceAutocompleteFormField,
+} from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { Separator } from "@/components/ui/separator";
-import Supplier from "../home.supplier.$id/route";
-import { salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-record-schema";
 import { cn } from "@/lib/utils";
+import { party } from "~/util/party";
+import { salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-record-schema";
 type SalesRecordType = z.infer<typeof salesRecordDataSchema>;
 
 export default function SalesRecordData({
@@ -51,6 +53,7 @@ export default function SalesRecordData({
   const navigate = useNavigate();
   const r = route;
   const { roleActions } = useOutletContext<GlobalState>();
+  const formValues = form.getValues();
   return (
     <div>
       <FormLayout>
@@ -60,23 +63,19 @@ export default function SalesRecordData({
             onSubmit={form.handleSubmit(onSubmit)}
             className={cn(isNew ? "create-grid" : "detail-grid")}
           >
-            <InvoiceAutocompleteForm
-              label={t("saleInvoice")}
-              partyType={r.saleInvoice}
-              control={form.control}
-              onSelect={(e) => {
-                form.setValue("invoiceID", e.id);
-              }}
-            />
             <CustomerAutoCompleteForm
               label={t("customer")}
-              control={form.control}
+              form={form}
               roleActions={roleActions}
               allowEdit={allowEdit}
-              onSelect={(e) => {
-                form.setValue("customerID", e.id);
-                form.setValue("nameOrBusinessName", e.name);
-              }}
+              required={true}
+            />
+            <InvoiceAutocompleteFormField
+              label={t(party.saleInvoice)}
+              partyType={party.saleInvoice}
+              partyID={formValues.customer?.id || 0}
+              allowEdit={allowEdit}
+              form={form}
             />
             <Separator className=" col-span-full" />
             <CustomFormDate

@@ -13,13 +13,13 @@ import { ShouldRevalidateFunctionArgs } from "@remix-run/react";
 import { LOAD_ACTION } from "~/constant";
 import { updateStatusWithEventSchema } from "~/util/data/schemas/base/base-schema";
 import {
-  editSalesRecord,
   mapToSalesRecordData,
+  salesRecordDataSchema,
 } from "~/util/data/schemas/invoicing/sales-record-schema";
 
 type ActionData = {
   action: string;
-  editData: z.infer<typeof editSalesRecord>;
+  editData: z.infer<typeof salesRecordDataSchema>;
   updateStatus: z.infer<typeof updateStatusWithEventSchema>;
 };
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -75,7 +75,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  console.log("ID",searchParams.get("id"))
+  console.log("ID", searchParams.get("id"));
   const res = await client.GET("/sales-record/detail/{id}", {
     params: {
       path: {

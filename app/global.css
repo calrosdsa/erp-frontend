@@ -54,7 +54,7 @@
     @apply text-gray-400 hover:text-gray-700 cursor-pointer
   }
   .card {
-    @apply p-2 border rounded-xl
+    @apply p-2 border rounded-xl shadow-md
   }
   
 }

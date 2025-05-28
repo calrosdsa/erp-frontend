@@ -5565,25 +5565,6 @@ export interface components {
             name: string;
             party_type_code: string;
         };
-        EditItemPriceRequestBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            item_id: number;
-            /** Format: int32 */
-            item_quantity: number;
-            /** Format: int64 */
-            price_list_id: number;
-            /** Format: double */
-            rate: number;
-            /** Format: int64 */
-            uom_id: number;
-        };
         EditLineItemRequestBody: {
             /**
              * Format: uri
@@ -6911,7 +6892,7 @@ export interface components {
             /** Format: int64 */
             id?: number;
             item_inventory: components["schemas"]["ItemInventoryFields"];
-            item_price_lines: components["schemas"]["ItemPriceLine"][];
+            item_price_lines: components["schemas"]["ItemPriceData"][];
         };
         ItemDetailDto: {
             /** Format: date-time */
@@ -6924,6 +6905,7 @@ export interface components {
             has_serial_no: boolean | null;
             /** Format: int64 */
             id: number;
+            item_prices: components["schemas"]["ItemPriceDto"][];
             item_type: string;
             maintain_stock: boolean;
             name: string;
@@ -7022,16 +7004,10 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            action?: string;
+            fields: components["schemas"]["ItemPriceFields"];
             /** Format: int64 */
-            item_id: number;
-            /** Format: int32 */
-            item_quantity: number;
-            /** Format: int64 */
-            price_list_id: number;
-            /** Format: double */
-            rate: number;
-            /** Format: int64 */
-            uom_id: number;
+            id?: number;
         };
         ItemPriceDto: {
             code: string;
@@ -7061,16 +7037,17 @@ export interface components {
             rate: number;
             uuid: string;
         };
-        ItemPriceLine: {
-            action: string;
+        ItemPriceFields: {
+            /** Format: int64 */
+            item_id: number;
             /** Format: int32 */
             item_quantity: number;
             /** Format: int64 */
             price_list_id: number;
-            /** Format: double */
+            /** Format: int64 */
             rate: number;
             /** Format: int64 */
-            uom_id: number;
+            unit_of_measure_id: number;
         };
         ItemVariantDto: {
             attibute_abbreviation: string;
@@ -9305,6 +9282,20 @@ export interface components {
             filters: components["schemas"]["FilterOptionDto"][];
             message: string;
             result: components["schemas"]["DealDto"][];
+        };
+        ResponseDataListListItemPriceDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["ItemPriceDto"][];
         };
         ResponseDataListListLedgerDtoBody: {
             /**
@@ -20811,21 +20802,16 @@ export interface operations {
     };
     "get-item-prices": {
         parameters: {
-            query: {
-                page?: string;
-                size: string;
-                enabled?: string;
+            query?: {
+                size?: string;
                 status?: string;
-                is_group?: string;
-                query?: string;
                 orientation?: string;
                 column?: string;
-                parentId?: string;
+                currency?: string;
+                price_list_id?: string;
+                item_id?: string;
             };
-            header?: {
-                Authorization?: string;
-                "User-Session-Uuid"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -20837,7 +20823,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginationResponsePaginationResultListItemPriceDtoBody"];
+                    "application/json": components["schemas"]["ResponseDataListListItemPriceDtoBody"];
                 };
             };
             /** @description Error */
@@ -20854,13 +20840,16 @@ export interface operations {
     "edit-item-price": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditItemPriceRequestBody"];
+                "application/json": components["schemas"]["ItemPriceData"];
             };
         };
         responses: {

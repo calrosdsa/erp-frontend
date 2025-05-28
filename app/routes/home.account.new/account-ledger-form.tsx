@@ -165,7 +165,7 @@ export default function AccountLedgerForm({
           <AccordationLayout
             title="Report"
             containerClassName=" col-span-full"
-            className="create-grid"
+            className=" grid grid-cols-2 gap-3"
           >
             <SelectForm
               data={[

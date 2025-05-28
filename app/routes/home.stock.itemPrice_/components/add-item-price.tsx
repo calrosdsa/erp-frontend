@@ -22,7 +22,7 @@ import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { components } from "~/sdk";
 import { useItemDebounceFetcher } from "~/util/hooks/fetchers/useItemDebounceFetcher";
 import { useTaxDebounceFetcher } from "~/util/hooks/fetchers/useTaxDebounceFetcher";
-import { usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
+import { usePriceListDebounceFetcher } from "~/util/hooks/fetchers/use-pricelist-fetcher";
 import { action } from "../route";
 import { useCreatePriceList } from "~/routes/home.stock.priceList_/components/add-price-list";
 

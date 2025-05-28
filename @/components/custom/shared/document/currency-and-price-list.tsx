@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import FormAutocomplete from "../../select/FormAutocomplete";
 import { Control, UseFormReturn } from "react-hook-form";
 import { useCurrencyDebounceFetcher } from "~/util/hooks/fetchers/useCurrencyDebounceFetcher";
-import { PriceListAutocompleteFormField } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
+import { PriceListAutocompleteFormField } from "~/util/hooks/fetchers/use-pricelist-fetcher";
 
 export default function CurrencyAndPriceList({
   form,

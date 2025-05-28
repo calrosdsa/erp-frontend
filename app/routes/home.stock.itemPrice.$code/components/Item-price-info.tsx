@@ -23,7 +23,7 @@ import { UomAutocompleteForm } from "~/util/hooks/fetchers/useUomDebounceFetcher
 import { Typography } from "@/components/typography";
 import { Form } from "@/components/ui/form";
 import { formatAmount } from "~/util/format/formatCurrency";
-import { PriceListAutocompleteForm } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
+import { PriceListAutocompleteForm } from "~/util/hooks/fetchers/use-pricelist-fetcher";
 
 type EditData = z.infer<typeof editItemPriceSchema>;
 export default function ItemPriceInfo() {

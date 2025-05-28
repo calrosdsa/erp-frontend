@@ -72,10 +72,15 @@ export default function SalesRecordInfo() {
       saleType: salesRecord?.sale_type,
       withTaxCreditRight: salesRecord?.with_tax_credit_right,
       consolidationStatus: salesRecord?.consolidation_status,
-      customer: salesRecord?.customer,
-      customerID: salesRecord?.customer_id,
-      invoice: salesRecord?.invoice_code,
-      invoiceID: salesRecord?.invoice_id,
+      customer: {
+        id:salesRecord?.customer_id,
+        name:salesRecord?.customer,
+      },
+      invoice: {
+        id:salesRecord?.invoice_id,
+        name:salesRecord?.invoice_code
+      },
+      
     },
   });
   const allowEdit = permission?.edit || false;

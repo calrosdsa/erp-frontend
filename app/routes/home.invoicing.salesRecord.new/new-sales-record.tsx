@@ -33,10 +33,15 @@ export default function NewSalesRecord() {
   const form = useForm<z.infer<typeof salesRecordDataSchema>>({
     resolver: zodResolver(salesRecordDataSchema),
     defaultValues:{
-    customerID:payload?.partyID,
-    customer:payload?.party,
-    invoiceID:payload?.invoiceID,
-    invoice:payload?.invoiceCode,
+    customer:{
+      name:payload?.party,
+      id:payload?.partyID,
+    },
+    invoice:{
+      name:payload?.invoiceCode,
+      id:payload?.invoiceID,
+    },
+    
     invoiceDate:new Date(),
     supplement: "",
     iceAmount: 0,

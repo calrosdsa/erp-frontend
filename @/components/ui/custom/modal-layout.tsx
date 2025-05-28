@@ -60,7 +60,7 @@ export default function ModalLayout({
       <SheetContent
         onInteractOutside={(event) => event.preventDefault()}
         className={cn(
-          "w-full md:max-w-full md:w-[80%] xl:w-[80%] overflow-auto  [&>button]:hidden px-0 pb-20",
+          "w-full md:max-w-full md:w-[80%] xl:w-[80%] overflow-auto  [&>button]:hidden px-0 pb-20 ",
           className
         )}
       >
@@ -288,7 +288,7 @@ export default function ModalLayout({
             </div>
             {/* <ResponsiveSidebar navItems={navItems} /> */}
           </SheetHeader>
-          <div className="grid gap-4 py-1">
+          <div className="grid gap-4 py-1 ">
             {children}
             {/* {tab == "info" && <DealInfoTab />} */}
           </div>

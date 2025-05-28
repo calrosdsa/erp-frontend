@@ -1,6 +1,7 @@
 import { formatRFC3339 } from "date-fns";
 import { z } from "zod";
 import { components } from "~/sdk";
+import { field } from "..";
 export const salesRecordDataSchema = z.object({
   id: z.number().optional(),
   invoiceDate: z.coerce.date(), // Assuming `time.Time` is represented as a Date
@@ -27,10 +28,8 @@ export const salesRecordDataSchema = z.object({
   saleType: z.string(),
   withTaxCreditRight: z.boolean(),
   consolidationStatus: z.string(),
-  customer: z.string(),
-  customerID: z.coerce.number(), // Assumes `int64` maps to `bigint` in JavaScript/TypeScript
-  invoiceID: z.number(),
-  invoice: z.string(),
+  customer: field,
+  invoice: field,
 });
 
 export const mapToSalesRecordData = (
@@ -42,10 +41,10 @@ export const mapToSalesRecordData = (
     base_amount_for_tax_debit: data.baseAmountForTaxDebit,
     consolidation_status: data.consolidationStatus,
     control_code: data.controlCode,
-    customer_id: Number(data.customerID), // Converting BigInt to number
+    customer_id: data.customer.id, // Converting BigInt to number
     customer_nit_ci: data.customerNitCi,
     discounts_bonus_and_rebates_subject_to_vat:
-      data.discountsBonusAndRebatesSubjectToVat,
+    data.discountsBonusAndRebatesSubjectToVat,
     exports_and_exempt_operations: data.exportsAndExemptOperations,
     gift_card_amount: data.giftCardAmount,
     ice_amount: data.iceAmount,
@@ -64,6 +63,6 @@ export const mapToSalesRecordData = (
     total_sale_amount: data.totalSaleAmount,
     with_tax_credit_right: data.withTaxCreditRight,
     zero_rate_taxable_sales: data.zeroRateTaxableSales,
-    invoice_id: data.invoiceID,
+    invoice_id: data.invoice.id,
   } as components["schemas"]["SalesRecordData"];
 };

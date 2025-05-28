@@ -18,7 +18,6 @@ import { ButtonToolbar } from "~/types/actions";
 import { Entity } from "~/types/enums";
 import { party } from "~/util/party";
 import { QuotationSchema } from "~/util/data/schemas/quotation/quotation-schema";
-import { mapToItemPriceLine } from "~/util/data/schemas/stock/item-schemas";
 import { toLineItemSchema } from "~/util/data/schemas/stock/line-item-schema";
 
 export const DealViewModel = ({ appContext }: { appContext: GlobalState }) => {

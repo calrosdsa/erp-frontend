@@ -9,7 +9,6 @@ import DetailLayout from "@/components/layout/detail-layout";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import { NavItem } from "~/types";
-import CostCenterInfo from "./tab/sales-record-info";
 import {
   setUpToolbar,
   useLoadingTypeToolbar,
@@ -22,6 +21,7 @@ import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Entity } from "~/types/enums";
+import SalesRecordInfo from "./tab/sales-record-info";
 
 export default function SalesRecordDetailClient() {
   const { salesRecord, actions, activities } = useLoaderData<typeof loader>();
@@ -122,7 +122,7 @@ export default function SalesRecordDetailClient() {
       activities={activities}
       partyName={salesRecord?.invoice_code}
     >
-      {tab == "info" && <CostCenterInfo />}
+      {tab == "info" && <SalesRecordInfo />}
     </DetailLayout>
   );
 }

@@ -96,8 +96,8 @@ export default function ItemInfo({
   );
 
   return (
-    <div className="grid grid-cols-9 gap-3">
-      <div className="col-span-4">
+    <div className="grid  gap-3">
+      <div className="">
         <SmartForm
           isNew={payload.isNew || false}
           title={t("info")}
@@ -134,8 +134,8 @@ export default function ItemInfo({
           <ItemForm />
         </SmartForm>
       </div>
-      {item?.id != undefined && (
-        <div className=" col-span-5">
+      {/* {item?.id != undefined && (
+        <div className=" col-span-3">
           <ActivityFeed
             appContext={appContext}
             activities={data?.activities || []}
@@ -144,7 +144,7 @@ export default function ItemInfo({
             entityID={Entity.ITEM}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }

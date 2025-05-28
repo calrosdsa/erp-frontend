@@ -144,7 +144,7 @@ export default function FormAutocompleteField<
             <>
               <div className="flex flex-col">
                 {label && (
-                  <FormLabel className="text-xs">
+                  <FormLabel className="text-xs text-primary/60">
                     {label} {required && "*"}
                   </FormLabel>
                 )}
@@ -168,7 +168,7 @@ export default function FormAutocompleteField<
         return (
           <FormItem className="flex flex-col w-full  ">
             <Popover open={open} onOpenChange={setOpen} modal={modal}>
-              <Command className="py-[5px]">
+              <Command className="">
                 <PopoverAnchor asChild className="">
                   <CommandPrimitive.Input
                     asChild
@@ -195,9 +195,9 @@ export default function FormAutocompleteField<
                       }
                     }}
                   >
-                    <div className="flex flex-col ">
+                    <div className="flex flex-col space-y-[7px] ">
                       {label && (
-                        <FormLabel className="text-xs">
+                        <FormLabel className="text-xs text-primary/60">
                           {label} {required && "*"}
                         </FormLabel>
                       )}
@@ -276,6 +276,8 @@ export default function FormAutocompleteField<
                   }}
                   className="w-[--radix-popover-trigger-width] p-1"
                 >
+                  <div>
+  
                   <CommandList>
                     {loading && (
                       <CommandPrimitive.Loading>
@@ -299,7 +301,7 @@ export default function FormAutocompleteField<
                           >
                             {enableSelected && (
                               <Check
-                                className={cn(
+                              className={cn(
                                   "mr-2 h-4 w-4",
                                   selected === option[nameK]
                                     ? "opacity-100"
@@ -316,25 +318,25 @@ export default function FormAutocompleteField<
                       </CommandGroup>
                     ) : null}
 
-                    {addNew && (
-                      <>
-                        <Separator className="py-1 shadow-lg w-full" />
-                        <Button
-                          size={"sm"}
-                          variant={"outline"}
-                          className=" py-1"
-                          onClick={() => {
-                            addNew();
-                            setOpen(false);
-                          }}
-                        >
-                          <span>Crear Nuevo</span>
-                          <PlusIcon />
-                        </Button>
-                      </>
-                    )}
                     {/* {!loading ? <CommandEmpty>{"No data."}</CommandEmpty> : null} */}
                   </CommandList>
+
+                   {addNew && (
+                                  <div className="w-full pt-2 pb-1 flex justify-end">
+                                  <Button
+                                    size={"xs"}
+                                    variant={"outline"}
+                                    onClick={() => {
+                                      addNew();
+                                      setOpen(false);
+                                    }}
+                                  >
+                                    <span>Crear Nuevo</span>
+                                    <PlusIcon />
+                                  </Button>
+                                      </div>
+                                )}
+                          </div>
                 </PopoverContent>
               </Command>
             </Popover>

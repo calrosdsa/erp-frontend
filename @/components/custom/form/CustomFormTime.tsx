@@ -65,7 +65,7 @@ export function CustomFormTime({
             <>
               <div className="flex flex-col">
                 {label && (
-                  <FormLabel className="text-xs">
+                  <FormLabel className="text-xs text-primary/60">
                     {label} {required && "*"}
                   </FormLabel>
                 )}
@@ -82,7 +82,7 @@ export function CustomFormTime({
         }
         return (
           <FormItem className="flex flex-col">
-            <FormLabel className="text-left text-xs">
+            <FormLabel className="text-left text-xs text-primary/60">
               {label} {required && "*"}
             </FormLabel>
             <Popover>

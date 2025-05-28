@@ -24,7 +24,7 @@ import {
   useItemDebounceFetcher,
 } from "~/util/hooks/fetchers/useItemDebounceFetcher";
 import { useTaxDebounceFetcher } from "~/util/hooks/fetchers/useTaxDebounceFetcher";
-import { PriceListAutocompleteForm, usePriceListDebounceFetcher } from "~/util/hooks/fetchers/usePriceListDebounceFetcher";
+import { PriceListAutocompleteForm, usePriceListDebounceFetcher } from "~/util/hooks/fetchers/use-pricelist-fetcher";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { usePermission } from "~/util/hooks/useActions";
 import { PartyType, partyTypeToJSON } from "~/gen/common";

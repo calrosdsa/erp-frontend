@@ -5,6 +5,7 @@ import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 import { components } from "~/sdk";
 import { itemInventory } from "./item-inventory-schema";
 import { field, fieldNull } from "..";
+import { itemPriceSchema, mapToItemPriceData } from "./item-price-schema";
 
 export type ItemSchema = z.infer<typeof itemSchema>
 
@@ -23,7 +24,11 @@ export const itemSchema = z.object({
   serialNoTemplate:z.coerce.string().optional().nullable(),
   weightUom:fieldNull,
   weightPerUnit:z.coerce.number().optional().nullable(),
+
+  itemPrices:z.array(itemPriceSchema),
 })
+
+
 
 
 export const mapToItemData = (e:ItemSchema)=>{
@@ -36,7 +41,7 @@ export const mapToItemData = (e:ItemSchema)=>{
       pn: e.pn,
       unit_of_measure_id: e.uom.id || 0,
     },
-    id: e.id || 0,
+    id: e.id || 0,  
     item_inventory: {
       has_serial_no: e.hasSerialNo,
       item_id: e.id,
@@ -46,7 +51,7 @@ export const mapToItemData = (e:ItemSchema)=>{
       weight_uom_id: e.weightUom?.id,
       weight_per_unit: e.weightPerUnit,
     },
-    item_price_lines: []
+    item_price_lines: e.itemPrices.map(t=>mapToItemPriceData(t)),
   } 
   return d 
 }
@@ -87,13 +92,13 @@ export const editItemSchema = z.object({
 });
 
 
-export const mapToItemPriceLine = (d:z.infer<typeof itemPriceLine>)=>{
-  const itemPrice:components["schemas"]["ItemPriceLine"] ={
-    item_quantity: d.itemQuantity,
-    price_list_id: d.priceListID,
-    rate: d.rate,
-    uom_id: d.uomID,
-    action: "",
-  }
-  return itemPrice
-}
+// export const mapToItemPriceLine = (d:z.infer<typeof itemPriceLine>)=>{
+//   const itemPrice:components["schemas"]["ItemPriceLine"] ={
+//     item_quantity: d.itemQuantity,
+//     price_list_id: d.priceListID,
+//     rate: d.rate,
+//     uom_id: d.uomID,
+//     action: "",
+//   }
+//   return itemPrice
+// }

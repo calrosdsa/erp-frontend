@@ -119,7 +119,7 @@ export function SmartForm<T extends z.ZodType>({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className={cn(className, "card")}
+          className={cn(className, "")}
         >
           {/* {JSON.stringify(form.formState.errors)} */}
           <div className="flex justify-between items-center ">

@@ -54,7 +54,7 @@ export default function CustomFormDate({
             <>
               <div className="flex flex-col">
                 {label && (
-                  <FormLabel className="text-xs">
+                  <FormLabel className="text-xs text-primary/60">
                     {label} {required && "*"}
                   </FormLabel>
                 )}
@@ -75,7 +75,7 @@ export default function CustomFormDate({
         return (
           <FormItem className="flex flex-col">
             {label && (
-              <FormLabel className="text-left text-xs">
+              <FormLabel className="text-left text-xs text-primary/60">
                 {label} {required && "*"}
               </FormLabel>
             )}

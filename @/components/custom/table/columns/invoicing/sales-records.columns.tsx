@@ -28,7 +28,7 @@ export const salesRecordColumn = ({}: {}): ColumnDef<
                 routeSufix: [name],
                 q: {
                   tab: "info",
-                  id:rowData.uuid
+                  id:rowData.id.toString()
                 },
               })
             }
@@ -37,7 +37,7 @@ export const salesRecordColumn = ({}: {}): ColumnDef<
       },
     },
     {
-      accessorKey: "customer_name",
+      accessorKey: "customer",
       header: "Nombre del cliente",
     },
     {

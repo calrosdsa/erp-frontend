@@ -1,22 +1,18 @@
 import {
-  useFetcher,
   useLoaderData,
   useNavigate,
   useOutletContext,
 } from "@remix-run/react";
 import { loader } from "./route";
 import { DataTable } from "@/components/custom/table/CustomTable";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { GlobalState } from "~/types/app-types";
 import { usePermission } from "~/util/hooks/useActions";
 import { route } from "~/util/route";
 import { salesRecordColumn } from "@/components/custom/table/columns/invoicing/sales-records.columns";
-import { ButtonToolbar } from "~/types/actions";
 import { useExporter } from "~/util/hooks/ui/useExporter";
 import DataLayout from "@/components/layout/data-layout";
 import { useTranslation } from "react-i18next";
 import { InvoiceSearch } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
-import { SupplierSearch } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import { CustomerSearch } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { ListLayout } from "@/components/ui/custom/list-layout";
 import { party } from "~/util/party";
@@ -58,6 +54,7 @@ export default function SalesRecordClient() {
           },
         })}
       >
+        {/* {JSON.stringify(paginationResult?.results)} */}
         <DataLayout
           filterOptions={paginationResult?.filters}
           orderOptions={[
