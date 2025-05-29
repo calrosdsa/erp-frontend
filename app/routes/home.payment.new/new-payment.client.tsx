@@ -117,7 +117,9 @@ export default function PaymentCreateClient() {
             q: {
               tab: "info",
             },
-          })
+          }),{
+            replace:true,
+          }
         );
       },
     },

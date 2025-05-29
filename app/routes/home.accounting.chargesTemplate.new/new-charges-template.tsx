@@ -3,7 +3,6 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import TaxAndChargesLines from "@/components/custom/shared/accounting/tax/tax-and-charge-lines";
 import { Card } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
 import { useFetcher, useNavigate, useOutletContext } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { action } from "./route";
@@ -22,6 +21,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { Input } from "@/components/ui/input";
 import { GlobalState } from "~/types/app-types";
 import { DEFAULT_CURRENCY } from "~/constant";
+import CreateLayout from "@/components/layout/create-layout";
 
 export default function NewChargesTemplateClient() {
   const fetcher = useFetcher<typeof action>();
@@ -85,9 +85,12 @@ export default function NewChargesTemplateClient() {
               routeSufix: [fetcher.data.chargesTemplate.name],
               q: {
                 tab: "info",
-                id: fetcher.data.chargesTemplate.uuid,
+                id: fetcher.data.chargesTemplate.id,
               },
-            })
+            }),
+            {
+              replace: true,
+            }
           );
         }
       },
@@ -101,39 +104,41 @@ export default function NewChargesTemplateClient() {
 
   return (
     <div>
-      <Card>
-        <FormLayout>
-          <Form {...form}>
-            <fetcher.Form
-              method="post"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className={"gap-y-3 grid p-3"}
-            >
-              <div className="create-grid">
-                <CustomFormField
-                  label={t("form.name")}
-                  control={form.control}
-                  name="name"
-                  children={(field) => {
-                    return <Input {...field} />;
-                  }}
-                />
+      <CreateLayout>
+        <Card>
+          <FormLayout>
+            <Form {...form}>
+              <fetcher.Form
+                method="post"
+                onSubmit={form.handleSubmit(onSubmit)}
+                className={"gap-y-3 grid p-3"}
+              >
+                <div className="create-grid">
+                  <CustomFormField
+                    label={t("form.name")}
+                    control={form.control}
+                    name="name"
+                    children={(field) => {
+                      return <Input {...field} />;
+                    }}
+                  />
 
-                <TaxAndChargesLines
-                  onChange={(e) => {
-                    form.setValue("taxLines", e);
-                    form.trigger("taxLines");
-                  }}
-                  currency={companyDefaults?.currency || DEFAULT_CURRENCY}
-                  showTotal={false}
-                />
-              </div>
+                  <TaxAndChargesLines
+                    onChange={(e) => {
+                      form.setValue("taxLines", e);
+                      form.trigger("taxLines");
+                    }}
+                    currency={companyDefaults?.currency || DEFAULT_CURRENCY}
+                    showTotal={false}
+                  />
+                </div>
 
-              <input ref={inputRef} type="submit" className="hidden" />
-            </fetcher.Form>
-          </Form>
-        </FormLayout>
-      </Card>
+                <input ref={inputRef} type="submit" className="hidden" />
+              </fetcher.Form>
+            </Form>
+          </FormLayout>
+        </Card>
+      </CreateLayout>
     </div>
   );
 }

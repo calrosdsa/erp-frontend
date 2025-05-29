@@ -19,7 +19,7 @@ import { party } from "~/util/party";
 import { ButtonToolbar } from "~/types/actions";
 import { useExporter } from "~/util/hooks/ui/useExporter";
 import { CustomerSearch } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-import { SupplierSearch } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
+import { SupplierSearch } from "~/util/hooks/fetchers/use-supplier-fetcher";
 import { ListLayout } from "@/components/ui/custom/list-layout";
 
 export default function PurchaseRecordClient() {

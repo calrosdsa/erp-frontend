@@ -70,7 +70,7 @@ export default function GeneralLedgerHeader() {
         />
 
         <AutocompleteSearch
-          data={ledgerFetcher.data?.accounts || []}
+          data={ledgerFetcher.data?.results || []}
           onValueChange={onLedgerChange}
           nameK={"name"}
           valueK={"id"}

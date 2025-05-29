@@ -77,8 +77,8 @@ export default function StockLedgerHeader() {
           nameK={"name"}
           valueK={"id"}
           placeholder={t("item")}
-          queryName="itemName"
-          queryValue="item"
+          queryName="item_name"
+          queryValue="item_id"
           onSelect={() => {}}
         />
 
@@ -88,8 +88,8 @@ export default function StockLedgerHeader() {
           nameK={"name"}
           valueK={"id"}
           placeholder={t("warehouse")}
-          queryName="warehouseName"
-          queryValue="warehouse"
+          queryName="warehouse_name"
+          queryValue="warehouse_id"
           onSelect={() => {}}
         />
       </div>

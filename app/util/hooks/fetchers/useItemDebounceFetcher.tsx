@@ -53,7 +53,7 @@ export const useItemDebounceFetcher = () =>{
             method:"POST",
             debounceTimeout:DEFAULT_DEBOUNCE_TIME,
             encType:"application/json",
-            action:r.items
+            action:r.to(r.item)
         })
     }
     

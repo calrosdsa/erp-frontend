@@ -54,7 +54,7 @@ export default function ModuleDetailClient() {
   ];
 
   const onChangeState = (e: EventState) => {
-    console.log("ON CHANGE STATE",e)
+    console.log("ON CHANGE STATE", e);
     const body: UpdateStatusWithEventType = {
       current_state: module?.status || "",
       party_id: module?.id.toString() || "",
@@ -106,6 +106,7 @@ export default function ModuleDetailClient() {
       entityID={Entity.MODULE}
       activities={activities}
       partyID={module?.id}
+      fullWidth={true}
       navItems={navItems}
     >
       {tab == "info" && <ModuleInfo />}

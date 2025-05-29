@@ -18,7 +18,7 @@ export const orderDataSchema = z.object({
   postingDate: z.date(),
   postingTime: z.string(),
   tz: z.string(),
-  deliveryDate: z.date().optional(),
+  deliveryDate: z.date().optional().nullable(),
   currency: z.string(),
 
   project: fieldNull,
@@ -124,3 +124,5 @@ export const mapToOrderData = (
     },
   };
 };
+
+

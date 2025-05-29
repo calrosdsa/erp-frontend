@@ -48,9 +48,8 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { FormulaEngine } from "../util/formula";
 import {
-  SupplierAutoCompleteForm,
   useSupplierDebounceFetcher,
-} from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
+} from "~/util/hooks/fetchers/use-supplier-fetcher";
 import { Control } from "react-hook-form";
 import PalettePicker from "./palette-picker";
 import { components } from "~/sdk";

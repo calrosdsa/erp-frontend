@@ -28,7 +28,7 @@ export const chargesTemplateColumns = ({}: {}): ColumnDef<
                 routeSufix: [name],
                 q: {
                   tab: "info",
-                  id:rowData.uuid
+                  id:rowData.id
                 },
               })
             }

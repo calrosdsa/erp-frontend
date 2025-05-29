@@ -54,8 +54,8 @@ export const CostCenterSearch = ({ placeholder }: { placeholder: string }) => {
       nameK={"name"}
       valueK={"id"}
       placeholder={placeholder}
-      queryName="costCenterName"
-      queryValue="costCenter"
+      queryName="cost_center_name"
+      queryValue="cost_center_id"
       onSelect={() => {}}
     />
   );

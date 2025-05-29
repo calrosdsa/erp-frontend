@@ -20,6 +20,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         from_date: fromDate,
         to_date: toDate,
         party: searchParams.get("party") || "",
+        project_id:searchParams.get("project_id"),
+        cost_center_id:searchParams.get("cost_center_id"),
       },
     },
   });

@@ -19,8 +19,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       query: {
         from_date: fromDate,
         to_date: toDate, 
-        item:searchParams.get("item") || "",
-        warehouse:searchParams.get("warehouse") || "",
+        item_id:searchParams.get("item_id") || "",
+        warehouse_id:searchParams.get("warehouse_id") || "",
       },
     },
   });

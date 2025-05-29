@@ -41,6 +41,8 @@ import { GlobalState } from "~/types/app-types";
 import AccountingDimensionForm from "@/components/custom/shared/accounting/accounting-dimension-form";
 import FormLayout from "@/components/custom/form/FormLayout";
 import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
+import { useCustomerStore } from "~/routes/home.customer.$id/customer-store";
 
 type EditData = z.infer<typeof pricingDataSchema>;
 type LineItemType = z.infer<typeof pricingLineItemDataSchema>;
@@ -98,6 +100,7 @@ export default function PricingData({
 }) {
   const { t } = useTranslation("common");
   const { roleActions } = useOutletContext<GlobalState>();
+  const  {openModal} =  useModalNav()
   const {
     fields: lineItems,
     append,
@@ -127,6 +130,9 @@ export default function PricingData({
       removeCharge(rowIndex);
     },
   });
+
+  const customerStore = useCustomerStore()
+  
 
   const chargesObject = useMemo(() => {
     console.log("RE RENDER ...");
@@ -241,6 +247,16 @@ export default function PricingData({
     return total;
   }, [form.getValues()]);
 
+
+  useEffect(()=>{
+    if(customerStore.newCustomer){
+      form.setValue("customer",{
+        id:customerStore.newCustomer.id,
+        name:customerStore.newCustomer.name,
+      })
+    }
+  },[customerStore.newCustomer])
+
   useEffect(() => {
     console.log("UPDATE LINES ....");
     updateLines();
@@ -350,10 +366,14 @@ export default function PricingData({
                 <CustomerAutoCompleteForm
                   label={t("customer")}
                   form={form}
+                  openModal={openModal}
                   roleActions={roleActions}
                   name="customer"
                 />
-                <AccountingDimensionForm form={form} />
+                <AccountingDimensionForm 
+                form={form}
+                openModal={openModal}
+                 />
               </div>
             </div>
 

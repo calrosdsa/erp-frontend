@@ -20,8 +20,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         from_date: fromDate,
         to_date: toDate, 
         voucher_no:searchParams.get("voucherNo") || "",
-        item:searchParams.get("item") || "",
-        warehouse:searchParams.get("warehouse") || "",
+        item_id:searchParams.get("item_id") || "",
+        warehouse_id:searchParams.get("warehouse_id") || "",
 
       },
     },

@@ -69,7 +69,8 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
     return defer({
         chargesTemplate:res.data?.result.entity,
         taxLines:taxLinesRes,
-        actions:res.data?.actions
+        actions:res.data?.actions,
+        activities:res.data?.result.activities,
     })
 }
 

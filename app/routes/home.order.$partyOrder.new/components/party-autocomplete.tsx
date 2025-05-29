@@ -18,98 +18,15 @@ import {
   SupplierAutoCompleteForm,
   SupplierSearch,
   useSupplierDebounceFetcher,
-} from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
+} from "~/util/hooks/fetchers/use-supplier-fetcher";
 import { usePermission } from "~/util/hooks/useActions";
 import { party } from "~/util/party";
 import { useSearchParams } from "@remix-run/react";
 import { route } from "~/util/route";
 import { CREATE, DEFAULT_ID } from "~/constant";
 import { OpenModalFunc } from "~/types";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 
-export default function PartyAutocomplete({
-  party,
-  form,
-  roleActions,
-  allowEdit,
-}: {
-  party: string;
-  form: UseFormReturn<any>;
-  allowEdit?: boolean;
-  roleActions: components["schemas"]["RoleActionDto"][];
-}) {
-  const { t } = useTranslation("common");
-  const [supplierDebounceFetcher, onSupplierChange] =
-    useSupplierDebounceFetcher();
-  const [customerFetcher, onCustomerChange] = useCustomerDebounceFetcher();
-  const [customerPermission] = usePermission({
-    actions: customerFetcher.data?.actions,
-    roleActions: roleActions,
-  });
-  const createCustomer = useCreateCustomer();
-  const [supplierPermission] = usePermission({
-    actions: supplierDebounceFetcher.data?.actions,
-    roleActions: roleActions,
-  });
-  const createSupplier = useCreateSupplier();
-
-  return (
-    <>
-      {(party == partyTypeToJSON(PartyType.purchaseOrder) ||
-        party == partyTypeToJSON(PartyType.purchaseInvoice) ||
-        party == partyTypeToJSON(PartyType.purchaseReceipt) ||
-        party == partyTypeToJSON(PartyType.supplierQuotation)) && (
-        <FormAutocomplete
-          required={true}
-          data={supplierDebounceFetcher.data?.suppliers || []}
-          form={form}
-          name="partyName"
-          nameK={"name"}
-          allowEdit={allowEdit}
-          onValueChange={onSupplierChange}
-          label={t("supplier")}
-          onSelect={(v) => {
-            // form.setValue("partyUuid", v.uuid);
-            form.setValue("partyID", v.id);
-            // form.setValue("partyType", partyTypeToJSON(PartyType.supplier));
-            form.trigger("partyID");
-          }}
-          {...(supplierPermission?.create && {
-            addNew: () => {
-              createSupplier.openDialog({});
-            },
-          })}
-        />
-      )}
-
-      {(party == partyTypeToJSON(PartyType.saleOrder) ||
-        party == partyTypeToJSON(PartyType.saleInvoice) ||
-        party == partyTypeToJSON(PartyType.deliveryNote) ||
-        party == partyTypeToJSON(PartyType.salesQuotation)) && (
-        <FormAutocomplete
-          required={true}
-          data={customerFetcher.data?.customers || []}
-          form={form}
-          name="partyName"
-          nameK={"name"}
-          onValueChange={onCustomerChange}
-          label={t("customer")}
-          allowEdit={allowEdit}
-          onSelect={(v) => {
-            // form.setValue("partyUuid", v.uuid);
-            form.setValue("partyID", v.id);
-            // form.setValue("partyType", partyTypeToJSON(PartyType.customer));
-            form.trigger("partyID");
-          }}
-          {...(customerPermission?.create && {
-            addNew: () => {
-              createCustomer.openDialog({});
-            },
-          })}
-        />
-      )}
-    </>
-  );
-}
 
 export const PartyAutocompleteField = ({
   partyType,
@@ -141,11 +58,7 @@ export const PartyAutocompleteField = ({
             name="party"
             allowEdit={allowEdit}
             label={t("supplier")}
-            openModal={() => {
-              openModal(route.supplier, DEFAULT_ID, {
-                action: CREATE,
-              });
-            }}
+            openModal={openModal}
             roleActions={roleActions}
             // navigate={()=>}
             {...(formValues.party?.id && {
@@ -168,11 +81,7 @@ export const PartyAutocompleteField = ({
           name="party"
           label={t("customer")}
           allowEdit={allowEdit}
-          openModal={() => {
-            openModal(route.supplier, DEFAULT_ID, {
-              action: CREATE,
-            });
-          }}
+          openModal={openModal}
           roleActions={roleActions}
           {...(formValues.party?.id && {
             navigate: () => {

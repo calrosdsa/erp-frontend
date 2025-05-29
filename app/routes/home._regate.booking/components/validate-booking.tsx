@@ -37,12 +37,9 @@ import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebou
 import { Typography } from "@/components/typography";
 import { EventAutoCompleteForm } from "~/util/hooks/fetchers/regate/useEventDebounceFetcher";
 import { setUpModalPayload } from "@/components/ui/custom/modal-layout";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 
-export const ValidateBooking = ({
-  keyPayload,
-}:{
-  keyPayload:string
-}) => {
+export const ValidateBooking = ({ keyPayload }: { keyPayload: string }) => {
   const fetcher = useFetcher<typeof action>({ key: "booking-data" });
 
   const form = useForm<z.infer<typeof validateBookingSchema>>({
@@ -60,7 +57,7 @@ export const ValidateBooking = ({
   const { t } = useTranslation("common");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const { openModal } = useModalNav();
   const setParams = (params: Record<string, any>) => {
     Object.entries(params).forEach(([key, value]) => {
       if (value) {
@@ -104,14 +101,18 @@ export const ValidateBooking = ({
     [fetcher.data]
   );
 
-  setUpModalPayload(keyPayload,() => {
-    return {
-      titleToolbar: "Crear Nueva Reserva",
-      onSave: () => {
-        inputRef.current?.click();
-      },
-    };
-  }, []);
+  setUpModalPayload(
+    keyPayload,
+    () => {
+      return {
+        titleToolbar: "Crear Nueva Reserva",
+        onSave: () => {
+          inputRef.current?.click();
+        },
+      };
+    },
+    []
+  );
 
   return (
     <FormLayout>
@@ -141,12 +142,7 @@ export const ValidateBooking = ({
               label={t("_customer.base")}
               roleActions={globalState?.roleActions || []}
               form={form}
-              openModal={() => {
-                setParams({
-                  [route.customer]: DEFAULT_ID,
-                  action: CREATE,
-                });
-              }}
+              openModal={openModal}
             />
 
             <Typography variant="subtitle2" className="col-span-full">

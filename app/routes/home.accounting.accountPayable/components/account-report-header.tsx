@@ -6,15 +6,17 @@ import { useSearchParams } from "@remix-run/react";
 import { format, parse } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
+import { CostCenterSearch } from "~/util/hooks/fetchers/accounting/use-cost-center-fetcher";
+import { ProjectSearch } from "~/util/hooks/fetchers/accounting/use-project-fetcher";
 import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fetcher";
 import { usePartyDebounceFetcher } from "~/util/hooks/fetchers/usePartyDebounceFetcher";
 
-export default function AccountPayableHeader() {
+export default function AccountReportHeader({partyType}:{
+  partyType:string
+}) {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
-  const [ledgerFetcher, onLedgerChange] = useAccountLedgerFetcher({
-    isGroup: false,
-  });
+
   const defaultValue = format(new Date(), "yyyy-MM-dd");
   const fromDate = parse(
     searchParams.get("fromDate") || defaultValue,
@@ -27,13 +29,10 @@ export default function AccountPayableHeader() {
     new Date()
   );
 
-  const parties: SelectItem[] = [
-    { name: t("supplier"), value: partyTypeToJSON(PartyType.supplier) },
-    { name: t("customer"), value: partyTypeToJSON(PartyType.customer) },
-  ];
+
 
   const [partyFetcher, onPartyChange] = usePartyDebounceFetcher({
-    partyType: partyTypeToJSON(PartyType.supplier),
+    partyType: partyType,
   });
 
   return (
@@ -69,9 +68,12 @@ export default function AccountPayableHeader() {
           queryName="partyName"
           queryValue="party"
           onSelect={(v) => {
-            console.log("SELECTED ITEMS",v)
+            console.log("SELECTED ITEMS", v);
           }}
         />
+
+        <ProjectSearch placeholder={t("project")} />
+        <CostCenterSearch placeholder={t("costCenter")} />
       </div>
     </div>
   );

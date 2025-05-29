@@ -36,6 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   let customer: components["schemas"]["CustomerDto"] | undefined = undefined;
+  console.log("CUSTOMER DATA",data.customerData)
   switch (data.action) {
     case "update-status": {
       const res = await client.PUT("/customer/update-status", {
@@ -46,6 +47,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
     case "create-customer": {
+
       const res = await client.POST("/customer", {
         body: mapToCustomerData(data.customerData),
       });

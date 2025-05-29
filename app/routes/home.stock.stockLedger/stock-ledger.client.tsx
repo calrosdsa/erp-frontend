@@ -10,12 +10,12 @@ import { route } from "~/util/route";
 import { stockLedgerColumns } from "@/components/custom/table/columns/stock/stock-ledger-columns";
 import StockLedgerHeader from "./components/stock-ledger-header";
 import { ResizableVirtualizedTable } from "@/components/custom/table/ResizableTable";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 
 export default function StockLedgerClient() {
   const { stockLedger } = useLoaderData<typeof loader>();
   const {t} = useTranslation("common")
-  const r = route
-  const navigate = useNavigate()
+  const {openModal} = useModalNav()
   setUpToolbar(()=>{
     return {
     }
@@ -31,7 +31,9 @@ export default function StockLedgerClient() {
         <CardContent className="px-2 py-3">
           <ResizableVirtualizedTable
             data={stockLedger || []}
-            columns={stockLedgerColumns({})}
+            columns={stockLedgerColumns({
+              openModal:openModal,
+            })}
           />
         </CardContent>
       </Card>

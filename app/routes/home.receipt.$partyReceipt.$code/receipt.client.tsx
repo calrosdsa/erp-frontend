@@ -166,7 +166,7 @@ export default function ReceiptDetailClient() {
     });
 
     return {
-      titleToolbar: `${t("_receipt.base")}(${receipt?.code})`,
+      titleToolbar: `${t(partyReceipt)}(${receipt?.code})`,
       status: stateFromJSON(receipt?.status),
       view: view,
       onChangeState: (e) => {

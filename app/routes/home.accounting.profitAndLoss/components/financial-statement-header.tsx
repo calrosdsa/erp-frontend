@@ -5,7 +5,12 @@ import CustomSelect from "@/components/custom/select/custom-select";
 import { useSearchParams } from "@remix-run/react";
 import { format, parse } from "date-fns";
 import { useTranslation } from "react-i18next";
-import { PartyType, partyTypeToJSON, TimeUnit, timeUnitToJSON } from "~/gen/common";
+import {
+  PartyType,
+  partyTypeToJSON,
+  TimeUnit,
+  timeUnitToJSON,
+} from "~/gen/common";
 import { CostCenterSearch } from "~/util/hooks/fetchers/accounting/use-cost-center-fetcher";
 import { ProjectSearch } from "~/util/hooks/fetchers/accounting/use-project-fetcher";
 import { useAccountLedgerFetcher } from "~/util/hooks/fetchers/use-account-ledger-fetcher";
@@ -56,10 +61,12 @@ export default function FinancialStatementHeader() {
           }}
           placeholder={t("form.toDate")}
         />
-          <CustomSelect
+        <CustomSelect
           data={periodicity}
           keyName="name"
-          defaultValue={searchParams.get("timeUnit") || timeUnitToJSON(TimeUnit.month)}
+          defaultValue={
+            searchParams.get("timeUnit") || timeUnitToJSON(TimeUnit.month)
+          }
           placeholder={t("Periodicidad")}
           keyValue="value"
           onValueChange={(e) => {

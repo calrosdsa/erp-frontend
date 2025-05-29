@@ -33,8 +33,8 @@ export const ProjectSearch = ({ placeholder }: { placeholder: string }) => {
       nameK={"name"}
       valueK={"id"}
       placeholder={placeholder}
-      queryName="projectName"
-      queryValue="project"
+      queryName="project_name"
+      queryValue="project_id"
       onSelect={() => {}}
     />
   );

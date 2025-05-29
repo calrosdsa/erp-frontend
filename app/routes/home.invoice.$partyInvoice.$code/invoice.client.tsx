@@ -240,7 +240,6 @@ export default function InvoiceDetailClient() {
               main: r.stockLedger,
               q: {
                 fromDate: format(invoice?.posting_date || "", "yyyy-MM-dd"),
-                toDate: format(invoice?.posting_date || "", "yyyy-MM-dd"),
                 voucherNo: invoice?.code,
               },
             })

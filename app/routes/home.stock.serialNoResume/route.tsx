@@ -21,7 +21,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         voucher_code: searchParams.get("voucherNo") || undefined,
         serial_no: searchParams.get("serialNo") || undefined,
         batch_bundle_no: searchParams.get("batchBundleNo") || undefined,
-        item_id:searchParams.get("item") || undefined,
+        item_id:searchParams.get("item_id") || undefined,
       },
     },
   });

@@ -50,6 +50,7 @@ import { setUpModalPayload } from "@/components/ui/custom/modal-layout";
 import { useCustomerStore } from "~/routes/home.customer.$id/customer-store";
 import { toast } from "sonner";
 import { useEventStore } from "~/routes/home._regate.event.$id/event-store";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 
 export default function CreateBookings({
   data,
@@ -98,6 +99,7 @@ export default function CreateBookings({
   const { resetPayload } = useNewBooking();
   const eventStore = useEventStore();
   const customerStore = useCustomerStore();
+  const { openModal } = useModalNav();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const onSubmit = (values: z.infer<typeof createBookingsSchema>) => {
@@ -166,7 +168,7 @@ export default function CreateBookings({
 
   useEffect(() => {
     if (eventStore.newEvent) {
-      console.log("NEW EVENT ....",eventStore.newEvent)
+      console.log("NEW EVENT ....", eventStore.newEvent);
       form.setValue("event", {
         id: eventStore.newEvent.id,
         name: eventStore.newEvent.name,
@@ -196,7 +198,7 @@ export default function CreateBookings({
         </Button>
       </div>
       <Form {...form}>
-        {JSON.stringify(form.getValues().event)}
+        {/* {JSON.stringify(form.getValues().event)} */}
         <fetcher.Form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="create-grid">
             <CustomerAutoCompleteForm
@@ -205,12 +207,7 @@ export default function CreateBookings({
               required={true}
               modal={true}
               form={form}
-              openModal={() => {
-                setParams({
-                  [route.customer]: DEFAULT_ID,
-                  action: CREATE,
-                });
-              }}
+              openModal={openModal}
             />
 
             <CustomFormField

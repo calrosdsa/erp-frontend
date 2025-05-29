@@ -23,7 +23,7 @@ export default function CustomerForm({
   const { t } = useTranslation("common");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 card">
       <SmartField name="name" label={t("form.name")} required={true} />
       <SmartField
         name="customerType"

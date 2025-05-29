@@ -133,7 +133,7 @@ export default function OrderData({
             }}
             allowEdit={allowEdit}
             allowCreate={allowCreate}
-            currency={formValues.currency}
+           currency={formValues.currency}
             lineType={itemLineTypeToJSON(ItemLineType.ITEM_LINE_ORDER)}
             docPartyType={partyOrder}
             priceListID={formValues.priceList?.id || undefined}

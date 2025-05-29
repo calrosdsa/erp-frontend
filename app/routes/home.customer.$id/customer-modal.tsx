@@ -153,7 +153,6 @@ export default function CustomerModal({
           navigate(
             r.toRoute({
               main: r.generalLedger,
-              routePrefix: [r.accountingM],
               q: {
                 fromDate: format(startOfMonth(new Date()) || "", "yyyy-MM-dd"),
                 toDate: format(endOfMonth(new Date()) || "", "yyyy-MM-dd"),

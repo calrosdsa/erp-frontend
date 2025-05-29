@@ -1,7 +1,7 @@
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { Control } from "react-hook-form";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
+import { CREATE, DEFAULT_DEBOUNCE_TIME, DEFAULT_ID } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { useCreateCustomer } from "~/routes/home.customer_/components/create-customer";
 import { components } from "~/sdk";
@@ -15,9 +15,11 @@ import {
   SmartAutocomplete,
   SmartAutocompleteProps,
 } from "@/components/form/smart-autocomplete";
+import { OpenModalFunc } from "~/types";
+import { AutoCompleteProps } from "@/components/custom/select/autocomplete";
 
 interface CustomerSmartAutocomplete
-  extends Partial<SmartAutocompleteProps<Customer, keyof Customer>> {}
+  extends Partial<AutoCompleteProps<Customer, keyof Customer>> {}
 export const CustomerSmartAutocomplete = ({
   ...props
 }: CustomerSmartAutocomplete) => {
@@ -37,9 +39,9 @@ export const CustomerSmartAutocomplete = ({
 
 type Customer = components["schemas"]["CustomerDto"];
 interface CustomerFormProps
-  extends Partial<AutocompleteFormProps<Customer, keyof Customer>> {
+  extends Partial<AutoCompleteProps<Customer, keyof Customer>> {
   roleActions?: components["schemas"]["RoleActionDto"][];
-  openModal?: () => void;
+  openModal?:OpenModalFunc;
 }
 
 export const CustomerAutoCompleteForm = ({
@@ -63,7 +65,9 @@ export const CustomerAutoCompleteForm = ({
       nameK="name"
       {...(permission.create && {
         addNew: () => {
-          props.openModal?.();
+          props.openModal?.(route.customer,DEFAULT_ID,{
+            "action":CREATE
+          });
         },
       })}
     />

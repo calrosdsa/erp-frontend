@@ -62,10 +62,7 @@ export default function CustomerInfo({
       {
         method: "POST",
         encType: "application/json",
-        action: route.toRoute({
-          main: route.customer,
-          routeSufix: [customer?.id.toString() || ""],
-        }),
+        action: route.toRouteDetail(route.customer,customer?.id.toString()),
       }
     );
     editPayload(key, {

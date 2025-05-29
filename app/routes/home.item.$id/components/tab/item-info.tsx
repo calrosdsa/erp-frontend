@@ -107,7 +107,7 @@ export default function ItemInfo({
           defaultValues={{
             id: item?.id,
             name: item?.name,
-            pn: item?.pn,
+            code: item?.pn,
             group: {
               id: item?.group_id,
               name: item?.group_name,

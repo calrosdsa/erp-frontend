@@ -51,6 +51,7 @@ export const toTaxAndChargeLineSchema = (
     taxRate: line.tax_rate,
     accountHeadName: line.account_head,
     accountHead: line.account_head_id,
+    
     amount: formatAmount(Number(line.amount)),
     isDeducted: line.is_deducted,
   };

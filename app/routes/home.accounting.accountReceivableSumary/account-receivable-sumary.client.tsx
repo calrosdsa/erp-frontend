@@ -5,15 +5,15 @@ import { DataTable } from "@/components/custom/table/CustomTable";
 import { components } from "~/sdk";
 import { DEFAULT_CURRENCY } from "~/constant";
 import { useMemo } from "react";
-import AccountPayableHeader from "./components/account-receivable-header";
-import { accountPayableSumaryColumns } from "@/components/custom/table/columns/accounting/account-payable-sumary-columns";
 import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
 import { ButtonToolbar } from "~/types/actions";
 import { useTranslation } from "react-i18next";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { route } from "~/util/route";
-import ReceivableSumaryHeader from "./components/account-receivable-header";
 import { accountReceivableSumaryColumns } from "@/components/custom/table/columns/accounting/account-receivable-sumary-columns";
+import AccountReportHeader from "../home.accounting.accountPayable/components/account-report-header";
+import { party } from "~/util/party";
+import { ListLayout } from "@/components/ui/custom/list-layout";
 
 interface LedgerData {
   Name: string;
@@ -21,21 +21,28 @@ interface LedgerData {
 
 export default function AccountReceivableSumaryClient() {
   const { accountReceivableSumary } = useLoaderData<typeof loader>();
-  const {t} = useTranslation("common")
-  const r = route
-  const navigate = useNavigate()
-  const total =  useMemo(()=>{
-    const totalInvoiceAmount = accountReceivableSumary?.reduce((prev,acc)=>prev + acc.total_invoiced_amount,0)
-    const totalPaidAmount = accountReceivableSumary?.reduce((prev,acc)=>prev + acc.total_paid_amount,0)
-    const totalOutstanding = Number(totalPaidAmount)-Number(totalInvoiceAmount)
+  const { t } = useTranslation("common");
+  const r = route;
+  const navigate = useNavigate();
+  const total = useMemo(() => {
+    const totalInvoiceAmount = accountReceivableSumary?.reduce(
+      (prev, acc) => prev + acc.total_invoiced_amount,
+      0
+    );
+    const totalPaidAmount = accountReceivableSumary?.reduce(
+      (prev, acc) => prev + acc.total_paid_amount,
+      0
+    );
+    const totalOutstanding =
+      Number(totalPaidAmount) - Number(totalInvoiceAmount);
     return {
       totalInvoiceAmount,
       totalPaidAmount,
       totalOutstanding,
-    }
-  },[accountReceivableSumary])
+    };
+  }, [accountReceivableSumary]);
 
-  setUpToolbar(()=>{
+  setUpToolbar(() => {
     let view: ButtonToolbar[] = [];
     view.push({
       label: t("accountReceivable"),
@@ -53,33 +60,36 @@ export default function AccountReceivableSumaryClient() {
       },
     });
     return {
-      view:view,
-    }
-  },[])
-  
+      view: view,
+    };
+  }, []);
 
   return (
     <div>
-      <Card>
-        <CardHeader>
-          <ReceivableSumaryHeader />
-        </CardHeader>
-        <CardContent className="px-2 py-3">
-          <DataTable
-            data={[
-              ...(accountReceivableSumary || []),
-              {
-                total_paid_amount: total.totalPaidAmount,
-                total_invoiced_amount: total.totalInvoiceAmount,
-                currency: (accountReceivableSumary != undefined && accountReceivableSumary.length > 0)
-                  ? accountReceivableSumary[0]?.currency
-                  : DEFAULT_CURRENCY,
-              } as components["schemas"]["SumaryEntryDto"],
-            ]}
-            columns={accountReceivableSumaryColumns({})}
-          />
-        </CardContent>
-      </Card>
+      <ListLayout title="Resumen de Cuentas por Cobrar">
+        <Card>
+          <CardHeader>
+            <AccountReportHeader partyType={party.customer} />
+          </CardHeader>
+          <CardContent className="px-2 py-3">
+            <DataTable
+              data={[
+                ...(accountReceivableSumary || []),
+                {
+                  total_paid_amount: total.totalPaidAmount,
+                  total_invoiced_amount: total.totalInvoiceAmount,
+                  currency:
+                    accountReceivableSumary != undefined &&
+                    accountReceivableSumary.length > 0
+                      ? accountReceivableSumary[0]?.currency
+                      : DEFAULT_CURRENCY,
+                } as components["schemas"]["SumaryEntryDto"],
+              ]}
+              columns={accountReceivableSumaryColumns({})}
+            />
+          </CardContent>
+        </Card>
+      </ListLayout>
     </div>
   );
 }

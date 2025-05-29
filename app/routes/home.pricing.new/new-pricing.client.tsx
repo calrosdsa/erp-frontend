@@ -1,19 +1,18 @@
 "use client";
 
-import React, {
-  useRef,
-  FormEvent,
-} from "react";
+import React, { useRef, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-
 import { action } from "./route";
 import { route } from "~/util/route";
-import { setUpToolbar } from "~/util/hooks/ui/useSetUpToolbar";
+import {
+  setUpToolbar,
+  useLoadingTypeToolbar,
+} from "~/util/hooks/ui/useSetUpToolbar";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import {
   pricingChargeDataSchema,
@@ -75,6 +74,14 @@ export default function NewPricingClient() {
       onSave: () => inputRef.current?.click(),
     }),
     [t]
+  );
+
+  useLoadingTypeToolbar(
+    {
+      loading: fetcher.state == "submitting",
+      loadingType: "SAVE",
+    },
+    [fetcher.state]
   );
 
   useDisplayMessage(

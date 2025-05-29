@@ -32,6 +32,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { party } from "~/util/party";
 import { salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-record-schema";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 type SalesRecordType = z.infer<typeof salesRecordDataSchema>;
 
 export default function SalesRecordData({
@@ -50,6 +51,7 @@ export default function SalesRecordData({
   isNew?: boolean;
 }) {
   const { t, i18n } = useTranslation("common");
+  const { openModal } = useModalNav();
   const navigate = useNavigate();
   const r = route;
   const { roleActions } = useOutletContext<GlobalState>();
@@ -69,6 +71,7 @@ export default function SalesRecordData({
               roleActions={roleActions}
               allowEdit={allowEdit}
               required={true}
+              openModal={openModal}
             />
             <InvoiceAutocompleteFormField
               label={t(party.saleInvoice)}

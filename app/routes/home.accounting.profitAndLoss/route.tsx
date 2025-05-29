@@ -24,8 +24,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         from_date: fromDate,
         to_date: toDate,
         time_unit: timeUnit,
-        project: searchParams.get("project") || "",
-        cost_center: searchParams.get("costCenter") || "",
+        project_id: searchParams.get("project_id") || "",
+        cost_center_id: searchParams.get("cost_center_id") || "",
       },
     },
   });

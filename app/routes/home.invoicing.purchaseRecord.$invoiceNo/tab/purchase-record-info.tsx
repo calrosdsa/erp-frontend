@@ -18,9 +18,7 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { z } from "zod";
 import { usePermission } from "~/util/hooks/useActions";
 import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
-import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { purchaseRecordDataSchema } from "~/util/data/schemas/invoicing/purchase-record-schema";
-import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
 import PurchaseRecordData from "~/routes/home.invoicing.purchaseRecord.new/purchase-record-data";
 type EditData = z.infer<typeof purchaseRecordDataSchema>;
 export default function PurchaseRecordInfo() {

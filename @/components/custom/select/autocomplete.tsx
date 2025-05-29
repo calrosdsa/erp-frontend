@@ -23,6 +23,7 @@ import { TooltipLayout } from "@/components/layout/tooltip-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Control } from "react-hook-form";
+import { OpenModalFunc } from "~/types";
 
 interface ActionButton {
   Icon: LucideIcon;
@@ -48,6 +49,7 @@ export interface AutoCompleteProps<T extends object, K extends keyof T> {
    onClear?: () => void;
    onFocus?: () => void;
    navigate?: (e: any) => void;
+   openModal?:OpenModalFunc
  
    // Styling and display
    className?: string;

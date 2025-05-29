@@ -32,7 +32,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = (await request.json()) as ActionData;
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
-  let actionRes = LOAD_ACTION;
+  // let actionRes = LOAD_ACTION;
+  let shouldRevalidate = false;
   switch (data.action) {
     case "generate-po": {
       const res = await client.POST("/pricing/generate-po", {
@@ -49,7 +50,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       message = res.data?.message;
       error = res.error?.detail;
-      console.log(res.error);
       break;
     }
     case "update-status": {
@@ -62,8 +62,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
     case "edit": {
       const res = await client.PUT("/pricing", {
-        body: mapToPricingData(data.editData)
+        body: mapToPricingData(data.editData),
       });
+      console.log("EDIT RES", res.data, res.error);
       error = res.error?.detail;
       message = res.data?.message;
       break;
@@ -72,7 +73,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({
     error,
     message,
-    action: actionRes,
+    shouldRevalidate,
   });
 };
 export function shouldRevalidate({
@@ -80,13 +81,15 @@ export function shouldRevalidate({
   defaultShouldRevalidate,
   actionResult,
 }: ShouldRevalidateFunctionArgs) {
-  if (actionResult?.action == LOAD_ACTION) {
+  // return false
+  if (actionResult?.shouldRevalidate) {
     return defaultShouldRevalidate;
   }
   if (formMethod === "POST") {
     return false;
   }
   return defaultShouldRevalidate;
+  
 }
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

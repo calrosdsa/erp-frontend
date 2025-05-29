@@ -36,7 +36,7 @@ export default function OrderInfoTab() {
   const fetcher = useFetcher<typeof action>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { companyDefaults } = useOutletContext<GlobalState>();
-  const { form, hasChanged, updateRef, previousValues } =
+  const { form, updateRef } =
     useEditFields<EditData>({
       schema: orderDataSchema,
       defaultValues: {
@@ -44,7 +44,7 @@ export default function OrderInfoTab() {
         currency: order?.currency || companyDefaults?.currency,
         postingTime: order?.posting_time,
         postingDate: new Date(order?.posting_date || new Date()),
-        deliveryDate: new Date(order?.delivery_date || new Date()),
+        deliveryDate: order?.delivery_date as any,
         tz: order?.tz,
         party: {
           id: order?.party_id,

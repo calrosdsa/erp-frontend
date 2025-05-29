@@ -1,20 +1,19 @@
 import FormAutocomplete from "@/components/custom/select/FormAutocomplete";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
+import { CREATE, DEFAULT_DEBOUNCE_TIME, DEFAULT_ID } from "~/constant";
 import { PartyType, partyTypeToJSON } from "~/gen/common";
 import { components } from "~/sdk";
 import { route } from "~/util/route";
 import { usePermission } from "../useActions";
-import { useCreateSupplier } from "~/routes/home.supplier_/components/create-supplier";
-import { Control } from "react-hook-form";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
 import FormAutocompleteField, { AutocompleteFormProps } from "@/components/custom/select/form-autocomplete";
+import { OpenModalFunc } from "~/types";
+import { AutoCompleteProps } from "@/components/custom/select/autocomplete";
 
 type Supplier = components["schemas"]["SupplierDto"];
 interface SupplierFormProps
-  extends Partial<AutocompleteFormProps<Supplier, keyof Supplier>> {
+  extends Partial<AutoCompleteProps<Supplier, keyof Supplier>> {
   roleActions?: components["schemas"]["RoleActionDto"][];
-  openModal?: () => void;
 }
 
 export const SupplierAutoCompleteForm = ({ ...props }: SupplierFormProps) => {
@@ -32,7 +31,9 @@ export const SupplierAutoCompleteForm = ({ ...props }: SupplierFormProps) => {
       nameK="name"
       {...(permission.create && {
         addNew: () => {
-          props.openModal?.();
+          props.openModal?.(route.supplier,DEFAULT_ID,{
+            "action":CREATE,
+          });
         },
       })}
     />

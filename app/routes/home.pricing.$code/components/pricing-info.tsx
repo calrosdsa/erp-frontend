@@ -8,7 +8,10 @@ import {
   mapPricingLineItemDto,
   pricingDataSchema,
 } from "~/util/data/schemas/pricing/pricing-schema";
-import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
+import {
+  displayMessage,
+  useDisplayMessage,
+} from "~/util/hooks/ui/useDisplayMessage";
 import {
   setUpToolbar,
   setUpToolbarTab,
@@ -16,7 +19,13 @@ import {
   useSetupToolbarStore,
 } from "~/util/hooks/ui/useSetUpToolbar";
 import { useEditFields } from "~/util/hooks/useEditFields";
-import { FormEvent, MutableRefObject, useEffect, useRef } from "react";
+import {
+  FormEvent,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
 import { useTranslation } from "react-i18next";
@@ -27,6 +36,9 @@ import { State, stateFromJSON } from "~/gen/common";
 import { ButtonToolbar } from "~/types/actions";
 import { components } from "~/sdk";
 import { useToolbar } from "~/util/hooks/ui/use-toolbar";
+import { toast } from "sonner";
+import { LOADING_MESSAGE } from "~/constant";
+import { useFetcherWithPromise } from "~/util/hooks/use-fetcher-with-promise";
 const defaultPricingCharges = [
   { name: "Flete", rate: 0.07, orderID: 1 },
   { name: "Importacion", rate: 0.13, orderID: 2 },
@@ -84,18 +96,18 @@ export default function PricingInfo({}: // inputRef
     actions: actions && actions[Entity.QUOTATION],
   });
   const confirmationDialog = useConfirmationDialog();
-  const toolbar = useToolbar();
-    const { setRegister } = useSetupToolbarStore();
-  
+  const { setRegister } = useSetupToolbarStore();
+  const [toastID, setToastID] = useState<string | number>("");
 
   const allowEdit = permission?.edit || false;
+  const fetcherPromise = useFetcherWithPromise<typeof action>();
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    console.log("onsubmit.................-----------------", "121212");
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    form.handleSubmit((values: EditType) => {
-      console.log("onsubmit.................-----------------", values);
-      fetcher.submit(
+    form.handleSubmit(async (values: EditType) => {
+      const id = toast.loading(LOADING_MESSAGE);
+      setToastID(id);
+      const res = await fetcherPromise.submit(
         {
           action: "edit",
           editData: values,
@@ -105,13 +117,31 @@ export default function PricingInfo({}: // inputRef
           encType: "application/json",
         }
       );
+      displayMessage({
+        toastID: id,
+        error: res?.error,
+        success: res?.message,
+      });
+      // console.log("onsubmit.................-----------------", values);
+      // fetcher.submit(
+      //   {
+      //     action: "edit",
+      //     editData: values,
+      //   },
+      //   {
+      //     method: "POST",
+      //     encType: "application/json",
+      //   }
+      // );
     })(e);
   };
 
-  const generate = (
+  const generate = async (
     action: string,
     pricing: components["schemas"]["PricingDto"]
   ) => {
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     const body: components["schemas"]["PricingDataRequestBody"] = {
       pricing: pricing,
       pricing_line_items: form
@@ -119,7 +149,7 @@ export default function PricingInfo({}: // inputRef
         .pricing_line_items.map((t) => mapPricingLineItemData(t)),
     };
     console.log("BODY", body);
-    fetcher.submit(
+    const res = await fetcherPromise.submit(
       {
         action: action,
         pricingData: body,
@@ -129,28 +159,16 @@ export default function PricingInfo({}: // inputRef
         encType: "application/json",
       }
     );
+    displayMessage({
+      toastID: id,
+      error: res?.error,
+      success: res?.message,
+    });
   };
 
-  useDisplayMessage(
-    {
-      error: fetcher.data?.error,
-      success: fetcher.data?.message,
-      onSuccessMessage: () => {
-        updateRef(form.getValues());
-      },
-    },
-    [fetcher.data]
-  );
-  useLoadingTypeToolbar(
-    {
-      loading: fetcher.state == "submitting",
-      loadingType: "SAVE",
-    },
-    [fetcher.state]
-  );
+ 
 
   useEffect(() => {
-
     const state = stateFromJSON(pricing?.status);
 
     let actions: ButtonToolbar[] = [];
@@ -166,7 +184,12 @@ export default function PricingInfo({}: // inputRef
         },
       });
     }
-    if (quoPerm.create && state == State.SUBMITTED && pricing && pricing.customer_id) {
+    if (
+      quoPerm.create &&
+      state == State.SUBMITTED &&
+      pricing &&
+      pricing.customer_id
+    ) {
       actions.push({
         label: "Generar Cotización de Venta",
         onClick: () => {
@@ -185,10 +208,11 @@ export default function PricingInfo({}: // inputRef
       },
       disabledSave: !allowEdit,
     });
-  }, [allowEdit,pricing]);
-  
+  }, [allowEdit, pricing]);
+
   return (
     <>
+      {/* {JSON.stringify(fetcher.data)} */}
       {form.getValues().pricing_charges && (
         <PricingData
           fetcher={fetcher}

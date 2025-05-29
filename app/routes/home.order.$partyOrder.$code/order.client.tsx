@@ -28,8 +28,6 @@ import DetailLayout from "@/components/layout/detail-layout";
 import OrderInfoTab from "./components/tab/order-info";
 import OrderConnectionsTab from "./components/tab/order-connections";
 import {
-  setUpToolbar,
-  setUpToolbarDetailPage,
   setUpToolbarRegister,
   useLoadingTypeToolbar,
 } from "~/util/hooks/ui/useSetUpToolbar";

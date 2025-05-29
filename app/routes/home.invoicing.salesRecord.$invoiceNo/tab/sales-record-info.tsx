@@ -22,7 +22,6 @@ import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { usePermission } from "~/util/hooks/useActions";
 import { formatAmount, formatAmountToInt } from "~/util/format/formatCurrency";
 import { salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-record-schema";
-import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
 import { Separator } from "@radix-ui/react-select";
 import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";

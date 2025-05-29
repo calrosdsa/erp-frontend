@@ -12,7 +12,7 @@ export type ItemSchema = z.infer<typeof itemSchema>
 export const itemSchema = z.object({
   id:z.number().optional(),
   name:z.string().min(DEFAULT_MIN_LENGTH).max(DEFAULT_MAX_LENGTH),
-  pn:z.string().optional().nullable(),
+  code:z.string().optional().nullable(),
   group:fieldNull,
   uom:field,
   maintainStock:z.boolean(),
@@ -38,7 +38,7 @@ export const mapToItemData = (e:ItemSchema)=>{
       group_id: e.group?.id,
       maintain_stock: e.maintainStock,
       name:e.name,
-      pn: e.pn,
+      code: e.code,
       unit_of_measure_id: e.uom.id || 0,
     },
     id: e.id || 0,  

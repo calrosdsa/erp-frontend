@@ -6895,6 +6895,7 @@ export interface components {
             item_price_lines: components["schemas"]["ItemPriceData"][];
         };
         ItemDetailDto: {
+            code: string | null;
             /** Format: date-time */
             created_at: string;
             description: string | null;
@@ -6909,7 +6910,6 @@ export interface components {
             item_type: string;
             maintain_stock: boolean;
             name: string;
-            pn: string | null;
             serial_no_template: string | null;
             /** Format: int32 */
             shelf_life_in_days: number | null;
@@ -6928,25 +6928,25 @@ export interface components {
             weight_uom_id: number | null;
         };
         ItemDto: {
+            code: string | null;
             /** Format: date-time */
             created_at: string;
             /** Format: int64 */
             id: number;
             item_type: string;
             name: string;
-            pn: string | null;
             status: string;
             /** Format: int64 */
             uom_id: number;
             uuid: string;
         };
         ItemFields: {
+            code?: string | null;
             description?: string | null;
             /** Format: int64 */
             group_id?: number | null;
             maintain_stock: boolean;
             name: string;
-            pn?: string | null;
             /** Format: int64 */
             unit_of_measure_id: number;
         };
@@ -10227,6 +10227,8 @@ export interface components {
             /** Format: int64 */
             id: number;
             item_code: string;
+            /** Format: int64 */
+            item_id: number;
             item_name: string;
             posting_date: string;
             posting_time: string;
@@ -10323,6 +10325,8 @@ export interface components {
             item_code: string;
             item_group_name: string;
             item_group_uuid: string;
+            /** Format: int64 */
+            item_id: number;
             item_name: string;
             item_uuid: string;
             /** Format: int32 */
@@ -10405,6 +10409,8 @@ export interface components {
             item_code: string;
             item_group_name: string;
             item_group_uuid: string;
+            /** Format: int64 */
+            item_id: number;
             item_name: string;
             item_uuid: string;
             /** Format: int32 */
@@ -14535,8 +14541,8 @@ export interface operations {
                 to_date: string;
                 currency?: string;
                 time_unit?: string;
-                cost_center?: string;
-                project?: string;
+                cost_center_id?: string;
+                project_id?: string;
             };
             header?: {
                 Authorization?: string;
@@ -14574,8 +14580,8 @@ export interface operations {
                 to_date: string;
                 currency?: string;
                 time_unit?: string;
-                cost_center?: string;
-                project?: string;
+                cost_center_id?: string;
+                project_id?: string;
             };
             header?: {
                 Authorization?: string;
@@ -14613,8 +14619,8 @@ export interface operations {
                 to_date: string;
                 currency?: string;
                 time_unit?: string;
-                cost_center?: string;
-                project?: string;
+                cost_center_id?: string;
+                project_id?: string;
             };
             header?: {
                 Authorization?: string;
@@ -20326,8 +20332,8 @@ export interface operations {
             query?: {
                 from_date?: string;
                 to_date?: string;
-                item?: string;
-                warehouse?: string;
+                item_id?: string;
+                warehouse_id?: string;
             };
             header?: {
                 Authorization?: string;
@@ -20364,8 +20370,8 @@ export interface operations {
                 from_date: string;
                 to_date: string;
                 voucher_no?: string;
-                item?: string;
-                warehouse?: string;
+                item_id?: string;
+                warehouse_id?: string;
             };
             header?: {
                 Authorization?: string;

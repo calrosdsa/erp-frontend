@@ -137,7 +137,10 @@ export default function NewReceiptClient() {
               q: {
                 tab: "info",
               },
-            })
+            }),
+            {
+              replace: true,
+            }
           );
         }
       },
@@ -166,4 +169,3 @@ export default function NewReceiptClient() {
     </CreateLayout>
   );
 }
-

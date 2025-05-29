@@ -18,8 +18,8 @@ export const loader = async({request}:LoaderFunctionArgs) =>{
             query:{
                 from_date:fromDate,
                 to_date:toDate,
-                project:searchParams.get("project") || undefined,
-                cost_center:searchParams.get("costCenter")||undefined,
+                project_id:searchParams.get("project_id") || undefined,
+                cost_center_id:searchParams.get("cost_center_id")||undefined,
             }
         }
     })

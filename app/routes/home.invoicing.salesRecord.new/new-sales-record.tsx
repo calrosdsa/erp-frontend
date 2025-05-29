@@ -15,7 +15,6 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { GlobalState } from "~/types/app-types";
 import { salesRecordDataSchema } from "~/util/data/schemas/invoicing/sales-record-schema";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
 import { useNewSalesRecord } from "./use-new-sales-record";
 import { Separator } from "@/components/ui/separator";
 import { InvoiceAutocompleteForm } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";

@@ -23,14 +23,14 @@ import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
 import { GlobalState } from "~/types/app-types";
 import { purchaseRecordDataSchema } from "~/util/data/schemas/invoicing/purchase-record-schema";
 import CustomFormDate from "@/components/custom/form/CustomFormDate";
-import { CustomerAutoCompleteForm } from "~/util/hooks/fetchers/useCustomerDebounceFetcher";
-import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/useSupplierDebounceFetcher";
+import { SupplierAutoCompleteForm } from "~/util/hooks/fetchers/use-supplier-fetcher";
 import {
   InvoiceAutocompleteForm,
   InvoiceAutocompleteFormField,
 } from "~/util/hooks/fetchers/docs/use-invoice-fetcher";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { useModalNav } from "~/util/hooks/app/use-open-modal";
 type PurchaseRecordDataType = z.infer<typeof purchaseRecordDataSchema>;
 
 export default function PurchaseRecordData({
@@ -50,6 +50,7 @@ export default function PurchaseRecordData({
 }) {
   const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
+  const {openModal} = useModalNav()
   const r = route;
   const { roleActions } = useOutletContext<GlobalState>();
   const formValues = form.getValues();
@@ -67,6 +68,7 @@ export default function PurchaseRecordData({
               form={form}
               roleActions={roleActions}
               required={true}
+              openModal={openModal}
               allowEdit={allowEdit}
             />
 

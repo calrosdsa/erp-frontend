@@ -41,6 +41,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@radix-ui/react-select";
 import { AutoCompleteProps } from "./autocomplete";
+import { OpenModalFunc } from "~/types";
 
 export interface AutocompleteFormProps<T extends object, K extends keyof T> {
   data: T[];
@@ -68,6 +69,7 @@ export interface AutocompleteFormProps<T extends object, K extends keyof T> {
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
   inputClassName?: string;
   navigate?: (e: any) => void;
+  openModal?:OpenModalFunc
 }
 
 export default function FormAutocompleteField<

@@ -104,8 +104,8 @@ export default function ChargesTemplateInfo() {
                 docPartyID={chargesTemplate.id}
                 showTotal={false}
                 allowEdit={chargesPerm?.edit || false}
-                allowCreate={chargesPerm?.create || false}
-              />
+                allowCreate={chargesPerm?.create || false} 
+                docPartyType={""}/>
             )}
           </div>
           <input className="hidden" type="submit" ref={inputRef} />

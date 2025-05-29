@@ -49,6 +49,7 @@ interface Props<T extends object, K extends keyof T, V extends keyof T> {
   onCustomDisplay?: (e: T, idx: number) => JSX.Element;
   queryValue: string;
   queryName: string;
+  triggerClassName?:string;
   isLoading?:boolean
 }
 
@@ -66,6 +67,7 @@ export default function AutocompleteSearch<
   onSelect,
   onCustomDisplay,
   className,
+  triggerClassName,
   addNew,
   isLoading,
   placeholder,
@@ -125,7 +127,7 @@ export default function AutocompleteSearch<
   }
 
   return (
-    <div className="flex items-center w-32">
+    <div className="flex items-center">
       <Popover open={open} onOpenChange={setOpen}>
         <Command shouldFilter={false}>
             <TooltipLayout content={placeholder}>
@@ -133,6 +135,7 @@ export default function AutocompleteSearch<
             <CommandPrimitive.Input
               asChild
               value={query}
+              className={cn(triggerClassName)}
               onValueChange={onQueryChange}
               onKeyDown={(e) => setOpen(e.key !== "Escape")}
               onMouseDown={() => setOpen((open) => !!query || !open)}

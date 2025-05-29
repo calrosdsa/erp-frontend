@@ -5,14 +5,15 @@ import { route } from "~/util/route";
 import { components } from "~/sdk";
 import TableCellNameNavigation from "../../cells/table-cell-name_navigation";
 import TableCellPrice from "../../cells/table-cell-price";
-import {
-  PartyType,
-  partyTypeToJSON,
-} from "~/gen/common";
+import { PartyType, partyTypeToJSON } from "~/gen/common";
+import { OpenModalFunc } from "~/types";
+import { TableCellBase } from "../../cells/table-cell";
 
-export const stockLedgerColumns = ({}: {}): ColumnDef<
-  components["schemas"]["StockLedgerEntryDto"]
->[] => {
+export const stockLedgerColumns = ({
+  openModal,
+}: {
+  openModal: OpenModalFunc;
+}): ColumnDef<components["schemas"]["StockLedgerEntryDto"]>[] => {
   let columns: ColumnDef<components["schemas"]["StockLedgerEntryDto"]>[] = [];
   const r = route;
   const { t, i18n } = useTranslation("common");
@@ -31,19 +32,10 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
     cell: ({ ...props }) => {
       const rowData = props.row.original;
       return (
-        <TableCellNameNavigation
-          navigate={(name) =>
-            r.toRoute({
-              main: partyTypeToJSON(PartyType.item),
-              routePrefix: [r.stockM],
-              routeSufix: [name],
-              q: {
-                tab: "info",
-                id: rowData.item_uuid,
-              },
-            })
-          }
+        <TableCellBase
+          className="font-semibold underline cursor-pointer"
           {...props}
+          onClick={() => openModal(route.item,rowData.item_id)}
         />
       );
     },
@@ -141,7 +133,7 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
       return <div>{t(rowData.voucher_type)}</div>;
     },
   });
-  
+
   columns.push({
     accessorKey: "voucher_no",
     header: t("form.voucherNo"),
@@ -149,8 +141,10 @@ export const stockLedgerColumns = ({}: {}): ColumnDef<
       const rowData = props.row.original;
       return (
         <TableCellNameNavigation
-        {...props}
-        navigate={(code)=>r.toVoucher(rowData.voucher_type,rowData.voucher_no)}
+          {...props}
+          navigate={(code) =>
+            r.toVoucher(rowData.voucher_type, rowData.voucher_no)
+          }
         />
       );
     },

@@ -19,11 +19,11 @@ export default function OrderConnectionsTab() {
         <Await resolve={connections}>
           {(data: any) => {
             const d =
-              data.data as components["schemas"]["ResponseDataListPartyConnectionsBody"];
+              data?.data as components["schemas"]["ResponseDataListPartyConnectionsBody"];
             return (
               <div>
                 <Connections
-                    data={d.result || []}
+                    data={d?.result || []}
                     q={{
                       order_code:order?.code,
                       order_id:order?.id.toString(),
