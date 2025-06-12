@@ -8,6 +8,7 @@ type ActionData = {
   action: string;
   activityID:number
   searchEntitiesQuery:operations["search-entities"]["parameters"]["query"]
+  connectionParameters: operations["connections"]["parameters"];
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -17,8 +18,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let message: string | undefined = undefined;
   let activities: components["schemas"]["ActivityDto"][] = [];
   let searchEntities:components["schemas"]["EntityDto"][] = [];
+  let connections: components["schemas"]["ConnectionDto"][] = [];
+  
   console.log(data.action)
   switch (data.action) {
+     case "connections": {
+      console.log("FETCHING CONNECTIONS...",data.connectionParameters)
+      const res = await client.GET("/connection/{id}", {
+        params: data.connectionParameters,
+      });
+      console.log(res.error,res.data)
+      connections = res.data?.result || [];
+      break;
+    }
     case "search-entities":{
       console.log(data.searchEntitiesQuery)
       const res = await client.GET("/module/search-entities",{
@@ -72,6 +84,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     message,
     activities,
     searchEntities,
+    connections,
     action:LOAD_ACTION,
   });
 };

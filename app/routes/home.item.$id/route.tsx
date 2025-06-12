@@ -1,33 +1,12 @@
-import {
-  ActionFunctionArgs,
-  defer,
-  json,
-  LoaderFunctionArgs,
-} from "@remix-run/node";
-import ItemDetailClient from "./item-modal";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import apiClient from "~/apiclient";
+import { DEFAULT_ID, LOAD_ACTION } from "~/constant";
+import { Await, Outlet, ShouldRevalidateFunctionArgs } from "@remix-run/react";
+import { components, operations } from "~/sdk";
 import {
-  DEFAULT_ID,
-  DEFAULT_PAGE,
-  DEFAULT_SIZE,
-  LOAD_ACTION,
-} from "~/constant";
-import {
-  Await,
-  Outlet,
-  ShouldRevalidateFunctionArgs,
-  useLoaderData,
-} from "@remix-run/react";
-import { Suspense } from "react";
-import FallBack from "@/components/layout/Fallback";
-import { z } from "zod";
-import { components } from "~/sdk";
-import {
-  editItemSchema,
   ItemSchema,
   mapToItemData,
 } from "~/util/data/schemas/stock/item-schemas";
-import { editItemInventory } from "~/util/data/schemas/stock/item-inventory-schema";
 
 type ActionData = {
   action: string;
@@ -41,7 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let message: string | undefined = undefined;
   let item: components["schemas"]["ItemDto"] | undefined = undefined;
   let actionRes = LOAD_ACTION;
-  switch (data.action) {
+  switch (data.action) {   
     case "create-item": {
       const res = await client.POST("/stock/item", {
         body: mapToItemData(data.itemData),
@@ -57,7 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
       error = res.error?.detail;
       message = res.data?.message;
-      console.log("ERROR",res.error)
+      console.log("ERROR", res.error);
       break;
     }
   }

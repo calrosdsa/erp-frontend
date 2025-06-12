@@ -1,8 +1,4 @@
-import {
-  useFetcher,
-  useNavigate,
-  useSearchParams,
-} from "@remix-run/react";
+import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react";
 import { action, loader } from "./route";
 import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
@@ -32,13 +28,12 @@ import { SerializeFrom } from "@remix-run/node";
 import { toast } from "sonner";
 import { useItemStore } from "./item-store";
 import ItemInfo from "./components/tab/item-info";
+import ItemActivity from "./components/tab/item-activity";
+import ItemConnections from "./components/tab/item-connections";
+import ConnectionsEntity from "@/components/layout/connections-entity";
+import { Entity } from "~/types/enums";
 
-
-export default function ItemModal({
-  appContext,
-}: {
-  appContext: GlobalState;
-}) {
+export default function ItemModal({ appContext }: { appContext: GlobalState }) {
   const key = route.item;
 
   const [data, setData] = useState<SerializeFrom<typeof loader>>();
@@ -49,16 +44,15 @@ export default function ItemModal({
   // const { item, actions, activities } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [tab,setTab] = useState("info")
-  
+  const [tab, setTab] = useState("info");
+
   const { t, i18n } = useTranslation("common");
   const itemID = searchParams.get(key);
-  const navigate = useNavigate();
   const [permission] = usePermission({
     roleActions: appContext.roleActions,
     actions: data?.actions,
   });
-  const [toastID,setToastID]= useState<string | number>("")
+  const [toastID, setToastID] = useState<string | number>("");
   const itemStore = useItemStore();
 
   const load = async () => {
@@ -76,14 +70,14 @@ export default function ItemModal({
     }
   };
   useEffect(() => {
-    if(itemID){
+    if (itemID) {
       load();
     }
   }, [itemID]);
 
   const onChangeState = (e: EventState) => {
-    const id = toast.loading(LOADING_MESSAGE)
-    setToastID(id)
+    const id = toast.loading(LOADING_MESSAGE);
+    setToastID(id);
     const body: z.infer<typeof updateStatusWithEventSchema> = {
       current_state: item?.status || "",
       party_id: item?.id.toString() || "",
@@ -107,11 +101,11 @@ export default function ItemModal({
 
   useDisplayMessage(
     {
-      toastID:toastID,
+      toastID: toastID,
       error: fetcher.data?.error,
       success: fetcher.data?.message,
-      onSuccessMessage:()=>{
-        load()
+      onSuccessMessage: () => {
+        load();
       },
     },
     [fetcher.data]
@@ -140,7 +134,7 @@ export default function ItemModal({
           },
         });
       }
-    
+
       return {
         title: isNew ? "Nuevo dirección" : item?.name,
         view: isNew ? [] : view,
@@ -160,7 +154,7 @@ export default function ItemModal({
   );
 
   const closeModal = () => {
-   itemStore.reset();
+    itemStore.reset();
     searchParams.delete(route.item);
     searchParams.delete("action");
     setSearchParams(searchParams, {
@@ -191,7 +185,7 @@ export default function ItemModal({
             <TabNavigation
               defaultValue={tab}
               onValueChange={(value) => {
-                setTab(value)
+                setTab(value);
                 // searchParams.set("tab", value);
                 // setSearchParams(searchParams, {
                 //   preventScrollReset: true,
@@ -210,6 +204,19 @@ export default function ItemModal({
                       permission={permission}
                     />
                   ),
+                },
+                {
+                  label: "Actividad",
+                  value: "activity",
+                  children: (
+                    <ItemActivity appContext={appContext} data={data} />
+                  ),
+                },
+                {
+                  label: "Conexiones",
+                  value: "connections",
+                  children: <ConnectionsEntity 
+                  entity={Entity.ITEM}/>,
                 },
               ]}
             />

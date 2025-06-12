@@ -13,7 +13,10 @@ interface ActionsFieldArrayProps<
   TKeyName extends string
 > extends UseFieldArrayProps<TFieldValues, TFieldArrayName, TKeyName> {
   onChange?: () => void;
-  addRow?:(append: UseFieldArrayAppend<TFieldValues, TFieldArrayName>)=>void
+  hasAction?: boolean;
+  addRow?: (append: UseFieldArrayAppend<TFieldValues, TFieldArrayName>) => void;
+  onRemove?:(index: number | number[])=>void
+  defaultValues?: Partial<TFieldValues[TFieldArrayName][number]>;
 }
 
 // Custom hook for field array actions
@@ -33,18 +36,26 @@ export function useActionsFieldArray<
 
   // Define additional utility methods
   const metaOptions = {
-    addRow: (
-      defaultValues: Partial<TFieldValues[TFieldArrayName][number]> = {}
-    ) => {
-      if(props.addRow){
-        props.addRow(append)
-      }else{
-        append(defaultValues as TFieldValues[TFieldArrayName][number]);
+    addRow: () => {
+      if (props.addRow) {
+        props.addRow(append);
+      } else {
+        // console.log("DEFAULT VALUES",defaultValues)
+        if (props.defaultValues) {
+          append(props.defaultValues as TFieldValues[TFieldArrayName][number]);
+        } else {
+          append({} as TFieldValues[TFieldArrayName][number]);
+        }
       }
     },
     removeRow: (index: number | number[]) => {
-      remove(index);
-      props?.onChange?.();
+      if(props.onRemove){
+        props.onRemove(index)
+      }else{
+        remove(index);
+        props?.onChange?.();
+
+      }
     },
     moveRow: (from: number, to: number) => {
       swap(from, to);

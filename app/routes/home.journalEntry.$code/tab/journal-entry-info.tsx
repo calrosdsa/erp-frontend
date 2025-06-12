@@ -98,7 +98,6 @@ export const JournalEntryInfo = ({
           schema={journalEntrySchema}
           keyPayload={key}
           permission={permission}
-          disableEdit={payload.status == State.SUBMITTED}
           defaultValues={{
             id: journalEntry?.id,
             postingDate: journalEntry?.posting_date

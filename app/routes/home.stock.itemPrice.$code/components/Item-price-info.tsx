@@ -19,7 +19,7 @@ import FormLayout from "@/components/custom/form/FormLayout";
 import CustomFormFieldInput from "@/components/custom/form/CustomFormInput";
 import { Separator } from "@/components/ui/separator";
 import { ItemAutocompleteForm } from "~/util/hooks/fetchers/useItemDebounceFetcher";
-import { UomAutocompleteForm } from "~/util/hooks/fetchers/useUomDebounceFetcher";
+import { UomAutocompleteForm } from "~/util/hooks/fetchers/use-uom-fetcher";
 import { Typography } from "@/components/typography";
 import { Form } from "@/components/ui/form";
 import { formatAmount } from "~/util/format/formatCurrency";

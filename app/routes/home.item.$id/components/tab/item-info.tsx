@@ -5,12 +5,8 @@ import { useTranslation } from "react-i18next";
 import { route } from "~/util/route";
 import { useEffect, useRef, useState } from "react";
 import { useDisplayMessage } from "~/util/hooks/ui/useDisplayMessage";
-import FormLayout from "@/components/custom/form/FormLayout";
-import { Form } from "@/components/ui/form";
-import { usePermission } from "~/util/hooks/useActions";
 import { GlobalState } from "~/types/app-types";
 import { SerializeFrom } from "@remix-run/node";
-import { mapToContactSchema } from "~/util/data/schemas/contact/contact.schema";
 import { SmartForm } from "@/components/form/smart-form";
 import { useModalStore } from "@/components/ui/custom/modal-layout";
 import { CREATE, DEFAULT_ID, LOADING_MESSAGE } from "~/constant";
@@ -23,6 +19,7 @@ import { action, loader } from "../../route";
 import { useItemStore } from "../../item-store";
 import { itemSchema, ItemSchema } from "~/util/data/schemas/stock/item-schemas";
 import ItemForm from "../item-form";
+import { mapDtoToItemPriceLine } from "~/util/data/schemas/stock/item-price-schema";
 export default function ItemInfo({
   appContext,
   data,
@@ -107,7 +104,7 @@ export default function ItemInfo({
           defaultValues={{
             id: item?.id,
             name: item?.name,
-            code: item?.pn,
+            code: item?.code,
             group: {
               id: item?.group_id,
               name: item?.group_name,
@@ -128,6 +125,7 @@ export default function ItemInfo({
               name: item?.weight_uom,
             },
             weightPerUnit: item?.weight_per_unit,
+            itemPrices: item?.item_prices?.map((t) => mapDtoToItemPriceLine(t)) || [],
           }}
           onSubmit={onSubmit}
         >

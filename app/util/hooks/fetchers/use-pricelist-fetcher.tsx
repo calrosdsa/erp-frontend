@@ -16,8 +16,8 @@ import {
 type PriceList = components["schemas"]["PriceListDto"];
 interface PriceListAutocompleteProps
   extends Partial<AutoCompleteProps<PriceList, keyof PriceList>> {
-  isSelling: boolean;
-  isBuying: boolean;
+  isSelling?: boolean;
+  isBuying?: boolean;
 }
 
 export const PriceListAutcomple = ({

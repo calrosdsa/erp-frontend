@@ -5,7 +5,7 @@ import { DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH } from "~/constant";
 import { components } from "~/sdk";
 import { itemInventory } from "./item-inventory-schema";
 import { field, fieldNull } from "..";
-import { itemPriceSchema, mapToItemPriceData } from "./item-price-schema";
+import { itemPriceLineSchema, itemPriceSchema, mapLineToItemPriceData, mapToItemPriceData } from "./item-price-schema";
 
 export type ItemSchema = z.infer<typeof itemSchema>
 
@@ -25,7 +25,7 @@ export const itemSchema = z.object({
   weightUom:fieldNull,
   weightPerUnit:z.coerce.number().optional().nullable(),
 
-  itemPrices:z.array(itemPriceSchema),
+  itemPrices:z.array(itemPriceLineSchema),
 })
 
 
@@ -51,7 +51,9 @@ export const mapToItemData = (e:ItemSchema)=>{
       weight_uom_id: e.weightUom?.id,
       weight_per_unit: e.weightPerUnit,
     },
-    item_price_lines: e.itemPrices.map(t=>mapToItemPriceData(t)),
+    item_price_lines:e.itemPrices.map(t=>mapLineToItemPriceData(t)),
+
+    // item_price_lines: e.itemPrices.map(t=>mapToItemPriceData(t)),
   } 
   return d 
 }

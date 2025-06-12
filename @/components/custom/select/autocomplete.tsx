@@ -107,15 +107,15 @@ const Autocomplete = <T extends object, K extends keyof T>({
     const value = item[nameK] as string;
     console.log("VALUE", value);
     setOpen(false);
-    setSelected(value);
     setQuery(value);
+    setSelected(value);
     if (onSelect) {
       onSelect(item);
     }
     // inputRef.current?.blur();
   };
   useEffect(() => {
-    console.log("MOUNT");
+    console.log("MOUNT...",query);
   }, []);
   
   if(!allowEdit){

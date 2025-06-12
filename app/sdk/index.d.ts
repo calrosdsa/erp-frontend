@@ -909,6 +909,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/connection/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["connections"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/cost-center": {
         parameters: {
             query?: never;
@@ -4962,6 +4978,16 @@ export interface components {
             Credentials?: string;
             Plugin: string;
         };
+        ConnectionDto: {
+            /** Format: int64 */
+            count: number;
+            /** Format: int64 */
+            entity_id: number;
+            entity_name: string;
+            /** Format: int64 */
+            id: number;
+            section_name: string;
+        };
         ContactBulkData: {
             /**
              * Format: uri
@@ -7019,9 +7045,9 @@ export interface components {
             /** Format: int64 */
             item_id: number;
             item_name: string;
-            item_price_uom: string | null;
+            item_price_uom: string;
             /** Format: int64 */
-            item_price_uom_id: number | null;
+            item_price_uom_id: number;
             /** Format: int32 */
             item_quantity: number;
             item_uom: string;
@@ -9146,6 +9172,19 @@ export interface components {
             message: string;
             result: components["schemas"]["ChatMessageDto"][];
         };
+        ResponseDataListConnectionDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ConnectionDto"][];
+        };
         ResponseDataListCourtRateDtoBody: {
             /**
              * Format: uri
@@ -10947,6 +10986,8 @@ export interface operations {
                 from_date: string;
                 to_date: string;
                 party?: string;
+                project_id?: string;
+                cost_center_id?: string;
             };
             header?: {
                 Authorization?: string;
@@ -10983,6 +11024,8 @@ export interface operations {
                 from_date: string;
                 to_date: string;
                 party?: string;
+                project_id?: string;
+                cost_center_id?: string;
             };
             header?: {
                 Authorization?: string;
@@ -11019,6 +11062,8 @@ export interface operations {
                 from_date: string;
                 to_date: string;
                 party?: string;
+                project_id?: string;
+                cost_center_id?: string;
             };
             header?: {
                 Authorization?: string;
@@ -11055,6 +11100,8 @@ export interface operations {
                 from_date: string;
                 to_date: string;
                 party?: string;
+                project_id?: string;
+                cost_center_id?: string;
             };
             header?: {
                 Authorization?: string;
@@ -13296,6 +13343,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginationResponsePaginationResultListCompanyDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    connections: {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListConnectionDtoBody"];
                 };
             };
             /** @description Error */

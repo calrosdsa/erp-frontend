@@ -33,7 +33,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTablePagination } from "./DataTablePagination";
-import { DEFAULT_PAGE, DEFAULT_SIZE } from "~/constant";
+import { DEFAULT_PAGE, DEFAULT_SIZE, DELETE } from "~/constant";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { useTranslation } from "react-i18next";
 import DataTableEditFooter from "./data-table-edit-footer";
@@ -308,7 +308,7 @@ export function DataTable<TData, TValue>({
             textOverflow: "ellipsis",
           }}
           className={cn(
-            "border-r  last:border-r-0 p-2 text-xs whitespace-nowrap "
+            "border-r  last:border-r-0 p-2 text-xs whitespace-nowrap ",
           )}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
