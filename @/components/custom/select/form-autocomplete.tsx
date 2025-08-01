@@ -90,7 +90,7 @@ export default function FormAutocompleteField<
   onCustomDisplay,
   className,
   allowEdit = true,
-  modal = false,
+  modal = true,
   addNew,
   required,
   href,
@@ -168,7 +168,7 @@ export default function FormAutocompleteField<
           );
         }
         return (
-          <FormItem className="flex flex-col w-full  ">
+          <FormItem className="flex flex-col w-full ">
             <Popover open={open} onOpenChange={setOpen} modal={modal}>
               <Command className="">
                 <PopoverAnchor asChild className="">
@@ -350,173 +350,3 @@ export default function FormAutocompleteField<
     />
   );
 }
-// {href && !allowEdit ? (
-//   <Button
-//     variant="outline"
-//     role="combobox"
-//     size="sm"
-//     type="button"
-//     onClick={(e) => {
-//       e.stopPropagation();
-//     }}
-//     className={cn(
-//       "justify-between",
-//       className,
-//       !field.value && "text-muted-foreground",
-//       !allowEdit &&
-//         "disabled:opacity-100 disabled:cursor-default bg-secondary"
-//     )}
-//   >
-//     <Link to={href} className="underline">
-//       {field.value?.name}
-//     </Link>
-//   </Button>
-// ) : (
-//   <PopoverTrigger asChild>
-//     <FormControl>
-//       <Button
-//         variant="outline"
-//         role="combobox"
-//         size={"sm"}
-//         disabled={!allowEdit}
-//         onClick={() => {
-//           onValueChange?.("");
-//           setOpen(!open);
-//         }}
-//         className={cn(
-//           "justify-between font-normal text-sm",
-//           className,
-//           !field.value && "text-muted-foreground",
-//           !allowEdit &&
-//             "disabled:opacity-100 disabled:cursor-default bg-secondary"
-//         )}
-//       >
-//         <span className=" truncate">{field.value?.name || ""}</span>
-
-//         {/* {field.value && allowEdit && !required && ( */}
-//         {field.value && allowEdit && (
-//           <div className="flex items-center">
-//             {field.value?.name ? (
-//               <IconButton
-//                 icon={XIcon}
-//                 size="sm"
-//                 className="ml-1 h-6 w-6 shrink-0 opacity-50 "
-//                 onClick={(e) => {
-//                   e.stopPropagation();
-//                   field.onChange({});
-//                   // onClear?.();
-//                   setOpen(false);
-//                   // form.setValue(name, "");
-//                 }}
-//               />
-//             ) : (
-//               <ChevronsUpDown className="ml-2 h w-4 shrink-0 opacity-50" />
-//             )}
-
-//             {href && field.value["name" as keyof T] && (
-//               <div
-//                 onClick={(e) => {
-//                   e.stopPropagation();
-//                 }}
-//               >
-//                 <Link to={href}>
-//                   <IconButton
-//                     icon={ArrowRight}
-//                     size="sm"
-//                     className="ml-1 h-6 w-6 shrink-0 opacity-50 "
-//                   />
-//                 </Link>
-//               </div>
-//             )}
-//           </div>
-//         )}
-//       </Button>
-//     </FormControl>
-//   </PopoverTrigger>
-// )}
-// <PopoverContent className="">
-//   <Command className="max-h-[200px]">
-//     <CommandInput
-//       onValueChange={(e) => {
-//         onValueChange?.(e);
-//       }}
-//     />
-//     <CommandList>
-//       <CommandEmpty className="py-16 text-center w-full">
-//         {placeholder ? placeholder : "No se encontraron resultados"}
-//       </CommandEmpty>
-//       <CommandGroup>
-//         {data.map((item, idx) =>
-//           onCustomDisplay ? (
-//             <CommandItem
-//               value={(item[nameK] as string) || ""}
-//               key={idx}
-//               className=" border-b"
-//               onSelect={() => {
-//                 field.onChange({
-//                   name: item[nameK],
-//                   id: item["id" as keyof T],
-//                   uuid: item["uuid" as keyof T],
-//                 });
-//                 if (onSelect) {
-//                   onSelect(item);
-//                 }
-//                 setOpen(false);
-//               }}
-//             >
-//               {onCustomDisplay(item, idx)}
-//             </CommandItem>
-//           ) : (
-//             <CommandItem
-//               value={(item[nameK] as string) || ""}
-//               key={idx}
-//               onSelect={() => {
-//                 console.log("NAME", name);
-//                 console.log("NAME value", item[nameK]);
-//                 // form.setValue(name, item[nameK]);
-//                 field.onChange({
-//                   name: item[nameK],
-//                   id: item["id" as keyof T],
-//                   uuid: item["uuid" as keyof T]
-//                     ? item["uuid" as keyof T]
-//                     : undefined,
-//                 });
-//                 // field.onChange(item[nameK]);
-//                 if (onSelect) {
-//                   onSelect(item);
-//                 }
-//                 setOpen(false);
-//               }}
-//             >
-//               <Check
-//                 className={cn(
-//                   "mr-2 h-4 w-4",
-//                   item[nameK] === field.value?.name
-//                     ? "opacity-100"
-//                     : "opacity-0"
-//                 )}
-//               />
-//               {item[nameK]?.toString() || ""}
-//             </CommandItem>
-//           )
-//         )}
-//       </CommandGroup>
-//     </CommandList>
-//   </Command>
-//   <div className="pt-2 px-1">
-//     <>
-//       {addNew && (
-//         <Button
-//           onClick={() => {
-//             addNew();
-//           }}
-//           size={"sm"}
-//           className=" space-x-2 flex"
-//         >
-//           <Typography fontSize={xs}>Add New</Typography>
-//           <PlusIcon size={15} />
-//         </Button>
-//       )}
-//     </>
-//   </div>
-// </PopoverContent>

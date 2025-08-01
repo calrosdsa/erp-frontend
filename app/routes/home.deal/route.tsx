@@ -10,6 +10,7 @@ import {
 } from "@remix-run/react";
 import { GlobalState } from "~/types/app-types";
 import { components } from "~/sdk";
+import { getSession } from "~/sessions";
 
 type ActionData = {
   dealTransition: components["schemas"]["EntityTransitionData"];
@@ -60,7 +61,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const client = apiClient({ request });
     const url = new URL(request.url);
     const searchParams = url.searchParams;
-    console.log("LOAD DEALS...");
+    const session = await getSession(request.headers.get("Cookie"));
+    console.log("LOAD DEALS...",session.data.access_token);
     // Parallelize requests with proper error handling
     const [dealsRes, stagesRes,currencyExchange] = await Promise.all([
       client.GET("/deal", {

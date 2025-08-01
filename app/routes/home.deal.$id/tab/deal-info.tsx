@@ -144,6 +144,7 @@ export default function DealInfoTab({
               uuid: deal?.uuid || appContext.profile?.uuid,
             },
             deal_type: deal?.deal_type,
+            
             contacts: data?.contacts?.map((t) => mapToContactSchema(t)) || [],
             observers:
               data?.observers.map((t) => mapToParticipantSchema(t)) || [],

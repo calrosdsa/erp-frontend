@@ -4,6 +4,7 @@ import { components } from "~/sdk";
 import { formatAmountToInt } from "~/util/format/formatCurrency";
 import { formatRFC3339 } from "date-fns";
 import { contactBulkDataSchema, contactDataSchema, mapToContactData } from "../contact/contact.schema";
+import { DEFAULT_CURRENCY } from "~/constant";
 
 export type DealData = z.infer<typeof dealSchema>
 export type ParticipantData = z.infer<typeof observerSchema>
@@ -20,7 +21,7 @@ export const dealSchema = z.object({
     stage:fieldRequired,
     customer:fieldNull,
     amount:z.coerce.number(),
-    currency:fieldRequired,
+    currency:field,
     deal_type:z.string().nullable().optional(),
     source:z.string().nullable().optional(),
     source_information:z.string().nullable().optional(),
@@ -45,7 +46,7 @@ export const mapToDealData = (e:DealData) => {
     const d:components["schemas"]["DealData"] = {
         fields: {
             amount: formatAmountToInt(e.amount),
-            currency: e.currency.name,
+            currency: e.currency.name || DEFAULT_CURRENCY,
             deal_type: e.deal_type,
             name: e.name,
             responsible_id: e.responsible.id,

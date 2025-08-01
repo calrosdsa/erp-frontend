@@ -6,10 +6,8 @@ import { Entity } from "~/types/enums";
 import { route } from "~/util/route";
 import { Typography } from "../typography";
 import { Badge } from "../ui/badge";
-
 export default function ConnectionsEntity({ entity }: { entity: Entity }) {
   const fetcher = useFetcher<typeof action>();
-
   const initData = async () => {
     const connectionParameters: operations["connections"]["parameters"] = {
       path: {
@@ -48,9 +46,8 @@ export default function ConnectionsEntity({ entity }: { entity: Entity }) {
   return (
     <>
       <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-y-3">
-        <Typography variant="subtitle1" className="col-span-full">
-          Conexiones
-        </Typography>
+
+        <Typography variant="subtitle1" className="col-span-full">Conexiones</Typography>
 
         {groupBySectionName &&
           Object.entries(groupBySectionName).map(([sectionName, items]) => (
