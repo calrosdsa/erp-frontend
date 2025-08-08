@@ -1,5 +1,6 @@
 import { Autocomplete, AutoCompleteProps } from "@/components/custom/select/autocomplete";
 import AutocompleteSearch from "@/components/custom/select/AutocompleteSearch";
+import { SmartAutocomplete } from "@/components/form/smart-autocomplete";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import { DEFAULT_DEBOUNCE_TIME } from "~/constant";
 import { components } from "~/sdk";
@@ -10,6 +11,27 @@ interface ProjectAutocompletProps
   extends Partial<AutoCompleteProps<Project, keyof Project>> {
   
 }
+interface ProjectSmartFieldProps {
+  onValueChange?: (value: string) => void;
+}
+
+export const ProjectSmartField = ({ ...props }: ProjectSmartFieldProps) => {
+  const [fetcher, onChange] = useProjectFetcher();
+  return (
+    <SmartAutocomplete
+      {...props}
+      data={fetcher.data?.projects || []}
+      onValueChange={(e) => {
+        onChange(e);
+        props.onValueChange?.(e);
+      }}
+      nameK="name"
+      name="project"
+      label="Project"
+      required
+    />
+  );
+};
 export const ProjectAutocomplete = ({
   ...props
 }:ProjectAutocompletProps)=>{

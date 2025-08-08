@@ -1194,11 +1194,20 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Deal */
+        /**
+         * Deal
+         * @description Retrieve a paginated list of deals with optional filtering and sorting capabilities. Returns deal summary information including status, value, and key dates.
+         */
         get: operations["deal"];
-        /** Edit Deal */
+        /**
+         * Edit Deal
+         * @description Update an existing deal record with new data. Validates the provided changes and updates the deal information while maintaining audit trail.
+         */
         put: operations["edit-deal"];
-        /** Create Deal */
+        /**
+         * Create Deal
+         * @description Create a new deal record with the provided deal data. Validates input data, assigns initial status, and returns the created deal with success message.
+         */
         post: operations["create-deal"];
         delete?: never;
         options?: never;
@@ -1213,7 +1222,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Deal Detail */
+        /**
+         * Deal Detail
+         * @description Retrieve comprehensive details for a specific deal by ID. Returns full deal information including contact details, pricing, timeline, and associated actions available to the current user.
+         */
         get: operations["deal-detail"];
         put?: never;
         post?: never;
@@ -1231,7 +1243,10 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Deal Transition */
+        /**
+         * Deal Transition
+         * @description Transition a deal through its lifecycle states (e.g., from prospect to qualified, won, or lost). Validates state transition rules and updates deal status accordingly.
+         */
         put: operations["deal-transition"];
         post?: never;
         delete?: never;
@@ -3923,6 +3938,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/task": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Task
+         * @description Retrieve a paginated list of tasks with optional filtering and sorting capabilities. Returns task summary information including status, assignee, and key dates.
+         */
+        get: operations["task"];
+        /**
+         * Edit Task
+         * @description Update an existing task record with new data. Validates the provided changes and updates the task information while maintaining audit trail.
+         */
+        put: operations["edit-task"];
+        /**
+         * Create Task
+         * @description Create a new task record with the provided task data. Validates input data, assigns initial status, and returns the created task with success message.
+         */
+        post: operations["create-task"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/task/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Task Detail
+         * @description Retrieve comprehensive details for a specific task by ID. Returns full task information including project details, assignee information, and associated actions available to the current user.
+         */
+        get: operations["task-detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/task/transition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Task Transition
+         * @description Transition a task through its lifecycle states (e.g., from prospect to qualified, won, or lost). Validates state transition rules and updates task status accordingly.
+         */
+        put: operations["task-transition"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/taxes-and-charges": {
         parameters: {
             query?: never;
@@ -4981,6 +5064,8 @@ export interface components {
         ConnectionDto: {
             /** Format: int64 */
             count: number;
+            entity_has_modal: boolean;
+            entity_href: string;
             /** Format: int64 */
             entity_id: number;
             entity_name: string;
@@ -6560,6 +6645,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["ResultEntitySupplierDto"];
+        };
+        EntityResponseResultEntityTaskDetailDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["ResultEntityTaskDetailDto"];
         };
         EntityResponseResultEntityTaxDtoBody: {
             /**
@@ -9420,6 +9518,20 @@ export interface components {
             message: string;
             result: components["schemas"]["StageDto"][];
         };
+        ResponseDataListListTaskDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            filters: components["schemas"]["FilterOptionDto"][];
+            message: string;
+            result: components["schemas"]["TaskDto"][];
+        };
         ResponseDataListListTermsAndConditionsDtoBody: {
             /**
              * Format: uri
@@ -9733,6 +9845,19 @@ export interface components {
             };
             message: string;
             result: components["schemas"]["SupplierDto"];
+        };
+        ResponseDataTaskDtoBody: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            actions: components["schemas"]["ActionDto"][];
+            associated_actions: {
+                [key: string]: components["schemas"]["ActionDto"][] | undefined;
+            };
+            message: string;
+            result: components["schemas"]["TaskDto"];
         };
         ResponseDataTermsAndConditionsDtoBody: {
             /**
@@ -10077,6 +10202,12 @@ export interface components {
             addresses: components["schemas"]["AddressDto"][];
             contacts: components["schemas"]["ContactDto"][];
             entity: components["schemas"]["SupplierDto"];
+        };
+        ResultEntityTaskDetailDto: {
+            activities: components["schemas"]["ActivityDto"][];
+            addresses: components["schemas"]["AddressDto"][];
+            contacts: components["schemas"]["ContactDto"][];
+            entity: components["schemas"]["TaskDetailDto"];
         };
         ResultEntityTaxDto: {
             activities: components["schemas"]["ActivityDto"][];
@@ -10515,6 +10646,64 @@ export interface components {
             /** Format: int64 */
             group_id?: number | null;
             name: string;
+        };
+        TaskData: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            fields: components["schemas"]["TaskFields"];
+            /** Format: int64 */
+            id: number;
+        };
+        TaskDetailDto: {
+            task: components["schemas"]["TaskDto"];
+        };
+        TaskDto: {
+            assignee_family_name: string;
+            assignee_given_name: string;
+            /** Format: int64 */
+            assignee_id: number | null;
+            /** Format: int64 */
+            company_id: number;
+            /** Format: date-time */
+            created_at: string;
+            description: string | null;
+            /** Format: date-time */
+            due_date: string | null;
+            /** Format: int64 */
+            id: number;
+            /** Format: int32 */
+            index: number;
+            priority: string | null;
+            project: string;
+            /** Format: int64 */
+            project_id: number;
+            stage: string;
+            /** Format: int32 */
+            stage_id: number;
+            /** Format: int32 */
+            stage_index: number;
+            title: string;
+            /** Format: date-time */
+            updated_at: string | null;
+            uuid: string;
+        };
+        TaskFields: {
+            /** Format: int64 */
+            assignee?: number | null;
+            description?: string | null;
+            /** Format: date-time */
+            due_date?: string | null;
+            /** Format: int32 */
+            index?: number;
+            priority?: string | null;
+            /** Format: int64 */
+            project_id: number;
+            /** Format: int32 */
+            stage_id?: number;
+            title: string;
         };
         TaxAndChargeLineData: {
             /** Format: double */
@@ -21957,6 +22146,195 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UpdateStatusWithEventBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    task: {
+        parameters: {
+            query?: {
+                size?: string;
+                /** @description Filter by task status */
+                status?: string;
+                orientation?: string;
+                column?: string;
+                /** @description Filter by assignee ID */
+                assignee?: number;
+                /** @description Filter by priority */
+                priority?: string;
+                /** @description Search in title and description */
+                search?: string;
+                /** @description Due date range start (YYYY-MM-DD) */
+                due_date_from?: string;
+                /** @description Due date range end (YYYY-MM-DD) */
+                due_date_to?: string;
+                /** @description Created date range start (YYYY-MM-DD) */
+                created_from?: string;
+                /** @description Created date range end (YYYY-MM-DD) */
+                created_to?: string;
+                created_at?: string;
+                updated_at?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataListListTaskDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "edit-task": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskData"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseMessageBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "create-task": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskData"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseDataTaskDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "task-detail": {
+        parameters: {
+            query?: {
+                query?: string;
+                orientation?: string;
+                column?: string;
+                parentId?: string;
+            };
+            header?: {
+                Authorization?: string;
+                "User-Session-Uuid"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResponseResultEntityTaskDetailDtoBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "task-transition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EntityTransitionData"];
             };
         };
         responses: {

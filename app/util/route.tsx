@@ -142,6 +142,7 @@ class Routes {
   cashOutflow = "cash-outflow";
   bankAccount = "bank-account";
   deal = "deal";
+  task = "task";
   chat = "chat";
   workspace = "workspace";
   module = "module";

@@ -84,8 +84,9 @@ export enum Entity {
   DEAL = 64,
   STAGE = 65,
   CHAT = 66,
-  BOOKING_SCHEDULE  =  66,
-  WORKSPACE = 67, 
+  BOOKING_SCHEDULE  =  67,
+  WORKSPACE = 68,
+  TASK = 69,
 }
 
 export enum PartyType {

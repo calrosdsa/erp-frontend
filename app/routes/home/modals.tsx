@@ -12,6 +12,7 @@ import WorkspaceModal from "../home.workspace.$id/workspace-modal";
 import AddressModal from "../home.address.$id/address-modal";
 import JournalEntryModal from "../home.journalEntry.$code/journal-entry-modal";
 import ItemModal from "../home.item.$id/item-modal";
+import TaskModal from "../home.task.$id/task-modal";
 
 export default function AppModals({ appContext }: { appContext: GlobalState }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +27,7 @@ export default function AppModals({ appContext }: { appContext: GlobalState }) {
   const address = searchParams.get(route.address);
   const journalEntry = searchParams.get(route.journalEntry)
   const item = searchParams.get(route.item)
+  const task = searchParams.get(route.task)
   return (
     <div>
       {item && <ItemModal appContext={appContext}/>}
@@ -39,6 +41,7 @@ export default function AppModals({ appContext }: { appContext: GlobalState }) {
       {supplier && <SupplierModal appContext={appContext} />}
       {workspace && <WorkspaceModal appContext={appContext} />}
       {journalEntry && <JournalEntryModal appContext={appContext}/>}
+      {task && <TaskModal appContext={appContext}/>}
     </div>
   );
 }

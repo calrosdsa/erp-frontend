@@ -12,7 +12,7 @@ import { ItemLineType, itemLineTypeToJSON } from "~/gen/common";
 
 type ActionData = {
   action: string;
-  dealData: DealData;
+  dealData: DealData; //From zod schema type 
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -58,6 +58,9 @@ export function shouldRevalidate({
   defaultShouldRevalidate,
   actionResult,
 }: ShouldRevalidateFunctionArgs) {
+  if (actionResult?.shouldRevalidate) {
+    return defaultShouldRevalidate;
+  }
   return false;
 }
 
@@ -65,7 +68,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  
+
   const entityId = searchParams.get("entity_id") ?? Entity.DEAL.toString();
   let stages: components["schemas"]["StageDto"][] = [];
   let dealData:
@@ -87,31 +90,31 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     });
     // Crear promesa condicional para el detalle del deal
     const dealPromise = client.GET("/deal/detail/{id}", {
-          params: {
-            path: {
-              id: params.id || "",
-            },
-          },
-        })
+      params: {
+        path: {
+          id: params.id || "",
+        },
+      },
+    });
 
-    const lineItemsPromise = client.GET("/item-line",{
-      params:{
-        query:{
-          line_type:itemLineTypeToJSON(ItemLineType.DEAL_LINE_ITEM),
-          id:params.id
-        }
-      }
-    })
+    const lineItemsPromise = client.GET("/item-line", {
+      params: {
+        query: {
+          line_type: itemLineTypeToJSON(ItemLineType.DEAL_LINE_ITEM),
+          id: params.id,
+        },
+      },
+    });
 
     // Ejecutar promesas en paralelo
-    const [stagesRes, dealRes,lineItemsRes] = await Promise.all([
+    const [stagesRes, dealRes, lineItemsRes] = await Promise.all([
       stagesPromise,
       dealPromise,
       lineItemsPromise,
     ]);
     stages = stagesRes.data?.result || [];
     dealData = dealRes?.data;
-    lineItems = lineItemsRes.data?.result || []
+    lineItems = lineItemsRes.data?.result || [];
   }
 
   return json({

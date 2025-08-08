@@ -14,7 +14,6 @@ type ActionData = {
 export const action = async ({ request }: LoaderFunctionArgs) => {
   const client = apiClient({ request });
   const data = (await request.json()) as ActionData;
-  console.log("STAGE DATA",data)
   let message: string | undefined = undefined;
   let error: string | undefined = undefined;
   let actionRes = LOAD_ACTION;
@@ -23,6 +22,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   let shouldRevalidate = false
   switch (data.action) {
     case "get":{
+      console.log(data.parameters)
       const res =await client.GET("/stage",{
         params:data.parameters
       })

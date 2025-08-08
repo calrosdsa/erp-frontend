@@ -6,8 +6,8 @@ import { formatRFC3339 } from "date-fns";
 import { contactBulkDataSchema, contactDataSchema, mapToContactData } from "../contact/contact.schema";
 import { DEFAULT_CURRENCY } from "~/constant";
 
-export type DealData = z.infer<typeof dealSchema>
 export type ParticipantData = z.infer<typeof observerSchema>
+export type DealData = z.infer<typeof dealSchema>
 
 export const observerSchema = z.object({
     profile_id:z.number(),
